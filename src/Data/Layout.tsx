@@ -5,12 +5,13 @@ import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBullete
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import TableChartRoundedIcon from "@mui/icons-material/TableChartRounded";
 import type { NavItem } from "../Types";
+import { ROUTES } from "../Constants";
 
 export const NavItems: NavItem[] = [
   {
     icon: <DashboardRoundedIcon />,
     name: "Dashboard",
-    subItems: [{ name: "Ecommerce", path: "/", pro: false }],
+    path: ROUTES.DASHBOARD,
   },
   {
     icon: <CalendarMonthRoundedIcon />,

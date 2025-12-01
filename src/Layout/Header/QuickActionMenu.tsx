@@ -1,114 +1,99 @@
-import { Box, Grid, Menu, Stack, Typography } from "@mui/material";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import SegmentIcon from "@mui/icons-material/Segment";
+import { Box, Drawer } from "@mui/material";
 import { useState } from "react";
+import { useWindowWidth } from "../../Utils/Hooks";
+import CloseIcon from "@mui/icons-material/Close";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import CategoryIcon from "@mui/icons-material/Category";
-import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
-import Inventory2Icon from "@mui/icons-material/Inventory2";
-import NoteIcon from "@mui/icons-material/Note";
-import PaidIcon from "@mui/icons-material/Paid";
-import PersonIcon from "@mui/icons-material/Person";
-import ReceiptIcon from "@mui/icons-material/Receipt";
-import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+const menuData = [
+  { title: "Sales", items: ["Invoice", "Credit Note"] },
+  {
+    title: "Bank / Cash",
+    items: ["Bank", "Bank Transaction", "Receipt", "Payment"],
+  },
+  { title: "Purchase", items: ["Supplier Bill", "Debit Note"] },
+  { title: "Contact", items: ["Contact"] },
+  {
+    title: "Inventory",
+    items: ["Product", "Stock Transfer", "Price Master"],
+  },
+];
 
-export default function QuickActionMenu() {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+const QuickActionMenu = () => {
+  const width = useWindowWidth();
+  const [open, setOpen] = useState(false);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const handleOpen = (e) => setAnchorEl(e.currentTarget);
-  const handleClose = () => setAnchorEl(null);
+  const toggleDrawer = (value: boolean) => () => setOpen(value);
 
   return (
-    <Box>
-      <Typography sx={{ cursor: "pointer", fontWeight: "600" }} onMouseEnter={handleOpen}>
-        Quick Action
-      </Typography>
+    <>
+      {width >= 1024 ? (
+        <Box className="relative group">
+          <p className="flex text-base font-bold items-center justify-center text-gray-700 bg-white cursor-pointer hover:text-dark dark:bg-gray-900 dark:text-gray-400 dark:hover:text-white">
+            Quick Action
+            <ExpandMoreIcon />
+          </p>
+          <div className="absolute left-0 mt-3 z-50 w-[820px] rounded-lg border border-gray-50 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-900 opacity-0 invisible scale-95 translate-y-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:visible group-hover:scale-100 group-hover:translate-y-0">
+            <div className="grid grid-cols-5 p-2">
+              {menuData.map((section, index) => (
+                <div key={section.title} className={`${index !== menuData.length - 1 ? "border-r border-gray-100 dark:border-gray-800" : ""}  p-2`}>
+                  <p className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">{section.title}</p>
+                  <ul className="flex flex-col pt-0">
+                    {section.items.map((item) => (
+                      <li key={item} className="flex items-center gap-3 px-3 py-2 font-medium text-gray-600 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
+                        - {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Box>
+      ) : (
+        <Box>
+          {/* ─────────────── MOBILE BUTTON ─────────────── */}
+          <button onClick={toggleDrawer(true)} className="flex items-center justify-center w-10 h-10 text-gray-400 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800">
+            <SegmentIcon />
+          </button>
 
-      <Menu
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{ onMouseLeave: handleClose }}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        transformOrigin={{ vertical: "top", horizontal: "left" }}
-        PaperProps={{
-          sx: { padding: 2, width: 900, borderRadius: 3, boxShadow: 4 },
-        }}
-      >
-        <Grid container spacing={4}>
-          {/* SALES */}
-          <Grid item xs={12} sm={4} md={2.4}>
-            <Typography sx={{ fontWeight: 700, mb: 1 }}>Sales</Typography>
-            <Stack spacing={1}>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <ReceiptLongIcon fontSize="small" /> <Typography>Invoice</Typography>
-              </Stack>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <NoteIcon fontSize="small" /> <Typography>Credit Note</Typography>
-              </Stack>
-            </Stack>
-          </Grid>
+          {/* ─────────────── MOBILE DRAWER ─────────────── */}
+          <Drawer open={open} onClose={toggleDrawer(false)}>
+            <div className="w-[280px] p-4">
+              <div className="flex justify-between items-center py-3 mb-3 border-b border-gray-300 dark:border-gray-700">
+                <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Quick Action</h5>
+                <CloseIcon onClick={toggleDrawer(false)} />
+              </div>
 
-          {/* BANK / CASH */}
-          <Grid item xs={12} sm={4} md={2.4}>
-            <Typography sx={{ fontWeight: 700, mb: 1 }}>Bank / Cash</Typography>
-            <Stack spacing={1}>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <AccountBalanceIcon fontSize="small" /> <Typography>Bank</Typography>
-              </Stack>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <PaidIcon fontSize="small" /> <Typography>Bank Transaction</Typography>
-              </Stack>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <ReceiptIcon fontSize="small" /> <Typography>Receipt</Typography>
-              </Stack>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <PaidIcon fontSize="small" /> <Typography>Payment</Typography>
-              </Stack>
-            </Stack>
-          </Grid>
+              <ul className="space-y-3">
+                {menuData.map((section, idx) => (
+                  <li key={section.title}>
+                    <button onClick={() => setOpenIndex(openIndex === idx ? null : idx)} className="flex items-center justify-between w-full py-2 text-left text-gray-700 dark:text-gray-300">
+                      <span>{section.title}</span>
+                      <KeyboardArrowDownRoundedIcon className={`transition-transform ${openIndex === idx ? "rotate-180" : ""}`} />
+                    </button>
 
-          {/* PURCHASE */}
-          <Grid item xs={12} sm={4} md={2.4}>
-            <Typography sx={{ fontWeight: 700, mb: 1 }}>Purchase</Typography>
-            <Stack spacing={1}>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <ShoppingCartIcon fontSize="small" /> <Typography>Supplier Bill</Typography>
-              </Stack>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <NoteIcon fontSize="small" /> <Typography>Debit Note</Typography>
-              </Stack>
-            </Stack>
-          </Grid>
-
-          {/* CONTACT */}
-          <Grid item xs={12} sm={4} md={2.4}>
-            <Typography sx={{ fontWeight: 700, mb: 1 }}>Contact</Typography>
-            <Stack spacing={1}>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <PersonIcon fontSize="small" /> <Typography>Contact</Typography>
-              </Stack>
-            </Stack>
-          </Grid>
-
-          {/* INVENTORY */}
-          <Grid item xs={12} sm={4} md={2.4}>
-            <Typography sx={{ fontWeight: 700, mb: 1 }}>Inventory</Typography>
-            <Stack spacing={1}>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Inventory2Icon fontSize="small" /> <Typography>Product</Typography>
-              </Stack>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <CompareArrowsIcon fontSize="small" /> <Typography>Stock Transfer</Typography>
-              </Stack>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <CategoryIcon fontSize="small" /> <Typography>Price Master</Typography>
-              </Stack>
-            </Stack>
-          </Grid>
-        </Grid>
-      </Menu>
-    </Box>
+                    {/* Submenu */}
+                    <div className={`overflow-hidden transition-all ${openIndex === idx ? "max-h-40" : "max-h-0"}`}>
+                      <ul className="ml-4 mt-2 space-y-2 border-l border-gray-300 pl-3">
+                        {section.items.map((item) => (
+                          <li key={item} className="text-sm text-gray-600 dark:text-gray-400">
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Drawer>
+        </Box>
+      )}
+    </>
   );
-}
+};
+
+export default QuickActionMenu;
