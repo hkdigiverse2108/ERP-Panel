@@ -88,7 +88,7 @@ const NotificationDropdown = () => {
       </IconButton>
 
       {/* DROPDOWN */}
-      <div className="fixed lg:absolute max-lg:left-1 max-lg:right-1 lg:right-0 mt-3 flex max-h-[480px] min-w-[285px] md:min-w-[330px] max-w-[350px] flex-col rounded-xl border border-gray-50 bg-white shadow-xl dark:border-gray-800 dark:bg-gray-dark z-50 opacity-0 invisible scale-95 translate-y-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:visible group-hover:scale-100 group-hover:translate-y-0">
+      <div className="fixed lg:absolute max-lg:left-1 max-lg:right-1 lg:right-0 mt-3 flex max-h-[480px] min-w-[285px] md:min-w-[330px] max-w-[350px] flex-col rounded-xl border border-gray-50 bg-white shadow-tooltip dark:border-gray-800 dark:bg-gray-dark z-50 opacity-0 invisible scale-95 translate-y-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:visible group-hover:scale-100 group-hover:translate-y-0">
         {/* HEADER */}
         <div className="flex items-center justify-center p-3 mb-3 border-b border-gray-300 dark:border-gray-700">
           <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Notification</h5>

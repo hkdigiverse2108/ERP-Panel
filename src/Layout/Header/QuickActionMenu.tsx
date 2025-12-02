@@ -1,10 +1,10 @@
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import SegmentIcon from "@mui/icons-material/Segment";
-import { Box, Drawer } from "@mui/material";
+import { Box } from "@mui/material";
 import { useState } from "react";
+import { CommonDrawer } from "../../Components/Common";
 import { useWindowWidth } from "../../Utils/Hooks";
-import CloseIcon from "@mui/icons-material/Close";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const menuData = [
   { title: "Sales", items: ["Invoice", "Credit Note"] },
@@ -35,10 +35,10 @@ const QuickActionMenu = () => {
             Quick Action
             <ExpandMoreIcon />
           </p>
-          <div className="absolute left-0 mt-3 z-50 w-[820px] rounded-lg border border-gray-50 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-900 opacity-0 invisible scale-95 translate-y-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:visible group-hover:scale-100 group-hover:translate-y-0">
+          <div className="absolute left-0 mt-3 z-50 w-[820px] rounded-lg border border-gray-50 bg-white shadow-tooltip dark:border-gray-800 dark:bg-gray-800 opacity-0 invisible scale-95 translate-y-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:visible group-hover:scale-100 group-hover:translate-y-0">
             <div className="grid grid-cols-5 p-2">
               {menuData.map((section, index) => (
-                <div key={section.title} className={`${index !== menuData.length - 1 ? "border-r border-gray-100 dark:border-gray-800" : ""}  p-2`}>
+                <div key={section.title} className={`${index !== menuData.length - 1 ? "border-r border-gray-100 dark:border-gray-700" : ""}  p-2`}>
                   <p className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">{section.title}</p>
                   <ul className="flex flex-col pt-0">
                     {section.items.map((item) => (
@@ -60,36 +60,27 @@ const QuickActionMenu = () => {
           </button>
 
           {/* ─────────────── MOBILE DRAWER ─────────────── */}
-          <Drawer open={open} onClose={toggleDrawer(false)}>
-            <div className="w-[280px] p-4">
-              <div className="flex justify-between items-center py-3 mb-3 border-b border-gray-300 dark:border-gray-700">
-                <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Quick Action</h5>
-                <CloseIcon onClick={toggleDrawer(false)} />
-              </div>
-
-              <ul className="space-y-3">
-                {menuData.map((section, idx) => (
-                  <li key={section.title}>
-                    <button onClick={() => setOpenIndex(openIndex === idx ? null : idx)} className="flex items-center justify-between w-full py-2 text-left text-gray-700 dark:text-gray-300">
-                      <span>{section.title}</span>
-                      <KeyboardArrowDownRoundedIcon className={`transition-transform ${openIndex === idx ? "rotate-180" : ""}`} />
-                    </button>
-
-                    {/* Submenu */}
-                    <div className={`overflow-hidden transition-all ${openIndex === idx ? "max-h-40" : "max-h-0"}`}>
-                      <ul className="ml-4 mt-2 space-y-2 border-l border-gray-300 pl-3">
-                        {section.items.map((item) => (
-                          <li key={item} className="text-sm text-gray-600 dark:text-gray-400">
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Drawer>
+          <CommonDrawer open={open} onClose={toggleDrawer(false)} anchor="left" width={280} title="Quick Action" paperProps={{ className: "bg-white dark:bg-gray-800!" }}>
+            <ul className="space-y-3">
+              {menuData.map((section, idx) => (
+                <li key={section.title}>
+                  <button onClick={() => setOpenIndex(openIndex === idx ? null : idx)} className="flex items-center justify-between w-full py-2 text-left text-gray-700 dark:text-gray-300">
+                    <span>{section.title}</span>
+                    <KeyboardArrowDownRoundedIcon className={`transition-transform ${openIndex === idx ? "rotate-180" : ""}`} />
+                  </button>
+                  <div className={`overflow-hidden transition-all ${openIndex === idx ? "max-h-40" : "max-h-0"}`}>
+                    <ul className="ml-4 mt-2 space-y-2 border-l border-gray-300 pl-3">
+                      {section.items.map((item) => (
+                        <li key={item} className="text-sm text-gray-600 dark:text-gray-400">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </CommonDrawer>
         </Box>
       )}
     </>

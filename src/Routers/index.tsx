@@ -1,5 +1,4 @@
 import { createBrowserRouter } from "react-router-dom";
-// import Layout from "../Layout";
 // import PrivateRoutes from "./PrivateRoutes";
 // import PublicRoutes from "./PublicRoutes";
 

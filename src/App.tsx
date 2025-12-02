@@ -1,17 +1,15 @@
 import { ThemeProvider } from "@mui/material/styles";
-import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 import { Router } from "./Routers";
-import Store from "./Store/Store";
-import Theme from "./Theme";
+import { useAppSelector } from "./Store/hooks";
+import { getTheme } from "./Theme";
 
 function App() {
+  const { isToggleTheme } = useAppSelector((state) => state.layout);
   return (
-    <Provider store={Store}>
-      <ThemeProvider theme={Theme}>
-        <RouterProvider router={Router} />
-      </ThemeProvider>
-    </Provider>
+    <ThemeProvider theme={getTheme(isToggleTheme === "light" ? "light" : "dark")}>
+      <RouterProvider router={Router} />
+    </ThemeProvider>
   );
 }
 

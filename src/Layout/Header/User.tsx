@@ -7,7 +7,7 @@ const User = () => {
       <div className="flex items-center bg-brand-500 text-white rounded-full border border-gray-200 dropdown-toggle dark:border-gray-800">
         <span className="overflow-hidden rounded-full max-xsm:text-sm h-11 w-11 max-xsm:h-9 max-xsm:w-9 flex justify-center items-center">HK</span>
       </div>
-      <div className="fixed lg:absolute max-lg:left-1 max-lg:right-1 lg:right-0 mt-3 flex min-w-[285px] max-w-[330px] flex-col rounded-xl border border-gray-50 bg-white shadow-xl dark:border-gray-800 dark:bg-gray-dark z-50 opacity-0 invisible scale-95 translate-y-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:visible group-hover:scale-100 group-hover:translate-y-0 ">
+      <div className="fixed lg:absolute max-lg:left-1 max-lg:right-1 lg:right-0 mt-3 flex min-w-[285px] max-w-[330px] flex-col rounded-xl border border-gray-50 bg-white shadow-tooltip dark:border-gray-800 dark:bg-gray-dark z-50 opacity-0 invisible scale-95 translate-y-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:visible group-hover:scale-100 group-hover:translate-y-0 ">
         <div className="p-3">
           <div className="flex items-center gap-3">
             <div className="flex items-center bg-brand-500 text-white rounded-full border border-gray-200 dropdown-toggle dark:border-gray-800">
