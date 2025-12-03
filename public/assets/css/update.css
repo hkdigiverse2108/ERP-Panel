@@ -1,0 +1,19 @@
+/* ************ Date Range Calendar Start *********** */
+
+.MuiDateRangeCalendar-root > div:first-child {
+  display: none !important;
+}
+
+.MuiDivider-root.MuiDivider-fullWidth{
+  @apply m-0!;
+}
+
+.dark .MuiPopper-root > div{
+  @apply dark:bg-gray-800!;
+}
+.dark .MuiPopover-root.MuiModal-root .MuiPaper-root{
+  @apply dark:bg-gray-800!;
+   --Paper-overlay: none !important;
+}
+
+/* ************ Date Range Calendar End *********** */

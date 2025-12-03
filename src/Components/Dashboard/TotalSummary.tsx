@@ -2,64 +2,73 @@ import { Grid, Paper, Typography } from "@mui/material";
 import { useState } from "react";
 import { CommonSelect } from "../../Attribute/FormFields";
 import { CommonCard } from "../Common";
+import CommonDateRangeSelector from "../../Attribute/FormFields/CommonDateRangeSelector";
+import dayjs from "dayjs";
 
 const TotalSummary = () => {
   const stats = [
-    { label: "Total Sales", value: "₹0", color: "#C8F7F1" },
-    { label: "Total Invoice", value: "0", color: "#C8F7F1" },
-    { label: "Sold Qty", value: "0", color: "#C8F7F1" },
-    { label: "Total Customers", value: "4", color: "#C8F7F1" },
-    { label: "To Receive", value: "₹0", color: "#C8F7F1" },
-    { label: "Total Sales Return", value: "₹0", color: "#C8F7F1" },
+    { label: "Total Sales", value: "₹0", color: "bg-cyan-100! dark:bg-cyan-800!" },
+    { label: "Total Invoice", value: "0", color: "bg-cyan-100!  dark:bg-cyan-800!" },
+    { label: "Sold Qty", value: "0", color: "bg-cyan-100!  dark:bg-cyan-800!" },
+    { label: "Total Customers", value: "4", color: "bg-cyan-100!  dark:bg-cyan-800!" },
+    { label: "To Receive", value: "₹0", color: "bg-cyan-100!  dark:bg-cyan-800!" },
+    { label: "Total Sales Return", value: "₹0", color: "bg-cyan-100!  dark:bg-cyan-800!" },
 
-    { label: "Total Purchase", value: "₹0", color: "#DCEBFF" },
-    { label: "Total Bills", value: "0", color: "#DCEBFF" },
-    { label: "Purchase Qty", value: "0", color: "#DCEBFF" },
-    { label: "Total Suppliers", value: "0", color: "#DCEBFF" },
-    { label: "To Pay", value: "₹0", color: "#DCEBFF" },
-    { label: "Total Purchase Return", value: "₹0", color: "#DCEBFF" },
+    { label: "Total Purchase", value: "₹0", color: "bg-blue-100!  dark:bg-blue-800!" },
+    { label: "Total Bills", value: "0", color: "bg-blue-100!  dark:bg-blue-800!" },
+    { label: "Purchase Qty", value: "0", color: "bg-blue-100!  dark:bg-blue-800!" },
+    { label: "Total Suppliers", value: "0", color: "bg-blue-100!  dark:bg-blue-800!" },
+    { label: "To Pay", value: "₹0", color: "bg-blue-100!  dark:bg-blue-800!" },
+    { label: "Total Purchase Return", value: "₹0", color: "bg-blue-100!  dark:bg-blue-800!" },
 
-    { label: "Total Paid", value: "₹0", color: "#E5D9FF" },
-    { label: "Total Expense", value: "₹0", color: "#E5D9FF" },
-    { label: "Total Products", value: "43", color: "#E9DFFF" },
-    { label: "Stock Qty", value: "56", color: "#E9DFFF" },
-    { label: "Stock Value", value: "₹5635", color: "#E5D9FF" },
-    { label: "Cash in Hand", value: "10985", color: "#E5D9FF" },
+    { label: "Total Paid", value: "₹0", color: "bg-purple-100!  dark:bg-purple-800!" },
+    { label: "Total Expense", value: "₹0", color: "bg-purple-100!  dark:bg-purple-800!" },
+    { label: "Total Products", value: "43", color: "bg-purple-100!  dark:bg-purple-800!" },
+    { label: "Stock Qty", value: "56", color: "bg-purple-100!  dark:bg-purple-800!" },
+    { label: "Stock Value", value: "₹5635", color: "bg-purple-100!  dark:bg-purple-800!" },
+    { label: "Cash in Hand", value: "10985", color: "bg-purple-100!  dark:bg-purple-800!" },
 
-    { label: "Gross Profit", value: "0", color: "#FFD6D6" },
-    { label: "Avg. Profit Margin", value: "₹0", color: "#FFD6D6" },
-    { label: "Avg. Profit Margin (%)", value: "0.00", color: "#FFD6D6" },
-    { label: "Avg. Cart Value", value: "₹0", color: "#FFD6D6" },
-    { label: "Avg. Bills (Nos.)", value: "0", color: "#FFD6D6" },
-    { label: "Bank Accounts", value: "-32260", color: "#FFD6D6" },
+    { label: "Gross Profit", value: "0", color: "bg-red-100!  dark:bg-red-800!" },
+    { label: "Avg. Profit Margin", value: "₹0", color: "bg-red-100!  dark:bg-red-800!" },
+    { label: "Avg. Profit Margin (%)", value: "0.00", color: "bg-red-100!  dark:bg-red-800!" },
+    { label: "Avg. Cart Value", value: "₹0", color: "bg-red-100!  dark:bg-red-800!" },
+    { label: "Avg. Bills (Nos.)", value: "0", color: "bg-red-100!  dark:bg-red-800!" },
+    { label: "Bank Accounts", value: "-32260", color: "bg-red-100!  dark:bg-red-800!" },
   ];
   const gstOptions = [
-    { label: "GST 28 (28.0%)", value: "28" },
-    { label: "GST 18 (18.0%)", value: "18" },
-    { label: "GST 12 (12.0%)", value: "12" },
-    { label: "GST 5 (5.0%)", value: "5" },
-    { label: "15 (15.0%)", value: "15" },
+    { label: "ALL", value: "all" },
+    { label: "Online", value: "online" },
+    { label: "Offline", value: "offline" },
   ];
 
   const [values, setValues] = useState<string[]>([]);
   console.log("values", values);
+  const [range, setRange] = useState({
+    start: dayjs(),
+    end: dayjs(),
+  });
+  console.log(range);
 
   const topContent = (
     <>
-      <CommonSelect sx={{ width: 300 }} label="Select Location" options={gstOptions} value={values} onChange={(v) => setValues(v)} limitTags={1} />
-      <div className="flex gap-2">
-        <CommonSelect sx={{ width: 300 }} label="Select Location" options={gstOptions} value={values} onChange={(v) => setValues(v)} limitTags={1} multiple />
-        <CommonSelect sx={{ width: 300 }} label="Select Channel" options={gstOptions} value={values} onChange={(v) => setValues(v)} limitTags={1} multiple />
-      </div>
+      <Grid size={{ xs: 12, sm: 4, xl: 3 }}>
+        <CommonDateRangeSelector value={range} onChange={setRange}/>
+      </Grid>
+      <Grid size={{ xs: 12, sm: 4, xl: 3 }} offset={{ xl: "auto" }}>
+        <CommonSelect label="Select Location" options={gstOptions} value={values} onChange={(v) => setValues(v)} limitTags={1} />
+      </Grid>
+      <Grid size={{ xs: 12, sm: 4, xl: 3 }}>
+        <CommonSelect label="Select Channel" options={gstOptions} value={values} onChange={(v) => setValues(v)} limitTags={1} />
+      </Grid>
     </>
   );
 
   return (
-    <CommonCard grid={{ xs: 12, md: 8 }} topContent={topContent}>
+    <CommonCard grid={{ xs: 12, md: 8 }} topContent={topContent} >
       <Grid container spacing={1.5} p={1.5}>
         {stats.map((item, index) => (
-          <Grid size={{ xs: 6, sm: 4, md: 3, lg: 2 }} key={index}>
-            <Paper elevation={0} sx={{ p: 2, borderRadius: 2, textAlign: "center", backgroundColor: item.color, height: "100%" }}>
+          <Grid size={{ xs: 6, sm: 4, lg: 3 ,xl:2 }} key={index}>
+            <Paper className={item.color} elevation={0} sx={{ p: 1.5, borderRadius: 2, textAlign: "center", height: "100%" }}>
               <Typography variant="h6">{item.value}</Typography>
               <Typography variant="body2" color="text.secondary">
                 {item.label}

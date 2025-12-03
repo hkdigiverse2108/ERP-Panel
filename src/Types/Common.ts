@@ -1,4 +1,5 @@
-import type { Breakpoint, DrawerProps, PaperProps as MuiPaperProps, SxProps, Theme } from "@mui/material";
+import type { Breakpoint, DrawerProps, PaperProps as MuiPaperProps } from "@mui/material";
+import type { Dayjs } from "dayjs";
 
 // ************ Drawer Start ***********
 
@@ -28,9 +29,20 @@ export interface CommonSelectProps {
   options: SelectOptionType[];
   value: string[];
   onChange: (values: string[]) => void;
-  sx?: SxProps<Theme>;
+  BoxClassName?: string;
   multiple?: boolean;
   limitTags?: number;
 }
 
 // ************ Select End ***********
+
+// ************ Date Range Selector Start ***********
+
+export interface CommonDateRangeSelectorProps {
+  value: { start: Dayjs; end: Dayjs };
+  onChange: (range: { start: Dayjs; end: Dayjs }) => void;
+  BoxClassName?: string;
+  active?: string;
+}
+
+// ************ Date Range Selector End ***********

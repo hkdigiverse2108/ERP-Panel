@@ -14,14 +14,16 @@ const CommonCard: FC<CommonCardProps> = ({ title, children, grid = { xs: 12 }, p
   return (
     <Grid size={grid}>
       <Paper elevation={0} className="rounded-lg! border! border-gray-200! bg-white! dark:border-gray-800! dark:bg-gray-dark!" {...paperProps}>
-        <div className="flex items-center justify-between px-2 py-1.5">
+        <Grid container spacing={1.5} className="flex! max-xsm:flex-col! items-center justify-between p-2">
           {title && (
-            <Typography variant="subtitle1" fontWeight={600} px={2} py={1.5} className="text-gray-700! dark:text-gray-200!">
-              {title}
-            </Typography>
+            <Grid size="auto">
+              <Typography variant="subtitle1" fontWeight={600} pl={1} py={0.7} className="text-gray-700! dark:text-gray-200!">
+                {title}
+              </Typography>
+            </Grid>
           )}
           {topContent}
-        </div>
+        </Grid>
 
         {!hideDivider && <Divider className="border-gray-300! dark:border-gray-700!" />}
 

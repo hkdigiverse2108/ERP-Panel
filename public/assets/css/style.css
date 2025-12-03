@@ -1,8 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
-@import "./utils/variables.css";
+@import "./variables.css";
 
 @layer base {
   *,
@@ -17,8 +16,10 @@
     cursor: pointer;
   }
   body {
-    @apply relative font-normal font-poppins z-1 bg-gray-50;
+    @apply relative font-normal font-outfit z-1 bg-gray-50;
   }
 }
 
 @import "./layout.css";
+@import "./update.css";
+

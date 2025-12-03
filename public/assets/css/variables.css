@@ -1,5 +1,5 @@
 /* :root {
-  --font-poppins: "Poppins", sans-serif;
+  --font-outfit: "Outfit", sans-serif;
 
   --breakpoint-2xsm: 375px;
   --breakpoint-xsm: 425px;
@@ -150,7 +150,7 @@
 
 @theme {
   --font-*: initial;
-  --font-poppins: poppins, sans-serif;
+  --font-outfit: Outfit, sans-serif;
 
   --breakpoint-*: initial;
   --breakpoint-2xsm: 375px;

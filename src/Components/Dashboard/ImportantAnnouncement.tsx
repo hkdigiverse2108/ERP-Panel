@@ -79,7 +79,7 @@ const ImportantAnnouncement = () => {
   ];
   return (
     <CommonCard title="Important Announcement" grid={{ xs: 12, md: 4 }}>
-      <Box className="flex flex-col max-h-[370px] overflow-y-auto custom-scrollbar">
+      <Box className="flex flex-col max-h-[385px] overflow-y-auto custom-scrollbar">
         {notifications.map((item, index) => (
           <Box key={index}>
             <div className="flex items-center gap-3 border-b border-gray-100 p-3 px-4 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/10">
