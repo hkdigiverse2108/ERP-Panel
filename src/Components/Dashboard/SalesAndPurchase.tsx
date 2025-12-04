@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
 import { useState } from "react";
-import CommonDateRangeSelector from "../../Attribute/FormFields/CommonDateRangeSelector";
 import { CommonCard } from "../Common";
 import { Box, Grid } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
+import { CommonDateRangeSelector } from "../../Attribute";
 // import { ChartToolbar } from "@mui/x-charts/ChartToolbar";
 
 const SalesAndPurchase = () => {
@@ -15,7 +15,7 @@ const SalesAndPurchase = () => {
   const filename = "Population_vs_GDP_Per_Capita_USD_2019";
 
   const topContent = (
-    <Grid size={{ xs: 12, sm: 5, xl: 4 }}>
+    <Grid size={{ xs: 12, sm: 5, md: 4 }}>
       <CommonDateRangeSelector value={range} onChange={setRange} active="This Week"/>
     </Grid>
   );

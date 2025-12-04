@@ -1,5 +1,6 @@
 import type { Breakpoint, DrawerProps, PaperProps as MuiPaperProps } from "@mui/material";
 import type { Dayjs } from "dayjs";
+import type { ReactNode } from "react";
 
 // ************ Drawer Start ***********
 
@@ -32,6 +33,7 @@ export interface CommonSelectProps {
   BoxClassName?: string;
   multiple?: boolean;
   limitTags?: number;
+  size?: "small" | "medium";
 }
 
 // ************ Select End ***********
@@ -46,3 +48,49 @@ export interface CommonDateRangeSelectorProps {
 }
 
 // ************ Date Range Selector End ***********
+
+// ************ Table Start ***********
+
+export interface Params {
+  [key: string]: any;
+}
+
+export interface UseBasicTableFilterHelperOptions {
+  initialParams?: Params;
+  debounceDelay?: number;
+  sortKey?: string;
+}
+
+export interface CommonColumn<T = any> {
+  field: keyof T | string;
+  headerName: string;
+  width?: number;
+  flex?: number;
+  sortable?: boolean;
+  align?: "left" | "right" | "center";
+  headerAlign?: "left" | "right" | "center";
+  renderCell?: (params: any) => React.ReactNode;
+}
+
+export interface CommonDataGridProps<T = any> {
+  columns: CommonColumn<T>[];
+  rows: T[];
+  loading?: boolean;
+
+  // Pagination
+  page: number;
+  limit: number;
+  total: number;
+
+  // Sorting
+  sortBy?: string | null;
+  onSortChange?: (field: string | null) => void;
+
+  // Pagination callback
+  onPageChange?: (page: number, limit: number) => void;
+
+  height?: number | string;
+}
+
+
+// ************ Table End ***********

@@ -1,9 +1,8 @@
 import { Grid, Paper, Typography } from "@mui/material";
-import { useState } from "react";
-import { CommonSelect } from "../../Attribute/FormFields";
-import { CommonCard } from "../Common";
-import CommonDateRangeSelector from "../../Attribute/FormFields/CommonDateRangeSelector";
 import dayjs from "dayjs";
+import { useState } from "react";
+import { CommonDateRangeSelector, CommonSelect } from "../../Attribute";
+import { CommonCard } from "../Common";
 
 const TotalSummary = () => {
   const stats = [
@@ -42,32 +41,31 @@ const TotalSummary = () => {
   ];
 
   const [values, setValues] = useState<string[]>([]);
-  console.log("values", values);
+  const [value, setValue] = useState<string[]>([]);
   const [range, setRange] = useState({
     start: dayjs(),
     end: dayjs(),
   });
-  console.log(range);
 
   const topContent = (
     <>
-      <Grid size={{ xs: 12, sm: 4, xl: 3 }}>
-        <CommonDateRangeSelector value={range} onChange={setRange}/>
+      <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+        <CommonDateRangeSelector value={range} onChange={setRange} />
       </Grid>
-      <Grid size={{ xs: 12, sm: 4, xl: 3 }} offset={{ xl: "auto" }}>
-        <CommonSelect label="Select Location" options={gstOptions} value={values} onChange={(v) => setValues(v)} limitTags={1} />
+      <Grid size={{ xs: 12, xsm: 6, sm: 4, xxl: 3 }} offset={{ xl: "auto" }}>
+        <CommonSelect label="Select Location" options={gstOptions} value={value} onChange={(v) => setValue(v)} limitTags={1}/>
       </Grid>
-      <Grid size={{ xs: 12, sm: 4, xl: 3 }}>
+      <Grid size={{ xs: 12, xsm: 6, sm: 4, xxl: 3 }}>
         <CommonSelect label="Select Channel" options={gstOptions} value={values} onChange={(v) => setValues(v)} limitTags={1} />
       </Grid>
     </>
   );
 
   return (
-    <CommonCard grid={{ xs: 12, md: 8 }} topContent={topContent} >
+    <CommonCard grid={{ xs: 12, md: 8 }} topContent={topContent}>
       <Grid container spacing={1.5} p={1.5}>
         {stats.map((item, index) => (
-          <Grid size={{ xs: 6, sm: 4, lg: 3 ,xl:2 }} key={index}>
+          <Grid size={{ xs: 6, sm: 4, lg: 3, xl: 2 }} key={index}>
             <Paper className={item.color} elevation={0} sx={{ p: 1.5, borderRadius: 2, textAlign: "center", height: "100%" }}>
               <Typography variant="h6">{item.value}</Typography>
               <Typography variant="body2" color="text.secondary">

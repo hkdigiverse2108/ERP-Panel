@@ -2,7 +2,7 @@ import { Autocomplete, Box, TextField } from "@mui/material";
 import { type FC } from "react";
 import type { CommonSelectProps, SelectOptionType } from "../../../Types";
 
-const CommonSelect: FC<CommonSelectProps> = ({ label, options, value, onChange, BoxClassName, multiple = false, limitTags }) => {
+const CommonSelect: FC<CommonSelectProps> = ({ label, options, value, onChange, BoxClassName, multiple = false, limitTags, size }) => {
   const valueObjects = value.map((v) => options.find((o) => o.value === v)).filter(Boolean) as SelectOptionType[];
   const singleValue = !multiple ? valueObjects[0] ?? null : null;
   return (
@@ -12,6 +12,7 @@ const CommonSelect: FC<CommonSelectProps> = ({ label, options, value, onChange, 
         options={options}
         limitTags={limitTags}
         value={multiple ? valueObjects : singleValue}
+        size={size ? size : "small"}
         getOptionLabel={(opt) => opt.label}
         isOptionEqualToValue={(option, val) => option.value === val.value}
         onChange={(_, newValues) => {

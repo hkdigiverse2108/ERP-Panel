@@ -1,10 +1,9 @@
 import dayjs from "dayjs";
 import { useState } from "react";
-import CommonDateRangeSelector from "../../Attribute/FormFields/CommonDateRangeSelector";
 import { CommonCard } from "../Common";
 import { Box, Grid } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { CommonSelect } from "../../Attribute/FormFields";
+import { CommonDateRangeSelector, CommonSelect } from "../../Attribute";
 // import { ChartToolbar } from "@mui/x-charts/ChartToolbar";
 
 const Transaction = () => {
@@ -21,11 +20,11 @@ const Transaction = () => {
   ];
   const topContent = (
     <>
-      <Grid size={{ xs: 12, sm: 4, xl: 3 }} offset={{ xl: "auto" }}>
-        <CommonSelect label="Select Location" options={gstOptions} value={values} onChange={(v) => setValues(v)} limitTags={1} />
+      <Grid size={{ xs: 12, xsm: 4, xl: 3 }} offset={{ xl: "auto" }}>
+        <CommonSelect label="Select Transaction" options={gstOptions} value={values} onChange={(v) => setValues(v)} limitTags={1} />
       </Grid>
-      <Grid size={{ xs: 12, sm: 5, xl: 4 }}>
-        <CommonDateRangeSelector value={range} onChange={setRange} />
+      <Grid size={{ xs: 12, sm: 4, xl: 4 }}>
+        <CommonDateRangeSelector value={range} onChange={setRange} active="This Month" />
       </Grid>
     </>
   );
