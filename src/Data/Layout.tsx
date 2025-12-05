@@ -8,11 +8,8 @@ import type { NavItem } from "../Types";
 import { ROUTES } from "../Constants";
 
 export const NavItems: NavItem[] = [
-  {
-    icon: <DashboardRoundedIcon />,
-    name: "Dashboard",
-    path: ROUTES.DASHBOARD,
-  },
+  { icon: <DashboardRoundedIcon />, name: "Dashboard", path: ROUTES.DASHBOARD },
+  { icon: <DashboardRoundedIcon />, name: "Contact", path: ROUTES.CONTACT },
   {
     icon: <CalendarMonthRoundedIcon />,
     name: "Calendar",

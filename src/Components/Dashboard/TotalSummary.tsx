@@ -6,19 +6,19 @@ import { CommonCard } from "../Common";
 
 const TotalSummary = () => {
   const stats = [
-    { label: "Total Sales", value: "₹0", color: "bg-cyan-100! dark:bg-cyan-800!" },
-    { label: "Total Invoice", value: "0", color: "bg-cyan-100!  dark:bg-cyan-800!" },
-    { label: "Sold Qty", value: "0", color: "bg-cyan-100!  dark:bg-cyan-800!" },
-    { label: "Total Customers", value: "4", color: "bg-cyan-100!  dark:bg-cyan-800!" },
-    { label: "To Receive", value: "₹0", color: "bg-cyan-100!  dark:bg-cyan-800!" },
-    { label: "Total Sales Return", value: "₹0", color: "bg-cyan-100!  dark:bg-cyan-800!" },
+    { label: "Total Sales", value: "₹0", color: "bg-brand-100! dark:bg-brand-800!" },
+    { label: "Total Invoice", value: "0", color: "bg-brand-100!  dark:bg-brand-800!" },
+    { label: "Sold Qty", value: "0", color: "bg-brand-100!  dark:bg-brand-800!" },
+    { label: "Total Customers", value: "4", color: "bg-brand-100!  dark:bg-brand-800!" },
+    { label: "To Receive", value: "₹0", color: "bg-brand-100!  dark:bg-brand-800!" },
+    { label: "Total Sales Return", value: "₹0", color: "bg-brand-100!  dark:bg-brand-800!" },
 
-    { label: "Total Purchase", value: "₹0", color: "bg-blue-100!  dark:bg-blue-800!" },
-    { label: "Total Bills", value: "0", color: "bg-blue-100!  dark:bg-blue-800!" },
-    { label: "Purchase Qty", value: "0", color: "bg-blue-100!  dark:bg-blue-800!" },
-    { label: "Total Suppliers", value: "0", color: "bg-blue-100!  dark:bg-blue-800!" },
-    { label: "To Pay", value: "₹0", color: "bg-blue-100!  dark:bg-blue-800!" },
-    { label: "Total Purchase Return", value: "₹0", color: "bg-blue-100!  dark:bg-blue-800!" },
+    { label: "Total Purchase", value: "₹0", color: "bg-sky-100!  dark:bg-sky-800!" },
+    { label: "Total Bills", value: "0", color: "bg-sky-100!  dark:bg-sky-800!" },
+    { label: "Purchase Qty", value: "0", color: "bg-sky-100!  dark:bg-sky-800!" },
+    { label: "Total Suppliers", value: "0", color: "bg-sky-100!  dark:bg-sky-800!" },
+    { label: "To Pay", value: "₹0", color: "bg-sky-100!  dark:bg-sky-800!" },
+    { label: "Total Purchase Return", value: "₹0", color: "bg-sky-100!  dark:bg-sky-800!" },
 
     { label: "Total Paid", value: "₹0", color: "bg-purple-100!  dark:bg-purple-800!" },
     { label: "Total Expense", value: "₹0", color: "bg-purple-100!  dark:bg-purple-800!" },
@@ -27,12 +27,12 @@ const TotalSummary = () => {
     { label: "Stock Value", value: "₹5635", color: "bg-purple-100!  dark:bg-purple-800!" },
     { label: "Cash in Hand", value: "10985", color: "bg-purple-100!  dark:bg-purple-800!" },
 
-    { label: "Gross Profit", value: "0", color: "bg-red-100!  dark:bg-red-800!" },
-    { label: "Avg. Profit Margin", value: "₹0", color: "bg-red-100!  dark:bg-red-800!" },
-    { label: "Avg. Profit Margin (%)", value: "0.00", color: "bg-red-100!  dark:bg-red-800!" },
-    { label: "Avg. Cart Value", value: "₹0", color: "bg-red-100!  dark:bg-red-800!" },
-    { label: "Avg. Bills (Nos.)", value: "0", color: "bg-red-100!  dark:bg-red-800!" },
-    { label: "Bank Accounts", value: "-32260", color: "bg-red-100!  dark:bg-red-800!" },
+    { label: "Gross Profit", value: "0", color: "bg-rose-100!  dark:bg-rose-800!" },
+    { label: "Avg. Profit Margin", value: "₹0", color: "bg-rose-100!  dark:bg-rose-800!" },
+    { label: "Avg. Profit Margin (%)", value: "0.00", color: "bg-rose-100!  dark:bg-rose-800!" },
+    { label: "Avg. Cart Value", value: "₹0", color: "bg-rose-100!  dark:bg-rose-800!" },
+    { label: "Avg. Bills (Nos.)", value: "0", color: "bg-rose-100!  dark:bg-rose-800!" },
+    { label: "Bank Accounts", value: "-32260", color: "bg-rose-100!  dark:bg-rose-800!" },
   ];
   const gstOptions = [
     { label: "ALL", value: "all" },

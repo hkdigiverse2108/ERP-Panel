@@ -3,6 +3,7 @@ import { ImportantAnnouncement, TotalSummary } from "../../Components/Dashboard"
 import SalesAndPurchase from "../../Components/Dashboard/SalesAndPurchase";
 import Transaction from "../../Components/Dashboard/Transaction";
 import TopCustomers from "../../Components/Dashboard/TopCustomers";
+import CustomersReport from "../../Components/Dashboard/CustomersReport";
 
 const Dashboard = () => {
   return (
@@ -13,6 +14,7 @@ const Dashboard = () => {
         <SalesAndPurchase />
         <Transaction />
         <TopCustomers />
+        <CustomersReport />
       </Grid>
     </Box>
   );
