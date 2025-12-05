@@ -1,4 +1,5 @@
 import type { Breakpoint, DrawerProps, PaperProps as MuiPaperProps } from "@mui/material";
+import type { GridColDef, GridFilterModel, GridPaginationModel, GridSortModel } from "@mui/x-data-grid";
 import type { Dayjs } from "dayjs";
 import type { ReactNode } from "react";
 
@@ -55,10 +56,11 @@ export interface Params {
   [key: string]: any;
 }
 
-export interface UseBasicTableFilterHelperOptions {
-  initialParams?: Params;
-  debounceDelay?: number;
-  sortKey?: string;
+export interface UseDataGridOptions {
+  page?: number;
+  pageSize?: number;
+  initialSort?: GridSortModel;
+  initialFilter?: GridFilterModel;
 }
 
 export interface CommonColumn<T = any> {
@@ -73,24 +75,26 @@ export interface CommonColumn<T = any> {
 }
 
 export interface CommonDataGridProps<T = any> {
-  columns: CommonColumn<T>[];
+  columns: GridColDef[];
   rows: T[];
+  rowCount: number;
   loading?: boolean;
 
   // Pagination
-  page: number;
-  limit: number;
-  total: number;
+  paginationModel: GridPaginationModel;
+  onPaginationModelChange: (model: GridPaginationModel) => void;
 
   // Sorting
-  sortBy?: string | null;
-  onSortChange?: (field: string | null) => void;
+  sortModel: GridSortModel;
+  onSortModelChange: (model: GridSortModel) => void;
 
-  // Pagination callback
-  onPageChange?: (page: number, limit: number) => void;
+  // Filter
+  filterModel: GridFilterModel;
+  onFilterModelChange: (model: GridFilterModel) => void;
 
-  height?: number | string;
+  pageSizeOptions?: number[];
+  defaultHidden?: string[];
+  BoxClass?: string;
 }
-
 
 // ************ Table End ***********

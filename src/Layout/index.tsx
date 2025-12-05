@@ -1,10 +1,10 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
+import { useAppSelector } from "../Store/hooks";
+import { setIsMobile } from "../Store/Slices/LayoutSlice";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import { useAppSelector } from "../Store/hooks";
-import { useDispatch } from "react-redux";
-import { setIsMobile } from "../Store/Slices/LayoutSlice";
-import { useEffect } from "react";
 
 const Layout = () => {
   const { isExpanded, isMobileOpen, isHovered } = useAppSelector((state) => state.layout);
@@ -25,7 +25,7 @@ const Layout = () => {
       <div>
         <Sidebar />
       </div>
-      <div className={`flex-1 transition-all duration-300 ease-in-out ${isExpanded || isHovered ? "lg:ml-[290px]" : "lg:ml-[90px]"} ${isMobileOpen ? "ml-0" : ""}`}>
+      <div className={`flex-1 transition-all duration-300 ease-in-out pt-16 lg:pt-20 ${isExpanded || isHovered ? "lg:ml-[290px]" : "lg:ml-[90px]"} ${isMobileOpen ? "ml-0" : ""}`}>
         <Header />
         <div className="p-4 mx-auto md:p-6">
           <Outlet />

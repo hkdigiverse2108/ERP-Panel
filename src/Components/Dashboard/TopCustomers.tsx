@@ -61,12 +61,17 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { CommonDateRangeSelector } from "../../Attribute";
 import { CommonCard, CommonDataGrid } from "../Common";
-import type { GridPaginationModel, GridSortModel, GridFilterModel } from "@mui/x-data-grid";
+import { useDataGrid } from "../../Utils/Hooks";
 
 const TopCustomers = () => {
   const [range, setRange] = useState({
     start: dayjs(),
     end: dayjs(),
+  });
+
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({
+    page: 0,
+    pageSize: 10,
   });
 
   // -----------------------------
@@ -94,26 +99,6 @@ const TopCustomers = () => {
     { id: 19, name: "Bhavesh", email: "bhavesh@gmail.com", status: "Active" },
     { id: 20, name: "Anita", email: "anita@gmail.com", status: "Inactive" },
   ];
-
-  // -----------------------------
-  // State for dynamic grid
-  // -----------------------------
-  const [rowsState, setRowsState] = useState({
-    rows,
-    rowCount: rows.length,
-  });
-
-  const [loading, setLoading] = useState(false);
-
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
-    page: 0,
-    pageSize: 10,
-  });
-
-  const [sortModel, setSortModel] = useState<GridSortModel>([]);
-  const [filterModel, setFilterModel] = useState<GridFilterModel>({
-    items: [],
-  });
 
   // -----------------------------
   // Columns
@@ -160,7 +145,7 @@ const TopCustomers = () => {
 
   return (
     <CommonCard title="Top 20 Customers" topContent={topContent} grid={{ xs: 12, md: 6 }}>
-      <CommonDataGrid BoxClass="h-100" columns={columns} rows={rowsState.rows} rowCount={rowsState.rowCount} loading={loading} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25]} defaultHidden={["name"]} />
+      <CommonDataGrid BoxClass="h-100 p-2" columns={columns} rows={rows} rowCount={rows.length} loading={false} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25]} defaultHidden={["name"]} />
     </CommonCard>
   );
 };

@@ -82,7 +82,7 @@ const ImportantAnnouncement = () => {
       <Box className="flex flex-col max-h-[385px] overflow-y-auto custom-scrollbar">
         {notifications.map((item, index) => (
           <Box key={index}>
-            <div className="flex items-center gap-3 border-b border-gray-100 p-3 px-4 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/10">
+            <div className="flex items-center gap-3 border-b border-gray-100 p-3 px-4 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-gray-800">
               <span className="w-12 h-12 rounded-full overflow-hidden">
                 <img src={`${ImagePath}user/${item.img}.jpg`} className="w-full h-full object-cover rounded-full" alt={item.name} />
               </span>

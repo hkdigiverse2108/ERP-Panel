@@ -1,30 +1,8 @@
-import { DataGrid, type GridColDef, type GridFilterModel, type GridPaginationModel, type GridSortModel } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { useMemo } from "react";
+import type { CommonDataGridProps } from "../../Types";
 
-export interface CommonDataGridProps<T = any> {
-  columns: GridColDef[];
-  rows: T[];
-  rowCount: number;
-  loading?: boolean;
-
-  // Pagination
-  paginationModel: GridPaginationModel;
-  onPaginationModelChange: (model: GridPaginationModel) => void;
-
-  // Sorting
-  sortModel: GridSortModel;
-  onSortModelChange: (model: GridSortModel) => void;
-
-  // Filter
-  filterModel: GridFilterModel;
-  onFilterModelChange: (model: GridFilterModel) => void;
-
-  pageSizeOptions?: number[];
-  defaultHidden?: string[];
-  BoxClass?:string
-}
-
-const CommonDataGrid = <T,>({ columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, pageSizeOptions = [10, 25, 50], defaultHidden = [] ,BoxClass}: CommonDataGridProps<T>) => {
+const CommonDataGrid = <T,>({ columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, pageSizeOptions = [10, 25, 50], defaultHidden = [], BoxClass }: CommonDataGridProps<T>) => {
   const visibilityModel = useMemo(() => {
     const model: Record<string, boolean> = {};
 
@@ -37,8 +15,6 @@ const CommonDataGrid = <T,>({ columns, rows, rowCount, loading = false, paginati
   return (
     <div className={BoxClass}>
       <DataGrid
-        // sx={{ border: 0 }}
-        sx={{m:1}}
         rows={rows}
         rowCount={rowCount}
         loading={loading}

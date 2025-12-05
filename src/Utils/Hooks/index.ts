@@ -1,6 +1,6 @@
 import useClickOutside from "./useClickOutside";
 import useWindowWidth from "./useWindowWidth";
-import useTableFilter from "./useTableFilter";
+import useDataGrid from "./useDataGrid";
 import useDebounce from "./useDebounce";
 
-export { useClickOutside, useWindowWidth, useTableFilter, useDebounce };
+export { useClickOutside, useWindowWidth, useDataGrid, useDebounce };

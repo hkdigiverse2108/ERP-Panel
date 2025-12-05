@@ -21,6 +21,7 @@
 /* ************ Table Start *********** */
 /* .css-j2rwcw-MuiDataGrid-root .MuiDataGrid-columnHeader, */
 .MuiDataGrid-toolbar,
+.MuiDataGrid-filler,
 .MuiDataGrid-scrollbarFiller,
 .MuiDataGrid-columnHeader {
   @apply bg-gray-50! dark:bg-gray-900! dark:border-gray-700!;
@@ -32,7 +33,7 @@
 }
 
 .dark .MuiDataGrid-row:hover{
-  @apply dark:bg-gray-700!;
+  @apply dark:bg-gray-800!;
 }
 
 .dark .MuiDataGrid-root {

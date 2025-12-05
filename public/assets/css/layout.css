@@ -74,8 +74,22 @@
   }
 }
 
+.dark .MuiDataGrid-scrollbar::-webkit-scrollbar-thumb,
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #344054;
+  @apply bg-gray-700;
+}
+
+.MuiDataGrid-scrollbar::-webkit-scrollbar {
+  @apply size-1.5;
+}
+
+.MuiDataGrid-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-gray-200 rounded-full dark:bg-gray-700;
+}
+
+.MuiDataGrid-scrollbar::-webkit-scrollbar-track {
+  @apply rounded-full;
 }
 
 /* ************ Sidebar End *********** */
+
