@@ -1,13 +1,9 @@
-import { Box, Grid } from "@mui/material";
-import { ImportantAnnouncement, TotalSummary } from "../../Components/Dashboard";
-import SalesAndPurchase from "../../Components/Dashboard/SalesAndPurchase";
-import Transaction from "../../Components/Dashboard/Transaction";
-import TopCustomers from "../../Components/Dashboard/TopCustomers";
-import CustomersReport from "../../Components/Dashboard/CustomersReport";
+import { Grid } from "@mui/material";
+import { CustomersReport, ImportantAnnouncement, SalesAndPurchase, TopCustomers, TotalSummary, Transaction } from "../../Components/Dashboard";
 
 const Dashboard = () => {
   return (
-    <Box>
+    <div className="m-4 md:m-6">
       <Grid container spacing={2}>
         <TotalSummary />
         <ImportantAnnouncement />
@@ -16,7 +12,7 @@ const Dashboard = () => {
         <TopCustomers />
         <CustomersReport />
       </Grid>
-    </Box>
+    </div>
   );
 };
 

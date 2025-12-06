@@ -98,3 +98,39 @@ export interface CommonDataGridProps<T = any> {
 }
 
 // ************ Table End ***********
+
+// ************ Input Start ***********
+
+export interface CommonTextFieldProps {
+  label?: string;
+  name: string;
+  type?: string;
+  placeholder?: string;
+  required?: boolean;
+  autoComplete?: string;
+  isFormLabel?: boolean;
+  grid?: object;
+  validating?: boolean;
+  clearable?: boolean;
+  startIcon?: ReactNode;
+  endIcon?: ReactNode;
+  showPasswordToggle?: boolean;
+  [key: string]: any;
+}
+
+// ************ Input End ***********
+
+// ************ Breadcrumb Start ***********
+
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+export interface BreadcrumbHeaderProps {
+  title: string;
+  breadcrumbs?: BreadcrumbItem[];
+  maxItems?: number;
+}
+
+// ************ Breadcrumb Start ***********

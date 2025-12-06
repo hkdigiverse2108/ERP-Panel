@@ -19,7 +19,7 @@
 /* ************ Date Range Calendar End *********** */
 
 /* ************ Table Start *********** */
-/* .css-j2rwcw-MuiDataGrid-root .MuiDataGrid-columnHeader, */
+
 .MuiDataGrid-toolbar,
 .MuiDataGrid-filler,
 .MuiDataGrid-scrollbarFiller,
@@ -60,3 +60,10 @@
 }
 
 /* ************ Table End *********** */
+
+/* ************ Input Start *********** */
+.MuiFormLabel-asterisk{
+  @apply text-red-500!;
+}
+
+/* ************ Input End *********** */

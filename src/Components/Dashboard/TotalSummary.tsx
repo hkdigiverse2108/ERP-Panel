@@ -66,7 +66,7 @@ const TotalSummary = () => {
       <Grid container spacing={1.5} p={1.5}>
         {stats.map((item, index) => (
           <Grid size={{ xs: 6, sm: 4, lg: 3, xl: 2 }} key={index}>
-            <Paper className={item.color} elevation={0} sx={{ p: 1.5, borderRadius: 2, textAlign: "center", height: "100%" }}>
+            <Paper className={item.color} elevation={0} sx={{ p: 1.5, borderRadius: 2, height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
               <Typography variant="h6">{item.value}</Typography>
               <Typography variant="body2" color="text.secondary">
                 {item.label}

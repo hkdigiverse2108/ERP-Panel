@@ -1,9 +1,9 @@
-import { ROUTES } from "./Routes";
-import { HTTP_STATUS } from "./HttpStatus";
-import { URL_KEYS } from "./Url";
-import { STORAGE_KEYS } from "./StorageKeys";
+export * from "./Routes";
+export * from "./HttpStatus";
+export * from "./Url";
+export * from "./StorageKeys";
+export * from "./PageTitle";
 
 export const Href: string = "#Javascript";
 export const ImagePath: string = "/assets/images/";
 
-export { ROUTES, HTTP_STATUS, URL_KEYS, STORAGE_KEYS };

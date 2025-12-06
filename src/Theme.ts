@@ -37,4 +37,17 @@ export const getTheme = (mode: "light" | "dark") =>
     typography: {
       fontFamily: ["Outfit", "sans-serif"].join(","),
     },
+    components: {
+  MuiOutlinedInput: {
+    styleOverrides: {
+      root: {
+        height: 42,
+      },
+      input: {
+        height: "25px",
+      },
+    },
+  },
+}
+
   });

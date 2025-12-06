@@ -7,7 +7,7 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 
 const Layout = () => {
-  const { isExpanded, isMobileOpen, isHovered } = useAppSelector((state) => state.layout);
+  const { isExpanded, isMobileOpen, isHovered, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -25,9 +25,9 @@ const Layout = () => {
       <div>
         <Sidebar />
       </div>
-      <div className={`flex-1 transition-all duration-300 ease-in-out pt-16 lg:pt-20 ${isExpanded || isHovered ? "lg:ml-[290px]" : "lg:ml-[90px]"} ${isMobileOpen ? "ml-0" : ""}`}>
+      <div className={`flex-1 transition-all duration-300 ease-linear ${isApplicationMenuOpen ? "pt-30 xsm:pt-35" : "pt-16"} lg:pt-[78px] ${isExpanded || isHovered ? "lg:ml-[290px]" : "lg:ml-[90px]"} ${isMobileOpen ? "ml-0" : ""}`}>
         <Header />
-        <div className="p-4 mx-auto md:p-6">
+        <div className="mx-auto">
           <Outlet />
         </div>
       </div>
