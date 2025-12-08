@@ -19,7 +19,6 @@ export const getTheme = (mode: "light" | "dark") =>
               dark: "#344054",
               contrastText: "#fff",
             },
-            
     },
     breakpoints: {
       values: {
@@ -38,16 +37,17 @@ export const getTheme = (mode: "light" | "dark") =>
       fontFamily: ["Outfit", "sans-serif"].join(","),
     },
     components: {
-  MuiOutlinedInput: {
-    styleOverrides: {
-      root: {
-        height: 42,
-      },
-      input: {
-        height: "25px",
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            height: 42,
+            borderRadius: "7px",
+          },
+          input: {
+            height: "25px",
+            borderRadius: "7px",
+          },
+        },
       },
     },
-  },
-}
-
   });

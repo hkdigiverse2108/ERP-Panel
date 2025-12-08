@@ -66,4 +66,8 @@
   @apply text-red-500!;
 }
 
+.MuiButtonBase-root.MuiButton-root{
+  @apply rounded-md!;
+}
+
 /* ************ Input End *********** */

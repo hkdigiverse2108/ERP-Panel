@@ -1,7 +1,8 @@
-import type { Breakpoint, DrawerProps, PaperProps as MuiPaperProps } from "@mui/material";
+import type { Breakpoint, ButtonProps, DrawerProps, PaperProps as MuiPaperProps } from "@mui/material";
 import type { GridColDef, GridFilterModel, GridPaginationModel, GridSortModel } from "@mui/x-data-grid";
 import type { Dayjs } from "dayjs";
 import type { ReactNode } from "react";
+import * as Yup from "yup";
 
 // ************ Drawer Start ***********
 
@@ -120,6 +121,20 @@ export interface CommonTextFieldProps {
 
 // ************ Input End ***********
 
+// ************ Button Start ***********
+
+export interface CommonButtonProps extends ButtonProps {
+  loading?: boolean;
+  loadingPosition?: "start" | "end";
+  disabled?: boolean;
+  title?: string;
+  grid?: object;
+  sx?: object;
+  children?: ReactNode;
+}
+
+// ************ Button End ***********
+
 // ************ Breadcrumb Start ***********
 
 export interface BreadcrumbItem {
@@ -134,3 +149,22 @@ export interface BreadcrumbHeaderProps {
 }
 
 // ************ Breadcrumb Start ***********
+
+// ************ Validation Yup schema Start ***********
+
+export type FieldSchemaArgs<K extends keyof FieldTypeMap> = [type: K, options?: FieldOptions<FieldTypeMap[K]>] | [type: K, label: string, options?: FieldOptions<FieldTypeMap[K]>];;
+
+export type FieldTypeMap = {
+  string: Yup.StringSchema<string | null | undefined>;
+  number: Yup.NumberSchema<number | null | undefined>;
+  boolean: Yup.BooleanSchema<boolean | null | undefined>;
+  array: Yup.ArraySchema<any[], Yup.AnyObject>;
+};
+
+export interface FieldOptions<T> {
+  required?: boolean;
+  extraRules?: (schema: T) => T;
+  minItems?: number;
+}
+
+// ************ Validation Yup schema End ***********
