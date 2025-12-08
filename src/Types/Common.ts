@@ -152,7 +152,7 @@ export interface BreadcrumbHeaderProps {
 
 // ************ Validation Yup schema Start ***********
 
-export type FieldSchemaArgs<K extends keyof FieldTypeMap> = [type: K, options?: FieldOptions<FieldTypeMap[K]>] | [type: K, label: string, options?: FieldOptions<FieldTypeMap[K]>];;
+export type FieldSchemaArgs<K extends keyof FieldTypeMap> = [type: K, options?: FieldOptions<FieldTypeMap[K]>] | [type: K, label: string, options?: FieldOptions<FieldTypeMap[K]>];
 
 export type FieldTypeMap = {
   string: Yup.StringSchema<string | null | undefined>;
@@ -168,3 +168,9 @@ export interface FieldOptions<T> {
 }
 
 // ************ Validation Yup schema End ***********
+
+// ************ Notification Start ***********
+
+export type MuiNotificationType = "success" | "info" | "warning" | "error";
+
+// ************ Notification End ***********

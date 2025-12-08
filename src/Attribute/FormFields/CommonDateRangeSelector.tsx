@@ -3,7 +3,7 @@ import { DateRangeCalendar, type DateRange } from "@mui/x-date-pickers-pro";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState, type FC } from "react";
 import type { CommonDateRangeSelectorProps } from "../../Types";
-import CommonButton from "./CommonButton";
+import {CommonButton} from "./CommonButton";
 
 const ranges = ["Today", "Yesterday", "This Week", "This Month", "Last 15 Days", "Last 30 Days", "This Quarter", "Last Quarter", "This Financial Year", "Last Financial Year"] as const;
 
@@ -53,7 +53,7 @@ const getRange = (label: RangeLabel): DateRange<Dayjs> => {
   }
 };
 
-const CommonDateRangeSelector: FC<CommonDateRangeSelectorProps> = ({ value, onChange, BoxClassName, active }) => {
+export const CommonDateRangeSelector: FC<CommonDateRangeSelectorProps> = ({ value, onChange, BoxClassName, active }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedRange, setSelectedRange] = useState<RangeLabel>((active as RangeLabel) ?? "Today");
   const [tempRange, setTempRange] = useState<DateRange<Dayjs>>([value.start, value.end]);
@@ -129,5 +129,3 @@ useEffect(() => {
     </Box>
   );
 };
-
-export default CommonDateRangeSelector;

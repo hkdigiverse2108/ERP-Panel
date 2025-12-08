@@ -2,7 +2,7 @@ import type { GridFilterModel, GridPaginationModel, GridSortModel } from "@mui/x
 import { useCallback, useState } from "react";
 import type { UseDataGridOptions } from "../../Types";
 
-const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initialFilter = { items: [] } }: UseDataGridOptions = {}) => {
+export const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initialFilter = { items: [] } }: UseDataGridOptions = {}) => {
   // Pagination
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page,
@@ -35,5 +35,3 @@ const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initialFilter 
     resetModels,
   };
 };
-
-export default useDataGrid;

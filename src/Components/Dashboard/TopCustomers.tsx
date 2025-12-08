@@ -145,7 +145,7 @@ const TopCustomers = () => {
 
   return (
     <CommonCard title="Top 20 Customers" topContent={topContent} grid={{ xs: 12, md: 6 }}>
-      <CommonDataGrid BoxClass="h-100 p-2" columns={columns} rows={rows} rowCount={[rows.length]} loading={false} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25]} defaultHidden={["name"]} />
+      <CommonDataGrid BoxClass="h-100 p-2" columns={columns} rows={rows} rowCount={rows.length} loading={false} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25]} defaultHidden={["name"]} />
     </CommonCard>
   );
 };

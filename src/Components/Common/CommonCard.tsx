@@ -10,7 +10,7 @@ interface CommonCardProps {
   topContent?: ReactNode;
 }
 
-const CommonCard: FC<CommonCardProps> = ({ title, children, grid = { xs: 12 }, paperProps, hideDivider = false, topContent }) => {
+ const CommonCard: FC<CommonCardProps> = ({ title, children, grid = { xs: 12 }, paperProps, hideDivider = false, topContent }) => {
   return (
     <Grid size={grid}>
       <Paper elevation={0} className="rounded-lg! border! border-gray-200! bg-white! dark:border-gray-800! dark:bg-gray-dark!" {...paperProps}>

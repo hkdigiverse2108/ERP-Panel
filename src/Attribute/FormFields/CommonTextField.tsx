@@ -10,7 +10,7 @@ import { useField, type FieldHookConfig } from "formik";
 import { useCallback, useMemo, useState, type FC, type ReactNode } from "react";
 import type { CommonTextFieldProps } from "../../Types";
 
-const CommonTextField: FC<CommonTextFieldProps> = ({ label, name, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, grid, ...props }) => {
+export const CommonTextField: FC<CommonTextFieldProps> = ({ label, name, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, grid, ...props }) => {
   const fieldConfig: FieldHookConfig<string> = { name };
   const [field, meta, helpers] = useField(fieldConfig);
   const [isFocused, setFocused] = useState(false);
@@ -118,5 +118,3 @@ const CommonTextField: FC<CommonTextFieldProps> = ({ label, name, type = "text",
     Input
   );
 };
-
-export default CommonTextField;

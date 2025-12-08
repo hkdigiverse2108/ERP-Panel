@@ -2,7 +2,7 @@ import { Button, Grid } from "@mui/material";
 import { type FC } from "react";
 import type { CommonButtonProps } from "../../Types";
 
-const CommonButton: FC<CommonButtonProps> = ({ children, loading = false, loadingPosition = "start", disabled, sx = {}, title, grid, ...props }) => {
+export const CommonButton: FC<CommonButtonProps> = ({ children, loading = false, loadingPosition = "start", disabled, sx = {}, title, grid, ...props }) => {
   const button = (
     <Button
       {...props}
@@ -23,5 +23,3 @@ const CommonButton: FC<CommonButtonProps> = ({ children, loading = false, loadin
 
   return grid ? <Grid size={grid}>{button}</Grid> : button;
 };
-
-export default CommonButton;

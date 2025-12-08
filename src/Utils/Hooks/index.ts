@@ -1,6 +1,4 @@
-import useClickOutside from "./useClickOutside";
-import useWindowWidth from "./useWindowWidth";
-import useDataGrid from "./useDataGrid";
-import useDebounce from "./useDebounce";
-
-export { useClickOutside, useWindowWidth, useDataGrid, useDebounce };
+export * from "./useClickOutside";
+export * from "./useWindowWidth";
+export * from "./useDataGrid";
+export * from "./useDebounce";

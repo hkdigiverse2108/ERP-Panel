@@ -3,9 +3,11 @@ import { Form, Formik } from "formik";
 import { CommonButton, CommonTextField } from "../../Attribute";
 import { ImagePath } from "../../Constants";
 import ThemeToggler from "../../Layout/ThemeToggler";
+import { LoginSchema } from "../../Utils/ValidationSchemas";
 
 const SignInForm = () => {
   return (
+    
     <div className="flex flex-col lg:flex-row w-full h-screen relative">
       {/* LEFT PANEL (form) */}
       <div className="flex flex-col flex-1 w-full h-full px-5 pt-10 lg:px-10 ">
@@ -15,7 +17,7 @@ const SignInForm = () => {
               <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">Sign In</h1>
               <p className="text-sm text-gray-500 dark:text-gray-400">Enter your email and password to sign in!</p>
             </div>
-            <Formik initialValues={{ email: "", password: "" }} onSubmit={(values) => console.log(values)}>
+            <Formik initialValues={{ email: "", password: "" }} validationSchema={LoginSchema} onSubmit={(values) => console.log(values)}>
               <Form>
                 <Grid container spacing={2}>
                   <CommonTextField name="email" label="Email ID" placeholder="Enter your email" required isFormLabel grid={{ xs: 12 }} />

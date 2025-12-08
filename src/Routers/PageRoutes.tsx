@@ -2,6 +2,7 @@ import { ROUTES } from "../Constants";
 import Dashboard from "../Pages/Dashboard";
 import GeneralSetting from "../Pages/Settings/General";
 import SignInForm from "../Pages/Auth/SignInForm";
+import { Navigate } from "react-router-dom";
 
 export const PageRoutes = [
   // { path: ROUTES.HOME, element: <Dashboard /> },
@@ -9,4 +10,7 @@ export const PageRoutes = [
   { path: ROUTES.SETTINGS.GENERAL, element: <GeneralSetting /> },
 ];
 
-export const AuthRoutes = [{ path: ROUTES.AUTH.LOGIN, element: <SignInForm/> }];
+export const AuthRoutes = [
+  { path: ROUTES.HOME, element: <Navigate to={ROUTES.AUTH.LOGIN} replace /> },
+  { path: ROUTES.AUTH.LOGIN, element: <SignInForm /> },
+];
