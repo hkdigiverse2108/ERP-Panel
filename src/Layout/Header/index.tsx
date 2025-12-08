@@ -100,7 +100,7 @@ const Header = () => {
             </form>
           </div> */}
         </div>
-        <div className={`${isApplicationMenuOpen ? "flex" : "hidden"} items-center justify-between max-lg:w-full gap-4 max-xsm:p-2 px-5 py-4 lg:flex shadow-theme-md lg:justify-end lg:px-0 lg:shadow-none`}>
+        <div className={`${isApplicationMenuOpen ? "flex" : "hidden"} items-center justify-between max-lg:w-full gap-4 max-xsm:p-2 px-5 py-4 lg:flex max-lg:shadow-theme-md max-lg:dark:shadow-theme-dark-md lg:justify-end lg:px-0`}>
           <div className="flex max-xsm:justify-between items-center gap-1 xsm:gap-3 w-full">
             <SupportDesk />
             <SearchList />
