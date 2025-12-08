@@ -4,10 +4,10 @@
 import SettingsIcon from '@mui/icons-material/Settings';
 // import TableChartRoundedIcon from "@mui/icons-material/TableChartRounded";
 import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';
-import { ROUTES } from "../Constants";
+import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
 export const NavItems: NavItem[] = [
-  { icon: <GridViewRoundedIcon />, name: "Dashboard", path: ROUTES.DASHBOARD },
+  { icon: <GridViewRoundedIcon />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
   // { icon: <DescriptionRoundedIcon />, name: "Contact", path: ROUTES.CONTACT.BASE },
   // { icon: <DashboardRoundedIcon />, name: "Employee", path: ROUTES.EMPLOYEE.BASE },
   // { icon: <DashboardRoundedIcon />, name: "Inventory", path: ROUTES.EMPLOYEE.BASE },
@@ -32,10 +32,10 @@ export const NavItems: NavItem[] = [
   //   subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
   // },
   {
-    name: "Settings",
+    name: PAGE_TITLE.SETTINGS.BASE,
     icon: <SettingsIcon  />,
     subItems: [
-      { name: "General", path: ROUTES.SETTINGS.GENERAL, pro: false },
+      { name: PAGE_TITLE.SETTINGS.GENERAL, path: ROUTES.SETTINGS.GENERAL, pro: false },
     ],
   },
 ];
