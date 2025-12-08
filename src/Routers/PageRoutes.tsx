@@ -1,6 +1,7 @@
 import { ROUTES } from "../Constants";
 import Dashboard from "../Pages/Dashboard";
 import GeneralSetting from "../Pages/Settings/General";
+import SignInForm from "../Pages/auth/Signinform";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -8,4 +9,4 @@ export const PageRoutes = [
   { path: ROUTES.SETTINGS.GENERAL, element: <GeneralSetting /> },
 ];
 
-// export const AuthRoutes = [{ path: ROUTES.HOME, element: <Navigate to={ROUTES.AUTH.LOGIN} replace /> }];
+export const AuthRoutes = [{ path: ROUTES.AUTH.LOGIN, element: <SignInForm/> }];

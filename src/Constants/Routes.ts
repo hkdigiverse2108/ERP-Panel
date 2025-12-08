@@ -1,6 +1,9 @@
 export const ROUTES = {
   HOME: "/",
   DASHBOARD: "/dashboard",
+  AUTH: {
+    LOGIN: "/auth/login",
+  },
   CONTACT: {
     BASE: "/contact",
   },
@@ -27,11 +30,11 @@ export const ROUTES = {
     STOCK_VERIFICATION: {
       BASE: "/stock-verification",
     },
-    MATERIAL_CREATION:{
+    MATERIAL_CREATION: {
       BASE: "/material-creation",
-    }
+    },
   },
-  SETTINGS:{
+  SETTINGS: {
     GENERAL: "/setting/general",
-  }
+  },
 } as const;
