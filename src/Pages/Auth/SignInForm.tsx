@@ -1,13 +1,30 @@
 import { Grid } from "@mui/material";
 import { Form, Formik } from "formik";
 import { CommonButton, CommonTextField } from "../../Attribute";
-import { ImagePath } from "../../Constants";
+import { ImagePath, ROUTES } from "../../Constants";
 import ThemeToggler from "../../Layout/ThemeToggler";
-import { LoginSchema } from "../../Utils/ValidationSchemas";
+import { SigninSchema } from "../../Utils/ValidationSchemas";
+import { Mutations } from "../../Api";
+import type { LoginPayload } from "../../Types";
+import { useAppDispatch } from "../../Store/hooks";
+import { useNavigate } from "react-router-dom";
+import { setSignin } from "../../Store/Slices/AuthSlice";
 
 const SignInForm = () => {
+  const { mutate: Signin, isPending: isSigninPending } = Mutations.useSignin();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (values: LoginPayload) => {
+    Signin({...values,email:values.email.toLowerCase()}, {
+      onSuccess: (response) => {
+        dispatch(setSignin(response?.data));
+        navigate(ROUTES.DASHBOARD);
+      },
+    });
+  };
+
   return (
-    
     <div className="flex flex-col lg:flex-row w-full h-screen relative">
       {/* LEFT PANEL (form) */}
       <div className="flex flex-col flex-1 w-full h-full px-5 pt-10 lg:px-10 ">
@@ -17,12 +34,12 @@ const SignInForm = () => {
               <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">Sign In</h1>
               <p className="text-sm text-gray-500 dark:text-gray-400">Enter your email and password to sign in!</p>
             </div>
-            <Formik initialValues={{ email: "", password: "" }} validationSchema={LoginSchema} onSubmit={(values) => console.log(values)}>
+            <Formik initialValues={{ email: "", password: "" }} validationSchema={SigninSchema} onSubmit={handleSubmit}>
               <Form>
                 <Grid container spacing={2}>
                   <CommonTextField name="email" label="Email ID" placeholder="Enter your email" required isFormLabel grid={{ xs: 12 }} />
                   <CommonTextField name="password" label="password" type="password" placeholder="Enter your password" required isFormLabel showPasswordToggle grid={{ xs: 12 }} />
-                  <CommonButton type="submit" variant="contained" title="Sign In" size="medium" fullWidth grid={{ xs: 12 }} />
+                  <CommonButton loading={isSigninPending} type="submit" variant="contained" title="Sign In" size="medium" fullWidth grid={{ xs: 12 }} />
                 </Grid>
               </Form>
             </Formik>

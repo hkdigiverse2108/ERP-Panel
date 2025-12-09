@@ -49,5 +49,23 @@ export const getTheme = (mode: "light" | "dark") =>
           },
         },
       },
+      MuiDataGrid: {
+        styleOverrides: {
+          root: {
+            borderRadius: 8,
+            border: "none",
+          },
+        },
+      },
+      MuiTab: {
+        styleOverrides: {
+          root: {
+            minHeight: 48,
+            height: 48,
+            justifyContent: "start",
+            textTransform: "none",
+          },
+        },
+      },
     },
   });

@@ -1,10 +1,16 @@
 import { STORAGE_KEYS } from "../Constants";
 
+export const Stringify = (value: object): string => {
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return "";
+  }
+};
 
-export const getStorage = () => localStorage;
+export const Storage = localStorage;
 
 export const getToken = () => {
-  const storage = getStorage();
-  const token = storage.getItem(STORAGE_KEYS.TOKEN);
+  const token = Storage.getItem(STORAGE_KEYS.TOKEN);
   return token;
 };

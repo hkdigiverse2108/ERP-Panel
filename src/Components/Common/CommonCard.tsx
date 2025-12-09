@@ -14,10 +14,10 @@ interface CommonCardProps {
   return (
     <Grid size={grid}>
       <Paper elevation={0} className="rounded-lg! border! border-gray-200! bg-white! dark:border-gray-800! dark:bg-gray-dark!" {...paperProps}>
-        <Grid container spacing={1.5} className="flex! max-xsm:flex-col! items-center justify-between p-2">
+        <Grid container spacing={1.5} className="flex! max-xsm:flex-col! items-center justify-between p-3">
           {title && (
             <Grid size="auto">
-              <Typography variant="subtitle1" fontWeight={600} px={1} py={0.7} className="text-gray-700! dark:text-gray-200!">
+              <Typography variant="subtitle1" fontWeight={600} px={.5} py={0.7} className="text-gray-700! dark:text-gray-200!">
                 {title}
               </Typography>
             </Grid>
@@ -25,7 +25,7 @@ interface CommonCardProps {
           {topContent}
         </Grid>
 
-        {!hideDivider && <Divider className="border-gray-300! dark:border-gray-700!" />}
+        {!hideDivider && <Divider className="border-gray-200! dark:border-gray-700!" />}
 
         {children}
       </Paper>

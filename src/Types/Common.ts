@@ -174,3 +174,33 @@ export interface FieldOptions<T> {
 export type MuiNotificationType = "success" | "info" | "warning" | "error";
 
 // ************ Notification End ***********
+
+// ************ Common Api Data Type Start ***********
+
+export interface PageState {
+  page: number;
+  limit: number;
+  page_limit: number;
+}
+
+export interface PageStatus {
+  totalData: number;
+  state: PageState;
+}
+
+export interface MessageStatus {
+  status: number;
+  message: string;
+  error: Record<string, unknown>;
+}
+
+export interface CommonDataType {
+  isDeleted: boolean;
+  isActive: boolean;
+  createdBy: null;
+  updatedBy: null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ************ Common Api Data Type End ***********

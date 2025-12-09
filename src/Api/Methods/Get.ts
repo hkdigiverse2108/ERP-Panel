@@ -1,13 +1,14 @@
 import axios, { AxiosError, type AxiosRequestConfig } from "axios";
+import { ErrorMessage, ShowNotification } from "../../Attribute";
 import { HTTP_STATUS, ROUTES } from "../../Constants";
 import type { Params } from "../../Types";
 import { getToken } from "../../Utils";
-import { ErrorMessage, ShowNotification } from "../../Attribute";
 
 let isRedirecting = false;
 
 export async function Get<T>(url: string, params?: Params, headers?: Record<string, string>): Promise<T> {
   const authToken = getToken();
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const config: AxiosRequestConfig = {
     method: "GET",
@@ -22,7 +23,7 @@ export async function Get<T>(url: string, params?: Params, headers?: Record<stri
   };
 
   try {
-    const response = await axios.get<T>(url, config);
+    const response = await axios.get<T>(BASE_URL + url, config);
     return response.data;
   } catch (error) {
     const axiosError = error as AxiosError<any>;

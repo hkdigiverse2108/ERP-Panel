@@ -1,10 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
-// import PrivateRoutes from "./PrivateRoutes";
-// import PublicRoutes from "./PublicRoutes";
-
 import Layout from "../Layout";
+import NotFound from "../Pages/NotFound";
 import { AuthRoutes, PageRoutes } from "./PageRoutes";
-// import PageNotFound from "../Components/Common/PageNotFound";
 
 export const Router = createBrowserRouter([
   {
@@ -20,5 +17,5 @@ export const Router = createBrowserRouter([
     // element: <PublicRoutes />,
     children: AuthRoutes,
   },
-  // { path: "*", element: <PageNotFound /> },
+  { path: "*", element: <NotFound /> },
 ]);

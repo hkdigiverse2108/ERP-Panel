@@ -13,4 +13,14 @@ declare module "@mui/material/styles" {
     xxl: true;
     xxxl: true;
   }
+  interface Components {
+    MuiDataGrid?: {
+      styleOverrides?: {
+        root?: {
+          borderRadius: number;
+          border: string;
+        };
+      };
+    };
+  }
 }

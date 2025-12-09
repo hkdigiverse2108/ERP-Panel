@@ -6,10 +6,11 @@ import { ShowNotification } from "../../Attribute";
 export async function Put<TInput, TResponse>(url: string, data?: TInput, isToken: boolean = true): Promise<TResponse> {
   const authToken = getToken();
   const isFormData = data instanceof FormData;
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const config: AxiosRequestConfig = {
     method: "PUT",
-    url,
+    url: BASE_URL + url,
     headers: {
       ...(isToken ? { Authorization: `Bearer ${authToken}` } : {}),
       ...(isFormData ? {} : { "Content-Type": "application/json" }),
