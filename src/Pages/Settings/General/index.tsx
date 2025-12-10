@@ -6,7 +6,6 @@ import { CommonBreadcrumbs } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { GeneralSettingBreadcrumbs } from "../../../Data";
 import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 import { useState, type SyntheticEvent } from "react";
 import PersonIcon from "@mui/icons-material/Person";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
