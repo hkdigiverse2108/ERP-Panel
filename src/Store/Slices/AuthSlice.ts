@@ -17,9 +17,9 @@ const authSlice = createSlice({
     setSignin: (state, action) => {
       state.token = action.payload.token;
       state.isAuthenticated = true;
-      state.user = action.payload.user;
+      state.user = action.payload;
       Storage.setItem(STORAGE_KEYS.TOKEN, action.payload.token);
-      Storage.setItem(STORAGE_KEYS.USER, Stringify(action.payload.user));
+      Storage.setItem(STORAGE_KEYS.USER, Stringify(action.payload));
     },
     setSignOut(state) {
       state.token = null;

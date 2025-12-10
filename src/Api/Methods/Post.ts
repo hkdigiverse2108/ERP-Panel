@@ -22,7 +22,7 @@ export async function Post<TInput, TResponse>(url: string, data?: TInput, isToke
     const response = await axios(config);
     const resData = response.data;
 
-    if (response.status === HTTP_STATUS.CREATED) {
+    if (response.status === HTTP_STATUS.CREATED || response.status === HTTP_STATUS.OK) {
       ShowNotification(resData.message, "success");
       return resData;
     } else {

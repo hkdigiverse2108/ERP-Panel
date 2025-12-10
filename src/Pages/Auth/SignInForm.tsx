@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import { Form, Formik } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { CommonButton, CommonTextField } from "../../Attribute";
 import { ImagePath, ROUTES } from "../../Constants";
 import ThemeToggler from "../../Layout/ThemeToggler";
@@ -15,11 +15,12 @@ const SignInForm = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = async (values: LoginPayload) => {
+  const handleSubmit = async (values: LoginPayload,{ resetForm }: FormikHelpers<LoginPayload>) => {
     Signin({...values,email:values.email.toLowerCase()}, {
       onSuccess: (response) => {
         dispatch(setSignin(response?.data));
         navigate(ROUTES.DASHBOARD);
+        resetForm()
       },
     });
   };
