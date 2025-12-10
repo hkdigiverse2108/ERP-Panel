@@ -39,14 +39,14 @@ export const getTheme = (mode: "light" | "dark") =>
     components: {
       MuiOutlinedInput: {
         styleOverrides: {
-          root: {
-            height: 42,
-            borderRadius: "7px",
-          },
-          input: {
-            height: "25px",
-            borderRadius: "7px",
-          },
+          // root: {
+          //   height: 42,
+          //   borderRadius: "7px",
+          // },
+          // input: {
+          //   height: "25px",
+          //   borderRadius: "7px",
+          // },
         },
       },
       MuiDataGrid: {
