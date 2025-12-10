@@ -25,7 +25,7 @@ interface CommonCardProps {
           {topContent}
         </Grid>
 
-        {!hideDivider && <Divider className="border-gray-200! dark:border-gray-700!" />}
+        {!hideDivider && <Divider className="border-gray-200! dark:border-gray-800!" />}
 
         {children}
       </Paper>

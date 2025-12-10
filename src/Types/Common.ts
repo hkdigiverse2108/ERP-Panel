@@ -195,6 +195,7 @@ export interface MessageStatus {
 }
 
 export interface CommonDataType {
+  _id: string;
   isDeleted: boolean;
   isActive: boolean;
   createdBy: null;

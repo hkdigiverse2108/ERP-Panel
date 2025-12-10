@@ -7,7 +7,6 @@ export interface LoginPayload {
 }
 
 export interface User extends LoginPayload, CommonDataType {
-  _id: string;
   fullName: string;
   phoneNumber: string;
   profileImage: string;

@@ -1,6 +1,6 @@
 import { ROUTES } from "../Constants";
 import Dashboard from "../Pages/Dashboard";
-import GeneralSetting from "../Pages/Settings/General";
+import GeneralSetting from "../Pages/Settings/GeneralSetting";
 import SignInForm from "../Pages/Auth/SignInForm";
 import { Navigate } from "react-router-dom";
 
