@@ -6,11 +6,12 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
+
 export const NavItems: NavItem[] = [
   { icon: <GridViewRoundedIcon />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
-  // { icon: <DescriptionRoundedIcon />, name: "Contact", path: ROUTES.CONTACT.BASE },
-  // { icon: <DashboardRoundedIcon />, name: "Employee", path: ROUTES.EMPLOYEE.BASE },
-  // { icon: <DashboardRoundedIcon />, name: "Inventory", path: ROUTES.EMPLOYEE.BASE },
+  // { icon: <GridViewRoundedIcon />, name: "Contact", path: ROUTES.CONTACT.BASE },
+  // { icon: <GridViewRoundedIcon />, name: "Employee", path: ROUTES.EMPLOYEE.BASE },
+  // { icon: <GridViewRoundedIcon />, name: "Inventory", path: ROUTES.EMPLOYEE.BASE },
   // {
   //   icon: <CalendarMonthRoundedIcon />,
   //   name: "Calendar",

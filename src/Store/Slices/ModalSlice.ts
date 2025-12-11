@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isUploadModal: false,
+  isUploadModal: { open: false, type: "image" },
 };
 
 const ModalSlice = createSlice({
   name: "Modal",
   initialState,
   reducers: {
-    setUploadModal: (state) => {
-      state.isUploadModal = !state.isUploadModal;
+    setUploadModal: (state, actions) => {
+      state.isUploadModal = actions.payload;
     },
   },
 });

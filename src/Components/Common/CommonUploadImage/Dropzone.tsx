@@ -1,135 +1,131 @@
-// import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-// import { useRef } from "react";
-
-// const Dropzone = () => {
-//   const fileRef = useRef<HTMLInputElement>(null);
-
-//   const handleOpenDialog = () => fileRef.current?.click();
-
-//   return (
-//     <>
-//       <div
-//         className="
-//           w-full h-[350px] rounded-2xl border-2 border-dashed
-//           border-gray-300 dark:border-gray-700
-//           hover:border-brand-500 dark:hover:border-brand-500
-//           flex flex-col items-center justify-center text-center
-//           cursor-pointer bg-white dark:bg-gray-900
-//         "
-//         onClick={handleOpenDialog}
-//       >
-//         {/* Inner content is visually clickable but does not block parent click */}
-//         <div className="pointer-events-none flex flex-col items-center">
-//           <CloudUploadIcon className="text-gray-500" sx={{ fontSize: 40 }} />
-
-//           <h4 className="mb-3 font-semibold text-gray-800 text-theme-xl dark:text-white/90">Drop Files Here, Paste</h4>
-
-//           <span className="text-center block w-full max-w-[290px] text-sm text-gray-700 dark:text-gray-400">Drag and drop your PNG, JPG, WebP, SVG images here or browse</span>
-
-//           <p className="mt-2 text-gray-500">Or</p>
-
-//           <p className="mt-2 text-brand-500 font-semibold">Browse Files</p>
-//         </div>
-
-//         {/* Hidden file input */}
-//         <input type="file" ref={fileRef} className="hidden" multiple onChange={(e) => console.log("Uploaded:", e.target.files)} />
-//       </div>
-//     </>
-//   );
-// };
-
-// export default Dropzone;
-
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CloseIcon from "@mui/icons-material/Close";
-import { Button, Grid } from "@mui/material";
-import { useRef, useState } from "react";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import { Grid } from "@mui/material";
+import { useRef, useState, type ChangeEvent, type DragEvent } from "react";
+import { Mutations } from "../../../Api";
+import { CommonButton, ShowNotification } from "../../../Attribute";
+import { useAppSelector } from "../../../Store/hooks";
 
 const DropzoneWithPreview = () => {
   const fileRef = useRef<HTMLInputElement>(null);
-  const [images, setImages] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
+  const { isUploadModal } = useAppSelector((state) => state.modal);
 
-  const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const fileList = event.target.files;
-    if (!fileList) return;
+  const { mutate: uploadImage, isPending } = Mutations.useUpload();
 
-    const newFiles: File[] = [];
-    const newPreviews: string[] = [];
+  const isImageMode = isUploadModal.type === "image";
+
+  // Allowed mime types
+  const allowedTypes = isImageMode ? ["image/png", "image/jpg", "image/jpeg", "image/webp"] : ["application/pdf"];
+
+  // Validate file type
+  const validate = (file: File) => allowedTypes.includes(file.type);
+
+  // Handle both input & drop upload
+  const processFiles = (fileList: FileList) => {
+    const validFiles: File[] = [];
+    const previewUrls: string[] = [];
 
     Array.from(fileList).forEach((file) => {
-      newFiles.push(file);
-      newPreviews.push(URL.createObjectURL(file));
+      if (!validate(file)) {
+        ShowNotification(isImageMode ? `Only PNG, JPG, WEBP, JPEG allowed` : `Only PDF files allowed`, "error");
+        return;
+      }
+      validFiles.push(file);
+      previewUrls.push(URL.createObjectURL(file));
     });
 
-    setFiles((prev) => [...prev, ...newFiles]);
-    setImages((prev) => [...prev, ...newPreviews]);
+    setFiles((prev) => [...prev, ...validFiles]);
+    setPreviews((prev) => [...prev, ...previewUrls]);
   };
 
-  const handleRemove = (index: number) => {
-    const newFiles = [...files];
-    const newImages = [...images];
+  const handleInputUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) processFiles(e.target.files);
+  };
 
-    newFiles.splice(index, 1);
-    newImages.splice(index, 1);
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (e.dataTransfer.files) processFiles(e.dataTransfer.files);
+  };
 
-    setFiles(newFiles);
-    setImages(newImages);
+  const handleRemove = (i: number) => {
+    URL.revokeObjectURL(previews[i]);
+    setFiles(files.filter((_, idx) => idx !== i));
+    setPreviews(previews.filter((_, idx) => idx !== i));
   };
 
   const handleClear = () => {
-    images.forEach((img) => URL.revokeObjectURL(img));
-    setImages([]);
+    previews.forEach((p) => URL.revokeObjectURL(p));
     setFiles([]);
-    if (fileRef.current) fileRef.current.value = "";
+    setPreviews([]);
+  };
+
+  const handleUpload = () => {
+    const formData = new FormData();
+    files.forEach((file) => formData.append(isImageMode ? "images" : "pdf", file));
+
+    uploadImage(formData, {
+      onSuccess: () => handleClear(),
+    });
   };
 
   return (
     <div>
       {/* DROPZONE */}
-      <div className="w-full h-[350px] rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-brand-500 dark:hover:border-brand-500 flex flex-col items-center justify-center text-center cursor-pointer bg-white dark:bg-gray-900" onClick={() => fileRef.current?.click()}>
+      <div
+        className="w-full h-[350px] rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-brand-500 dark:hover:border-brand-500 flex flex-col items-center justify-center text-center cursor-pointer bg-white dark:bg-gray-900"
+        onClick={() => fileRef.current?.click()}
+        onDragOver={(e) => e.preventDefault()} // IMPORTANT
+        onDrop={handleDrop} // IMPORTANT
+      >
         {/* PREVIEW GRID */}
         <Grid container spacing={2} className="flex flex-wrap custom-scrollbar overflow-y-auto p-3">
-          {images.map((src, index) => (
-            <Grid size={{ xs: 6, sm: 4, md: 3 }} key={index} className="relative w-36 border rounded-lg  overflow-hidden">
-              <img src={src} className="w-full h-full object-cover" />
+          {files.map((file, index) => (
+            <Grid size={{ xs: 6, sm: 4, md: 3 }} key={index} className="relative border rounded-lg overflow-hidden">
+              {isImageMode ? (
+                <img src={previews[index]} className="w-full h-full object-cover" />
+              ) : (
+                /* PDF Preview Box */
+                <div className="w-full! flex flex-col items-center justify-center p-2">
+                  <PictureAsPdfIcon sx={{ fontSize: 40 }} className="mb-2 opacity-80 text-gray-800 dark:text-gray-300" />
+                  <p className="text-xs text-gray-700 dark:text-gray-300 text-center truncate w-full">{file.name}</p>
+                </div>
+              )}
 
-              {/* Remove Button (X) */}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   handleRemove(index);
                 }}
-                className="absolute right-1 top-1 z-999 flex h-9.5 w-9.5 items-center justify-center rounded-full bg-gray-100 text-gray-800 transition-colors hover:bg-gray-200 hover:text-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white sm:h-8 sm:w-8"
+                className="absolute right-1 top-1 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
               >
-                <CloseIcon sx={{ fontSize: 20 }} />
+                <CloseIcon sx={{ fontSize: 18 }} />
               </button>
             </Grid>
           ))}
         </Grid>
 
-        {/* Empty message when no images uploaded */}
-        {images.length === 0 && (
+        {/* EMPTY STATE */}
+        {files.length === 0 && (
           <div className="flex flex-col items-center justify-center flex-1 text-center">
             <CloudUploadIcon className="text-gray-500" sx={{ fontSize: 40 }} />
-            <h4 className="mb-3 font-semibold text-gray-800 text-theme-xl dark:text-white/90">Drop Files Here, Paste</h4>
-            <span className="text-center block w-full max-w-[290px] text-sm text-gray-700 dark:text-gray-400">Drag and drop your PNG, JPG, WebP, SVG images here or browse</span>
+            <h4 className="mb-3 font-semibold text-gray-800 dark:text-white/90">Drop Files Here, Paste</h4>
+            <span className="text-center block w-full max-w-[290px] text-sm text-gray-700 dark:text-gray-400">{`Drag and drop your ${isUploadModal.type === "image" ? "PNG, JPG, WEBP, JPEG images" : "PDF"}  here or browse`}</span>
             <p className="mt-2 text-gray-500">Or</p>
             <p className="mt-2 text-brand-500 font-semibold">Browse Files</p>
           </div>
         )}
       </div>
 
-      {/* Hidden Input */}
-      <input type="file" ref={fileRef} className="hidden" multiple accept="image/*" onChange={handleUpload} />
+      {/* HIDDEN FILE INPUT */}
+      <input type="file" ref={fileRef} className="hidden" multiple accept={isImageMode ? allowedTypes.join(", ") : "application/pdf"} onChange={handleInputUpload} />
 
-      {/* Footer: Clear + Insert */}
+      {/* FOOTER */}
       <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
-        <Button onClick={handleClear}>Clear</Button>
-
-        <Button variant="contained" disabled={images.length === 0} onClick={() => console.log("Selected Files:", files)}>
-          Insert Media
-        </Button>
+        <CommonButton onClick={handleClear} title="Clear" />
+        <CommonButton loading={isPending} title="Insert Media" variant="contained" disabled={files.length === 0} onClick={handleUpload} />
       </div>
     </div>
   );

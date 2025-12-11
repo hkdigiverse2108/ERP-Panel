@@ -1,41 +1,29 @@
-import { Button, Tab, Tabs } from "@mui/material";
-import { useState, type FC } from "react";
+import { Tab, Tabs } from "@mui/material";
+import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
 import { setUploadModal } from "../../../Store/Slices/ModalSlice";
-import type { CommonUploadImageProps } from "../../../Types";
-import { Modal } from "../CommonModal";
 import Dropzone from "./Dropzone";
 import FileGallery from "./FileGallery";
+import CommonModal from "../CommonModal";
 
-const CommonUploadImage: FC<CommonUploadImageProps> = ({ title = "Upload Image" }) => {
+const CommonUpload = () => {
+  const [tab, setTab] = useState(0);
   const { isUploadModal } = useAppSelector((state) => state.modal);
   const dispatch = useAppDispatch();
 
-  const [tab, setTab] = useState(0);
   return (
-    <>
-      <Button onClick={() => dispatch(setUploadModal())}>Upload Image</Button>
+    <CommonModal isOpen={isUploadModal.open} title={`Upload ${isUploadModal.type === "image" ? "Image" : "PDF"}`} onClose={() => dispatch(setUploadModal({ open: false, type: "image" }))} className="max-w-[900px] m-2 sm:m-5">
+      <div className="flex flex-col gap-5">
+        <Tabs value={tab} onChange={(_, v) => setTab(v)} className="border-b border-gray-200 dark:border-gray-800">
+          <Tab label="Select File" />
+          <Tab label="Upload New" />
+        </Tabs>
 
-      <Modal isOpen={isUploadModal} title={title} onClose={() => dispatch(setUploadModal())} className="max-w-[900px] m-2 sm:m-5">
-        <div className="flex flex-col gap-5">
-          <Tabs value={tab} onChange={(_, v) => setTab(v)} className="border-b border-gray-200 dark:border-gray-800">
-            <Tab label="Upload New" />
-            <Tab label="Select File" />
-          </Tabs>
-
-          {tab === 0 && <Dropzone />}
-          {tab === 1 && <FileGallery />}
-
-          {/* <div className="flex justify-end gap-3 mt-5 pt-4 border-t border-gray-200 dark:border-gray-800">
-            <Button onClick={() => dispatch(setUploadModal())}>Close</Button>
-            <Button variant="contained" onClick={() => dispatch(setUploadModal())}>
-              Save
-            </Button>
-          </div> */}
-        </div>
-      </Modal>
-    </>
+        {tab === 0 && <FileGallery />}
+        {tab === 1 && <Dropzone />}
+      </div>
+    </CommonModal>
   );
 };
 
-export default CommonUploadImage;
+export default CommonUpload;

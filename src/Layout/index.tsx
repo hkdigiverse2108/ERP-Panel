@@ -5,7 +5,7 @@ import { useAppSelector } from "../Store/hooks";
 import { setIsMobile } from "../Store/Slices/LayoutSlice";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import { CommonUploadImage } from "../Components/Common";
+import { CommonUpload } from "../Components/Common";
 
 const Layout = () => {
   const { isExpanded, isMobileOpen, isHovered, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
@@ -34,7 +34,7 @@ const Layout = () => {
           </div>
         </div>
       </div>
-      <CommonUploadImage />
+      <CommonUpload />
     </>
   );
 };

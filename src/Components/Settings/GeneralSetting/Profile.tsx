@@ -139,12 +139,12 @@ const Profile = () => {
       <CommonCard title="logo" grid={{ xs: 12 }}>
         <Grid container className="p-4">
           <Grid size={3}>
-            <Box onClick={() => dispatch(setUploadModal())} className={`flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>
+            <Box onClick={() => dispatch(setUploadModal({open: true, type: "image"}))} className={`flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>
               <img src={`${ImagePath}user/1.jpg`} alt={"alt"} className="object-cover w-full h-full rounded-md" />
             </Box>
           </Grid>
           <Grid size={3}>
-            <Box className={`flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>
+            <Box onClick={() => dispatch(setUploadModal({open: true, type: "pdf"}))} className={`flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>
               <img src={`${ImagePath}user/1.jpg`} alt={"alt"} className="object-cover w-full h-full rounded-md" />
             </Box>
           </Grid>

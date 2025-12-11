@@ -17,7 +17,7 @@ export const GlobalSnackbar = () => {
   }, []);
 
   return (
-    <Snackbar open={open} autoHideDuration={3000} anchorOrigin={{ vertical: "top", horizontal: "right" }} onClose={() => setOpen(false)}>
+    <Snackbar open={open} autoHideDuration={3000} anchorOrigin={{ vertical: "top", horizontal: "right" }} onClose={() => setOpen(false)} className="z-99999!">
       <Alert onClose={() => setOpen(false)} severity={type} variant="filled">
         {msg}
       </Alert>

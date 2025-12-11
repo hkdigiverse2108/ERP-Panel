@@ -46,7 +46,7 @@ const Header = () => {
 
   return (
     // <header className="fixed top-0 flex w-[calc(100% - 253px)] bg-white border-gray-200 z-40 dark:border-gray-800 dark:bg-gray-900 lg:border-b">
-    <header className={`fixed top-0 left-0 right-0 z-40 flex bg-white dark:bg-gray-900 lg:border-b border-gray-200 dark:border-gray-800 transition-all duration-300 ${isExpanded || isHovered ? "lg:ml-[290px] lg:w-[calc(100%-290px)]" : "lg:ml-[90px] lg:w-[calc(100%-90px)]"}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 flex bg-white dark:bg-gray-900 lg:border-b border-gray-200 dark:border-gray-800 transition-all duration-300 ${isExpanded || isHovered ? "lg:ml-[290px] lg:w-[calc(100%-290px)]" : "lg:ml-[90px] lg:w-[calc(100%-90px)]"}`}>
       <div className="w-full flex flex-col items-center justify-between grow lg:flex-row lg:px-6">
         <div className="flex items-center justify-between max-lg:w-full gap-2 px-3 py-3 sm:gap-4 lg:justify-normal border-b border-gray-200 dark:border-gray-800 lg:border-b-0 lg:px-0 lg:py-4">
           {width <= 1024 && (

@@ -26,18 +26,13 @@ export async function Get<T>(url: string, params?: Params, headers?: Record<stri
     const response = await axios.get<T>(BASE_URL + url, config);
     return response.data;
   } catch (error) {
-    const axiosError = error as AxiosError<any>;
-
-    const responseData = axiosError.response?.data as { message?: string };
-    const errorMessage = responseData?.message || axiosError.message || "Something went wrong";
-    const status = axiosError?.response?.status;
-
-    if (status === HTTP_STATUS.TOKEN_EXPIRED && !isRedirecting) {
+    const axiosError = error as AxiosError<{ status?: string }>;
+    if (axiosError?.response?.status === HTTP_STATUS.TOKEN_EXPIRED && !isRedirecting) {
       isRedirecting = true;
       window.location.href = ROUTES.HOME;
       setTimeout(() => (isRedirecting = false), 1000);
     } else {
-      ShowNotification(ErrorMessage(errorMessage), "error");
+      ShowNotification(ErrorMessage(error), "error");
     }
     throw null;
   }

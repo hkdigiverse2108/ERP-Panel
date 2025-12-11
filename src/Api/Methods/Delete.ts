@@ -26,7 +26,7 @@ export async function Delete<T, TInput>(url: string, data?: TInput): Promise<T> 
     } else {
       return null as T;
     }
-  } catch (error: any) {
+  } catch (error) {
     const axiosError = error as AxiosError<any>;
     const responseData = axiosError.response?.data as { message?: string };
     const message = responseData?.message || axiosError.message || "Something went wrong";

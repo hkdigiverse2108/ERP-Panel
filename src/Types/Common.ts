@@ -234,8 +234,13 @@ export interface CommonSwitchProps extends CommonValidationSwitchProps {
 
 // ************ Upload Start ***********
 
-export interface CommonUploadImageProps {
+export interface CommonUploadProps {
   title?: string;
+  type?: "image" | "pdf";
+}
+
+export interface UploadResponse extends MessageStatus{
+  data: string[];
 }
 
 // ************ Upload End ***********
