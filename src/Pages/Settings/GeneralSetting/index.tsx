@@ -19,7 +19,7 @@ import { CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { Profile } from "../../../Components/Settings/GeneralSetting";
 import { PAGE_TITLE } from "../../../Constants";
 import { GeneralSettingBreadcrumbs } from "../../../Data";
-import ReportFormats from "../../../Components/Settings/ReportFormats";
+import ReportFormats from "../../../Components/Settings/GeneralSetting/ReportFormats";
 
 const GeneralSetting = () => {
   const [value, setValue] = useState(0);
