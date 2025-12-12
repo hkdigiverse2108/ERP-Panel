@@ -136,7 +136,7 @@ const Profile = () => {
           ))}
         </Grid>
       </CommonCard>
-      <CommonCard title="logo" grid={{ xs: 12 }}>
+      <CommonCard title="logo" grid={{ xs: 12 }}> 
         <Grid container className="p-4">
           <Grid size={3}>
             <Box onClick={() => dispatch(setUploadModal({open: true, type: "image"}))} className={`flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>

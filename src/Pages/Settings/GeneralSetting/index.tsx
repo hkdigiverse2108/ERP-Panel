@@ -19,6 +19,7 @@ import { CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { Profile } from "../../../Components/Settings/GeneralSetting";
 import { PAGE_TITLE } from "../../../Constants";
 import { GeneralSettingBreadcrumbs } from "../../../Data";
+import ReportFormats from "../../../Components/Settings/ReportFormats";
 
 const GeneralSetting = () => {
   const [value, setValue] = useState(0);
@@ -38,6 +39,9 @@ const GeneralSetting = () => {
     { label: "MAC Binding Master", value: 10, icon: <LanIcon /> },
   ];
 
+  // Map tab index → component
+  const tabViews = [<Profile />, <Profile />, <ReportFormats />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />];
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.GENERAL} maxItems={1} breadcrumbs={GeneralSettingBreadcrumbs} />
@@ -53,7 +57,8 @@ const GeneralSetting = () => {
             </Box>
           </Grid>
           <Grid size={{ xs: 12, md: 9, lg: 9, xl: 10 }} className="rounded-lg p-4 bg-white dark:bg-gray-dark! border border-gray-200 dark:border-gray-800">
-            <Box className={`${value === 0 ? "block" : "hidden"}`}>
+            {tabViews[value]}
+            {/* <Box className={`${value === 0 ? "block" : "hidden"}`}>
               <Profile />
             </Box>
             <Box className={`${value === 1 ? "block" : "hidden"}`}>
@@ -70,6 +75,9 @@ const GeneralSetting = () => {
                 </Formik>
               </CommonCard>
             </Box>
+            <Box className={`${value === 2 ? "block" : "hidden"}`}>
+              <ReportFormats />
+            </Box> */}
           </Grid>
         </Grid>
       </div>
