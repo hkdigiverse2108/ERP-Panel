@@ -7,13 +7,20 @@ import { CommonButton } from "../../../Attribute";
 import { useAppSelector } from "../../../Store/hooks";
 
 const FileGallery = () => {
+  const { isUploadModal } = useAppSelector((state) => state.modal);
+  const shouldFetchImages = isUploadModal.type === "image"; // your condition
+  const shouldFetchPdf = isUploadModal.type === "pdf"; // your condition
+
   const [selected, setSelected] = useState<string[]>([]);
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const [menuIndex, setMenuIndex] = useState<string>("");
   const { mutate: mutateDelete } = Mutations.useDeleteUpload();
-  const { data: images, isLoading: isLoadingImages } = Queries.useGetUploadImage();
-  const { data: pdf, isLoading: isLoadingPdf } = Queries.useGetUploadPdf();
-  const { isUploadModal } = useAppSelector((state) => state.modal);
+  const { data: images, isLoading: isLoadingImages } = Queries.useGetUploadImage({
+    enabled: shouldFetchImages,
+  });
+  const { data: pdf, isLoading: isLoadingPdf } = Queries.useGetUploadPdf({
+    enabled: shouldFetchPdf,
+  });
 
   const ListData = isUploadModal.type === "image" ? images?.data : pdf?.data;
 

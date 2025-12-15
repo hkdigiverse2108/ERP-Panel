@@ -49,9 +49,9 @@ const GeneralSetting = () => {
         <Grid container spacing={2}>
           <Grid size={{ xs: 12, md: 3, lg: 3, xl: 2 }}>
             <Box className="rounded-lg py-4 bg-white dark:bg-gray-dark! border border-gray-200 dark:border-gray-800">
-              <Tabs orientation="vertical" variant="scrollable" value={value} onChange={handleChange}>
+              <Tabs orientation={"vertical"} variant="scrollable" value={value} onChange={handleChange}>
                 {generalSettingTabs.map((tab, index) => (
-                  <Tab key={index} icon={tab.icon} label={tab.label} value={tab.value} iconPosition="start" />
+                  <Tab key={index} icon={tab.icon} label={tab.label} value={tab.value} iconPosition="start" className="" />
                 ))}
               </Tabs>
             </Box>

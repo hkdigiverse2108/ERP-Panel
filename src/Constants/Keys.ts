@@ -8,4 +8,7 @@ export const KEYS = {
     ALL_IMAGE: "upload-images",
     ALL_PDF: "upload-pdf",
   },
+  USER: {
+    ONE : "user",
+  },
 };

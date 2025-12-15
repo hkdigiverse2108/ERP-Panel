@@ -6,10 +6,21 @@ import { setIsMobile } from "../Store/Slices/LayoutSlice";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { CommonUpload } from "../Components/Common";
+import { Queries } from "../Api";
+import { setUser } from "../Store/Slices/AuthSlice";
 
 const Layout = () => {
   const { isExpanded, isMobileOpen, isHovered, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
   const dispatch = useDispatch();
+
+  const { user } = useAppSelector((state) => state.auth);
+  const { data: userData, isLoading: userLoading } = Queries.userGetUserdata(user?._id);
+
+  useEffect(() => {
+    if (userData) {
+      dispatch(setUser(userData?.data));
+    }
+  }, [userData, userLoading]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -21,6 +32,7 @@ const Layout = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [dispatch]);
+
   return (
     <>
       <div className="min-h-screen xl:flex overflow-hidden">

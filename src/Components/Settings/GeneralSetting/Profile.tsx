@@ -1,15 +1,26 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, IconButton, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 import { CommonSelect, CommonSwitch } from "../../../Attribute";
 import { ImagePath } from "../../../Constants";
 import { CommonCard } from "../../Common";
 import { useAppDispatch } from "../../../Store/hooks";
 import { setUploadModal } from "../../../Store/Slices/ModalSlice";
+import { GridMoreVertIcon } from "@mui/x-data-grid";
 
 const Profile = () => {
+  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+  const [menuIndex, setMenuIndex] = useState<string>("");
   const [value, setValue] = useState<string[]>([]);
-    const dispatch = useAppDispatch();
-  
+  const [enabled, setEnabled] = useState(false);
+
+  const dispatch = useAppDispatch();
+
+  const handleDelete = () => {
+    // mutateDelete({ fileUrl: menuIndex });
+    setMenuIndex("");
+    setMenuAnchor(null);
+  };
+
   const BasicDetails = [
     { label: "Accounting Type", value: "Centralized" },
     { label: "Name", value: "Bakery" },
@@ -60,7 +71,6 @@ const Profile = () => {
     { label: "Offline", value: "offline" },
   ];
 
-  const [enabled, setEnabled] = useState(false);
   return (
     <Grid container spacing={2}>
       <Grid size={12} className="p-5 border border-gray-200 rounded-lg dark:border-gray-800">
@@ -136,24 +146,40 @@ const Profile = () => {
           ))}
         </Grid>
       </CommonCard>
-      <CommonCard title="logo" grid={{ xs: 12 }}> 
-        <Grid container className="p-4">
-          <Grid size={3}>
-            <Box onClick={() => dispatch(setUploadModal({open: true, type: "image"}))} className={`flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>
+      <CommonCard title="logo" grid={{ xs: 12, lg: 6 }}>
+        <Grid container className="p-4 " spacing={2}>
+          <Grid size={{ xs: 12, md: 6 }} className=" flex! justify-center! items-center!">
+            <Box onClick={() => dispatch(setUploadModal({ open: true, type: "image" }))} className={`relative flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>
+              <img src={`${ImagePath}user/1.jpg`} alt={"alt"} className="object-cover w-full h-full rounded-md" />
+              <div
+                className="absolute top-1 right-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMenuAnchor(e.currentTarget);
+                  setMenuIndex("as");
+                }}
+              >
+                <IconButton size="small" className=" p-0!">
+                  <GridMoreVertIcon />
+                </IconButton>
+              </div>
+            </Box>
+          </Grid>
+          <Menu className="z-99999!" anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
+            <MenuItem onClick={() => console.log("Download", menuIndex)}>Download</MenuItem>
+            <MenuItem onClick={() => handleDelete()}>Delete</MenuItem>
+          </Menu>
+          <Grid size={{ xs: 12, md: 6 }} className=" flex! justify-center! items-center!">
+            <Box onClick={() => dispatch(setUploadModal({ open: true, type: "pdf" }))} className={`flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>
               <img src={`${ImagePath}user/1.jpg`} alt={"alt"} className="object-cover w-full h-full rounded-md" />
             </Box>
           </Grid>
-          <Grid size={3}>
-            <Box onClick={() => dispatch(setUploadModal({open: true, type: "pdf"}))} className={`flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>
-              <img src={`${ImagePath}user/1.jpg`} alt={"alt"} className="object-cover w-full h-full rounded-md" />
-            </Box>
-          </Grid>
-          <Grid size={3}>
+          <Grid size={{ xs: 12, md: 6 }} className=" flex! justify-center! items-center!">
             <Box className={`flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>
               <img src={`${ImagePath}user/1.jpg`} alt={"alt"} className="object-cover w-full h-full rounded-md" />
             </Box>
           </Grid>
-          <Grid size={3}>
+          <Grid size={{ xs: 12, md: 6 }} className=" flex! justify-center! items-center!">
             <Box className={`flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>
               <img src={`${ImagePath}user/1.jpg`} alt={"alt"} className="object-cover w-full h-full rounded-md" />
             </Box>
