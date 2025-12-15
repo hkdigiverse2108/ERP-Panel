@@ -37,4 +37,8 @@ export const ROUTES = {
   SETTINGS: {
     GENERAL: "/setting/general",
   },
-} as const;
+  COMPANY: {
+    EDIT: "/company/edit",
+  } 
+ 
+ } as const;
