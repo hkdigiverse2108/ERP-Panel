@@ -1,24 +1,73 @@
 import { Box, Grid, IconButton, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
-import { CommonSelect, CommonSwitch } from "../../../Attribute";
+import { CommonButton, CommonSelect, CommonSwitch, CommonTextField } from "../../../Attribute";
 import { ImagePath } from "../../../Constants";
-import { CommonCard } from "../../Common";
-import { useAppDispatch } from "../../../Store/hooks";
-import { setUploadModal } from "../../../Store/Slices/ModalSlice";
+import { CommonCard, CommonModal } from "../../Common";
+import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
+import { setSelectedFiles, setUploadModal } from "../../../Store/Slices/ModalSlice";
 import { GridMoreVertIcon } from "@mui/x-data-grid";
+import { Form, Formik } from "formik";
+import { Mutations } from "../../../Api";
+import { setUser } from "../../../Store/Slices/AuthSlice";
+import { getChangedFields } from "../../../Utils";
 
 const Profile = () => {
+  const { user } = useAppSelector((state) => state.auth);
+  const { selectedFiles } = useAppSelector((state) => state.modal);
+
+  const [userValue, setUserValue] = useState({
+    fullName: user?.fullName || "",
+    email: user?.email || "",
+    phoneNumber: user?.phoneNumber || "",
+    profileImage: user?.profileImage || "",
+  });
+
+  const [isImageDeleted, setIsImageDeleted] = useState(false);
+  const [modelOpen, setModelOpen] = useState(false);
+
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const [menuIndex, setMenuIndex] = useState<string>("");
   const [value, setValue] = useState<string[]>([]);
   const [enabled, setEnabled] = useState(false);
 
+  const { mutate: editUserMutate } = Mutations.useEditUser();
   const dispatch = useAppDispatch();
 
-  const handleDelete = () => {
-    // mutateDelete({ fileUrl: menuIndex });
-    setMenuIndex("");
-    setMenuAnchor(null);
+  const handleEditUser = async (data: any) => {
+    try {
+      let newData = { ...data };
+
+      if (selectedFiles[0]) {
+        newData.profileImage = selectedFiles[0];
+      }
+
+      if (isImageDeleted) {
+        newData.profileImage = "";
+      }
+
+      const payload = getChangedFields(newData, userValue);
+
+      console.log("Data : =", newData, userValue);
+      editUserMutate(
+        { userId: user?._id, ...payload },
+        {
+          onSuccess: (response) => {
+            dispatch(setUser(response?.data));
+            setUserValue(response?.data);
+            setIsImageDeleted(false);
+            dispatch(setSelectedFiles([]));
+            setModelOpen(false);
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteImage = () => {
+    setIsImageDeleted(true);
+    dispatch(setSelectedFiles([]));
   };
 
   const BasicDetails = [
@@ -77,18 +126,18 @@ const Profile = () => {
         <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex flex-col items-center w-full gap-6 xl:flex-row">
             <div className="w-20 h-20 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800">
-              <img src={`${ImagePath}user/1.jpg`} alt="user" />
+              <img src={user?.profileImage || `${ImagePath}user/1.jpg`} alt="Profile Image" className="w-full h-full" />
             </div>
             <div className="order-3 xl:order-2">
-              <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">Musharof Chowdhury</h4>
+              <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">{user?.fullName}</h4>
               <div className="flex flex-col items-center gap-1 text-center xl:flex-row xl:gap-3 xl:text-left">
-                <p className="text-sm text-gray-500 dark:text-gray-400">Team Manager</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{user?.phoneNumber}</p>
                 <div className="hidden h-3.5 w-px bg-gray-300 dark:bg-gray-700 xl:block"></div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Arizona, United States</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{user?.email}</p>
               </div>
             </div>
           </div>
-          <button className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 lg:inline-flex lg:w-auto">
+          <button onClick={() => setModelOpen(!modelOpen)} className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 lg:inline-flex lg:w-auto">
             <svg className="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path fillRule="evenodd" clipRule="evenodd" d="M15.0911 2.78206C14.2125 1.90338 12.7878 1.90338 11.9092 2.78206L4.57524 10.116C4.26682 10.4244 4.0547 10.8158 3.96468 11.2426L3.31231 14.3352C3.25997 14.5833 3.33653 14.841 3.51583 15.0203C3.69512 15.1996 3.95286 15.2761 4.20096 15.2238L7.29355 14.5714C7.72031 14.4814 8.11172 14.2693 8.42013 13.9609L15.7541 6.62695C16.6327 5.74827 16.6327 4.32365 15.7541 3.44497L15.0911 2.78206ZM12.9698 3.84272C13.2627 3.54982 13.7376 3.54982 14.0305 3.84272L14.6934 4.50563C14.9863 4.79852 14.9863 5.2734 14.6934 5.56629L14.044 6.21573L12.3204 4.49215L12.9698 3.84272ZM11.2597 5.55281L5.6359 11.1766C5.53309 11.2794 5.46238 11.4099 5.43238 11.5522L5.01758 13.5185L6.98394 13.1037C7.1262 13.0737 7.25666 13.003 7.35947 12.9002L12.9833 7.27639L11.2597 5.55281Z" fill="" />
             </svg>
@@ -167,7 +216,7 @@ const Profile = () => {
           </Grid>
           <Menu className="z-99999!" anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
             <MenuItem onClick={() => console.log("Download", menuIndex)}>Download</MenuItem>
-            <MenuItem onClick={() => handleDelete()}>Delete</MenuItem>
+            <MenuItem onClick={() => handleDeleteImage()}>Delete</MenuItem>
           </Menu>
           <Grid size={{ xs: 12, md: 6 }} className=" flex! justify-center! items-center!">
             <Box onClick={() => dispatch(setUploadModal({ open: true, type: "pdf" }))} className={`flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>
@@ -191,6 +240,41 @@ const Profile = () => {
         <CommonSwitch name="notifications" label="Allow RoundOff" required value={enabled} onChange={(val) => setEnabled(val)} />
         <CommonSelect label="Select Location" options={gstOptions} value={value} onChange={(v) => setValue(v)} limitTags={1} />
       </Grid>
+      {/* User Edit Model */}
+      <CommonModal isOpen={modelOpen} title="Edit Profile" subTitle="" onClose={() => setModelOpen(!modelOpen)} className="max-w-[500px] m-2 sm:m-5">
+        <Formik enableReinitialize initialValues={{ fullName: userValue?.fullName, email: userValue?.email, phoneNumber: userValue?.phoneNumber }} onSubmit={handleEditUser}>
+          <Form>
+            <Grid sx={{ px: 1 }} container spacing={2}>
+              <CommonTextField name="fullName" label="Name" placeholder="John Doe" grid={{ xs: 12 }} />
+              <CommonTextField name="email" label="Email" grid={{ xs: 12 }} />
+              <CommonTextField name="phoneNumber" label="Phone Number" grid={{ xs: 12 }} />
+              <Grid size={{ xs: 12, md: 6 }}>
+                <span>Profile Image :</span>
+                <Box onClick={() => dispatch(setUploadModal({ open: true, type: "image" }))} className={`relative flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>
+                  <img src={selectedFiles[0] || (isImageDeleted ? `${ImagePath}user/1.jpg` : userValue?.profileImage || `${ImagePath}user/1.jpg`)} alt={""} className="object-cover w-full h-full rounded-md" />
+                  <div
+                    className="absolute top-1 right-1 "
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setMenuAnchor(e.currentTarget);
+                      setMenuIndex("as");
+                    }}
+                  >
+                    <IconButton size="small" className="p-0!">
+                      <GridMoreVertIcon />
+                    </IconButton>
+                  </div>
+                </Box>
+              </Grid>
+              <Menu className="z-99999!" anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
+                <MenuItem onClick={() => console.log("Download", menuIndex)}>Download</MenuItem>
+                <MenuItem onClick={handleDeleteImage}>Delete</MenuItem>
+              </Menu>
+              <CommonButton type="submit" variant="contained" title="Save" size="medium" fullWidth grid={{ xs: 12 }} />
+            </Grid>
+          </Form>
+        </Formik>
+      </CommonModal>
     </Grid>
   );
 };

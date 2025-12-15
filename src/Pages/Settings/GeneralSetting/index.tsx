@@ -16,10 +16,9 @@ import { Form, Formik } from "formik";
 import { useState, type SyntheticEvent } from "react";
 import { CommonTextField } from "../../../Attribute";
 import { CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
-import { Profile } from "../../../Components/Settings/GeneralSetting";
+import { Profile, ReportFormats } from "../../../Components/Settings/GeneralSetting";
 import { PAGE_TITLE } from "../../../Constants";
 import { GeneralSettingBreadcrumbs } from "../../../Data";
-import ReportFormats from "../../../Components/Settings/GeneralSetting/ReportFormats";
 
 const GeneralSetting = () => {
   const [value, setValue] = useState(0);

@@ -46,13 +46,13 @@ const SupportDesk = () => {
       </Box>
       <CommonModal isOpen={open} title="Talk To Our Expert" subTitle="Fill In Your Info - We'll Reach Out Shortly" onClose={() => setOpen(!open)} className="max-w-[500px] m-2 sm:m-5">
         <div className="flex flex-col gap-5">
-          <Formik initialValues={{ name: "", password: "", search: "", username: "" }} onSubmit={(values) => console.log(values)}>
+          <Formik initialValues={{ business: "", contactName: "", contact: "", notes: "" }} onSubmit={(values) => console.log(values)}>
             <Form>
               <Grid sx={{ px: 1 }} container spacing={2}>
-                <CommonTextField name="Business" label="Business Name" placeholder="John Doe" grid={{ xs: 12 }} />
-                <CommonTextField name="Contact Name" label="Contact Name" grid={{ xs: 12 }} />
-                <CommonTextField name="Contact" label="Contact No." grid={{ xs: 12 }} />
-                <CommonTextField name="Notes" label="Notes" type="textarea" multiline rows={2} validating={false} grid={{ xs: 12 }} />
+                <CommonTextField name="business" label="Business Name" placeholder="John Doe" grid={{ xs: 12 }} />
+                <CommonTextField name="contactName" label="Contact Name" grid={{ xs: 12 }} />
+                <CommonTextField name="contact" label="Contact No." grid={{ xs: 12 }} />
+                <CommonTextField name="notes" label="Notes" type="textarea" multiline rows={2} validating={false} grid={{ xs: 12 }} />
                 <CommonButton type="submit" variant="contained" title="Sign In" size="medium" fullWidth grid={{ xs: 12 }} />
               </Grid>
             </Form>

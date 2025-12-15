@@ -131,7 +131,7 @@ const ReportFormats = () => {
           </Grid>
         </RadioGroup>
 
-        <CommonModal isOpen={open} title="Talk To Our Expert" subTitle="Fill In Your Info - We'll Reach Out Shortly" onClose={() => setOpen(!open)} className="max-w-[500px] m-2 sm:m-5">
+        <CommonModal isOpen={open} title="" subTitle="" onClose={() => setOpen(!open)} className="max-w-[500px] m-2 sm:m-5">
           <div className="flex flex-col gap-5">
             <img src={imageUrl} alt="" />
           </div>

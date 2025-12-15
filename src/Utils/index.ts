@@ -1,3 +1,4 @@
+export * from "./getChangedFields";
 import { STORAGE_KEYS } from "../Constants";
 
 export const Stringify = (value: object): string => {

@@ -4,12 +4,15 @@ import { IconButton, Menu, MenuItem, Skeleton } from "@mui/material";
 import { useState } from "react";
 import { Mutations, Queries } from "../../../Api";
 import { CommonButton } from "../../../Attribute";
-import { useAppSelector } from "../../../Store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
+import { setSelectedFiles, setUploadModal } from "../../../Store/Slices/ModalSlice";
 
 const FileGallery = () => {
   const { isUploadModal } = useAppSelector((state) => state.modal);
   const shouldFetchImages = isUploadModal.type === "image"; // your condition
   const shouldFetchPdf = isUploadModal.type === "pdf"; // your condition
+
+  const dispatch = useAppDispatch();
 
   const [selected, setSelected] = useState<string[]>([]);
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -30,6 +33,12 @@ const FileGallery = () => {
     mutateDelete({ fileUrl: menuIndex });
     setMenuIndex("");
     setMenuAnchor(null);
+  };
+
+  const handleSaveBtn = async () => {
+    console.log("selected ->", selected);
+    dispatch(setSelectedFiles(selected));
+    dispatch(setUploadModal({ open: false, type: "image" }));
   };
 
   return (
@@ -82,7 +91,7 @@ const FileGallery = () => {
           <p className="text-gray-500">{selected.length} selected</p>
           <CommonButton title="Close" onClick={() => setSelected([])} />
         </div>
-        <CommonButton variant="contained" title="Save" />
+        <CommonButton variant="contained" title="Save" onClick={handleSaveBtn} />
       </div>
     </>
   );
