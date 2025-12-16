@@ -16,12 +16,18 @@ import { Form, Formik } from "formik";
 import { useState, type SyntheticEvent } from "react";
 import { CommonTextField } from "../../../Attribute";
 import { CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
-import { Profile, ReportFormats } from "../../../Components/Settings/GeneralSetting";
 import { PAGE_TITLE } from "../../../Constants";
 import { GeneralSettingBreadcrumbs } from "../../../Data";
+import EditIcon from "@mui/icons-material/Edit";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../../Constants/Routes";
+import { Profile, ReportFormats } from "../../../Components/Settings/GeneralSetting";
 
 const GeneralSetting = () => {
+  
   const [value, setValue] = useState(0);
+  const navigate = useNavigate();
 
   const handleChange = (_: SyntheticEvent, newValue: number) => setValue(newValue);
   const generalSettingTabs = [
@@ -77,6 +83,13 @@ const GeneralSetting = () => {
             <Box className={`${value === 2 ? "block" : "hidden"}`}>
               <ReportFormats />
             </Box> */}
+            {value === 0 && (
+              <Box className="flex justify-end mt-6">
+                <Button variant="contained" startIcon={<EditIcon />} onClick={() => navigate(ROUTES.COMPANY.EDIT)}>
+                  Edit Company
+                </Button>
+              </Box>
+            )}
           </Grid>
         </Grid>
       </div>

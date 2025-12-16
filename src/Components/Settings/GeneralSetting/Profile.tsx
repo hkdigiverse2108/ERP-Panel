@@ -11,6 +11,7 @@ import { Mutations } from "../../../Api";
 import { setUser } from "../../../Store/Slices/AuthSlice";
 import { getChangedFields } from "../../../Utils";
 
+
 const Profile = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { selectedFiles } = useAppSelector((state) => state.modal);

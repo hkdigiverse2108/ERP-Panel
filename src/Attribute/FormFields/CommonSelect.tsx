@@ -35,7 +35,7 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
   return grid ? <Grid size={grid}>{Input}</Grid> : Input;
 };
 
-export const CommonSelect: FC<CommonSelectProps> = ({ label, options, value, onChange, multiple = false, limitTags, size, grid }) => {
+export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value, onChange, multiple = false, limitTags, size, grid }) => {
   const valueObjects = value.map((v) => options.find((o) => o.value === v)).filter(Boolean) as SelectOptionType[];
   const singleValue = !multiple ? valueObjects[0] ?? null : null;
 
@@ -50,7 +50,7 @@ export const CommonSelect: FC<CommonSelectProps> = ({ label, options, value, onC
       isOptionEqualToValue={(option, val) => option.value === val.value}
       onChange={(_, newValues) => {
         if (multiple) {
-          onChange((newValues as SelectOptionType[]).map((o) => o.value));
+          onChange((newValues as SelectOptionType[])?.map((o) => o.value));
         } else {
           const single = newValues as SelectOptionType | null;
           onChange(single ? [single.value] : []);
