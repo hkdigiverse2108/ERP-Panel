@@ -16,7 +16,7 @@ const CommonDataGrid = <T,>({ columns, rows, rowCount, loading = false, paginati
     <div className={BoxClass}>
       <DataGrid
         rows={rows}
-        rowCount={rowCount}
+        // rowCount={rowCount}
         loading={loading}
         columns={columns}
         showToolbar
