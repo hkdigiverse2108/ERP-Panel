@@ -30,9 +30,16 @@ export const KEYS = {
   USER: {
     ROOT: ["user"],
     LIST: ["user", "list"],
-    DETAIL: (id: string) => ["user", "detail", id],
+    DETAILS: (id: string) => ["user", "detail", id],
     ADD: ["user", "add"], // mutation
     EDIT: ["user", "edit"], // mutation
     DELETE: ["user", "delete"], // mutation
+  },
+
+  COMPANY: {
+    ROOT: ["company"],
+    LIST: ["company", "list"],
+    DETAILS: (id: string) => ["company", "detail", id],
+    EDIT: ["user", "edit"], // mutation
   },
 };

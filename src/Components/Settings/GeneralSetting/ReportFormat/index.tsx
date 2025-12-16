@@ -1,8 +1,8 @@
 import React, { useState, type SyntheticEvent } from "react";
-import { CommonSelect } from "../../../Attribute";
+import { CommonSelect } from "../../../../Attribute";
 import { Box, FormControlLabel, Grid, Radio, RadioGroup, Tab, Tabs } from "@mui/material";
-import { ImagePath } from "../../../Constants";
-import { CommonModal } from "../../Common";
+import { ImagePath } from "../../../../Constants";
+import { CommonModal } from "../../../Common";
 
 export interface ISelectOption {
   label: string;

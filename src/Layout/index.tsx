@@ -8,19 +8,28 @@ import Sidebar from "./Sidebar";
 import { CommonUpload } from "../Components/Common";
 import { Queries } from "../Api";
 import { setUser } from "../Store/Slices/AuthSlice";
+import { setCompany } from "../Store/Slices/CompanySlice";
 
 const Layout = () => {
   const { isExpanded, isMobileOpen, isHovered, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
   const dispatch = useDispatch();
 
   const { user } = useAppSelector((state) => state.auth);
-  const { data: userData, isLoading: userLoading } = Queries.userGetUserdata(user?._id);
+  const { data: userData, isLoading: userLoading } = Queries.useGetUserdata(user?._id);
+
+  const { data: companyData, isLoading: companyLoading } = Queries.useGetCompanyData(user?.companyId);
 
   useEffect(() => {
     if (userData) {
       dispatch(setUser(userData?.data));
     }
   }, [userData, userLoading]);
+
+  useEffect(() => {
+    if (companyData) {
+      dispatch(setCompany(companyData?.data));
+    }
+  }, [companyData, companyLoading]);
 
   useEffect(() => {
     const handleResize = () => {

@@ -1,7 +1,5 @@
-// import { Profile, EditCompany, ReportFormats } from "./Profile";
+import ReportFormats from "./ReportFormat";
 import Profile from "./Profile";
-import ReportFormats from "./ReportFormats";
-import EditCompany from "./EditCompany";
-// import { EditCompany } from "../../../Components/Settings/GeneralSetting";
+import EditCompany from "./Profile/EditCompany";
 
-export { Profile, EditCompany, ReportFormats };
+export { ReportFormats, Profile, EditCompany };

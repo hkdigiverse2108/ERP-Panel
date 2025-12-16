@@ -9,8 +9,14 @@ export const Queries = {
   useGetUploadPdf: (options?: AppQueryOptions<UploadResponse>) => useQueries<UploadResponse>(KEYS.UPLOAD.LIST_PDF, () => Get(URL_KEYS.UPLOAD.ALL_PDF), options),
 
   // ************ User ***********
-  userGetUserdata: (userId?: string) =>
-    useQueries<any>([KEYS.USER.ADD], () => Get(URL_KEYS.USER.ONE(userId as string)), {
-      enabled: !!userId,
+  useGetUserdata: (id?: string) =>
+    useQueries<any>(KEYS.USER.DETAILS(id as string), () => Get(URL_KEYS.USER.ONE(id as string)), {
+      enabled: !!id,
+    }),
+
+  // ************ Company ***********
+  useGetCompanyData: (id?: string) =>
+    useQueries<any>(KEYS.COMPANY.DETAILS(id as string), () => Get(URL_KEYS.COMPANY.ONE(id as string)), {
+      enabled: !!id,
     }),
 };

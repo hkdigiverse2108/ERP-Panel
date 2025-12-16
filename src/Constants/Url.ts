@@ -15,4 +15,11 @@ export const URL_KEYS = {
     EDIT: "/user/edit",
     DELETE: "/user/delete",
   },
+  COMPANY: {
+    ADD: "company/add",
+    ALL: "company/all",
+    ONE: (id: string) => `/company/${id}`,
+    EDIT: "/company/edit",
+    DELETE: "/company/delete",
+  },
 } as const;
