@@ -5,6 +5,7 @@ import { AuthRoutes, PageRoutes } from "./PageRoutes";
 import PrivateRoutes from "./PrivateRoutes";
 import PublicRoutes from "./PublicRoutes";
 
+
 export const Router = createBrowserRouter([
   {
     element: <PrivateRoutes />,

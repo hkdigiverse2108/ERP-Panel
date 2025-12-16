@@ -1,3 +1,4 @@
+
 export const ROUTES = {
   HOME: "/",
   DASHBOARD: "/dashboard",
@@ -9,6 +10,9 @@ export const ROUTES = {
   },
   EMPLOYEE: {
     BASE: "/employee",
+    LIST: "/employee/list",
+    EDIT:"/employee/edit/:id", 
+    ADDEDIT:"/employee/edit/add",
   },
   INVENTORY: {
     STOCK: "/stock",
@@ -26,7 +30,7 @@ export const ROUTES = {
     },
     MATERIAL_CONSUMPTION: {
       BASE: "/material-consumption",
-    },
+    }, 
     STOCK_VERIFICATION: {
       BASE: "/stock-verification",
     },
@@ -39,6 +43,12 @@ export const ROUTES = {
   },
   COMPANY: {
     EDIT: "/company/edit",
-  } 
- 
+  }, 
+ BRANCH:{
+  BASE :"/branch",
+  EDIT :"/branch/edit",
+ },
+  
+  
+  
  } as const;
