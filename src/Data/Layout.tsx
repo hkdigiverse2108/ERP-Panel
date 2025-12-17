@@ -16,7 +16,7 @@ export const NavItems: NavItem[] = [
   { icon: <GridViewRoundedIcon/>, name: PAGE_TITLE.BRANCH.BASE, path:ROUTES.BRANCH.BASE},
   // { icon: <GridViewRoundedIcon />, name: "Contact", path: ROUTES.CONTACT.BASE },
   // { icon: <GridViewRoundedIcon />, name: "Employee", path: ROUTES.EMPLOYEE.BASE },
-  // { icon: <GridViewRoundedIcon />, name: "Inventory", path: ROUTES.EMPLOYEE.BASE },
+  { icon: <GridViewRoundedIcon />, name:INVENTORY.PRODUCT, path:ROUTES.INVENTORY.PRODUCT },
   // {
   //   icon: <CalendarMonthRoundedIcon />,
   //   name: "Calendar",

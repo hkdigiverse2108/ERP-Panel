@@ -8,6 +8,8 @@ import Employees from "../Pages/Employee";
 import EmployeeEdit from "../Pages/Employee/EmployeeEdit";
 import Branch from "../Pages/Branch";
 import BranchEdit from "../Pages/Branch/BranchEdit";
+import Product from "../Pages/Inventory/Product";
+
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -18,6 +20,7 @@ export const PageRoutes = [
   { path: ROUTES.EMPLOYEE.EDIT, element: <EmployeeEdit /> },
   { path: ROUTES.BRANCH.BASE, element: <Branch /> },
   { path: ROUTES.BRANCH.EDIT, element: <BranchEdit /> },
+  { path: ROUTES.INVENTORY.PRODUCT, element: <Product />},
 ];
 
 export const AuthRoutes = [
@@ -27,4 +30,5 @@ export const AuthRoutes = [
 
 export const ComponentRoutes = [
   //  {path: ROUTES.COMPONENTS.EDIT_COMPANY, element: <EditCompany />},
+
 ];
