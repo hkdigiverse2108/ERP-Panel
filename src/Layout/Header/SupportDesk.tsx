@@ -53,7 +53,7 @@ const SupportDesk = () => {
                 <CommonTextField name="contactName" label="Contact Name" grid={{ xs: 12 }} />
                 <CommonTextField name="contact" label="Contact No." grid={{ xs: 12 }} />
                 <CommonTextField name="notes" label="Notes" type="textarea" multiline rows={2} validating={false} grid={{ xs: 12 }} />
-                <CommonButton type="submit" variant="contained" title="Sign In" size="medium" fullWidth grid={{ xs: 12 }} />
+                <CommonButton type="submit" variant="contained" title="Send" size="medium" fullWidth grid={{ xs: 12 }} />
               </Grid>
             </Form>
           </Formik>

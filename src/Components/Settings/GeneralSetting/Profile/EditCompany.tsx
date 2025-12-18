@@ -4,7 +4,6 @@ import { CommonTextField, CommonSwitch } from "../../../../Attribute";
 import { CommonCard } from "../../../Common";
 import { Validation } from "../../../../Utils/ValidationSchemas/Validation";
 import { useNavigate } from "react-router-dom";
-
 import * as Yup from "yup";
 import { GridMoreVertIcon } from "@mui/x-data-grid";
 import { setSelectedFiles, setUploadModal } from "../../../../Store/Slices/ModalSlice";
@@ -14,6 +13,7 @@ import { useEffect, useState } from "react";
 import { Mutations } from "../../../../Api";
 import { getChangedFields } from "../../../../Utils";
 import { setCompany } from "../../../../Store/Slices/CompanySlice";
+import { CommonButton } from "../../../../Attribute";
 
 type CompanyImageKey = "logo" | "waterMark" | "reportFormatLogo" | "authorizedSignature";
 
@@ -277,14 +277,20 @@ export const EditCompany = () => {
               </CommonCard>
 
               {/* ACTIONS */}
-              <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 3 }}>
-                <Button variant="outlined" onClick={() => navigate(-1)}>
-                  Back
-                </Button>
-                <Button type="submit" variant="contained">
-                  Submit
-                </Button>
-              </Box>
+              <Grid className="w-full! flex justify-end ">
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    gap: 2,
+                    mt: 2,
+                  }}
+                >
+                  <CommonButton variant="outlined" onClick={() => navigate(-1)} title="Back" />
+
+                  <CommonButton type="submit" variant="contained" title="Save" />
+                </Box>
+              </Grid>
             </Grid>
           </Form>
         )}

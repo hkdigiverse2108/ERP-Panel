@@ -7,11 +7,13 @@ import { Mutations } from "../../Api";
 import { cleanEditPayload, getChangedFields, removeEmptyFields } from "../../Utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { KEYS } from "../../Constants";
+import { useAppSelector } from "../../Store/hooks";
 
 const EmployeeForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
+  const { company } = useAppSelector((state) => state.company);
 
   const queryClient = useQueryClient();
   const { mutate: editEmployeeMutate, isPending: isEditLoading } = Mutations.useEditEmployee();
