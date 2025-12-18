@@ -5,22 +5,21 @@ import SignInForm from "../Pages/Auth/SignInForm";
 import { Navigate } from "react-router-dom";
 import { EditCompany } from "../Components/Settings/GeneralSetting";
 import Employees from "../Pages/Employee";
-import EmployeeEdit from "../Pages/Employee/EmployeeEdit";
+import EmployeeForm from "../Pages/Employee/EmployeeForm";
 import Branch from "../Pages/Branch";
 import BranchEdit from "../Pages/Branch/BranchEdit";
-import Product from "../Pages/Inventory/Product";
-
+// import Product from "../Pages/Inventory/Product";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
   { path: ROUTES.DASHBOARD, element: <Dashboard /> },
   { path: ROUTES.SETTINGS.GENERAL, element: <GeneralSetting /> },
   { path: ROUTES.COMPANY.EDIT, element: <EditCompany /> },
-  { path: ROUTES.EMPLOYEE.LIST, element: <Employees /> },
-  { path: ROUTES.EMPLOYEE.EDIT, element: <EmployeeEdit /> },
+  { path: ROUTES.EMPLOYEE.BASE, element: <Employees /> },
+  { path: ROUTES.EMPLOYEE.ADD_EDIT, element: <EmployeeForm /> },
   { path: ROUTES.BRANCH.BASE, element: <Branch /> },
   { path: ROUTES.BRANCH.EDIT, element: <BranchEdit /> },
-  { path: ROUTES.INVENTORY.PRODUCT, element: <Product />},
+  // { path: ROUTES.INVENTORY.PRODUCT, element: <Product />},
 ];
 
 export const AuthRoutes = [
@@ -30,5 +29,4 @@ export const AuthRoutes = [
 
 export const ComponentRoutes = [
   //  {path: ROUTES.COMPONENTS.EDIT_COMPANY, element: <EditCompany />},
-
 ];

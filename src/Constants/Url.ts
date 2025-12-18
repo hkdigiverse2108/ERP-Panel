@@ -13,13 +13,20 @@ export const URL_KEYS = {
     ALL: "/user/all",
     ONE: (id: string) => `/user/${id}`,
     EDIT: "/user/edit",
-    DELETE: "/user/delete",
+    DELETE: "/user/delete/",
   },
   COMPANY: {
     ADD: "company/add",
     ALL: "company/all",
     ONE: (id: string) => `/company/${id}`,
     EDIT: "/company/edit",
-    DELETE: "/company/delete",
+    DELETE: "/company/delete/",
+  },
+  EMPLOYEE: {
+    BASE: "/employee",
+    ADD: "/employee/add",
+    ALL: "/employee/all",
+    ONE: (id: string) => `/employee/${id}`,
+    EDIT: "/employee/edit",
   },
 } as const;

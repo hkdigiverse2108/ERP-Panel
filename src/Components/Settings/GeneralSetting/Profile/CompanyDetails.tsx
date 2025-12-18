@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { CommonCard } from "../../../Common";
 import { Box, Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -66,8 +65,6 @@ import EditIcon from "@mui/icons-material/Edit";
 // ];
 
 const CompanyDetails = () => {
-  const [enabled, setEnabled] = useState(false);
-
   const { company = {} } = useAppSelector((state) => state.company);
 
   const navigate = useNavigate();
@@ -117,6 +114,28 @@ const CompanyDetails = () => {
     { label: "TAN No.", value: company?.taxDeductionAndCollectionAccountNumber },
     { label: "IEC No.", value: company?.importerExporterCode },
     { label: "Outlet Size (sq.ft.)", value: company?.outletSize },
+  ];
+  const imageItems = [
+    {
+      label: "Logo",
+      src: company?.logo,
+      alt: "Logo",
+    },
+    {
+      label: "Watermark",
+      src: company?.waterMark,
+      alt: "waterMark",
+    },
+    {
+      label: "Report Formats Logo",
+      src: company?.reportFormatLogo,
+      alt: "reportFormatLogo",
+    },
+    {
+      label: "Authorised Signature",
+      src: company?.authorizedSignature,
+      alt: "authorizedSignature",
+    },
   ];
 
   return (
@@ -172,36 +191,20 @@ const CompanyDetails = () => {
         </Grid>
       </CommonCard>
 
-      <CommonCard title="logo" grid={{ xs: 12, lg: 6 }}>
-        <Grid container className="p-4 " spacing={2}>
-          <Grid size={{ xs: 12, md: 6 }} className=" max-sm:flex! max-sm:justify-center! max-sm:items-center!">
-            <p>Logo</p>
-            <Box className={`relative flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>
-              <img src={`${company?.logo || `${ImagePath}user/1.jpg`} `} alt={"Logo"} className="object-cover w-full h-full rounded-md" />
-            </Box>
-          </Grid>
+      <CommonCard title="logo" grid={{ xs: 12, xl: 6 }}>
+        <Grid container spacing={2} className="p-4 overflow-auto ">
+          {imageItems.map((item, index) => (
+            <Grid key={index} size={{ xs: 12, md: 6 }} className="flex! flex-col! max-sm:justify-center! max-sm:items-center! ">
+              <p>{item.label}</p>
 
-          <Grid size={{ xs: 12, md: 6 }} className=" max-sm:flex! max-sm:justify-center! max-sm:items-center!">
-            <p>Watermark</p>
-
-            <Box className={`flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>
-              <img src={`${company?.waterMark || `${ImagePath}user/1.jpg`} `} alt={"waterMark"} className="object-cover w-full h-full rounded-md" />
-            </Box>
-          </Grid>
-          <Grid size={{ xs: 12, md: 6 }} className=" max-sm:flex! max-sm:justify-center! max-sm:items-center!">
-            <p>Report Formats Logo</p>
-            <Box className={`flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>
-              <img src={`${company?.reportFormatLogo || `${ImagePath}user/1.jpg`} `} alt={"reportFormatLogo"} className="object-cover w-full h-full rounded-md" />
-            </Box>
-          </Grid>
-          <Grid size={{ xs: 12, md: 6 }} className=" max-sm:flex! max-sm:justify-center! max-sm:items-center!">
-            <p>Authorised Signature</p>
-            <Box className={`flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden`} sx={{ width: 150, height: 150 }}>
-              <img src={`${company?.authorizedSignature || `${ImagePath}user/1.jpg`} `} alt={"authorizedSignature"} className="object-cover w-full h-full rounded-md" />
-            </Box>
-          </Grid>
+              <Box className="flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden" sx={{ width: 150, height: 150 }}>
+                <img src={item.src || `${ImagePath}user/1.jpg`} alt={item.alt} className="object-cover w-full h-full rounded-md" />
+              </Box>
+            </Grid>
+          ))}
         </Grid>
       </CommonCard>
+
       <Grid size={6}>
         <CommonSwitch name="allowRoundOff" label="Allow RoundOff" value={company?.allowRoundOff === "true" || false} />
         <CommonSwitch name="enableFeedbackModule" label="Enable Feedback Module" value={company?.enableFeedbackModule === "true" || false} />
