@@ -15,11 +15,16 @@ export const ROUTES = {
     ADD_EDIT:"/employee/add-edit",
   },
   INVENTORY: {
-    STOCK: "/stock",
-     PRODUCT: {
-     BASE: "inventory/product",
-     ADDEDIT:"/inventory/product/add-edit/:id?",
-     },
+    BASE: "/inventory",
+    
+    PRODUCT: {
+      BASE: "/inventory/product",
+      ADDEDIT: "/inventory/product/add-edit/:id?",
+    },
+
+    STOCK: {
+      BASE: "/inventory/stock",
+    },
     CATEGORY_BRAND: "/category-brand",
     DEPARTMENT: "/department",
     BILL_OF_MATERIALS: {
@@ -47,7 +52,7 @@ export const ROUTES = {
   }, 
  BRANCH:{
   BASE :"/branch",
-  EDIT :"/branch/edit",
+  EDIT :"/branch/add-edit",
  },
   
   

@@ -3,6 +3,7 @@ import { Formik, Form } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CommonCard } from "../../Components/Common";
 import { CommonTextField } from "../../Attribute";
+import { CommonButton } from "../../Attribute";
 
 const BranchEdit = () => {
   const location = useLocation();
@@ -25,12 +26,12 @@ const BranchEdit = () => {
             <CommonCard title="Edit Branch" grid={{ xs: 12 }}>
               <Grid container spacing={2} sx={{ p: 2 }}>
                 {/* BRANCH FIELDS */}
-                <CommonTextField name="branchName" label="Branch Name" grid={{ xs: 12, md: 6 }} />
+                <CommonTextField name="branchName" label="Branch Name" required grid={{ xs: 12, md: 6 }} />
 
-                <CommonTextField name="branchAddress" label="Branch Address" grid={{ xs: 12, md: 6 }} />
+                <CommonTextField name="branchAddress" label="Branch Address" required grid={{ xs: 12, md: 6 }} />
 
                 {/* ACTION BUTTONS */}
-                <Grid item xs={12}>
+                <Grid className="w-full! flex justify-end ">
                   <Box
                     sx={{
                       display: "flex",
@@ -39,12 +40,9 @@ const BranchEdit = () => {
                       mt: 2,
                     }}
                   >
-                    <Button variant="outlined" onClick={() => navigate(-1)}>
-                      Back
-                    </Button>
-                    <Button type="submit" variant="contained">
-                      Save
-                    </Button>
+                    <CommonButton variant="outlined" onClick={() => navigate(-1)} title="Back" />
+
+                    <CommonButton type="submit" variant="contained" title="Save" />
                   </Box>
                 </Grid>
               </Grid>
