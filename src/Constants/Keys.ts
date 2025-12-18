@@ -21,15 +21,15 @@ export const KEYS = {
 
   UPLOAD: {
     ROOT: ["upload"],
-    LIST_IMAGE: ["upload", "image"],
-    LIST_PDF: ["upload", "pdf"],
+    ALL_IMAGE: ["upload", "image"],
+    ALL_PDF: ["upload", "pdf"],
     ADD: ["upload", "add"], // mutation
     DELETE: ["upload", "delete"], // mutation
   },
 
   USER: {
     ROOT: ["user"],
-    LIST: ["user", "list"],
+    ALL: ["user", "all"],
     DETAILS: (id: string) => ["user", "detail", id],
     ADD: ["user", "add"], // mutation
     EDIT: ["user", "edit"], // mutation
@@ -38,8 +38,17 @@ export const KEYS = {
 
   COMPANY: {
     ROOT: ["company"],
-    LIST: ["company", "list"],
+    ALL: ["company", "all"],
     DETAILS: (id: string) => ["company", "detail", id],
-    EDIT: ["user", "edit"], // mutation
+    EDIT: ["user", "edit"],
+  },
+
+  EMPLOYEE: {
+    ROOT: ["employee"],
+    ALL: ["employee", "all"],
+    DETAILS: (id: string) => ["employee", "detail", id],
+    ADD: ["employee", "add"],
+    EDIT: ["employee", "edit"],
+    DELETE: ["employee", "delete"], // mutation
   },
 };

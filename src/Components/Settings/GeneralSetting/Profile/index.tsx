@@ -94,6 +94,7 @@ const Profile = () => {
           </button>
         </div>
       </Grid>
+      {/* ============ Company ============ */}
       <CompanyDetails />
 
       {/* User Edit Model */}

@@ -5,8 +5,8 @@ import { useQueries } from "./ReactQuery";
 
 export const Queries = {
   // ************ Upload ***********
-  useGetUploadImage: (options?: AppQueryOptions<UploadResponse>) => useQueries<UploadResponse>(KEYS.UPLOAD.LIST_IMAGE, () => Get(URL_KEYS.UPLOAD.ALL_IMAGE), options),
-  useGetUploadPdf: (options?: AppQueryOptions<UploadResponse>) => useQueries<UploadResponse>(KEYS.UPLOAD.LIST_PDF, () => Get(URL_KEYS.UPLOAD.ALL_PDF), options),
+  useGetUploadImage: (options?: AppQueryOptions<UploadResponse>) => useQueries<UploadResponse>(KEYS.UPLOAD.ALL_IMAGE, () => Get(URL_KEYS.UPLOAD.ALL_IMAGE), options),
+  useGetUploadPdf: (options?: AppQueryOptions<UploadResponse>) => useQueries<UploadResponse>(KEYS.UPLOAD.ALL_PDF, () => Get(URL_KEYS.UPLOAD.ALL_PDF), options),
 
   // ************ User ***********
   useGetUserdata: (id?: string) =>
@@ -17,6 +17,14 @@ export const Queries = {
   // ************ Company ***********
   useGetCompanyData: (id?: string) =>
     useQueries<any>(KEYS.COMPANY.DETAILS(id as string), () => Get(URL_KEYS.COMPANY.ONE(id as string)), {
+      enabled: !!id,
+    }),
+
+  // ************ Company ***********
+  useGetAllEmployeeData: () => useQueries<any>(KEYS.EMPLOYEE.ALL, () => Get(URL_KEYS.EMPLOYEE.ALL)),
+
+  useGetOneEmployeeData: (id?: string) =>
+    useQueries<any>(KEYS.EMPLOYEE.ALL, () => Get(URL_KEYS.EMPLOYEE.ALL), {
       enabled: !!id,
     }),
 };

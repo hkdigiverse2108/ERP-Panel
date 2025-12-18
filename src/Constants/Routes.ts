@@ -12,7 +12,7 @@ export const ROUTES = {
     BASE: "/employee",
     LIST: "/employee/list",
     EDIT:"/employee/edit/:id", 
-    ADDEDIT:"/employee/edit/add",
+    ADD_EDIT:"/employee/add-edit",
   },
   INVENTORY: {
     STOCK: "/stock",

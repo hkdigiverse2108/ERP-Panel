@@ -12,11 +12,11 @@ import type { NavItem } from "../Types";
 
 export const NavItems: NavItem[] = [
   { icon: <GridViewRoundedIcon />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
-  { icon: <PeopleIcon />, name: PAGE_TITLE.EMPLOYEE.LIST, path: ROUTES.EMPLOYEE.LIST },
+  { icon: <PeopleIcon />, name: PAGE_TITLE.EMPLOYEE.BASE, path: ROUTES.EMPLOYEE.BASE },
   { icon: <GridViewRoundedIcon/>, name: PAGE_TITLE.BRANCH.BASE, path:ROUTES.BRANCH.BASE},
   // { icon: <GridViewRoundedIcon />, name: "Contact", path: ROUTES.CONTACT.BASE },
   // { icon: <GridViewRoundedIcon />, name: "Employee", path: ROUTES.EMPLOYEE.BASE },
-  { icon: <GridViewRoundedIcon />, name:INVENTORY.PRODUCT, path:ROUTES.INVENTORY.PRODUCT },
+  // { icon: <GridViewRoundedIcon />, name:INVENTORY.PRODUCT, path:ROUTES.INVENTORY.PRODUCT },
   // {
   //   icon: <CalendarMonthRoundedIcon />,
   //   name: "Calendar",
