@@ -7,62 +7,28 @@ import { Mutations } from "../../Api";
 import { cleanEditPayload, getChangedFields, removeEmptyFields } from "../../Utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { KEYS } from "../../Constants";
+import { useAppSelector } from "../../Store/hooks";
 
 const EmployeeForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
+  const { company } = useAppSelector((state) => state.company);
 
   const queryClient = useQueryClient();
   const { mutate: editEmployeeMutate, isPending: isEditLoading } = Mutations.useEditEmployee();
   const { mutate: addEmployeeMutate, isPending: isAddLoading } = Mutations.useAddEmployee();
 
-  // const handleSubmit = async (values: any) => {
-  //   try {
-  //     if (data?.id) {
-  //       console.log("Employee Edit Data:", values);
-
-  //       const Payload = removeEmptyFields(values);
-  //       const filteredPayload = getChangedFields(Payload, data);
-  //       console.log("filteredPayload -->", filteredPayload);
-
-  //       editEmployeeMutate(
-  //         { employeeId: data?._id, ...filteredPayload },
-  //         {
-  //           onSuccess: () => {
-  //             queryClient.invalidateQueries({ queryKey: KEYS.EMPLOYEE.ALL });
-  //             navigate(-1);
-  //           },
-  //         }
-  //       );
-  //     } else {
-  //       const Payload = removeEmptyFields(values);
-  //       console.log("const payload0", Payload, values);
-  //       addEmployeeMutate(Payload, {
-  //         onSuccess: () => {
-  //           queryClient.invalidateQueries({ queryKey: KEYS.EMPLOYEE.ALL });
-  //           navigate(-1);
-  //         },
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log("error -> ", error);
-  //   }
-  // };
-
   const handleSubmit = async (values: any) => {
     try {
       if (data?.id) {
-        // EDIT FLOW
-
-        // 1️⃣ detect all changes (including clears)
         const changedFields = getChangedFields(values, data);
 
-        // 2️⃣ remove untouched empties, keep intentional clears
         const payload = cleanEditPayload(changedFields, data);
+        payload.companyId = company?._id;
 
         editEmployeeMutate(
-          { employeeId: data._id, ...payload },
+          { employeeId: data?._id, ...payload },
           {
             onSuccess: () => {
               queryClient.invalidateQueries({ queryKey: KEYS.EMPLOYEE.ALL });
@@ -71,10 +37,8 @@ const EmployeeForm = () => {
           }
         );
       } else {
-        // ADD FLOW
-
-        const payload = removeEmptyFields(values);
-
+        let payload = removeEmptyFields(values);
+        payload.companyId = company?._id;
         addEmployeeMutate(payload, {
           onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: KEYS.EMPLOYEE.ALL });

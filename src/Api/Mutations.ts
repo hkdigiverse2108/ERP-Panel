@@ -18,7 +18,7 @@ export const Mutations = {
   useEditCompany: () => useMutations<FormData, any>(KEYS.COMPANY.EDIT, (input) => Put(URL_KEYS.COMPANY.EDIT, input)),
 
   // ************ Employee ***********
-  useAddEmployee: () => useMutations<LoginPayload, LoginResponse>(KEYS.EMPLOYEE.ADD, (input) => Post(URL_KEYS.EMPLOYEE.ADD, input, false)),
+  useAddEmployee: () => useMutations<FormData, any>(KEYS.EMPLOYEE.ADD, (input) => Post(URL_KEYS.EMPLOYEE.ADD, input, false)),
   useEditEmployee: () => useMutations<FormData, any>(KEYS.EMPLOYEE.EDIT, (input) => Put(URL_KEYS.EMPLOYEE.EDIT, input)),
   useDeleteEmployee: () => useMutations<{ id: string }, void>(KEYS.EMPLOYEE.DELETE, (id) => Delete(`${URL_KEYS.EMPLOYEE.BASE}/${id}`)),
 };
