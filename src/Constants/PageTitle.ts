@@ -9,17 +9,17 @@ export const PAGE_TITLE = {
   EMPLOYEE: {
     BASE: "Employee",
     LIST: "Employee List",
-    
   },
-  BRANCH:{
-    BASE:"Branch",
+  BRANCH: {
+    BASE: "Branch",
   },
-  INVENTORY:{
-    PRODUCT:{
-       BASE:"inventory/product",
-    }
-  
+  INVENTORY: {
+    BASE: "inventory",
+    STOCK: "stock",
+    PRODUCT : "Product",
+    // PRODUCT: {
+    //   BASE: "inventory/product",
+      ADDEDIT: "/inventory/product/add-edit/:id?",
+    // },
   },
-
-
 } as const;

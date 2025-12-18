@@ -3,14 +3,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import { CommonButton } from "../../../Attribute";
 import { CommonCard, CommonDataGrid } from "../../../Components/Common";
 import { useDataGrid } from "../../../Utils/Hooks";
 import { ROUTES } from "../../../Constants";
 
 const Product = () => {
   const navigate = useNavigate();
-  
 
   // ================== STATE ==================
   const [openDelete, setOpenDelete] = useState(false);
@@ -26,10 +25,10 @@ const Product = () => {
     productType: "",
   });
 
-  // ================== DATAGRID HOOK ==================
+  //  DATAGRID HOOK
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({ page: 0, pageSize: 10 });
 
-  // ================== TABLE DATA (BAKERY) ==================
+  // TABLE DATA (BAKERY) 
   const rows = [
     {
       id: 1,
@@ -57,17 +56,14 @@ const Product = () => {
     },
   ];
 
-  // ================== FUNCTIONS ==================
- const handleAdd = () => {
-  navigate(ROUTES.INVENTORY.PRODUCT.ADDEDIT);
-};
+  // FUNCTIONS
+  const handleAdd = () => {
+    navigate(ROUTES.INVENTORY.PRODUCT.ADDEDIT);
+  };
 
-const handleEdit = (row) => {
-  navigate(
-    ROUTES.INVENTORY.PRODUCT.ADDEDIT.replace(":id", row.id),
-    { state: { data: row } }
-  );
-};
+  const handleEdit = (row) => {
+    navigate(ROUTES.INVENTORY.PRODUCT.ADDEDIT.replace(":id", row.id), { state: { data: row } });
+  };
 
   const handleDelete = (row) => {
     setSelectedRow(row);
@@ -79,7 +75,7 @@ const handleEdit = (row) => {
     setOpenDelete(false);
   };
 
-  // ================== COLUMNS (EXACT LIKE EMPLOYEE) ==================
+  //  COLUMNS 
   const columns = [
     {
       field: "id",
@@ -123,12 +119,12 @@ const handleEdit = (row) => {
       filterable: false,
       renderCell: (params) => (
         <Grid container spacing={1}>
-          <Grid item>
+          <Grid size="auto">
             <IconButton color="primary" size="small" onClick={() => handleEdit(params.row)}>
               <EditIcon />
             </IconButton>
           </Grid>
-          <Grid item>
+          <Grid size="auto">
             <IconButton color="error" size="small" onClick={() => handleDelete(params.row)}>
               <DeleteIcon />
             </IconButton>
@@ -138,29 +134,27 @@ const handleEdit = (row) => {
     },
   ];
 
-  // ================== TOP FILTER SECTION ==================
+  //  TOP FILTER SECTION 
   const filterFields = ["Department", "Category", "Sub Category", "Brand", "Sub Brand", "HSN", "Purchase Tax", "Product Type"];
 
   const topContent = (
     <Grid container spacing={2} alignItems="center">
-      {filterFields.map((label) => (
+      {/* {filterFields.map((label) => (
         <Grid item xs={12} sm={6} md={3} key={label}>
           <TextField select fullWidth size="small" label={label} value="">
             <MenuItem value="">All</MenuItem>
             <MenuItem value="Sample">Sample</MenuItem>
           </TextField>
         </Grid>
-      ))}
+      ))} */}
 
-      <Grid item>
-        <Button variant="contained" color="primary" size="large" sx={{ px: 4, fontSize: "0.9rem" }} onClick={handleAdd}>
-          ADD
-        </Button>
+      <Grid size="auto">
+        <CommonButton variant="contained" color="primary" size="medium" title="ADD" onClick={handleAdd} sx={{ px: 4, fontSize: "0.9rem" }} />
       </Grid>
     </Grid>
   );
 
-  // ================== RENDER ==================
+  //  RENDER 
   return (
     <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
       <CommonCard title="Bakery Products" topContent={topContent}>
@@ -169,8 +163,8 @@ const handleEdit = (row) => {
 
       {/* Delete Confirmation Modal */}
       <Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>Are you sure you want to delete {selectedRow?.name}?</DialogContent>
+        <DialogTitle sx={{ color: "red" }}>Confirm Delete</DialogTitle>
+        <DialogContent>Are you sure you want to delete "{selectedRow?.name}"?</DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDelete(false)}>No</Button>
           <Button color="error" onClick={confirmDelete}>

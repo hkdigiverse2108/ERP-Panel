@@ -9,7 +9,8 @@ import EmployeeEdit from "../Pages/Employee/EmployeeEdit";
 import Branch from "../Pages/Branch";
 import BranchEdit from "../Pages/Branch/BranchEdit";
 import Product from "../Pages/Inventory/Product";
-
+import EditProduct from "../Pages/Inventory/Product/EditProduct";
+import Stocks from "../Pages/Inventory/Stock";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -20,9 +21,10 @@ export const PageRoutes = [
   { path: ROUTES.EMPLOYEE.EDIT, element: <EmployeeEdit /> },
   { path: ROUTES.BRANCH.BASE, element: <Branch /> },
   { path: ROUTES.BRANCH.EDIT, element: <BranchEdit /> },
-  { path: ROUTES.INVENTORY.PRODUCT, element: <Product />},
+  { path: ROUTES.INVENTORY.PRODUCT.BASE, element: <Product /> },
+  { path: ROUTES.INVENTORY.PRODUCT.ADDEDIT, element: <EditProduct /> },
+  { path: ROUTES.INVENTORY.STOCK.BASE, element: <Stocks /> },
 ];
-
 export const AuthRoutes = [
   { path: ROUTES.HOME, element: <Navigate to={ROUTES.AUTH.SIGNIN} replace /> },
   { path: ROUTES.AUTH.SIGNIN, element: <SignInForm /> },
@@ -30,5 +32,4 @@ export const AuthRoutes = [
 
 export const ComponentRoutes = [
   //  {path: ROUTES.COMPONENTS.EDIT_COMPANY, element: <EditCompany />},
-
 ];

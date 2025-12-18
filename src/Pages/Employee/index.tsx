@@ -1,5 +1,5 @@
 import { Grid, Box, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
-import dayjs from "dayjs";
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
@@ -7,20 +7,21 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { CommonCard, CommonDataGrid } from "../../Components/Common";
 import { useDataGrid } from "../../Utils/Hooks";
 import { ROUTES } from "../../Constants";
-// import EmployeeEdit from "./EmployeeEdit";
+import { CommonButton } from "../../Attribute";
+
 
 const Employee = () => {
   const navigate = useNavigate();
 
-  // ================== STATE ==================
-  const [range, setRange] = useState({ start: dayjs(), end: dayjs() });
+  //  STATE
+ 
   const [openDelete, setOpenDelete] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
 
-  // ================== DATAGRID HOOK ==================
+  //  DATAGRID HOOK 
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({ page: 0, pageSize: 10 });
 
-  // ================== TABLE DATA ==================
+  // TABLE DATA 
   const rows = [
     { id: 1, name: "Kenil", email: "kenil@gmail.com", status: "Active" },
     { id: 2, name: "Amit", email: "amit@gmail.com", status: "Inactive" },
@@ -34,7 +35,7 @@ const Employee = () => {
     { id: 10, name: "Rita", email: "rita@gmail.com", status: "Inactive" },
   ];
 
-  // ================== FUNCTIONS ==================
+  // FUNCTIONS //
 
   const handleAdd = () => {
     navigate(ROUTES.EMPLOYEE.ADDEDIT); 
@@ -54,7 +55,7 @@ const Employee = () => {
     setOpenDelete(false);
   };
 
-  // ================== COLUMNS ==================
+  // COLUMNS //
   const columns = [
     {
       field: "id",
@@ -92,12 +93,12 @@ const Employee = () => {
       filterable: false,
       renderCell: (params) => (
         <Grid container spacing={1}>
-          <Grid item>
+          <Grid size="auto">
             <IconButton color="primary" size="small" onClick={() => handleEdit(params.row)}>
               <EditIcon />
             </IconButton>
           </Grid>
-          <Grid item>
+         <Grid size="auto">
             <IconButton color="error" size="small" onClick={() => handleDelete(params.row)}>
               <DeleteIcon />
             </IconButton>
@@ -107,18 +108,16 @@ const Employee = () => {
     },
   ];
 
-  // ================== TOP SECTION ==================
+  //  TOP SECTION 
   const topContent = (
     <Grid container spacing={2} alignItems="center" sx={{ mb: 0, p: 0 }}>
-      <Grid item>
-        <Button variant="contained" color="primary" size="large" sx={{ px: 4, fontSize: "0.9rem" }} onClick={handleAdd} >
-          ADD
-        </Button>
+      <Grid size="auto">
+       <CommonButton variant="contained" color="primary" size="medium" title="ADD" onClick={handleAdd} sx={{ px: 4, fontSize: "0.9rem" }} />
       </Grid>
     </Grid>
   );
 
-  // ================== RENDER ==================
+  //  RENDER 
   return (
     <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
       <CommonCard title="Employees" topContent={topContent} sx={{ p: { xs: 2, sm: 3 }, boxShadow: 3, borderRadius: 3 }}>
@@ -127,8 +126,8 @@ const Employee = () => {
 
       {/* Delete Confirmation Modal */}
       <Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>Are you sure you want to delete {selectedRow?.name}?</DialogContent>
+        <DialogTitle sx={{ color: 'red' }}>Confirm Delete</DialogTitle>
+        <DialogContent>Are you sure you want to delete "{selectedRow?.name}"?</DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDelete(false)}>No</Button>
           <Button color="error" onClick={confirmDelete}>
