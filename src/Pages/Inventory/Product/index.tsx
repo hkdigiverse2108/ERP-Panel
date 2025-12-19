@@ -58,11 +58,11 @@ const Product = () => {
 
   // FUNCTIONS
   const handleAdd = () => {
-    navigate(ROUTES.INVENTORY.PRODUCT.ADDEDIT);
+    navigate(ROUTES.PRODUCT.ADD_EDIT);
   };
 
   const handleEdit = (row) => {
-    navigate(ROUTES.INVENTORY.PRODUCT.ADDEDIT.replace(":id", row.id), { state: { data: row } });
+    navigate(ROUTES.PRODUCT.ADD_EDIT.replace(":id", row.id), { state: { data: row } });
   };
 
   const handleDelete = (row) => {

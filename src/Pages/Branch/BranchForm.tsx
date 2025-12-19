@@ -26,9 +26,9 @@ const BranchForm = () => {
             <CommonCard title="Edit Branch" grid={{ xs: 12 }}>
               <Grid container spacing={2} sx={{ p: 2 }}>
                 {/* BRANCH FIELDS */}
-                <CommonTextField name="branchName" label="Branch Name" required grid={{ xs: 12, md: 6 }} />
+                <CommonTextField name="branchName" label="Branch Name" required grid={{ xs: 12, md: 12 }} />
 
-                <CommonTextField name="branchAddress" label="Branch Address" required grid={{ xs: 12, md: 6 }} />
+                <CommonTextField name="branchAddress" label="Branch Address" required grid={{ xs: 12, md: 12 }} />
 
                 {/* ACTION BUTTONS */}
                 <Grid className="w-full! flex justify-end ">

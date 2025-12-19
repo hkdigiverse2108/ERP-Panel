@@ -11,6 +11,7 @@ import BranchForm from "../Pages/Branch/BranchForm";
 import Product from "../Pages/Inventory/Product";
 import ProductForm from "../Pages/Inventory/Product/ProductForm";
 import Stocks from "../Pages/Inventory/Stock";
+import Contact from "../Pages/Contacts";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -21,9 +22,11 @@ export const PageRoutes = [
   { path: ROUTES.EMPLOYEE.ADD_EDIT, element: <EmployeeForm /> },
   { path: ROUTES.BRANCH.BASE, element: <Branch /> },
   { path: ROUTES.BRANCH.EDIT, element: <BranchForm /> },
-  { path: ROUTES.INVENTORY.PRODUCT.BASE, element: <Product /> },
-  { path: ROUTES.INVENTORY.PRODUCT.ADDEDIT, element: <ProductForm /> },
-  { path: ROUTES.INVENTORY.STOCK.BASE, element: <Stocks /> },
+  { path: ROUTES.PRODUCT.BASE, element: <Product /> },
+  { path: ROUTES.PRODUCT.ADD_EDIT, element: <ProductForm /> },
+  { path: ROUTES.STOCK.BASE, element: <Stocks /> },
+  { path: ROUTES.CONTACT.BASE, element:<Contact/>},
+  // { path: ROUTES.CONTACT.ADDEDIT, element:<}
 ];
 export const AuthRoutes = [
   { path: ROUTES.HOME, element: <Navigate to={ROUTES.AUTH.SIGNIN} replace /> },
