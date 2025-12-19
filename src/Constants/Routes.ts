@@ -7,23 +7,21 @@ export const ROUTES = {
   },
   CONTACT: {
     BASE: "/contact",
+    ADDEDIT: "/edit/add",
   },
   EMPLOYEE: {
     BASE: "/employee",
-    LIST: "/employee/list",
-    EDIT:"/employee/edit/:id", 
     ADD_EDIT:"/employee/add-edit",
   },
-  INVENTORY: {
-    BASE: "/inventory",
+  
     
     PRODUCT: {
-      BASE: "/inventory/product",
-      ADDEDIT: "/inventory/product/add-edit/:id?",
+      BASE: "/product",
+      ADD_EDIT: "/product/add-edit",
     },
 
     STOCK: {
-      BASE: "/inventory/stock",
+      BASE: "/stock",
     },
     CATEGORY_BRAND: "/category-brand",
     DEPARTMENT: "/department",
@@ -43,7 +41,7 @@ export const ROUTES = {
     MATERIAL_CREATION: {
       BASE: "/material-creation",
     },
-  },
+  
   SETTINGS: {
     GENERAL: "/setting/general",
   },
