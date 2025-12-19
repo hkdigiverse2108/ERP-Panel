@@ -11,39 +11,16 @@ import type { NavItem } from "../Types";
 export const NavItems: NavItem[] = [
   { icon: <GridViewRoundedIcon />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
   { icon: <PeopleIcon />, name: PAGE_TITLE.EMPLOYEE.BASE, path: ROUTES.EMPLOYEE.BASE },
-  { icon: <GridViewRoundedIcon/>, name: PAGE_TITLE.BRANCH.BASE, path:ROUTES.BRANCH.BASE},
-  // { icon: <GridViewRoundedIcon />, name: "Contact", path: ROUTES.CONTACT.BASE },
-  // { icon: <GridViewRoundedIcon />, name: "Employee", path: ROUTES.EMPLOYEE.BASE },
-  // { icon: <GridViewRoundedIcon />, name:INVENTORY.PRODUCT, path:ROUTES.INVENTORY.PRODUCT },
-  // { icon: <GridViewRoundedIcon />, name: "Contact", path: ROUTES.CONTACT.BASE },
-  // { icon: <GridViewRoundedIcon />, name: "Employee", path: ROUTES.EMPLOYEE.BASE },
-  // { icon: <GridViewRoundedIcon />, name: "inventory", path: ROUTES.INVENTORY.PRODUCT.BASE },
+  { icon: <GridViewRoundedIcon />, name: PAGE_TITLE.BRANCH.BASE, path: ROUTES.BRANCH.BASE },
   {
     name: PAGE_TITLE.INVENTORY.BASE,
     icon: <SettingsIcon />,
-    subItems: [{ name: PAGE_TITLE.INVENTORY.PRODUCT, path: ROUTES.INVENTORY.PRODUCT.BASE, pro: false },
-     { name: PAGE_TITLE.INVENTORY.STOCK, path: ROUTES.INVENTORY.STOCK.BASE, pro: false }],
-  },    
-  // {
-  //   icon: <CalendarMonthRoundedIcon />,
-  //   name: "Calendar",
-  //   path: "/calendar",
-  // },
-  //   {
-  //     icon: <PersonRoundedIcon />,
-  //      name: "User Profile",
-  //      path: "/profile",
-  //  },
-  // {
-  //   name: "Forms",
-  //   icon: <FormatListBulletedRoundedIcon />,
-  //   subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
-  // },
-  // {
-  //   name: "Tables",
-  //   icon: <TableChartRoundedIcon />,
-  //   subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
-  // },
+    subItems: [
+      { name: PAGE_TITLE.INVENTORY.PRODUCT, path: ROUTES.INVENTORY.PRODUCT.BASE, pro: false },
+      { name: PAGE_TITLE.INVENTORY.STOCK, path: ROUTES.INVENTORY.STOCK.BASE, pro: false },
+    ],
+  },
+
   {
     name: PAGE_TITLE.SETTINGS.BASE,
     icon: <SettingsIcon />,

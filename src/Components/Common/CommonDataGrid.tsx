@@ -16,7 +16,7 @@ const CommonDataGrid = <T,>({ columns, rows, rowCount, loading = false, paginati
     <div className={BoxClass}>
       <DataGrid
         rows={rows}
-        // rowCount={rowCount}
+        rowCount={rowCount}
         loading={loading}
         columns={columns}
         showToolbar
@@ -33,21 +33,23 @@ const CommonDataGrid = <T,>({ columns, rows, rowCount, loading = false, paginati
         }}
         density="standard"
         //Pagination
-        paginationMode="client"
+        paginationMode="server"
         paginationModel={paginationModel}
         onPaginationModelChange={onPaginationModelChange}
         ///Sorting
-        sortingMode="client"
+        sortingMode="server"
         sortModel={sortModel}
         onSortModelChange={onSortModelChange}
         //Filter
-        filterMode="client"
+        filterMode="server"
         filterModel={filterModel}
         onFilterModelChange={onFilterModelChange}
         //
         disableRowSelectionOnClick
         pageSizeOptions={pageSizeOptions}
         // pageSizeOptions={[5, 10, 25, { value: -1, label: 'All' }]}
+
+        keepNonExistentRowsSelected={false} // 🔥 IMPORTANT
       />
     </div>
   );

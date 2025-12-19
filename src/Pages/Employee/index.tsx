@@ -10,23 +10,35 @@ import { Mutations, Queries } from "../../Api";
 import { useQueryClient } from "@tanstack/react-query";
 
 const Employee = () => {
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({ page: 0, pageSize: 10 });
+
+  const employeeParams = useMemo(
+    () => ({
+      page: paginationModel.page + 1,
+      limit: paginationModel.pageSize,
+      search: filterModel?.quickFilterValues?.[0],
+      // activeFilter: filterModel?.isActive,
+    }),
+    [paginationModel, filterModel]
+  );
+
   const queryClient = useQueryClient();
 
   const [rawToDelete, setRawToDelete] = useState<any>(null);
 
-  const { data: employeeData, isLoading: employeeDataLoading } = Queries.useGetAllEmployeeData();
+  const { data: employeeData, isLoading: employeeDataLoading } = Queries.useGetAllEmployeeData(employeeParams);
   const { mutate: deleteEmployeeMutate } = Mutations.useDeleteEmployee();
 
   const allEmployee = useMemo(() => {
     return employeeData?.data?.employee_data.map((emp: any) => ({ ...emp, id: emp?._id })) || [];
   }, [employeeData]);
 
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({ page: 0, pageSize: 10 });
+  const totalRows = employeeData?.data?.totalData || 0;
 
   const handleDeleteBtn = () => {
     deleteEmployeeMutate(rawToDelete?._id, {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: KEYS.EMPLOYEE.ALL });
+        queryClient.invalidateQueries({ queryKey: [KEYS.EMPLOYEE.ALL] });
         setRawToDelete(null);
       },
     });
@@ -109,7 +121,7 @@ const Employee = () => {
   return (
     <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
       <CommonCard title="Employees" topContent={topContent}>
-        <CommonDataGrid BoxClass="rounded-md overflow-hidden" columns={columns} rows={allEmployee} rowCount={allEmployee.length} loading={employeeDataLoading} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25]} />
+        <CommonDataGrid BoxClass="rounded-md overflow-hidden" columns={columns} rows={allEmployee} rowCount={totalRows} loading={employeeDataLoading} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25]} />
       </CommonCard>
 
       <CommonModal isOpen={Boolean(rawToDelete)} onClose={() => setRawToDelete(null)} className="max-w-125 m-2 sm:m-5 pt-0!">

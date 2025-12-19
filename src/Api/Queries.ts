@@ -1,5 +1,6 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AppQueryOptions, UploadResponse } from "../Types";
+import type { AppQueryOptions, Params, UploadResponse } from "../Types";
+import { cleanParams } from "../Utils";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 
@@ -21,7 +22,10 @@ export const Queries = {
     }),
 
   // ************ Employee ***********
-  useGetAllEmployeeData: () => useQueries<any>(KEYS.EMPLOYEE.ALL, () => Get(URL_KEYS.EMPLOYEE.ALL)),
+  useGetAllEmployeeData: (params?: Params) =>
+    useQueries<any>([KEYS.EMPLOYEE.ALL, cleanParams(params)], () => Get(URL_KEYS.EMPLOYEE.ALL, cleanParams(params)), {
+      placeholderData: undefined,
+    }),
 
   useGetOneEmployeeData: (id?: string) =>
     useQueries<any>(KEYS.EMPLOYEE.ALL, () => Get(URL_KEYS.EMPLOYEE.ALL), {
