@@ -51,4 +51,13 @@ export const KEYS = {
     EDIT: ["employee", "edit"],
     DELETE: ["employee", "delete"], // mutation
   },
+
+  BRANCH: {
+    ROOT: ["branch"],
+    ALL: ["branch", "all"],
+    DETAILS: (id: string) => ["branch", "detail", id],
+    ADD: ["branch", "add"],
+    EDIT: ["branch", "edit"],
+    DELETE: ["branch", "delete"], // mutation
+  },
 };

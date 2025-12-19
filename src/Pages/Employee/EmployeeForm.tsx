@@ -1,8 +1,8 @@
-import { Box, Grid, Button } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { Formik, Form } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CommonCard } from "../../Components/Common";
-import { CommonSwitch, CommonTextField } from "../../Attribute";
+import { CommonButton, CommonSwitch, CommonTextField } from "../../Attribute";
 import { Mutations } from "../../Api";
 import { cleanEditPayload, getChangedFields, removeEmptyFields } from "../../Utils";
 import { useQueryClient } from "@tanstack/react-query";
@@ -19,63 +19,26 @@ const EmployeeForm = () => {
   const { mutate: editEmployeeMutate, isPending: isEditLoading } = Mutations.useEditEmployee();
   const { mutate: addEmployeeMutate, isPending: isAddLoading } = Mutations.useAddEmployee();
 
-  // const handleSubmit = async (values: any) => {
-  //   try {
-  //     if (data?.id) {
-  //       console.log("Employee Edit Data:", values);
-
-  //       const Payload = removeEmptyFields(values);
-  //       const filteredPayload = getChangedFields(Payload, data);
-  //       console.log("filteredPayload -->", filteredPayload);
-
-  //       editEmployeeMutate(
-  //         { employeeId: data?._id, ...filteredPayload },
-  //         {
-  //           onSuccess: () => {
-  //             queryClient.invalidateQueries({ queryKey: KEYS.EMPLOYEE.ALL });
-  //             navigate(-1);
-  //           },
-  //         }
-  //       );
-  //     } else {
-  //       const Payload = removeEmptyFields(values);
-  //       console.log("const payload0", Payload, values);
-  //       addEmployeeMutate(Payload, {
-  //         onSuccess: () => {
-  //           queryClient.invalidateQueries({ queryKey: KEYS.EMPLOYEE.ALL });
-  //           navigate(-1);
-  //         },
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log("error -> ", error);
-  //   }
-  // };
-
   const handleSubmit = async (values: any) => {
+    if (isEditLoading || isAddLoading) return;
     try {
+      console.log("Form Values:", values, data);
       if (data?.id) {
-        // EDIT FLOW
-
-        // 1️⃣ detect all changes (including clears)
         const changedFields = getChangedFields(values, data);
 
-        // 2️⃣ remove untouched empties, keep intentional clears
-        const payload = cleanEditPayload(changedFields, data);
+        let payload = cleanEditPayload(changedFields, data);
+        payload.companyId = company?._id;
+        payload.employeeId = data._id;
 
-        editEmployeeMutate(
-          { employeeId: data._id, ...payload },
-          {
-            onSuccess: () => {
-              queryClient.invalidateQueries({ queryKey: KEYS.EMPLOYEE.ALL });
-              navigate(-1);
-            },
-          }
-        );
+        editEmployeeMutate(payload, {
+          onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: KEYS.EMPLOYEE.ALL });
+            navigate(-1);
+          },
+        });
       } else {
-        // ADD FLOW
-
-        const payload = removeEmptyFields(values);
+        let payload = removeEmptyFields(values);
+        payload.companyId = company?._id;
 
         addEmployeeMutate(payload, {
           onSuccess: () => {
@@ -88,6 +51,8 @@ const EmployeeForm = () => {
       console.error("error -> ", error);
     }
   };
+
+  console.log("is Loading:", isEditLoading, isAddLoading);
 
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
@@ -128,40 +93,39 @@ const EmployeeForm = () => {
         }}
         onSubmit={handleSubmit}
       >
-        {({ values, setFieldValue }) => (
+        {({ values, setFieldValue, isSubmitting }) => (
           <Form>
             <Grid container spacing={2}>
               {/* BASIC DETAILS */}
               <CommonCard title="Basic Details" grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="name" label="Employee Name" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="username" label="User Name" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="role" label="Role" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="mobileNo" label="Mobile No." grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="name" label="Employee Name" required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="username" label="User Name" required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="role" label="Role" required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="mobileNo" label="Mobile No." required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="email" label="Email" required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="panNumber" label="PAN No." required grid={{ xs: 12, md: 4 }} />
                 </Grid>
               </CommonCard>
 
               {/* ADDRESS DETAILS */}
               <CommonCard title="Address Details" grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="address.address" label="Address" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="address.country" label="Country" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="address.state" label="State" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="address.city" label="City" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="address.postalCode" label="ZIP Code" grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="address.address" label="Address" required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="address.country" label="Country" required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="address.state" label="State" required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="address.city" label="City" required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="address.postalCode" label="ZIP Code" type="number" required grid={{ xs: 12, md: 4 }} />
                 </Grid>
               </CommonCard>
 
               {/* BANK DETAILS */}
               <CommonCard title="Bank Details" grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="bankDetails.bankName" label="Bank Name" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="bankDetails.branch" label="Branch Name" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="bankDetails.accountNumber" label="Account No." grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="bankDetails.IFSCCode" label="IFSC Code" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="bankDetails.bankHolderName" label="Account Holder Name" grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="bankDetails.bankName" label="Bank Name" required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="bankDetails.branch" label="Branch Name" required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="bankDetails.accountNumber" label="Account No." required type="number" grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="bankDetails.bankHolderName" label="Account Holder Name" required grid={{ xs: 12, md: 4 }} />
                   <CommonTextField name="bankDetails.swiftCode" label="Swift Code" grid={{ xs: 12, md: 4 }} />
                 </Grid>
               </CommonCard>
@@ -169,23 +133,19 @@ const EmployeeForm = () => {
               {/* SALARY DETAILS */}
               <CommonCard title="Salary Details" grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="wages" label="Wages" type="number" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="commission" type="number" label="Commission" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="extraWages" type="number" label="Extra Wages" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="target" type="number" label="Target" grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="wages" label="Wages" type="number" required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="commission" type="number" label="Commission" required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="extraWages" type="number" label="Extra Wages" required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="target" type="number" label="Target" required grid={{ xs: 12, md: 4 }} />
                 </Grid>
               </CommonCard>
 
               <CommonSwitch name="isActive" label="Is Active" value={values.isActive} onChange={(checked) => setFieldValue("isActive", checked)} grid={{ xs: 12, md: 12 }} />
               {/* ACTION BUTTONS */}
-              <Grid size="auto" className="w-full! flex justify-end">
-                <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-                  <Button variant="outlined" onClick={() => navigate(-1)}>
-                    Back
-                  </Button>
-                  <Button type="submit" variant="contained" loading={isEditLoading || isAddLoading}>
-                    Save
-                  </Button>
+              <Grid className="w-full! flex justify-end ">
+                <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 2 }}>
+                  <CommonButton variant="outlined" onClick={() => navigate(-1)} title="Back" loading={isEditLoading || isAddLoading} />
+                  <CommonButton type="submit" variant="contained" title="Save" loading={isEditLoading || isAddLoading || isSubmitting} disabled={isEditLoading || isAddLoading || isSubmitting} />
                 </Box>
               </Grid>
             </Grid>

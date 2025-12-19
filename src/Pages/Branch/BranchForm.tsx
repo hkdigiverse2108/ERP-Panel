@@ -5,11 +5,11 @@ import { CommonCard } from "../../Components/Common";
 import { CommonTextField } from "../../Attribute";
 import { CommonButton } from "../../Attribute";
 
-const BranchEdit = () => {
+const BranchForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
-  console.log("BranchEdit");
+  console.log("BranchForm");
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
       <Formik
@@ -54,4 +54,4 @@ const BranchEdit = () => {
   );
 };
 
-export default BranchEdit;
+export default BranchForm;

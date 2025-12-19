@@ -20,11 +20,19 @@ export const Queries = {
       enabled: !!id,
     }),
 
-  // ************ Company ***********
+  // ************ Employee ***********
   useGetAllEmployeeData: () => useQueries<any>(KEYS.EMPLOYEE.ALL, () => Get(URL_KEYS.EMPLOYEE.ALL)),
 
   useGetOneEmployeeData: (id?: string) =>
     useQueries<any>(KEYS.EMPLOYEE.ALL, () => Get(URL_KEYS.EMPLOYEE.ALL), {
+      enabled: !!id,
+    }),
+
+  // ************ Branch ***********
+  useGetAllBranchData: () => useQueries<any>(KEYS.BRANCH.ALL, () => Get(URL_KEYS.BRANCH.ALL)),
+
+  useGetOneBranchData: (id?: string) =>
+    useQueries<any>(KEYS.BRANCH.ALL, () => Get(URL_KEYS.BRANCH.ALL), {
       enabled: !!id,
     }),
 };

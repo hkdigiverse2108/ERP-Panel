@@ -6,7 +6,7 @@ import { CommonTextField } from "../../../Attribute";
 import { CommonRichText } from "../../../Attribute";
 import { CommonButton } from "../../../Attribute";
 
-const EditProduct = () => {
+const ProductForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
@@ -127,4 +127,4 @@ const EditProduct = () => {
   );
 };
 
-export default EditProduct;
+export default ProductForm;

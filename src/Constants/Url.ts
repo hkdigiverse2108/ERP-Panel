@@ -20,7 +20,7 @@ export const URL_KEYS = {
     ALL: "company/all",
     ONE: (id: string) => `/company/${id}`,
     EDIT: "/company/edit",
-    DELETE: "/company/delete/",
+   
   },
   EMPLOYEE: {
     BASE: "/employee",
@@ -28,5 +28,13 @@ export const URL_KEYS = {
     ALL: "/employee/all",
     ONE: (id: string) => `/employee/${id}`,
     EDIT: "/employee/edit",
+  },
+
+  BRANCH: {
+    BASE: "/branch",
+    ADD: "/branch/add",
+    ALL: "/branch/all",
+    ONE: (id: string) => `/branch/${id}`,
+    EDIT: "/branch/edit",
   },
 } as const;
