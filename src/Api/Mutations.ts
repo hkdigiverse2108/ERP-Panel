@@ -26,4 +26,12 @@ export const Mutations = {
   useAddBranch: () => useMutations<FormData, any>(KEYS.BRANCH.ADD, (input) => Post(URL_KEYS.BRANCH.ADD, input, false)),
   useEditBranch: () => useMutations<FormData, any>(KEYS.BRANCH.EDIT, (input) => Put(URL_KEYS.BRANCH.EDIT, input)),
   useDeleteBranch: () => useMutations<{ id: string }, void>(KEYS.BRANCH.DELETE, (id) => Delete(`${URL_KEYS.BRANCH.BASE}/${id}`)),
+
+  // ************ Branch ***********
+  useAddProduct: () => useMutations<FormData, any>(KEYS.PRODUCT.ADD, (input) => Post(URL_KEYS.PRODUCT.ADD, input, false)),
+  useEditProduct: () => useMutations<FormData, any>(KEYS.PRODUCT.EDIT, (input) => Put(URL_KEYS.PRODUCT.EDIT, input)),
+  useDeleteProduct: () => useMutations<{ id: string }, void>(KEYS.PRODUCT.DELETE, (id) => Delete(`${URL_KEYS.PRODUCT.BASE}/${id}`)),
+
+  // ************ Call Request ***********
+  useAddCallRequest: () => useMutations<FormData, any>(KEYS.CALL_REQUEST.ADD, (input) => Post(URL_KEYS.CALL_REQUEST.ADD, input, false)),
 };

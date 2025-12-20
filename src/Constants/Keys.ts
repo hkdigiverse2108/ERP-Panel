@@ -60,4 +60,21 @@ export const KEYS = {
     EDIT: ["branch", "edit"],
     DELETE: ["branch", "delete"], // mutation
   },
+  PRODUCT: {
+    ROOT: ["product"],
+    ALL: ["product", "all"],
+    DETAILS: (id: string) => ["product", "detail", id],
+    ADD: ["product", "add"],
+    EDIT: ["product", "edit"],
+    DELETE: ["product", "delete"], // mutation
+  },
+  STOCK: {
+    ROOT: ["stock"],
+    ALL: ["stock", "all"],
+    DETAILS: (id: string) => ["stock", "detail", id],
+  },
+  CALL_REQUEST: {
+    ROOT: ["call-request"],
+    ADD: ["call-request", "add"],
+  },
 };

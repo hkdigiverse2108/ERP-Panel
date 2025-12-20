@@ -22,10 +22,16 @@ export const Queries = {
     }),
 
   // ************ Employee ***********
-  useGetAllEmployeeData: (params?: Params) =>
-    useQueries<any>([KEYS.EMPLOYEE.ALL, cleanParams(params)], () => Get(URL_KEYS.EMPLOYEE.ALL, cleanParams(params)), {
-      placeholderData: undefined,
-    }),
+  useGetAllEmployeeData: (params?: Params) => {
+    const cleanedParams = cleanParams(params);
+    return useQueries<any>(
+      [KEYS.EMPLOYEE.ALL, cleanedParams],
+      () => Get(URL_KEYS.EMPLOYEE.ALL, cleanedParams),
+      {
+        placeholderData: (previousData: any) => previousData,
+      }
+    );
+  },
 
   useGetOneEmployeeData: (id?: string) =>
     useQueries<any>(KEYS.EMPLOYEE.ALL, () => Get(URL_KEYS.EMPLOYEE.ALL), {
@@ -33,10 +39,27 @@ export const Queries = {
     }),
 
   // ************ Branch ***********
-  useGetAllBranchData: () => useQueries<any>(KEYS.BRANCH.ALL, () => Get(URL_KEYS.BRANCH.ALL)),
 
+  useGetAllBranchData: (params?: Params) => {
+    const cleanedParams = cleanParams(params);
+
+    return useQueries<any>([KEYS.BRANCH.ALL, cleanedParams], () => Get(URL_KEYS.BRANCH.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData, })
+  },
   useGetOneBranchData: (id?: string) =>
     useQueries<any>(KEYS.BRANCH.ALL, () => Get(URL_KEYS.BRANCH.ALL), {
-      enabled: !!id,
+      enabled: !!id
     }),
+
+  // ************ Stock ***********
+
+  useGetAllStockData: (params?: Params) => {
+    const cleanedParams = cleanParams(params);
+
+    return useQueries<any>([KEYS.STOCK.ALL, cleanedParams], () => Get(URL_KEYS.STOCK.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData, })
+  },
+  // ************ Stock ***********
+  useGetAllProductData: (params?: Params) => {
+    const cleanedParams = cleanParams(params);
+    return useQueries<any>([KEYS.PRODUCT.ALL, cleanedParams], () => Get(URL_KEYS.PRODUCT.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData, })
+  },
 };

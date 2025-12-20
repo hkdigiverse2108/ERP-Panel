@@ -17,7 +17,6 @@ const Employee = () => {
       page: paginationModel.page + 1,
       limit: paginationModel.pageSize,
       search: filterModel?.quickFilterValues?.[0],
-      // activeFilter: filterModel?.isActive,
     }),
     [paginationModel, filterModel]
   );
@@ -26,13 +25,14 @@ const Employee = () => {
 
   const [rawToDelete, setRawToDelete] = useState<any>(null);
 
-  const { data: employeeData, isLoading: employeeDataLoading } = Queries.useGetAllEmployeeData(employeeParams);
+  const { data: employeeData, isLoading: employeeDataLoading, isRefetching } = Queries.useGetAllEmployeeData(employeeParams);
   const { mutate: deleteEmployeeMutate } = Mutations.useDeleteEmployee();
 
   const allEmployee = useMemo(() => {
     return employeeData?.data?.employee_data.map((emp: any) => ({ ...emp, id: emp?._id })) || [];
   }, [employeeData]);
 
+  console.log("all Employee -> ", allEmployee, employeeParams);
   const totalRows = employeeData?.data?.totalData || 0;
 
   const handleDeleteBtn = () => {

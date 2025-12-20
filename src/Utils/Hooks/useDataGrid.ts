@@ -17,7 +17,7 @@ export const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initial
 
   // Combined reset
   const resetModels = useCallback(() => {
-    setPaginationModel({ page: 0, pageSize });
+    setPaginationModel({ page, pageSize });
     setSortModel([]);
     setFilterModel({ items: [] });
   }, [pageSize]);

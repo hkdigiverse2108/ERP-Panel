@@ -19,11 +19,12 @@ const EmployeeForm = () => {
   const { mutate: editEmployeeMutate, isPending: isEditLoading } = Mutations.useEditEmployee();
   const { mutate: addEmployeeMutate, isPending: isAddLoading } = Mutations.useAddEmployee();
 
+  const isEditing = Boolean(data?._id);
+
   const handleSubmit = async (values: any) => {
     if (isEditLoading || isAddLoading) return;
     try {
-      console.log("Form Values:", values, data);
-      if (data?.id) {
+      if (isEditing) {
         const changedFields = getChangedFields(values, data);
 
         let payload = cleanEditPayload(changedFields, data);
@@ -56,7 +57,7 @@ const EmployeeForm = () => {
 
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
-      <h2 style={{ marginBottom: 16 }}>Employee Edit</h2>
+      <h2 style={{ marginBottom: 16 }}> {isEditing ? "Edit" : "Add"} Employee </h2>
 
       <Formik
         enableReinitialize
@@ -89,7 +90,7 @@ const EmployeeForm = () => {
           commission: data?.commission || "",
           extraWages: data?.extraWages || "",
           target: data?.target || "",
-          isActive: data?.isActive || false,
+          isActive: data?.isActive ?? true,
         }}
         onSubmit={handleSubmit}
       >

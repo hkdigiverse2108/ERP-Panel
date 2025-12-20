@@ -1,54 +1,95 @@
-import { Box, Grid, Button } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { Formik, Form } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CommonCard } from "../../Components/Common";
-import { CommonTextField } from "../../Attribute";
-import { CommonButton } from "../../Attribute";
+import { CommonButton, CommonTextField, CommonSwitch } from "../../Attribute";
+import { Mutations } from "../../Api";
+import { cleanEditPayload, getChangedFields, removeEmptyFields } from "../../Utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { KEYS } from "../../Constants";
+import { useAppSelector } from "../../Store/hooks";
 
 const BranchForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
-  console.log("BranchForm");
+  const { company } = useAppSelector((state) => state.company);
+
+  const queryClient = useQueryClient();
+
+  const { mutate: addBranchMutate, isPending: isAddLoading } = Mutations.useAddBranch();
+  const { mutate: editBranchMutate, isPending: isEditLoading } = Mutations.useEditBranch();
+  const isEditing = Boolean(data?._id);
+
+  const handleSubmit = async (values: any) => {
+    if (isAddLoading || isEditLoading) return;
+
+    try {
+      if (isEditing) {
+        const changedFields = getChangedFields(values, data);
+        let payload = cleanEditPayload(changedFields, data);
+
+        payload.branchId = data._id;
+        payload.companyId = company?._id;
+
+        editBranchMutate(payload, {
+          onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [KEYS.BRANCH.ALL] });
+            navigate(-1);
+          },
+        });
+      } else {
+        let payload = removeEmptyFields(values);
+        payload.companyId = company?._id;
+
+        addBranchMutate(payload, {
+          onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [KEYS.BRANCH.ALL] });
+            navigate(-1);
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Branch form error:", error);
+    }
+  };
+
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
+      <h2 style={{ marginBottom: 16 }}>{isEditing ? "Edit Branch" : "Add Branch"}</h2>
+
       <Formik
+        enableReinitialize
         initialValues={{
-          branchName: data?.name || "",
-          branchAddress: data?.address || "",
+          name: data?.name || "",
+          address: data?.address || "",
+          isActive: data?.isActive ?? true,
         }}
-        onSubmit={(values) => {
-          console.log("Branch Edit Data:", values);
-        }}
+        onSubmit={handleSubmit}
       >
-        <Form>
-          <Grid container spacing={2}>
-            <CommonCard title="Edit Branch" grid={{ xs: 12 }}>
-              <Grid container spacing={2} sx={{ p: 2 }}>
-                {/* BRANCH FIELDS */}
-                <CommonTextField name="branchName" label="Branch Name" required grid={{ xs: 12, md: 12 }} />
+        {({ values, setFieldValue, isSubmitting }) => (
+          <Form>
+            <Grid container spacing={2}>
+              <CommonCard title="Branch Details" grid={{ xs: 12 }}>
+                <Grid container spacing={2} sx={{ p: 2 }}>
+                  <CommonTextField name="name" label="Branch Name" required grid={{ xs: 12 }} />
 
-                <CommonTextField name="branchAddress" label="Branch Address" required grid={{ xs: 12, md: 12 }} />
+                  <CommonTextField name="address" label="Branch Address" required grid={{ xs: 12 }} />
 
-                {/* ACTION BUTTONS */}
-                <Grid className="w-full! flex justify-end ">
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      gap: 2,
-                      mt: 2,
-                    }}
-                  >
-                    <CommonButton variant="outlined" onClick={() => navigate(-1)} title="Back" />
+                  <CommonSwitch name="isActive" label="Is Active" value={values.isActive} onChange={(checked) => setFieldValue("isActive", checked)} grid={{ xs: 12 }} />
 
-                    <CommonButton type="submit" variant="contained" title="Save" />
-                  </Box>
+                  {/* ACTION BUTTONS */}
+                  <Grid className="w-full! flex justify-end">
+                    <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+                      <CommonButton variant="outlined" title="Back" onClick={() => navigate(-1)} loading={isAddLoading || isEditLoading} />
+                      <CommonButton type="submit" variant="contained" title="Save" loading={isAddLoading || isEditLoading || isSubmitting} disabled={isAddLoading || isEditLoading || isSubmitting} />
+                    </Box>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </CommonCard>
-          </Grid>
-        </Form>
+              </CommonCard>
+            </Grid>
+          </Form>
+        )}
       </Formik>
     </Box>
   );

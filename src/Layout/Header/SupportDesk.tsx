@@ -7,9 +7,22 @@ import { Form, Formik } from "formik";
 import { useState } from "react";
 import { CommonButton, CommonTextField } from "../../Attribute";
 import { CommonModal } from "../../Components/Common";
+import { Mutations } from "../../Api";
 
 const SupportDesk = () => {
   const [open, setOpen] = useState(false);
+
+  const { mutate: callRequestMutate, isPending: isCallRequestLoading } = Mutations.useAddCallRequest();
+
+  const handleSubmit = (values: any) => {
+    console.log(values);
+    callRequestMutate(values, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
+  };
+
   return (
     <>
       <Box className="relative group">
@@ -46,14 +59,14 @@ const SupportDesk = () => {
       </Box>
       <CommonModal isOpen={open} title="Talk To Our Expert" subTitle="Fill In Your Info - We'll Reach Out Shortly" onClose={() => setOpen(!open)} className="max-w-[500px] m-2 sm:m-5">
         <div className="flex flex-col gap-5">
-          <Formik initialValues={{ business: "", contactName: "", contact: "", notes: "" }} onSubmit={(values) => console.log(values)}>
+          <Formik initialValues={{ businessName: "", contactName: "", contactNo: "", note: "" }} onSubmit={handleSubmit}>
             <Form>
               <Grid sx={{ px: 1 }} container spacing={2}>
-                <CommonTextField name="business" label="Business Name" placeholder="John Doe" grid={{ xs: 12 }} />
+                <CommonTextField name="businessName" label="Business Name" placeholder="John Doe" grid={{ xs: 12 }} />
                 <CommonTextField name="contactName" label="Contact Name" grid={{ xs: 12 }} />
-                <CommonTextField name="contact" label="Contact No." grid={{ xs: 12 }} />
-                <CommonTextField name="notes" label="Notes" type="textarea" multiline rows={2} validating={false} grid={{ xs: 12 }} />
-                <CommonButton type="submit" variant="contained" title="Send" size="medium" fullWidth grid={{ xs: 12 }} />
+                <CommonTextField name="contactNo" label="Contact No." grid={{ xs: 12 }} />
+                <CommonTextField name="note" label="Notes" type="textarea" multiline rows={2} validating={false} grid={{ xs: 12 }} />
+                <CommonButton type="submit" variant="contained" title="Send" size="medium" loading={isCallRequestLoading} fullWidth grid={{ xs: 12 }} />
               </Grid>
             </Form>
           </Formik>

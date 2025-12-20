@@ -1,8 +1,5 @@
-// import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
-// import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
- import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import SettingsIcon from "@mui/icons-material/Settings";
-// import TableChartRoundedIcon from "@mui/icons-material/TableChartRounded";
 import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import PeopleIcon from "@mui/icons-material/People";

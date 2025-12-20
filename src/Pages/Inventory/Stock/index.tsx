@@ -1,24 +1,11 @@
 import { Grid, Box } from "@mui/material";
-// import { useNavigate } from "react-router-dom";
 
 import { CommonCard, CommonDataGrid } from "../../../Components/Common";
 import { useDataGrid } from "../../../Utils/Hooks";
-// import { ROUTES } from "../../../Constants";
 
 const Stocks = () => {
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({ page: 0, pageSize: 10 });
 
-
-  //  DATAGRID HOOK 
-  const {
-    paginationModel,
-    setPaginationModel,
-    sortModel,
-    setSortModel,
-    filterModel,
-    setFilterModel,
-  } = useDataGrid({ page: 0, pageSize: 10 });
-
-  //  STOCK DATA
   const rows = [
     {
       id: 1,
@@ -70,7 +57,7 @@ const Stocks = () => {
     },
   ];
 
-  //  COLUMNS 
+  //  COLUMNS
   const columns = [
     {
       field: "id",
@@ -108,22 +95,10 @@ const Stocks = () => {
     },
   ];
 
-  //  RENDER 
   return (
     <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
       <CommonCard title="Stocks">
-        <CommonDataGrid
-          columns={columns}
-          rows={rows}
-          rowCount={rows.length}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          sortModel={sortModel}
-          onSortModelChange={setSortModel}
-          filterModel={filterModel}
-          onFilterModelChange={setFilterModel}
-          pageSizeOptions={[5, 10, 25]}
-        />
+        <CommonDataGrid columns={columns} rows={rows} rowCount={rows.length} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25]} />
       </CommonCard>
     </Box>
   );

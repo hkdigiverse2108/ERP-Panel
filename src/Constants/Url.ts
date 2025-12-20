@@ -20,7 +20,6 @@ export const URL_KEYS = {
     ALL: "company/all",
     ONE: (id: string) => `/company/${id}`,
     EDIT: "/company/edit",
-   
   },
   EMPLOYEE: {
     BASE: "/employee",
@@ -36,5 +35,24 @@ export const URL_KEYS = {
     ALL: "/branch/all",
     ONE: (id: string) => `/branch/${id}`,
     EDIT: "/branch/edit",
+  },
+
+  PRODUCT: {
+    BASE: "/product",
+    ADD: "/product/add",
+    ALL: "/product/all",
+    ONE: (id: string) => `/product/${id}`,
+    EDIT: "/product/edit",
+  },
+
+  STOCK: {
+    BASE: "/stock",
+    ALL: "/stock/all",
+    ONE: (id: string) => `/stock/${id}`,
+  },
+
+  CALL_REQUEST: {
+    BASE: "/call-request",
+    ADD: "/call-request/add",
   },
 } as const;

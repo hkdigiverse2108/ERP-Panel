@@ -7,11 +7,14 @@ const CommonDataGrid = <T,>({ columns, rows, rowCount, loading = false, paginati
     const model: Record<string, boolean> = {};
 
     defaultHidden.forEach((col) => {
-      model[col] = false; // hide this column
+      model[col] = false; // hide thi
     });
 
     return model;
   }, [defaultHidden]);
+
+  console.log("all rows -> ", rows);
+
   return (
     <div className={BoxClass}>
       <DataGrid
@@ -37,11 +40,11 @@ const CommonDataGrid = <T,>({ columns, rows, rowCount, loading = false, paginati
         paginationModel={paginationModel}
         onPaginationModelChange={onPaginationModelChange}
         ///Sorting
-        sortingMode="server"
+        sortingMode="client"
         sortModel={sortModel}
         onSortModelChange={onSortModelChange}
         //Filter
-        filterMode="server"
+        filterMode="client"
         filterModel={filterModel}
         onFilterModelChange={onFilterModelChange}
         //
@@ -49,7 +52,7 @@ const CommonDataGrid = <T,>({ columns, rows, rowCount, loading = false, paginati
         pageSizeOptions={pageSizeOptions}
         // pageSizeOptions={[5, 10, 25, { value: -1, label: 'All' }]}
 
-        keepNonExistentRowsSelected={false} // 🔥 IMPORTANT
+        keepNonExistentRowsSelected={false} //  IMPORTANT
       />
     </div>
   );
