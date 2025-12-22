@@ -34,4 +34,7 @@ export const Mutations = {
 
   // ************ Call Request ***********
   useAddCallRequest: () => useMutations<FormData, any>(KEYS.CALL_REQUEST.ADD, (input) => Post(URL_KEYS.CALL_REQUEST.ADD, input, false)),
+
+  //************** bank *****************/
+  useAddBank: () => useMutations<FormData, any>(KEYS.BANK.ADD, (input) => Post(URL_KEYS.BANK.ADD, input, false)),
 };

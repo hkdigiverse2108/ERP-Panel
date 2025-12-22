@@ -15,7 +15,7 @@ import { useState, type SyntheticEvent } from "react";
 import { CommonBreadcrumbs } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { GeneralSettingBreadcrumbs } from "../../../Data";
-import { Profile, ReportFormats } from "../../../Components/Settings/GeneralSetting";
+import { Profile, ReportFormats } from "../../../Components/Settings/GeneralSetting"; 
 
 const GeneralSetting = () => {
   const [value, setValue] = useState(0);

@@ -6,9 +6,11 @@ import { CommonButton, CommonTextField, CommonSwitch, CommonSelect } from "../..
 import { Mutations } from "../../../Api";
 import { cleanEditPayload, getChangedFields, removeEmptyFields } from "../../../Utils";
 import { useQueryClient } from "@tanstack/react-query";
-import { KEYS } from "../../../Constants";
+import { KEYS, PAGE_TITLE, ROUTES } from "../../../Constants";
 import { useAppSelector } from "../../../Store/hooks";
 import { BRAND_OPTIONS, CATEGORY_OPTIONS, DEPARTMENT_OPTIONS, PRODUCT_TYPE_OPTIONS, SUB_BRAND_OPTIONS, SUB_CATEGORY_OPTIONS, TAX_OPTIONS, UOM_OPTIONS } from "../../../Data";
+import { ProductFormBreadcrumbs } from "../../../Data";
+import { CommonBreadcrumbs } from "../../../Components/Common";
 
 const ProductForm = () => {
   const location = useLocation();
@@ -61,8 +63,11 @@ const ProductForm = () => {
   };
 
   return (
-    <Box sx={{ p: { xs: 2, md: 3 } }}>
-      <h2 style={{ marginBottom: 16 }}>{isEditing ? "Edit Product" : "Add Product"}</h2>
+    <>
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT.ADDEDIT} maxItems={1} breadcrumbs={ProductFormBreadcrumbs} />
+
+      <div className="m-4 md:m-6">
+    
 
       <Formik
         enableReinitialize
@@ -197,7 +202,8 @@ const ProductForm = () => {
           </Form>
         )}
       </Formik>
-    </Box>
+    </div>
+  </>
   );
 };
 

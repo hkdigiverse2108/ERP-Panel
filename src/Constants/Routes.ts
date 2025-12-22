@@ -10,17 +10,17 @@ export const ROUTES = {
     ADD_EDIT: "/edit/add",
   },
   EMPLOYEE: {
-    BASE: "/employee",
-    ADD_EDIT: "/employee/add-edit",
+    BASE: "Employee",
+    ADD_EDIT: "/Employee/add-edit",
   },
 
   PRODUCT: {
-    BASE: "/product",
-    ADD_EDIT: "/product/add-edit",
+    BASE: "Product",
+    ADD_EDIT: "/Product/add-edit",
   },
 
   STOCK: {
-    BASE: "/stock",
+    BASE: "stock",
   },
   CATEGORY_BRAND: "/category-brand",
   DEPARTMENT: "/department",
@@ -48,10 +48,17 @@ export const ROUTES = {
     EDIT: "/company/edit",
   }, 
  BRANCH:{
-  BASE :"/branch",
-  ADD_EDIT :"/branch/add-edit",
+  BASE :"Branch",
+  ADD_EDIT :"/Branch/add-edit",
  },
-  
+  BANK:{
+    BASE:"/bank",
+    ADD_EDIT:"/bank/add-edit",
+  },
+  TRANSACTION:{
+    BASE:"/transaction",
+    ADD_EDIT:"/transaction/add-edit"
+  }
   
   
  } as const;

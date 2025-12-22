@@ -77,4 +77,11 @@ export const KEYS = {
     ROOT: ["call-request"],
     ADD: ["call-request", "add"],
   },
+  BANK:{
+    ROOT: ["bank"],
+    ALL:["bank", "all"],
+    ADD:["bank", "add"],
+    EDIT:["bank", "edit"],
+    DELETE:["bank", "delete"],
+  }
 };

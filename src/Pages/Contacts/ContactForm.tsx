@@ -19,7 +19,7 @@ const ContactForm = () => {
 
       <Formik
         initialValues={{
-          //  GENERAL DETAILS 
+          //  GENERAL DETAILS
           name: data?.name || "",
           email: data?.email || "",
           companyName: data?.companyName || "",
@@ -34,7 +34,7 @@ const ContactForm = () => {
           customerType: data?.customerType || "retailer",
           vendorType: data?.vendorType || "manufacturer",
 
-          //  ADDRESS DETAILS 
+          //  ADDRESS DETAILS
           gstType: data?.gstType || "",
           gstin: data?.gstin || "",
           addressName: data?.addressName || "",
@@ -53,12 +53,10 @@ const ContactForm = () => {
       >
         {({ values, setFieldValue }) => (
           <Form>
-                    
             <Grid container spacing={2}>
               {/*  GENERAL DETAILS  */}
               <CommonCard title="General Details" grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
-                
                   <CommonTextField name="name" label="Name" required grid={{ xs: 12, md: 6 }} />
                   <CommonTextField name="email" label="Email" grid={{ xs: 12, md: 6 }} />
                   <CommonTextField name="companyName" label="Company Name" required grid={{ xs: 12, md: 6 }} />
@@ -83,7 +81,7 @@ const ContactForm = () => {
                     </Grid>
                   )}
 
-                  {/*VENDOR TYPE */} 
+                  {/*VENDOR TYPE */}
                   {type === "vendor" && (
                     <Grid size="auto">
                       <label className="font-semibold">Vendor Type</label>
@@ -117,7 +115,7 @@ const ContactForm = () => {
               </CommonCard>
 
               {/*  ACTION BUTTONS*/}
-              <Grid className="w-full! flex justify-end ">  
+              <Grid className="w-full! flex justify-end ">
                 <Box
                   sx={{
                     display: "flex",
@@ -129,7 +127,7 @@ const ContactForm = () => {
                   <CommonButton variant="outlined" onClick={() => navigate(-1)} title="Back" />
 
                   <CommonButton type="submit" variant="contained" title="Save" />
-                </Box>          
+                </Box>
               </Grid>
             </Grid>
           </Form>
@@ -140,3 +138,4 @@ const ContactForm = () => {
 };
 
 export default ContactForm;
+  

@@ -2,6 +2,9 @@ import { Grid, Box } from "@mui/material";
 
 import { CommonCard, CommonDataGrid } from "../../../Components/Common";
 import { useDataGrid } from "../../../Utils/Hooks";
+import  {CommonBreadcrumbs} from "../../../Components/Common";
+import { StockBreadcrumbs } from "../../../Data";
+import { PAGE_TITLE, ROUTES } from "../../../Constants";
 
 const Stocks = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({ page: 0, pageSize: 10 });
@@ -96,11 +99,16 @@ const Stocks = () => {
   ];
 
   return (
-    <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
+     <>
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.STOCK} maxItems={1} breadcrumbs={StockBreadcrumbs} />
+
+      <div className="m-4 md:m-6">
+    
       <CommonCard title="Stocks">
         <CommonDataGrid columns={columns} rows={rows} rowCount={rows.length} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25]} />
       </CommonCard>
-    </Box>
+    </div>
+    </>
   );
 };
 

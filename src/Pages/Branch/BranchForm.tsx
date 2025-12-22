@@ -6,8 +6,10 @@ import { CommonButton, CommonTextField, CommonSwitch } from "../../Attribute";
 import { Mutations } from "../../Api";
 import { cleanEditPayload, getChangedFields, removeEmptyFields } from "../../Utils";
 import { useQueryClient } from "@tanstack/react-query";
-import { KEYS } from "../../Constants";
+import { KEYS, PAGE_TITLE, ROUTES } from "../../Constants";
 import { useAppSelector } from "../../Store/hooks";
+import {CommonBreadcrumbs} from "../../Components/Common";
+import { BranchFormBreadcrumbs } from "../../Data";
 
 const BranchForm = () => {
   const location = useLocation();
@@ -55,8 +57,12 @@ const BranchForm = () => {
   };
 
   return (
-    <Box sx={{ p: { xs: 2, md: 3 } }}>
-      <h2 style={{ marginBottom: 16 }}>{isEditing ? "Edit Branch" : "Add Branch"}</h2>
+     <>
+      <CommonBreadcrumbs title={PAGE_TITLE.BRANCH.ADDEDIT} maxItems={1} breadcrumbs={BranchFormBreadcrumbs} />
+
+      <div className="m-4 md:m-6">
+   
+      
 
       <Formik
         enableReinitialize
@@ -91,7 +97,9 @@ const BranchForm = () => {
           </Form>
         )}
       </Formik>
-    </Box>
+      </div>
+      </>
+  
   );
 };
 

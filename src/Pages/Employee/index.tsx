@@ -8,6 +8,8 @@ import { useDataGrid } from "../../Utils/Hooks";
 import { KEYS, ROUTES } from "../../Constants";
 import { Mutations, Queries } from "../../Api";
 import { useQueryClient } from "@tanstack/react-query";
+import { EmployeeBreadcrumbs } from "../../Data";
+import { CommonBreadcrumbs } from "../../Components/Common";
 
 const Employee = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({ page: 0, pageSize: 10 });
@@ -119,22 +121,28 @@ const Employee = () => {
   );
 
   return (
-    <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
-      <CommonCard title="Employees" topContent={topContent}>
-        <CommonDataGrid BoxClass="rounded-md overflow-hidden" columns={columns} rows={allEmployee} rowCount={totalRows} loading={employeeDataLoading} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25]} />
-      </CommonCard>
 
-      <CommonModal isOpen={Boolean(rawToDelete)} onClose={() => setRawToDelete(null)} className="max-w-125 m-2 sm:m-5 pt-0!">
-        <p className="text-red-500 text-2xl mb-4 font-semibold  ">Confirm Delete</p>
-        <p className="my-3">Are you sure you want to delete "{rawToDelete?.username}"?</p>
-        <div className="flex justify-end">
-          <Button onClick={() => setRawToDelete(null)}>No</Button>
-          <Button color="error" onClick={handleDeleteBtn}>
-            Yes
-          </Button>
-        </div>
-      </CommonModal>
-    </Box>
+    <>
+      <CommonBreadcrumbs title={ROUTES.EMPLOYEE.BASE} maxItems={1} breadcrumbs={EmployeeBreadcrumbs} />
+
+      <div className="m-4 md:m-6">
+        <CommonCard title="Employees" topContent={topContent}>
+          <CommonDataGrid BoxClass="rounded-md overflow-hidden" columns={columns} rows={allEmployee} rowCount={totalRows} loading={employeeDataLoading} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25]} />
+        </CommonCard>
+
+        <CommonModal isOpen={Boolean(rawToDelete)} onClose={() => setRawToDelete(null)} className="max-w-125 m-2 sm:m-5 pt-0!">
+          <p className="text-red-500 text-2xl mb-4 font-semibold  ">Confirm Delete</p>
+          <p className="my-3">Are you sure you want to delete "{rawToDelete?.username}"?</p>
+          <div className="flex justify-end">
+            <Button onClick={() => setRawToDelete(null)}>No</Button>
+            <Button color="error" onClick={handleDeleteBtn}>
+              Yes
+            </Button>
+          </div>
+        </CommonModal>
+      </div>
+    </>
+   
   );
 };
 
