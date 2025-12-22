@@ -4,5 +4,6 @@ import CommonDataGrid from "./CommonDataGrid";
 import CommonBreadcrumbs from "./CommonBreadcrumbs";
 import CommonUpload from "./CommonUploadImage";
 import CommonModal from "./CommonModal";
+import CommonActionColumn from "./CommonActionColumn";
 
-export { CommonDrawer, CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonUpload, CommonModal };
+export { CommonDrawer, CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonUpload, CommonModal, CommonActionColumn };

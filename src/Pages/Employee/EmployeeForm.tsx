@@ -5,9 +5,9 @@ import { CommonCard } from "../../Components/Common";
 import { CommonButton, CommonSwitch, CommonTextField } from "../../Attribute";
 import { Mutations } from "../../Api";
 import { cleanEditPayload, getChangedFields, removeEmptyFields } from "../../Utils";
-import { useQueryClient } from "@tanstack/react-query";
-import { KEYS } from "../../Constants";
 import { useAppSelector } from "../../Store/hooks";
+import { boolean, number } from "yup";
+import { EmployeeFormSchema } from "../../Utils/ValidationSchemas";
 
 const EmployeeForm = () => {
   const location = useLocation();
@@ -15,11 +15,41 @@ const EmployeeForm = () => {
   const { data } = location.state || {};
   const { company } = useAppSelector((state) => state.company);
 
-  const queryClient = useQueryClient();
   const { mutate: editEmployeeMutate, isPending: isEditLoading } = Mutations.useEditEmployee();
   const { mutate: addEmployeeMutate, isPending: isAddLoading } = Mutations.useAddEmployee();
 
   const isEditing = Boolean(data?._id);
+
+  const initialValues = {
+    name: data?.name || "",
+    username: data?.username || "",
+    mobileNo: data?.mobileNo || "",
+    email: data?.email || "",
+    panNumber: data?.panNumber || null,
+    role: data?.role || "",
+
+    address: {
+      address: data?.address?.address || "",
+      country: data?.address?.country || "",
+      state: data?.address?.state || "",
+      city: data?.address?.city || "",
+      postalCode: data?.address?.postalCode || null,
+    },
+
+    bankDetails: {
+      bankName: data?.bankDetails?.bankName || "",
+      branch: data?.bankDetails?.branch || "",
+      accountNumber: data?.bankDetails?.accountNumber || null,
+      bankHolderName: data?.bankDetails?.bankHolderName || "",
+      swiftCode: data?.bankDetails?.swiftCode || "",
+    },
+
+    wages: data?.wages || null,
+    commission: data?.commission || null,
+    extraWages: data?.extraWages || null,
+    target: data?.target || null,
+    isActive: data?.isActive || false,
+  };
 
   const handleSubmit = async (values: any) => {
     if (isEditLoading || isAddLoading) return;
@@ -33,7 +63,6 @@ const EmployeeForm = () => {
 
         editEmployeeMutate(payload, {
           onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: KEYS.EMPLOYEE.ALL });
             navigate(-1);
           },
         });
@@ -43,7 +72,6 @@ const EmployeeForm = () => {
 
         addEmployeeMutate(payload, {
           onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: KEYS.EMPLOYEE.ALL });
             navigate(-1);
           },
         });
@@ -53,49 +81,13 @@ const EmployeeForm = () => {
     }
   };
 
-  console.log("is Loading:", isEditLoading, isAddLoading);
-
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
       <h2 style={{ marginBottom: 16 }}> {isEditing ? "Edit" : "Add"} Employee </h2>
 
-      <Formik
-        enableReinitialize
-        initialValues={{
-          name: data?.name || "",
-          username: data?.username || "",
-          mobileNo: data?.mobileNo || "",
-          email: data?.email || "",
-          panNumber: data?.panNumber || "",
-          role: data?.role || "",
-
-          address: {
-            address: data?.address?.address || "",
-            country: data?.address?.country || "",
-            state: data?.address?.state || "",
-            city: data?.address?.city || "",
-            postalCode: data?.address?.postalCode || "",
-          },
-
-          bankDetails: {
-            bankName: data?.bankDetails?.bankName || "",
-            branch: data?.bankDetails?.branch || "",
-            accountNumber: data?.bankDetails?.accountNumber || "",
-            IFSCCode: data?.bankDetails?.IFSCCode || "",
-            bankHolderName: data?.bankDetails?.bankHolderName || "",
-            swiftCode: data?.bankDetails?.swiftCode || "",
-          },
-
-          wages: data?.wages || "",
-          commission: data?.commission || "",
-          extraWages: data?.extraWages || "",
-          target: data?.target || "",
-          isActive: data?.isActive ?? true,
-        }}
-        onSubmit={handleSubmit}
-      >
+      <Formik enableReinitialize initialValues={initialValues} validationSchema={EmployeeFormSchema} onSubmit={handleSubmit}>
         {({ values, setFieldValue, isSubmitting }) => (
-          <Form>
+          <Form noValidate>
             <Grid container spacing={2}>
               {/* BASIC DETAILS */}
               <CommonCard title="Basic Details" grid={{ xs: 12 }}>
@@ -105,28 +97,28 @@ const EmployeeForm = () => {
                   <CommonTextField name="role" label="Role" required grid={{ xs: 12, md: 4 }} />
                   <CommonTextField name="mobileNo" label="Mobile No." required grid={{ xs: 12, md: 4 }} />
                   <CommonTextField name="email" label="Email" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="panNumber" label="PAN No."  grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="panNumber" label="PAN No." inputProps={{ textTransform: "uppercase" }} grid={{ xs: 12, md: 4 }} />
                 </Grid>
               </CommonCard>
 
               {/* ADDRESS DETAILS */}
               <CommonCard title="Address Details" grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="address.address" label="Address"  grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="address.country" label="Country"  grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="address.state" label="State"  grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="address.city" label="City"  grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="address.postalCode" label="ZIP Code" type="number"  grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="address.address" label="Address" grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="address.country" label="Country" grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="address.state" label="State" grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="address.city" label="City" grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="address.postalCode" label="ZIP Code" type="number" grid={{ xs: 12, md: 4 }} />
                 </Grid>
               </CommonCard>
 
               {/* BANK DETAILS */}
               <CommonCard title="Bank Details" grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="bankDetails.bankName" label="Bank Name"  grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="bankDetails.branch" label="Branch Name"  grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="bankDetails.accountNumber" label="Account No."  type="number" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="bankDetails.bankHolderName" label="Account Holder Name"  grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="bankDetails.bankName" label="Bank Name" grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="bankDetails.branch" label="Branch Name" grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="bankDetails.accountNumber" label="Account No." type="number" grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="bankDetails.bankHolderName" label="Account Holder Name" grid={{ xs: 12, md: 4 }} />
                   <CommonTextField name="bankDetails.swiftCode" label="Swift Code" grid={{ xs: 12, md: 4 }} />
                 </Grid>
               </CommonCard>
@@ -134,10 +126,10 @@ const EmployeeForm = () => {
               {/* SALARY DETAILS */}
               <CommonCard title="Salary Details" grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="wages" label="Wages" type="number"  grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="commission" type="number" label="Commission"  grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="extraWages" type="number" label="Extra Wages"  grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="target" type="number" label="Target"  grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="wages" label="Wages" type="number" grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="commission" type="number" label="Commission" grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="extraWages" type="number" label="Extra Wages" grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="target" type="number" label="Target" grid={{ xs: 12, md: 4 }} />
                 </Grid>
               </CommonCard>
 

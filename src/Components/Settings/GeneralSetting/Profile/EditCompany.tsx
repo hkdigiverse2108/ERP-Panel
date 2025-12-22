@@ -190,13 +190,13 @@ export const EditCompany = () => {
 
               {/* COMMUNICATION */}
               <CommonCard title="Communication Details" grid={{ xs: 12 }}>
-                <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="address" label="Address" grid={{ xs: 12 }} />
-                  <CommonTextField name="city" label="City" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="state" label="State" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="country" label="Country" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="pinCode" label="Pin Code" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="timeZone" label="Time Zone" grid={{ xs: 12, md: 4 }} />
+                <Grid container spacing={2} sx={{ p: 2}}>
+                  <CommonTextField name="address" label="Address" grid={{ xs: 12, md: 6 }} multiline/>
+                  <CommonTextField name="city" label="City" grid={{ xs: 12, md: 6 }} />
+                  <CommonTextField name="state" label="State" grid={{ xs: 12, md: 6 }} />
+                  <CommonTextField name="country" label="Country" grid={{ xs: 12, md: 6 }} />
+                  <CommonTextField name="pinCode" label="Pin Code" grid={{ xs: 12, md: 6 }} />
+                  <CommonTextField name="timeZone" label="Time Zone" grid={{ xs: 12, md: 6 }} />
                 </Grid>
               </CommonCard>
 

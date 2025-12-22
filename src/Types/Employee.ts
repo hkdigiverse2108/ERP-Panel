@@ -1,3 +1,5 @@
+import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+
 export interface Address {
   address: string;
   country: string;
@@ -11,11 +13,10 @@ export interface BankDetails {
   branch: string;
   accountNumber: string;
   bankHolderName: string;
-  IFSCCode?: string;
   swiftCode?: string;
 }
 
-export interface EmployeeBase {
+export interface EmployeeBase extends CommonDataType {
   name: string;
   username: string;
   mobileNo: string;
@@ -26,27 +27,21 @@ export interface EmployeeBase {
   address: Address;
   bankDetails: BankDetails;
 
-  wages: number | "";
-  commission: number | "";
-  extraWages: number | "";
-  target: number | "";
+  wages: number;
+  commission: number;
+  extraWages: number;
+  target: number;
+
   isActive: boolean;
-}
+  status: "ACTIVE" | "INACTIVE";
 
-export interface AddEmployeePayload extends EmployeeBase {
   companyId: string;
 }
 
-export interface EditEmployeePayload extends Partial<EmployeeBase> {
-  companyId: string;
-  employeeId: string;
+export interface EmployeeDataResponse extends PageStatus {
+  employee_data: EmployeeBase[];
 }
 
-export interface EmployeeResponse extends EmployeeBase {
-  _id: string;
-  companyId: string;
-  createdAt: string;
-  updatedAt: string;
+export interface EmployeeApiResponse extends MessageStatus {
+  data: EmployeeDataResponse;
 }
-
-export type EmployeeFormValues = EmployeeBase;
