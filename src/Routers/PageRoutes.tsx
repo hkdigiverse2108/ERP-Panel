@@ -22,7 +22,7 @@ export const PageRoutes = [
   { path: ROUTES.EMPLOYEE.BASE, element: <Employees /> },
   { path: ROUTES.EMPLOYEE.ADD_EDIT, element: <EmployeeForm /> },
   { path: ROUTES.BRANCH.BASE, element: <Branch /> },
-  { path: ROUTES.BRANCH.EDIT, element: <BranchForm /> },
+  { path: ROUTES.BRANCH.ADD_EDIT, element: <BranchForm /> },
   { path: ROUTES.PRODUCT.BASE, element: <Product /> },
   { path: ROUTES.PRODUCT.ADD_EDIT, element: <ProductForm /> },
   { path: ROUTES.STOCK.BASE, element: <Stocks /> },

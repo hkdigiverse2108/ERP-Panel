@@ -86,7 +86,7 @@ const Branch = () => {
       renderCell: (params: any) => (
         <Grid container spacing={1}>
           <Grid size="auto">
-            <Link to={ROUTES.BRANCH.EDIT} state={{ data: params.row }}>
+            <Link to={ROUTES.BRANCH.ADD_EDIT} state={{ data: params.row }}>
               <IconButton color="primary" size="small">
                 <EditIcon />
               </IconButton>
@@ -106,7 +106,7 @@ const Branch = () => {
   const topContent = (
     <Grid container spacing={2} alignItems="center">
       <Grid size="auto">
-        <Link to={ROUTES.BRANCH.EDIT}>
+        <Link to={ROUTES.BRANCH.ADD_EDIT}>
           <Button variant="contained" color="primary" size="large" sx={{ px: 4, fontSize: "0.9rem" }}>
             ADD
           </Button>

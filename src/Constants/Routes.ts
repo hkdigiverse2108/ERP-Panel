@@ -46,12 +46,12 @@ export const ROUTES = {
   },
   COMPANY: {
     EDIT: "/company/edit",
-  },
-  BRANCH: {
-    BASE: "/branch",
-    EDIT: "/branch/add-edit",
-  },
-
-
-
-} as const;
+  }, 
+ BRANCH:{
+  BASE :"/branch",
+  ADD_EDIT :"/branch/add-edit",
+ },
+  
+  
+  
+ } as const;

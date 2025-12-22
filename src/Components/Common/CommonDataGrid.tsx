@@ -14,14 +14,19 @@ const CommonDataGrid = <T,>({ columns, rows, rowCount, loading = false, paginati
   }, [defaultHidden]);
 
   console.log("all rows -> ", rows);
+  const fixedColumns = columns.map((c) => ({
+    ...c,
+    // width: 150,
+    // flex: undefined,
+  }));
 
   return (
-    <div className={BoxClass}>
+    <div className={`${BoxClass} min-w-full max-w-395 overflow-auto`}>
       <DataGrid
         rows={rows}
         rowCount={rowCount}
         loading={loading}
-        columns={columns}
+        columns={fixedColumns}
         showToolbar
         slotProps={{
           loadingOverlay: {

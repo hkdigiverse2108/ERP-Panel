@@ -105,28 +105,28 @@ const EmployeeForm = () => {
                   <CommonTextField name="role" label="Role" required grid={{ xs: 12, md: 4 }} />
                   <CommonTextField name="mobileNo" label="Mobile No." required grid={{ xs: 12, md: 4 }} />
                   <CommonTextField name="email" label="Email" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="panNumber" label="PAN No." required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="panNumber" label="PAN No."  grid={{ xs: 12, md: 4 }} />
                 </Grid>
               </CommonCard>
 
               {/* ADDRESS DETAILS */}
               <CommonCard title="Address Details" grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="address.address" label="Address" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="address.country" label="Country" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="address.state" label="State" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="address.city" label="City" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="address.postalCode" label="ZIP Code" type="number" required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="address.address" label="Address"  grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="address.country" label="Country"  grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="address.state" label="State"  grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="address.city" label="City"  grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="address.postalCode" label="ZIP Code" type="number"  grid={{ xs: 12, md: 4 }} />
                 </Grid>
               </CommonCard>
 
               {/* BANK DETAILS */}
               <CommonCard title="Bank Details" grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="bankDetails.bankName" label="Bank Name" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="bankDetails.branch" label="Branch Name" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="bankDetails.accountNumber" label="Account No." required type="number" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="bankDetails.bankHolderName" label="Account Holder Name" required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="bankDetails.bankName" label="Bank Name"  grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="bankDetails.branch" label="Branch Name"  grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="bankDetails.accountNumber" label="Account No."  type="number" grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="bankDetails.bankHolderName" label="Account Holder Name"  grid={{ xs: 12, md: 4 }} />
                   <CommonTextField name="bankDetails.swiftCode" label="Swift Code" grid={{ xs: 12, md: 4 }} />
                 </Grid>
               </CommonCard>
@@ -134,10 +134,10 @@ const EmployeeForm = () => {
               {/* SALARY DETAILS */}
               <CommonCard title="Salary Details" grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="wages" label="Wages" type="number" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="commission" type="number" label="Commission" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="extraWages" type="number" label="Extra Wages" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="target" type="number" label="Target" required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="wages" label="Wages" type="number"  grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="commission" type="number" label="Commission"  grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="extraWages" type="number" label="Extra Wages"  grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="target" type="number" label="Target"  grid={{ xs: 12, md: 4 }} />
                 </Grid>
               </CommonCard>
 

@@ -67,6 +67,8 @@ const ProductForm = () => {
       <Formik
         enableReinitialize
         initialValues={{
+          companyId: data?.companyId || "",
+
           itemCode: data?.itemCode || "",
           name: data?.name || "",
           printName: data?.printName || "",
@@ -84,10 +86,10 @@ const ProductForm = () => {
           purchaseTaxId: data?.purchaseTaxId || "",
           salesTaxId: data?.salesTaxId || "",
 
-          mrp: data?.mrp || "",
-          sellingPrice: data?.sellingPrice || "",
-          purchasePrice: data?.purchasePrice || "",
-          landingCost: data?.landingCost || "",
+          mrp: data?.mrp || 0,
+          sellingPrice: data?.sellingPrice || 0,
+          purchasePrice: data?.purchasePrice || 0,
+          landingCost: data?.landingCost || 0,
 
           hsnCode: data?.hsnCode || "",
           expiryDays: data?.expiryDays || "",
@@ -96,48 +98,43 @@ const ProductForm = () => {
           shortDescription: data?.shortDescription || "",
           description: data?.description || "",
 
-          status: data?.status || "active",
+          netWeight: data?.netWeight || "",
+          nutritionInfo: data?.nutritionInfo || "",
+          ingredients: data?.ingredients || "",
+          image: data?.image || "",
 
-          sellingDiscount: data?.sellingDiscount || "",
-          sellingMargin: data?.sellingMargin || "",
-          retailerDiscount: data?.retailerDiscount || "",
-          retailerPrice: data?.retailerPrice || "",
-          retailerMargin: data?.retailerMargin || "",
+          isPurchaseTaxInclusive: data?.isPurchaseTaxInclusive || false,
+          isSalesTaxInclusive: data?.isSalesTaxInclusive || false,
+          cessPercentage: data?.cessPercentage || 0,
+
+          manageBatch: data?.manageBatch || false,
+          hasExpiry: data?.hasExpiry || false,
+
+          status: data?.status || "active",
         }}
         onSubmit={handleSubmit}
       >
         {({ values, setFieldValue, isSubmitting }) => (
           <Form>
             <Grid container spacing={2}>
+              {/* ================= GENERAL DETAILS ================= */}
               <CommonCard title="General Details" grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
                   <CommonTextField name="itemCode" label="Item Code" required grid={{ xs: 12, md: 6 }} />
-
-                  <CommonSelect label="Product Type" options={PRODUCT_TYPE_OPTIONS} value={values.productType ? [values.productType] : []} onChange={(val) => setFieldValue("productType", val[0] || "")} grid={{ xs: 12, md: 6 }} />
-
+                  <CommonSelect label="Product Type" options={PRODUCT_TYPE_OPTIONS} value={values.productType ? [values.productType] : []} onChange={(v) => setFieldValue("productType", v[0] || "")} grid={{ xs: 12, md: 6 }} />
                   <CommonTextField name="name" label="Product Name" required grid={{ xs: 12, md: 6 }} />
+                  <CommonTextField name="printName" label="Print Name" grid={{ xs: 12, md: 6 }} />
+                  <CommonTextField name="slug" label="Slug" grid={{ xs: 12, md: 6 }} />
 
-                  <CommonTextField name="printName" label="Print Name" required grid={{ xs: 12, md: 6 }} />
+                  <CommonSelect label="Category"  options={CATEGORY_OPTIONS} value={values.categoryId ? [values.categoryId] : []} onChange={(v) => setFieldValue("categoryId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
+                  <CommonSelect label="Sub Category" options={SUB_CATEGORY_OPTIONS} value={values.subCategoryId ? [values.subCategoryId] : []} onChange={(v) => setFieldValue("subCategoryId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
+                  <CommonSelect label="Brand" options={BRAND_OPTIONS} value={values.brandId ? [values.brandId] : []} onChange={(v) => setFieldValue("brandId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
+                  <CommonSelect label="Sub Brand" options={SUB_BRAND_OPTIONS} value={values.subBrandId ? [values.subBrandId] : []} onChange={(v) => setFieldValue("subBrandId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
+                  <CommonSelect label="Department" options={DEPARTMENT_OPTIONS} value={values.departmentId ? [values.departmentId] : []} onChange={(v) => setFieldValue("departmentId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
+                  <CommonSelect label="UOM" options={UOM_OPTIONS} value={values.uomId ? [values.uomId] : []} onChange={(v) => setFieldValue("uomId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
 
-                  <CommonSelect label="Category" options={CATEGORY_OPTIONS} value={values.categoryId ? [values.categoryId] : []} onChange={(val) => setFieldValue("categoryId", val[0] || "")} grid={{ xs: 12, md: 6 }} />
-
-                  <CommonSelect label="Sub Category" options={SUB_CATEGORY_OPTIONS} value={values.subCategoryId ? [values.subCategoryId] : []} onChange={(val) => setFieldValue("subCategoryId", val[0] || "")} grid={{ xs: 12, md: 6 }} />
-
-                  <CommonSelect label="Brand" options={BRAND_OPTIONS} value={values.brandId ? [values.brandId] : []} onChange={(val) => setFieldValue("brandId", val[0] || "")} grid={{ xs: 12, md: 6 }} />
-
-                  <CommonSelect label="Sub Brand" options={SUB_BRAND_OPTIONS} value={values.subBrandId ? [values.subBrandId] : []} onChange={(val) => setFieldValue("subBrandId", val[0] || "")} grid={{ xs: 12, md: 6 }} />
-
-                  <CommonSelect label="Department" options={DEPARTMENT_OPTIONS} value={values.departmentId ? [values.departmentId] : []} onChange={(val) => setFieldValue("departmentId", val[0] || "")} grid={{ xs: 12, md: 6 }} />
-
-                  <CommonSelect label="UOM" options={UOM_OPTIONS} value={values.uomId ? [values.uomId] : []} onChange={(val) => setFieldValue("uomId", val[0] || "")} grid={{ xs: 12, md: 6 }} />
-
-                  <CommonTextField name="hsnCode" label="HSN Code" required grid={{ xs: 12, md: 6 }} />
-
-                  <CommonSelect label="Purchase Tax" options={TAX_OPTIONS} value={values.purchaseTaxId ? [values.purchaseTaxId] : []} onChange={(val) => setFieldValue("purchaseTaxId", val[0] || "")} grid={{ xs: 12, md: 6 }} />
-
-                  <CommonSelect label="Sales Tax" options={TAX_OPTIONS} value={values.salesTaxId ? [values.salesTaxId] : []} onChange={(val) => setFieldValue("salesTaxId", val[0] || "")} grid={{ xs: 12, md: 6 }} />
-
-                  <CommonTextField name="expiryDays" label="Expiry Days" grid={{ xs: 12, md: 6 }} />
+                  <CommonTextField name="hsnCode" label="HSN Code" grid={{ xs: 12, md: 6 }} />
+                  <CommonTextField name="expiryDays" label="Expiry Days" type="number" grid={{ xs: 12, md: 6 }} />
 
                   <CommonSelect
                     label="Expiry Type"
@@ -146,37 +143,54 @@ const ProductForm = () => {
                       { label: "Expiry", value: "expiry" },
                     ]}
                     value={values.expiryType ? [values.expiryType] : []}
-                    onChange={(val) => setFieldValue("expiryType", val[0] || "")}
+                    onChange={(v) => setFieldValue("expiryType", v[0] || "")}
                     grid={{ xs: 12, md: 6 }}
                   />
 
                   <CommonTextField name="shortDescription" label="Short Description" grid={{ xs: 12, md: 6 }} />
-
-                  {/* <Grid xs={12}>
-                    <CommonRichText value={values.description} onChange={(val) => setFieldValue("description", val)} />
-                  </Grid> */}
+                  <CommonTextField name="description" label="Description" multiline rows={3} grid={{ xs: 12 }} />
                 </Grid>
               </CommonCard>
 
-              <CommonCard title="Pricing Details" grid={{ xs: 12 }}>
+              {/* ================= PRICING & TAX ================= */}
+              <CommonCard title="Pricing & Tax" grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
                   <CommonTextField name="purchasePrice" label="Purchase Price" type="number" grid={{ xs: 12, md: 6 }} />
-
                   <CommonTextField name="landingCost" label="Landing Cost" type="number" grid={{ xs: 12, md: 6 }} />
-
                   <CommonTextField name="mrp" label="MRP" type="number" required grid={{ xs: 12, md: 6 }} />
-
                   <CommonTextField name="sellingPrice" label="Selling Price" type="number" required grid={{ xs: 12, md: 6 }} />
+
+                  <CommonSelect label="Purchase Tax" options={TAX_OPTIONS} value={values.purchaseTaxId ? [values.purchaseTaxId] : []} onChange={(v) => setFieldValue("purchaseTaxId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
+                  <CommonSelect label="Sales Tax" options={TAX_OPTIONS} value={values.salesTaxId ? [values.salesTaxId] : []} onChange={(v) => setFieldValue("salesTaxId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
+
+                  <CommonTextField name="cessPercentage" label="Cess %" type="number" grid={{ xs: 12, md: 6 }} />
+
+                  <CommonSwitch name="isPurchaseTaxInclusive" label="Purchase Tax Inclusive" value={values.isPurchaseTaxInclusive} onChange={(v) => setFieldValue("isPurchaseTaxInclusive", v)} grid={{ xs: 12, md: 6 }} />
+                  <CommonSwitch name="isSalesTaxInclusive" label="Sales Tax Inclusive" value={values.isSalesTaxInclusive} onChange={(v) => setFieldValue("isSalesTaxInclusive", v)} grid={{ xs: 12, md: 6 }} />
                 </Grid>
               </CommonCard>
 
-              <CommonSwitch name="status" label="Status" value={values.status === "active"} onChange={(checked) => setFieldValue("status", checked ? "active" : "inactive")} grid={{ xs: 12 }} />
+              {/* ================= INVENTORY ================= */}
+              <CommonCard title="Inventory & Other Details" grid={{ xs: 12 }}>
+                <Grid container spacing={2} sx={{ p: 2 }}>
+                  <CommonTextField name="netWeight" label="Net Weight" type="number" grid={{ xs: 12, md: 6 }} />
+                  <CommonTextField name="nutritionInfo" label="Nutrition Info" grid={{ xs: 12, md: 6 }} />
+                  <CommonTextField name="ingredients" label="Ingredients" grid={{ xs: 12, md: 6 }} />
+                  <CommonTextField name="image" label="Image URL" grid={{ xs: 12, md: 6 }} />
 
+                  <CommonSwitch name="manageBatch" label="Manage Batch" value={values.manageBatch} onChange={(v) => setFieldValue("manageBatch", v)} grid={{ xs: 12, md: 6 }} />
+                  <CommonSwitch name="hasExpiry" label="Has Expiry" value={values.hasExpiry} onChange={(v) => setFieldValue("hasExpiry", v)} grid={{ xs: 12, md: 6 }} />
+                  <CommonSwitch name="status" label="Status" value={values.status === "active"} onChange={(v) => setFieldValue("status", v ? "active" : "inactive")} grid={{ xs: 12 }} />
+                </Grid>
+              </CommonCard>
+
+              {/* ================= STATUS ================= */}
+
+              {/* ================= ACTIONS ================= */}
               <Grid className="w-full! flex justify-end">
                 <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-                  <CommonButton variant="outlined" title="Back" onClick={() => navigate(-1)} loading={isAddLoading || isEditLoading} />
-
-                  <CommonButton type="submit" variant="contained" title="Save" loading={isAddLoading || isEditLoading || isSubmitting} disabled={isAddLoading || isEditLoading || isSubmitting} />
+                  <CommonButton variant="outlined" title="Back" onClick={() => navigate(-1)} />
+                  <CommonButton type="submit" variant="contained" title="Save" loading={isSubmitting} />
                 </Box>
               </Grid>
             </Grid>

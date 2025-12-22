@@ -24,13 +24,9 @@ export const Queries = {
   // ************ Employee ***********
   useGetAllEmployeeData: (params?: Params) => {
     const cleanedParams = cleanParams(params);
-    return useQueries<any>(
-      [KEYS.EMPLOYEE.ALL, cleanedParams],
-      () => Get(URL_KEYS.EMPLOYEE.ALL, cleanedParams),
-      {
-        placeholderData: (previousData: any) => previousData,
-      }
-    );
+    return useQueries<any>([KEYS.EMPLOYEE.ALL, cleanedParams], () => Get(URL_KEYS.EMPLOYEE.ALL, cleanedParams), {
+      placeholderData: (previousData: any) => previousData,
+    });
   },
 
   useGetOneEmployeeData: (id?: string) =>
@@ -43,11 +39,11 @@ export const Queries = {
   useGetAllBranchData: (params?: Params) => {
     const cleanedParams = cleanParams(params);
 
-    return useQueries<any>([KEYS.BRANCH.ALL, cleanedParams], () => Get(URL_KEYS.BRANCH.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData, })
+    return useQueries<any>([KEYS.BRANCH.ALL, cleanedParams], () => Get(URL_KEYS.BRANCH.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData });
   },
   useGetOneBranchData: (id?: string) =>
     useQueries<any>(KEYS.BRANCH.ALL, () => Get(URL_KEYS.BRANCH.ALL), {
-      enabled: !!id
+      enabled: !!id,
     }),
 
   // ************ Stock ***********
@@ -55,11 +51,11 @@ export const Queries = {
   useGetAllStockData: (params?: Params) => {
     const cleanedParams = cleanParams(params);
 
-    return useQueries<any>([KEYS.STOCK.ALL, cleanedParams], () => Get(URL_KEYS.STOCK.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData, })
+    return useQueries<any>([KEYS.STOCK.ALL, cleanedParams], () => Get(URL_KEYS.STOCK.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData });
   },
   // ************ Stock ***********
   useGetAllProductData: (params?: Params) => {
     const cleanedParams = cleanParams(params);
-    return useQueries<any>([KEYS.PRODUCT.ALL, cleanedParams], () => Get(URL_KEYS.PRODUCT.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData, })
+    return useQueries<any>([KEYS.PRODUCT.ALL, cleanedParams], () => Get(URL_KEYS.PRODUCT.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData });
   },
 };

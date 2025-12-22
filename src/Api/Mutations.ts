@@ -24,7 +24,7 @@ export const Mutations = {
 
   // ************ Branch ***********
   useAddBranch: () => useMutations<FormData, any>(KEYS.BRANCH.ADD, (input) => Post(URL_KEYS.BRANCH.ADD, input, false)),
-  useEditBranch: () => useMutations<FormData, any>(KEYS.BRANCH.EDIT, (input) => Put(URL_KEYS.BRANCH.EDIT, input)),
+  useEditBranch: () => useMutations<FormData, any>(KEYS.BRANCH.ADD, (input) => Put(URL_KEYS.BRANCH.EDIT, input)),
   useDeleteBranch: () => useMutations<{ id: string }, void>(KEYS.BRANCH.DELETE, (id) => Delete(`${URL_KEYS.BRANCH.BASE}/${id}`)),
 
   // ************ Branch ***********

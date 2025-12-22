@@ -229,7 +229,7 @@ export const EditCompany = () => {
                     const value = images[key];
 
                     return (
-                      <Grid item xs={12} md={6} className="flex flex-col items-center">
+                      <Grid size="auto" className="flex flex-col items-center">
                         <p className="mb-2 text-sm font-medium">{label}</p>
 
                         <Box onClick={() => handleUpload(key)} sx={{ width: 150, height: 150 }} className="relative cursor-pointer border rounded-lg overflow-hidden">
