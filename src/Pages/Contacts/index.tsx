@@ -62,11 +62,11 @@ const Contact = () => {
 
   //  HANDLERS
   const handleAdd = () => {
-    navigate(ROUTES.CONTACT.ADDEDIT, { state: { type: contactType } });
+    navigate(ROUTES.CONTACT.ADD_EDIT, { state: { type: contactType } });
   };
 
   const handleEdit = (row) => {
-    navigate(ROUTES.CONTACT.ADDEDIT.replace(":id", row.id), {
+    navigate(ROUTES.CONTACT.ADD_EDIT.replace(":id", row.id), {
       state: { data: row, type: contactType },
     });
   };
@@ -146,6 +146,7 @@ const Contact = () => {
 
   //  RENDER 
   return (
+      
     <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
       <CommonCard title="Contacts" topContent={topContent}>
         <CommonDataGrid rows={rows} columns={columns} rowCount={rows.length} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25]} />

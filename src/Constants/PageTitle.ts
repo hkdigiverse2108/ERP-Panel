@@ -13,13 +13,16 @@ export const PAGE_TITLE = {
   BRANCH: {
     BASE: "Branch",
   },
+  CONTACT: {
+    BASE: "Contact",
+  },
   INVENTORY: {
     BASE: "inventory",
     STOCK: "stock",
-    PRODUCT : "Product",
+    PRODUCT: "Product",
     // PRODUCT: {
     //   BASE: "inventory/product",
-      ADDEDIT: "/inventory/product/add-edit/:id?",
+    ADDEDIT: "/inventory/product/add-edit/:id?",
     // },
   },
 } as const;
