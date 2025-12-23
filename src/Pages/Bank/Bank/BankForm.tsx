@@ -83,7 +83,7 @@ const BankForm = () => {
                 <CommonCard title="Bank Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     {/* SELECT GROUP */}
-                    <CommonSelect name="bankGroup" label="Select Group" required options={[]} grid={{ xs: 12, md: 6 }} />
+                    <CommonSelect name="bankGroup" label="Select Group" require d options={[]} grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="bankName" label="Bank Name" required grid={{ xs: 12, md: 6 }} />
 
                     <CommonTextField name="branchName" label="Branch Name" required grid={{ xs: 12, md: 6 }} />

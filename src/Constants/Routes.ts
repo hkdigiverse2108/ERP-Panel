@@ -57,8 +57,12 @@ export const ROUTES = {
   },
   TRANSACTION:{
     BASE:"/transaction",
-    ADD_EDIT:"/transaction/add-edit"
-  }
+    ADD_EDIT:"/transaction/add-edit",
+  },
+  PAYMENT:{
+    BASE:"/payment",
+    ADD_EDIT:"/payment/add-edit",
+  },
   
   
  } as const;

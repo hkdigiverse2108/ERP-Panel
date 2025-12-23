@@ -16,6 +16,7 @@ import ContactForm from "../Pages/Contacts/ContactForm";
 import Bank from "../Pages/Bank/Bank";
 import BankForm from "../Pages/Bank/Bank/BankForm";
 import BankTransaction from "../Pages/Bank/BankTransaction";
+import PaymentList from "../Pages/Bank/Payment";
 
 
 export const PageRoutes = [
@@ -34,7 +35,8 @@ export const PageRoutes = [
   { path: ROUTES.CONTACT.ADD_EDIT, element: <ContactForm /> },
   { path: ROUTES.BANK.BASE, element: <Bank />},
   { path: ROUTES.BANK.ADD_EDIT, element:<BankForm/>},
-  { path: ROUTES.TRANSACTION.BASE, element: <BankTransaction />}
+  { path: ROUTES.TRANSACTION.BASE, element: <BankTransaction />},
+  { path: ROUTES.PAYMENT.BASE, element: <PaymentList />},
 ];
 export const AuthRoutes = [
   { path: ROUTES.HOME, element: <Navigate to={ROUTES.AUTH.SIGNIN} replace /> },

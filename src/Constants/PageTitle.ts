@@ -23,7 +23,7 @@ export const PAGE_TITLE = {
     // PRODUCT: "Product",
     PRODUCT: {
       BASE: "product",
-      ADDEDIT: "inventory/product/add-edit/:id?",
+      ADDEDIT: "product/add-edit",
     },
   },
   BANK:{
@@ -37,5 +37,8 @@ export const PAGE_TITLE = {
   },
   TRANSACTION :{
     BASE: "Transaction",
+  },
+  PAYMENT :{
+   BASE : "Payment" 
   }
 } as const;

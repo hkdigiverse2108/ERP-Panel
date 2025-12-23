@@ -9,7 +9,8 @@ import { KEYS, PAGE_TITLE, ROUTES } from "../../../Constants";
 import { Mutations, Queries } from "../../../Api";
 import { useQueryClient } from "@tanstack/react-query";
 import { BankBreadCrumbs } from "../../../Data";
-// import { useGetAllBankData, useDeleteBank } from "../../../Api";
+import { useGetAllBankData, useDeleteBank } from "../../../Api";
+
 
 const Bank = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({ page: 0, pageSize: 10 });
@@ -73,7 +74,7 @@ const Bank = () => {
       headerName: "Account No.",
       flex: 1,
       renderCell: (params: any) => {
-        const value = params.value || "";
+        const value = params.value || ""; 
         return `XXXX${value.slice(-4)}`;
       },
     },
