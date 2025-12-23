@@ -1,4 +1,3 @@
-
 export const PAGE_TITLE = {
   DASHBOARD: "Dashboard",
   SETTINGS: {
@@ -8,11 +7,12 @@ export const PAGE_TITLE = {
   EMPLOYEE: {
     BASE: "Employee",
     LIST: "Employee List",
-    ADDEDIT :"Add edit"
+    ADD: "Add Employee",
+    EDIT: "Edit Employee",
   },
   BRANCH: {
     BASE: "Branch",
-    ADDEDIT :"Add edit"
+    ADDEDIT: "Add edit",
   },
   CONTACT: {
     BASE: "Contact",
@@ -26,16 +26,14 @@ export const PAGE_TITLE = {
       ADDEDIT: "inventory/product/add-edit/:id?",
     },
   },
-  BANK:{
-    BASE:"Bank",
-    BANK:{
-      BASE:"Bank",
-      ADDEDIT:"Bank/add-edit",
-
-    }
-
+  BANK: {
+    BASE: "Bank",
+    BANK: {
+      BASE: "Bank",
+      ADDEDIT: "Bank/add-edit",
+    },
   },
-  TRANSACTION :{
+  TRANSACTION: {
     BASE: "Transaction",
-  }
+  },
 } as const;

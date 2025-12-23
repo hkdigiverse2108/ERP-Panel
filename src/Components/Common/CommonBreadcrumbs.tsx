@@ -1,7 +1,8 @@
-import { Breadcrumbs, Link, Typography } from "@mui/material";
+import { Breadcrumbs, Typography } from "@mui/material";
 import type { FC } from "react";
 import type { BreadcrumbHeaderProps, BreadcrumbItem } from "../../Types";
 import { ROUTES } from "../../Constants";
+import { Link } from "react-router-dom";
 
 const CommonBreadcrumbs: FC<BreadcrumbHeaderProps> = ({ title, maxItems = 2, breadcrumbs = [] }) => {
   const finalBreadcrumbs: BreadcrumbItem[] = [{ label: "Home", href: ROUTES.DASHBOARD }, ...breadcrumbs];
@@ -14,7 +15,7 @@ const CommonBreadcrumbs: FC<BreadcrumbHeaderProps> = ({ title, maxItems = 2, bre
         <Breadcrumbs maxItems={validMaxItems} aria-label="breadcrumb">
           {finalBreadcrumbs.map((item, index) =>
             item.href ? (
-              <Link key={index} underline="none" variant="body2" href={item.href} className="text-gray-500! dark:text-gray-400! capitalize">
+              <Link key={index} to={item.href} className="text-gray-500! dark:text-gray-400! capitalize">
                 {item.label}
               </Link>
             ) : (

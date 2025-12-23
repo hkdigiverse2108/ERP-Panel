@@ -1,17 +1,15 @@
-import { Box, Button, Grid } from "@mui/material";
+import { Box } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
-import { CommonButton } from "../../Attribute";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonModal } from "../../Components/Common";
-import { ROUTES } from "../../Constants";
-import { EmployeeBreadcrumbs } from "../../Data";
+import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../Components/Common";
+import { PAGE_TITLE, ROUTES } from "../../Constants";
+import { BREADCRUMBS } from "../../Data";
 import type { EmployeeBase } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
 
 const Employee = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rawToDelete, setRawToDelete, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, params } = useDataGrid();
 
   const { data: employeeData, isLoading: employeeDataLoading, isFetching: employeeDataFetching } = Queries.useGetEmployee(params);
   const { mutate: deleteEmployeeMutate } = Mutations.useDeleteEmployee();
@@ -20,8 +18,8 @@ const Employee = () => {
   const totalRows = employeeData?.data?.totalData || 0;
 
   const handleDeleteBtn = () => {
-    if (!rawToDelete) return;
-    deleteEmployeeMutate(rawToDelete?._id as string, { onSuccess: () => setRawToDelete(null) });
+    if (!rowToDelete) return;
+    deleteEmployeeMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
   };
 
   const columns: GridColDef<EmployeeBase>[] = [
@@ -29,7 +27,6 @@ const Employee = () => {
     { field: "name", headerName: "Name", flex: 1 },
     { field: "email", headerName: "Email", flex: 1 },
     { field: "phoneNo", headerName: "Phone No", flex: 1 },
-    { field: "role", headerName: "Role", flex: 1 },
     { field: "panNumber", headerName: "PAN Number", flex: 1 },
     { field: "wages", headerName: "Wages", flex: 1 },
     { field: "extraWages", headerName: "Extra Wages", flex: 1 },
@@ -42,37 +39,18 @@ const Employee = () => {
     },
     CommonActionColumn({
       editRoute: ROUTES.EMPLOYEE.ADD_EDIT,
-      onDelete: (row) => setRawToDelete({ _id: row?._id, title: row?.username }),
+      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.username }),
     }),
   ];
 
-  const topContent = (
-    <Grid size="auto">
-      <Link to={ROUTES.EMPLOYEE.ADD_EDIT}>
-        <CommonButton variant="contained" size="small">
-          ADD
-        </CommonButton>
-      </Link>
-    </Grid>
-  );
-
   return (
     <>
-      <CommonBreadcrumbs title={ROUTES.EMPLOYEE.BASE} maxItems={1} breadcrumbs={EmployeeBreadcrumbs} />
+      <CommonBreadcrumbs title={PAGE_TITLE.EMPLOYEE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.EMPLOYEE.BASE} />
       <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
-        <CommonCard title="Employees" topContent={topContent}>
+        <CommonCard title="Employees" btnHref={ROUTES.EMPLOYEE.ADD_EDIT}>
           <CommonDataGrid BoxClass="rounded-md overflow-hidden" columns={columns} rows={allEmployee} rowCount={totalRows} loading={employeeDataLoading || employeeDataFetching} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} />
         </CommonCard>
-
-        <CommonModal title="Confirm Delete" isOpen={Boolean(rawToDelete)} onClose={() => setRawToDelete(null)} className="max-w-125 m-2 sm:m-5">
-          <p className="my-3">Are you sure you want to delete "{rawToDelete?.title}"?</p>
-          <div className="flex justify-end">
-            <Button onClick={() => setRawToDelete(null)}>No</Button>
-            <Button color="error" onClick={handleDeleteBtn}>
-              Yes
-            </Button>
-          </div>
-        </CommonModal>
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       </Box>
     </>
   );

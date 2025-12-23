@@ -22,7 +22,7 @@ export const Mutations = {
   // useEditEmployee: () => useMutations<EmployeeFormValues, void>([KEYS.EMPLOYEE.EDIT, KEYS.EMPLOYEE.BASE], (input) => Put(URL_KEYS.EMPLOYEE.EDIT, input)),
   useAddEmployee: () => useMutations<AddEmployeePayload, void>([KEYS.EMPLOYEE.ADD, KEYS.EMPLOYEE.BASE], (input) => Post(URL_KEYS.EMPLOYEE.ADD, input)),
   useEditEmployee: () => useMutations<EditEmployeePayload, void>([KEYS.EMPLOYEE.EDIT, KEYS.EMPLOYEE.BASE], (input) => Put(URL_KEYS.EMPLOYEE.EDIT, input)),
-  useDeleteEmployee: () => useMutations<string, void>([KEYS.EMPLOYEE.DELETE], (id) => Delete(`${URL_KEYS.EMPLOYEE.BASE}/${id}`)),
+  useDeleteEmployee: () => useMutations<string, void>([KEYS.EMPLOYEE.DELETE, KEYS.EMPLOYEE.BASE], (id) => Delete(`${URL_KEYS.EMPLOYEE.BASE}/${id}`)),
 
   // ************ Branch ***********
   useAddBranch: () => useMutations<FormData, any>(KEYS.BRANCH.ADD, (input) => Post(URL_KEYS.BRANCH.ADD, input, false)),

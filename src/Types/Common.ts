@@ -38,9 +38,10 @@ export interface CommonSelectProps {
   limitTags?: number;
   size?: "small" | "medium";
   grid?: GridType;
+  required?: boolean;
 }
 
-export interface CommonValidationSelectProps extends CommonSelectProps {
+export interface CommonValidationSelectProps extends Omit<CommonSelectProps, "onChange" | "value"> {
   name: string;
 }
 
@@ -239,8 +240,31 @@ export interface CommonUploadProps {
   type?: "image" | "pdf";
 }
 
-export interface UploadResponse extends MessageStatus{
+export interface UploadResponse extends MessageStatus {
   data: string[];
 }
 
 // ************ Upload End ***********
+
+// ************ Delete Start ***********
+
+export interface CommonDeleteModalProps {
+  open: boolean;
+  title?: string;
+  description?: string;
+  itemName?: string;
+  loading?: boolean;
+  onClose: () => void;
+  onConfirm?: () => void;
+}
+
+// ************ Delete End ***********
+
+// ************ Bottom Action Bar Start ***********
+
+export interface CommonBottomActionBarProps {
+  children?: ReactNode;
+  isLoading?: boolean;
+  save?: boolean;
+}
+// ************ Bottom Action Bar End ***********

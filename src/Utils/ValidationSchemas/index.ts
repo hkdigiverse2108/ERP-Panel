@@ -15,19 +15,20 @@ export const EmployeeFormSchema = Yup.object({
   // ---------- BASIC DETAILS ----------
   name: Validation("string", "Name"),
   username: Validation("string", "Username"),
-  role: Validation("string", "Role"),
+  designation: Validation("string", "Designation",{ required: false }),
+  role: Validation("string", "Role", { required: false }),
   phoneNo: Validation("string", "Phone No", { extraRules: (s) => s.trim().matches(/^[0-9]{10}$/, "Phone number must be 10 digits") }),
-  email: Validation("string", "Email", { extraRules: (s) => s.trim().email("Invalid email address") }),
-  branch: Validation("string", "Branch Name", { required: false }),
+  email: Validation("string", "Email", {required: false, extraRules: (s) => s.trim().email("Invalid email address") }),
+  branchId: Validation("string", "Branch Name", { required: false }),
   panNumber: Validation("string", "PAN Number", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
 
   // ---------- ADDRESS ----------
   address: Yup.object({
-    address: Validation("string", "Address", { required: false }),
-    country: Validation("string", "Country", { required: false }),
-    state: Validation("string", "State", { required: false }),
-    city: Validation("string", "City", { required: false }),
-    postalCode: Validation("string", "ZIP Code", { required: false, extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid ZIP Code") }),
+    address: Validation("string", "Address"),
+    country: Validation("string", "Country"),
+    state: Validation("string", "State"),
+    city: Validation("string", "City"),
+    postalCode: Validation("string", "ZIP Code", {extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid ZIP Code") }),
   }).nullable(),
 
   // ---------- BANK DETAILS ----------

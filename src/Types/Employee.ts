@@ -20,8 +20,10 @@ export interface BankDetails {
 export interface EmployeeFormValues {
   name?: string;
   username?: string;
+  designation?: string;
   phoneNo?: string;
   email?: string;
+  branchId?: string;
   panNumber?: string;
   role?: string;
   address?: Address;
@@ -31,6 +33,7 @@ export interface EmployeeFormValues {
   extraWages?: number;
   target?: number;
   isActive?: boolean;
+  _submitAction?: string;
 }
 
 export type AddEmployeePayload = EmployeeFormValues & { companyId: string };

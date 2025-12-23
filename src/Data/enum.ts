@@ -27,18 +27,15 @@ export const PRODUCT_TYPE_OPTIONS = [
   { label: "Semi Finished", value: "semi_finished" },
   { label: "Service", value: "service" },
   { label: "Non Inventory", value: "non_inventory" },
-
 ];
-export
-  const CATEGORY_OPTIONS = [{ label: "Flour", value: "679a1c2f8f4de1a01234abcd" }];
-export
-  const SUB_CATEGORY_OPTIONS = [{ label: "Whole Wheat", value: "679a1c3d8f4e1a001234abce" }];
+
+export const CATEGORY_OPTIONS = [{ label: "Flour", value: "679a1c2f8f4de1a01234abcd" }];
+export const SUB_CATEGORY_OPTIONS = [{ label: "Whole Wheat", value: "679a1c3d8f4e1a001234abce" }];
 
 export const BRAND_OPTIONS = [{ label: "Organic Brand", value: "679a1c4e8f4e1a001234abcf" }];
 
 export const SUB_BRAND_OPTIONS = [{ label: "Premium", value: "679a1c5f8f4e1a001234abd0" }];
-export
-  const DEPARTMENT_OPTIONS = [{ label: "Grocery", value: "679a1c6f8f4e1a001234abd1" }];
+export const DEPARTMENT_OPTIONS = [{ label: "Grocery", value: "679a1c6f8f4e1a001234abd1" }];
 
 export const UOM_OPTIONS = [{ label: "KG", value: "679a1c7f8f4e1a001234abd2" }];
 

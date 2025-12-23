@@ -17,7 +17,7 @@ export const useDataGrid = ({ page = 0, pageSize = 5, initialSort = [], initialF
   const [filterModel, setFilterModel] = useState<GridFilterModel>(initialFilter);
 
   /* ---------------- Delete ---------------- */
-  const [rawToDelete, setRawToDelete] = useState<{ _id?: string; title?: string } | null>(null);
+  const [rowToDelete, setRowToDelete] = useState<{ _id?: string; title?: string } | null>(null);
 
   /* ---------------- API Params ---------------- */
   const params = useMemo(() => {
@@ -47,8 +47,8 @@ export const useDataGrid = ({ page = 0, pageSize = 5, initialSort = [], initialF
     filterModel,
     setFilterModel,
 
-    rawToDelete,
-    setRawToDelete,
+    rowToDelete,
+    setRowToDelete,
 
     params,
     resetModels,

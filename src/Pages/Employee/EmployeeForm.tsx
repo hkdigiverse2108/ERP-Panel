@@ -1,11 +1,11 @@
 import { Box, Grid } from "@mui/material";
-import { Form, Formik } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations } from "../../Api";
-import { CommonButton, CommonSwitch, CommonTextField } from "../../Attribute";
-import { CommonBreadcrumbs, CommonCard } from "../../Components/Common";
+import { CommonTextField, CommonValidationSelect, CommonValidationSwitch } from "../../Attribute";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
-import { EmployeeFormBreadcrumbs } from "../../Data";
+import { BREADCRUMBS, PRODUCT_TYPE_OPTIONS } from "../../Data";
 import { useAppSelector } from "../../Store/hooks";
 import type { EmployeeFormValues } from "../../Types";
 import { GetChangedFields, RemoveEmptyFields } from "../../Utils";
@@ -21,14 +21,17 @@ const EmployeeForm = () => {
   const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditEmployee();
 
   const isEditing = Boolean(data?._id);
+  const pageMode = isEditing ? "EDIT" : "ADD";
 
   const initialValues: EmployeeFormValues = {
     name: data?.name || "",
     username: data?.username || "",
+    designation: data?.designation || "",
     phoneNo: data?.phoneNo || "",
     email: data?.email || "",
     panNumber: data?.panNumber || "",
     role: data?.role || "",
+    branchId: data?.branchId || "",
 
     address: {
       address: data?.address?.address || "",
@@ -54,22 +57,27 @@ const EmployeeForm = () => {
     isActive: data?.isActive || false,
   };
 
-  const handleSubmit = (values: EmployeeFormValues) => {
-    if (isAddLoading || isEditLoading) return;
+  const handleSubmit = (values: EmployeeFormValues, { resetForm }: FormikHelpers<EmployeeFormValues>) => {
+    const { _submitAction, ...rest } = values;
+
+    const onSuccessHandler = () => {
+      if (_submitAction === "saveAndNew") resetForm();
+      else navigate(-1);
+    };
     if (isEditing) {
-      const changedFields = GetChangedFields(values, data);
-      editEmployee({ ...changedFields, employeeId: data._id, companyId: company!._id }, { onSuccess: () => navigate(-1) });
+      const changedFields = GetChangedFields(rest, data);
+      editEmployee({ ...changedFields, employeeId: data._id, companyId: company!._id }, { onSuccess: () => onSuccessHandler() });
     } else {
-      addEmployee({ ...RemoveEmptyFields(values), companyId: company!._id }, { onSuccess: () => navigate(-1) });
+      addEmployee({ ...RemoveEmptyFields(rest), companyId: company!._id }, { onSuccess: () => onSuccessHandler() });
     }
   };
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.EMPLOYEE.ADDEDIT} maxItems={1} breadcrumbs={EmployeeFormBreadcrumbs} />
-      <Box sx={{ p: { xs: 2, md: 3 } }}>
+      <CommonBreadcrumbs title={PAGE_TITLE.EMPLOYEE[pageMode]} maxItems={1} breadcrumbs={BREADCRUMBS.EMPLOYEE[pageMode]} />
+      <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<EmployeeFormValues> enableReinitialize initialValues={initialValues} validationSchema={EmployeeFormSchema} onSubmit={handleSubmit}>
-          {({ values, setFieldValue }) => (
+          {({ resetForm, setFieldValue }) => (
             <Form noValidate>
               <Grid container spacing={2}>
                 {/* BASIC DETAILS */}
@@ -77,22 +85,23 @@ const EmployeeForm = () => {
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonTextField name="name" label="Employee Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="username" label="User Name" required grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="role" label="Role" required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="designation" label="User designation" grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="role" label="role" options={PRODUCT_TYPE_OPTIONS} grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="phoneNo" label="Phone No." required grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="email" label="Email" required grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="panNumber" label="PAN No." inputProps={{ textTransform: "uppercase" }} grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="branch" label="branch" grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="branchId" label="branch" options={PRODUCT_TYPE_OPTIONS} grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
 
                 {/* ADDRESS DETAILS */}
                 <CommonCard title="Address Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonTextField name="address.address" label="Address" grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="address.country" label="Country" grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="address.state" label="State" grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="address.city" label="City" grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="address.postalCode" label="ZIP Code" type="number" grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="address.address" label="Address" required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="address.country" label="Country" required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="address.state" label="State" required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="address.city" label="City" required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="address.postalCode" label="ZIP Code" required type="number" grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
 
@@ -118,14 +127,9 @@ const EmployeeForm = () => {
                   </Grid>
                 </CommonCard>
 
-                <CommonSwitch name="isActive" label="Is Active" value={values.isActive} onChange={(checked) => setFieldValue("isActive", checked)} grid={{ xs: 12 }} />
-                {/* ACTION BUTTONS */}
-                <Grid className="w-full! flex justify-end">
-                  <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 2 }}>
-                    <CommonButton variant="outlined" onClick={() => navigate(-1)} title="Back" loading={isEditLoading || isAddLoading} />
-                    <CommonButton type="submit" variant="contained" title="Save" loading={isEditLoading || isAddLoading} disabled={isEditLoading || isAddLoading} />
-                  </Box>
-                </Grid>
+                <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />
+
+                <CommonBottomActionBar clear isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}
