@@ -50,3 +50,21 @@ export const EmployeeFormSchema = Yup.object({
   // ---------- STATUS ----------
   isActive: Yup.boolean(),
 });
+
+export const ProductFormSchema = Yup.object({
+  _submitAction: Yup.string().notRequired(),
+
+  itemCode: Validation("string", "Item Code"),
+  name: Validation("string", "Product Name"),
+  productType: Validation("string", "Product Type"),
+  categoryId: Validation("string", "Category"),
+  uomId: Validation("string", "UOM"),
+
+  mrp: Validation("number", "MRP"),
+  sellingPrice: Validation("number", "Selling Price"),
+
+  purchaseTaxId: Validation("string", "Purchase Tax", { required: false }),
+  salesTaxId: Validation("string", "Sales Tax", { required: false }),
+
+  status: Validation("string", "Status"),
+});
