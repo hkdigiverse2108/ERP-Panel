@@ -41,7 +41,7 @@ export const URL_KEYS = {
     ADD: "/product/add",
     ALL: "/product/all",
     ONE: (id: string) => `/product/${id}`,
-    EDIT: "/product/edit",
+    EDIT: "Product/edit",
   },
 
   STOCK: {
@@ -54,4 +54,10 @@ export const URL_KEYS = {
     BASE: "/call-request",
     ADD: "/call-request/add",
   },
+  BANK:{
+    BASE: "/bank",
+    ADD: "/bank/add",
+    EDIT: "/bank/edit",
+  }
+
 } as const;

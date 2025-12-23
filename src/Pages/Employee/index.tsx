@@ -4,8 +4,9 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
 import { CommonButton } from "../../Attribute";
-import { CommonActionColumn, CommonCard, CommonDataGrid, CommonModal } from "../../Components/Common";
+import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonModal } from "../../Components/Common";
 import { ROUTES } from "../../Constants";
+import { EmployeeBreadcrumbs } from "../../Data";
 import type { EmployeeBase } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
 
@@ -56,21 +57,24 @@ const Employee = () => {
   );
 
   return (
-    <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
-      <CommonCard title="Employees" topContent={topContent}>
-        <CommonDataGrid BoxClass="rounded-md overflow-hidden" columns={columns} rows={allEmployee} rowCount={totalRows} loading={employeeDataLoading || employeeDataFetching} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} />
-      </CommonCard>
+    <>
+      <CommonBreadcrumbs title={ROUTES.EMPLOYEE.BASE} maxItems={1} breadcrumbs={EmployeeBreadcrumbs} />
+      <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
+        <CommonCard title="Employees" topContent={topContent}>
+          <CommonDataGrid BoxClass="rounded-md overflow-hidden" columns={columns} rows={allEmployee} rowCount={totalRows} loading={employeeDataLoading || employeeDataFetching} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} />
+        </CommonCard>
 
-      <CommonModal title="Confirm Delete" isOpen={Boolean(rawToDelete)} onClose={() => setRawToDelete(null)} className="max-w-125 m-2 sm:m-5">
-        <p className="my-3">Are you sure you want to delete "{rawToDelete?.title}"?</p>
-        <div className="flex justify-end">
-          <Button onClick={() => setRawToDelete(null)}>No</Button>
-          <Button color="error" onClick={handleDeleteBtn}>
-            Yes
-          </Button>
-        </div>
-      </CommonModal>
-    </Box>
+        <CommonModal title="Confirm Delete" isOpen={Boolean(rawToDelete)} onClose={() => setRawToDelete(null)} className="max-w-125 m-2 sm:m-5">
+          <p className="my-3">Are you sure you want to delete "{rawToDelete?.title}"?</p>
+          <div className="flex justify-end">
+            <Button onClick={() => setRawToDelete(null)}>No</Button>
+            <Button color="error" onClick={handleDeleteBtn}>
+              Yes
+            </Button>
+          </div>
+        </CommonModal>
+      </Box>
+    </>
   );
 };
 

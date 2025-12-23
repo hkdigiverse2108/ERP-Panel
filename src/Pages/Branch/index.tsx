@@ -5,9 +5,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CommonCard, CommonDataGrid, CommonModal } from "../../Components/Common";
 import { useDataGrid } from "../../Utils/Hooks";
-import { KEYS, ROUTES } from "../../Constants";
+import { KEYS, PAGE_TITLE, ROUTES } from "../../Constants";
 import { Mutations, Queries } from "../../Api";
 import { useQueryClient } from "@tanstack/react-query";
+import {CommonBreadcrumbs} from "../../Components/Common";
+import { BranchBreadcrumbs } from "../../Data";
 
 const Branch = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({ page: 0, pageSize: 10 });
@@ -116,7 +118,10 @@ const Branch = () => {
   );
 
   return (
-    <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
+    <>
+      <CommonBreadcrumbs title={PAGE_TITLE.BRANCH.BASE} maxItems={1} breadcrumbs={BranchBreadcrumbs} />
+
+      <div className="m-4 md:m-6">
       <CommonCard title="Branches" topContent={topContent}>
         <CommonDataGrid BoxClass="rounded-md overflow-hidden" columns={columns} rows={allBranches} rowCount={totalRows} loading={isLoading} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25]} />
       </CommonCard>
@@ -132,7 +137,9 @@ const Branch = () => {
           </Button>
         </div>
       </CommonModal>
-    </Box>
+      </div>
+      </>
+  
   );
 };
 

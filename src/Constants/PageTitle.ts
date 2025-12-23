@@ -1,4 +1,3 @@
-import Branch from "../Pages/Branch";
 
 export const PAGE_TITLE = {
   DASHBOARD: "Dashboard",
@@ -9,9 +8,11 @@ export const PAGE_TITLE = {
   EMPLOYEE: {
     BASE: "Employee",
     LIST: "Employee List",
+    ADDEDIT :"Add edit"
   },
   BRANCH: {
     BASE: "Branch",
+    ADDEDIT :"Add edit"
   },
   CONTACT: {
     BASE: "Contact",
@@ -19,10 +20,22 @@ export const PAGE_TITLE = {
   INVENTORY: {
     BASE: "inventory",
     STOCK: "stock",
-    PRODUCT: "Product",
-    // PRODUCT: {
-    //   BASE: "inventory/product",
-    ADDEDIT: "/inventory/product/add-edit/:id?",
-    // },
+    // PRODUCT: "Product",
+    PRODUCT: {
+      BASE: "product",
+      ADDEDIT: "inventory/product/add-edit/:id?",
+    },
   },
+  BANK:{
+    BASE:"Bank",
+    BANK:{
+      BASE:"Bank",
+      ADDEDIT:"Bank/add-edit",
+
+    }
+
+  },
+  TRANSACTION :{
+    BASE: "Transaction",
+  }
 } as const;

@@ -4,6 +4,9 @@ import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import PeopleIcon from "@mui/icons-material/People";
 import type { NavItem } from "../Types";
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+
+
 
 export const NavItems: NavItem[] = [
   { icon: <GridViewRoundedIcon />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
@@ -14,9 +17,17 @@ export const NavItems: NavItem[] = [
     name: PAGE_TITLE.INVENTORY.BASE,
     icon: <SettingsIcon />,
     subItems: [
-      { name: PAGE_TITLE.INVENTORY.PRODUCT, path: ROUTES.PRODUCT.BASE, pro: false },
+      { name: PAGE_TITLE.INVENTORY.PRODUCT.BASE, path: ROUTES.PRODUCT.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.STOCK, path: ROUTES.STOCK.BASE, pro: false },
     ],
+  },
+  {
+    name: PAGE_TITLE.BANK.BANK.BASE,
+    icon:<AccountBalanceIcon />,
+    subItems:[
+      {name: PAGE_TITLE.BANK.BANK.BASE, path :ROUTES.BANK.BASE},
+      {name: PAGE_TITLE.TRANSACTION.BASE, path: ROUTES.TRANSACTION.BASE}
+    ]
   },
   {
     name: PAGE_TITLE.SETTINGS.BASE,

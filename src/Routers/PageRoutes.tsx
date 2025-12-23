@@ -13,6 +13,10 @@ import ProductForm from "../Pages/Inventory/Product/ProductForm";
 import Stocks from "../Pages/Inventory/Stock";
 import Contact from "../Pages/Contacts";
 import ContactForm from "../Pages/Contacts/ContactForm";
+import Bank from "../Pages/Bank/Bank";
+import BankForm from "../Pages/Bank/Bank/BankForm";
+import BankTransaction from "../Pages/Bank/BankTransaction";
+
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -28,6 +32,9 @@ export const PageRoutes = [
   { path: ROUTES.STOCK.BASE, element: <Stocks /> },
   { path: ROUTES.CONTACT.BASE, element: <Contact /> },
   { path: ROUTES.CONTACT.ADD_EDIT, element: <ContactForm /> },
+  { path: ROUTES.BANK.BASE, element: <Bank />},
+  { path: ROUTES.BANK.ADD_EDIT, element:<BankForm/>},
+  { path: ROUTES.TRANSACTION.BASE, element: <BankTransaction />}
 ];
 export const AuthRoutes = [
   { path: ROUTES.HOME, element: <Navigate to={ROUTES.AUTH.SIGNIN} replace /> },
