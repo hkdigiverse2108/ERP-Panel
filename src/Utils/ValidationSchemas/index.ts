@@ -16,11 +16,10 @@ export const EmployeeFormSchema = Yup.object({
   name: Validation("string", "Name"),
   username: Validation("string", "Username"),
   role: Validation("string", "Role"),
-  mobileNo: Validation("string", "Mobile No"),
-  email: Validation("string", "Email", { extraRules: (s) => s.email("Invalid email address") }),
-
-  // PAN is alphanumeric, NOT number
-  panNumber: Validation("string", "PAN Number", { required: false, extraRules: (s) => s.matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
+  phoneNo: Validation("string", "Phone No", { extraRules: (s) => s.trim().matches(/^[0-9]{10}$/, "Phone number must be 10 digits") }),
+  email: Validation("string", "Email", { extraRules: (s) => s.trim().email("Invalid email address") }),
+  branch: Validation("string", "Branch Name", { required: false }),
+  panNumber: Validation("string", "PAN Number", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
 
   // ---------- ADDRESS ----------
   address: Yup.object({
@@ -28,8 +27,8 @@ export const EmployeeFormSchema = Yup.object({
     country: Validation("string", "Country", { required: false }),
     state: Validation("string", "State", { required: false }),
     city: Validation("string", "City", { required: false }),
-    postalCode: Validation("number", "ZIP Code", { required: false }).nullable(),
-  }),
+    postalCode: Validation("string", "ZIP Code", { required: false, extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid ZIP Code") }),
+  }).nullable(),
 
   // ---------- BANK DETAILS ----------
   bankDetails: Yup.object({
@@ -38,7 +37,8 @@ export const EmployeeFormSchema = Yup.object({
     accountNumber: Validation("number", "Account Number", { required: false }).nullable(),
     bankHolderName: Validation("string", "Account Holder Name", { required: false }),
     swiftCode: Validation("string", "Swift Code", { required: false }),
-  }),
+    IFSCCode: Validation("string", "IFSC Code", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, "Invalid IFSC Code") }),
+  }).nullable(),
 
   // ---------- SALARY ----------
   wages: Validation("number", "Wages", { required: false }).nullable(),

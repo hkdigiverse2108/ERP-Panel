@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { LoginPayload, LoginResponse, UploadResponse } from "../Types";
+import type { AddEmployeePayload, EditEmployeePayload, LoginPayload, LoginResponse, UploadResponse } from "../Types";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
 
@@ -18,8 +18,10 @@ export const Mutations = {
   useEditCompany: () => useMutations<FormData, any>(KEYS.COMPANY.EDIT, (input) => Put(URL_KEYS.COMPANY.EDIT, input)),
 
   // ************ Employee ***********
-  useAddEmployee: () => useMutations<FormData, any>([KEYS.EMPLOYEE.ADD], (input) => Post(URL_KEYS.EMPLOYEE.ADD, input)),
-  useEditEmployee: () => useMutations<FormData, any>([KEYS.EMPLOYEE.EDIT], (input) => Put(URL_KEYS.EMPLOYEE.EDIT, input)),
+  // useAddEmployee: () => useMutations<EmployeeFormValues, void>([KEYS.EMPLOYEE.ADD, KEYS.EMPLOYEE.BASE], (input) => Post(URL_KEYS.EMPLOYEE.ADD, input)),
+  // useEditEmployee: () => useMutations<EmployeeFormValues, void>([KEYS.EMPLOYEE.EDIT, KEYS.EMPLOYEE.BASE], (input) => Put(URL_KEYS.EMPLOYEE.EDIT, input)),
+  useAddEmployee: () => useMutations<AddEmployeePayload, void>([KEYS.EMPLOYEE.ADD, KEYS.EMPLOYEE.BASE], (input) => Post(URL_KEYS.EMPLOYEE.ADD, input)),
+  useEditEmployee: () => useMutations<EditEmployeePayload, void>([KEYS.EMPLOYEE.EDIT, KEYS.EMPLOYEE.BASE], (input) => Put(URL_KEYS.EMPLOYEE.EDIT, input)),
   useDeleteEmployee: () => useMutations<string, void>([KEYS.EMPLOYEE.DELETE], (id) => Delete(`${URL_KEYS.EMPLOYEE.BASE}/${id}`)),
 
   // ************ Branch ***********

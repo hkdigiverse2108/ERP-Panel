@@ -1,19 +1,18 @@
-import { Grid, Box, Button, IconButton, MenuItem, Menu } from "@mui/material";
-import { Formik, Form } from "formik";
-import { CommonTextField, CommonSwitch } from "../../../../Attribute";
-import { CommonCard } from "../../../Common";
-import { Validation } from "../../../../Utils/ValidationSchemas/Validation";
+import { Box, Grid, IconButton, Menu, MenuItem } from "@mui/material";
+import { GridMoreVertIcon } from "@mui/x-data-grid";
+import { Form, Formik } from "formik";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import { GridMoreVertIcon } from "@mui/x-data-grid";
+import { Mutations } from "../../../../Api";
+import { CommonButton, CommonSwitch, CommonTextField } from "../../../../Attribute";
+import { ImagePath } from "../../../../Constants";
+import { setCompany } from "../../../../Store/Slices/CompanySlice";
 import { setSelectedFiles, setUploadModal } from "../../../../Store/Slices/ModalSlice";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
-import { ImagePath } from "../../../../Constants";
-import { useEffect, useState } from "react";
-import { Mutations } from "../../../../Api";
-import { getChangedFields } from "../../../../Utils";
-import { setCompany } from "../../../../Store/Slices/CompanySlice";
-import { CommonButton } from "../../../../Attribute";
+import { GetChangedFields } from "../../../../Utils";
+import { Validation } from "../../../../Utils/ValidationSchemas/Validation";
+import { CommonCard } from "../../../Common";
 
 type CompanyImageKey = "logo" | "waterMark" | "reportFormatLogo" | "authorizedSignature";
 
@@ -53,7 +52,7 @@ export const EditCompany = () => {
       ...images,
     };
 
-    const payload = getChangedFields(newData, companyData);
+    const payload = GetChangedFields(newData, companyData);
 
     editCompanyMutate(
       { companyId: companyData?._id, ...payload },

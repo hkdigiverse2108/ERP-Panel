@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { CommonCard } from "../../Components/Common";
 import { CommonButton, CommonTextField, CommonSwitch } from "../../Attribute";
 import { Mutations } from "../../Api";
-import { cleanEditPayload, getChangedFields, removeEmptyFields } from "../../Utils";
+import {  GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { KEYS } from "../../Constants";
 import { useAppSelector } from "../../Store/hooks";
@@ -26,20 +26,20 @@ const BranchForm = () => {
 
     try {
       if (isEditing) {
-        const changedFields = getChangedFields(values, data);
-        let payload = cleanEditPayload(changedFields, data);
+        const changedFields = GetChangedFields(values, data);
+        // let payload = cleanEditPayload(changedFields, data);
 
-        payload.branchId = data._id;
-        payload.companyId = company?._id;
+        // payload.branchId = data._id;
+        // payload.companyId = company?._id;
 
-        editBranchMutate(payload, {
-          onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [KEYS.BRANCH.ALL] });
-            navigate(-1);
-          },
-        });
+        // editBranchMutate(payload, {
+        //   onSuccess: () => {
+        //     queryClient.invalidateQueries({ queryKey: [KEYS.BRANCH.ALL] });
+        //     navigate(-1);
+        //   },
+        // });
       } else {
-        let payload = removeEmptyFields(values);
+        let payload = RemoveEmptyFields(values);
         payload.companyId = company?._id;
 
         addBranchMutate(payload, {

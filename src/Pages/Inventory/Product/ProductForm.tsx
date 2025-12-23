@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { CommonCard } from "../../../Components/Common";
 import { CommonButton, CommonTextField, CommonSwitch, CommonSelect } from "../../../Attribute";
 import { Mutations } from "../../../Api";
-import { cleanEditPayload, getChangedFields, removeEmptyFields } from "../../../Utils";
+import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { KEYS } from "../../../Constants";
 import { useAppSelector } from "../../../Store/hooks";
@@ -28,22 +28,22 @@ const ProductForm = () => {
 
     try {
       if (isEditing) {
-        const changedFields = getChangedFields(values, data);
-        let payload = cleanEditPayload(changedFields, data);
+        const changedFields = GetChangedFields(values, data);
+        // let payload = cleanEditPayload(changedFields, data);
 
-        payload.productId = data._id;
-        payload.companyId = company?._id;
+        // payload.productId = data._id;
+        // payload.companyId = company?._id;
 
-        editProductMutate(payload, {
-          onSuccess: () => {
-            queryClient.invalidateQueries({
-              queryKey: [KEYS.PRODUCT.ALL],
-            });
-            navigate(-1);
-          },
-        });
+        // editProductMutate(payload, {
+        //   onSuccess: () => {
+        //     queryClient.invalidateQueries({
+        //       queryKey: [KEYS.PRODUCT.ALL],
+        //     });
+        //     navigate(-1);
+        //   },
+        // });
       } else {
-        let payload = removeEmptyFields(values);
+        let payload = RemoveEmptyFields(values);
         payload.companyId = company?._id;
 
         addProductMutate(payload, {

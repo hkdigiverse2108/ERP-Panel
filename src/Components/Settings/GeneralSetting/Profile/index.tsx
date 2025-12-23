@@ -9,7 +9,7 @@ import { GridMoreVertIcon } from "@mui/x-data-grid";
 import { Form, Formik } from "formik";
 import { Mutations } from "../../../../Api";
 import { setUser } from "../../../../Store/Slices/AuthSlice";
-import { getChangedFields } from "../../../../Utils";
+import { GetChangedFields } from "../../../../Utils";
 import CompanyDetails from "./CompanyDetails";
 
 const Profile = () => {
@@ -44,7 +44,7 @@ const Profile = () => {
         newData.profileImage = "";
       }
 
-      const payload = getChangedFields(newData, userValue);
+      const payload = GetChangedFields(newData, userValue);
 
       console.log("Data : =", newData, userValue);
       editUserMutate(

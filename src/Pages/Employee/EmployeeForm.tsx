@@ -1,12 +1,12 @@
 import { Box, Grid } from "@mui/material";
-import { Formik, Form } from "formik";
+import { Form, Formik } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CommonCard } from "../../Components/Common";
-import { CommonButton, CommonSwitch, CommonTextField } from "../../Attribute";
 import { Mutations } from "../../Api";
-import { cleanEditPayload, getChangedFields, removeEmptyFields } from "../../Utils";
+import { CommonButton, CommonSwitch, CommonTextField } from "../../Attribute";
+import { CommonCard } from "../../Components/Common";
 import { useAppSelector } from "../../Store/hooks";
-import { boolean, number } from "yup";
+import type { EmployeeFormValues } from "../../Types";
+import { GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { EmployeeFormSchema } from "../../Utils/ValidationSchemas";
 
 const EmployeeForm = () => {
@@ -15,17 +15,17 @@ const EmployeeForm = () => {
   const { data } = location.state || {};
   const { company } = useAppSelector((state) => state.company);
 
-  const { mutate: editEmployeeMutate, isPending: isEditLoading } = Mutations.useEditEmployee();
-  const { mutate: addEmployeeMutate, isPending: isAddLoading } = Mutations.useAddEmployee();
+  const { mutate: addEmployee, isPending: isAddLoading } = Mutations.useAddEmployee();
+  const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditEmployee();
 
   const isEditing = Boolean(data?._id);
 
-  const initialValues = {
+  const initialValues: EmployeeFormValues = {
     name: data?.name || "",
     username: data?.username || "",
-    mobileNo: data?.mobileNo || "",
+    phoneNo: data?.phoneNo || "",
     email: data?.email || "",
-    panNumber: data?.panNumber || null,
+    panNumber: data?.panNumber || "",
     role: data?.role || "",
 
     address: {
@@ -42,6 +42,7 @@ const EmployeeForm = () => {
       accountNumber: data?.bankDetails?.accountNumber || null,
       bankHolderName: data?.bankDetails?.bankHolderName || "",
       swiftCode: data?.bankDetails?.swiftCode || "",
+      IFSCCode: data?.bankDetails?.IFSCCode || "",
     },
 
     wages: data?.wages || null,
@@ -51,33 +52,13 @@ const EmployeeForm = () => {
     isActive: data?.isActive || false,
   };
 
-  const handleSubmit = async (values: any) => {
-    if (isEditLoading || isAddLoading) return;
-    try {
-      if (isEditing) {
-        const changedFields = getChangedFields(values, data);
-
-        let payload = cleanEditPayload(changedFields, data);
-        payload.companyId = company?._id;
-        payload.employeeId = data._id;
-
-        editEmployeeMutate(payload, {
-          onSuccess: () => {
-            navigate(-1);
-          },
-        });
-      } else {
-        let payload = removeEmptyFields(values);
-        payload.companyId = company?._id;
-
-        addEmployeeMutate(payload, {
-          onSuccess: () => {
-            navigate(-1);
-          },
-        });
-      }
-    } catch (error) {
-      console.error("error -> ", error);
+  const handleSubmit = (values: EmployeeFormValues) => {
+    if (isAddLoading || isEditLoading) return;
+    if (isEditing) {
+      const changedFields = GetChangedFields(values, data);
+      editEmployee({ ...changedFields, employeeId: data._id, companyId: company!._id }, { onSuccess: () => navigate(-1) });
+    } else {
+      addEmployee({ ...RemoveEmptyFields(values), companyId: company!._id }, { onSuccess: () => navigate(-1) });
     }
   };
 
@@ -85,8 +66,8 @@ const EmployeeForm = () => {
     <Box sx={{ p: { xs: 2, md: 3 } }}>
       <h2 style={{ marginBottom: 16 }}> {isEditing ? "Edit" : "Add"} Employee </h2>
 
-      <Formik enableReinitialize initialValues={initialValues} validationSchema={EmployeeFormSchema} onSubmit={handleSubmit}>
-        {({ values, setFieldValue, isSubmitting }) => (
+      <Formik<EmployeeFormValues> enableReinitialize initialValues={initialValues} validationSchema={EmployeeFormSchema} onSubmit={handleSubmit}>
+        {({ values, setFieldValue }) => (
           <Form noValidate>
             <Grid container spacing={2}>
               {/* BASIC DETAILS */}
@@ -95,9 +76,10 @@ const EmployeeForm = () => {
                   <CommonTextField name="name" label="Employee Name" required grid={{ xs: 12, md: 4 }} />
                   <CommonTextField name="username" label="User Name" required grid={{ xs: 12, md: 4 }} />
                   <CommonTextField name="role" label="Role" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="mobileNo" label="Mobile No." required grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="phoneNo" label="Phone No." required grid={{ xs: 12, md: 4 }} />
                   <CommonTextField name="email" label="Email" required grid={{ xs: 12, md: 4 }} />
                   <CommonTextField name="panNumber" label="PAN No." inputProps={{ textTransform: "uppercase" }} grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="branch" label="branch" grid={{ xs: 12, md: 4 }} />
                 </Grid>
               </CommonCard>
 
@@ -120,6 +102,7 @@ const EmployeeForm = () => {
                   <CommonTextField name="bankDetails.accountNumber" label="Account No." type="number" grid={{ xs: 12, md: 4 }} />
                   <CommonTextField name="bankDetails.bankHolderName" label="Account Holder Name" grid={{ xs: 12, md: 4 }} />
                   <CommonTextField name="bankDetails.swiftCode" label="Swift Code" grid={{ xs: 12, md: 4 }} />
+                  <CommonTextField name="bankDetails.IFSCCode" label="IFSC Code" grid={{ xs: 12, md: 4 }} />
                 </Grid>
               </CommonCard>
 
@@ -133,12 +116,12 @@ const EmployeeForm = () => {
                 </Grid>
               </CommonCard>
 
-              <CommonSwitch name="isActive" label="Is Active" value={values.isActive} onChange={(checked) => setFieldValue("isActive", checked)} grid={{ xs: 12, md: 12 }} />
+              <CommonSwitch name="isActive" label="Is Active" value={values.isActive} onChange={(checked) => setFieldValue("isActive", checked)} grid={{ xs: 12 }} />
               {/* ACTION BUTTONS */}
-              <Grid className="w-full! flex justify-end ">
+              <Grid className="w-full! flex justify-end">
                 <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 2 }}>
                   <CommonButton variant="outlined" onClick={() => navigate(-1)} title="Back" loading={isEditLoading || isAddLoading} />
-                  <CommonButton type="submit" variant="contained" title="Save" loading={isEditLoading || isAddLoading || isSubmitting} disabled={isEditLoading || isAddLoading || isSubmitting} />
+                  <CommonButton type="submit" variant="contained" title="Save" loading={isEditLoading || isAddLoading} disabled={isEditLoading || isAddLoading} />
                 </Box>
               </Grid>
             </Grid>

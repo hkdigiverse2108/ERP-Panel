@@ -27,7 +27,7 @@ const Employee = () => {
     { field: "username", headerName: "User Name", flex: 1 },
     { field: "name", headerName: "Name", flex: 1 },
     { field: "email", headerName: "Email", flex: 1 },
-    { field: "mobileNo", headerName: "Mobile", flex: 1 },
+    { field: "phoneNo", headerName: "Phone No", flex: 1 },
     { field: "role", headerName: "Role", flex: 1 },
     { field: "panNumber", headerName: "PAN Number", flex: 1 },
     { field: "wages", headerName: "Wages", flex: 1 },
@@ -41,7 +41,7 @@ const Employee = () => {
     },
     CommonActionColumn({
       editRoute: ROUTES.EMPLOYEE.ADD_EDIT,
-      onDelete: (row) => setRawToDelete({ _id: row._id!, title: row.username }),
+      onDelete: (row) => setRawToDelete({ _id: row?._id, title: row?.username }),
     }),
   ];
 
