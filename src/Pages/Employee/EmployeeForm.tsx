@@ -77,7 +77,7 @@ const EmployeeForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.EMPLOYEE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.EMPLOYEE[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<EmployeeFormValues> enableReinitialize initialValues={initialValues} validationSchema={EmployeeFormSchema} onSubmit={handleSubmit}>
-          {({ resetForm, setFieldValue }) => (
+          {({ resetForm, setFieldValue ,dirty}) => (
             <Form noValidate>
               <Grid container spacing={2}>
                 {/* BASIC DETAILS */}
@@ -129,7 +129,7 @@ const EmployeeForm = () => {
 
                 <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />
 
-                <CommonBottomActionBar clear isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

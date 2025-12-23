@@ -28,21 +28,13 @@ const BranchForm = () => {
     address: data?.address || "",
     isActive: data?.isActive || true,
   };
-  const emptyValues: BranchFormValues = {
-    name: "",
-    address: "",
-    isActive: true,
-  };
 
   const handleSubmit = (values: BranchFormValues, { resetForm }: FormikHelpers<BranchFormValues>) => {
     const { _submitAction, ...rest } = values;
 
     const onSuccessHandler = () => {
-      if (_submitAction === "saveAndNew") {
-        console.log("_submitAction", _submitAction);
-
-        resetForm({ values: emptyValues });
-      } else navigate(-1);
+      if (_submitAction === "saveAndNew") resetForm({ values: initialValues });
+      else navigate(-1);
     };
 
     if (isEditing) {
@@ -67,7 +59,7 @@ const BranchForm = () => {
                     <CommonTextField name="address" label="Branch Address" required grid={{ xs: 12 }} />
                     <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />
                   </Grid>
-                  <CommonBottomActionBar clear disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: emptyValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                  <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
                 </CommonCard>
               </Grid>
             </Form>
