@@ -111,7 +111,7 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({ label, name, type = 
   );
 
   return grid ? (
-    <Grid size={grid} className="flex flex-col justify-end">
+    <Grid size={grid} className="flex flex-col justify-start">
       {Input}
     </Grid>
   ) : (

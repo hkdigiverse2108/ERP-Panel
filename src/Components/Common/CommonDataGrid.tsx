@@ -2,7 +2,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import type { CommonDataGridProps } from "../../Types";
 
-const CommonDataGrid = <T,>({ columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, pageSizeOptions = [10, 25, 50], defaultHidden = [], BoxClass }: CommonDataGridProps<T>) => {
+const CommonDataGrid = <T,>({ columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass }: CommonDataGridProps<T>) => {
   const visibilityModel = useMemo(() => {
     const model: Record<string, boolean> = {};
 
@@ -13,20 +13,28 @@ const CommonDataGrid = <T,>({ columns, rows, rowCount, loading = false, paginati
     return model;
   }, [defaultHidden]);
 
-  console.log("all rows -> ", rows);
   const fixedColumns = columns.map((c) => ({
     ...c,
     // width: 150,
     // flex: undefined,
   }));
 
+  fixedColumns.unshift({
+    field: "srNo",
+    headerName: "Sr No",
+    width: 90,
+    sortable: false,
+    filterable: false,
+    renderCell: (params) => paginationModel.page * paginationModel.pageSize + params.api.getRowIndexRelativeToVisibleRows(params?.id) + 1,
+  });
+
   return (
     <div className={`${BoxClass} min-w-full max-w-395 overflow-auto`}>
       <DataGrid
         rows={rows}
+        columns={fixedColumns}
         rowCount={rowCount}
         loading={loading}
-        columns={fixedColumns}
         showToolbar
         slotProps={{
           loadingOverlay: {
@@ -40,10 +48,12 @@ const CommonDataGrid = <T,>({ columns, rows, rowCount, loading = false, paginati
           },
         }}
         density="standard"
+        disableRowSelectionOnClick
         //Pagination
         paginationMode="server"
         paginationModel={paginationModel}
         onPaginationModelChange={onPaginationModelChange}
+        pageSizeOptions={[5, 10, 50, 100, { value: rowCount, label: "All" }]}
         ///Sorting
         sortingMode="client"
         sortModel={sortModel}
@@ -52,11 +62,6 @@ const CommonDataGrid = <T,>({ columns, rows, rowCount, loading = false, paginati
         filterMode="client"
         filterModel={filterModel}
         onFilterModelChange={onFilterModelChange}
-        //
-        disableRowSelectionOnClick
-        pageSizeOptions={pageSizeOptions}
-        // pageSizeOptions={[5, 10, 25, { value: -1, label: 'All' }]}
-
         keepNonExistentRowsSelected={false} //  IMPORTANT
       />
     </div>

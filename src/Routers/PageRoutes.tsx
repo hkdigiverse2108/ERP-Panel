@@ -42,7 +42,3 @@ export const AuthRoutes = [
   { path: ROUTES.HOME, element: <Navigate to={ROUTES.AUTH.SIGNIN} replace /> },
   { path: ROUTES.AUTH.SIGNIN, element: <SignInForm /> },
 ];
-
-export const ComponentRoutes = [
-  //  {path: ROUTES.COMPONENTS.EDIT_COMPANY, element: <EditCompany />},
-];

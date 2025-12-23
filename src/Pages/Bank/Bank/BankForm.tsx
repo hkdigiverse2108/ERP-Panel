@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { CommonCard, CommonBreadcrumbs } from "../../../Components/Common";
 import { CommonButton, CommonTextField, CommonSwitch, CommonSelect } from "../../../Attribute";
 import { Mutations } from "../../../Api";
-import { cleanEditPayload, getChangedFields, removeEmptyFields } from "../../../Utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { KEYS, PAGE_TITLE } from "../../../Constants";
 import { useAppSelector } from "../../../Store/hooks";
@@ -27,28 +26,28 @@ const BankForm = () => {
     if (isAddLoading || isEditLoading) return;
 
     if (isEditing) {
-      const changedFields = getChangedFields(values, data);
-      let payload = cleanEditPayload(changedFields, data);
+      // const changedFields = getChangedFields(values, data);
+      // let payload = cleanEditPayload(changedFields, data);
 
-      payload.bankId = data._id;
-      payload.companyId = company?._id;
+      // payload.bankId = data._id;
+      // payload.companyId = company?._id;
 
-      editBankMutate(payload, {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: [KEYS.BANK.ALL] });
-          navigate(-1);
-        },
-      });
+      // editBankMutate(payload, {
+      //   onSuccess: () => {
+      //     queryClient.invalidateQueries({ queryKey: [KEYS.BANK.ALL] });
+      //     navigate(-1);
+      //   },
+      // });
     } else {
-      let payload = removeEmptyFields(values);
-      payload.companyId = company?._id;
+      // let payload = removeEmptyFields(values);
+      // payload.companyId = company?._id;
 
-      addBankMutate(payload, {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: [KEYS.BANK.ALL] });
-          navigate(-1);
-        },
-      });
+      // addBankMutate(payload, {
+      //   onSuccess: () => {
+      //     queryClient.invalidateQueries({ queryKey: [KEYS.BANK.ALL] });
+      //     navigate(-1);
+      //   },
+      // });
     }
   };
 

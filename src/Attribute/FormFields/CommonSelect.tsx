@@ -3,16 +3,20 @@ import { useField } from "formik";
 import { type FC } from "react";
 import type { CommonSelectProps, CommonValidationSelectProps, SelectOptionType } from "../../Types";
 
-export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, label, options, multiple = false, limitTags, size = "small", grid }) => {
-  const [field, meta, helpers] = useField<string[]>({ name });
-  const valueObjects = field.value?.map((v) => options.find((o) => o.value === v)).filter(Boolean) as SelectOptionType[];
-  const singleValue = !multiple ? valueObjects[0] ?? null : null;
+export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, label, required, options, multiple = false, limitTags, size = "small", grid }) => {
+  const [field, meta, helpers] = useField<any>({ name });
+
+  // Normalize value
+  const safeValue = multiple ? (Array.isArray(field.value) ? field.value : []) : field.value ?? "";
+
+  const valueObjects = multiple ? safeValue?.map((v: string) => options.find((o) => o.value === v)).filter(Boolean) : options.find((o) => o.value === safeValue) ?? null;
+
   const Input = (
     <Autocomplete
       multiple={multiple}
       options={options}
       limitTags={limitTags}
-      value={multiple ? valueObjects : singleValue}
+      value={valueObjects}
       size={size}
       getOptionLabel={(opt) => opt.label}
       isOptionEqualToValue={(option, val) => option.value === val.value}
@@ -20,15 +24,11 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
         if (multiple) {
           helpers.setValue((newValues as SelectOptionType[]).map((o) => o.value));
         } else {
-          const single = newValues as SelectOptionType | null;
-          helpers.setValue(single ? [single.value] : []);
+          helpers.setValue((newValues as SelectOptionType | null)?.value ?? "");
         }
       }}
       onBlur={() => helpers.setTouched(true)}
-      filterSelectedOptions
-      clearOnEscape
-      disableCloseOnSelect={multiple}
-      renderInput={(params) => <TextField {...params} label={label} size={size} error={meta.touched && Boolean(meta.error)} helperText={meta.touched && meta.error ? meta.error : ""} />}
+      renderInput={(params) => <TextField {...params} className="capitalize" required={required} label={label} size={size} error={meta.touched && Boolean(meta.error)} helperText={meta.touched && meta.error ? meta.error : ""} />}
     />
   );
 

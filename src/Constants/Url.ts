@@ -16,16 +16,15 @@ export const URL_KEYS = {
     DELETE: "/user/delete/",
   },
   COMPANY: {
-    ADD: "company/add",
-    ALL: "company/all",
+    ADD: "/company/add",
+    ALL: "/company/all",
     ONE: (id: string) => `/company/${id}`,
     EDIT: "/company/edit",
   },
   EMPLOYEE: {
     BASE: "/employee",
-    ADD: "/employee/add",
     ALL: "/employee/all",
-    ONE: (id: string) => `/employee/${id}`,
+    ADD: "/employee/add",
     EDIT: "/employee/edit",
   },
 

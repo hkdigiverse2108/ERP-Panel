@@ -44,12 +44,10 @@ export const KEYS = {
   },
 
   EMPLOYEE: {
-    ROOT: ["employee"],
-    ALL: ["employee", "all"],
-    DETAILS: (id: string) => ["employee", "detail", id],
-    ADD: ["employee", "add"],
-    EDIT: ["employee", "edit"],
-    DELETE: ["employee", "delete"], // mutation
+    BASE: "employee",
+    ADD: "employee-add",
+    EDIT: "employee-edit",
+    DELETE: "employee-delete",
   },
 
   BRANCH: {

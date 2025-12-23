@@ -1,6 +1,6 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AppQueryOptions, Params, UploadResponse } from "../Types";
-import { cleanParams } from "../Utils";
+import type { AppQueryOptions, EmployeeApiResponse, Params, UploadResponse } from "../Types";
+import { CleanParams } from "../Utils";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 
@@ -22,22 +22,17 @@ export const Queries = {
     }),
 
   // ************ Employee ***********
-  useGetAllEmployeeData: (params?: Params) => {
-    const cleanedParams = cleanParams(params);
-    return useQueries<any>([KEYS.EMPLOYEE.ALL, cleanedParams], () => Get(URL_KEYS.EMPLOYEE.ALL, cleanedParams), {
-      placeholderData: (previousData: any) => previousData,
-    });
-  },
+  useGetEmployee: (params?: Params) => useQueries<EmployeeApiResponse>([KEYS.EMPLOYEE.BASE, params], () => Get(URL_KEYS.EMPLOYEE.ALL, params)),
 
   useGetOneEmployeeData: (id?: string) =>
-    useQueries<any>(KEYS.EMPLOYEE.ALL, () => Get(URL_KEYS.EMPLOYEE.ALL), {
+    useQueries<any>([KEYS.EMPLOYEE.BASE], () => Get(URL_KEYS.EMPLOYEE.ALL), {
       enabled: !!id,
     }),
 
   // ************ Branch ***********
 
   useGetAllBranchData: (params?: Params) => {
-    const cleanedParams = cleanParams(params);
+    const cleanedParams = CleanParams(params);
 
     return useQueries<any>([KEYS.BRANCH.ALL, cleanedParams], () => Get(URL_KEYS.BRANCH.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData });
   },
@@ -49,13 +44,13 @@ export const Queries = {
   // ************ Stock ***********
 
   useGetAllStockData: (params?: Params) => {
-    const cleanedParams = cleanParams(params);
+    const cleanedParams = CleanParams(params);
 
     return useQueries<any>([KEYS.STOCK.ALL, cleanedParams], () => Get(URL_KEYS.STOCK.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData });
   },
   // ************ Stock ***********
   useGetAllProductData: (params?: Params) => {
-    const cleanedParams = cleanParams(params);
+    const cleanedParams = CleanParams(params);
     return useQueries<any>([KEYS.PRODUCT.ALL, cleanedParams], () => Get(URL_KEYS.PRODUCT.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData });
   },
 };
