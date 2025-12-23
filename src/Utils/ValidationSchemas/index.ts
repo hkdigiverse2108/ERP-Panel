@@ -34,7 +34,7 @@ export const EmployeeFormSchema = Yup.object({
   // ---------- BANK DETAILS ----------
   bankDetails: Yup.object({
     bankName: Validation("string", "Bank Name", { required: false }),
-    branch: Validation("string", "Branch Name", { required: false }),
+    branchName: Validation("string", "Branch Name", { required: false }),
     accountNumber: Validation("number", "Account Number", { required: false }).nullable(),
     bankHolderName: Validation("string", "Account Holder Name", { required: false }),
     swiftCode: Validation("string", "Swift Code", { required: false }),

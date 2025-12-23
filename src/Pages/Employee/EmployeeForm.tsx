@@ -1,14 +1,14 @@
 import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Mutations } from "../../Api";
+import { Mutations, Queries } from "../../Api";
 import { CommonTextField, CommonValidationSelect, CommonValidationSwitch } from "../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
 import { BREADCRUMBS, PRODUCT_TYPE_OPTIONS } from "../../Data";
 import { useAppSelector } from "../../Store/hooks";
 import type { EmployeeFormValues } from "../../Types";
-import { GetChangedFields, RemoveEmptyFields } from "../../Utils";
+import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { EmployeeFormSchema } from "../../Utils/ValidationSchemas";
 
 const EmployeeForm = () => {
@@ -17,6 +17,7 @@ const EmployeeForm = () => {
   const { data } = location.state || {};
   const { company } = useAppSelector((state) => state.company);
 
+  const { data: branchData } = Queries.useGetBranch();
   const { mutate: addEmployee, isPending: isAddLoading } = Mutations.useAddEmployee();
   const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditEmployee();
 
@@ -43,7 +44,7 @@ const EmployeeForm = () => {
 
     bankDetails: {
       bankName: data?.bankDetails?.bankName || "",
-      branch: data?.bankDetails?.branch || "",
+      branchName: data?.bankDetails?.branchName || "",
       accountNumber: data?.bankDetails?.accountNumber || null,
       bankHolderName: data?.bankDetails?.bankHolderName || "",
       swiftCode: data?.bankDetails?.swiftCode || "",
@@ -77,7 +78,7 @@ const EmployeeForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.EMPLOYEE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.EMPLOYEE[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<EmployeeFormValues> enableReinitialize initialValues={initialValues} validationSchema={EmployeeFormSchema} onSubmit={handleSubmit}>
-          {({ resetForm, setFieldValue ,dirty}) => (
+          {({ resetForm, setFieldValue, dirty }) => (
             <Form noValidate>
               <Grid container spacing={2}>
                 {/* BASIC DETAILS */}
@@ -90,7 +91,7 @@ const EmployeeForm = () => {
                     <CommonTextField name="phoneNo" label="Phone No." required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="branchId" label="branch" options={PRODUCT_TYPE_OPTIONS} grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="branchId" label="branch" options={GenerateOptions(branchData?.data?.branch_data)} grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
 
@@ -109,7 +110,7 @@ const EmployeeForm = () => {
                 <CommonCard title="Bank Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonTextField name="bankDetails.bankName" label="Bank Name" grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="bankDetails.branch" label="Branch Name" grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="bankDetails.branchName" label="Branch Name" grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="bankDetails.accountNumber" label="Account No." type="number" grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="bankDetails.bankHolderName" label="Account Holder Name" grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="bankDetails.swiftCode" label="Swift Code" grid={{ xs: 12, md: 4 }} />

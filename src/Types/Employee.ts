@@ -10,7 +10,7 @@ export interface Address {
 
 export interface BankDetails {
   bankName?: string;
-  branch?: string;
+  branchName?: string;
   accountNumber?: string;
   bankHolderName?: string;
   swiftCode?: string;
