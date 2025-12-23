@@ -187,7 +187,7 @@ export type MuiNotificationType = "success" | "info" | "warning" | "error";
 export interface PageState {
   page: number;
   limit: number;
-  page_limit: number;
+  totalPages: number;
 }
 
 export interface PageStatus {
@@ -204,7 +204,6 @@ export interface MessageStatus {
 export interface CommonDataType {
   _id: string;
   isDeleted: boolean;
-  isActive: boolean;
   createdBy: null;
   updatedBy: null;
   createdAt: string;

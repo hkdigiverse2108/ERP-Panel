@@ -30,9 +30,8 @@ export const URL_KEYS = {
 
   BRANCH: {
     BASE: "/branch",
-    ADD: "/branch/add",
     ALL: "/branch/all",
-    ONE: (id: string) => `/branch/${id}`,
+    ADD: "/branch/add",
     EDIT: "/branch/edit",
   },
 

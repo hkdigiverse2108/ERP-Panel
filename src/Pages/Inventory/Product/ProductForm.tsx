@@ -6,7 +6,7 @@ import { Mutations } from "../../../Api";
 import { CommonTextField, CommonSwitch, CommonSelect } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { KEYS, PAGE_TITLE } from "../../../Constants";
-import { BRAND_OPTIONS, BREADCRUMBS, CATEGORY_OPTIONS, DEPARTMENT_OPTIONS, PRODUCT_TYPE_OPTIONS, SUB_BRAND_OPTIONS, SUB_CATEGORY_OPTIONS, TAX_OPTIONS, UOM_OPTIONS } from "../../../Data";
+import { BRAND_OPTIONS, BREADCRUMBS, CATEGORY_OPTIONS, DEPARTMENT_OPTIONS, PRODUCT_TYPE_OPTIONS, SUB_BRAND_OPTIONS, SUB_CATEGORY_OPTIONS, TAX_OPTIONS, UOM_OPTIONS , } from "../../../Data";
 import { useAppSelector } from "../../../Store/hooks";
 import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { ProductFormSchema } from "../../../Utils/ValidationSchemas";
@@ -116,7 +116,7 @@ const ProductForm = () => {
 
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik enableReinitialize initialValues={initialValues} validationSchema={ProductFormSchema} onSubmit={handleSubmit}>
-          {({ values, setFieldValue, resetForm }) => (
+          {({ values, setFieldValue, resetForm , dirty}) => (
             <Form noValidate>
               <Grid container spacing={2}>
                 {/* ---------- GENERAL DETAILS ---------- */}
@@ -133,6 +133,12 @@ const ProductForm = () => {
                     <CommonSelect label="Sub Brand" options={SUB_BRAND_OPTIONS} value={values.subBrandId ? [values.subBrandId] : []} onChange={(v) => setFieldValue("subBrandId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
                     <CommonSelect label="Department" options={DEPARTMENT_OPTIONS} value={values.departmentId ? [values.departmentId] : []} onChange={(v) => setFieldValue("departmentId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
                     <CommonSelect label="UOM" options={UOM_OPTIONS} value={values.uomId ? [values.uomId] : []} onChange={(v) => setFieldValue("uomId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
+                    <CommonTextField name="description" label="Description" multiline rows={4} grid={{ xs: 12 }} />
+                    <CommonTextField name="note" label="Note" multiline rows={4} grid={{ xs: 12 }} />
+                    <CommonTextField name="shortNote" label="Short Note" multiline rows={4} grid={{ xs: 12 }} />
+                    <CommonTextField name="tags" label="Tags" grid={{ xs: 12 }} />
+                    {/* <CommonSelect label="Status" options={} value={values.status ? [values.status] : []} onChange={(v) => setFieldValue("status", v[0] || "")} grid={{ xs: 12, md: 6 }} /> */}
+                    
                   </Grid>
                 </CommonCard>
 
@@ -147,7 +153,7 @@ const ProductForm = () => {
                 </CommonCard>
 
                 {/* ---------- ACTION BAR ---------- */}
-                <CommonBottomActionBar clear isLoading={isAddLoading || isEditLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar clear disabled={!dirty} isLoading={isAddLoading || isEditLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

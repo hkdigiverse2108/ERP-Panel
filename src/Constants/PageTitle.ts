@@ -12,7 +12,8 @@ export const PAGE_TITLE = {
   },
   BRANCH: {
     BASE: "Branch",
-    ADDEDIT: "Add edit",
+    ADD: "Add Branch",
+    EDIT: "Edit Branch",
   },
   CONTACT: {
     BASE: "Contact",

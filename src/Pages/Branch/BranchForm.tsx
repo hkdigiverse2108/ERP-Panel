@@ -1,15 +1,15 @@
 import { Box, Grid } from "@mui/material";
-import { Formik, Form } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CommonCard } from "../../Components/Common";
-import { CommonButton, CommonTextField, CommonSwitch } from "../../Attribute";
 import { Mutations } from "../../Api";
-import {  GetChangedFields, RemoveEmptyFields } from "../../Utils";
-import { useQueryClient } from "@tanstack/react-query";
-import { KEYS, PAGE_TITLE, ROUTES } from "../../Constants";
+import { CommonTextField, CommonValidationSwitch } from "../../Attribute";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
+import { PAGE_TITLE } from "../../Constants";
+import { BREADCRUMBS } from "../../Data";
 import { useAppSelector } from "../../Store/hooks";
-import {CommonBreadcrumbs} from "../../Components/Common";
-import { BranchFormBreadcrumbs } from "../../Data";
+import type { BranchFormValues } from "../../Types";
+import { GetChangedFields, RemoveEmptyFields } from "../../Utils";
+import { BranchFormSchema } from "../../Utils/ValidationSchemas";
 
 const BranchForm = () => {
   const location = useLocation();
@@ -17,89 +17,64 @@ const BranchForm = () => {
   const { data } = location.state || {};
   const { company } = useAppSelector((state) => state.company);
 
-  const queryClient = useQueryClient();
+  const { mutate: addBranch, isPending: isAddLoading } = Mutations.useAddBranch();
+  const { mutate: editBranch, isPending: isEditLoading } = Mutations.useEditBranch();
 
-  const { mutate: addBranchMutate, isPending: isAddLoading } = Mutations.useAddBranch();
-  const { mutate: editBranchMutate, isPending: isEditLoading } = Mutations.useEditBranch();
   const isEditing = Boolean(data?._id);
+  const pageMode = isEditing ? "EDIT" : "ADD";
 
-  const handleSubmit = async (values: any) => {
-    if (isAddLoading || isEditLoading) return;
+  const initialValues: BranchFormValues = {
+    name: data?.name || "",
+    address: data?.address || "",
+    isActive: data?.isActive || true,
+  };
+  const emptyValues: BranchFormValues = {
+    name: "",
+    address: "",
+    isActive: true,
+  };
 
-    try {
-      if (isEditing) {
-        const changedFields = GetChangedFields(values, data);
-        // let payload = cleanEditPayload(changedFields, data);
+  const handleSubmit = (values: BranchFormValues, { resetForm }: FormikHelpers<BranchFormValues>) => {
+    const { _submitAction, ...rest } = values;
 
-        // payload.branchId = data._id;
-        // payload.companyId = company?._id;
+    const onSuccessHandler = () => {
+      if (_submitAction === "saveAndNew") {
+        console.log("_submitAction", _submitAction);
 
-        // editBranchMutate(payload, {
-        //   onSuccess: () => {
-        //     queryClient.invalidateQueries({ queryKey: [KEYS.BRANCH.ALL] });
-        //     navigate(-1);
-        //   },
-        // });
-      } else {
-        let payload = RemoveEmptyFields(values);
-        payload.companyId = company?._id;
+        resetForm({ values: emptyValues });
+      } else navigate(-1);
+    };
 
-        addBranchMutate(payload, {
-          onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [KEYS.BRANCH.ALL] });
-            navigate(-1);
-          },
-        });
-      }
-    } catch (error) {
-      console.error("Branch form error:", error);
+    if (isEditing) {
+      const changedFields = GetChangedFields(rest, data);
+      editBranch({ ...changedFields, branchId: data._id, companyId: company!._id }, { onSuccess: onSuccessHandler });
+    } else {
+      addBranch({ ...RemoveEmptyFields(rest), companyId: company!._id }, { onSuccess: onSuccessHandler });
     }
   };
 
   return (
-     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.BRANCH.ADDEDIT} maxItems={1} breadcrumbs={BranchFormBreadcrumbs} />
-
-      <div className="m-4 md:m-6">
-   
-      
-
-      <Formik
-        enableReinitialize
-        initialValues={{
-          name: data?.name || "",
-          address: data?.address || "",
-          isActive: data?.isActive ?? true,
-        }}
-        onSubmit={handleSubmit}
-      >
-        {({ values, setFieldValue, isSubmitting }) => (
-          <Form>
-            <Grid container spacing={2}>
-              <CommonCard title="Branch Details" grid={{ xs: 12 }}>
-                <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="name" label="Branch Name" required grid={{ xs: 12 }} />
-
-                  <CommonTextField name="address" label="Branch Address" required grid={{ xs: 12 }} />
-
-                  <CommonSwitch name="isActive" label="Is Active" value={values.isActive} onChange={(checked) => setFieldValue("isActive", checked)} grid={{ xs: 12 }} />
-
-                  {/* ACTION BUTTONS */}
-                  <Grid className="w-full! flex justify-end">
-                    <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-                      <CommonButton variant="outlined" title="Back" onClick={() => navigate(-1)} loading={isAddLoading || isEditLoading} />
-                      <CommonButton type="submit" variant="contained" title="Save" loading={isAddLoading || isEditLoading || isSubmitting} disabled={isAddLoading || isEditLoading || isSubmitting} />
-                    </Box>
+    <>
+      <CommonBreadcrumbs title={PAGE_TITLE.BRANCH[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.BRANCH[pageMode]} />
+      <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
+        <Formik<BranchFormValues> enableReinitialize initialValues={initialValues} validationSchema={BranchFormSchema} onSubmit={handleSubmit}>
+          {({ resetForm, setFieldValue, dirty }) => (
+            <Form noValidate>
+              <Grid container spacing={2}>
+                <CommonCard hideDivider grid={{ xs: 12 }}>
+                  <Grid container spacing={2} sx={{ p: 2 }}>
+                    <CommonTextField name="name" label="Branch Name" required grid={{ xs: 12 }} />
+                    <CommonTextField name="address" label="Branch Address" required grid={{ xs: 12 }} />
+                    <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />
                   </Grid>
-                </Grid>
-              </CommonCard>
-            </Grid>
-          </Form>
-        )}
-      </Formik>
-      </div>
-      </>
-  
+                  <CommonBottomActionBar clear disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: emptyValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                </CommonCard>
+              </Grid>
+            </Form>
+          )}
+        </Formik>
+      </Box>
+    </>
   );
 };
 

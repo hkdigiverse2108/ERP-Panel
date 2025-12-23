@@ -48,8 +48,8 @@ export const ROUTES = {
     EDIT: "/company/edit",
   }, 
  BRANCH:{
-  BASE :"Branch",
-  ADD_EDIT :"/Branch/add-edit",
+  BASE :"/branch",
+  ADD_EDIT :"/branch/add-edit",
  },
   BANK:{
     BASE:"/bank",
