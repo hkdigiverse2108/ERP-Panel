@@ -51,13 +51,12 @@ export const KEYS = {
   },
 
   BRANCH: {
-    ROOT: ["branch"],
-    ALL: ["branch", "all"],
-    DETAILS: (id: string) => ["branch", "detail", id],
-    ADD: ["branch", "add"],
-    EDIT: ["branch", "edit"],
-    DELETE: ["branch", "delete"], // mutation
+    BASE: "branch",
+    ADD: "branch-add",
+    EDIT: "branch-edit",
+    DELETE: "branch-delete",
   },
+  
   PRODUCT: {
     ROOT: ["product"],
     ALL: ["product", "all"],
@@ -75,11 +74,11 @@ export const KEYS = {
     ROOT: ["call-request"],
     ADD: ["call-request", "add"],
   },
-  BANK:{
+  BANK: {
     ROOT: ["bank"],
-    ALL:["bank", "all"],
-    ADD:["bank", "add"],
-    EDIT:["bank", "edit"],
-    DELETE:["bank", "delete"],
-  }
+    ALL: ["bank", "all"],
+    ADD: ["bank", "add"],
+    EDIT: ["bank", "edit"],
+    DELETE: ["bank", "delete"],
+  },
 };

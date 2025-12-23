@@ -9,9 +9,13 @@ export const BREADCRUMBS = {
     ADD: [{ label: PAGE_TITLE.EMPLOYEE.BASE, href: ROUTES.EMPLOYEE.BASE }, { label: PAGE_TITLE.EMPLOYEE.ADD }],
     EDIT: [{ label: PAGE_TITLE.EMPLOYEE.BASE, href: ROUTES.EMPLOYEE.BASE }, { label: PAGE_TITLE.EMPLOYEE.EDIT }],
   },
+  BRANCH: {
+    BASE: [{ label: PAGE_TITLE.BRANCH.BASE }],
+    ADD: [{ label: PAGE_TITLE.BRANCH.BASE, href: ROUTES.BRANCH.BASE }, { label: PAGE_TITLE.BRANCH.ADD }],
+    EDIT: [{ label: PAGE_TITLE.BRANCH.BASE, href: ROUTES.BRANCH.BASE }, { label: PAGE_TITLE.BRANCH.EDIT }],
+  },
 };
 
-export const BranchBreadcrumbs = [{ label: ROUTES.BRANCH.BASE }];
 export const BranchFormBreadcrumbs = [{ label: ROUTES.BRANCH.ADD_EDIT }];
 export const ProductBreadcrumbs = [{ label: ROUTES.PRODUCT.BASE }];
 export const ProductFormBreadcrumbs = [{ label: ROUTES.PRODUCT.ADD_EDIT }];

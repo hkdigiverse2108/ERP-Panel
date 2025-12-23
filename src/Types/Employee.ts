@@ -40,7 +40,7 @@ export type AddEmployeePayload = EmployeeFormValues & { companyId: string };
 
 export type EditEmployeePayload = AddEmployeePayload & { employeeId: string };
 
-export type EmployeeBase = Omit<EmployeeFormValues, "isActive"> & CommonDataType;
+export type EmployeeBase = EmployeeFormValues & CommonDataType;
 
 export interface EmployeeDataResponse extends PageStatus {
   employee_data: EmployeeBase[];

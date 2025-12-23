@@ -47,7 +47,7 @@ const Employee = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.EMPLOYEE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.EMPLOYEE.BASE} />
       <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
-        <CommonCard title="Employees" btnHref={ROUTES.EMPLOYEE.ADD_EDIT}>
+        <CommonCard title={PAGE_TITLE.EMPLOYEE.BASE} btnHref={ROUTES.EMPLOYEE.ADD_EDIT}>
           <CommonDataGrid BoxClass="rounded-md overflow-hidden" columns={columns} rows={allEmployee} rowCount={totalRows} loading={employeeDataLoading || employeeDataFetching} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} />
         </CommonCard>
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />

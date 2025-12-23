@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AppQueryOptions, EmployeeApiResponse, Params, UploadResponse } from "../Types";
+import type { AppQueryOptions, BranchApiResponse, EmployeeApiResponse, Params, UploadResponse } from "../Types";
 import { CleanParams } from "../Utils";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
@@ -24,22 +24,9 @@ export const Queries = {
   // ************ Employee ***********
   useGetEmployee: (params?: Params) => useQueries<EmployeeApiResponse>([KEYS.EMPLOYEE.BASE, params], () => Get(URL_KEYS.EMPLOYEE.ALL, params)),
 
-  useGetOneEmployeeData: (id?: string) =>
-    useQueries<any>([KEYS.EMPLOYEE.BASE], () => Get(URL_KEYS.EMPLOYEE.ALL), {
-      enabled: !!id,
-    }),
-
   // ************ Branch ***********
 
-  useGetAllBranchData: (params?: Params) => {
-    const cleanedParams = CleanParams(params);
-
-    return useQueries<any>([KEYS.BRANCH.ALL, cleanedParams], () => Get(URL_KEYS.BRANCH.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData });
-  },
-  useGetOneBranchData: (id?: string) =>
-    useQueries<any>(KEYS.BRANCH.ALL, () => Get(URL_KEYS.BRANCH.ALL), {
-      enabled: !!id,
-    }),
+  useGetBranch: (params?: Params) => useQueries<BranchApiResponse>([KEYS.BRANCH.BASE, params], () => Get(URL_KEYS.BRANCH.ALL, params)),
 
   // ************ Stock ***********
 

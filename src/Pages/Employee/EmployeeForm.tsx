@@ -74,7 +74,7 @@ const EmployeeForm = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.EMPLOYEE[pageMode]} maxItems={1} breadcrumbs={BREADCRUMBS.EMPLOYEE[pageMode]} />
+      <CommonBreadcrumbs title={PAGE_TITLE.EMPLOYEE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.EMPLOYEE[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<EmployeeFormValues> enableReinitialize initialValues={initialValues} validationSchema={EmployeeFormSchema} onSubmit={handleSubmit}>
           {({ resetForm, setFieldValue }) => (
