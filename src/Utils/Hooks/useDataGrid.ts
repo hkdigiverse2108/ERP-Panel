@@ -13,6 +13,9 @@ export const useDataGrid = ({ page = 0, pageSize = 5, initialSort = [], initialF
   /* ---------------- Sorting ---------------- */
   const [sortModel, setSortModel] = useState<GridSortModel>(initialSort);
 
+  /* ---------------- Sorting ---------------- */
+  const [isActive, setActive] = useState<boolean>(true);
+
   /* ---------------- Filtering ---------------- */
   const [filterModel, setFilterModel] = useState<GridFilterModel>(initialFilter);
 
@@ -49,6 +52,9 @@ export const useDataGrid = ({ page = 0, pageSize = 5, initialSort = [], initialF
 
     rowToDelete,
     setRowToDelete,
+
+    isActive,
+    setActive,
 
     params,
     resetModels,

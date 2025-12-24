@@ -35,6 +35,10 @@ export const URL_KEYS = {
     EDIT: "/branch/edit",
   },
 
+  ANNOUNCEMENT: {
+    ALL: "/announcement/all",
+  },
+
   PRODUCT: {
     BASE: "/product",
     ADD: "/product/add",
@@ -53,7 +57,7 @@ export const URL_KEYS = {
     BASE: "/call-request",
     ADD: "/call-request/add",
   },
-  BANK:{
+  BANK: {
     BASE: "/bank",
     ADD: "/bank/add",
     EDIT: "/bank/edit",

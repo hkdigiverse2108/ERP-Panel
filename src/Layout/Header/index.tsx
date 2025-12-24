@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../Store/hooks";
 import { setApplicationMenuOpen, setToggleMobileSidebar, setToggleSidebar } from "../../Store/Slices/LayoutSlice";
 import { useWindowWidth } from "../../Utils/Hooks";
 import FinancialYear from "./FinancialYear";
-import NotificationDropdown from "./NotificationDropdown";
+import ImportantAnnouncement from "./ImportantAnnouncement";
 import POS from "./POS";
 import QuickActionMenu from "./QuickActionMenu";
 import SearchList from "./SearchList";
@@ -105,7 +105,7 @@ const Header = () => {
             <SupportDesk />
             <SearchList />
             <ThemeToggleButton />
-            <NotificationDropdown />
+            <ImportantAnnouncement />
             <POS />
             <FinancialYear />
             <User />

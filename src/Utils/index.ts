@@ -1,4 +1,5 @@
 export * from "./FormHelpers";
+export * from "./DateFormatted";
 import { STORAGE_KEYS } from "../Constants";
 import type { Params } from "../Types";
 
@@ -22,4 +23,17 @@ export const CleanParams = (params?: Params): Params | undefined => {
   if (!params) return undefined;
 
   return Object.fromEntries(Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== ""));
+};
+
+export const GenerateOptions = (data?: { _id: string; name?: string; firstName?: string; lastName?: string; title?: string }[]) => {
+  if (!data || !Array.isArray(data)) return [];
+
+  return data.map((item) => {
+    const label = item.name?.trim() || [item.firstName, item.lastName].filter(Boolean).join(" ") || item.title?.trim() || "Unnamed";
+
+    return {
+      value: item._id,
+      label,
+    };
+  });
 };

@@ -10,7 +10,7 @@ export interface Address {
 
 export interface BankDetails {
   bankName?: string;
-  branch?: string;
+  branchName?: string;
   accountNumber?: string;
   bankHolderName?: string;
   swiftCode?: string;
@@ -34,9 +34,10 @@ export interface EmployeeFormValues {
   target?: number;
   isActive?: boolean;
   _submitAction?: string;
+  companyId?: string
 }
 
-export type AddEmployeePayload = EmployeeFormValues & { companyId: string };
+export type AddEmployeePayload = EmployeeFormValues;
 
 export type EditEmployeePayload = AddEmployeePayload & { employeeId: string };
 

@@ -56,7 +56,11 @@ export const KEYS = {
     EDIT: "branch-edit",
     DELETE: "branch-delete",
   },
-  
+
+  ANNOUNCEMENT: {
+    BASE: "announcement",
+  },
+
   PRODUCT: {
     ROOT: ["product"],
     ALL: ["product", "all"],

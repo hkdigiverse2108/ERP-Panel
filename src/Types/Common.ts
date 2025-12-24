@@ -1,5 +1,5 @@
 import type { Breakpoint, ButtonProps, DrawerProps, PaperProps as MuiPaperProps } from "@mui/material";
-import type { GridColDef, GridFilterModel, GridPaginationModel, GridSortModel } from "@mui/x-data-grid";
+import type { GridColDef, GridFilterModel, GridPaginationModel, GridRowsProp, GridSortModel, GridValidRowModel } from "@mui/x-data-grid";
 import type { Dayjs } from "dayjs";
 import type { ReactNode } from "react";
 import * as Yup from "yup";
@@ -71,22 +71,16 @@ export interface UseDataGridOptions {
   initialFilter?: GridFilterModel;
 }
 
-export interface CommonColumn<T = any> {
-  field: keyof T | string;
-  headerName: string;
-  width?: number;
-  flex?: number;
-  sortable?: boolean;
-  align?: "left" | "right" | "center";
-  headerAlign?: "left" | "right" | "center";
-  renderCell?: (params: any) => React.ReactNode;
-}
-
-export interface CommonDataGridProps<T = any> {
+export interface CommonDataGridProps {
   columns: GridColDef[];
-  rows: T[];
+  rows: any[];
   rowCount: number;
   loading?: boolean;
+
+  handleAdd?: () => void;
+  
+  isActive?: boolean;
+  setActive?: (active: boolean) => void;
 
   // Pagination
   paginationModel: GridPaginationModel;
@@ -103,6 +97,28 @@ export interface CommonDataGridProps<T = any> {
   pageSizeOptions?: number[];
   defaultHidden?: string[];
   BoxClass?: string;
+}
+
+export interface CustomToolbarProps {
+  apiRef: any;
+  columns: GridColDef[];
+  rows: GridRowsProp;
+  rowCount: number;
+  handleAdd?: () => void;
+  isActive?: boolean;
+  setActive?: (active: boolean) => void;
+}
+
+export interface ExportToExcelProps<T extends GridValidRowModel> {
+  columns: readonly GridColDef[];
+  rows: readonly T[];
+  fileName?: string;
+}
+
+export interface ExportToPDFProps<T extends GridValidRowModel> {
+  columns: readonly GridColDef[];
+  rows: readonly T[];
+  fileName?: string;
 }
 
 // ************ Table End ***********
@@ -267,3 +283,26 @@ export interface CommonBottomActionBarProps {
   save?: boolean;
 }
 // ************ Bottom Action Bar End ***********
+
+// ************ Modal Start ***********
+
+export interface CommonModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  className?: string;
+  children: ReactNode;
+  showCloseButton?: boolean;
+  isFullscreen?: boolean;
+  title?: string;
+  subTitle?: string;
+}
+
+type UploadType = "image" | "pdf";
+
+export interface ModalStateSlice {
+  isUploadModal: { open: boolean; type: UploadType };
+  selectedFiles: string[];
+  isModalVideoPlay: { open: boolean; link: string };
+}
+
+// ************ Modal End ***********

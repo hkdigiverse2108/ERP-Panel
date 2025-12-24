@@ -4,3 +4,4 @@ export * from "./Api";
 export * from "./Auth";
 export * from "./Employee";
 export * from "./Branch";
+export * from "./Announcement";

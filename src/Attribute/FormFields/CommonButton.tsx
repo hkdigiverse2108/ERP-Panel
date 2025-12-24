@@ -12,7 +12,6 @@ export const CommonButton: FC<CommonButtonProps> = ({ children, loading = false,
       sx={{
         borderRadius: 1.2,
         fontWeight: 600,
-        gap: 1,
         height: props.size === "small" ? 36 : props.size === "large" ? 48 : 42,
         ...sx,
       }}

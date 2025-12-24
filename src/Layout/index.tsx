@@ -9,6 +9,7 @@ import { CommonUpload } from "../Components/Common";
 import { Queries } from "../Api";
 import { setUser } from "../Store/Slices/AuthSlice";
 import { setCompany } from "../Store/Slices/CompanySlice";
+import CommonVideoModal from "../Components/Common/Modal/CommonVideoModal";
 
 const Layout = () => {
   const { isExpanded, isMobileOpen, isHovered, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
@@ -56,6 +57,7 @@ const Layout = () => {
         </div>
       </div>
       <CommonUpload />
+      <CommonVideoModal />
     </>
   );
 };

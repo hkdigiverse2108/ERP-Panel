@@ -1,17 +1,7 @@
-import { useRef, useEffect, type FC, type ReactNode } from "react";
+import { useEffect, useRef, type FC } from "react";
+import type { CommonModalProps } from "../../../Types";
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  className?: string;
-  children: ReactNode;
-  showCloseButton?: boolean;
-  isFullscreen?: boolean;
-  title?: string;
-  subTitle?: string;
-}
-
-const CommonModal: FC<ModalProps> = ({ isOpen, onClose, children, className, showCloseButton = true, isFullscreen = false, title, subTitle }) => {
+const CommonModal: FC<CommonModalProps> = ({ isOpen, onClose, children, className, showCloseButton = true, isFullscreen = false, title, subTitle }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -51,10 +41,12 @@ const CommonModal: FC<ModalProps> = ({ isOpen, onClose, children, className, sho
           </button>
         )}
         <div className=" max-h-180! overflow-y-auto">
-          <div className={`px-2 pr-8 sm:pr-14 pb-3 mb-3 lg:mb-4 ${title || subTitle ? " border-b border-gray-200 dark:border-gray-800" : ""} `}>
-            <h4 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-white/90">{title}</h4>
-            {subTitle && <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{subTitle}</p>}
-          </div>
+          {(title || subTitle) && (
+            <div className={`px-2 pr-8 sm:pr-14 pb-3 mb-3 lg:mb-4 ${title || subTitle ? " border-b border-gray-200 dark:border-gray-800" : ""} `}>
+              <h4 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-white/90">{title}</h4>
+              {subTitle && <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{subTitle}</p>}
+            </div>
+          )}
           {children}
         </div>
       </div>
