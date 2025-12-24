@@ -81,4 +81,11 @@ export const KEYS = {
     EDIT: ["bank", "edit"],
     DELETE: ["bank", "delete"],
   },
+  PAYMENT: {
+    BASE: ["payment"],
+    ADD: ["payment", "add"],
+    EDIT: ["payment", "edit"],
+    DELETE: ["payment", "delete"],
+},
+
 };

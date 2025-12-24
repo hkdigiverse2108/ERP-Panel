@@ -38,6 +38,8 @@ export const PAGE_TITLE = {
     BASE: "Transaction",
   },
   PAYMENT :{
-   BASE : "Payment" 
+   BASE : "Payment" ,
+   EDIT : "Edit Payment",
+   ADD: "Add Payment",
   }
 } as const;

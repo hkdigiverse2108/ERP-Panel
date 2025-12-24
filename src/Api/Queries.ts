@@ -40,4 +40,8 @@ export const Queries = {
     const cleanedParams = CleanParams(params);
     return useQueries<any>([KEYS.PRODUCT.ALL, cleanedParams], () => Get(URL_KEYS.PRODUCT.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData });
   },
+
+  // ************ payment*
+  // useGetPayments: (params?: Params) =>useQueries<PaymentApiResponse>([KEYS.PAYMENT.BASE, params],() => Get(URL_KEYS.PAYMENT.ALL, params),),
+
 };

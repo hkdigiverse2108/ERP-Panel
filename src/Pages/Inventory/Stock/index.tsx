@@ -5,9 +5,11 @@ import { useDataGrid } from "../../../Utils/Hooks";
 import  {CommonBreadcrumbs} from "../../../Components/Common";
 import { StockBreadcrumbs } from "../../../Data";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
+import { useState } from "react";
 
 const Stocks = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({ page: 0, pageSize: 10 });
+  const [filterEnabled, setFilterEnabled] = useState(false);
 
   const rows = [
     {
@@ -105,7 +107,7 @@ const Stocks = () => {
       <div className="m-4 md:m-6">
     
       <CommonCard title="Stocks">
-        <CommonDataGrid columns={columns} rows={rows} rowCount={rows.length} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25]} />
+        <CommonDataGrid  columns={columns} rows={rows} rowCount={rows.length} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25,]}  />
       </CommonCard>
     </div>
     </>
@@ -113,3 +115,4 @@ const Stocks = () => {
 };
 
 export default Stocks;
+  

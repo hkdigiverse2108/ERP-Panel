@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, IconButton } from "@mui/material";
 import { Formik, Form, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
@@ -6,10 +6,14 @@ import { Mutations } from "../../../Api";
 import { CommonTextField, CommonSwitch, CommonSelect } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { KEYS, PAGE_TITLE } from "../../../Constants";
-import { BRAND_OPTIONS, BREADCRUMBS, CATEGORY_OPTIONS, DEPARTMENT_OPTIONS, PRODUCT_TYPE_OPTIONS, SUB_BRAND_OPTIONS, SUB_CATEGORY_OPTIONS, TAX_OPTIONS, UOM_OPTIONS , } from "../../../Data";
+import { BRAND_OPTIONS, BREADCRUMBS, CATEGORY_OPTIONS, DEPARTMENT_OPTIONS, PRODUCT_TYPE_OPTIONS, SUB_BRAND_OPTIONS, SUB_CATEGORY_OPTIONS, TAX_OPTIONS, UOM_OPTIONS } from "../../../Data";
 import { useAppSelector } from "../../../Store/hooks";
 import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { ProductFormSchema } from "../../../Utils/ValidationSchemas";
+import { FieldArray } from "formik";
+// import { IconButton} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { CommonButton } from "../../../Attribute";
 
 const ProductForm = () => {
   const location = useLocation();
@@ -27,6 +31,17 @@ const ProductForm = () => {
 
   const initialValues = {
     _submitAction: "save",
+    variants: [
+      {
+        name: "",
+        nutrition: [
+          {
+            label: "",
+            value: "",
+          },
+        ],
+      },
+    ],
 
     companyId: data?.companyId || "",
 
@@ -116,7 +131,7 @@ const ProductForm = () => {
 
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik enableReinitialize initialValues={initialValues} validationSchema={ProductFormSchema} onSubmit={handleSubmit}>
-          {({ values, setFieldValue, resetForm , dirty}) => (
+          {({ values, setFieldValue, resetForm, dirty }) => (
             <Form noValidate>
               <Grid container spacing={2}>
                 {/* ---------- GENERAL DETAILS ---------- */}
@@ -133,12 +148,66 @@ const ProductForm = () => {
                     <CommonSelect label="Sub Brand" options={SUB_BRAND_OPTIONS} value={values.subBrandId ? [values.subBrandId] : []} onChange={(v) => setFieldValue("subBrandId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
                     <CommonSelect label="Department" options={DEPARTMENT_OPTIONS} value={values.departmentId ? [values.departmentId] : []} onChange={(v) => setFieldValue("departmentId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
                     <CommonSelect label="UOM" options={UOM_OPTIONS} value={values.uomId ? [values.uomId] : []} onChange={(v) => setFieldValue("uomId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
+                    <CommonTextField name="tags" label="Tags" grid={{ xs: 12, md: 6 }} />
+                    <CommonTextField name="net weight" label="Net Weight" grid={{ xs: 12, md: 6 }} />
+
                     <CommonTextField name="description" label="Description" multiline rows={4} grid={{ xs: 12 }} />
-                    <CommonTextField name="note" label="Note" multiline rows={4} grid={{ xs: 12 }} />
+
                     <CommonTextField name="shortNote" label="Short Note" multiline rows={4} grid={{ xs: 12 }} />
-                    <CommonTextField name="tags" label="Tags" grid={{ xs: 12 }} />
+                    <CommonCard title="Nutrition" grid={{ xs: 12 }}>
+                      <Grid spacing={2} sx={{ p: 2 }}>
+                        <FieldArray name="variants">
+                          {({ push, remove }) => (
+                            <>
+                              {values.variants.map((variant, vIndex) => (
+                                <Grid spacing={2} key={vIndex}>
+                                  <Box p={2} border="1px solid #ccc " borderRadius={1} mb={2}>
+                                    <FieldArray name={`variants.${vIndex}.nutrition`}>
+                                      {() => (
+                                        <>
+                                          {variant.nutrition.map((_, nIndex) => (
+                                            <Grid spacing={2} key={nIndex}>
+                                              {/* Nutrition Name */}
+                                              <Grid container spacing={2} grid={{ xs: 12, md: 5 }}>
+                                                <CommonTextField name={`variants.${vIndex}.nutrition.${nIndex}.label`} label="Nutrition Name" grid={{ xs: 12, md: 6 }} />
+                                                <CommonTextField name={`variants.${vIndex}.nutrition.${nIndex}.value`} label="Nutrition Value" grid={{ xs: 12, md: 5.5 }} />
+                                                {values.variants.length > 1 && (
+                                                  <IconButton color="error" size="small" onClick={() => remove(vIndex)}>
+                                                    <DeleteIcon />
+                                                  </IconButton>
+                                                )}
+                                              </Grid>
+                                            </Grid>
+                                          ))}
+                                        </>
+                                      )}
+                                    </FieldArray>
+                                  </Box>
+                                </Grid>
+                              ))}
+
+                              {/* ADD  BUTTON  */}
+                              <Grid className="flex flex-start!">
+                                <CommonButton 
+                                  variant="contained"
+                                  onClick={() =>
+                                    push({
+                                      name: "",
+                                      nutrition: [{ label: "", value: "" }],
+                                    })
+                                  }
+                                  
+                                >
+                                  + Add Nutrition
+                                </CommonButton>
+                              </Grid>
+                            </>
+                          )}
+                        </FieldArray>
+                      </Grid>
+                    </CommonCard>
+
                     {/* <CommonSelect label="Status" options={} value={values.status ? [values.status] : []} onChange={(v) => setFieldValue("status", v[0] || "")} grid={{ xs: 12, md: 6 }} /> */}
-                    
                   </Grid>
                 </CommonCard>
 
@@ -147,6 +216,9 @@ const ProductForm = () => {
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonTextField name="mrp" label="MRP" type="number" required grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="sellingPrice" label="Selling Price" type="number" required grid={{ xs: 12, md: 6 }} />
+                    <CommonTextField name="Purchase Price" label="Purchase Price" type="number" required grid={{ xs: 12, md: 6 }} />
+                    <CommonTextField name="landingCost" label="Landing Cost" type="number" required grid={{ xs: 12, md: 6 }} />
+                    {/* <CommonTextField name="purchaseTaxId" label="Purchase Tax" type="number" required grid={{ xs: 12, md: 6 }} /> */}
                     <CommonSelect label="Purchase Tax" options={TAX_OPTIONS} value={values.purchaseTaxId ? [values.purchaseTaxId] : []} onChange={(v) => setFieldValue("purchaseTaxId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
                     <CommonSelect label="Sales Tax" options={TAX_OPTIONS} value={values.salesTaxId ? [values.salesTaxId] : []} onChange={(v) => setFieldValue("salesTaxId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
                   </Grid>

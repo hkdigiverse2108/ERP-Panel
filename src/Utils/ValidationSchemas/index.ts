@@ -50,21 +50,35 @@ export const EmployeeFormSchema = Yup.object({
   // ---------- STATUS ----------
   isActive: Yup.boolean(),
 });
-
+ // ---------- Product Form Schema ----------
 export const ProductFormSchema = Yup.object({
   itemCode: Validation("string", "Item Code"),
-  name: Validation("string", "Product Name"),
   productType: Validation("string", "Product Type"),
+  name: Validation("string", "Product Name"),
+  printName: Validation("string", "Print Name", { required: false }),
+  slug: Validation("string", "Slug", { required: false }),
+
   categoryId: Validation("string", "Category"),
+  subCategoryId: Validation("string", "Sub Category", { required: false }),
+
+  brandId: Validation("string", "Brand", { required: false }),
+  subBrandId: Validation("string", "Sub Brand", { required: false }),
+
+  departmentId: Validation("string", "Department", { required: false }),
   uomId: Validation("string", "UOM"),
+
+  tags: Validation("string", "Tags", { required: false }),
+
+  description: Validation("string", "Description", { required: false }),
+  shortNote: Validation("string", "Short Note", { required: false }),
+
   mrp: Validation("number", "MRP"),
   sellingPrice: Validation("number", "Selling Price"),
+  purchasePrice: Validation("number", "Purchase Price"),
+  landingCost: Validation("number", "Landing Cost"),
+
   purchaseTaxId: Validation("string", "Purchase Tax", { required: false }),
   salesTaxId: Validation("string", "Sales Tax", { required: false }),
+  nutritionalFacts: Validation("string", "Nutritional Facts", { required: false }),
   status: Validation("string", "Status"),
-});
-export const BranchFormSchema = Yup.object({
-  name: Validation("string", "Name"),
-  address: Validation("string", "Address"),
-  isActive: Yup.boolean(),
 });

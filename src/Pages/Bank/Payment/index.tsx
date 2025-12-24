@@ -1,10 +1,13 @@
-import { Grid, IconButton,Button } from "@mui/material";
+import { Grid, IconButton, Button } from "@mui/material";
 import { useMemo, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CommonCard, CommonDataGrid, CommonModal, CommonBreadcrumbs } from "../../../Components/Common";
 import { useDataGrid } from "../../../Utils/Hooks";
-import { PAGE_TITLE } from "../../../Constants";
+
+import { Link } from "react-router-dom";
+import { KEYS, PAGE_TITLE, ROUTES } from "../../../Constants";
+
 
 const PaymentList = () => {
   const { paginationModel, setPaginationModel } = useDataGrid({
@@ -13,6 +16,7 @@ const PaymentList = () => {
   });
 
   const [rowToDelete, setRowToDelete] = useState<any>(null);
+  
 
   const rows = useMemo(
     () =>
@@ -71,13 +75,23 @@ const PaymentList = () => {
       ),
     },
   ];
-
+  const topContent = (
+    <Grid container spacing={2} alignItems="center">
+      <Grid size="auto">
+        <Link to={ ROUTES.PAYMENT.ADD_EDIT }>
+          <Button variant="contained" color="primary" size="large" sx={{ px: 4, fontSize: "0.9rem" }}>
+            ADD
+          </Button>
+        </Link>
+      </Grid>
+    </Grid>
+  );
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PAYMENT.BASE || "Payments"} maxItems={1} />
 
       <div className="m-4 md:m-6">
-        <CommonCard title="Payments">
+        <CommonCard title="Payments" topContent={topContent}>
           <CommonDataGrid columns={columns} rows={rows} rowCount={rows.length} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} pageSizeOptions={[5, 10, 25]} />
         </CommonCard>
       </div>
@@ -87,7 +101,7 @@ const PaymentList = () => {
         <p className="text-red-500 text-xl font-semibold mb-3">Confirm Delete</p>
         <p className="my-3">Are you sure you want to delete payment "{rowToDelete?.paymentNo}"?</p>
         <div className="flex justify-end gap-2 mt-4">
-          <Button onClick={() => setRowToDelete(null)}>No</Button>
+          <Button onClick={() => setRowToDelete(null)}>No</Button> 
           <Button color="error">Yes</Button>
         </div>
       </CommonModal>

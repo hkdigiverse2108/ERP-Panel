@@ -19,6 +19,11 @@ export const BREADCRUMBS = {
     ADD: [{ label: PAGE_TITLE.BRANCH.BASE, href: ROUTES.BRANCH.BASE }, { label: PAGE_TITLE.BRANCH.ADD }],
     EDIT: [{ label: PAGE_TITLE.BRANCH.BASE, href: ROUTES.BRANCH.BASE }, { label: PAGE_TITLE.BRANCH.EDIT }],
   },
+  PAYMENT: {
+    BASE: [{ label: PAGE_TITLE.PAYMENT.BASE }],
+    ADD: [{ label: PAGE_TITLE.PAYMENT.BASE, href: ROUTES.PAYMENT.BASE }, { label: PAGE_TITLE.PAYMENT.ADD }],
+    EDIT: [{ label: PAGE_TITLE.PAYMENT.BASE, href: ROUTES.PAYMENT.BASE }, { label: PAGE_TITLE.PAYMENT.EDIT }],
+  },
 };
 
 export const BranchFormBreadcrumbs = [{ label: ROUTES.BRANCH.ADD_EDIT }];

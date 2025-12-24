@@ -9,7 +9,7 @@ import { BREADCRUMBS } from "../../Data";
 import { useAppSelector } from "../../Store/hooks";
 import type { BranchFormValues } from "../../Types";
 import { GetChangedFields, RemoveEmptyFields } from "../../Utils";
-import { BranchFormSchema } from "../../Utils/ValidationSchemas";
+// import { BranchFormSchema } from "../../Utils/ValidationSchemas";
 
 const BranchForm = () => {
   const location = useLocation();
@@ -49,7 +49,7 @@ const BranchForm = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.BRANCH[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.BRANCH[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
-        <Formik<BranchFormValues> enableReinitialize initialValues={initialValues} validationSchema={BranchFormSchema} onSubmit={handleSubmit}>
+        <Formik<BranchFormValues> enableReinitialize initialValues={initialValues}  onSubmit={handleSubmit}>
           {({ resetForm, setFieldValue, dirty }) => (
             <Form noValidate>
               <Grid container spacing={2}>
