@@ -7,12 +7,15 @@ import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
 import type { EmployeeBase } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
+import { useNavigate } from "react-router-dom";
 
 const Employee = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete,isActive,setActive, params } = useDataGrid();
+  const navigate = useNavigate();
 
   const { data: employeeData, isLoading: employeeDataLoading, isFetching: employeeDataFetching } = Queries.useGetEmployee(params);
   const { mutate: deleteEmployeeMutate } = Mutations.useDeleteEmployee();
+  const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditEmployee();
 
   const allEmployee = useMemo(() => employeeData?.data?.employee_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [employeeData]);
   const totalRows = employeeData?.data?.totalData || 0;
@@ -22,33 +25,46 @@ const Employee = () => {
     deleteEmployeeMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
   };
 
+  const handleAdd = () => navigate(ROUTES.EMPLOYEE.ADD_EDIT);
+
   const columns: GridColDef<EmployeeBase>[] = [
-    { field: "username", headerName: "User Name", flex: 1 },
-    { field: "name", headerName: "Name", flex: 1 },
-    { field: "email", headerName: "Email", flex: 1 },
-    { field: "phoneNo", headerName: "Phone No", flex: 1 },
-    { field: "panNumber", headerName: "PAN Number", flex: 1 },
-    { field: "wages", headerName: "Wages", flex: 1 },
-    { field: "extraWages", headerName: "Extra Wages", flex: 1 },
-    { field: "commission", headerName: "Extra Wages", flex: 1 },
-    {
-      field: "isActive",
-      headerName: "is Active",
-      flex: 1,
-      renderCell: (params) => <span className={`font-semibold ${params?.value == true ? "text-green-600" : "text-red-600"}`}>{params?.value?.toString()}</span>,
-    },
+    { field: "username", headerName: "User Name",type: "string", width: 170 },
+    { field: "name", headerName: "Name", width: 170 },
+    { field: "email", headerName: "Email", width: 240 },
+    { field: "phoneNo", headerName: "Phone No", width: 150 },
+    { field: "panNumber", headerName: "PAN Number", width: 150 },
+    { field: "wages", headerName: "Wages",type: "number", width: 150 },
+    { field: "extraWages", headerName: "Extra Wages",type: "number", width: 150 },
+    { field: "commission", headerName: "Extra Wages",type: "number", flex: 1, minWidth: 150 },
     CommonActionColumn({
+      active: (row) => editEmployee({ employeeId: row?._id, companyId: row?.companyId, isActive: !row.isActive }),
       editRoute: ROUTES.EMPLOYEE.ADD_EDIT,
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.username }),
     }),
   ];
+  
+  const CommonDataGridOption = {
+    columns,
+    rows: allEmployee,
+    rowCount: totalRows,
+    loading: employeeDataLoading || employeeDataFetching || isEditLoading,
+    isActive,
+    // setActive,
+    handleAdd,
+    paginationModel,
+    onPaginationModelChange: setPaginationModel,
+    sortModel,
+    onSortModelChange: setSortModel,
+    filterModel,
+    onFilterModelChange: setFilterModel,
+  };
 
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.EMPLOYEE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.EMPLOYEE.BASE} />
       <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
-        <CommonCard title={PAGE_TITLE.EMPLOYEE.BASE} btnHref={ROUTES.EMPLOYEE.ADD_EDIT}>
-          <CommonDataGrid BoxClass="rounded-md overflow-hidden" columns={columns} rows={allEmployee} rowCount={totalRows} loading={employeeDataLoading || employeeDataFetching} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} />
+        <CommonCard hideDivider>
+          <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       </Box>

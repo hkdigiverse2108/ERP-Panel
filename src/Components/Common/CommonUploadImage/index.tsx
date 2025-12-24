@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
 import { setUploadModal } from "../../../Store/Slices/ModalSlice";
 import Dropzone from "./Dropzone";
 import FileGallery from "./FileGallery";
-import CommonModal from "../CommonModal";
+import CommonModal from "../Modal/CommonModal";
 
 const CommonUpload = () => {
   const [tab, setTab] = useState(0);

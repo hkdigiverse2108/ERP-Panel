@@ -1,6 +1,6 @@
 import { type FC } from "react";
-import { CommonButton } from "../../Attribute";
-import type { CommonDeleteModalProps } from "../../Types";
+import { CommonButton } from "../../../Attribute";
+import type { CommonDeleteModalProps } from "../../../Types";
 import CommonModal from "./CommonModal";
 
 const CommonDeleteModal: FC<CommonDeleteModalProps> = ({ open, title, description, itemName, loading = false, onClose, onConfirm }) => {

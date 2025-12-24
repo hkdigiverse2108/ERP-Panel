@@ -3,9 +3,9 @@ import CommonCard from "./CommonCard";
 import CommonDataGrid from "./CommonDataGrid";
 import CommonBreadcrumbs from "./CommonBreadcrumbs";
 import CommonUpload from "./CommonUploadImage";
-import CommonModal from "./CommonModal";
+import CommonModal from "./Modal/CommonModal";
 import CommonActionColumn from "./CommonActionColumn";
-import CommonDeleteModal from "./CommonDeleteModal";
+import CommonDeleteModal from "./Modal/CommonDeleteModal";
 import CommonBottomActionBar from "./CommonBottomActionBar";
 
 export { CommonDrawer, CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonUpload, CommonModal, CommonActionColumn, CommonDeleteModal, CommonBottomActionBar };

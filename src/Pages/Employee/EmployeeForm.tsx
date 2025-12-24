@@ -88,7 +88,7 @@ const EmployeeForm = () => {
                     <CommonTextField name="username" label="User Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="designation" label="User designation" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="role" label="role" options={PRODUCT_TYPE_OPTIONS} grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="phoneNo" label="Phone No." required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="phoneNo" label="Phone No." type="number" required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="branchId" label="branch" options={GenerateOptions(branchData?.data?.branch_data)} grid={{ xs: 12, md: 4 }} />
@@ -99,9 +99,9 @@ const EmployeeForm = () => {
                 <CommonCard title="Address Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonTextField name="address.address" label="Address" required grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="address.country" label="Country" required grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="address.state" label="State" required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="address.city" label="City" required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="address.state" label="State" required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="address.country" label="Country" required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="address.postalCode" label="ZIP Code" required type="number" grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>

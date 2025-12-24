@@ -7,7 +7,7 @@ export interface BranchFormValues {
   _submitAction?: string;
 }
 
-export type AddBranchPayload = BranchFormValues & { companyId: string };
+export type AddBranchPayload = BranchFormValues & { companyId?: string };
 
 export type EditBranchPayload = AddBranchPayload & { branchId: string };
 

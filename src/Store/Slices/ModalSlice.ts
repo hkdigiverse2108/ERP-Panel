@@ -1,43 +1,33 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import type { ModalStateSlice } from "../../Types";
 
-type UploadType = "image" | "pdf";
-
-interface UploadModalState {
-  open: boolean;
-  type: UploadType;
-}
-
-interface ModalState {
-  isUploadModal: UploadModalState;
-  selectedFiles: string[];
-}
-
-const initialState: ModalState = {
-  isUploadModal: {
-    open: false,
-    type: "image",
-  },
+const initialState: ModalStateSlice = {
+  isUploadModal: { open: false, type: "image" },
   selectedFiles: [],
+  isModalVideoPlay: { open: false, link: "" },
 };
 
 const ModalSlice = createSlice({
   name: "modal",
   initialState,
   reducers: {
-    setUploadModal: (state, action: PayloadAction<UploadModalState>) => {
+    setUploadModal: (state, action) => {
       state.isUploadModal = action.payload;
     },
 
-    setSelectedFiles: (state, action: PayloadAction<string[]>) => {
+    setSelectedFiles: (state, action) => {
       state.selectedFiles = action.payload;
     },
 
     clearSelectedFiles: (state) => {
       state.selectedFiles = [];
     },
+    setModalVideoPlay(state, action) {
+      state.isModalVideoPlay = action.payload;
+    },
   },
 });
 
-export const { setUploadModal, setSelectedFiles, clearSelectedFiles } = ModalSlice.actions;
+export const { setUploadModal, setSelectedFiles, clearSelectedFiles ,setModalVideoPlay} = ModalSlice.actions;
 
 export default ModalSlice.reducer;

@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { ImagePath } from "../../Constants";
 import { CommonCard } from "../Common";
 
-const ImportantAnnouncement = () => {
+const Notifications = () => {
   const notifications = [
     {
       img: "1",
@@ -78,7 +78,7 @@ const ImportantAnnouncement = () => {
     },
   ];
   return (
-    <CommonCard title="Important Announcement" grid={{ xs: 12, md: 4 }}>
+    <CommonCard title="Notifications" grid={{ xs: 12, md: 4 }}>
       <Box className="flex flex-col max-h-[385px] overflow-y-auto custom-scrollbar">
         {notifications.map((item, index) => (
           <Box key={index}>
@@ -103,4 +103,4 @@ const ImportantAnnouncement = () => {
   );
 };
 
-export default ImportantAnnouncement;
+export default Notifications;

@@ -3,10 +3,14 @@ import YouTubeIcon from "@mui/icons-material/YouTube";
 import { Badge, Box, IconButton } from "@mui/material";
 import { Queries } from "../../Api";
 import { FormatDate } from "../../Utils";
+import { useAppDispatch } from "../../Store/hooks";
+import { setModalVideoPlay } from "../../Store/Slices/ModalSlice";
 
-const NotificationDropdown = () => {
+const ImportantAnnouncement = () => {
+  const dispatch = useAppDispatch();
   const { data: announcementData } = Queries.useGetAnnouncement();
   const Data = announcementData?.data?.announcement_data;
+  const handleVideoOpen = (link: string) => dispatch(setModalVideoPlay({ open: true, link: link }));
 
   return (
     <Box className="relative group">
@@ -21,7 +25,7 @@ const NotificationDropdown = () => {
       <div className="fixed lg:absolute max-lg:left-1 max-lg:right-1 lg:right-0 mt-3 flex max-h-[480px] min-w-[285px] md:min-w-[330px] max-w-[350px] flex-col rounded-xl border border-gray-50 bg-white shadow-tooltip dark:border-gray-800 dark:bg-gray-dark z-50 opacity-0 invisible scale-95 translate-y-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:visible group-hover:scale-100 group-hover:translate-y-0">
         {/* HEADER */}
         <div className="flex items-center justify-center p-3 mb-3 border-b border-gray-300 dark:border-gray-700">
-          <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Notification</h5>
+          <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Important Announcement</h5>
         </div>
 
         {/* LIST */}
@@ -33,7 +37,7 @@ const NotificationDropdown = () => {
                   <span className="flex justify-between items-center mb-1.5 text-theme-sm text-gray-500 dark:text-gray-400 space-x-1">
                     <span className="font-medium text-gray-800 dark:text-white/90">
                       Version {item.version}
-                      {item.link && <YouTubeIcon className="text-red-500 ms-2" />}
+                      {item.link && <YouTubeIcon className="text-red-500 ms-2" onClick={() => handleVideoOpen(item.link)} />}
                     </span>
                     <span className="text-gray-500 text-theme-xs dark:text-gray-400">{FormatDate(item.version)}</span>
                   </span>
@@ -57,4 +61,4 @@ const NotificationDropdown = () => {
   );
 };
 
-export default NotificationDropdown;
+export default ImportantAnnouncement;
