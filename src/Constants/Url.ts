@@ -22,10 +22,10 @@ export const URL_KEYS = {
     EDIT: "/company/edit",
   },
   EMPLOYEE: {
-    BASE: "/employee",
-    ALL: "/employee/all",
-    ADD: "/employee/add",
-    EDIT: "/employee/edit",
+    BASE: "/user",
+    ALL: "/user/all",
+    ADD: "/user/add",
+    EDIT: "/user/edit",
   },
 
   BRANCH: {

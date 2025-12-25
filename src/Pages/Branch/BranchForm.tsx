@@ -49,7 +49,7 @@ const BranchForm = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.BRANCH[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.BRANCH[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
-        <Formik<BranchFormValues> enableReinitialize initialValues={initialValues}  onSubmit={handleSubmit}>
+        <Formik<BranchFormValues> enableReinitialize initialValues={initialValues} onSubmit={handleSubmit}>
           {({ resetForm, setFieldValue, dirty }) => (
             <Form noValidate>
               <Grid container spacing={2}>
@@ -57,7 +57,7 @@ const BranchForm = () => {
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonTextField name="name" label="Branch Name" required grid={{ xs: 12 }} />
                     <CommonTextField name="address" label="Branch Address" required grid={{ xs: 12 }} />
-                    <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />
+                    {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                   </Grid>
                   <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
                 </CommonCard>

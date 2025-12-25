@@ -18,7 +18,7 @@ export interface BankDetails {
 }
 
 export interface EmployeeFormValues {
-  name?: string;
+  fullName?: string;
   username?: string;
   designation?: string;
   phoneNo?: string;
@@ -39,12 +39,12 @@ export interface EmployeeFormValues {
 
 export type AddEmployeePayload = EmployeeFormValues;
 
-export type EditEmployeePayload = AddEmployeePayload & { employeeId: string };
+export type EditEmployeePayload = AddEmployeePayload & { userId: string };
 
 export type EmployeeBase = EmployeeFormValues & CommonDataType;
 
 export interface EmployeeDataResponse extends PageStatus {
-  employee_data: EmployeeBase[];
+  user_data: EmployeeBase[];
 }
 
 export interface EmployeeApiResponse extends MessageStatus {

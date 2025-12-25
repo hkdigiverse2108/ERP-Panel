@@ -56,6 +56,7 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({ columns, rows, rowCount, load
         paginationMode="server"
         paginationModel={paginationModel}
         onPaginationModelChange={onPaginationModelChange}
+        pageSizeOptions={[5, 10, 50, 100, { value: rowCount, label: "All" }]}
         sortingMode="client"
         sortModel={sortModel}
         onSortModelChange={onSortModelChange}

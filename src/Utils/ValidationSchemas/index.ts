@@ -3,7 +3,7 @@ import { Validation } from "./Validation";
 
 // ---------- Reusable helpers ----------
 
-const ImageSchema = (label: string, required = true) => Validation("array", label, required ? { minItems: 1 } : { required: false });
+// const ImageSchema = (label: string, required = true) => Validation("array", label, required ? { minItems: 1 } : { required: false });
 
 // Signin
 export const SigninSchema = Yup.object({
@@ -13,7 +13,7 @@ export const SigninSchema = Yup.object({
 
 export const EmployeeFormSchema = Yup.object({
   // ---------- BASIC DETAILS ----------
-  name: Validation("string", "Name"),
+  fullName: Validation("string", "FullName"),
   username: Validation("string", "Username"),
   designation: Validation("string", "Designation", { required: false }),
   role: Validation("string", "Role", { required: false }),
