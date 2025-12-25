@@ -17,7 +17,7 @@ import Bank from "../Pages/Bank/Bank";
 import BankForm from "../Pages/Bank/Bank/BankForm";
 import BankTransaction from "../Pages/Bank/BankTransaction";
 import PaymentList from "../Pages/Bank/Payment";
-import PaymentForm from "../Pages/Bank/Payment/";
+import PaymentForm from "../Pages/Bank/Payment/PaymentForm";
 
 
 export const PageRoutes = [
