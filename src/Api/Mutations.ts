@@ -37,4 +37,9 @@ export const Mutations = {
 
   //************** bank *****************/
   useAddBank: () => useMutations<FormData, any>(KEYS.BANK.ADD, (input) => Post(URL_KEYS.BANK.ADD, input, false)),
+
+  //************** payment **************** */
+  useAddPayment: () => useMutations<FormData, any>(KEYS.PAYMENT.ADD, (input) => Post(URL_KEYS.PAYMENT.ADD, input, false)),
+  useEditPayment: () => useMutations<FormData, any>(KEYS.PAYMENT.EDIT, (input) => Put(URL_KEYS.PAYMENT.EDIT, input)),
+  useDeletePayment: () => useMutations<{ id: string }, void>(KEYS.PAYMENT.DELETE, (id) => Delete(`${URL_KEYS.PAYMENT.BASE}/${id}`)),
 };

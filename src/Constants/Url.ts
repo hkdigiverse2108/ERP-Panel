@@ -62,4 +62,12 @@ export const URL_KEYS = {
     ADD: "/bank/add",
     EDIT: "/bank/edit",
   },
+  PAYMENT: {
+  BASE: "/payment",
+  ADD: "/payment/add",
+  EDIT: "/payment/edit",
+  ALL: "/payment/all",
+},
+
+
 } as const;

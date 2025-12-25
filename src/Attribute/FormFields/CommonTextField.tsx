@@ -49,7 +49,7 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({ label, name, type = 
         <InputAdornment position="end" key="toggle-password">
           <IconButton size="small" onClick={toggleShowPassword}>
             {show ? <VisibilityOff /> : <Visibility />}
-          </IconButton>
+          </IconButton> 
         </InputAdornment>
       );
     }

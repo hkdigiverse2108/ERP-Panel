@@ -15,7 +15,6 @@ const BankTransaction = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [rowToDelete, setRowToDelete] = useState<any>(null);
 
-  // Dummy data (replace with API later)
   const rows = useMemo(
     () =>
       Array.from({ length: 10 }).map((_, i) => ({

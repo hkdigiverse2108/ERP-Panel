@@ -8,8 +8,9 @@ import { useDataGrid } from "../../../Utils/Hooks";
 import { KEYS, PAGE_TITLE, ROUTES } from "../../../Constants";
 import { Mutations, Queries } from "../../../Api";
 import { useQueryClient } from "@tanstack/react-query";
-import { ProductBreadcrumbs } from "../../../Data";
+// import { ProductBreadcrumbs } from "../../../Data";
 import { CommonBreadcrumbs } from "../../../Components/Common";
+import {CommonDeleteModal} from "../../../Components/Common";
 
 const Product = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({ page: 0, pageSize: 10 });
@@ -122,7 +123,7 @@ const Product = () => {
   return (
 
    <>
-      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT.BASE} maxItems={1} breadcrumbs={ProductBreadcrumbs} />
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT.BASE} maxItems={1} breadcrumbs={[{ label: PAGE_TITLE.INVENTORY.PRODUCT.BASE }]} />
 
       <div className="m-4 md:m-6">
       <CommonCard title="Products" topContent={topContent}>
@@ -130,16 +131,7 @@ const Product = () => {
       </CommonCard>
 
       {/* Delete Confirmation */}
-      <CommonModal isOpen={Boolean(rowToDelete)} onClose={() => setRowToDelete(null)} className="max-w-125 m-2 sm:m-5 pt-0!">
-        <p className="text-red-500 text-2xl mb-4 font-semibold">Confirm Delete</p>
-        <p className="my-3">Are you sure you want to delete "{rowToDelete?.name}"?</p>
-        <div className="flex justify-end">
-          <Button onClick={() => setRowToDelete(null)}>No</Button>
-          <Button color="error" onClick={handleDelete}>
-            Yes
-          </Button>
-        </div>
-      </CommonModal>
+       <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       </div>
     </>
   );
