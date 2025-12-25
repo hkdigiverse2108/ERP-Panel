@@ -8,10 +8,10 @@ export interface commonImageBoxProps {
   url: string;
   label: string;
   type: "image" | "pdf";
+  grid?: object | number;
 }
 
-const CommonImageBox: FC<commonImageBoxProps> = ({ url, label, type }) => {
-  // const url = `${ImagePath}user/1.jpg`;
+const CommonImageBox: FC<commonImageBoxProps> = ({ url, label, type ,grid}) => {
   const displayFile =
     type === "image" ? (
       <img src={url} alt={"Image"} className="object-cover w-full h-full rounded-md" />
@@ -21,7 +21,7 @@ const CommonImageBox: FC<commonImageBoxProps> = ({ url, label, type }) => {
       </Link>
     );
   return (
-    <Grid size={{ xs: 12, md: 6 }} className="flex! flex-col! max-sm:justify-center! max-sm:items-center! ">
+    <Grid size={grid} className="flex! flex-col! justify-center! items-center! gap-2">
       {label && <p>{label}</p>}
       <Box className="flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden" sx={{ width: 150, height: 150 }}>
         {url ? displayFile : <FolderOffRoundedIcon className="text-7xl!" />}

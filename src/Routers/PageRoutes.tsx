@@ -3,7 +3,7 @@ import Dashboard from "../Pages/Dashboard";
 import GeneralSetting from "../Pages/Settings/GeneralSetting";
 import SignInForm from "../Pages/Auth/SignInForm";
 import { Navigate } from "react-router-dom";
-import { EditCompany } from "../Components/Settings/GeneralSetting";
+import { CompanyForm } from "../Components/Settings/GeneralSetting";
 import Employees from "../Pages/Employee";
 import EmployeeForm from "../Pages/Employee/EmployeeForm";
 import Branch from "../Pages/Branch";
@@ -25,7 +25,7 @@ export const PageRoutes = [
   { path: ROUTES.DASHBOARD, element: <Dashboard /> },
 
   { path: ROUTES.SETTINGS.GENERAL, element: <GeneralSetting /> },
-  { path: ROUTES.COMPANY.EDIT, element: <EditCompany /> },
+  { path: ROUTES.COMPANY.EDIT, element: <CompanyForm /> },
 
   { path: ROUTES.EMPLOYEE.BASE, element: <Employees /> },
   { path: ROUTES.EMPLOYEE.ADD_EDIT, element: <EmployeeForm /> },
@@ -41,13 +41,13 @@ export const PageRoutes = [
   { path: ROUTES.CONTACT.BASE, element: <Contact /> },
   { path: ROUTES.CONTACT.ADD_EDIT, element: <ContactForm /> },
 
-  { path: ROUTES.BANK.BASE, element: <Bank />},
-  { path: ROUTES.BANK.ADD_EDIT, element:<BankForm/>},
+  { path: ROUTES.BANK.BASE, element: <Bank /> },
+  { path: ROUTES.BANK.ADD_EDIT, element: <BankForm /> },
 
-  { path: ROUTES.TRANSACTION.BASE, element: <BankTransaction />},
+  { path: ROUTES.TRANSACTION.BASE, element: <BankTransaction /> },
 
-  { path: ROUTES.PAYMENT.BASE, element: <PaymentList />},
-  { path: ROUTES.PAYMENT.ADD_EDIT, element: <PaymentForm />}
+  { path: ROUTES.PAYMENT.BASE, element: <PaymentList /> },
+  { path: ROUTES.PAYMENT.ADD_EDIT, element: <PaymentForm /> },
 ];
 
 export const AuthRoutes = [

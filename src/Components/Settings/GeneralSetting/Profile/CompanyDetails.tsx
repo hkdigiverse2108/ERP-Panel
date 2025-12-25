@@ -196,14 +196,6 @@ const CompanyDetails = () => {
         <Grid container spacing={2} className="p-4 overflow-auto ">
           {ImageItems.map((item, index) => (
             <CommonImageBox key={index} url={item.src || `${ImagePath}user/1.jpg`} label={item.label} type={"image"} />
-
-            // <Grid key={index} size={{ xs: 12, md: 6 }} className="flex! flex-col! max-sm:justify-center! max-sm:items-center! ">
-            //   <p>{item.label}</p>
-
-            //   <Box className="flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden" sx={{ width: 150, height: 150 }}>
-            //     <img src={item.src || `${ImagePath}user/1.jpg`} alt={item.alt} className="object-cover w-full h-full rounded-md" />
-            //   </Box>
-            // </Grid>
           ))}
         </Grid>
       </CommonCard>
