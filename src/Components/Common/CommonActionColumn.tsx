@@ -8,11 +8,12 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 interface CommonActionColumnProps<T> {
   editRoute?: string;
+  onEdit?: (row: T) => void;
   onDelete?: (row: T) => void;
   active?: (row: T) => void;
 }
 
-const CommonActionColumn = <T extends { _id?: string }>({ active, editRoute, onDelete }: CommonActionColumnProps<T>): GridColDef<T> => ({
+const CommonActionColumn = <T extends { _id?: string }>({ active, editRoute, onDelete, onEdit }: CommonActionColumnProps<T>): GridColDef<T> => ({
   field: "actions",
   headerName: "Actions",
   width: 140,
@@ -24,7 +25,7 @@ const CommonActionColumn = <T extends { _id?: string }>({ active, editRoute, onD
     return (
       <Grid container spacing={1}>
         {active && (
-          <Grid size="auto" onClick={() => active(params.row)}>
+          <Grid size="auto">
             <IconButton size="small" color={isActive ? "success" : "error"} onClick={() => active(params.row)}>
               {isActive ? <VisibilityIcon /> : <VisibilityOffIcon />}
             </IconButton>
@@ -37,6 +38,13 @@ const CommonActionColumn = <T extends { _id?: string }>({ active, editRoute, onD
                 <EditIcon />
               </IconButton>
             </Link>
+          </Grid>
+        )}
+        {onEdit && (
+          <Grid size="auto">
+            <IconButton size="small" onClick={() => onEdit(params.row)}>
+              <EditIcon />
+            </IconButton>
           </Grid>
         )}
         {onDelete && (

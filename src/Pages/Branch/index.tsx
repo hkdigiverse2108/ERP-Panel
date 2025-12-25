@@ -43,7 +43,7 @@ const Branch = () => {
     rowCount: totalRows,
     loading: branchDataLoading || branchDataFetching || isEditLoading,
     isActive,
-    // setActive,
+    setActive,
     handleAdd,
     paginationModel,
     onPaginationModelChange: setPaginationModel,

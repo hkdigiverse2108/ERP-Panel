@@ -23,7 +23,7 @@ export function useMutations<TInput, TResponse>(mutationKey: QueryKey, callback:
     },
     onError: (error: CombinedErrorResponse) => {
       switch (error.status) {
-        case HTTP_STATUS.TOKEN_EXPIRED:
+        case HTTP_STATUS.UNAUTHORIZED:
           dispatch(setSignOut());
           navigate(ROUTES.AUTH.SIGNIN + `?returnUrl=${window.location.pathname}`, {
             replace: true,

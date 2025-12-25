@@ -13,9 +13,9 @@ import { Box, Grid, Tabs } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import { useState, type SyntheticEvent } from "react";
 import { CommonBreadcrumbs } from "../../../Components/Common";
+import { Profile, ReportFormats, UserRoles } from "../../../Components/Settings/GeneralSetting";
 import { PAGE_TITLE } from "../../../Constants";
 import { GeneralSettingBreadcrumbs } from "../../../Data";
-import { Profile, ReportFormats } from "../../../Components/Settings/GeneralSetting"; 
 
 const GeneralSetting = () => {
   const [value, setValue] = useState(0);
@@ -36,7 +36,7 @@ const GeneralSetting = () => {
   ];
 
   // Map tab index → component
-  const tabViews = [<Profile />, <Profile />, <ReportFormats />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />];
+  const tabViews = [<Profile />, <Profile />, <ReportFormats />, <UserRoles />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />];
 
   return (
     <>
@@ -47,33 +47,13 @@ const GeneralSetting = () => {
             <Box className="rounded-lg py-4 bg-white dark:bg-gray-dark! border border-gray-200 dark:border-gray-800">
               <Tabs orientation={"vertical"} variant="scrollable" value={value} onChange={handleChange}>
                 {generalSettingTabs.map((tab, index) => (
-                  <Tab key={index} icon={tab.icon} label={tab.label} value={tab.value} iconPosition="start" className="" />
+                  <Tab key={index} icon={tab.icon} label={tab.label} value={tab.value} iconPosition="start" />
                 ))}
               </Tabs>
             </Box>
           </Grid>
           <Grid size={{ xs: 12, md: 9, lg: 9, xl: 10 }} className="rounded-lg p-4 bg-white dark:bg-gray-dark! border border-gray-200 dark:border-gray-800">
             {tabViews[value]}
-            {/* <Box className={`${value === 0 ? "block" : "hidden"}`}>
-              <Profile />
-            </Box>
-            <Box className={`${value === 1 ? "block" : "hidden"}`}>
-              <CommonCard title="Customers Report" grid={{ xs: 12 }}>
-                <Formik initialValues={{ name: "", password: "", search: "", username: "" }} onSubmit={(values) => console.log(values)}>
-                  <Form>
-                    <Grid sx={{ p: 2 }} container spacing={2}>
-                      <CommonTextField name="name" label="Full Name" placeholder="John Doe" required grid={{ xs: 12, sm: 6 }} />
-                      <CommonTextField name="password" label="password" type="password" required showPasswordToggle grid={{ xs: 12, sm: 6 }} />
-                      <CommonTextField name="searc" label="Search" clearable endIcon={<SearchIcon />} grid={{ xs: 12, sm: 6 }} />
-                      <CommonTextField name="usernam" label="Username" validating={false} grid={{ xs: 12, sm: 6 }} />
-                    </Grid>
-                  </Form>
-                </Formik>
-              </CommonCard>
-            </Box>
-            <Box className={`${value === 2 ? "block" : "hidden"}`}>
-              <ReportFormats />
-            </Box> */}
           </Grid>
         </Grid>
       </div>

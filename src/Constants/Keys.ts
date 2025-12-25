@@ -57,6 +57,13 @@ export const KEYS = {
     DELETE: "branch-delete",
   },
 
+  ROLES: {
+    BASE: "role",
+    ADD: "role-add",
+    EDIT: "role-edit",
+    DELETE: "role-delete",
+  },
+
   ANNOUNCEMENT: {
     BASE: "announcement",
   },
@@ -76,7 +83,7 @@ export const KEYS = {
   },
   CALL_REQUEST: {
     ROOT: ["call-request"],
-    ADD: ["call-request", "add"],
+    ADD: "call-request",
   },
   BANK: {
     ROOT: ["bank"],
@@ -90,6 +97,5 @@ export const KEYS = {
     ADD: ["payment", "add"],
     EDIT: ["payment", "edit"],
     DELETE: ["payment", "delete"],
-},
-
+  },
 };

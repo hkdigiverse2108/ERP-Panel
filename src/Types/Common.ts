@@ -69,6 +69,7 @@ export interface UseDataGridOptions {
   pageSize?: number;
   initialSort?: GridSortModel;
   initialFilter?: GridFilterModel;
+  active?: boolean;
 }
 
 export interface CommonDataGridProps {

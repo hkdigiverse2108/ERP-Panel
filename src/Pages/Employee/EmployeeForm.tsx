@@ -55,21 +55,22 @@ const EmployeeForm = () => {
     commission: data?.commission || null,
     extraWages: data?.extraWages || null,
     target: data?.target || null,
-    isActive: data?.isActive || false,
+    isActive: data?.isActive ?? true,
   };
 
-  const handleSubmit = (values: EmployeeFormValues, { resetForm }: FormikHelpers<EmployeeFormValues>) => {
+  const handleSubmit = async (values: EmployeeFormValues, { resetForm }: FormikHelpers<EmployeeFormValues>) => {
     const { _submitAction, ...rest } = values;
+    const payload = { ...rest, phoneNo: rest.phoneNo?.toString(), companyId: company!._id };
 
-    const onSuccessHandler = () => {
+    const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
       else navigate(-1);
     };
     if (isEditing) {
-      const changedFields = GetChangedFields(rest, data);
-      editEmployee({ ...changedFields, userId: data._id, companyId: company!._id, phoneNo:changedFields.phoneNo?.toString() }, { onSuccess: () => onSuccessHandler() });
+      const changedFields = GetChangedFields(payload, data);
+      await editEmployee({ ...changedFields, userId: data._id }, { onSuccess: handleSuccess });
     } else {
-      addEmployee({ ...RemoveEmptyFields(rest), companyId: company!._id }, { onSuccess: () => onSuccessHandler() });
+      await addEmployee(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
   };
 

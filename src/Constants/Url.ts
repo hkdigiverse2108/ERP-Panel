@@ -35,6 +35,13 @@ export const URL_KEYS = {
     EDIT: "/branch/edit",
   },
 
+  ROLES: {
+    BASE: "/role",
+    ALL: "/role/all",
+    ADD: "/role/add",
+    EDIT: "/role/edit",
+  },
+
   ANNOUNCEMENT: {
     ALL: "/announcement/all",
   },
@@ -63,11 +70,9 @@ export const URL_KEYS = {
     EDIT: "/bank/edit",
   },
   PAYMENT: {
-  BASE: "/payment",
-  ADD: "/payment/add",
-  EDIT: "/payment/edit",
-  ALL: "/payment/all",
-},
-
-
+    BASE: "/payment",
+    ADD: "/payment/add",
+    EDIT: "/payment/edit",
+    ALL: "/payment/all",
+  },
 } as const;

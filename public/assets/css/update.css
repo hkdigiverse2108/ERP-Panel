@@ -26,6 +26,9 @@
 .MuiDataGrid-columnHeader {
   @apply bg-gray-50! dark:bg-gray-900! dark:border-gray-700!;
 }
+.MuiDataGrid-toolbar{
+  @apply min-h-auto!;
+}
 
 .dark .MuiDataGrid-withBorderColor,
 .dark .MuiDataGrid-cell{

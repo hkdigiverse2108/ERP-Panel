@@ -18,81 +18,85 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ apiRef, columns, rows, rowCount
 
   return (
     <Toolbar>
-      <Typography variant="body2" component="div" sx={{ flexGrow: 1 }}>
-        Total Results: {rowCount}
-      </Typography>
-      <Box sx={{ display: "flex", gap: 1 }}>
-        {setActive && <CommonSwitch name="isActive" label="Active" switchPlacement="start" value={isActive} onChange={(checked) => setActive(checked)} grid={{ xs: 12 }} />}
+      <Box className="flex flex-wrap justify-between items-center w-full">
+        <Typography variant="body2" py={1} px={1}>
+          Total Results: {rowCount}
+        </Typography>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+          {setActive && <CommonSwitch name="isActive" label="Active :" switchPlacement="start" value={isActive} onChange={(checked) => setActive(checked)} />}
 
-        <GridToolbarQuickFilter />
+          <GridToolbarQuickFilter />
 
-        <Tooltip title="Columns">
-          <IconButton onClick={() => apiRef.current.showPreferences("columns")}>
-            <ViewColumnIcon />
-          </IconButton>
-        </Tooltip>
+          <Tooltip title="Columns">
+            <IconButton onClick={() => apiRef.current.showPreferences("columns")}>
+              <ViewColumnIcon />
+            </IconButton>
+          </Tooltip>
 
-        {/* CUSTOM FILTER ICON */}
-        <Tooltip title="Filters">
-          <IconButton onClick={() => apiRef.current.showPreferences("filters")}>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+          {/* CUSTOM FILTER ICON */}
+          <Tooltip title="Filters">
+            <IconButton onClick={() => apiRef.current.showPreferences("filters")}>
+              <FilterListIcon />
+            </IconButton>
+          </Tooltip>
 
-        {/* EXPORT */}
-        <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-          <DownloadIcon />
-        </IconButton>
+          {/* EXPORT */}
+          <Tooltip title="Export">
+            <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+              <DownloadIcon />
+            </IconButton>
+          </Tooltip>
 
-        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
-          {/* EXCEL */}
-          <MenuItem
-            onClick={() => {
-              ExportDataGridToExcel({
-                columns,
-                rows,
-                fileName: "employees.xlsx",
-              });
-              setAnchorEl(null);
-            }}
-          >
-            <GridOnIcon fontSize="small" sx={{ mr: 1 }} />
-            Download as Excel
-          </MenuItem>
+          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
+            {/* EXCEL */}
+            <MenuItem
+              onClick={() => {
+                ExportDataGridToExcel({
+                  columns,
+                  rows,
+                  fileName: "employees.xlsx",
+                });
+                setAnchorEl(null);
+              }}
+            >
+              <GridOnIcon fontSize="small" sx={{ mr: 1 }} />
+              Download as Excel
+            </MenuItem>
 
-          {/* PRINT */}
-          <MenuItem
-            onClick={() => {
-              apiRef?.current?.exportDataAsPrint();
-              setAnchorEl(null);
-            }}
-          >
-            <PrintIcon fontSize="small" sx={{ mr: 1 }} />
-            Print
-          </MenuItem>
+            {/* PRINT */}
+            <MenuItem
+              onClick={() => {
+                apiRef?.current?.exportDataAsPrint();
+                setAnchorEl(null);
+              }}
+            >
+              <PrintIcon fontSize="small" sx={{ mr: 1 }} />
+              Print
+            </MenuItem>
 
-          {/* PDF */}
-          <MenuItem
-            onClick={() => {
-              ExportDataGridToPDF({
-                columns,
-                rows,
-                fileName: "employees.pdf",
-              });
-              setAnchorEl(null);
-            }}
-          >
-            <PictureAsPdfIcon fontSize="small" sx={{ mr: 1 }} />
-            PDF
-          </MenuItem>
-        </Menu>
-        {handleAdd && (
-          <Grid size="auto">
-            <CommonButton variant="contained" size="small" startIcon={<AddIcon />} onClick={handleAdd}>
-              ADD
-            </CommonButton>
-          </Grid>
-        )}
+            {/* PDF */}
+            <MenuItem
+              onClick={() => {
+                ExportDataGridToPDF({
+                  columns,
+                  rows,
+                  fileName: "employees.pdf",
+                });
+                setAnchorEl(null);
+              }}
+            >
+              <PictureAsPdfIcon fontSize="small" sx={{ mr: 1 }} />
+              PDF
+            </MenuItem>
+          </Menu>
+          {handleAdd && (
+            <Grid size="auto">
+              <CommonButton variant="contained" size="small" startIcon={<AddIcon />} onClick={handleAdd}>
+                ADD
+              </CommonButton>
+            </Grid>
+          )}
+        </Box>
       </Box>
     </Toolbar>
   );

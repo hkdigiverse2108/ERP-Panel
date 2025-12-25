@@ -28,7 +28,7 @@ export async function Get<T>(url: string, params?: Params, headers?: Record<stri
   } catch (error) {
     const axiosError = error as AxiosError<{ status?: string }>;
 
-    if (axiosError?.response?.status === HTTP_STATUS.TOKEN_EXPIRED && !isRedirecting) {
+    if (axiosError?.response?.status === HTTP_STATUS.UNAUTHORIZED && !isRedirecting) {
       Storage.clear();
       isRedirecting = true;
       window.location.href = ROUTES.HOME;
