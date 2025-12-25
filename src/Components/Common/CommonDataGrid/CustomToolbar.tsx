@@ -6,7 +6,7 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import PrintIcon from "@mui/icons-material/Print";
 import ViewColumnIcon from "@mui/icons-material/ViewColumn";
 import { Box, Grid, IconButton, Menu, MenuItem, Tooltip, Typography } from "@mui/material";
-import { GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { GridToolbarQuickFilter, Toolbar } from "@mui/x-data-grid";
 import { useState, type FC } from "react";
 import { CommonButton, CommonSwitch } from "../../../Attribute";
 import type { CustomToolbarProps } from "../../../Types";
@@ -17,7 +17,7 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ apiRef, columns, rows, rowCount
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   return (
-    <GridToolbarContainer sx={{ justifyContent: "flex-end", p: 1 }}>
+    <Toolbar>
       <Typography variant="body2" component="div" sx={{ flexGrow: 1 }}>
         Total Results: {rowCount}
       </Typography>
@@ -94,7 +94,7 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ apiRef, columns, rows, rowCount
           </Grid>
         )}
       </Box>
-    </GridToolbarContainer>
+    </Toolbar>
   );
 };
 
