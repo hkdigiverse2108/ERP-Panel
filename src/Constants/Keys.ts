@@ -20,11 +20,10 @@ export const KEYS = {
   },
 
   UPLOAD: {
-    ROOT: ["upload"],
-    ALL_IMAGE: ["upload", "image"],
-    ALL_PDF: ["upload", "pdf"],
-    ADD: ["upload", "add"], // mutation
-    DELETE: ["upload", "delete"], // mutation
+    ALL_IMAGE: "upload-image",
+    ALL_PDF: "upload-pdf",
+    ADD: "upload",
+    DELETE: "upload-delete",
   },
 
   USER: {
@@ -37,10 +36,8 @@ export const KEYS = {
   },
 
   COMPANY: {
-    ROOT: ["company"],
-    ALL: ["company", "all"],
-    DETAILS: (id: string) => ["company", "detail", id],
-    EDIT: ["user", "edit"],
+    BASE: "company",
+    EDIT: "company-edit",
   },
 
   EMPLOYEE: {

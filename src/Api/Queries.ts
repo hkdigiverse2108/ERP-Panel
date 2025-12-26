@@ -1,25 +1,20 @@
 import { KEYS, URL_KEYS } from "../Constants";
 import type { AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, EmployeeApiResponse, Params, RolesApiResponse, UploadResponse } from "../Types";
+import type { CompanyApiResponse } from "../Types/Company";
 import { CleanParams } from "../Utils";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 
 export const Queries = {
   // ************ Upload ***********
-  useGetUploadImage: (options?: AppQueryOptions<UploadResponse>) => useQueries<UploadResponse>(KEYS.UPLOAD.ALL_IMAGE, () => Get(URL_KEYS.UPLOAD.ALL_IMAGE), options),
-  useGetUploadPdf: (options?: AppQueryOptions<UploadResponse>) => useQueries<UploadResponse>(KEYS.UPLOAD.ALL_PDF, () => Get(URL_KEYS.UPLOAD.ALL_PDF), options),
+  useGetUploadImage: (options?: AppQueryOptions<UploadResponse>) => useQueries<UploadResponse>([KEYS.UPLOAD.ALL_IMAGE], () => Get(URL_KEYS.UPLOAD.ALL_IMAGE), options),
+  useGetUploadPdf: (options?: AppQueryOptions<UploadResponse>) => useQueries<UploadResponse>([KEYS.UPLOAD.ALL_PDF], () => Get(URL_KEYS.UPLOAD.ALL_PDF), options),
 
   // ************ User ***********
-  useGetUserdata: (id?: string) =>
-    useQueries<any>(KEYS.USER.DETAILS(id as string), () => Get(URL_KEYS.USER.ONE(id as string)), {
-      enabled: !!id,
-    }),
+  useGetUserdata: (id?: string) => useQueries<any>(KEYS.USER.DETAILS(id as string), () => Get(URL_KEYS.USER.ONE(id as string)), { enabled: !!id }),
 
   // ************ Company ***********
-  useGetCompanyData: (id?: string) =>
-    useQueries<any>(KEYS.COMPANY.DETAILS(id as string), () => Get(URL_KEYS.COMPANY.ONE(id as string)), {
-      enabled: !!id,
-    }),
+  useGetSingleCompany: (id?: string) => useQueries<CompanyApiResponse>([KEYS.COMPANY.BASE, id], () => Get(`${URL_KEYS.COMPANY.BASE}/${id}`), { enabled: !!id }),
 
   // ************ Employee ***********
   useGetEmployee: (params?: Params) => useQueries<EmployeeApiResponse>([KEYS.EMPLOYEE.BASE, params], () => Get(URL_KEYS.EMPLOYEE.ALL, params)),
@@ -51,5 +46,4 @@ export const Queries = {
 
   // ************ payment*
   // useGetPayments: (params?: Params) =>useQueries<PaymentApiResponse>([KEYS.PAYMENT.BASE, params],() => Get(URL_KEYS.PAYMENT.ALL, params),),
-
 };

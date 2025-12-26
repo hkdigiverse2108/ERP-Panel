@@ -4,6 +4,17 @@ import { Validation } from "./Validation";
 // ---------- Reusable helpers ----------
 
 // const ImageSchema = (label: string, required = true) => Validation("array", label, required ? { minItems: 1 } : { required: false });
+export const PhoneValidation = (label = "Phone No", options?: { requiredCountryCode?: boolean; requiredNumber?: boolean }) =>
+  Yup.object({
+    countryCode: Validation("string", "Country code", {
+      required: options?.requiredCountryCode ?? true,
+    }),
+
+    phoneNo: Validation("string", label, {
+      required: options?.requiredNumber ?? true,
+      extraRules: (s) => s.trim().matches(/^[0-9]{10}$/, "Phone number must be 10 digits"),
+    }),
+  });
 
 // Signin
 export const SigninSchema = Yup.object({
@@ -100,4 +111,17 @@ export const ProductFormSchema = Yup.object({
   salesTaxId: Validation("string", "Sales Tax", { required: false }),
   nutritionalFacts: Validation("string", "Nutritional Facts", { required: false }),
   status: Validation("string", "Status"),
+});
+
+export const CompanyFormSchemas = Yup.object({
+  name: Validation("string", "Company Name"),
+  email: Validation("string", "Email"),
+  city: Validation("string", "City"),
+  state: Validation("string", "State"),
+  phoneNo: PhoneValidation(),
+  ownerNo: PhoneValidation(),
+  logo: Validation("string", "Logo"),
+  waterMark: Validation("string", "Water Mark"),
+  reportFormatLogo: Validation("string", "Report Format Logo"),
+  authorizedSignature: Validation("string", "Authorized Signature"),
 });

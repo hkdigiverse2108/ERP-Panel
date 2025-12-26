@@ -8,14 +8,14 @@ export const Mutations = {
   useSignin: () => useMutations<LoginPayload, LoginResponse>(KEYS.AUTH.SIGNIN, (input) => Post(URL_KEYS.AUTH.SIGNIN, input, false)),
 
   // ************ Upload ***********
-  useUpload: () => useMutations<FormData, UploadResponse>(KEYS.UPLOAD.ADD, (input) => Post(URL_KEYS.UPLOAD.ADD, input)),
-  useDeleteUpload: () => useMutations<{ fileUrl: string }, void>(KEYS.UPLOAD.DELETE, (id) => Delete(`${URL_KEYS.UPLOAD.DELETE}`, id)),
+  useUpload: () => useMutations<FormData, UploadResponse>([KEYS.UPLOAD.ADD, KEYS.UPLOAD.ALL_IMAGE, KEYS.UPLOAD.ALL_PDF], (input) => Post(URL_KEYS.UPLOAD.ADD, input)),
+  useDeleteUpload: () => useMutations<{ fileUrl: string }, void>([KEYS.UPLOAD.DELETE, KEYS.UPLOAD.ALL_IMAGE, KEYS.UPLOAD.ALL_PDF], (id) => Delete(`${URL_KEYS.UPLOAD.DELETE}`, id)),
 
   // ************ User ***********
   useEditUser: () => useMutations<FormData, any>(KEYS.USER.EDIT, (input) => Put(URL_KEYS.USER.EDIT, input)),
 
   // ************ Company ***********
-  useEditCompany: () => useMutations<FormData, any>(KEYS.COMPANY.EDIT, (input) => Put(URL_KEYS.COMPANY.EDIT, input)),
+  useEditCompany: () => useMutations<FormData, any>([KEYS.COMPANY.EDIT], (input) => Put(URL_KEYS.COMPANY.EDIT, input)),
 
   // ************ Employee ***********
   useAddEmployee: () => useMutations<AddEmployeePayload, void>([KEYS.EMPLOYEE.ADD, KEYS.EMPLOYEE.BASE], (input) => Post(URL_KEYS.EMPLOYEE.ADD, input)),

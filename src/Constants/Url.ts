@@ -16,9 +16,9 @@ export const URL_KEYS = {
     DELETE: "/user/delete/",
   },
   COMPANY: {
-    ADD: "/company/add",
+    BASE: "/company",
     ALL: "/company/all",
-    ONE: (id: string) => `/company/${id}`,
+    ADD: "/company/add",
     EDIT: "/company/edit",
   },
   EMPLOYEE: {

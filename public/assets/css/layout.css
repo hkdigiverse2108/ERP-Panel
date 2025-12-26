@@ -92,21 +92,28 @@
 }
 
 .dark .MuiDataGrid-scrollbar::-webkit-scrollbar-thumb,
+.dark .MuiTelInput-Menu .MuiPaper-root.MuiPopover-paper::-webkit-scrollbar-thumb,
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
   @apply bg-gray-700;
 }
 
-.MuiDataGrid-scrollbar::-webkit-scrollbar {
+.MuiDataGrid-scrollbar::-webkit-scrollbar,
+.MuiTelInput-Menu .MuiPaper-root.MuiPopover-paper::-webkit-scrollbar {
   @apply size-1.5;
 }
 
+.MuiTelInput-Menu .MuiPaper-root.MuiPopover-paper::-webkit-scrollbar-thumb,
 .MuiDataGrid-scrollbar::-webkit-scrollbar-thumb {
   @apply bg-gray-200 rounded-full dark:bg-gray-700;
 }
 
+.MuiTelInput-Menu .MuiPaper-root.MuiPopover-paper::-webkit-scrollbar-track,
 .MuiDataGrid-scrollbar::-webkit-scrollbar-track {
   @apply rounded-full;
 }
 
-/* ************ Sidebar End *********** */
+.MuiTelInput-Menu .MuiPaper-root.MuiPopover-paper {
+  max-height: calc(100% - 600px);
+}
 
+/* ************ Sidebar End *********** */

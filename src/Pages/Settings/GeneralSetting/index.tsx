@@ -40,7 +40,7 @@ const GeneralSetting = () => {
   ];
 
   // Map tab index → component
-  const tabViews = [<Profile />, <CompanyProfile />, <ReportFormats />, <UserRoles />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />];
+  const tabViews = [<Profile />, <CompanyProfile />, <ReportFormats />, <Profile />, <UserRoles />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />];
 
   return (
     <>

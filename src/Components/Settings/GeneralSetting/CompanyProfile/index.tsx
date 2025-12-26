@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import { CommonSwitch } from "../../../../Attribute";
 import { ImagePath, ROUTES } from "../../../../Constants";
 import { useAppSelector } from "../../../../Store/hooks";
-import { CommonCard } from "../../../Common";
-import CommonImageBox from "../../../Common/CommonUploadImage/CommonImageBox";
+import { CommonCard, CommonImageBox } from "../../../Common";
 
 const CompanyProfile = () => {
   const { company = {} } = useAppSelector((state) => state.company);

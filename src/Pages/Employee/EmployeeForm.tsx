@@ -5,7 +5,7 @@ import { Mutations, Queries } from "../../Api";
 import { CommonTextField, CommonValidationSelect, CommonValidationSwitch } from "../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
-import { BREADCRUMBS, PRODUCT_TYPE_OPTIONS } from "../../Data";
+import { BREADCRUMBS } from "../../Data";
 import { useAppSelector } from "../../Store/hooks";
 import type { EmployeeFormValues } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
@@ -16,8 +16,9 @@ const EmployeeForm = () => {
   const navigate = useNavigate();
   const { data } = location.state || {};
   const { company } = useAppSelector((state) => state.company);
-
-  const { data: branchData } = Queries.useGetBranch();
+  
+  const { data: rolesData } = Queries.useGetRoles({ activeFilter: true });
+  const { data: branchData } = Queries.useGetBranch({ activeFilter: true });
   const { mutate: addEmployee, isPending: isAddLoading } = Mutations.useAddEmployee();
   const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditEmployee();
 
@@ -88,7 +89,7 @@ const EmployeeForm = () => {
                     <CommonTextField name="fullName" label="Full Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="username" label="User Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="designation" label="User designation" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="role" label="role" options={PRODUCT_TYPE_OPTIONS} grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="role" label="role" options={GenerateOptions(rolesData?.data?.role_data)} grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="phoneNo" label="Phone No." type="number" required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />
