@@ -122,24 +122,10 @@ const ProductForm = () => {
 
     if (isEditing) {
       const changedFields = GetChangedFields(rest, data);
-
-      const payload = {
-        ...changedFields,
-        _id: data._id,
-        companyId: company?._id,
-      };
-
-      editProduct(objectToFormData(payload), { onSuccess: onSuccessHandler });
+      editProduct({ ...changedFields, productId: data._id, companyId: companyId!._id }, { onSuccess: onSuccessHandler });
     } else {
-      const payload = {
-        ...RemoveEmptyFields(rest),
-        companyId: company?._id,
-      };
-
-      addProduct(objectToFormData(payload), { onSuccess: onSuccessHandler });
+      addProduct({ ...RemoveEmptyFields(rest), companyId: company!._id }, { onSuccess: onSuccessHandler });
     }
-  };
-
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT[pageMode]} maxItems={1} breadcrumbs={BREADCRUMBS.PRODUCT[pageMode]} />
@@ -162,7 +148,7 @@ const ProductForm = () => {
                     <CommonSelect label="Brand" options={BRAND_OPTIONS} value={values.brandId ? [values.brandId] : []} onChange={(v) => setFieldValue("brandId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
                     <CommonSelect label="Sub Brand" options={SUB_BRAND_OPTIONS} value={values.subBrandId ? [values.subBrandId] : []} onChange={(v) => setFieldValue("subBrandId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
                     <CommonSelect label="Department" options={DEPARTMENT_OPTIONS} value={values.departmentId ? [values.departmentId] : []} onChange={(v) => setFieldValue("departmentId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
-                    <CommonSelect label="UOM" options={UOM_OPTIONS} value={values.uomId ? [values.uomId] : []} onChange={(v) => setFieldValue("uomId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
+                    <CommonSelect label="Brand" options={UOM_OPTIONS} value={values.uomId ? [values.uomId] : []} onChange={(v) => setFieldValue("uomId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="tags" label="Tags" grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="net weight" label="Net Weight" grid={{ xs: 12, md: 6 }} />
 
@@ -249,5 +235,5 @@ const ProductForm = () => {
     </>
   );
 };
-
+}
 export default ProductForm;

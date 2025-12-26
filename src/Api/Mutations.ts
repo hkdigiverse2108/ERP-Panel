@@ -28,9 +28,9 @@ export const Mutations = {
   useDeleteBranch: () => useMutations<string, void>([KEYS.BRANCH.DELETE, KEYS.BRANCH.BASE], (id) => Delete(`${URL_KEYS.BRANCH.BASE}/${id}`)),
 
   // ************ product ***********
-  useAddProduct: () => useMutations<FormData, any>(KEYS.PRODUCT.ADD, (input) => Post(URL_KEYS.PRODUCT.ADD, input, false)),
-  useEditProduct: () => useMutations<FormData, any>(KEYS.PRODUCT.EDIT, (input) => Put(URL_KEYS.PRODUCT.EDIT, input)),
-  useDeleteProduct: () => useMutations<{ id: string }, void>(KEYS.PRODUCT.DELETE, (id) => Delete(`${URL_KEYS.PRODUCT.BASE}/${id}`)),
+  useAddProduct: () => useMutations<FormData, void>([KEYS.PRODUCT.ADD, KEYS.PRODUCT.BASE],  (input) => Post(URL_KEYS.PRODUCT.ADD, input, false)),
+  useEditProduct: () => useMutations<FormData, void>([KEYS.PRODUCT.EDIT, KEYS.PRODUCT.BASE], (input) => Put(URL_KEYS.PRODUCT.EDIT, input)),
+  useDeleteProduct: () => useMutations< string , void>([KEYS.PRODUCT.DELETE, KEYS.PRODUCT.BASE], (id) => Delete(`${URL_KEYS.PRODUCT.BASE}/${id}`)),
 
   // ************ Call Request ***********
   useAddCallRequest: () => useMutations<FormData, any>(KEYS.CALL_REQUEST.ADD, (input) => Post(URL_KEYS.CALL_REQUEST.ADD, input, false)),
@@ -46,4 +46,4 @@ export const Mutations = {
   useDeletePayment: () => useMutations<{ id: string }, void>(KEYS.PAYMENT.DELETE, (id) => Delete(`${URL_KEYS.PAYMENT.BASE}/${id}`)),
 
  
-};
+}; 

@@ -56,12 +56,13 @@ export const KEYS = {
     EDIT: "branch-edit",
     DELETE: "branch-delete",
   },
-
+  
   ANNOUNCEMENT: {
     BASE: "announcement",
   },
 
   PRODUCT: {
+    BASE: "product",
     ROOT: ["product"],
     ALL: ["product", "all"],
     DETAILS: (id: string) => ["product", "detail", id],

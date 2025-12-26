@@ -23,7 +23,7 @@ export interface EmployeeFormValues {
   designation?: string;
   phoneNo?: string;
   email?: string;
-  branchId?: string;
+  branchId?: string; 
   panNumber?: string;
   role?: string;
   address?: Address;

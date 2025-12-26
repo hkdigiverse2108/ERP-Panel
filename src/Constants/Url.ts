@@ -43,7 +43,7 @@ export const URL_KEYS = {
     BASE: "/product",
     ADD: "/product/add",
     ALL: "/product/all",
-    ONE: (id: string) => `/product/${id}`,
+    // ONE: (id: string) => `/product/${id}`,
     EDIT: "Product/edit",
   },
 
