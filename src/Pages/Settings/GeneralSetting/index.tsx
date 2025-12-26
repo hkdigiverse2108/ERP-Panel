@@ -1,3 +1,4 @@
+import { CorporateFare } from "@mui/icons-material";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import BarChartIcon from "@mui/icons-material/BarChart";
@@ -12,31 +13,34 @@ import TagIcon from "@mui/icons-material/Tag";
 import { Box, Grid, Tabs } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import { useState, type SyntheticEvent } from "react";
+import { useLocation } from "react-router-dom";
 import { CommonBreadcrumbs } from "../../../Components/Common";
+import { CompanyProfile, Profile, ReportFormats, UserRoles } from "../../../Components/Settings/GeneralSetting";
 import { PAGE_TITLE } from "../../../Constants";
 import { GeneralSettingBreadcrumbs } from "../../../Data";
-import { Profile, ReportFormats } from "../../../Components/Settings/GeneralSetting"; 
 
 const GeneralSetting = () => {
-  const [value, setValue] = useState(0);
+  const location = useLocation();
+  const [value, setValue] = useState<number>(() => (typeof location.state === "number" ? location.state : 0));
 
   const handleChange = (_: SyntheticEvent, newValue: number) => setValue(newValue);
   const generalSettingTabs = [
-    { label: "Profile", value: 0, icon: <PersonIcon /> },
-    { label: "Taxes", value: 1, icon: <ReceiptLongIcon /> },
-    { label: "Report Formats", value: 2, icon: <SettingsIcon /> },
-    { label: "User Roles", value: 3, icon: <AccountTreeIcon /> },
-    { label: "Prefix", value: 4, icon: <TagIcon /> },
-    { label: "Payment Terms", value: 5, icon: <PaymentIcon /> },
-    { label: "Additional Charges", value: 6, icon: <AddCircleIcon /> },
-    { label: "Consumption Type", value: 7, icon: <BarChartIcon /> },
-    { label: "Hardware", value: 8, icon: <DevicesIcon /> },
-    { label: "Manage Account", value: 9, icon: <ManageAccountsIcon /> },
-    { label: "MAC Binding Master", value: 10, icon: <LanIcon /> },
+    { label: "User Profile", value: 0, icon: <PersonIcon /> },
+    { label: "Company Profile", value: 1, icon: <CorporateFare /> },
+    { label: "Taxes", value: 2, icon: <ReceiptLongIcon /> },
+    { label: "Report Formats", value: 3, icon: <SettingsIcon /> },
+    { label: "User Roles", value: 4, icon: <AccountTreeIcon /> },
+    { label: "Prefix", value: 5, icon: <TagIcon /> },
+    { label: "Payment Terms", value: 6, icon: <PaymentIcon /> },
+    { label: "Additional Charges", value: 7, icon: <AddCircleIcon /> },
+    { label: "Consumption Type", value: 8, icon: <BarChartIcon /> },
+    { label: "Hardware", value: 9, icon: <DevicesIcon /> },
+    { label: "Manage Account", value: 10, icon: <ManageAccountsIcon /> },
+    { label: "MAC Binding Master", value: 11, icon: <LanIcon /> },
   ];
 
   // Map tab index → component
-  const tabViews = [<Profile />, <Profile />, <ReportFormats />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />];
+  const tabViews = [<Profile />, <CompanyProfile />, <ReportFormats />, <UserRoles />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />];
 
   return (
     <>
@@ -47,33 +51,13 @@ const GeneralSetting = () => {
             <Box className="rounded-lg py-4 bg-white dark:bg-gray-dark! border border-gray-200 dark:border-gray-800">
               <Tabs orientation={"vertical"} variant="scrollable" value={value} onChange={handleChange}>
                 {generalSettingTabs.map((tab, index) => (
-                  <Tab key={index} icon={tab.icon} label={tab.label} value={tab.value} iconPosition="start" className="" />
+                  <Tab key={index} icon={tab.icon} label={tab.label} value={tab.value} iconPosition="start" className="capitalize" />
                 ))}
               </Tabs>
             </Box>
           </Grid>
           <Grid size={{ xs: 12, md: 9, lg: 9, xl: 10 }} className="rounded-lg p-4 bg-white dark:bg-gray-dark! border border-gray-200 dark:border-gray-800">
             {tabViews[value]}
-            {/* <Box className={`${value === 0 ? "block" : "hidden"}`}>
-              <Profile />
-            </Box>
-            <Box className={`${value === 1 ? "block" : "hidden"}`}>
-              <CommonCard title="Customers Report" grid={{ xs: 12 }}>
-                <Formik initialValues={{ name: "", password: "", search: "", username: "" }} onSubmit={(values) => console.log(values)}>
-                  <Form>
-                    <Grid sx={{ p: 2 }} container spacing={2}>
-                      <CommonTextField name="name" label="Full Name" placeholder="John Doe" required grid={{ xs: 12, sm: 6 }} />
-                      <CommonTextField name="password" label="password" type="password" required showPasswordToggle grid={{ xs: 12, sm: 6 }} />
-                      <CommonTextField name="searc" label="Search" clearable endIcon={<SearchIcon />} grid={{ xs: 12, sm: 6 }} />
-                      <CommonTextField name="usernam" label="Username" validating={false} grid={{ xs: 12, sm: 6 }} />
-                    </Grid>
-                  </Form>
-                </Formik>
-              </CommonCard>
-            </Box>
-            <Box className={`${value === 2 ? "block" : "hidden"}`}>
-              <ReportFormats />
-            </Box> */}
           </Grid>
         </Grid>
       </div>

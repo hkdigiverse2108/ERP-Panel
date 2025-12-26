@@ -5,6 +5,7 @@ import { ImagePath, ROUTES } from "../../../../Constants";
 import { useAppSelector } from "../../../../Store/hooks";
 import { CommonSwitch } from "../../../../Attribute";
 import EditIcon from "@mui/icons-material/Edit";
+import CommonImageBox from "../../../Common/CommonUploadImage/CommonImageBox";
 
 // type CompanyDetailsProps = {
 //   handleDeleteImage: () => void;
@@ -115,7 +116,7 @@ const CompanyDetails = () => {
     { label: "IEC No.", value: company?.importerExporterCode },
     { label: "Outlet Size (sq.ft.)", value: company?.outletSize },
   ];
-  const imageItems = [
+  const ImageItems = [
     {
       label: "Logo",
       src: company?.logo,
@@ -193,14 +194,8 @@ const CompanyDetails = () => {
 
       <CommonCard title="logo" grid={{ xs: 12, xl: 6 }}>
         <Grid container spacing={2} className="p-4 overflow-auto ">
-          {imageItems.map((item, index) => (
-            <Grid key={index} size={{ xs: 12, md: 6 }} className="flex! flex-col! max-sm:justify-center! max-sm:items-center! ">
-              <p>{item.label}</p>
-
-              <Box className="flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden" sx={{ width: 150, height: 150 }}>
-                <img src={item.src || `${ImagePath}user/1.jpg`} alt={item.alt} className="object-cover w-full h-full rounded-md" />
-              </Box>
-            </Grid>
+          {ImageItems.map((item, index) => (
+            <CommonImageBox key={index} url={item.src || `${ImagePath}user/1.jpg`} label={item.label} type={"image"} />
           ))}
         </Grid>
       </CommonCard>

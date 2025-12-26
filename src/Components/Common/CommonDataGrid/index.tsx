@@ -2,6 +2,7 @@ import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import { useMemo, type FC } from "react";
 import CustomToolbar from "./CustomToolbar";
 import type { CommonDataGridProps } from "../../../Types";
+import type { GridColDef, GridValueGetter } from "@mui/x-data-grid";
 
 const CommonDataGrid: FC<CommonDataGridProps> = ({ columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass, handleAdd, isActive, setActive }) => {
   const apiRef = useGridApiRef();
@@ -12,7 +13,18 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({ columns, rows, rowCount, load
     return model;
   }, [defaultHidden]);
 
-  const fixedColumns = useMemo(() => {
+  const withFallbackValueGetter = (col: GridColDef): GridColDef => {
+    if (col.valueGetter) return col;
+    const fallbackGetter: GridValueGetter = (value) => {
+      if (value === null || value === undefined || value === "") return "-";
+      return value;
+    };
+    return { ...col, valueGetter: fallbackGetter };
+  };
+
+  const columnsWithFallback = useMemo<GridColDef[]>(() => columns.map(withFallbackValueGetter), [columns]);
+
+  const fixedColumns = useMemo<GridColDef[]>(() => {
     return [
       {
         field: "srNo",
@@ -20,31 +32,31 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({ columns, rows, rowCount, load
         width: 90,
         sortable: false,
         filterable: false,
-        valueGetter: (_, row) => paginationModel.page * paginationModel.pageSize + rows.findIndex((r) => r.id === row.id) + 1,
+        valueGetter: (_value, row) => paginationModel.page * paginationModel.pageSize + rows.findIndex((r) => r.id === row.id) + 1,
       },
-      ...columns,
+      ...columnsWithFallback,
     ];
-  }, [columns, paginationModel, rows]);
+  }, [columnsWithFallback, paginationModel, rows]);
 
   return (
     <div className={`${BoxClass} min-w-full overflow-auto`}>
       <DataGrid
         apiRef={apiRef}
-        label="hyy"
         rows={rows}
         columns={fixedColumns}
         rowCount={rowCount}
         loading={loading}
-        showToolbar
         slots={{
           toolbar: () => <CustomToolbar apiRef={apiRef} columns={fixedColumns} rows={rows} rowCount={rowCount} handleAdd={handleAdd} isActive={isActive} setActive={setActive} />,
         }}
+        showToolbar
         initialState={{
           columns: { columnVisibilityModel: visibilityModel },
         }}
         paginationMode="server"
         paginationModel={paginationModel}
         onPaginationModelChange={onPaginationModelChange}
+        pageSizeOptions={[5, 10, 50, 100, { value: rowCount, label: "All" }]}
         sortingMode="client"
         sortModel={sortModel}
         onSortModelChange={onSortModelChange}

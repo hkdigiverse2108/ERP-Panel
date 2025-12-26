@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from "react";
 import type { UseDataGridOptions } from "../../Types";
 import { CleanParams } from "..";
 
-export const useDataGrid = ({ page = 0, pageSize = 5, initialSort = [], initialFilter = { items: [] } }: UseDataGridOptions = {}) => {
+export const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initialFilter = { items: [] }, active }: UseDataGridOptions = {}) => {
   /* ---------------- Pagination ---------------- */
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page,
@@ -27,11 +27,11 @@ export const useDataGrid = ({ page = 0, pageSize = 5, initialSort = [], initialF
     return CleanParams({
       page: paginationModel.page + 1,
       limit: paginationModel.pageSize,
-
+      ...(!active && { activeFilter: isActive }),
       // Quick search
       search: filterModel.quickFilterValues?.[0],
     });
-  }, [paginationModel, filterModel]);
+  }, [paginationModel, filterModel, isActive,active]);
 
   /* ---------------- Reset ---------------- */
   const resetModels = useCallback(() => {

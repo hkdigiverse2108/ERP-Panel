@@ -97,7 +97,7 @@ const FileGallery = ({ multiple = false }: FileGalleryProps) => {
 
   return (
     <>
-      <div className="flex flex-col gap-4 custom-scrollbar h-[350px] overflow-y-auto">
+      <div className="flex flex-col gap-4 custom-scrollbar h-[327px] overflow-y-auto">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {isLoadingImages || isLoadingPdf
             ? [...Array(10)].map((_, i) => <Skeleton key={i} variant="rectangular" width="100%" height={140} sx={{ borderRadius: "10px" }} />)
@@ -138,7 +138,7 @@ const FileGallery = ({ multiple = false }: FileGalleryProps) => {
         </div>
 
         {/* Context Menu */}
-        <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
+        <Menu className="z-99999!" anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
           <MenuItem onClick={() => console.log("Download", menuIndex)}>Download</MenuItem>
           <MenuItem onClick={handleDelete}>Delete</MenuItem>
         </Menu>

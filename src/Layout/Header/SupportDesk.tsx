@@ -8,20 +8,15 @@ import { useState } from "react";
 import { CommonButton, CommonTextField } from "../../Attribute";
 import { CommonModal } from "../../Components/Common";
 import { Mutations } from "../../Api";
+import { CallRequestFormSchema } from "../../Utils/ValidationSchemas";
+import type { CallRequestFormValues } from "../../Types";
 
 const SupportDesk = () => {
   const [open, setOpen] = useState(false);
 
   const { mutate: callRequestMutate, isPending: isCallRequestLoading } = Mutations.useAddCallRequest();
 
-  const handleSubmit = (values: any) => {
-    console.log(values);
-    callRequestMutate(values, {
-      onSuccess: () => {
-        setOpen(false);
-      },
-    });
-  };
+  const handleSubmit = (values: CallRequestFormValues) => callRequestMutate({...values, contactNo: values.contactNo?.toString()}, { onSuccess: () => setOpen(false) });
 
   return (
     <>
@@ -39,18 +34,15 @@ const SupportDesk = () => {
                 <LocalPhoneIcon className="text-gray-700 dark:text-gray-300" />
                 <span className="text-gray-800 dark:text-gray-300">+91 80008 77644</span>
               </li>
-
               <li className="flex items-center gap-3 border-b pb-3 border-gray-100 dark:border-gray-800">
                 <MailOutlineIcon className="text-gray-700 dark:text-gray-300" />
                 <span className="text-gray-800 dark:text-gray-300">support@vasyerp.com</span>
               </li>
-
               <li className="flex items-center gap-3 border-b pb-3 border-gray-100 dark:border-gray-800">
                 <AccessTimeIcon className="text-gray-700 dark:text-gray-300" />
                 <span className="text-gray-800 dark:text-gray-300">9:00 AM – 9:00 PM (IST)</span>
               </li>
             </ul>
-
             <button onClick={() => setOpen(!open)} className="mt-4 w-full py-2 text-center text-white font-medium bg-blue-600 rounded-lg hover:bg-blue-700">
               Request A Callback
             </button>
@@ -59,13 +51,13 @@ const SupportDesk = () => {
       </Box>
       <CommonModal isOpen={open} title="Talk To Our Expert" subTitle="Fill In Your Info - We'll Reach Out Shortly" onClose={() => setOpen(!open)} className="max-w-[500px] m-2 sm:m-5">
         <div className="flex flex-col gap-5">
-          <Formik initialValues={{ businessName: "", contactName: "", contactNo: "", note: "" }} onSubmit={handleSubmit}>
-            <Form>
+          <Formik initialValues={{ businessName: "", contactName: "", contactNo: "", note: "" }} validationSchema={CallRequestFormSchema} enableReinitialize onSubmit={handleSubmit}>
+            <Form noValidate>
               <Grid sx={{ px: 1 }} container spacing={2}>
-                <CommonTextField name="businessName" label="Business Name" placeholder="John Doe" grid={{ xs: 12 }} />
-                <CommonTextField name="contactName" label="Contact Name" grid={{ xs: 12 }} />
-                <CommonTextField name="contactNo" label="Contact No." grid={{ xs: 12 }} />
-                <CommonTextField name="note" label="Notes" type="textarea" multiline rows={2} validating={false} grid={{ xs: 12 }} />
+                <CommonTextField name="businessName" label="Business Name" grid={{ xs: 12 }} required />
+                <CommonTextField name="contactName" label="Contact Name" grid={{ xs: 12 }} required />
+                <CommonTextField name="contactNo" label="Contact No." type="number" grid={{ xs: 12 }} required />
+                <CommonTextField name="note" label="Notes" type="textarea" multiline rows={2} validating={false} grid={{ xs: 12 }} required />
                 <CommonButton type="submit" variant="contained" title="Send" size="medium" loading={isCallRequestLoading} fullWidth grid={{ xs: 12 }} />
               </Grid>
             </Form>

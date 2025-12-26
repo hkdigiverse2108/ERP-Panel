@@ -25,7 +25,7 @@ const EmployeeForm = () => {
   const pageMode = isEditing ? "EDIT" : "ADD";
 
   const initialValues: EmployeeFormValues = {
-    name: data?.name || "",
+    fullName: data?.fullName || "",
     username: data?.username || "",
     designation: data?.designation || "",
     phoneNo: data?.phoneNo || "",
@@ -55,21 +55,22 @@ const EmployeeForm = () => {
     commission: data?.commission || null,
     extraWages: data?.extraWages || null,
     target: data?.target || null,
-    isActive: data?.isActive || false,
+    isActive: data?.isActive ?? true,
   };
 
-  const handleSubmit = (values: EmployeeFormValues, { resetForm }: FormikHelpers<EmployeeFormValues>) => {
+  const handleSubmit = async (values: EmployeeFormValues, { resetForm }: FormikHelpers<EmployeeFormValues>) => {
     const { _submitAction, ...rest } = values;
+    const payload = { ...rest, phoneNo: rest.phoneNo?.toString(), companyId: company!._id };
 
-    const onSuccessHandler = () => {
+    const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
       else navigate(-1);
     };
     if (isEditing) {
-      const changedFields = GetChangedFields(rest, data);
-      editEmployee({ ...changedFields, employeeId: data._id, companyId: company!._id }, { onSuccess: () => onSuccessHandler() });
+      const changedFields = GetChangedFields(payload, data);
+      await editEmployee({ ...changedFields, userId: data._id }, { onSuccess: handleSuccess });
     } else {
-      addEmployee({ ...RemoveEmptyFields(rest), companyId: company!._id }, { onSuccess: () => onSuccessHandler() });
+      await addEmployee(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
   };
 
@@ -84,7 +85,7 @@ const EmployeeForm = () => {
                 {/* BASIC DETAILS */}
                 <CommonCard title="Basic Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonTextField name="name" label="Employee Name" required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="fullName" label="Full Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="username" label="User Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="designation" label="User designation" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="role" label="role" options={PRODUCT_TYPE_OPTIONS} grid={{ xs: 12, md: 4 }} />
@@ -127,10 +128,9 @@ const EmployeeForm = () => {
                     <CommonTextField name="target" type="number" label="Target" grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
+                {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
 
-                <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />
-
-                <CommonBottomActionBar clear disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

@@ -56,7 +56,18 @@ export const KEYS = {
     EDIT: "branch-edit",
     DELETE: "branch-delete",
   },
+<<<<<<< HEAD
   
+=======
+
+  ROLES: {
+    BASE: "role",
+    ADD: "role-add",
+    EDIT: "role-edit",
+    DELETE: "role-delete",
+  },
+
+>>>>>>> ebcfc013aecc498b4511559a3dd8e16323daf89d
   ANNOUNCEMENT: {
     BASE: "announcement",
   },
@@ -77,7 +88,7 @@ export const KEYS = {
   },
   CALL_REQUEST: {
     ROOT: ["call-request"],
-    ADD: ["call-request", "add"],
+    ADD: "call-request",
   },
   BANK: {
     BASE :["bank"],
@@ -91,6 +102,5 @@ export const KEYS = {
     ADD: ["payment", "add"],
     EDIT: ["payment", "edit"],
     DELETE: ["payment", "delete"],
-},
-
+  },
 };

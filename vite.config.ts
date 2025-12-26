@@ -11,6 +11,8 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), tailwindcss()],
     server: {
+      host: true,
+      allowedHosts: "all",
       port: PORT,
       proxy: {
         "/api": {

@@ -3,7 +3,7 @@ import { Validation } from "./Validation";
 
 // ---------- Reusable helpers ----------
 
-const ImageSchema = (label: string, required = true) => Validation("array", label, required ? { minItems: 1 } : { required: false });
+// const ImageSchema = (label: string, required = true) => Validation("array", label, required ? { minItems: 1 } : { required: false });
 
 // Signin
 export const SigninSchema = Yup.object({
@@ -13,7 +13,7 @@ export const SigninSchema = Yup.object({
 
 export const EmployeeFormSchema = Yup.object({
   // ---------- BASIC DETAILS ----------
-  name: Validation("string", "Name"),
+  fullName: Validation("string", "FullName"),
   username: Validation("string", "Username"),
   designation: Validation("string", "Designation", { required: false }),
   role: Validation("string", "Role", { required: false }),
@@ -50,7 +50,26 @@ export const EmployeeFormSchema = Yup.object({
   // ---------- STATUS ----------
   isActive: Yup.boolean(),
 });
- // ---------- Product Form Schema ----------
+
+export const BranchFormSchema = Yup.object({
+  name: Validation("string", "Branch name"),
+  address: Validation("string", "Address"),
+  isActive: Yup.boolean(),
+});
+
+export const RolesFormSchema = Yup.object({
+  name: Validation("string", "Roles name"),
+  isActive: Yup.boolean(),
+});
+
+export const CallRequestFormSchema = Yup.object({
+  businessName: Validation("string", "Business Name"),
+  contactName: Validation("string", "Contact Name"),
+  contactNo: Validation("string", "Contact No", { extraRules: (s) => s.trim().matches(/^[0-9]{10}$/, "Phone number must be 10 digits") }),
+  note: Validation("string", "note"),
+});
+
+// ---------- Product Form Schema ----------
 export const ProductFormSchema = Yup.object({
   itemCode: Validation("string", "Item Code"),
   productType: Validation("string", "Product Type"),

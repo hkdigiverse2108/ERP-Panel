@@ -10,14 +10,14 @@ import { useDataGrid } from "../../Utils/Hooks";
 import { useNavigate } from "react-router-dom";
 
 const Employee = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete,isActive,setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
 
   const { data: employeeData, isLoading: employeeDataLoading, isFetching: employeeDataFetching } = Queries.useGetEmployee(params);
   const { mutate: deleteEmployeeMutate } = Mutations.useDeleteEmployee();
   const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditEmployee();
 
-  const allEmployee = useMemo(() => employeeData?.data?.employee_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [employeeData]);
+  const allEmployee = useMemo(() => employeeData?.data?.user_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [employeeData]);
   const totalRows = employeeData?.data?.totalData || 0;
 
   const handleDeleteBtn = () => {
@@ -28,28 +28,28 @@ const Employee = () => {
   const handleAdd = () => navigate(ROUTES.EMPLOYEE.ADD_EDIT);
 
   const columns: GridColDef<EmployeeBase>[] = [
-    { field: "username", headerName: "User Name",type: "string", width: 170 },
-    { field: "name", headerName: "Name", width: 170 },
+    { field: "username", headerName: "User Name", type: "string", width: 170 },
+    { field: "fullName", headerName: "Full Name", width: 170 },
     { field: "email", headerName: "Email", width: 240 },
     { field: "phoneNo", headerName: "Phone No", width: 150 },
     { field: "panNumber", headerName: "PAN Number", width: 150 },
-    { field: "wages", headerName: "Wages",type: "number", width: 150 },
-    { field: "extraWages", headerName: "Extra Wages",type: "number", width: 150 },
-    { field: "commission", headerName: "Extra Wages",type: "number", flex: 1, minWidth: 150 },
+    { field: "wages", headerName: "Wages", type: "number", width: 150 },
+    { field: "extraWages", headerName: "Extra Wages", type: "number", width: 150 },
+    { field: "commission", headerName: "Extra Wages", type: "number", flex: 1, minWidth: 150 },
     CommonActionColumn({
-      active: (row) => editEmployee({ employeeId: row?._id, companyId: row?.companyId, isActive: !row.isActive }),
+      active: (row) => editEmployee({ userId: row?._id, companyId: row?.companyId, isActive: !row.isActive }),
       editRoute: ROUTES.EMPLOYEE.ADD_EDIT,
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.username }),
     }),
   ];
-  
+
   const CommonDataGridOption = {
     columns,
     rows: allEmployee,
     rowCount: totalRows,
     loading: employeeDataLoading || employeeDataFetching || isEditLoading,
     isActive,
-    // setActive,
+    setActive,
     handleAdd,
     paginationModel,
     onPaginationModelChange: setPaginationModel,
