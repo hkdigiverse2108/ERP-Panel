@@ -1,138 +1,83 @@
-import { Grid, Box, IconButton, Button } from "@mui/material";
-import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { CommonCard, CommonDataGrid, CommonModal } from "../../../Components/Common";
-import { useDataGrid } from "../../../Utils/Hooks";
-import { KEYS, PAGE_TITLE, ROUTES } from "../../../Constants";
+import { Box } from "@mui/material";
+import type { GridColDef } from "@mui/x-data-grid";
+import { useMemo } from "react";
 import { Mutations, Queries } from "../../../Api";
-import { useQueryClient } from "@tanstack/react-query";
-// import { ProductBreadcrumbs } from "../../../Data";
-import { CommonBreadcrumbs } from "../../../Components/Common";
-import {CommonDeleteModal} from "../../../Components/Common";
+import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { PAGE_TITLE, ROUTES } from "../../../Constants";
+import { BREADCRUMBS } from "../../../Data";
+import type { ProductBase } from "../../../Types";
+import { useDataGrid } from "../../../Utils/Hooks";
+import { useNavigate } from "react-router-dom";
 
 const Product = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({ page: 0, pageSize: 10 });
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, params } = useDataGrid();
 
-  const productParams = useMemo(
-    () => ({
-      page: paginationModel.page + 1,
-      limit: paginationModel.pageSize,
-      search: filterModel?.quickFilterValues?.[0],
-    }),
-    [paginationModel, filterModel]
-  );
+  const navigate = useNavigate();
 
-  const queryClient = useQueryClient();
-  const [rowToDelete, setRowToDelete] = useState<any>(null);
+  const { data: productData, isLoading: productLoading, isFetching: productFetching } = Queries.useGetProduct(params);
 
-  const { data: productData, isLoading } = Queries.useGetAllProductData(productParams);
   const { mutate: deleteProductMutate } = Mutations.useDeleteProduct();
+  const { mutate: editProduct, isPending: isEditLoading } = Mutations.useEditProduct();
 
-  const allProducts = useMemo(() => {
-    return (
-      productData?.data?.product_data?.map((product: any) => ({
-        ...product,
-        id: product?._id,
-      })) || []
-    );
-  }, [productData]);
+  const allProducts = useMemo(() => productData?.data?.product_data?.map((prod: ProductBase) => ({ ...prod, id: prod?._id })) || [], [productData]);
 
   const totalRows = productData?.data?.totalData || 0;
 
-  const handleDelete = () => {
-    deleteProductMutate(rowToDelete?._id, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [KEYS.PRODUCT.ALL] });
-        setRowToDelete(null);
-      },
+  const handleDeleteBtn = () => {
+    if (!rowToDelete) return;
+    deleteProductMutate({ id: rowToDelete._id as string }, {
+      onSuccess: () => setRowToDelete(null),
     });
   };
 
-  const columns = [
-    {
-      field: "srNo",
-      headerName: "Sr No",
-      width: 90,
-      sortable: false,
-      filterable: false,
-      renderCell: (params: any) => {
-        const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
-        return paginationModel.page * paginationModel.pageSize + index + 1;
+  const handleAdd = () => navigate(ROUTES.PRODUCT.ADD_EDIT);
+
+  const columns: GridColDef<ProductBase & { id: string; isActive: boolean }>[] = [
+    { field: "name", headerName: "Product Name", width: 200 },
+    { field: "sku", headerName: "SKU", width: 150 },
+    { field: "category", headerName: "Category", width: 180 },
+    { field: "price", headerName: "Price", type: "number", width: 120 },
+    { field: "stock", headerName: "Stock", type: "number", width: 120 },
+    { field: "gst", headerName: "GST (%)", type: "number", width: 120 },
+    CommonActionColumn({
+      active: (row) => {
+        const fd = new FormData();
+        if (row?._id) fd.append("id", String(row._id));
+        if (row?.companyId) fd.append("companyId", String(row.companyId));
+        fd.append("isActive", String(!row?.isActive));
+        editProduct(fd);
       },
-    },
-    { field: "itemCode", headerName: "Item Code", flex: 1 },
-    { field: "name", headerName: "Name", flex: 1 },
-    { field: "printName", headerName: "Print Name", flex: 1 },
-    { field: "mrp", headerName: "MRP", flex: 1 },
-    { field: "sellingPrice", headerName: "Selling Price", flex: 1 },
-    { field: "hsnCode", headerName: "HSN", flex: 1 },
-    {
-      field: "status",
-      headerName: "Status",
-      flex: 1,
-      renderCell: (params: any) => (
-        <span
-          style={{
-            color: params.value === "active" ? "green" : "red",
-            fontWeight: 500,
-          }}
-        >
-          {params.value}
-        </span>
-      ),
-    },
-    {
-      field: "actions",
-      headerName: "Actions",
-      width: 120,
-      sortable: false,
-      filterable: false,
-      renderCell: (params: any) => (
-        <Grid container spacing={1}>
-          <Grid size="auto">
-            <Link to={ROUTES.PRODUCT.ADD_EDIT} state={{ data: params.row }}>
-              <IconButton color="primary" size="small">
-                <EditIcon />
-              </IconButton>
-            </Link>
-          </Grid>
-          <Grid size="auto">
-            <IconButton color="error" size="small" onClick={() => setRowToDelete(params.row)}>
-              <DeleteIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-      ),
-    },
+      editRoute: ROUTES.PRODUCT.ADD_EDIT,
+      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
+    }),
   ];
 
-  const topContent = (
-    <Grid container spacing={2} alignItems="center">
-      <Grid size="auto">
-        <Link to={ROUTES.PRODUCT.ADD_EDIT}>
-          <Button variant="contained" color="primary" size="large" sx={{ px: 4, fontSize: "0.9rem" }}>
-            ADD
-          </Button>
-        </Link>
-      </Grid>
-    </Grid>
-  );
+  const dataGridOptions = {
+    columns,
+    rows: allProducts,
+    rowCount: totalRows,
+    loading: productLoading || productFetching || isEditLoading,
+    isActive,
+    handleAdd,
+    paginationModel,
+    onPaginationModelChange: setPaginationModel,
+    sortModel,
+    onSortModelChange: setSortModel,
+    filterModel,
+    onFilterModelChange: setFilterModel,
+  };
 
   return (
+    <>
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PRODUCT.BASE} />
 
-   <>
-      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT.BASE} maxItems={1} breadcrumbs={[{ label: PAGE_TITLE.INVENTORY.PRODUCT.BASE }]} />
+      <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
+        <CommonCard hideDivider>
+          <CommonDataGrid {...dataGridOptions} />
+        </CommonCard>
 
-      <div className="m-4 md:m-6">
-      <CommonCard title="Products" topContent={topContent}>
-        <CommonDataGrid BoxClass="rounded-md overflow-hidden" columns={columns} rows={allProducts} rowCount={totalRows} loading={isLoading} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25]} />
-      </CommonCard>
-
-      {/* Delete Confirmation */}
-       <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
-      </div>
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
+      </Box>
     </>
   );
 };

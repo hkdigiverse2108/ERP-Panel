@@ -17,37 +17,37 @@ const BankForm = () => {
 
   const queryClient = useQueryClient();
 
-//   const { mutate: addBankMutate, isPending: isAddLoading } = Mutations.useAddBank();
-//   const { mutate: editBankMutate, isPending: isEditLoading } = Mutations.useEditBank();
+   const { mutate: addBankMutate, isPending: isAddLoading } = Mutations.useAddBank();
+   const { mutate: editBankMutate, isPending: isEditLoading } = Mutations.useEditBank();
 
   const isEditing = Boolean(data?._id);
 
   const handleSubmit = (values: any) => {
-    if (isAddLoading || isEditLoading) return;
+     if (isAddLoading || isEditLoading) return;
 
     if (isEditing) {
-      // const changedFields = getChangedFields(values, data);
-      // let payload = cleanEditPayload(changedFields, data);
+       const changedFieldsData = changedFields(values, data);
+       let payload = cleanEditPayload(changedFieldsData, data);
 
-      // payload.bankId = data._id;
-      // payload.companyId = company?._id;
+       payload.bankId = data._id;
+       payload.companyId = company?._id;
 
-      // editBankMutate(payload, {
-      //   onSuccess: () => {
-      //     queryClient.invalidateQueries({ queryKey: [KEYS.BANK.ALL] });
-      //     navigate(-1);
-      //   },
-      // });
+       editBankMutate(payload, {
+         onSuccess: () => {
+           queryClient.invalidateQueries({ queryKey: [KEYS.BANK.ALL] });
+         navigate(-1);
+         },
+       });
     } else {
-      // let payload = removeEmptyFields(values);
-      // payload.companyId = company?._id;
+       let payload = removeEmptyFields(values);
+       payload.companyId = company?._id;
 
-      // addBankMutate(payload, {
-      //   onSuccess: () => {
-      //     queryClient.invalidateQueries({ queryKey: [KEYS.BANK.ALL] });
-      //     navigate(-1);
-      //   },
-      // });
+     addBankMutate(payload, {
+         onSuccess: () => {
+           queryClient.invalidateQueries({ queryKey: [KEYS.BANK.ALL] });
+           navigate(-1);
+         },
+       });
     }
   };
 
@@ -82,7 +82,7 @@ const BankForm = () => {
                 <CommonCard title="Bank Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     {/* SELECT GROUP */}
-                    <CommonSelect name="bankGroup" label="Select Group" require d options={[]} grid={{ xs: 12, md: 6 }} />
+                    {/* <CommonSelect name="bankGroup" label="Select Group" require d options={[]} grid={{ xs: 12, md: 6 }} /> */}
                     <CommonTextField name="bankName" label="Bank Name" required grid={{ xs: 12, md: 6 }} />
 
                     <CommonTextField name="branchName" label="Branch Name" required grid={{ xs: 12, md: 6 }} />
@@ -94,11 +94,11 @@ const BankForm = () => {
                     <CommonTextField name="address" label="Address" multiline rows={3} grid={{ xs: 12 }} />
 
                     {/* LOCATION */}
-                    <CommonSelect name="country" label="Country" required options={[]} grid={{ xs: 12, md: 4 }} />
+                    <CommonSelect label="Country" required options={[]} value={values.country} onChange={(value) => setFieldValue("country", value)} grid={{ xs: 12, md: 4 }} />
 
-                    <CommonSelect name="state" label="State" required options={[]} grid={{ xs: 12, md: 4 }} />
+                    <CommonSelect label="State" required options={[]} value={values.state} onChange={(value) => setFieldValue("state", value)} grid={{ xs: 12, md: 4 }} />
 
-                    <CommonSelect name="city" label="City" required options={[]} grid={{ xs: 12, md: 4 }} />
+                    <CommonSelect label="City" required options={[]} value={values.city} onChange={(value) => setFieldValue("city", value)} grid={{ xs: 12, md: 4 }} />
 
                     <CommonTextField name="zipCode" label="Zip / Postal Code" grid={{ xs: 12, md: 6 }} />
 
@@ -123,3 +123,11 @@ const BankForm = () => {
 };
 
 export default BankForm;
+function cleanEditPayload(changedFieldsData: any, data: any) {
+  throw new Error("Function not implemented.");
+}
+
+function removeEmptyFields(values: any) {
+  throw new Error("Function not implemented.");
+}
+

@@ -27,7 +27,7 @@ export const Mutations = {
   useEditBranch: () => useMutations<EditBranchPayload, void>([KEYS.BRANCH.EDIT, KEYS.BRANCH.BASE], (input) => Put(URL_KEYS.BRANCH.EDIT, input)),
   useDeleteBranch: () => useMutations<string, void>([KEYS.BRANCH.DELETE, KEYS.BRANCH.BASE], (id) => Delete(`${URL_KEYS.BRANCH.BASE}/${id}`)),
 
-  // ************ Branch ***********
+  // ************ product ***********
   useAddProduct: () => useMutations<FormData, any>(KEYS.PRODUCT.ADD, (input) => Post(URL_KEYS.PRODUCT.ADD, input, false)),
   useEditProduct: () => useMutations<FormData, any>(KEYS.PRODUCT.EDIT, (input) => Put(URL_KEYS.PRODUCT.EDIT, input)),
   useDeleteProduct: () => useMutations<{ id: string }, void>(KEYS.PRODUCT.DELETE, (id) => Delete(`${URL_KEYS.PRODUCT.BASE}/${id}`)),
@@ -37,9 +37,13 @@ export const Mutations = {
 
   //************** bank *****************/
   useAddBank: () => useMutations<FormData, any>(KEYS.BANK.ADD, (input) => Post(URL_KEYS.BANK.ADD, input, false)),
+  useEditBank: () => useMutations<FormData, any>(KEYS.BANK.EDIT, (input) => Put(URL_KEYS.BANK.EDIT, input)),
+  useDeleteBank: () => useMutations<{ id: string }, void>(KEYS.BANK.DELETE, (id) => Delete(`${URL_KEYS.BANK.BASE}/${id}`)),
 
   //************** payment **************** */
   useAddPayment: () => useMutations<FormData, any>(KEYS.PAYMENT.ADD, (input) => Post(URL_KEYS.PAYMENT.ADD, input, false)),
   useEditPayment: () => useMutations<FormData, any>(KEYS.PAYMENT.EDIT, (input) => Put(URL_KEYS.PAYMENT.EDIT, input)),
   useDeletePayment: () => useMutations<{ id: string }, void>(KEYS.PAYMENT.DELETE, (id) => Delete(`${URL_KEYS.PAYMENT.BASE}/${id}`)),
+
+ 
 };

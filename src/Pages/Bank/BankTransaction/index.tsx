@@ -1,10 +1,12 @@
-import { Grid, IconButton, Button, TextField } from "@mui/material";
+import { Grid, IconButton, Button } from "@mui/material";
 import { useMemo, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { CommonCard, CommonDataGrid, CommonModal, CommonBreadcrumbs } from "../../../Components/Common";
+import { CommonCard, CommonDataGrid, CommonDeleteModal, CommonBreadcrumbs } from "../../../Components/Common";
 import { useDataGrid } from "../../../Utils/Hooks";
 import { PAGE_TITLE } from "../../../Constants";
+import type { GridSortModel, GridFilterModel } from "@mui/x-data-grid";
+import AddTransactionDialog from "./TransactionModel";
 
 const BankTransaction = () => {
   const { paginationModel, setPaginationModel } = useDataGrid({
@@ -14,6 +16,8 @@ const BankTransaction = () => {
 
   const [openDialog, setOpenDialog] = useState(false);
   const [rowToDelete, setRowToDelete] = useState<any>(null);
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({ items: [] });
 
   const rows = useMemo(
     () =>
@@ -77,13 +81,18 @@ const BankTransaction = () => {
     </Button>
   );
 
+  function handleDeleteBtn(): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.TRANSACTION.BASE || "Bank Transactions"} maxItems={1} />
 
       <div className="m-4 md:m-6">
         <CommonCard title="Bank Transactions" topContent={topContent}>
-          <CommonDataGrid columns={columns} rows={rows} rowCount={rows.length} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} pageSizeOptions={[5, 10, 25]} />
+          <CommonDataGrid columns={columns} rows={rows} rowCount={rows.length} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} 
+          pageSizeOptions={[5, 10, 25]} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel}/>
         </CommonCard>
       </div>
 
@@ -91,50 +100,10 @@ const BankTransaction = () => {
       <AddTransactionDialog open={openDialog} onClose={() => setOpenDialog(false)} />
 
       {/* ================= Delete Confirmation ================= */}
-      <CommonModal isOpen={Boolean(rowToDelete)} onClose={() => setRowToDelete(null)} className="max-w-125 m-2 sm:m-5 pt-0!">
-        <p className="text-red-500 text-xl font-semibold mb-3">Confirm Delete</p>
-        <p className="my-3">Are you sure you want to delete voucher "{rowToDelete?.voucherNo}"?</p>
-        <div className="flex justify-end gap-2 mt-4">
-          <Button onClick={() => setRowToDelete(null)}>No</Button>
-          <Button color="error">Yes</Button>
-        </div>
-      </CommonModal>
+       <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
     </>
   );
 };
-const AddTransactionDialog = ({ open, onClose }: any) => {
-  return (
-    <CommonModal isOpen={open} onClose={onClose} className="max-w-xl">
-      <p className="text-xl font-semibold mb-4">Add Bank Transaction</p>
 
-      <Grid container spacing={2}>
-        <Grid size={6}>
-          <TextField fullWidth label="From Account" />
-        </Grid>
-
-        <Grid size={6}>
-          <TextField fullWidth label="To Account" />
-        </Grid>
-
-        <Grid size={6}>
-          <TextField fullWidth label="Amount" type="number" />
-        </Grid>
-
-        <Grid size={6}>
-          <TextField fullWidth label="Transaction Date" type="date" InputLabelProps={{ shrink: true }} />
-        </Grid>
-
-        <Grid size={12}>
-          <TextField fullWidth label="Description" multiline rows={3} />
-        </Grid>
-      </Grid>
-
-      <div className="flex justify-end gap-2 mt-6">
-        <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained">Save</Button>
-      </div>
-    </CommonModal>
-  );
-};
 
 export default BankTransaction;

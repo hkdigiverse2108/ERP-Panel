@@ -24,7 +24,8 @@ export const PAGE_TITLE = {
     // PRODUCT: "Product",
     PRODUCT: {
       BASE: "product",
-      ADDEDIT: "product/add-edit",
+      ADD: "Add product",
+      EDIT: "Edit product",
     },
   },
   BANK: {
@@ -37,9 +38,9 @@ export const PAGE_TITLE = {
   TRANSACTION: {
     BASE: "Transaction",
   },
-  PAYMENT :{
-   BASE : "Payment" ,
-   EDIT : "Edit Payment",
-   ADD: "Add Payment",
-  }
+  PAYMENT: {
+    BASE: "Payment",
+    EDIT: "Edit Payment",
+    ADD: "Add Payment",
+  },
 } as const;

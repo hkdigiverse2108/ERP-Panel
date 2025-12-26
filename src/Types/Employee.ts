@@ -34,7 +34,7 @@ export interface EmployeeFormValues {
   target?: number;
   isActive?: boolean;
   _submitAction?: string;
-  companyId?: string
+  companyId?: string 
 }
 
 export type AddEmployeePayload = EmployeeFormValues;
