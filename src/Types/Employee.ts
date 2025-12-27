@@ -1,4 +1,4 @@
-import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
 
 export interface Address {
   address?: string;
@@ -21,7 +21,7 @@ export interface EmployeeFormValues {
   fullName?: string;
   username?: string;
   designation?: string;
-  phoneNo?: string;
+  phoneNo?: PhoneNumberType;
   email?: string;
   branchId?: string; 
   panNumber?: string;

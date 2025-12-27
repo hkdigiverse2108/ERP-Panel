@@ -1,18 +1,20 @@
 import { Box, Grid } from "@mui/material";
-import { Form, Formik, useFormikContext } from "formik";
+import { Form, Formik, useFormikContext, type FormikValues } from "formik";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations } from "../../../../Api";
 import { CommonButton, CommonPhoneNumber, CommonSwitch, CommonTextField } from "../../../../Attribute";
-import { ROUTES } from "../../../../Constants";
+import { PAGE_TITLE, ROUTES } from "../../../../Constants";
 import { setCompany } from "../../../../Store/Slices/CompanySlice";
 import { setSelectedFiles, setUploadModal } from "../../../../Store/Slices/ModalSlice";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
 import type { Params } from "../../../../Types";
 import { GetChangedFields } from "../../../../Utils";
 import { CompanyFormSchemas } from "../../../../Utils/ValidationSchemas";
-import { CommonCard } from "../../../Common";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Common";
 import { CommonFormImageBox } from "../../../Common/CommonUploadImage/CommonImageBox";
+import type { CompanyFormValues } from "../../../../Types/Company";
+import { BREADCRUMBS } from "../../../../Data";
 type CompanyImageKey = "logo" | "waterMark" | "reportFormatLogo" | "authorizedSignature";
 
 const COMPANY_IMAGES = [
@@ -24,14 +26,14 @@ const COMPANY_IMAGES = [
 
 const CompanyForm = () => {
   const { company: companyData = {} } = useAppSelector((state) => state.company);
-  const { mutate: editCompanyMutate } = Mutations.useEditCompany();
+  const { mutate: editCompanyMutate , isPending: isEditLoading} = Mutations.useEditCompany();
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const [activeKey, setActiveKey] = useState<CompanyImageKey | null>(null);
 
-  const initialValues = {
+  const initialValues: CompanyFormValues = {
     name: companyData.name || "",
     displayName: companyData.displayName || "",
     contactName: companyData.contactName || "",
@@ -54,12 +56,12 @@ const CompanyForm = () => {
     pinCode: companyData.pinCode || null,
     timeZone: companyData.timeZone || "",
 
-    bankName: companyData.bankName || "",
-    bankIFSC: companyData.bankIFSC || "",
+    // bankName: companyData.bankName || "",
+    // bankIFSC: companyData.bankIFSC || "",
     upiId: companyData.upiId || "",
-    branchName: companyData.branchName || "",
-    accountHolderName: companyData.accountHolderName || "",
-    bankAccountNumber: companyData.bankAccountNumber || "",
+    // branchName: companyData.branchName || "",
+    // accountHolderName: companyData.accountHolderName || "",
+    // bankAccountNumber: companyData.bankAccountNumber || "",
 
     userName: companyData.userName || "",
     GSTRegistrationType: companyData.GSTRegistrationType || "",
@@ -72,11 +74,10 @@ const CompanyForm = () => {
     importerExporterCode: companyData.importerExporterCode || "",
     outletSize: companyData.outletSize || "",
     fssaiNo: companyData.fssaiNo || null,
-
-    // financialMonthInterval: companyData.financialMonthInterval || "",
     taxDeductionAndCollectionAccountNumber: companyData.taxDeductionAndCollectionAccountNumber || "",
-    // printDateFormat: companyData.printDateFormat || "",
-    // decimalPoint: companyData.decimalPoint || "",
+    printDateFormat: companyData.printDateFormat || "",
+    decimalPoint: companyData.decimalPoint || "",
+    // currency: companyData.currency || "",
 
     enableFeedbackModule: companyData.enableFeedbackModule === true || companyData.enableFeedbackModule === "true",
     allowRoundOff: companyData.allowRoundOff === true || companyData.allowRoundOff === "true",
@@ -86,7 +87,7 @@ const CompanyForm = () => {
     authorizedSignature: companyData.authorizedSignature || null,
   };
 
-  const handleOnSubmit = (values: any) => {
+  const handleOnSubmit = (values: CompanyFormValues) => {
     const newData = {
       ...values,
     };
@@ -104,11 +105,11 @@ const CompanyForm = () => {
       }
     );
   };
-  const FormikImageSync = ({ activeKey, clearActiveKey }: Params) => {
+  const FormikImageSync = <T extends FormikValues>({ activeKey, clearActiveKey }: Params) => {
     const { selectedFiles } = useAppSelector((state) => state.modal);
     const dispatch = useAppDispatch();
 
-    const { setFieldValue } = useFormikContext<any>();
+    const { setFieldValue } = useFormikContext<T>();
 
     useEffect(() => {
       if (!selectedFiles[0] || !activeKey) return;
@@ -132,91 +133,99 @@ const CompanyForm = () => {
   if (!companyData) return false;
 
   return (
-    <Box sx={{ p: { xs: 2, md: 2 }, m: { xs: 1, md: 2 } }}>
-      <Formik enableReinitialize initialValues={initialValues} validationSchema={CompanyFormSchemas} onSubmit={handleOnSubmit}>
-        {({ values, setFieldValue }) => (
-          <Form>
-            <FormikImageSync activeKey={activeKey} clearActiveKey={() => setActiveKey(null)} />
-            <Grid container spacing={2}>
-              {/* BASIC DETAILS */}
-              <CommonCard title="Basic Details" grid={{ xs: 12 }}>
-                <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="name" label="Company Name" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="displayName" label="Display Name" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="contactName" label="Contact Name" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} required />
-                  <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
-                  <CommonTextField name="supportEmail" label="support Email" grid={{ xs: 12, md: 4 }} required />
-                  <CommonTextField name="customerCareNumber" label="Customer Care Number" grid={{ xs: 12, md: 4 }} />
-                  <CommonPhoneNumber label="Owner No." countryCodeName="ownerNo.countryCode" numberName="ownerNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
+    <>
+      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.COMPANY.EDIT} maxItems={3} breadcrumbs={BREADCRUMBS.GENERAL_SETTING.COMPANY} />
+      <Box sx={{ p: { xs: 2, md: 3 } }}>
+        <Formik<CompanyFormValues> enableReinitialize initialValues={initialValues} validationSchema={CompanyFormSchemas} onSubmit={handleOnSubmit}>
+          {({ values, setFieldValue ,dirty}) => (
+            <Form noValidate>
+              <FormikImageSync activeKey={activeKey} clearActiveKey={() => setActiveKey(null)} />
+              <Grid container spacing={2}>
+                {/* BASIC DETAILS */}
+                <CommonCard title="Basic Details" grid={{ xs: 12 }}>
+                  <Grid container spacing={2} sx={{ p: 2 }}>
+                    <CommonTextField name="name" label="Company Name" required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="displayName" label="Display Name" required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="contactName" label="Contact Name" required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} required />
+                    <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
+                    <CommonTextField name="supportEmail" label="support Email" grid={{ xs: 12, md: 4 }} required />
+                    <CommonTextField name="customerCareNumber" label="Customer Care Number" type="number" grid={{ xs: 12, md: 4 }} />
+                    <CommonPhoneNumber label="Owner No." countryCodeName="ownerNo.countryCode" numberName="ownerNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
+                  </Grid>
+                </CommonCard>
+
+                {/* COMMUNICATION */}
+                <CommonCard title="Communication Details" grid={{ xs: 12 }}>
+                  <Grid container spacing={2} sx={{ p: 2 }}>
+                    <CommonTextField name="address" label="Address" grid={{ xs: 12, md: 4 }} multiline required />
+                    <CommonTextField name="city" label="City" grid={{ xs: 12, md: 4 }} required />
+                    <CommonTextField name="state" label="State" grid={{ xs: 12, md: 4 }} required />
+                    <CommonTextField name="country" label="Country" grid={{ xs: 12, md: 4 }} required />
+                    <CommonTextField name="pinCode" label="Pin Code" grid={{ xs: 12, md: 4 }} required />
+                    <CommonTextField name="timeZone" label="Time Zone" grid={{ xs: 12, md: 4 }} />
+                  </Grid>
+                </CommonCard>
+
+                {/* BANK */}
+                <CommonCard title="Bank Details" grid={{ xs: 12 }}>
+                  <Grid container spacing={2} sx={{ p: 2 }}>
+                    {/* <CommonTextField name="bankIFSC" label="IFSC Code" grid={{ xs: 12, md: 4 }} /> */}
+                    {/* <CommonTextField name="bankName" label="Bank Name" grid={{ xs: 12, md: 4 }} /> */}
+                    {/* <CommonTextField name="branchName" label="branch Name" grid={{ xs: 12, md: 4 }} /> */}
+                    {/* <CommonTextField name="accountHolderName" label="Account Holder Name" grid={{ xs: 12, md: 4 }} /> */}
+                    <CommonTextField name="upiId" label="UPI ID" grid={{ xs: 12, md: 4 }} />
+                    {/* <CommonTextField name="bankAccountNumber" label="Account No." grid={{ xs: 12, md: 4 }} /> */}
+                  </Grid>
+                </CommonCard>
+
+                {/* OTHER */}
+                <CommonCard title="Other Details" grid={{ xs: 12 }}>
+                  <Grid container spacing={2} sx={{ p: 2 }}>
+                    <CommonTextField name="userName" label="User Name" grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="GSTRegistrationType" label="GST Registration Type" grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="GSTIdentificationNumber" label="GSTIN" grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="PanNo" label="PAN No." grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="taxDeductionAndCollectionAccountNumber" label="TAN No." grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="webSite" label="Web Site" grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="financialYear" label="Default Financial Year" grid={{ xs: 12, md: 4 }} required />
+                    <CommonTextField name="corporateIdentificationNumber" label="CIN No." grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="letterOfUndertaking" label="LUT No." grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="importerExporterCode" label="IEC No." grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="outletSize" label="Outlet Size (sq. ft.)" grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="fssaiNo" label="FSSAI No" grid={{ xs: 12, md: 4 }} />
+                    {/* <CommonTextField name="currency" label="currency" grid={{ xs: 12, md: 4 }} /> */}
+                    <CommonTextField name="printDateFormat" label="Print Date Format" grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="decimalPoint" label="Decimal Point" grid={{ xs: 12, md: 4 }} />
+
+                    <CommonSwitch name="allowRoundOff" label="Allow Round Off" value={values.allowRoundOff} onChange={(checked) => setFieldValue("allowRoundOff", checked)} grid={{ xs: 12 }} />
+                    <CommonSwitch name="enableFeedbackModule" label="Enable Feedback Module" value={values.enableFeedbackModule} onChange={(checked) => setFieldValue("enableFeedbackModule", checked)} grid={{ xs: 12 }} />
+                  </Grid>
+                </CommonCard>
+
+                <CommonCard title="Company Images" grid={{ xs: 12 }}>
+                  <Grid container spacing={3} sx={{ p: 2 }}>
+                    {COMPANY_IMAGES.map(({ key, label }) => (
+                      <CommonFormImageBox key={key} name={key} label={label} type="image" grid={{ xs: 12, xsm: 6, xl: 3 }} onUpload={() => handleUpload(key)} onDelete={() => handleDelete()} />
+                    ))}
+                  </Grid>
+                </CommonCard>
+
+                {/* ACTIONS */}
+                <CommonBottomActionBar save disabled={!dirty} isLoading={isEditLoading}/>
+
+                <Grid className="w-full! flex justify-end ">
+                  <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 2 }}>
+                    <CommonButton variant="outlined" onClick={() => navigate(ROUTES.SETTINGS.GENERAL, { state: 1 })} title="Back" />
+                    <CommonButton type="submit" variant="contained" title="Save" />
+                  </Box>
                 </Grid>
-              </CommonCard>
-
-              {/* COMMUNICATION */}
-              <CommonCard title="Communication Details" grid={{ xs: 12 }}>
-                <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="address" label="Address" grid={{ xs: 12, md: 4 }} multiline required />
-                  <CommonTextField name="city" label="City" grid={{ xs: 12, md: 4 }} required />
-                  <CommonTextField name="state" label="State" grid={{ xs: 12, md: 4 }} required />
-                  <CommonTextField name="country" label="Country" grid={{ xs: 12, md: 4 }} required />
-                  <CommonTextField name="pinCode" label="Pin Code" grid={{ xs: 12, md: 4 }} required />
-                  <CommonTextField name="timeZone" label="Time Zone" grid={{ xs: 12, md: 4 }} />
-                </Grid>
-              </CommonCard>
-
-              {/* BANK */}
-              <CommonCard title="Bank Details" grid={{ xs: 12 }}>
-                <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="bankIFSC" label="IFSC Code" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="bankName" label="Bank Name" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="branchName" label="branch Name" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="accountHolderName" label="Account Holder Name" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="upiId" label="UPI ID" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="bankAccountNumber" label="Account No." grid={{ xs: 12, md: 4 }} />
-                </Grid>
-              </CommonCard>
-
-              {/* OTHER */}
-              <CommonCard title="Other Details" grid={{ xs: 12 }}>
-                <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="userName" label="User Name" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="GSTRegistrationType" label="GST Registration Type" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="GSTIdentificationNumber" label="GSTIN" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="PanNo" label="PAN No." grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="taxDeductionAndCollectionAccountNumber" label="TAN No." grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="webSite" label="Web Site" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="financialYear" label="Default Financial Year" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="corporateIdentificationNumber" label="CIN No." grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="letterOfUndertaking" label="LUT No." grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="importerExporterCode" label="IEC No." grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="outletSize" label="Outlet Size (sq. ft.)" grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="fssaiNo" label="FSSAI No" grid={{ xs: 12, md: 4 }} />
-
-                  <CommonSwitch name="allowRoundOff" label="Allow Round Off" value={values.allowRoundOff} onChange={(checked) => setFieldValue("allowRoundOff", checked)} grid={{ xs: 12 }} />
-                  <CommonSwitch name="enableFeedbackModule" label="Enable Feedback Module" value={values.enableFeedbackModule} onChange={(checked) => setFieldValue("enableFeedbackModule", checked)} grid={{ xs: 12 }} />
-                </Grid>
-              </CommonCard>
-
-              <CommonCard title="Company Images" grid={{ xs: 12 }}>
-                <Grid container spacing={3} sx={{ p: 2 }}>
-                  {COMPANY_IMAGES.map(({ key, label }) => (
-                    <CommonFormImageBox key={key} name={key} required label={label} type="image" grid={{ xs: 12, xsm: 6, xl: 3 }} onUpload={() => handleUpload(key)} onDelete={() => handleDelete()} />
-                  ))}
-                </Grid>
-              </CommonCard>
-
-              {/* ACTIONS */}
-              <Grid className="w-full! flex justify-end ">
-                <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 2 }}>
-                  <CommonButton variant="outlined" onClick={() => navigate(ROUTES.SETTINGS.GENERAL, { state: 1 })} title="Back" />
-                  <CommonButton type="submit" variant="contained" title="Save" />
-                </Box>
               </Grid>
-            </Grid>
-          </Form>
-        )}
-      </Formik>
-    </Box>
+            </Form>
+          )}
+        </Formik>
+      </Box>
+    </>
   );
 };
 

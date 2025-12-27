@@ -14,8 +14,15 @@ export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, ro
 
       if (col.field === "srNo") {
         record[header] = index + 1;
+        return;
+      }
+
+      const rawValue = (row as Record<string, unknown>)[col.field];
+
+      if ("exportFormatter" in col && typeof col.exportFormatter === "function") {
+        record[header] = col.exportFormatter(rawValue, row);
       } else {
-        record[header] = (row as Record<string, unknown>)[col.field] ?? "";
+        record[header] = rawValue ?? "";
       }
     });
 

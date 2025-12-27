@@ -1,13 +1,12 @@
 import { Box } from "@mui/material";
-import type { GridColDef } from "@mui/x-data-grid";
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../Components/Common";
+import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonPhoneColumns } from "../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
-import type { EmployeeBase } from "../../Types";
+import type { AppGridColDef, EmployeeBase } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
-import { useNavigate } from "react-router-dom";
 
 const Employee = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -27,11 +26,11 @@ const Employee = () => {
 
   const handleAdd = () => navigate(ROUTES.EMPLOYEE.ADD_EDIT);
 
-  const columns: GridColDef<EmployeeBase>[] = [
+  const columns: AppGridColDef<EmployeeBase>[] = [
     { field: "username", headerName: "User Name", type: "string", width: 170 },
     { field: "fullName", headerName: "Full Name", width: 170 },
     { field: "email", headerName: "Email", width: 240 },
-    { field: "phoneNo", headerName: "Phone No", width: 150 },
+    CommonPhoneColumns<EmployeeBase>(),
     { field: "panNumber", headerName: "PAN Number", width: 150 },
     { field: "wages", headerName: "Wages", type: "number", width: 150 },
     { field: "extraWages", headerName: "Extra Wages", type: "number", width: 150 },
@@ -62,7 +61,7 @@ const Employee = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.EMPLOYEE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.EMPLOYEE.BASE} />
-      <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
+      <Box sx={{ p: { xs: 2, md: 3 } }}>
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

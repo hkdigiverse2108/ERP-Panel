@@ -12,13 +12,14 @@ const CompanyProfile = () => {
     {
       title: "Basic Details",
       items: [
+        { label: "Accounting Type", value: company?.accountingType },
         { label: "Name", value: company?.name },
         { label: "Display Name", value: company?.displayName },
         { label: "Contact Name", value: company?.contactName },
-        { label: "Owner No", value: company?.ownerNo },
+        { label: "Owner No", value: `+${company?.ownerNo?.countryCode} ${company?.ownerNo?.phoneNo}` },
         { label: "Support Email", value: company?.supportEmail },
         { label: "Email", value: company?.email },
-        { label: "Mobile No.", value: company?.phoneNumber },
+        { label: "phone No", value: `+${company?.phoneNo?.countryCode} ${company?.phoneNo?.phoneNo}` },
         { label: "Customer Care No.", value: company?.customerCareNumber },
       ],
     },
@@ -53,7 +54,7 @@ const CompanyProfile = () => {
         { label: "GST Registration Type", value: company?.GSTRegistrationType },
         { label: "GSTIN", value: company?.GSTIdentificationNumber },
         { label: "Financial Month Interval", value: company?.financialMonthInterval },
-        { label: "Default Financial Year", value: company?.defaultFinancialYear },
+        { label: "Default Financial Year", value: company?.financialYear },
       ],
     },
     {
@@ -64,6 +65,8 @@ const CompanyProfile = () => {
         { label: "TAN No.", value: company?.taxDeductionAndCollectionAccountNumber },
         { label: "IEC No.", value: company?.importerExporterCode },
         { label: "Outlet Size (sq.ft.)", value: company?.outletSize },
+        { label: "Decimal Point", value: company?.decimalPoint },
+        { label: "Print Date Format", value: company?.printDateFormat },
       ],
     },
   ];
@@ -95,7 +98,7 @@ const CompanyProfile = () => {
           <Grid sx={{ p: 2 }} container spacing={2}>
             {section.items.map((item, idx) => (
               <Grid key={idx} size={{ xs: 12, xsm: 6, xl: 3 }}>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">{item.label}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 capitalize">{item.label}</p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">{item.value}</p>
               </Grid>
             ))}
