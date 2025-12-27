@@ -18,7 +18,7 @@ const Layout = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { data: userData, isLoading: userLoading } = Queries.useGetUserdata(user?._id);
 
-  const { data: companyData, isLoading: companyLoading } = Queries.useGetCompanyData(user?.companyId);
+  const { data: companyData, isLoading: companyLoading } = Queries.useGetSingleCompany(user?.companyId);
 
   useEffect(() => {
     if (userData) {

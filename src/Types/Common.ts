@@ -1,6 +1,7 @@
 import type { Breakpoint, ButtonProps, DrawerProps, PaperProps as MuiPaperProps } from "@mui/material";
 import type { GridColDef, GridFilterModel, GridPaginationModel, GridRowsProp, GridSortModel, GridValidRowModel } from "@mui/x-data-grid";
 import type { Dayjs } from "dayjs";
+import type { MuiTelInputProps } from "mui-tel-input";
 import type { ReactNode } from "react";
 import * as Yup from "yup";
 
@@ -47,6 +48,19 @@ export interface CommonValidationSelectProps extends Omit<CommonSelectProps, "on
 
 // ************ Select End ***********
 
+// ************ Common Phone Number start ***********
+
+export interface CommonPhoneNumberProps extends Omit<MuiTelInputProps, "value" | "onChange" | "name" | "forceCallingCode"> {
+  countryCodeName: string; // Formik field
+  numberName: string; // Formik field
+  label?: string;
+  required?: boolean;
+  isFormLabel?: boolean;
+  grid?: object | number;
+}
+
+// ************  Common Phone Number End ***********
+
 // ************ Date Range Selector Start ***********
 
 export interface CommonDateRangeSelectorProps {
@@ -79,7 +93,7 @@ export interface CommonDataGridProps {
   loading?: boolean;
 
   handleAdd?: () => void;
-  
+
   isActive?: boolean;
   setActive?: (active: boolean) => void;
 
