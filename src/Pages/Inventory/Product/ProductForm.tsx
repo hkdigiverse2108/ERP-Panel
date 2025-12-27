@@ -3,7 +3,7 @@ import { Formik, Form, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { Mutations } from "../../../Api";
-import { CommonTextField, CommonSwitch, CommonSelect } from "../../../Attribute";
+import { CommonTextField, CommonSelect } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { KEYS, PAGE_TITLE } from "../../../Constants";
 import { BRAND_OPTIONS, BREADCRUMBS, CATEGORY_OPTIONS, DEPARTMENT_OPTIONS, PRODUCT_TYPE_OPTIONS, SUB_BRAND_OPTIONS, SUB_CATEGORY_OPTIONS, TAX_OPTIONS, UOM_OPTIONS } from "../../../Data";
@@ -88,6 +88,23 @@ const ProductForm = () => {
     status: data?.status || "active",
   };
 
+  const objectToFormData = (obj: Record<string, any>) => {
+    const fd = new FormData();
+    Object.entries(obj).forEach(([k, v]) => {
+      if (v === undefined || v === null) return;
+      if (v instanceof File) {
+        fd.append(k, v);
+      } else if (Array.isArray(v)) {
+        v.forEach((val) => fd.append(k, typeof val === "object" ? JSON.stringify(val) : String(val)));
+      } else if (typeof v === "object") {
+        fd.append(k, JSON.stringify(v));
+      } else {
+        fd.append(k, String(v));
+      }
+    });
+    return fd;
+  };
+
   const handleSubmit = (values: any, { resetForm }: FormikHelpers<any>) => {
     const { _submitAction, ...rest } = values;
 
@@ -105,29 +122,13 @@ const ProductForm = () => {
 
     if (isEditing) {
       const changedFields = GetChangedFields(rest, data);
-
-      editProduct(
-        {
-          ...changedFields,
-          productId: data._id,
-          companyId: company?._id,
-        },
-        { onSuccess: onSuccessHandler }
-      );
+      editProduct({ ...changedFields, productId: data._id, companyId: companyId!._id }, { onSuccess: onSuccessHandler });
     } else {
-      addProduct(
-        {
-          ...RemoveEmptyFields(rest),
-          companyId: company?._id,
-        },
-        { onSuccess: onSuccessHandler }
-      );
+      addProduct({ ...RemoveEmptyFields(rest), companyId: company!._id }, { onSuccess: onSuccessHandler });
     }
-  };
-
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT.BASE[pageMode]} maxItems={1} breadcrumbs={BREADCRUMBS.PRODUCT[pageMode]} />
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT[pageMode]} maxItems={1} breadcrumbs={BREADCRUMBS.PRODUCT[pageMode]} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik enableReinitialize initialValues={initialValues} validationSchema={ProductFormSchema} onSubmit={handleSubmit}>
@@ -147,7 +148,7 @@ const ProductForm = () => {
                     <CommonSelect label="Brand" options={BRAND_OPTIONS} value={values.brandId ? [values.brandId] : []} onChange={(v) => setFieldValue("brandId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
                     <CommonSelect label="Sub Brand" options={SUB_BRAND_OPTIONS} value={values.subBrandId ? [values.subBrandId] : []} onChange={(v) => setFieldValue("subBrandId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
                     <CommonSelect label="Department" options={DEPARTMENT_OPTIONS} value={values.departmentId ? [values.departmentId] : []} onChange={(v) => setFieldValue("departmentId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
-                    <CommonSelect label="UOM" options={UOM_OPTIONS} value={values.uomId ? [values.uomId] : []} onChange={(v) => setFieldValue("uomId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
+                    <CommonSelect label="Brand" options={UOM_OPTIONS} value={values.uomId ? [values.uomId] : []} onChange={(v) => setFieldValue("uomId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="tags" label="Tags" grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="net weight" label="Net Weight" grid={{ xs: 12, md: 6 }} />
 
@@ -166,9 +167,9 @@ const ProductForm = () => {
                                       {() => (
                                         <>
                                           {variant.nutrition.map((_, nIndex) => (
-                                            <Grid spacing={2} key={nIndex}>
+                                            <Grid key={nIndex}>
                                               {/* Nutrition Name */}
-                                              <Grid container spacing={2} grid={{ xs: 12, md: 5 }}>
+                                              <Grid container spacing={2} sx={{ xs: 12, md: 5 }}>
                                                 <CommonTextField name={`variants.${vIndex}.nutrition.${nIndex}.label`} label="Nutrition Name" grid={{ xs: 12, md: 6 }} />
                                                 <CommonTextField name={`variants.${vIndex}.nutrition.${nIndex}.value`} label="Nutrition Value" grid={{ xs: 12, md: 5.5 }} />
                                                 {values.variants.length > 1 && (
@@ -234,5 +235,5 @@ const ProductForm = () => {
     </>
   );
 };
-
+}
 export default ProductForm;

@@ -41,13 +41,14 @@ export const PageRoutes = [
   { path: ROUTES.CONTACT.BASE, element: <Contact /> },
   { path: ROUTES.CONTACT.ADD_EDIT, element: <ContactForm /> },
 
-  { path: ROUTES.BANK.BASE, element: <Bank /> },
-  { path: ROUTES.BANK.ADD_EDIT, element: <BankForm /> },
+  { path: ROUTES.BANK.BASE, element: <Bank />},
+  { path: ROUTES.BANK.ADD_EDIT, element:<BankForm/>},
 
-  { path: ROUTES.TRANSACTION.BASE, element: <BankTransaction /> },
+  { path: ROUTES.TRANSACTION.BASE, element: <BankTransaction />},
 
-  { path: ROUTES.PAYMENT.BASE, element: <PaymentList /> },
-  { path: ROUTES.PAYMENT.ADD_EDIT, element: <PaymentForm /> },
+  { path: ROUTES.PAYMENT.BASE, element: <PaymentList />},
+  { path: ROUTES.PAYMENT.ADD_EDIT, element: <PaymentForm />}
+  
 ];
 
 export const AuthRoutes = [

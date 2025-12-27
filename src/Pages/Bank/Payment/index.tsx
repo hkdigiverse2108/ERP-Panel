@@ -2,7 +2,7 @@ import { Grid, IconButton, Button } from "@mui/material";
 import { useMemo, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { CommonCard, CommonDataGrid, CommonModal, CommonBreadcrumbs } from "../../../Components/Common";
+import { CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonDeleteModal } from "../../../Components/Common";
 import { useDataGrid } from "../../../Utils/Hooks";
 
 import { Link } from "react-router-dom";
@@ -86,6 +86,10 @@ const PaymentList = () => {
       </Grid>
     </Grid>
   );
+  function handleDeleteBtn(): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PAYMENT.BASE || "Payments"} maxItems={1} />
@@ -97,14 +101,7 @@ const PaymentList = () => {
       </div>
 
       {/* ================= Delete Confirmation ================= */}
-      <CommonModal isOpen={Boolean(rowToDelete)} onClose={() => setRowToDelete(null)} className="max-w-125 m-2 sm:m-5 pt-0!">
-        <p className="text-red-500 text-xl font-semibold mb-3">Confirm Delete</p>
-        <p className="my-3">Are you sure you want to delete payment "{rowToDelete?.paymentNo}"?</p>
-        <div className="flex justify-end gap-2 mt-4">
-          <Button onClick={() => setRowToDelete(null)}>No</Button> 
-          <Button color="error">Yes</Button>
-        </div>
-      </CommonModal>
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
     </>
   );
 };

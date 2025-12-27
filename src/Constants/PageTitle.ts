@@ -29,7 +29,8 @@ export const PAGE_TITLE = {
     // PRODUCT: "Product",
     PRODUCT: {
       BASE: "product",
-      ADDEDIT: "product/add-edit",
+      ADD: "Add product",
+      EDIT: "Edit product",
     },
   },
   BANK: {

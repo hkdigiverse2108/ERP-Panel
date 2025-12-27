@@ -9,7 +9,6 @@ import { KEYS, PAGE_TITLE, ROUTES } from "../../../Constants";
 import { Mutations, Queries } from "../../../Api";
 import { useQueryClient } from "@tanstack/react-query";
 import { BankBreadCrumbs } from "../../../Data";
-import { useGetAllBankData, useDeleteBank } from "../../../Api";
 
 
 const Bank = () => {
@@ -27,7 +26,7 @@ const Bank = () => {
   const queryClient = useQueryClient();  
   const [rowToDelete, setRowToDelete] = useState<any>(null);
 
-   const { data: bankData, isLoading } = Queries.useGetAllBankData(bankParams);
+   const { data: bankData, isLoading } = Queries.useGetBank(bankParams);
 
    const { mutate: deleteBankMutate } = Mutations.useDeleteBank(); 
 
@@ -118,7 +117,7 @@ const Bank = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.BANK.BANK.BASE} maxItems={1} breadcrumbs={BankBreadCrumbs} />
+      <CommonBreadcrumbs title={PAGE_TITLE.BANK.BASE} maxItems={1} breadcrumbs={BankBreadCrumbs} />
 
       <div className="m-4 md:m-6">
         <CommonCard title="Banks" topContent={topContent}>

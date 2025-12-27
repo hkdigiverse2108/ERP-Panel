@@ -60,12 +60,13 @@ export const KEYS = {
     EDIT: "role-edit",
     DELETE: "role-delete",
   },
-
+  
   ANNOUNCEMENT: {
     BASE: "announcement",
   },
 
   PRODUCT: {
+    BASE: "product",
     ROOT: ["product"],
     ALL: ["product", "all"],
     DETAILS: (id: string) => ["product", "detail", id],
@@ -83,7 +84,7 @@ export const KEYS = {
     ADD: "call-request",
   },
   BANK: {
-    ROOT: ["bank"],
+    BASE :["bank"],
     ALL: ["bank", "all"],
     ADD: ["bank", "add"],
     EDIT: ["bank", "edit"],

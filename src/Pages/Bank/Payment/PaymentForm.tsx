@@ -82,7 +82,7 @@ const PaymentForm = () => {
               <Grid container spacing={{ xs: 1.5, md: 2 }}>
                 {/* PAYMENT MODE */}
                 <CommonCard title="Payment Mode" grid={{ xs: 12 }}>
-                  <RadioGroup
+                  <RadioGroup className="p-2 m-2"
                     row={false}
                     sx={{
                       flexDirection: { xs: "column", sm: "row" },
@@ -101,7 +101,7 @@ const PaymentForm = () => {
                   <CommonCard title="Cash Payment Details" grid={{ xs: 12 }}>
                     <Grid container spacing={{ xs: 1.5, md: 2 }} sx={{ p: { xs: 1, md: 2 } }}>
                       <CommonTextField name="party" label="Party" grid={{ xs: 12, sm: 6, md: 4 }} />
-                      <CommonTextField name="paymentDate" type="date" label="Payment Date" grid={{ xs: 12, sm: 6, md: 4 }} />
+                      <CommonTextField name="paymentDate" type="date" label="Payment Date" grid={{ xs: 12, sm: 6, md: 4 }} InputLabelProps={{ shrink: true }} />
                       <CommonTextField name="amount" type="number" label="Amount" grid={{ xs: 12, sm: 6, md: 4 }} />
                       <CommonTextField name="description" label="Description" grid={{ xs: 12 }} />
 
@@ -138,8 +138,8 @@ const PaymentForm = () => {
                       </RadioGroup>
 
                       <CommonTextField name="party" label="Party" grid={{ xs: 12, sm: 6, md: 4 }} />
-                      <CommonTextField name="paymentDate" type="date" label="Payment Date" grid={{ xs: 12, sm: 6, md: 4 }} />
-                      <CommonTextField name="transactionDate" type="date" label="Transaction Date" grid={{ xs: 12, sm: 6, md: 4 }} />
+                      <CommonTextField name="paymentDate" type="date" label="Payment Date" grid={{ xs: 12, sm: 6, md: 4 }} InputLabelProps={{ shrink: true }} />
+                      <CommonTextField name="transactionDate" type="date" label="Transaction Date" grid={{ xs: 12, sm: 6, md: 4 }}  InputLabelProps={{ shrink: true }}/>
                       <CommonTextField name="transactionNo" label="Transaction No" grid={{ xs: 12, sm: 6, md: 4 }} />
                       <CommonTextField name="amount" type="number" label="Amount" grid={{ xs: 12, sm: 6, md: 4 }} />
                       <CommonTextField name="description" label="Description" grid={{ xs: 12 }} />
