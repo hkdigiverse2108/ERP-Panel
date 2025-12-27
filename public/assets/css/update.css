@@ -86,3 +86,9 @@ input[type=number] {
 
 /* ************ Input End *********** */
 
+.advanced-search.MuiPaper-elevation{
+   @apply bg-white! dark:bg-gray-900! shadow-0!;
+}
+.advanced-search .MuiAccordion-heading{
+  @apply text-gray-700 dark:text-gray-300;
+}

@@ -9,5 +9,6 @@ import CommonDeleteModal from "./Modal/CommonDeleteModal";
 import CommonBottomActionBar from "./CommonBottomActionBar";
 import { CommonImageBox } from "./CommonUploadImage/CommonImageBox";
 import CommonPhoneColumns from "./CommonDataGrid/CommonPhoneColumns";
+import AdvancedSearch from "./AdvancedSearch";
 
-export { CommonDrawer, CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonUpload, CommonModal, CommonActionColumn, CommonDeleteModal, CommonBottomActionBar, CommonImageBox, CommonPhoneColumns };
+export { CommonDrawer, CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonUpload, CommonModal, CommonActionColumn, CommonDeleteModal, CommonBottomActionBar, CommonImageBox, CommonPhoneColumns, AdvancedSearch };

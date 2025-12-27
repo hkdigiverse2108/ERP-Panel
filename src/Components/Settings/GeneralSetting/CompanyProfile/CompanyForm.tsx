@@ -150,8 +150,8 @@ const CompanyForm = () => {
                     <CommonTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} required />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
                     <CommonTextField name="supportEmail" label="support Email" grid={{ xs: 12, md: 4 }} required />
-                    <CommonTextField name="customerCareNumber" label="Customer Care Number" type="number" grid={{ xs: 12, md: 4 }} />
                     <CommonPhoneNumber label="Owner No." countryCodeName="ownerNo.countryCode" numberName="ownerNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
+                    <CommonTextField name="customerCareNumber" label="Customer Care Number" type="number" grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
 

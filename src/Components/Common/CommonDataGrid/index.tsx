@@ -3,6 +3,8 @@ import { useMemo, type FC } from "react";
 import CustomToolbar from "./CustomToolbar";
 import type { CommonDataGridProps } from "../../../Types";
 import type { GridColDef, GridValueGetter } from "@mui/x-data-grid";
+import { Box } from "@mui/material";
+import NoRowsOverlay from "./NoRowsOverlay";
 
 const CommonDataGrid: FC<CommonDataGridProps> = ({ columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass, handleAdd, isActive, setActive }) => {
   const apiRef = useGridApiRef();
@@ -48,6 +50,8 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({ columns, rows, rowCount, load
         loading={loading}
         slots={{
           toolbar: () => <CustomToolbar apiRef={apiRef} columns={fixedColumns} rows={rows} rowCount={rowCount} handleAdd={handleAdd} isActive={isActive} setActive={setActive} />,
+          noRowsOverlay: () => <NoRowsOverlay />,
+          noResultsOverlay: () => <Box sx={{ p: 2, textAlign: "center" }}>No matching results</Box>,
         }}
         showToolbar
         initialState={{
@@ -64,6 +68,7 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({ columns, rows, rowCount, load
         filterModel={filterModel}
         onFilterModelChange={onFilterModelChange}
         disableRowSelectionOnClick
+        sx={{ "--DataGrid-overlayHeight": "300px" }}
       />
     </div>
   );
