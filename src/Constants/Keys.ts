@@ -56,10 +56,7 @@ export const KEYS = {
     EDIT: "branch-edit",
     DELETE: "branch-delete",
   },
-<<<<<<< HEAD
   
-=======
-
   ROLES: {
     BASE: "role",
     ADD: "role-add",
@@ -67,7 +64,6 @@ export const KEYS = {
     DELETE: "role-delete",
   },
 
->>>>>>> ebcfc013aecc498b4511559a3dd8e16323daf89d
   ANNOUNCEMENT: {
     BASE: "announcement",
   },
