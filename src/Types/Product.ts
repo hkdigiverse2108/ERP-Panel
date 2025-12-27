@@ -17,8 +17,7 @@ export interface ProductFormValues {
 
 export type AddProductPayload = ProductFormValues;
 
-export type EditProductPayload = AddProductPayload & {productId: string;
-};
+export type EditProductPayload = AddProductPayload & {productId: string};
 
 export type ProductBase = ProductFormValues & CommonDataType;
 

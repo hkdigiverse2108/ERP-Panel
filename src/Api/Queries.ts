@@ -31,6 +31,10 @@ export const Queries = {
 
   useGetAnnouncement: () => useQueries<AnnouncementApiResponse>([KEYS.ANNOUNCEMENT.BASE], () => Get(URL_KEYS.ANNOUNCEMENT.ALL)),
 
+  //***************product**************** */
+  useGetProduct: (params?: Params) => useQueries<any>([KEYS.PRODUCT.BASE, params], () => Get(URL_KEYS.PRODUCT.ALL, params)),
+
+
   // ************ Stock ***********
 
   useGetAllStockData: (params?: Params) => {

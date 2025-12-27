@@ -18,7 +18,7 @@ const Product = () => {
   const { mutate: deleteProductMutate } = Mutations.useDeleteProduct();
   const { mutate: editProduct, isPending: isEditLoading } = Mutations.useEditProduct();
 
-  const allProducts = useMemo(() => productData?.data?.product_data.map((prod) => ({ ...prod, id: prod?._id })) || [], [productData]);
+  const allProducts = useMemo(() => productData?.data?.product_data.map((prod: { _id: any; }) => ({ ...prod, id: prod?._id })) || [], [productData]);
 
   const totalRows = productData?.data?.totalData || 0;
 
