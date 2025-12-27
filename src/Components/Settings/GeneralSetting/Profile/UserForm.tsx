@@ -1,89 +1,86 @@
 import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Mutations, Queries } from "../../Api";
-import { CommonPhoneNumber, CommonTextField, CommonValidationSelect, CommonValidationSwitch } from "../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
-import { PAGE_TITLE } from "../../Constants";
-import { BREADCRUMBS } from "../../Data";
-import { useAppSelector } from "../../Store/hooks";
-import type { EmployeeFormValues } from "../../Types";
-import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
-import { EmployeeFormSchema } from "../../Utils/ValidationSchemas";
+import { useNavigate } from "react-router-dom";
+import { Mutations, Queries } from "../../../../Api";
+import { CommonPhoneNumber, CommonTextField, CommonValidationSelect } from "../../../../Attribute";
+import { PAGE_TITLE } from "../../../../Constants";
+import { BREADCRUMBS } from "../../../../Data";
+import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
+import type { EmployeeFormValues } from "../../../../Types";
+import { GenerateOptions, GetChangedFields } from "../../../../Utils";
+import { EmployeeFormSchema } from "../../../../Utils/ValidationSchemas";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Common";
+import { setUser } from "../../../../Store/Slices/AuthSlice";
 
-const EmployeeForm = () => {
-  const location = useLocation();
+const UserForm = () => {
   const navigate = useNavigate();
-  const { data } = location.state || {};
+  const dispatch = useAppDispatch();
   const { company } = useAppSelector((state) => state.company);
-
+  const { user: UserData } = useAppSelector((state) => state.auth);
   const { data: rolesData } = Queries.useGetRoles({ activeFilter: true });
   const { data: branchData } = Queries.useGetBranch({ activeFilter: true });
-  const { mutate: addEmployee, isPending: isAddLoading } = Mutations.useAddEmployee();
-  const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditEmployee();
-
-  const isEditing = Boolean(data?._id);
-  const pageMode = isEditing ? "EDIT" : "ADD";
+  const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditUser();
 
   const initialValues: EmployeeFormValues = {
-    fullName: data?.fullName || "",
-    username: data?.username || "",
-    designation: data?.designation || "",
+    fullName: UserData?.fullName || "",
+    username: UserData?.username || "",
+    designation: UserData?.designation || "",
     phoneNo: {
-      countryCode: data?.phoneNo?.countryCode || "",
-      phoneNo: data?.phoneNo?.phoneNo || "",
+      countryCode: UserData?.phoneNo?.countryCode || "",
+      phoneNo: UserData?.phoneNo?.phoneNo || "",
     },
-    email: data?.email || "",
-    panNumber: data?.panNumber || "",
-    role: data?.role || "",
-    branchId: data?.branchId || "",
+    email: UserData?.email || "",
+    panNumber: UserData?.panNumber || "",
+    role: UserData?.role || "",
+    branchId: UserData?.branchId || "",
 
     address: {
-      address: data?.address?.address || "",
-      country: data?.address?.country || "",
-      state: data?.address?.state || "",
-      city: data?.address?.city || "",
-      postalCode: data?.address?.postalCode || null,
+      address: UserData?.address?.address || "",
+      country: UserData?.address?.country || "",
+      state: UserData?.address?.state || "",
+      city: UserData?.address?.city || "",
+      postalCode: UserData?.address?.postalCode || null,
     },
 
     bankDetails: {
-      bankName: data?.bankDetails?.bankName || "",
-      branchName: data?.bankDetails?.branchName || "",
-      accountNumber: data?.bankDetails?.accountNumber || null,
-      bankHolderName: data?.bankDetails?.bankHolderName || "",
-      swiftCode: data?.bankDetails?.swiftCode || "",
-      IFSCCode: data?.bankDetails?.IFSCCode || "",
+      bankName: UserData?.bankDetails?.bankName || "",
+      branchName: UserData?.bankDetails?.branchName || "",
+      accountNumber: UserData?.bankDetails?.accountNumber || null,
+      bankHolderName: UserData?.bankDetails?.bankHolderName || "",
+      swiftCode: UserData?.bankDetails?.swiftCode || "",
+      IFSCCode: UserData?.bankDetails?.IFSCCode || "",
     },
 
-    wages: data?.wages || null,
-    commission: data?.commission || null,
-    extraWages: data?.extraWages || null,
-    target: data?.target || null,
-    isActive: data?.isActive ?? true,
+    wages: UserData?.wages || null,
+    commission: UserData?.commission || null,
+    extraWages: UserData?.extraWages || null,
+    target: UserData?.target || null,
+    isActive: UserData?.isActive ?? true,
   };
 
   const handleSubmit = async (values: EmployeeFormValues, { resetForm }: FormikHelpers<EmployeeFormValues>) => {
-    const { _submitAction, ...rest } = values;
+    const { ...rest } = values;
     const payload = { ...rest, companyId: company!._id };
-    
-    const handleSuccess = () => {
-      if (_submitAction === "saveAndNew") resetForm();
-      else navigate(-1);
-    };
-    if (isEditing) {
-      const changedFields = GetChangedFields(payload, data);
-      await editEmployee({ ...changedFields, userId: data._id }, { onSuccess: handleSuccess });
-    } else {
-      await addEmployee(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
-    }
+
+    const changedFields = GetChangedFields(payload, UserData);
+    await editEmployee(
+      { ...changedFields, userId: UserData._id },
+      {
+        onSuccess: (response) => {
+          dispatch(setUser(response?.data));
+          resetForm();
+          navigate(-1);
+        },
+      }
+    );
   };
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.EMPLOYEE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.EMPLOYEE[pageMode]} />
+      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.USER.EDIT} maxItems={3} breadcrumbs={BREADCRUMBS.GENERAL_SETTING.USER} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<EmployeeFormValues> enableReinitialize initialValues={initialValues} validationSchema={EmployeeFormSchema} onSubmit={handleSubmit}>
-          {({ resetForm, setFieldValue, dirty }) => (
+          {({ dirty }) => (
             <Form noValidate>
               <Grid container spacing={2}>
                 {/* BASIC DETAILS */}
@@ -132,9 +129,7 @@ const EmployeeForm = () => {
                     <CommonTextField name="target" type="number" label="Target" grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
-                {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
-
-                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar save disabled={!dirty} isLoading={isEditLoading} />
               </Grid>
             </Form>
           )}
@@ -144,4 +139,4 @@ const EmployeeForm = () => {
   );
 };
 
-export default EmployeeForm;
+export default UserForm;

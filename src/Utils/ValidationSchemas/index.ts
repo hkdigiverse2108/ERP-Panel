@@ -26,9 +26,9 @@ export const EmployeeFormSchema = Yup.object({
   // ---------- BASIC DETAILS ----------
   fullName: Validation("string", "FullName"),
   username: Validation("string", "Username"),
-  designation: Validation("string", "Designation", { required: false }),
+  // designation: Validation("string", "Designation", { required: false }),
   role: Validation("string", "Role", { required: false }),
-  phoneNo: Validation("string", "Phone No", { extraRules: (s) => s.trim().matches(/^[0-9]{10}$/, "Phone number must be 10 digits") }),
+  phoneNo: PhoneValidation(),
   email: Validation("string", "Email", { required: false, extraRules: (s) => s.trim().email("Invalid email address") }),
   branchId: Validation("string", "Branch Name", { required: false }),
   panNumber: Validation("string", "PAN Number", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
@@ -76,7 +76,7 @@ export const RolesFormSchema = Yup.object({
 export const CallRequestFormSchema = Yup.object({
   businessName: Validation("string", "Business Name"),
   contactName: Validation("string", "Contact Name"),
-  contactNo: Validation("string", "Contact No", { extraRules: (s) => s.trim().matches(/^[0-9]{10}$/, "Phone number must be 10 digits") }),
+  contactNo: PhoneValidation("Contact No"),
   note: Validation("string", "note"),
 });
 
@@ -115,13 +115,44 @@ export const ProductFormSchema = Yup.object({
 
 export const CompanyFormSchemas = Yup.object({
   name: Validation("string", "Company Name"),
-  email: Validation("string", "Email"),
-  city: Validation("string", "City"),
-  state: Validation("string", "State"),
+  displayName: Validation("string", "display Name"),
+  contactName: Validation("string", "contact Name"),
+  email: Validation("string", "Email", { extraRules: (s) => s.trim().email("Invalid email address") }),
+  supportEmail: Validation("string", "support Email", { extraRules: (s) => s.trim().email("Invalid email address") }),
+  customerCareNumber: Validation("string", "customer Care Number"),
   phoneNo: PhoneValidation(),
   ownerNo: PhoneValidation(),
-  logo: Validation("string", "Logo"),
-  waterMark: Validation("string", "Water Mark"),
-  reportFormatLogo: Validation("string", "Report Format Logo"),
-  authorizedSignature: Validation("string", "Authorized Signature"),
+
+  address: Validation("string", "address"),
+  city: Validation("string", "city"),
+  state: Validation("string", "State"),
+  country: Validation("string", "country"),
+  pinCode: Validation("string", "pinCode", { extraRules: (s) => s.trim().matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
+  timeZone: Validation("string", "timeZone", { required: false }),
+
+  upiId: Validation("string", "upiId", { required: false }),
+
+  userName: Validation("string", "userName", { required: false }),
+  GSTRegistrationType: Validation("string", "GSTRegistrationType", { required: false }),
+  GSTIdentificationNumber: Validation("string", "GSTIdentificationNumber", { required: false }),
+  PanNo: Validation("string", "PanNo", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid Pan Number") }),
+  taxDeductionAndCollectionAccountNumber: Validation("string", "taxDeductionAndCollectionAccountNumber", { required: false }),
+  webSite: Validation("string", "webSite", { required: false }),
+  financialYear: Validation("string", "financialYear", { required: false }),
+  corporateIdentificationNumber: Validation("string", "corporateIdentificationNumber", { required: false }),
+  letterOfUndertaking: Validation("string", "letterOfUndertaking", { required: false }),
+  importerExporterCode: Validation("string", "importerExporterCode", { required: false }),
+  outletSize: Validation("string", "outletSize", { required: false }),
+  fssaiNo: Validation("string", "fssaiNo", { required: false, extraRules: (s) => s.trim().matches(/^[0-9]{14}$/, "FSSAI number must be exactly 14 digits") }),
+  currency: Validation("string", "currency", { required: false }),
+  printDateFormat: Validation("string", "printDateFormat", { required: false }),
+  decimalPoint: Validation("string", "decimalPoint", { required: false }),
+
+  allowRoundOff: Validation("boolean", "allowRoundOff", { required: false }),
+  enableFeedbackModule: Validation("boolean", "enableFeedbackModule", { required: false }),
+
+  logo: Validation("string", "Logo", { required: false }),
+  waterMark: Validation("string", "Water Mark", { required: false }),
+  reportFormatLogo: Validation("string", "Report Format Logo", { required: false }),
+  authorizedSignature: Validation("string", "Authorized Signature", { required: false }),
 });

@@ -7,6 +7,16 @@ import * as Yup from "yup";
 
 type GridType = number | object | "auto" | "grow";
 
+export interface PhoneNumberType {
+  countryCode?: string;
+  phoneNo?: string;
+}
+
+export type AppGridColDef<T extends GridValidRowModel> =
+  GridColDef<T> & {
+    exportFormatter?: (value: unknown, row: T) => string | number;
+  };
+
 // ************ Drawer Start ***********
 
 export interface CommonDrawerProps extends Omit<DrawerProps, "anchor" | "title"> {

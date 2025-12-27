@@ -11,7 +11,7 @@ export const Queries = {
   useGetUploadPdf: (options?: AppQueryOptions<UploadResponse>) => useQueries<UploadResponse>([KEYS.UPLOAD.ALL_PDF], () => Get(URL_KEYS.UPLOAD.ALL_PDF), options),
 
   // ************ User ***********
-  useGetUserdata: (id?: string) => useQueries<any>(KEYS.USER.DETAILS(id as string), () => Get(URL_KEYS.USER.ONE(id as string)), { enabled: !!id }),
+  useGetUserdata: (id?: string) => useQueries<EmployeeApiResponse>([KEYS.USER.BASE], () => Get(`${URL_KEYS.USER.BASE}/${id}`), { enabled: !!id }),
 
   // ************ Company ***********
   useGetSingleCompany: (id?: string) => useQueries<CompanyApiResponse>([KEYS.COMPANY.BASE, id], () => Get(`${URL_KEYS.COMPANY.BASE}/${id}`), { enabled: !!id }),

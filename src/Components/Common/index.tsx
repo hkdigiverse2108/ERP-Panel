@@ -8,5 +8,6 @@ import CommonActionColumn from "./CommonActionColumn";
 import CommonDeleteModal from "./Modal/CommonDeleteModal";
 import CommonBottomActionBar from "./CommonBottomActionBar";
 import { CommonImageBox } from "./CommonUploadImage/CommonImageBox";
+import CommonPhoneColumns from "./CommonDataGrid/CommonPhoneColumns";
 
-export { CommonDrawer, CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonUpload, CommonModal, CommonActionColumn, CommonDeleteModal, CommonBottomActionBar, CommonImageBox };
+export { CommonDrawer, CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonUpload, CommonModal, CommonActionColumn, CommonDeleteModal, CommonBottomActionBar, CommonImageBox, CommonPhoneColumns };

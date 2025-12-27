@@ -1,4 +1,3 @@
-
 export const ROUTES = {
   HOME: "/",
   DASHBOARD: "/dashboard",
@@ -46,23 +45,24 @@ export const ROUTES = {
   },
   COMPANY: {
     EDIT: "/company/edit",
-  }, 
- BRANCH:{
-  BASE :"/branch",
-  ADD_EDIT :"/branch/add-edit",
- },
-  BANK:{
-    BASE:"/bank",
-    ADD_EDIT:"/bank/add-edit",
   },
-  TRANSACTION:{
-    BASE:"/transaction",
-    ADD_EDIT:"/transaction/add-edit",
+  USER: {
+    EDIT: "/user/edit",
   },
-  PAYMENT:{
-    BASE:"/payment",
-    ADD_EDIT:"/payment/add-edit",
+  BRANCH: {
+    BASE: "/branch",
+    ADD_EDIT: "/branch/add-edit",
   },
-  
-  
- } as const;
+  BANK: {
+    BASE: "/bank",
+    ADD_EDIT: "/bank/add-edit",
+  },
+  TRANSACTION: {
+    BASE: "/transaction",
+    ADD_EDIT: "/transaction/add-edit",
+  },
+  PAYMENT: {
+    BASE: "/payment",
+    ADD_EDIT: "/payment/add-edit",
+  },
+} as const;

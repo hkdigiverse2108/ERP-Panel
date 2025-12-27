@@ -39,6 +39,10 @@ export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows
 
       const rawValue = (row as Record<string, unknown>)[col.field];
 
+   if ("exportFormatter" in col && typeof col.exportFormatter === "function") {
+      return col.exportFormatter(rawValue, row);
+    }
+
       return normalizeExportValue(rawValue);
     })
   );

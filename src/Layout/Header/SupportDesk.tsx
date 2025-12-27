@@ -5,7 +5,7 @@ import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { Box, Grid } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useState } from "react";
-import { CommonButton, CommonTextField } from "../../Attribute";
+import { CommonButton, CommonPhoneNumber, CommonTextField } from "../../Attribute";
 import { CommonModal } from "../../Components/Common";
 import { Mutations } from "../../Api";
 import { CallRequestFormSchema } from "../../Utils/ValidationSchemas";
@@ -16,7 +16,14 @@ const SupportDesk = () => {
 
   const { mutate: callRequestMutate, isPending: isCallRequestLoading } = Mutations.useAddCallRequest();
 
-  const handleSubmit = (values: CallRequestFormValues) => callRequestMutate({...values, contactNo: values.contactNo?.toString()}, { onSuccess: () => setOpen(false) });
+  const initialValues: CallRequestFormValues = {
+    businessName: "",
+    contactName: "",
+    contactNo: { countryCode: "", phoneNo: "" },
+    note: "",
+  };
+
+  const handleSubmit = (values: CallRequestFormValues) => callRequestMutate(values, { onSuccess: () => setOpen(false) });
 
   return (
     <>
@@ -51,12 +58,12 @@ const SupportDesk = () => {
       </Box>
       <CommonModal isOpen={open} title="Talk To Our Expert" subTitle="Fill In Your Info - We'll Reach Out Shortly" onClose={() => setOpen(!open)} className="max-w-[500px] m-2 sm:m-5">
         <div className="flex flex-col gap-5">
-          <Formik initialValues={{ businessName: "", contactName: "", contactNo: "", note: "" }} validationSchema={CallRequestFormSchema} enableReinitialize onSubmit={handleSubmit}>
+          <Formik<CallRequestFormValues> initialValues={initialValues} validationSchema={CallRequestFormSchema} enableReinitialize onSubmit={handleSubmit}>
             <Form noValidate>
               <Grid sx={{ px: 1 }} container spacing={2}>
                 <CommonTextField name="businessName" label="Business Name" grid={{ xs: 12 }} required />
                 <CommonTextField name="contactName" label="Contact Name" grid={{ xs: 12 }} required />
-                <CommonTextField name="contactNo" label="Contact No." type="number" grid={{ xs: 12 }} required />
+                <CommonPhoneNumber label="Phone No." countryCodeName="contactNo.countryCode" numberName="contactNo.phoneNo" grid={{ xs: 12 }} required />
                 <CommonTextField name="note" label="Notes" type="textarea" multiline rows={2} validating={false} grid={{ xs: 12 }} required />
                 <CommonButton type="submit" variant="contained" title="Send" size="medium" loading={isCallRequestLoading} fullWidth grid={{ xs: 12 }} />
               </Grid>

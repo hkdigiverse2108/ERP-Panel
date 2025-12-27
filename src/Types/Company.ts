@@ -1,56 +1,54 @@
-import type { CommonDataType, MessageStatus } from "./Common";
+import type { CommonDataType, MessageStatus, PhoneNumberType } from "./Common";
 
 export interface CompanyFormValues {
-  GSTIdentificationNumber: string;
-  GSTRegistrationType: string;
-  PanNo: string;
-  accountHolderName: string;
-  address: string;
-  allowRoundOff: boolean;
-  authorizedSignature: string;
-  bankAccountNumber: string;
-  bankIFSC: string;
-  bankName: string;
-  branch: string;
-  city: string;
-  contactName: string;
-  corporateIdentificationNumber: string;
-  country: string;
-  customerCareNumber: string;
-  decimalPoint: string;
-  defaultFinancialYear: string;
-  displayName: string;
-  email: string;
-  employees: [];
-  enableFeedbackModule: string;
-  financialMonthInterval: string;
-  financialYear: string;
-  importerExporterCode: string;
-  isActive: boolean;
-  letterOfUndertaking: string;
-  logo: string;
-  name: string;
-  outletSize: string;
-  ownerNo: string;
-  phoneNumber: string;
-  pinCode: string;
-  printDateFormat: string;
-  reportFormatLogo: string;
-  roles: [];
-  state: string;
-  supportEmail: string;
-  taxDeductionAndCollectionAccountNumber: string;
-  timeZone: string;
-  upiId: string;
-  userIds: [];
-  userName: string;
-  waterMark: string;
-  webSite: string;
+  name?: string;
+  displayName?: string;
+  contactName?: string;
+  email?: string;
+  supportEmail?: string;
+  phoneNo?: PhoneNumberType;
+  ownerNo?: PhoneNumberType;
+  customerCareNumber?: string;
+
+  address?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  pinCode?: string;
+  timeZone?: string;
+
+  bankName?: string;
+  bankIFSC?: string;
+  upiId?: string;
+  branchName?: string;
+  accountHolderName?: string;
+  bankAccountNumber?: string;
+
+  userName?: string;
+  GSTRegistrationType?: string;
+  GSTIdentificationNumber?: string;
+  PanNo?: string;
+  webSite?: string;
+  financialYear?: string;
+  corporateIdentificationNumber?: string;
+  letterOfUndertaking?: string;
+  importerExporterCode?: string;
+  outletSize?: string;
+  fssaiNo?: string;
+  taxDeductionAndCollectionAccountNumber?: string;
+  printDateFormat?: string;
+  decimalPoint?: string;
+  currency?: string;
+
+  enableFeedbackModule?: boolean;
+  allowRoundOff?: boolean;
+  logo?: string;
+  waterMark?: string;
+  reportFormatLogo?: string;
+  authorizedSignature?: string;
 }
 
-export type AddCompanyPayload = CompanyFormValues & { companyId?: string };
-
-export type EditCompanyPayload = AddCompanyPayload & { CompanyId: string };
+export type EditCompanyPayload = CompanyFormValues & { companyId: string };
 
 export type CompanyBase = CompanyFormValues & CommonDataType;
 

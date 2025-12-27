@@ -9,11 +9,8 @@ export const URL_KEYS = {
     ALL_PDF: "/upload/pdf",
   },
   USER: {
-    ADD: "/user/add",
-    ALL: "/user/all",
-    ONE: (id: string) => `/user/${id}`,
+    BASE: "/user",
     EDIT: "/user/edit",
-    DELETE: "/user/delete/",
   },
   COMPANY: {
     BASE: "/company",
