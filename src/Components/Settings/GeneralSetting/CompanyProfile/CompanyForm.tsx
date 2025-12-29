@@ -3,7 +3,7 @@ import { Form, Formik, useFormikContext, type FormikValues } from "formik";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations } from "../../../../Api";
-import { CommonButton, CommonPhoneNumber, CommonSwitch, CommonTextField } from "../../../../Attribute";
+import { CommonButton, CommonPhoneNumber, CommonSwitch, CommonTextField, CommonValidationSelect } from "../../../../Attribute";
 import { PAGE_TITLE, ROUTES } from "../../../../Constants";
 import { setCompany } from "../../../../Store/Slices/CompanySlice";
 import { setSelectedFiles, setUploadModal } from "../../../../Store/Slices/ModalSlice";
@@ -14,7 +14,7 @@ import { CompanyFormSchemas } from "../../../../Utils/ValidationSchemas";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Common";
 import { CommonFormImageBox } from "../../../Common/CommonUploadImage/CommonImageBox";
 import type { CompanyFormValues } from "../../../../Types/Company";
-import { BREADCRUMBS } from "../../../../Data";
+import { BREADCRUMBS, CityOptionsByState, CountryOptions, StateOptions, TimeZoneOptions } from "../../../../Data";
 type CompanyImageKey = "logo" | "waterMark" | "reportFormatLogo" | "authorizedSignature";
 
 const COMPANY_IMAGES = [
@@ -26,7 +26,7 @@ const COMPANY_IMAGES = [
 
 const CompanyForm = () => {
   const { company: companyData = {} } = useAppSelector((state) => state.company);
-  const { mutate: editCompanyMutate , isPending: isEditLoading} = Mutations.useEditCompany();
+  const { mutate: editCompanyMutate, isPending: isEditLoading } = Mutations.useEditCompany();
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -52,7 +52,7 @@ const CompanyForm = () => {
     address: companyData.address || "",
     city: companyData.city || "",
     state: companyData.state || "",
-    country: companyData.country || "",
+    country: "India",
     pinCode: companyData.pinCode || null,
     timeZone: companyData.timeZone || "",
 
@@ -137,7 +137,7 @@ const CompanyForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.COMPANY.EDIT} maxItems={3} breadcrumbs={BREADCRUMBS.GENERAL_SETTING.COMPANY} />
       <Box sx={{ p: { xs: 2, md: 3 } }}>
         <Formik<CompanyFormValues> enableReinitialize initialValues={initialValues} validationSchema={CompanyFormSchemas} onSubmit={handleOnSubmit}>
-          {({ values, setFieldValue ,dirty}) => (
+          {({ values, setFieldValue, dirty }) => (
             <Form noValidate>
               <FormikImageSync activeKey={activeKey} clearActiveKey={() => setActiveKey(null)} />
               <Grid container spacing={2}>
@@ -159,11 +159,11 @@ const CompanyForm = () => {
                 <CommonCard title="Communication Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonTextField name="address" label="Address" grid={{ xs: 12, md: 4 }} multiline required />
-                    <CommonTextField name="city" label="City" grid={{ xs: 12, md: 4 }} required />
-                    <CommonTextField name="state" label="State" grid={{ xs: 12, md: 4 }} required />
-                    <CommonTextField name="country" label="Country" grid={{ xs: 12, md: 4 }} required />
+                    <CommonValidationSelect name="country" label="Country" disabled options={CountryOptions} required grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="state" label="State" disabled={!values?.country} options={StateOptions} grid={{ xs: 12, md: 4 }} required />
+                    <CommonValidationSelect name="city" label="City" disabled={!values?.state} options={CityOptionsByState[values?.state || ""] || []} grid={{ xs: 12, md: 4 }} required />
                     <CommonTextField name="pinCode" label="Pin Code" grid={{ xs: 12, md: 4 }} required />
-                    <CommonTextField name="timeZone" label="Time Zone" grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="timeZone" label="Time Zone" disabled options={TimeZoneOptions[values?.country || ""] || []} grid={{ xs: 12, md: 4 }} required />
                   </Grid>
                 </CommonCard>
 
@@ -212,7 +212,7 @@ const CompanyForm = () => {
                 </CommonCard>
 
                 {/* ACTIONS */}
-                <CommonBottomActionBar save disabled={!dirty} isLoading={isEditLoading}/>
+                <CommonBottomActionBar save disabled={!dirty} isLoading={isEditLoading} />
 
                 <Grid className="w-full! flex justify-end ">
                   <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 2 }}>

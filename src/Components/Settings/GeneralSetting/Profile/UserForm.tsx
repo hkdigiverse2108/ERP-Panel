@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../../Api";
 import { CommonPhoneNumber, CommonTextField, CommonValidationSelect } from "../../../../Attribute";
 import { PAGE_TITLE } from "../../../../Constants";
-import { BREADCRUMBS } from "../../../../Data";
+import { BREADCRUMBS, CityOptionsByState, CountryOptions, StateOptions } from "../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
 import type { EmployeeFormValues } from "../../../../Types";
 import { GenerateOptions, GetChangedFields } from "../../../../Utils";
@@ -36,7 +36,7 @@ const UserForm = () => {
 
     address: {
       address: UserData?.address?.address || "",
-      country: UserData?.address?.country || "",
+      country: "India",
       state: UserData?.address?.state || "",
       city: UserData?.address?.city || "",
       postalCode: UserData?.address?.postalCode || null,
@@ -80,7 +80,7 @@ const UserForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.USER.EDIT} maxItems={3} breadcrumbs={BREADCRUMBS.GENERAL_SETTING.USER} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<EmployeeFormValues> enableReinitialize initialValues={initialValues} validationSchema={EmployeeFormSchema} onSubmit={handleSubmit}>
-          {({ dirty }) => (
+          {({ dirty, values }) => (
             <Form noValidate>
               <Grid container spacing={2}>
                 {/* BASIC DETAILS */}
@@ -101,9 +101,9 @@ const UserForm = () => {
                 <CommonCard title="Address Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonTextField name="address.address" label="Address" required grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="address.city" label="City" required grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="address.state" label="State" required grid={{ xs: 12, md: 4 }} />
-                    <CommonTextField name="address.country" label="Country" required grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="address.state" label="State" disabled={!values.address?.country} options={StateOptions} grid={{ xs: 12, md: 4 }} required />
+                    <CommonValidationSelect name="address.city" label="City" disabled={!values.address?.state} options={CityOptionsByState[values?.address?.state || ""] || []} grid={{ xs: 12, md: 4 }} required />
+                    <CommonValidationSelect name="address.country" label="Country" disabled options={CountryOptions} required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="address.postalCode" label="ZIP Code" required type="number" grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>

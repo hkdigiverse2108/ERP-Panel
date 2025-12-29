@@ -50,6 +50,7 @@ export interface CommonSelectProps {
   size?: "small" | "medium";
   grid?: GridType;
   required?: boolean;
+  disabled?: boolean;
 }
 
 export interface CommonValidationSelectProps extends Omit<CommonSelectProps, "onChange" | "value"> {
