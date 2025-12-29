@@ -32,7 +32,7 @@ export const Queries = {
   useGetAnnouncement: () => useQueries<AnnouncementApiResponse>([KEYS.ANNOUNCEMENT.BASE], () => Get(URL_KEYS.ANNOUNCEMENT.ALL)),
 
   //***************product**************** */
-  useGetProduct: (params?: Params) => useQueries<any>([KEYS.PRODUCT.BASE, params], () => Get(URL_KEYS.PRODUCT.ALL, params)),
+  useGetProduct: (params?: Params) => useQueries<ProductApiResponse>([KEYS.PRODUCT.BASE, params], () => Get(URL_KEYS.PRODUCT.ALL, params)),
 
 
   // ************ Stock ***********
@@ -51,9 +51,8 @@ export const Queries = {
   // ************ payment*
   // useGetPayments: (params?: Params) =>useQueries<PaymentApiResponse>([KEYS.PAYMENT.BASE, params],() => Get(URL_KEYS.PAYMENT.ALL, params),),
 
-  // ************ product*
-  useGetProduct: (params?: Params) => useQueries<ProductApiResponse>([KEYS.PRODUCT.ALL, params], () => Get(URL_KEYS.PRODUCT.ALL, params)),
 
+ 
   //************ bank ********/
 
   useGetBank: (params?: Params) => useQueries<any>([KEYS.BANK.BASE, params], () => Get(URL_KEYS.BANK.ALL, params), { placeholderData: (previousData: any) => previousData }),
