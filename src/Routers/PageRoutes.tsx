@@ -18,6 +18,7 @@ import BankForm from "../Pages/Bank/Bank/BankForm";
 import BankTransaction from "../Pages/Bank/BankTransaction";
 import PaymentList from "../Pages/Bank/Payment";
 import PaymentForm from "../Pages/Bank/Payment/PaymentForm";
+import NewPos from "../Pages/POS/New";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -48,8 +49,9 @@ export const PageRoutes = [
   { path: ROUTES.TRANSACTION.BASE, element: <BankTransaction />},
 
   { path: ROUTES.PAYMENT.BASE, element: <PaymentList />},
-  { path: ROUTES.PAYMENT.ADD_EDIT, element: <PaymentForm />}
+  { path: ROUTES.PAYMENT.ADD_EDIT, element: <PaymentForm />},
   
+  { path: ROUTES.POS.NEW, element: <NewPos />},
 ];
 
 export const AuthRoutes = [

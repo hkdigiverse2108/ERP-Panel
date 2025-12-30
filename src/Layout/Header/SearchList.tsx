@@ -21,7 +21,7 @@ const SearchList = () => {
   }, [query]);
   return (
     <>
-      <div onClick={() => setOpen(!open)} className="flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full hover:text-dark-900 h-11 w-11 max-xsm:h-9 max-xsm:w-9 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white">
+      <div onClick={() => setOpen(!open)} className="flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full h-11 w-11 max-xsm:h-9 max-xsm:w-9 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white">
         <SearchSharpIcon sx={{ fontSize: { xs: 20, md: 22 } }} />
       </div>
       <CommonDrawer open={open} onClose={() => setOpen(!open)} anchor="right" width={280} title="Search List" paperProps={{ className: "bg-white dark:bg-gray-800!" }}>

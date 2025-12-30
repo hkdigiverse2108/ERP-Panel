@@ -43,3 +43,66 @@ export const TAX_OPTIONS = [
   { label: "GST 5%", value: "679a1c8f8f4e1a001234abd3" },
   { label: "GST 12%", value: "679a1c9f8f4e1a001234abd4" },
 ];
+
+export const ORDER_TYPE = [
+  { label: "Walk In", value: "Walk In" },
+  { label: "Delivery", value: "Delivery" },
+];
+
+export const USER_TYPE = [
+  { label: "Dhruvi Bakery", value: "Dhruvi Bakery" },
+  { label: "Rakesh", value: "Rakesh" },
+];
+
+export const BAUD_RATE = [
+  { label: "300 baud", value: "300" },
+  { label: "1200 baud", value: "1200" },
+  { label: "2400 baud", value: "2400" },
+  { label: "4800 baud", value: "4800" },
+  { label: "96000 baud", value: "96000" },
+  { label: "19200 baud", value: "19200" },
+  { label: "38400 baud", value: "38400" },
+  { label: "57600 baud", value: "57600" },
+  { label: "115200 baud", value: "115200" },
+];
+
+export const DATA_BITS = [
+  { label: "5", value: "5" },
+  { label: "6", value: "6" },
+  { label: "7", value: "7" },
+  { label: "8", value: "8" },
+];
+
+export const STOP_BITS = [
+  { label: "1", value: "1" },
+  { label: "2", value: "2" },
+];
+
+export const PARITY = [
+  { label: "None", value: "None" },
+  { label: "Even", value: "Even" },
+  { label: "Odd", value: "Odd" },
+  { label: "Mark", value: "Mark" },
+  { label: "Space", value: "Space" },
+];
+
+export const FLOW_CONTROL = [
+  { label: "None", value: "None" },
+  { label: "RTC/CTS", value: "RTC/CTS" },
+  { label: "DTR/DSR", value: "DTR/DSR" },
+  { label: "XON/XOFF", value: "XON/XOFF" },
+];
+
+export const PRECISION = [
+  { label: "None", value: "None" },
+  { label: "Adjust 3 places", value: "Adjust 3 places" },
+]
+
+export const GST_TYPE = [
+  { label: "UnRegistered", value: "UnRegistered" },
+  { label: "Registered Regular", value: "Registered Regular" },
+  { label: "Registered Composition", value: "Registered Composition" },
+  { label: "Input Service Distributor", value: "Input Service Distributor" },
+  { label: "E-Commerce Operator", value: "E-Commerce Operator" },
+  { label: "Other", value: "Other" },
+]

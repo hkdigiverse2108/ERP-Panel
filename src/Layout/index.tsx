@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { useAppSelector } from "../Store/hooks";
-import { setIsMobile } from "../Store/Slices/LayoutSlice";
+import { setIsMobile, setSidebarOpen, setToggleSidebar } from "../Store/Slices/LayoutSlice";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { CommonUpload } from "../Components/Common";
@@ -12,13 +12,19 @@ import { setCompany } from "../Store/Slices/CompanySlice";
 import CommonVideoModal from "../Components/Common/Modal/CommonVideoModal";
 
 const Layout = () => {
-  const { isExpanded, isMobileOpen, isHovered, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
+  const { isExpanded, isMobileOpen, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const { user } = useAppSelector((state) => state.auth);
   const { data: userData, isLoading: userLoading } = Queries.useGetUserdata(user?._id);
 
   const { data: companyData, isLoading: companyLoading } = Queries.useGetSingleCompany(user?.companyId);
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/pos")) dispatch(setSidebarOpen(false));
+    else dispatch(setSidebarOpen(true));
+  }, [dispatch, location.pathname]);
 
   useEffect(() => {
     if (userData) {
@@ -49,7 +55,7 @@ const Layout = () => {
         <div>
           <Sidebar />
         </div>
-        <div className={`flex-1 transition-all duration-300 ease-linear ${isApplicationMenuOpen ? "pt-30 xsm:pt-35" : "pt-16"} lg:pt-[78px] ${isExpanded || isHovered ? "lg:ml-[290px]" : "lg:ml-[90px]"} ${isMobileOpen ? "ml-0" : ""}`}>
+        <div className={`flex-1 transition-all duration-300 ease-linear ${isApplicationMenuOpen ? "pt-30 xsm:pt-35" : "pt-16"} lg:pt-[78px] ${isExpanded ? "lg:ml-[290px]" : "lg:ml-[90px]"} ${isMobileOpen ? "ml-0" : ""}`}>
           <Header />
           <div className="mx-auto">
             <Outlet />

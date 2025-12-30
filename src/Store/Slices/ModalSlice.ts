@@ -5,6 +5,7 @@ const initialState: ModalStateSlice = {
   isUploadModal: { open: false, type: "image" },
   selectedFiles: [],
   isModalVideoPlay: { open: false, link: "" },
+  isCustomerModal: { open: false, data: null },
 };
 
 const ModalSlice = createSlice({
@@ -25,9 +26,12 @@ const ModalSlice = createSlice({
     setModalVideoPlay(state, action) {
       state.isModalVideoPlay = action.payload;
     },
+    setCustomerModal: (state, action) => {
+      state.isCustomerModal = action.payload;
+    },
   },
 });
 
-export const { setUploadModal, setSelectedFiles, clearSelectedFiles ,setModalVideoPlay} = ModalSlice.actions;
+export const { setUploadModal, setSelectedFiles, clearSelectedFiles, setModalVideoPlay, setCustomerModal } = ModalSlice.actions;
 
 export default ModalSlice.reducer;

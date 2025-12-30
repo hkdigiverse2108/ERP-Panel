@@ -65,4 +65,8 @@ export const ROUTES = {
     BASE: "/payment",
     ADD_EDIT: "/payment/add-edit",
   },
+  POS:{
+    BASE: "/pos",
+    NEW: "/pos/new",
+  }
 } as const;

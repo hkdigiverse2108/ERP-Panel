@@ -22,7 +22,7 @@ const CommonDrawer: FC<CommonDrawerProps> = ({ open, onClose, anchor = "right", 
     <Drawer open={open} onClose={onClose} anchor={anchor} ModalProps={{ keepMounted: true }} slotProps={{ paper: { sx: paperSx, ...paperProps } }} {...drawerProps}>
       <Box className="flex justify-between items-center p-3">
         {title && (
-          <Typography variant="h5" className="font-medium! text-gray-800 dark:text-gray-200">
+          <Typography variant="h6" className="font-medium! text-gray-800 dark:text-gray-200">
             {title}
           </Typography>
         )}
@@ -34,7 +34,7 @@ const CommonDrawer: FC<CommonDrawerProps> = ({ open, onClose, anchor = "right", 
         )}
       </Box>
 
-      {showDivider && <Divider className="dark:border-gray-700!" />}
+      {showDivider && <Divider className="dark:border-gray-600!" />}
 
       <Box sx={{ flex: 1, overflowY: "auto", p: 2 }}>{children}</Box>
     </Drawer>

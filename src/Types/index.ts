@@ -13,3 +13,5 @@ export * from "./Product";
 // export * from "./Bank";
 // export * from "./Transaction";
 export * from "./Payment";
+export * from "./POS";
+export * from "./Customer";
