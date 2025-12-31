@@ -2,7 +2,7 @@ import type { Breakpoint, ButtonProps, DrawerProps, PaperProps as MuiPaperProps 
 import type { GridColDef, GridFilterModel, GridPaginationModel, GridRowsProp, GridSortModel, GridValidRowModel } from "@mui/x-data-grid";
 import type { Dayjs } from "dayjs";
 import type { MuiTelInputProps } from "mui-tel-input";
-import type { ReactNode } from "react";
+import type { FocusEvent, ReactNode } from "react";
 import * as Yup from "yup";
 import type { CustomerFormValues } from "./Customer";
 
@@ -94,7 +94,7 @@ export interface CommonValidationDatePickerProps extends DatePickerOption {
   label?: string;
 }
 
-export interface CommonDatePickerProps extends CommonValidationDatePickerProps{
+export interface CommonDatePickerProps extends CommonValidationDatePickerProps {
   value: any;
   onChange: (value: any) => void;
 }
@@ -169,7 +169,7 @@ export interface ExportToPDFProps<T extends GridValidRowModel> {
 
 // ************ Input Start ***********
 
-export interface CommonTextFieldProps {
+export interface CommonValidationTextFieldProps {
   label?: string;
   name: string;
   type?: string;
@@ -183,7 +183,14 @@ export interface CommonTextFieldProps {
   startIcon?: ReactNode;
   endIcon?: ReactNode;
   showPasswordToggle?: boolean;
-  [key: string]: any;
+  disabled?: boolean;
+  onFocus?: (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => void;
+  onBlur?: (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => void;
+  helperText?: string;
+}
+export interface CommonTextFieldProps extends Omit<CommonValidationTextFieldProps, "name"> {
+  value: string;
+  onChange: (value: string) => void;
 }
 
 // ************ Input End ***********
@@ -348,6 +355,7 @@ export interface ModalStateSlice {
   selectedFiles: string[];
   isModalVideoPlay: { open: boolean; link: string };
   isCustomerModal: { open: boolean; data: CustomerFormValues | null };
+  isPaymentListModal: boolean;
 }
 
 // ************ Modal End ***********

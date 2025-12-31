@@ -1,23 +1,18 @@
 import Clear from "@mui/icons-material/Clear";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { FormLabel, Grid } from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
-import IconButton from "@mui/material/IconButton";
-import InputAdornment from "@mui/material/InputAdornment";
-import TextField from "@mui/material/TextField";
+import { FormControl, FormLabel, Grid, IconButton, InputAdornment, TextField, CircularProgress } from "@mui/material";
 import { useField, type FieldHookConfig } from "formik";
 import { useCallback, useMemo, useState, type FC, type ReactNode } from "react";
-import type { CommonTextFieldProps } from "../../Types";
+import type { CommonTextFieldProps, CommonValidationTextFieldProps } from "../../Types";
 
-export const CommonTextField: FC<CommonTextFieldProps> = ({ label, name, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, grid, ...props }) => {
+export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ label, name, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, ...props }) => {
   const fieldConfig: FieldHookConfig<string> = { name };
   const [field, meta, helpers] = useField(fieldConfig);
   const [isFocused, setFocused] = useState(false);
 
   const isPassword = type === "password";
   const [show, setShow] = useState(false);
-  const toggleShowPassword = () => setShow((prev) => !prev);
 
   const inputType = isPassword && showPasswordToggle ? (show ? "text" : "password") : type;
 
@@ -47,9 +42,9 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({ label, name, type = 
     if (showPasswordToggle && isPassword) {
       items.push(
         <InputAdornment position="end" key="toggle-password">
-          <IconButton size="small" onClick={toggleShowPassword}>
+          <IconButton size="small" onClick={() => setShow((prev) => !prev)}>
             {show ? <VisibilityOff /> : <Visibility />}
-          </IconButton> 
+          </IconButton>
         </InputAdornment>
       );
     }
@@ -70,7 +65,7 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({ label, name, type = 
   const startAdornment = startIcon ? <InputAdornment position="start">{startIcon}</InputAdornment> : undefined;
 
   const Input = (
-    <>
+    <FormControl fullWidth error={meta.touched && Boolean(meta.error)}>
       {isFormLabel && (
         <FormLabel className="capitalize" required={required} htmlFor={name} error={meta.touched && Boolean(meta.error)} focused={isFocused} sx={{ mb: 0.5 }}>
           {label}
@@ -78,17 +73,18 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({ label, name, type = 
       )}
 
       <TextField
+        {...field}
+        {...props}
         className="capitalize"
         fullWidth
         label={isFormLabel ? undefined : label}
         id={name}
         type={inputType}
+        disabled={disabled}
         placeholder={placeholder}
         autoComplete={autoComplete}
         required={required}
         size="small"
-        {...field}
-        {...props}
         onFocus={(e) => {
           setFocused(true);
           props.onFocus?.(e);
@@ -107,7 +103,99 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({ label, name, type = 
           },
         }}
       />
-    </>
+    </FormControl>
+  );
+
+  return grid ? (
+    <Grid size={grid} className="flex flex-col justify-start">
+      {Input}
+    </Grid>
+  ) : (
+    Input
+  );
+};
+
+export const CommonTextField: FC<CommonTextFieldProps> = ({ label, value, onChange, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, ...props }) => {
+  const [focused, setFocused] = useState(false);
+  const isPassword = type === "password";
+  const [show, setShow] = useState(false);
+
+  const inputType = isPassword && showPasswordToggle ? (show ? "text" : "password") : type;
+
+  const endAdornment = useMemo(() => {
+    const items: ReactNode[] = [];
+
+    if (validating) {
+      items.push(
+        <InputAdornment position="end" key="loading">
+          <CircularProgress size={18} />
+        </InputAdornment>
+      );
+    }
+
+    if (clearable && value) {
+      items.push(
+        <InputAdornment position="end" key="clear">
+          <IconButton size="small" onClick={() => onChange?.("")}>
+            <Clear fontSize="small" />
+          </IconButton>
+        </InputAdornment>
+      );
+    }
+
+    if (showPasswordToggle && isPassword) {
+      items.push(
+        <InputAdornment position="end" key="toggle">
+          <IconButton size="small" onClick={() => setShow((p) => !p)}>
+            {show ? <VisibilityOff /> : <Visibility />}
+          </IconButton>
+        </InputAdornment>
+      );
+    }
+
+    if (endIcon) {
+      items.push(
+        <InputAdornment position="end" key="end-icon">
+          {endIcon}
+        </InputAdornment>
+      );
+    }
+
+    return items.length ? <>{items}</> : undefined;
+  }, [validating, clearable, value, showPasswordToggle, isPassword, endIcon, show, onChange]);
+
+  const startAdornment = startIcon ? <InputAdornment position="start">{startIcon}</InputAdornment> : undefined;
+
+  const Input = (
+    <FormControl fullWidth>
+      {isFormLabel && (
+        <FormLabel className="capitalize" required={required} focused={focused} sx={{ mb: 0.5 }}>
+          {label}
+        </FormLabel>
+      )}
+
+      <TextField
+        {...props}
+        className="capitalize"
+        value={value}
+        onChange={(e) => onChange?.(e.target.value)}
+        disabled={disabled}
+        label={isFormLabel ? undefined : label}
+        type={inputType}
+        placeholder={placeholder}
+        required={required}
+        autoComplete={autoComplete}
+        size="small"
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        slotProps={{
+          input: {
+            startAdornment,
+            endAdornment,
+          },
+        }}
+      />
+    </FormControl>
   );
 
   return grid ? (

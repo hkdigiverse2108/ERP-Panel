@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
-import { CommonButton, CommonTextField } from "../../Attribute";
+import { CommonButton, CommonValidationTextField } from "../../Attribute";
 import { ImagePath, ROUTES } from "../../Constants";
 import ThemeToggler from "../../Layout/ThemeToggler";
 import { SigninSchema } from "../../Utils/ValidationSchemas";
@@ -38,8 +38,8 @@ const SignInForm = () => {
             <Formik initialValues={{ email: "", password: "" }} validationSchema={SigninSchema} onSubmit={handleSubmit}>
               <Form>
                 <Grid container spacing={2}>
-                  <CommonTextField name="email" label="Email ID" placeholder="Enter your email" required isFormLabel grid={{ xs: 12 }} />
-                  <CommonTextField name="password" label="password" type="password" placeholder="Enter your password" required isFormLabel showPasswordToggle grid={{ xs: 12 }} />
+                  <CommonValidationTextField name="email" label="Email ID" placeholder="Enter your email" required isFormLabel grid={{ xs: 12 }} />
+                  <CommonValidationTextField name="password" label="password" type="password" placeholder="Enter your password" required isFormLabel showPasswordToggle grid={{ xs: 12 }} />
                   <CommonButton loading={isSigninPending} type="submit" variant="contained" title="Sign In" size="medium" fullWidth grid={{ xs: 12 }} />
                 </Grid>
               </Form>

@@ -2,7 +2,7 @@ import { Box, Grid, RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import { Formik, Form } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CommonCard } from "../../Components/Common";
-import { CommonTextField, CommonButton } from "../../Attribute";
+import { CommonValidationTextField, CommonButton } from "../../Attribute";
 
 const ContactForm = () => {
   const navigate = useNavigate();
@@ -57,17 +57,17 @@ const ContactForm = () => {
               {/*  GENERAL DETAILS  */}
               <CommonCard title="General Details" grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="name" label="Name" required grid={{ xs: 12, md: 6 }} />
-                  <CommonTextField name="email" label="Email" grid={{ xs: 12, md: 6 }} />
-                  <CommonTextField name="companyName" label="Company Name" required grid={{ xs: 12, md: 6 }} />
-                  <CommonTextField name="mobileNo" label="Mobile No" type="number" required grid={{ xs: 12, md: 6 }} />
-                  <CommonTextField name="whatsappNo" label="WhatsApp No" type="number" required grid={{ xs: 12, md: 6 }} />
-                  <CommonTextField name="panNo" label="PAN No" required grid={{ xs: 12, md: 6 }} />
+                  <CommonValidationTextField name="name" label="Name" required grid={{ xs: 12, md: 6 }} />
+                  <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 6 }} />
+                  <CommonValidationTextField name="companyName" label="Company Name" required grid={{ xs: 12, md: 6 }} />
+                  <CommonValidationTextField name="mobileNo" label="Mobile No" type="number" required grid={{ xs: 12, md: 6 }} />
+                  <CommonValidationTextField name="whatsappNo" label="WhatsApp No" type="number" required grid={{ xs: 12, md: 6 }} />
+                  <CommonValidationTextField name="panNo" label="PAN No" required grid={{ xs: 12, md: 6 }} />
 
-                  <CommonTextField name="paymentMode" label="Payment Mode" required grid={{ xs: 12, md: 6 }} />
-                  <CommonTextField name="paymentTerms" label="Payment Terms" grid={{ xs: 12, md: 6 }} />
-                  <CommonTextField name="openingBalance" label="Opening Balance" type="number" grid={{ xs: 12, md: 6 }} />
-                  <CommonTextField name="customerCategory" label="Customer Category" grid={{ xs: 12, md: 6 }} />
+                  <CommonValidationTextField name="paymentMode" label="Payment Mode" required grid={{ xs: 12, md: 6 }} />
+                  <CommonValidationTextField name="paymentTerms" label="Payment Terms" grid={{ xs: 12, md: 6 }} />
+                  <CommonValidationTextField name="openingBalance" label="Opening Balance" type="number" grid={{ xs: 12, md: 6 }} />
+                  <CommonValidationTextField name="customerCategory" label="Customer Category" grid={{ xs: 12, md: 6 }} />
 
                   {/*  CUSTOMER TYPE */}
                   {type === "customer" && (
@@ -98,18 +98,18 @@ const ContactForm = () => {
               {/*  ADDRESS DETAILS */}
               <CommonCard title="Address Details" grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="gstType" label="GST Type" required grid={{ xs: 12, md: 6 }} />
-                  <CommonTextField name="gstin" label="GSTIN" required grid={{ xs: 12, md: 6 }} />
-                  <CommonTextField name="addressName" label="Name" required grid={{ xs: 12, md: 6 }} />
-                  <CommonTextField name="addressCompany" label="Company Name" required grid={{ xs: 12, md: 6 }} />
-                  <CommonTextField name="addressContact" label="Contact No" required grid={{ xs: 12, md: 6 }} />
-                  <CommonTextField name="addressEmail" label="Email" required grid={{ xs: 12, md: 6 }} />
-                  <CommonTextField name="address" label="Address" required grid={{ xs: 12 }} />
+                  <CommonValidationTextField name="gstType" label="GST Type" required grid={{ xs: 12, md: 6 }} />
+                  <CommonValidationTextField name="gstin" label="GSTIN" required grid={{ xs: 12, md: 6 }} />
+                  <CommonValidationTextField name="addressName" label="Name" required grid={{ xs: 12, md: 6 }} />
+                  <CommonValidationTextField name="addressCompany" label="Company Name" required grid={{ xs: 12, md: 6 }} />
+                  <CommonValidationTextField name="addressContact" label="Contact No" required grid={{ xs: 12, md: 6 }} />
+                  <CommonValidationTextField name="addressEmail" label="Email" required grid={{ xs: 12, md: 6 }} />
+                  <CommonValidationTextField name="address" label="Address" required grid={{ xs: 12 }} />
 
-                  <CommonTextField name="country" label="Country" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="state" label="State" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="city" label="City" required grid={{ xs: 12, md: 4 }} />
-                  <CommonTextField name="pinCode" label="Pin Code" required grid={{ xs: 12, md: 4 }} />
+                  <CommonValidationTextField name="country" label="Country" required grid={{ xs: 12, md: 4 }} />
+                  <CommonValidationTextField name="state" label="State" required grid={{ xs: 12, md: 4 }} />
+                  <CommonValidationTextField name="city" label="City" required grid={{ xs: 12, md: 4 }} />
+                  <CommonValidationTextField name="pinCode" label="Pin Code" required grid={{ xs: 12, md: 4 }} />
                 </Grid>
               </CommonCard>
 

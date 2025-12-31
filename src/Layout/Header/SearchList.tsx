@@ -3,7 +3,7 @@ import { CommonDrawer } from "../../Components/Common";
 import { useMemo, useState } from "react";
 import { Form, Formik } from "formik";
 import { Grid } from "@mui/material";
-import { CommonTextField } from "../../Attribute";
+import { CommonValidationTextField } from "../../Attribute";
 import { NavItems } from "../../Data";
 
 const SearchList = () => {
@@ -28,7 +28,7 @@ const SearchList = () => {
         <Formik initialValues={{ search: "" }} onSubmit={() => {}}>
           <Form>
             <Grid sx={{ px: 1 }} container spacing={2}>
-              <CommonTextField name="Search" placeholder="Search..." grid={{ xs: 12 }} onChange={(e: any) => setQuery(e.target.value)}/>
+              <CommonValidationTextField name="Search" placeholder="Search..." grid={{ xs: 12 }} onChange={(e: any) => setQuery(e.target.value)}/>
             </Grid>
           </Form>
         </Formik>

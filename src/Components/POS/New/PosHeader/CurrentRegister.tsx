@@ -3,7 +3,7 @@ import { Grid, Tooltip } from "@mui/material";
 import { useState, type ChangeEvent } from "react";
 import { CommonModal } from "../../../Common";
 import { Form, Formik } from "formik";
-import { CommonButton, CommonTextField, CommonValidationSelect } from "../../../../Attribute";
+import { CommonButton, CommonValidationTextField, CommonValidationSelect } from "../../../../Attribute";
 import { BAUD_RATE } from "../../../../Data";
 
 const CurrentRegister = () => {
@@ -93,7 +93,7 @@ const CurrentRegister = () => {
                         <tr key={note} className="bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-900">
                           <td className="px-3 py-2 text-start font-medium text-gray-600 dark:text-gray-300">₹{note}</td>
                           <td className="px-3">
-                            <CommonTextField
+                            <CommonValidationTextField
                               name={`nos_${note}`}
                               type="number"
                               value={nosMap[note] ?? ""}
@@ -121,11 +121,11 @@ const CurrentRegister = () => {
                 <div className="space-y-3 text-sm">
                   <Grid container spacing={2}>
                     <CommonValidationSelect name="bankAccount" label="Bank Account" options={BAUD_RATE} grid={{ xs: 12 }} />
-                    <CommonTextField name="bankTransfer" label="Bank Transfer" grid={{ xs: 12 }} />
-                    <CommonTextField name="cashFlow" label="Cash Flow" grid={{ xs: 12 }} />
-                    <CommonTextField name="totalCashLeftInDrawer" label="Total Cash Left In Drawer" grid={{ xs: 12 }} />
-                    <CommonTextField name="physicalDrawer" label="Physical Drawer" required grid={{ xs: 12 }} />
-                    <CommonTextField name="closingNote" label="Closing Note" grid={{ xs: 12 }} rows={3} multiline />
+                    <CommonValidationTextField name="bankTransfer" label="Bank Transfer" grid={{ xs: 12 }} />
+                    <CommonValidationTextField name="cashFlow" label="Cash Flow" grid={{ xs: 12 }} />
+                    <CommonValidationTextField name="totalCashLeftInDrawer" label="Total Cash Left In Drawer" grid={{ xs: 12 }} />
+                    <CommonValidationTextField name="physicalDrawer" label="Physical Drawer" required grid={{ xs: 12 }} />
+                    <CommonValidationTextField name="closingNote" label="Closing Note" grid={{ xs: 12 }} rows={3} multiline />
                   </Grid>
                 </div>
               </div>

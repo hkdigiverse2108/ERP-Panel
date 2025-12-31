@@ -5,7 +5,7 @@ import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { Box, Grid } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useState } from "react";
-import { CommonButton, CommonPhoneNumber, CommonTextField } from "../../Attribute";
+import { CommonButton, CommonPhoneNumber, CommonValidationTextField } from "../../Attribute";
 import { CommonModal } from "../../Components/Common";
 import { Mutations } from "../../Api";
 import { CallRequestFormSchema } from "../../Utils/ValidationSchemas";
@@ -61,10 +61,10 @@ const SupportDesk = () => {
           <Formik<CallRequestFormValues> initialValues={initialValues} validationSchema={CallRequestFormSchema} enableReinitialize onSubmit={handleSubmit}>
             <Form noValidate>
               <Grid sx={{ px: 1 }} container spacing={2}>
-                <CommonTextField name="businessName" label="Business Name" grid={{ xs: 12 }} required />
-                <CommonTextField name="contactName" label="Contact Name" grid={{ xs: 12 }} required />
+                <CommonValidationTextField name="businessName" label="Business Name" grid={{ xs: 12 }} required />
+                <CommonValidationTextField name="contactName" label="Contact Name" grid={{ xs: 12 }} required />
                 <CommonPhoneNumber label="Phone No." countryCodeName="contactNo.countryCode" numberName="contactNo.phoneNo" grid={{ xs: 12 }} required />
-                <CommonTextField name="note" label="Notes" type="textarea" multiline rows={2} validating={false} grid={{ xs: 12 }} required />
+                <CommonValidationTextField name="note" label="Notes" type="textarea" multiline rows={2} validating={false} grid={{ xs: 12 }} required />
                 <CommonButton type="submit" variant="contained" title="Send" size="medium" loading={isCallRequestLoading} fullWidth grid={{ xs: 12 }} />
               </Grid>
             </Form>

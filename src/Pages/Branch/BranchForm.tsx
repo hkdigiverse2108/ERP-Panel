@@ -2,7 +2,7 @@ import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations } from "../../Api";
-import { CommonTextField, CommonValidationSwitch } from "../../Attribute";
+import { CommonValidationTextField, CommonValidationSwitch } from "../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
@@ -57,8 +57,8 @@ const BranchForm = () => {
               <Grid container spacing={2}>
                 <CommonCard hideDivider grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonTextField name="name" label="Branch Name" required grid={{ xs: 12 }} />
-                    <CommonTextField name="address" label="Branch Address" required grid={{ xs: 12 }} />
+                    <CommonValidationTextField name="name" label="Branch Name" required grid={{ xs: 12 }} />
+                    <CommonValidationTextField name="address" label="Branch Address" required grid={{ xs: 12 }} />
                     {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                   </Grid>
                   <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />

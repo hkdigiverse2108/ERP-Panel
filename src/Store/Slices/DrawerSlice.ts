@@ -1,18 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isEndTestDrawer: false,
+  isHoldBillDrawer: false,
 };
 
 const DrawerSlice = createSlice({
   name: "Drawer",
   initialState,
   reducers: {
-    setEndTestDrawer: (state) => {
-      state.isEndTestDrawer = !state.isEndTestDrawer;
+    setHoldBillDrawer: (state) => {
+      state.isHoldBillDrawer = !state.isHoldBillDrawer;
     },
   },
 });
 
-export const { setEndTestDrawer } = DrawerSlice.actions;
+export const { setHoldBillDrawer } = DrawerSlice.actions;
 export default DrawerSlice.reducer;
