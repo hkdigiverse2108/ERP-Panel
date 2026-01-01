@@ -5,7 +5,7 @@ import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { Box, Grid } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useState } from "react";
-import { CommonButton, CommonPhoneNumber, CommonTextField } from "../../Attribute";
+import { CommonButton, CommonPhoneNumber, CommonValidationTextField } from "../../Attribute";
 import { CommonModal } from "../../Components/Common";
 import { Mutations } from "../../Api";
 import { CallRequestFormSchema } from "../../Utils/ValidationSchemas";
@@ -28,7 +28,7 @@ const SupportDesk = () => {
   return (
     <>
       <Box className="relative group">
-        <div className="flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full hover:text-dark-900 h-11 w-11 max-xsm:h-9 max-xsm:w-9 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white cursor-pointer">
+        <div className="flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full h-11 w-11 max-xsm:h-9 max-xsm:w-9 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white cursor-pointer">
           <SupportAgentIcon sx={{ fontSize: { xs: 20, md: 22 } }} />
         </div>
         <div className="absolute lg:right-0 mt-3 flex min-w-[285px] max-w-[330px] flex-col rounded-xl border border-gray-50 bg-white shadow-tooltip dark:border-gray-800 dark:bg-gray-dark z-50 opacity-0 invisible scale-95 translate-y-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:visible group-hover:scale-100 group-hover:translate-y-0 ">
@@ -61,10 +61,10 @@ const SupportDesk = () => {
           <Formik<CallRequestFormValues> initialValues={initialValues} validationSchema={CallRequestFormSchema} enableReinitialize onSubmit={handleSubmit}>
             <Form noValidate>
               <Grid sx={{ px: 1 }} container spacing={2}>
-                <CommonTextField name="businessName" label="Business Name" grid={{ xs: 12 }} required />
-                <CommonTextField name="contactName" label="Contact Name" grid={{ xs: 12 }} required />
+                <CommonValidationTextField name="businessName" label="Business Name" grid={{ xs: 12 }} required />
+                <CommonValidationTextField name="contactName" label="Contact Name" grid={{ xs: 12 }} required />
                 <CommonPhoneNumber label="Phone No." countryCodeName="contactNo.countryCode" numberName="contactNo.phoneNo" grid={{ xs: 12 }} required />
-                <CommonTextField name="note" label="Notes" type="textarea" multiline rows={2} validating={false} grid={{ xs: 12 }} required />
+                <CommonValidationTextField name="note" label="Notes" type="textarea" multiline rows={2} validating={false} grid={{ xs: 12 }} required />
                 <CommonButton type="submit" variant="contained" title="Send" size="medium" loading={isCallRequestLoading} fullWidth grid={{ xs: 12 }} />
               </Grid>
             </Form>

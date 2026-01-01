@@ -1,9 +1,8 @@
 import { Box, Grid, RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
-
 import { CommonCard, CommonBottomActionBar, CommonBreadcrumbs } from "../../../Components/Common";
-import { CommonTextField } from "../../../Attribute";
+import { CommonValidationTextField } from "../../../Attribute";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import { useAppSelector } from "../../../Store/hooks";
@@ -100,10 +99,10 @@ const PaymentForm = () => {
                 {values.paymentMode === "CASH" && (
                   <CommonCard title="Cash Payment Details" grid={{ xs: 12 }}>
                     <Grid container spacing={{ xs: 1.5, md: 2 }} sx={{ p: { xs: 1, md: 2 } }}>
-                      <CommonTextField name="party" label="Party" grid={{ xs: 12, sm: 6, md: 4 }} />
-                      <CommonTextField name="paymentDate" type="date" label="Payment Date" grid={{ xs: 12, sm: 6, md: 4 }} InputLabelProps={{ shrink: true }} />
-                      <CommonTextField name="amount" type="number" label="Amount" grid={{ xs: 12, sm: 6, md: 4 }} />
-                      <CommonTextField name="description" label="Description" grid={{ xs: 12 }} />
+                      <CommonValidationTextField name="party" label="Party" grid={{ xs: 12, sm: 6, md: 4 }} />
+                      <CommonValidationTextField name="paymentDate" type="date" label="Payment Date" grid={{ xs: 12, sm: 6, md: 4 }} InputLabelProps={{ shrink: true }} />
+                      <CommonValidationTextField name="amount" type="number" label="Amount" grid={{ xs: 12, sm: 6, md: 4 }} />
+                      <CommonValidationTextField name="description" label="Description" grid={{ xs: 12 }} />
 
                       <RadioGroup
                         sx={{
@@ -137,12 +136,12 @@ const PaymentForm = () => {
                         <FormControlLabel value="CHEQUE" control={<Radio />} label="Cheque" />
                       </RadioGroup>
 
-                      <CommonTextField name="party" label="Party" grid={{ xs: 12, sm: 6, md: 4 }} />
-                      <CommonTextField name="paymentDate" type="date" label="Payment Date" grid={{ xs: 12, sm: 6, md: 4 }} InputLabelProps={{ shrink: true }} />
-                      <CommonTextField name="transactionDate" type="date" label="Transaction Date" grid={{ xs: 12, sm: 6, md: 4 }}  InputLabelProps={{ shrink: true }}/>
-                      <CommonTextField name="transactionNo" label="Transaction No" grid={{ xs: 12, sm: 6, md: 4 }} />
-                      <CommonTextField name="amount" type="number" label="Amount" grid={{ xs: 12, sm: 6, md: 4 }} />
-                      <CommonTextField name="description" label="Description" grid={{ xs: 12 }} />
+                      <CommonValidationTextField name="party" label="Party" grid={{ xs: 12, sm: 6, md: 4 }} />
+                      <CommonValidationTextField name="paymentDate" type="date" label="Payment Date" grid={{ xs: 12, sm: 6, md: 4 }} InputLabelProps={{ shrink: true }} />
+                      <CommonValidationTextField name="transactionDate" type="date" label="Transaction Date" grid={{ xs: 12, sm: 6, md: 4 }}  InputLabelProps={{ shrink: true }}/>
+                      <CommonValidationTextField name="transactionNo" label="Transaction No" grid={{ xs: 12, sm: 6, md: 4 }} />
+                      <CommonValidationTextField name="amount" type="number" label="Amount" grid={{ xs: 12, sm: 6, md: 4 }} />
+                      <CommonValidationTextField name="description" label="Description" grid={{ xs: 12 }} />
                     </Grid>
                   </CommonCard>
                 )}

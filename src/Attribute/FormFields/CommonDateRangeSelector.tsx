@@ -3,7 +3,7 @@ import { DateRangeCalendar, type DateRange } from "@mui/x-date-pickers-pro";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState, type FC } from "react";
 import type { CommonDateRangeSelectorProps } from "../../Types";
-import {CommonButton} from "./CommonButton";
+import { CommonButton } from "./CommonButton";
 
 const ranges = ["Today", "Yesterday", "This Week", "This Month", "Last 15 Days", "Last 30 Days", "This Quarter", "Last Quarter", "This Financial Year", "Last Financial Year"] as const;
 
@@ -63,16 +63,15 @@ export const CommonDateRangeSelector: FC<CommonDateRangeSelectorProps> = ({ valu
     setTempRange(getRange(label));
   };
 
-useEffect(() => {
-  if (!active) return;
+  useEffect(() => {
+    if (!active) return;
 
-  const label = active as RangeLabel;
-  const range = getRange(label);
+    const label = active as RangeLabel;
+    const range = getRange(label);
 
-  // Only sync parent value
-  onChange({ start: range[0]!, end: range[1]! });
-}, [active, onChange]);
-
+    // Only sync parent value
+    onChange({ start: range[0]!, end: range[1]! });
+  }, [active, onChange]);
 
   const applyCustom = () => {
     if (tempRange[0] && tempRange[1]) {
@@ -80,7 +79,7 @@ useEffect(() => {
       setAnchorEl(null);
     }
   };
-  
+
   const handleClose = () => {
     setAnchorEl(null);
     setSelectedRange((active as RangeLabel) ?? "Today");
@@ -101,13 +100,15 @@ useEffect(() => {
           }}
         >
           {/* LEFT LIST */}
-          <List dense sx={{ width: { xs: "100%", md: 200 }, borderRight: { md: "1px solid #ddd" }, borderBottom: { xs: "1px solid #ddd", md: "none" } }}>
-            {ranges.map((item) => (
-              <ListItemButton key={item} selected={selectedRange === item} onClick={() => handleRangeSelect(item)}>
-                <ListItemText primary={item} />
-              </ListItemButton>
-            ))}
-          </List>
+          {active !== "custom" && (
+            <List dense sx={{ width: { xs: "100%", md: 200 }, borderRight: { md: "1px solid #ddd" }, borderBottom: { xs: "1px solid #ddd", md: "none" } }}>
+              {ranges.map((item) => (
+                <ListItemButton key={item} selected={selectedRange === item} onClick={() => handleRangeSelect(item)}>
+                  <ListItemText primary={item} />
+                </ListItemButton>
+              ))}
+            </List>
+          )}
 
           {/* RIGHT CALENDAR */}
           <Box sx={{ flexGrow: 1, minWidth: { xs: "100%", md: 300 }, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
@@ -119,8 +120,8 @@ useEffect(() => {
               <Box>{tempRange[0] && tempRange[1] ? `${tempRange[0].format("DD/MM/YYYY")} - ${tempRange[1].format("DD/MM/YYYY")}` : ""}</Box>
 
               <Box sx={{ display: "flex", gap: 1, pl: 2 }}>
-                <CommonButton variant="outlined" onClick={() => setAnchorEl(null)} title="Cancel"/>
-                <CommonButton variant="contained" onClick={applyCustom} title="Apply"/>
+                <CommonButton variant="outlined" onClick={() => setAnchorEl(null)} title="Cancel" />
+                <CommonButton variant="contained" onClick={applyCustom} title="Apply" />
               </Box>
             </Box>
           </Box>

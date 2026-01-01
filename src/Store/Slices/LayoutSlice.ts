@@ -33,7 +33,9 @@ const layoutSlice = createSlice({
     setToggleSidebar: (state) => {
       state.isExpanded = !state.isExpanded;
     },
-
+    setSidebarOpen: (state, action) => {
+      state.isExpanded = action.payload;
+    },
     setToggleMobileSidebar: (state) => {
       state.isMobileOpen = !state.isMobileOpen;
     },
@@ -57,6 +59,6 @@ const layoutSlice = createSlice({
   },
 });
 
-export const { setIsMobile, setToggleSidebar, setToggleMobileSidebar, setIsHovered, setApplicationMenuOpen, setToggleSubmenu, setToggleTheme } = layoutSlice.actions;
+export const { setIsMobile, setToggleSidebar, setToggleMobileSidebar, setIsHovered, setApplicationMenuOpen, setToggleSubmenu, setToggleTheme, setSidebarOpen } = layoutSlice.actions;
 
 export default layoutSlice.reducer;

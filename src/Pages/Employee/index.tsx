@@ -1,16 +1,18 @@
-import { Box } from "@mui/material";
-import { useMemo } from "react";
+import { Box, Grid } from "@mui/material";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonPhoneColumns } from "../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonPhoneColumns } from "../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../Constants";
-import { BREADCRUMBS } from "../../Data";
+import { BREADCRUMBS, PRODUCT_TYPE_OPTIONS } from "../../Data";
 import type { AppGridColDef, EmployeeBase } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
+import { CommonSelect } from "../../Attribute";
 
 const Employee = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
+  const [value, setValue] = useState<string[]>([]);
 
   const { data: employeeData, isLoading: employeeDataLoading, isFetching: employeeDataFetching } = Queries.useGetEmployee(params);
   const { mutate: deleteEmployeeMutate } = Mutations.useDeleteEmployee();
@@ -61,7 +63,12 @@ const Employee = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.EMPLOYEE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.EMPLOYEE.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 } }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch>
+          <Grid size={{ xs: 12, xsm: 6, sm: 3, xxl: 2 }}>
+            <CommonSelect label="Select Location" options={PRODUCT_TYPE_OPTIONS} value={value} onChange={(v) => setValue(v)} limitTags={1} multiple />
+          </Grid>
+        </AdvancedSearch>
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

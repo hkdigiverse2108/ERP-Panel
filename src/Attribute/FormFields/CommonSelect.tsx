@@ -3,7 +3,7 @@ import { useField } from "formik";
 import { type FC } from "react";
 import type { CommonSelectProps, CommonValidationSelectProps, SelectOptionType } from "../../Types";
 
-export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, label, required, options, multiple = false, limitTags, size = "small", grid }) => {
+export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, label, required, options, multiple = false, limitTags, size = "small", grid, disabled }) => {
   const [field, meta, helpers] = useField<any>({ name });
 
   // Normalize value
@@ -18,6 +18,7 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
       limitTags={limitTags}
       value={valueObjects}
       size={size}
+      disabled={disabled}
       getOptionLabel={(opt) => opt.label}
       isOptionEqualToValue={(option, val) => option.value === val.value}
       onChange={(_, newValues) => {
@@ -28,14 +29,14 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
         }
       }}
       onBlur={() => helpers.setTouched(true)}
-      renderInput={(params) => <TextField {...params} className="capitalize" required={required} label={label} size={size} error={meta.touched && Boolean(meta.error)} helperText={meta.touched && meta.error ? meta.error : ""} />}
+      renderInput={(params) => <TextField {...params} className="capitalize" disabled={disabled} required={required} label={label} size={size} error={meta.touched && Boolean(meta.error)} helperText={meta.touched && meta.error ? meta.error : ""} />}
     />
   );
 
   return grid ? <Grid size={grid}>{Input}</Grid> : Input;
 };
 
-export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value, onChange, multiple = false, limitTags, size, grid }) => {
+export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value, onChange, multiple = false, limitTags, size, grid, disabled }) => {
   const valueObjects = value.map((v) => options.find((o) => o.value === v)).filter(Boolean) as SelectOptionType[];
   const singleValue = !multiple ? valueObjects[0] ?? null : null;
 
@@ -46,6 +47,7 @@ export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value
       limitTags={limitTags}
       value={multiple ? valueObjects : singleValue}
       size={size}
+      disabled={disabled}
       getOptionLabel={(opt) => opt.label}
       isOptionEqualToValue={(option, val) => option.value === val.value}
       onChange={(_, newValues) => {
@@ -59,7 +61,7 @@ export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value
       filterSelectedOptions
       clearOnEscape
       disableCloseOnSelect={multiple}
-      renderInput={(params) => <TextField {...params} label={label} size="small" />}
+      renderInput={(params) => <TextField {...params} className="capitalize" disabled={disabled} label={label} size="small" />}
     />
   );
 

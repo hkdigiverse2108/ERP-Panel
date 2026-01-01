@@ -156,3 +156,21 @@ export const CompanyFormSchemas = Yup.object({
   reportFormatLogo: Validation("string", "Report Format Logo", { required: false }),
   authorizedSignature: Validation("string", "Authorized Signature", { required: false }),
 });
+
+export const WeightScaleFormSchema = Yup.object({
+  baudRate: Validation("string", "Baud Rate"),
+  dataBits: Validation("string", "Data Bits"),
+  stopBits: Validation("string", "Stop Bits"),
+  parity: Validation("string", "Parity"),
+  flowControl: Validation("string", "Flow Control"),
+  precision: Validation("string", "Precision"),
+});
+
+export const CustomerFormSchema = Yup.object({
+  baudRate: Validation("string", "Baud Rate"),
+  dataBits: Validation("string", "Data Bits"),
+  stopBits: Validation("string", "Stop Bits"),
+  parity: Validation("string", "Parity"),
+  flowControl: Validation("string", "Flow Control"),
+  precision: Validation("string", "Precision"),
+});

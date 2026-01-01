@@ -2,7 +2,7 @@ import { Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import type { FC } from "react";
 import { Mutations } from "../../../../Api";
-import { CommonButton, CommonTextField, CommonValidationSwitch } from "../../../../Attribute";
+import { CommonButton, CommonValidationTextField, CommonValidationSwitch } from "../../../../Attribute";
 import { PAGE_TITLE } from "../../../../Constants";
 import type { RolesBase, RolesFormValues } from "../../../../Types";
 import { GetChangedFields, RemoveEmptyFields } from "../../../../Utils";
@@ -53,7 +53,7 @@ const RolesFormModal: FC<RolesFormModalProps> = ({ openModal, setOpenModal, isEd
             <Grid container spacing={2}>
               <CommonCard hideDivider grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
-                  <CommonTextField name="name" label="Roles Name" required grid={{ xs: 12 }} />
+                  <CommonValidationTextField name="name" label="Roles Name" required grid={{ xs: 12 }} />
                   {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                   <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
                     <CommonButton variant="outlined" onClick={() => setOpenModal(!openModal)} title="Cancel" />

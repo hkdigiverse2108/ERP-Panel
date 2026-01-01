@@ -41,6 +41,11 @@ export const PAGE_TITLE = {
       EDIT: "Edit product",
     },
   },
+  CUSTOMER:{
+    BASE: "Customer",
+    ADD: "Add Customer",
+    EDIT: "Edit Customer",
+  },
   BANK: {
     BASE: "Bank",
     BANK: {
@@ -55,5 +60,9 @@ export const PAGE_TITLE = {
     BASE: "Payment",
     EDIT: "Edit Payment",
     ADD: "Add Payment",
+  },
+  POS: {
+    BASE: "POS",
+    NEW: "New POS",
   },
 } as const;
