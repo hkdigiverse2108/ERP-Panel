@@ -187,6 +187,8 @@ export interface CommonValidationTextFieldProps {
   onFocus?: (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => void;
   onBlur?: (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => void;
   helperText?: string;
+  multiline?: boolean;
+  isCurrency?: boolean;
 }
 export interface CommonTextFieldProps extends Omit<CommonValidationTextFieldProps, "name"> {
   value: string;
@@ -356,6 +358,11 @@ export interface ModalStateSlice {
   isModalVideoPlay: { open: boolean; link: string };
   isCustomerModal: { open: boolean; data: CustomerFormValues | null };
   isPaymentListModal: boolean;
+  isAddPaymentModal: boolean;
+  isRedeemLoyaltyModal: boolean;
+  isCreditNoteModal: boolean;
+  isOrderModal: boolean;
+  isCashControlModal: boolean;
 }
 
 // ************ Modal End ***********
@@ -377,7 +384,7 @@ export interface CommonRadioProps {
   grid?: GridType;
 }
 
-export interface CommonValidationRadioProps extends CommonRadioProps {
+export interface CommonValidationRadioProps extends Omit<CommonRadioProps, "value" | "onChange"> {
   name: string;
   required?: boolean;
 }
