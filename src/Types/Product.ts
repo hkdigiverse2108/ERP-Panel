@@ -1,7 +1,7 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 
 export interface ProductFormValues {
-  variants: any;
+  variants?: any;
   _id?: string;
   _submitAction?: string;
   companyId?: string;
@@ -17,7 +17,7 @@ export interface ProductFormValues {
   brandId?: string;
   subBrandId?: string;
   departmentId?: string;
-  uomId?: string;
+  uomId?: string; 
   purchaseTaxId?: string;
   salesTaxId?: string;
   isPurchaseTaxInclusive?: boolean;
@@ -27,7 +27,8 @@ export interface ProductFormValues {
   sellingPrice?: number;
   purchasePrice?: number;
   landingCost?: number;
-  
+  masterQuantity?: number;
+  minimumQuantity?: number;
   hsnCode?: string;
   expiryDays?: string;
   expiryType?: string;
@@ -49,6 +50,7 @@ export interface ProductFormValues {
   quantity?: number;
   gst?: number;
   isActive?: boolean;
+  imageUrl?: string;
 }
 
 

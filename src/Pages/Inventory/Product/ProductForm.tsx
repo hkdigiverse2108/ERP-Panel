@@ -2,9 +2,9 @@ import { Box, Grid, IconButton } from "@mui/material";
 import { Formik, Form, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations } from "../../../Api";
-import { CommonTextField, CommonSelect, CommonValidationSelect } from "../../../Attribute";
+import { CommonTextField, CommonSelect, CommonValidationSelect, CommonValidationSwitch } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
-import {  PAGE_TITLE } from "../../../Constants";
+import { PAGE_TITLE } from "../../../Constants";
 import { BRAND_OPTIONS, BREADCRUMBS, CATEGORY_OPTIONS, PRODUCT_TYPE_OPTIONS, SUB_CATEGORY_OPTIONS, TAX_OPTIONS, UOM_OPTIONS } from "../../../Data";
 import { useAppSelector } from "../../../Store/hooks";
 import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
@@ -18,7 +18,7 @@ import type { ProductFormValues } from "../../../Types";
 const ProductForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
- 
+
   const { data } = location.state || {};
   const { company } = useAppSelector((state) => state.company);
 
@@ -28,19 +28,18 @@ const ProductForm = () => {
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
 
- const initialValues: ProductFormValues = {
-    _submitAction: "save",
-     variants: [
-       {
-       name: "",
-         nutrition: [
-           {
-             label: "",
-           value: "",
-           },
+  const initialValues: ProductFormValues = {
+    variants: [
+      {
+        name: "",
+        nutrition: [
+          {
+            label: "",
+            value: "",
+          },
         ],
       },
-     ],
+    ],
 
     companyId: data?.companyId || "",
 
@@ -87,61 +86,50 @@ const ProductForm = () => {
     status: data?.status || "active",
   };
 
-  const handleSubmit = async (
-  values: ProductFormValues,
-  { resetForm }: FormikHelpers<ProductFormValues>
-) => {
-  const { _submitAction, ...rest } = values;
+  const handleSubmit = async (values: ProductFormValues, { resetForm }: FormikHelpers<ProductFormValues>) => {
+    const { _submitAction, ...rest } = values;
 
-  const payload = {
-    ...rest,
-    companyId: company!._id,
+    const payload = {
+      ...rest,
+      companyId: company!._id,
+    };
+
+    const handleSuccess = () => {
+      if (_submitAction === "saveAndNew") resetForm();
+      else navigate(-1);
+    };
+
+    if (isEditing) {
+      const changedFields = GetChangedFields(payload, data);
+      await editProduct({ ...changedFields, variants: payload.variants, productId: data._id }, { onSuccess: handleSuccess });
+    } else {
+      await addProduct({ ...RemoveEmptyFields(payload), variants: payload.variants }, { onSuccess: handleSuccess });
+    }
   };
 
-  const handleSuccess = () => {
-    if (_submitAction === "saveAndNew") resetForm();
-    else navigate(-1);
-  };
-
-  if (isEditing) {
-    const changedFields = GetChangedFields(payload, data);
-    editProduct(
-      { ...changedFields, variants: payload.variants, productId: data._id },
-      { onSuccess: handleSuccess }
-    );
-  } else {
-    const cleanedPayload = RemoveEmptyFields(payload);
-    addProduct(
-      { ...cleanedPayload, variants: payload.variants },
-      { onSuccess: handleSuccess }
-    );
-  }
-};
-
-
-return (
+  return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT[pageMode]} maxItems={1} breadcrumbs={BREADCRUMBS.PRODUCT[pageMode]} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<ProductFormValues> enableReinitialize initialValues={initialValues} validationSchema={ProductFormSchema} onSubmit={handleSubmit}>
-          {({ values, setFieldValue, resetForm }) => (
+          {({ values, setFieldValue, resetForm, dirty }) => (
             <Form noValidate>
               <Grid container spacing={2}>
-                {/* ---------- GENERAL DETAILS ---------- */} 
+                {/* ---------- GENERAL DETAILS ---------- */}
                 <CommonCard title="General Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonTextField name="itemCode" label="Item Code" required grid={{ xs: 12, md: 6 }} />
-                  <CommonValidationSelect name="productType" label="Product Type" options={PRODUCT_TYPE_OPTIONS} grid={{ xs: 12, md: 6 }} />
-                   <CommonTextField name="name" label="Product Name" required grid={{ xs: 12, md: 6 }} />
+                    <CommonValidationSelect name="productType" label="Product Type" options={PRODUCT_TYPE_OPTIONS} grid={{ xs: 12, md: 6 }} />
+                    <CommonTextField name="name" label="Product Name" required grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="printName" label="Print Name" grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="slug" label="Slug" grid={{ xs: 12, md: 6 }} />
                     <CommonValidationSelect name="categoryId" label="Category" options={CATEGORY_OPTIONS} grid={{ xs: 12, md: 6 }} />
                     <CommonValidationSelect name="subCategoryId" label="Sub Category" options={SUB_CATEGORY_OPTIONS} grid={{ xs: 12, md: 6 }} />
 
                     <CommonValidationSelect name="brandId" label="Brand" options={BRAND_OPTIONS} grid={{ xs: 12, md: 6 }} />
-                   <CommonValidationSelect name="uomId" label="UOM" options={UOM_OPTIONS} grid={{ xs: 12, md: 6 }} />
-                   <CommonValidationSelect name="taxId" label="Tax" options={TAX_OPTIONS} grid={{ xs: 12, md: 6 }} />
+                    <CommonValidationSelect name="uomId" label="UOM" options={UOM_OPTIONS} grid={{ xs: 12, md: 6 }} />
+                    <CommonValidationSelect name="taxId" label="Tax" options={TAX_OPTIONS} grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="tags" label="Tags" grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="net weight" label="Net Weight" grid={{ xs: 12, md: 6 }} />
 
@@ -153,7 +141,7 @@ return (
                         <FieldArray name="variants">
                           {({ push, remove }) => (
                             <>
-                              {values.variants.map((variant: { nutrition: any[]; }, vIndex: number) => (
+                              {values.variants.map((variant: { nutrition: any[] }, vIndex: number) => (
                                 <Grid spacing={2} key={vIndex}>
                                   <Box p={2} border="1px solid #ccc " borderRadius={1} mb={2}>
                                     <FieldArray name={`variants.${vIndex}.nutrition`}>
@@ -200,7 +188,7 @@ return (
                       </Grid>
                     </CommonCard>
 
-                    {/* <CommonSelect label="Status" options={} value={values.status ? [values.status] : []} onChange={(v) => setFieldValue("status", v[0] || "")} grid={{ xs: 12, md: 6 }} /> */}
+                    
                   </Grid>
                 </CommonCard>
 
@@ -216,9 +204,9 @@ return (
                     <CommonSelect label="Sales Tax" options={TAX_OPTIONS} value={values.salesTaxId ? [values.salesTaxId] : []} onChange={(v) => setFieldValue("salesTaxId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
                   </Grid>
                 </CommonCard>
-
+                {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                 {/* ---------- ACTION BAR ---------- */}
-                <CommonBottomActionBar clear={!isEditing}  isLoading={isAddLoading || isEditLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isAddLoading || isEditLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

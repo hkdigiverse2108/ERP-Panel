@@ -30,6 +30,7 @@ const Product = () => {
 
  
   const columns: GridColDef<ProductBase>[] = [
+    { field: "imageUrl", headerName: "image", width: 150 },
     { field: "itemCode", headerName: "itemCode", width: 200 },
     { field: "printName", headerName: "printName", width: 150 },
     { field: "description", headerName: "description.", width: 180 },
@@ -45,7 +46,6 @@ const Product = () => {
           productId: row?._id,
           companyId: row?.companyId,
           isActive: !row.isActive,
-          variants: row?.variants || []
         }),
       editRoute: ROUTES.PRODUCT.ADD_EDIT,
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
