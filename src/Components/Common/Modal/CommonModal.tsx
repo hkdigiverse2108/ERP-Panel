@@ -32,7 +32,7 @@ const CommonModal: FC<CommonModalProps> = ({ isOpen, onClose, children, classNam
   return (
     <div className="fixed inset-0 flex items-center justify-center overflow-y-auto modal z-999">
       {!isFullscreen && <div className="fixed inset-0 h-full w-full bg-gray-400/50 backdrop-blur-none" onClick={onClose}></div>}
-      <div ref={modalRef} className={`${contentClasses} ${className} p-5`} onClick={(e) => e.stopPropagation()}>
+      <div ref={modalRef} className={`${contentClasses} ${className} p-5 m-2 sm:m-5`} onClick={(e) => e.stopPropagation()}>
         {showCloseButton && (
           <button onClick={onClose} className="absolute right-3 top-3 z-999 flex h-9.5 w-9.5 items-center justify-center rounded-full bg-gray-100 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white sm:-right-4 sm:-top-4 sm:h-11 sm:w-11">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -40,14 +40,14 @@ const CommonModal: FC<CommonModalProps> = ({ isOpen, onClose, children, classNam
             </svg>
           </button>
         )}
-        <div className=" max-h-180! overflow-y-auto">
+        <div>
           {(title || subTitle) && (
             <div className={`px-2 pr-8 sm:pr-14 pb-3 mb-3 lg:mb-4 ${title || subTitle ? " border-b border-gray-200 dark:border-gray-800" : ""} `}>
               <h4 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-white/90">{title}</h4>
               {subTitle && <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{subTitle}</p>}
             </div>
           )}
-          {children}
+          <div className="max-h-155! overflow-y-auto custom-scrollbar">{children}</div>
         </div>
       </div>
     </div>

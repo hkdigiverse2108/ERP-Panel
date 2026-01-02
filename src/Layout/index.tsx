@@ -19,7 +19,7 @@ const Layout = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { data: userData, isLoading: userLoading } = Queries.useGetUserdata(user?._id);
 
-  const { data: companyData, isLoading: companyLoading } = Queries.useGetSingleCompany(user?.companyId);
+  const { data: companyData, isLoading: companyLoading } = Queries.useGetSingleCompany(user?.companyId?._id);
 
   useEffect(() => {
     if (location.pathname.startsWith("/pos")) dispatch(setSidebarOpen(false));

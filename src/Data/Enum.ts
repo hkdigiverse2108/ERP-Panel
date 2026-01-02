@@ -96,7 +96,7 @@ export const FLOW_CONTROL = [
 export const PRECISION = [
   { label: "None", value: "None" },
   { label: "Adjust 3 places", value: "Adjust 3 places" },
-]
+];
 
 export const GST_TYPE = [
   { label: "UnRegistered", value: "UnRegistered" },
@@ -105,4 +105,35 @@ export const GST_TYPE = [
   { label: "Input Service Distributor", value: "Input Service Distributor" },
   { label: "E-Commerce Operator", value: "E-Commerce Operator" },
   { label: "Other", value: "Other" },
+];
+
+export const PAYMENTS = [
+  { label: "Receipt", value: "Receipt" },
+  { label: "Payment", value: "Payment" },
+  { label: "Expense", value: "Expense" },
+];
+
+export const VOUCHER_TYPE = [
+  { label: "Sales", value: "sales" },
+  { label: "Purchase", value: "purchase" },
+  { label: "Expense", value: "expense" },
+];
+
+export const PAYMENT_TYPE = [
+  { label: "Advance Payment", value: "advancePayment" },
+  { label: "Against Bill", value: "againstBill" },
+];
+
+export const PAYMENT_MODE = [
+  { label: "Cash", value: "cash" },
+  { label: "Card", value: "card" },
+  { label: "UPI", value: "upi" },
+  { label: "Wallet", value: "wallet" },
+  { label: "Bank", value: "bank" },
+  { label: "Cheque", value: "cheque" },
+];
+
+export const CASH_CONTROL = [
+  { label: "Opening Balance", value: "openingBalance" },
+  { label: "Add Money In", value: "addMoneyIn" },
 ]

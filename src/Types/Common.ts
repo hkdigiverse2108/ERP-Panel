@@ -358,6 +358,11 @@ export interface ModalStateSlice {
   isModalVideoPlay: { open: boolean; link: string };
   isCustomerModal: { open: boolean; data: CustomerFormValues | null };
   isPaymentListModal: boolean;
+  isAddPaymentModal: boolean;
+  isRedeemLoyaltyModal: boolean;
+  isCreditNoteModal: boolean;
+  isOrderModal: boolean;
+  isCashControlModal: boolean;
 }
 
 // ************ Modal End ***********
@@ -379,7 +384,7 @@ export interface CommonRadioProps {
   grid?: GridType;
 }
 
-export interface CommonValidationRadioProps extends CommonRadioProps {
+export interface CommonValidationRadioProps extends Omit<CommonRadioProps, "value" | "onChange"> {
   name: string;
   required?: boolean;
 }
