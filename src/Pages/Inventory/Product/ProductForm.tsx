@@ -2,10 +2,10 @@ import { Box, Grid, IconButton } from "@mui/material";
 import { Formik, Form, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations } from "../../../Api";
-import { CommonValidationTextField, CommonSelect } from "../../../Attribute";
+import { CommonValidationTextField, CommonSelect, CommonValidationSwitch } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { BRAND_OPTIONS, BREADCRUMBS, CATEGORY_OPTIONS, PRODUCT_TYPE_OPTIONS, SUB_CATEGORY_OPTIONS, TAX_OPTIONS, UOM_OPTIONS } from "../../../Data";
+import { BRAND_OPTIONS, BREADCRUMBS, CATEGORY_OPTIONS, DEPARTMENT_OPTIONS, PRODUCT_TYPE_OPTIONS, SUB_BRAND_OPTIONS, SUB_CATEGORY_OPTIONS, TAX_OPTIONS, UOM_OPTIONS } from "../../../Data";
 import { useAppSelector } from "../../../Store/hooks";
 import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { ProductFormSchema } from "../../../Utils/ValidationSchemas";
@@ -103,10 +103,9 @@ const ProductForm = () => {
       const changedFields = GetChangedFields(payload, data);
       await editProduct({ ...changedFields, variants: payload.variants, productId: data._id }, { onSuccess: handleSuccess });
     } else {
-      await addProduct({ ...RemoveEmptyFields(payload), variants: payload.variants }, { onSuccess: handleSuccess });
+      await addProduct({ ...RemoveEmptyFields(payload) }, { onSuccess: handleSuccess });
     }
   };
-
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT[pageMode]} maxItems={1} breadcrumbs={BREADCRUMBS.PRODUCT[pageMode]} />
@@ -187,8 +186,6 @@ const ProductForm = () => {
                         </FieldArray>
                       </Grid>
                     </CommonCard>
-
-                    
                   </Grid>
                 </CommonCard>
 

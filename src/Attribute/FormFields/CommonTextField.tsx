@@ -6,7 +6,7 @@ import { useField, type FieldHookConfig } from "formik";
 import { useCallback, useMemo, useState, type FC, type ReactNode } from "react";
 import type { CommonTextFieldProps, CommonValidationTextFieldProps } from "../../Types";
 
-export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ label, name, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, ...props }) => {
+export const  CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ label, name, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, ...props }) => {
   const fieldConfig: FieldHookConfig<string> = { name };
   const [field, meta, helpers] = useField(fieldConfig);
   const [isFocused, setFocused] = useState(false);

@@ -187,6 +187,8 @@ export interface CommonValidationTextFieldProps {
   onFocus?: (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => void;
   onBlur?: (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => void;
   helperText?: string;
+  multiline?: boolean;
+  rows?: number;
 }
 export interface CommonTextFieldProps extends Omit<CommonValidationTextFieldProps, "name"> {
   value: string;
