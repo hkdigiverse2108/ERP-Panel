@@ -20,8 +20,8 @@ const Profile = () => {
         { label: "designation", value: user?.designation },
         { label: "phone No", value: `+${user?.phoneNo?.countryCode} ${user?.phoneNo?.phoneNo}` },
         { label: "pan Number", value: user?.panNumber },
-        { label: "role", value: user?.role },
-        { label: "branchId", value: user?.branchId },
+        { label: "role", value: user?.role?.name },
+        { label: "branchId", value: user?.branchId?.name },
       ],
     },
     {

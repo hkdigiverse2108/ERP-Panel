@@ -137,3 +137,8 @@ export const CASH_CONTROL = [
   { label: "Opening Balance", value: "openingBalance" },
   { label: "Add Money In", value: "addMoneyIn" },
 ]
+
+export const REDEEM_CREDIT_TYPE = [
+  { label: "Credit Note", value: "creditNote" },
+  { label: "Advance Payment", value: "advancePayment" },
+]

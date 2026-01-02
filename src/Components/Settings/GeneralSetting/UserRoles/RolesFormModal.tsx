@@ -40,7 +40,7 @@ const RolesFormModal: FC<RolesFormModalProps> = ({ openModal, setOpenModal, isEd
 
     if (isEditing) {
       const changedFields = GetChangedFields(rest, isEdit);
-      editRoles({ ...changedFields, roleId: isEdit._id }, { onSuccess: onSuccessHandler });
+      editRoles({ ...changedFields, roleId: isEdit?._id }, { onSuccess: onSuccessHandler });
     } else {
       addRoles(RemoveEmptyFields(rest), { onSuccess: onSuccessHandler });
     }

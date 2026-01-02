@@ -7,12 +7,14 @@ import type { CommonPhoneNumberProps } from "../../Types";
 export const CommonPhoneNumber: FC<CommonPhoneNumberProps> = ({ countryCodeName, numberName, label, required, isFormLabel = false, grid, defaultCountry = "IN", size = "small", ...props }) => {
   const [codeField, , codeHelpers] = useField(countryCodeName);
   const [numberField, meta, numberHelpers] = useField(numberName);
+  const [country, setCountry] = useState(defaultCountry);
 
   const [isFocused, setFocused] = useState(false);
 
   const handleChange = (_: string, info: MuiTelInputInfo) => {
-    codeHelpers.setValue(info.countryCallingCode); 
-    numberHelpers.setValue(info.nationalNumber); 
+    codeHelpers.setValue(info.countryCallingCode);
+    numberHelpers.setValue(info.nationalNumber);
+    if (info.countryCode) setCountry(info.countryCode);
   };
 
   const Input = (
@@ -27,7 +29,7 @@ export const CommonPhoneNumber: FC<CommonPhoneNumberProps> = ({ countryCodeName,
         {...props}
         size={size}
         required={required}
-        defaultCountry={defaultCountry}
+        defaultCountry={country}
         forceCallingCode={false}
         value={codeField.value && numberField.value ? `+${codeField.value}${numberField.value}` : ""}
         label={isFormLabel ? undefined : label}
