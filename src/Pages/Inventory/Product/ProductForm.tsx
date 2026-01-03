@@ -91,9 +91,9 @@ const ProductForm = () => {
 
     const payload = {
       ...rest,
-      companyId: company!._id,
+      variants: values.variants.filter((v) => v.name.trim() !== ""),
+      companyId: company?._id,
     };
-
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
       else navigate(-1);

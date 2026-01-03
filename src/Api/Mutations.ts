@@ -43,8 +43,8 @@ export const Mutations = {
   useAddCallRequest: () => useMutations<CallRequestFormValues, void>([KEYS.CALL_REQUEST.ADD], (input) => Post(URL_KEYS.CALL_REQUEST.ADD, input, false)),
 
   //************** bank *****************/
-  useAddBank: () => useMutations<FormData, any>(KEYS.BANK.ADD, (input) => Post(URL_KEYS.BANK.ADD, input, false)),
-  useEditBank: () => useMutations<FormData, any>(KEYS.BANK.EDIT, (input) => Put(URL_KEYS.BANK.EDIT, input)),
+  useAddBank: () => useMutations<FormData, void>(KEYS.BANK.ADD, (input) => Post(URL_KEYS.BANK.ADD, input, false)),
+  useEditBank: () => useMutations<FormData, void>(KEYS.BANK.EDIT, (input) => Put(URL_KEYS.BANK.EDIT, input)),
   useDeleteBank: () => useMutations<{ id: string }, void>(KEYS.BANK.DELETE, (id) => Delete(`${URL_KEYS.BANK.BASE}/${id}`)),
 
   //************** payment **************** */
