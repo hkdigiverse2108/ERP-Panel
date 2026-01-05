@@ -45,7 +45,7 @@ export const Mutations = {
 
   //************** bank *****************/
   useAddBank: () => useMutations<AddBankPayload, void>([KEYS.BANK.ADD], (input) => Post(URL_KEYS.BANK.ADD, input)),
-  useEditBank: () => useMutations<EditBankPayload, void>([KEYS.BANK.EDIT], (input) => Put(URL_KEYS.BANK.EDIT, input)),
+  useEditBank: () => useMutations<EditBankPayload, void>([KEYS.BANK.EDIT, KEYS.BANK.BASE], (input) => Put(URL_KEYS.BANK.EDIT, input)),
   useDeleteBank: () => useMutations< string , void>([KEYS.BANK.DELETE], (id) => Delete(`${URL_KEYS.BANK.BASE}/${id}`)),
 
   //************** payment **************** */
