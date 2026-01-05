@@ -13,7 +13,7 @@ interface CommonActionColumnProps<T> {
   active?: (row: T) => void;
 }
 
-const CommonActionColumn = <T extends { _id?: string }>({ active, editRoute, onDelete, onEdit }: CommonActionColumnProps<T>): GridColDef<T> => ({
+const   CommonActionColumn = <T extends { _id?: string }>({ active, editRoute, onDelete, onEdit }: CommonActionColumnProps<T>): GridColDef<T> => ({
   field: "actions",
   headerName: "Actions",
   width: 140,

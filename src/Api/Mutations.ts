@@ -41,17 +41,17 @@ export const Mutations = {
   useDeleteProduct: () => useMutations< string , void>([KEYS.PRODUCT.DELETE, KEYS.PRODUCT.BASE], (id) => Delete(`${URL_KEYS.PRODUCT.BASE}/${id}`)),
 
   // ************ Call Request ***********
-  useAddCallRequest: () => useMutations<CallRequestFormValues, void>([KEYS.CALL_REQUEST.ADD], (input) => Post(URL_KEYS.CALL_REQUEST.ADD, input, false)),
+  useAddCallRequest: () => useMutations<CallRequestFormValues, void>([KEYS.CALL_REQUEST.ADD], (input) => Post(URL_KEYS.CALL_REQUEST.ADD, input)),
 
   //************** bank *****************/
-  useAddBank: () => useMutations<AddBankPayload, void>(KEYS.BANK.ADD, (input) => Post(URL_KEYS.BANK.ADD, input, false)),
-  useEditBank: () => useMutations<EditBankPayload, void>(KEYS.BANK.EDIT, (input) => Put(URL_KEYS.BANK.EDIT, input)),
-  useDeleteBank: () => useMutations< string , void>(KEYS.BANK.DELETE, (id) => Delete(`${URL_KEYS.BANK.BASE}/${id}`)),
+  useAddBank: () => useMutations<AddBankPayload, void>([KEYS.BANK.ADD], (input) => Post(URL_KEYS.BANK.ADD, input)),
+  useEditBank: () => useMutations<EditBankPayload, void>([KEYS.BANK.EDIT], (input) => Put(URL_KEYS.BANK.EDIT, input)),
+  useDeleteBank: () => useMutations< string , void>([KEYS.BANK.DELETE], (id) => Delete(`${URL_KEYS.BANK.BASE}/${id}`)),
 
   //************** payment **************** */
-  useAddPayment: () => useMutations<FormData, any>(KEYS.PAYMENT.ADD, (input) => Post(URL_KEYS.PAYMENT.ADD, input, false)),
-  useEditPayment: () => useMutations<FormData, any>(KEYS.PAYMENT.EDIT, (input) => Put(URL_KEYS.PAYMENT.EDIT, input)),
-  useDeletePayment: () => useMutations<{ id: string }, void>(KEYS.PAYMENT.DELETE, (id) => Delete(`${URL_KEYS.PAYMENT.BASE}/${id}`)),
+  useAddPayment: () => useMutations<FormData, any>([KEYS.PAYMENT.ADD], (input) => Post(URL_KEYS.PAYMENT.ADD, input)),
+  useEditPayment: () => useMutations<FormData, any>([KEYS.PAYMENT.EDIT], (input) => Put(URL_KEYS.PAYMENT.EDIT, input)),
+  useDeletePayment: () => useMutations<{ id: string }, void>([KEYS.PAYMENT.DELETE], (id) => Delete(`${URL_KEYS.PAYMENT.BASE}/${id}`)),
 
  
 }; 
