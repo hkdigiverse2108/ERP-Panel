@@ -25,7 +25,7 @@ const AddPayment = () => {
     remark: "",
   };
 
-  const handleSubmit = (values: any) => {};
+  const handleSubmit = () => {};
 
   return (
     <CommonModal title="Payments" isOpen={isAddPaymentModal} onClose={() => dispatch(setAddPaymentModal())} className="max-w-[1000px]">
@@ -55,8 +55,8 @@ const AddPayment = () => {
                         <CommonValidationSelect name="paymentMode" label="Payment Mode" options={PAYMENT_MODE} grid={{ xs: 12, sm: 6, md: 4 }} required />
                         <CommonValidationSelect name="bank" label="Select Bank" options={PAYMENT_MODE} grid={{ xs: 12, sm: 6, md: 4 }} disabled={!showBank} required />
                         <CommonValidationTextField name="totalPayment" label="Total Payment" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency />
-                        <CommonValidationTextField name="paidAmount" label="Paid Amount" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency/>
-                        <CommonValidationTextField name="pendingAmount" label="Pending Amount" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency/>
+                        <CommonValidationTextField name="paidAmount" label="Paid Amount" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency />
+                        <CommonValidationTextField name="pendingAmount" label="Pending Amount" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency />
                         <CommonValidationTextField name="kasar" label="Kasar" type="number" grid={{ xs: 12, sm: 6, md: 4 }} />
                         <CommonValidationTextField name="amount" label="Amount" type="number" grid={{ xs: 12, sm: 6, md: 4 }} required />
                         <CommonValidationTextField name="remark" label="Remark" grid={{ xs: 12 }} multiline />
@@ -81,9 +81,9 @@ const AddPayment = () => {
                         <CommonValidationSelect name="sales" label="Select Bill" options={PAYMENT_TYPE} grid={{ xs: 12, sm: 6, md: 4 }} required />
                         <CommonValidationSelect name="paymentMode" label="Payment Mode" options={PAYMENT_MODE} grid={{ xs: 12, sm: 6, md: 4 }} required />
                         <CommonValidationSelect name="bank" label="Select Bank" options={PAYMENT_MODE} grid={{ xs: 12, sm: 6, md: 4 }} disabled={!showBank} required />
-                        <CommonValidationTextField name="totalPayment" label="Total Payment" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency/>
-                        <CommonValidationTextField name="paidAmount" label="Paid Amount" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency/>
-                        <CommonValidationTextField name="pendingAmount" label="Pending Amount" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency/>
+                        <CommonValidationTextField name="totalPayment" label="Total Payment" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency />
+                        <CommonValidationTextField name="paidAmount" label="Paid Amount" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency />
+                        <CommonValidationTextField name="pendingAmount" label="Pending Amount" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency />
                         <CommonValidationTextField name="kasar" label="Kasar" type="number" grid={{ xs: 12, sm: 6, md: 4 }} />
                         <CommonValidationTextField name="amount" label="Amount" type="number" grid={{ xs: 12, sm: 6, md: 4 }} required />
                         <CommonValidationTextField name="remark" label="Remark" grid={{ xs: 12 }} multiline />

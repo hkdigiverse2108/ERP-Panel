@@ -38,7 +38,7 @@ const Employee = () => {
     { field: "extraWages", headerName: "Extra Wages", type: "number", width: 150 },
     { field: "commission", headerName: "Extra Wages", type: "number", flex: 1, minWidth: 150 },
     CommonActionColumn({
-      active: (row) => editEmployee({ userId: row?._id, companyId: row?.companyId, isActive: !row.isActive }),
+      active: (row) => editEmployee({ userId: row?._id, companyId: row?.companyId?._id, isActive: !row.isActive }),
       editRoute: ROUTES.EMPLOYEE.ADD_EDIT,
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.username }),
     }),

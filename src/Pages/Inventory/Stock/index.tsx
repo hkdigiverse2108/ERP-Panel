@@ -1,15 +1,11 @@
-import { Grid, Box } from "@mui/material";
 
-import { CommonCard, CommonDataGrid } from "../../../Components/Common";
-import { useDataGrid } from "../../../Utils/Hooks";
-import  {CommonBreadcrumbs} from "../../../Components/Common";
+import { CommonBreadcrumbs, CommonCard, CommonDataGrid } from "../../../Components/Common";
+import { PAGE_TITLE } from "../../../Constants";
 import { StockBreadcrumbs } from "../../../Data";
-import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { useState } from "react";
+import { useDataGrid } from "../../../Utils/Hooks";
 
 const Stocks = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({ page: 0, pageSize: 10 });
-  const [filterEnabled, setFilterEnabled] = useState(false);
 
   const rows = [
     {

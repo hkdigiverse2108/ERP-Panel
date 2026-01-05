@@ -9,7 +9,6 @@ import type { NavItem } from "../../Types";
 import SidebarWidget from "./SidebarWidget";
 import { ImagePath } from "../../Constants";
 import { useWindowWidth } from "../../Utils/Hooks";
-import PeopleIcon from "@mui/icons-material/People";
 
 const Sidebar = () => {
   const { isExpanded, isMobileOpen, isHovered } = useAppSelector((state) => state.layout);

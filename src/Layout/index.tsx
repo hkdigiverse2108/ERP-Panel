@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet, useLocation } from "react-router-dom";
 import { useAppSelector } from "../Store/hooks";
-import { setIsMobile, setSidebarOpen, setToggleSidebar } from "../Store/Slices/LayoutSlice";
+import { setIsMobile, setSidebarOpen } from "../Store/Slices/LayoutSlice";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { CommonUpload } from "../Components/Common";

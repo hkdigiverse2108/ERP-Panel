@@ -1,9 +1,8 @@
 import SearchSharpIcon from "@mui/icons-material/SearchSharp";
-import { CommonDrawer } from "../../Components/Common";
-import { useMemo, useState } from "react";
-import { Form, Formik } from "formik";
 import { Grid } from "@mui/material";
-import { CommonValidationTextField } from "../../Attribute";
+import { useMemo, useState } from "react";
+import { CommonTextField } from "../../Attribute";
+import { CommonDrawer } from "../../Components/Common";
 import { NavItems } from "../../Data";
 
 const SearchList = () => {
@@ -25,13 +24,9 @@ const SearchList = () => {
         <SearchSharpIcon sx={{ fontSize: { xs: 20, md: 22 } }} />
       </div>
       <CommonDrawer open={open} onClose={() => setOpen(!open)} anchor="right" width={280} title="Search List" paperProps={{ className: "bg-white dark:bg-gray-800!" }}>
-        <Formik initialValues={{ search: "" }} onSubmit={() => {}}>
-          <Form>
-            <Grid sx={{ px: 1 }} container spacing={2}>
-              <CommonValidationTextField name="Search" placeholder="Search..." grid={{ xs: 12 }} onChange={(e: any) => setQuery(e.target.value)}/>
-            </Grid>
-          </Form>
-        </Formik>
+        <Grid sx={{ px: 1 }} container spacing={2}>
+          <CommonTextField value={query} placeholder="Search..." grid={{ xs: 12 }} onChange={(e) => setQuery(e)} />
+        </Grid>
         <ul className="space-y-3 mt-4">
           {filteredItems.map((section, idx) => (
             <li key={idx}>

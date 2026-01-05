@@ -91,7 +91,7 @@ const ProductForm = () => {
 
     const payload = {
       ...rest,
-      variants: values.variants.filter((v) => v.name.trim() !== ""),
+      variants: values.variants.filter((v:any) => v.name.trim() !== ""),
       companyId: company?._id,
     };
     const handleSuccess = () => {

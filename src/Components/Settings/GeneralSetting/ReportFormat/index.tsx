@@ -58,8 +58,6 @@ const ReportFormats = () => {
     { label: "Receipt", value: 10 },
   ];
 
-  const tabViews = ["", "", "", "", "", "", "", "", "", "", ""];
-
   const reportData: IReportData = {
     0: [
       { value: "pos1", label: "POS Offline - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
