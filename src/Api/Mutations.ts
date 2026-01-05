@@ -1,6 +1,8 @@
 import { KEYS, URL_KEYS } from "../Constants";
 import type { AddBranchPayload, AddEmployeePayload, AddRolesPayload, CallRequestFormValues, EditBranchPayload, EditEmployeePayload, EditRolesPayload, EmployeeApiResponse, LoginPayload, LoginResponse, UploadResponse } from "../Types";
+import type { AddBankPayload, EditBankPayload } from "../Types/Bank";
 import type { CompanyApiResponse, EditCompanyPayload } from "../Types/Company";
+import type { AddProductPayload, EditProductPayload } from "../Types/Product";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
 
@@ -34,17 +36,17 @@ export const Mutations = {
   useDeleteRoles: () => useMutations<string, void>([KEYS.ROLES.DELETE, KEYS.ROLES.BASE], (id) => Delete(`${URL_KEYS.ROLES.BASE}/${id}`)),
 
   // ************ product ***********
-  useAddProduct: () => useMutations<FormData, void>([KEYS.PRODUCT.ADD, KEYS.PRODUCT.BASE],  (input) => Post(URL_KEYS.PRODUCT.ADD, input, false)),
-  useEditProduct: () => useMutations<FormData, void>([KEYS.PRODUCT.EDIT, KEYS.PRODUCT.BASE], (input) => Put(URL_KEYS.PRODUCT.EDIT, input)),
+  useAddProduct: () => useMutations<AddProductPayload, void>([KEYS.PRODUCT.ADD, KEYS.PRODUCT.BASE],  (input) => Post(URL_KEYS.PRODUCT.ADD, input)),
+  useEditProduct: () => useMutations<EditProductPayload, void>([KEYS.PRODUCT.EDIT, KEYS.PRODUCT.BASE], (input) => Put(URL_KEYS.PRODUCT.EDIT, input)),
   useDeleteProduct: () => useMutations< string , void>([KEYS.PRODUCT.DELETE, KEYS.PRODUCT.BASE], (id) => Delete(`${URL_KEYS.PRODUCT.BASE}/${id}`)),
 
   // ************ Call Request ***********
   useAddCallRequest: () => useMutations<CallRequestFormValues, void>([KEYS.CALL_REQUEST.ADD], (input) => Post(URL_KEYS.CALL_REQUEST.ADD, input, false)),
 
   //************** bank *****************/
-  useAddBank: () => useMutations<FormData, any>(KEYS.BANK.ADD, (input) => Post(URL_KEYS.BANK.ADD, input, false)),
-  useEditBank: () => useMutations<FormData, any>(KEYS.BANK.EDIT, (input) => Put(URL_KEYS.BANK.EDIT, input)),
-  useDeleteBank: () => useMutations<{ id: string }, void>(KEYS.BANK.DELETE, (id) => Delete(`${URL_KEYS.BANK.BASE}/${id}`)),
+  useAddBank: () => useMutations<AddBankPayload, void>(KEYS.BANK.ADD, (input) => Post(URL_KEYS.BANK.ADD, input, false)),
+  useEditBank: () => useMutations<EditBankPayload, void>(KEYS.BANK.EDIT, (input) => Put(URL_KEYS.BANK.EDIT, input)),
+  useDeleteBank: () => useMutations< string , void>(KEYS.BANK.DELETE, (id) => Delete(`${URL_KEYS.BANK.BASE}/${id}`)),
 
   //************** payment **************** */
   useAddPayment: () => useMutations<FormData, any>(KEYS.PAYMENT.ADD, (input) => Post(URL_KEYS.PAYMENT.ADD, input, false)),

@@ -64,11 +64,10 @@ export const KEYS = {
     ADD: "call-request",
   },
   BANK: {
-    BASE :["bank"],
-    ALL: ["bank", "all"],
-    ADD: ["bank", "add"],
-    EDIT: ["bank", "edit"],
-    DELETE: ["bank", "delete"],
+    BASE: "bank",
+    ADD: "bank-add",
+    EDIT: "bank-edit",
+    DELETE: "bank-delete",
   },
   PAYMENT: {
     BASE: ["payment"],

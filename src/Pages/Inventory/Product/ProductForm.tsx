@@ -1,11 +1,10 @@
 import { Box, Grid, IconButton } from "@mui/material";
 import { Formik, Form, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
 import { Mutations } from "../../../Api";
-import { CommonValidationTextField, CommonSelect } from "../../../Attribute";
+import { CommonValidationTextField, CommonSelect, CommonValidationSwitch } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
-import { KEYS, PAGE_TITLE } from "../../../Constants";
+import { PAGE_TITLE } from "../../../Constants";
 import { BRAND_OPTIONS, BREADCRUMBS, CATEGORY_OPTIONS, DEPARTMENT_OPTIONS, PRODUCT_TYPE_OPTIONS, SUB_BRAND_OPTIONS, SUB_CATEGORY_OPTIONS, TAX_OPTIONS, UOM_OPTIONS } from "../../../Data";
 import { useAppSelector } from "../../../Store/hooks";
 import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
@@ -14,11 +13,11 @@ import { FieldArray } from "formik";
 // import { IconButton} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CommonButton } from "../../../Attribute";
+import type { ProductFormValues } from "../../../Types";
 
 const ProductForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const { data } = location.state || {};
   const { company } = useAppSelector((state) => state.company);
@@ -29,8 +28,7 @@ const ProductForm = () => {
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
 
-  const initialValues = {
-    _submitAction: "save",
+  const initialValues: ProductFormValues = {
     variants: [
       {
         name: "",
@@ -88,60 +86,32 @@ const ProductForm = () => {
     status: data?.status || "active",
   };
 
-  const objectToFormData = (obj: Record<string, any>) => {
-    const fd = new FormData();
-    Object.entries(obj).forEach(([k, v]) => {
-      if (v === undefined || v === null) return;
-      if (v instanceof File) {
-        fd.append(k, v);
-      } else if (Array.isArray(v)) {
-        v.forEach((val) => fd.append(k, typeof val === "object" ? JSON.stringify(val) : String(val)));
-      } else if (typeof v === "object") {
-        fd.append(k, JSON.stringify(v));
-      } else {
-        fd.append(k, String(v));
-      }
-    });
-    return fd;
-  };
-
-  const handleSubmit = async (
-    values: any,
-    { resetForm }: FormikHelpers<any>
-  ) => {
+  const handleSubmit = async (values: ProductFormValues, { resetForm }: FormikHelpers<ProductFormValues>) => {
     const { _submitAction, ...rest } = values;
 
     const payload = {
-      ...RemoveEmptyFields(rest),
-      companyId: company!._id,
+      ...rest,
+      variants: values.variants.filter((v) => v.name.trim() !== ""),
+      companyId: company?._id,
     };
-
-    const onSuccessHandler = () => {
-      queryClient.invalidateQueries({
-        queryKey: [KEYS.PRODUCT.ALL],
-      });
-
+    const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
       else navigate(-1);
     };
 
     if (isEditing) {
       const changedFields = GetChangedFields(payload, data);
-      editProduct(
-        { ...changedFields, productId: data._id },
-        { onSuccess: onSuccessHandler }
-      );
+      await editProduct({ ...changedFields, variants: payload.variants, productId: data._id }, { onSuccess: handleSuccess });
     } else {
-      addProduct(payload, { onSuccess: onSuccessHandler });
+      await addProduct({ ...RemoveEmptyFields(payload) }, { onSuccess: handleSuccess });
     }
   };
-
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT[pageMode]} maxItems={1} breadcrumbs={BREADCRUMBS.PRODUCT[pageMode]} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
-        <Formik enableReinitialize initialValues={initialValues} validationSchema={ProductFormSchema} onSubmit={handleSubmit}>
+        <Formik<ProductFormValues> enableReinitialize initialValues={initialValues} validationSchema={ProductFormSchema} onSubmit={handleSubmit}>
           {({ values, setFieldValue, resetForm, dirty }) => (
             <Form noValidate>
               <Grid container spacing={2}>
@@ -170,7 +140,7 @@ const ProductForm = () => {
                         <FieldArray name="variants">
                           {({ push, remove }) => (
                             <>
-                              {values.variants.map((variant, vIndex) => (
+                              {values.variants.map((variant: { nutrition: any[] }, vIndex: number) => (
                                 <Grid spacing={2} key={vIndex}>
                                   <Box p={2} border="1px solid #ccc " borderRadius={1} mb={2}>
                                     <FieldArray name={`variants.${vIndex}.nutrition`}>
@@ -216,8 +186,6 @@ const ProductForm = () => {
                         </FieldArray>
                       </Grid>
                     </CommonCard>
-
-                    {/* <CommonSelect label="Status" options={} value={values.status ? [values.status] : []} onChange={(v) => setFieldValue("status", v[0] || "")} grid={{ xs: 12, md: 6 }} /> */}
                   </Grid>
                 </CommonCard>
 
@@ -233,9 +201,9 @@ const ProductForm = () => {
                     <CommonSelect label="Sales Tax" options={TAX_OPTIONS} value={values.salesTaxId ? [values.salesTaxId] : []} onChange={(v) => setFieldValue("salesTaxId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
                   </Grid>
                 </CommonCard>
-
+                {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                 {/* ---------- ACTION BAR ---------- */}
-                <CommonBottomActionBar clear disabled={!dirty} isLoading={isAddLoading || isEditLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isAddLoading || isEditLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

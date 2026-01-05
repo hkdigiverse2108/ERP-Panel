@@ -36,7 +36,7 @@ const CommonCard: FC<CommonCardProps> = ({ title, children, grid = { xs: 12 }, p
                 </Link>
               </Grid>
             )}
-          </Grid>
+          </Grid> 
         )}
 
         {!hideDivider && <Divider className="border-gray-200! dark:border-gray-800!" />}

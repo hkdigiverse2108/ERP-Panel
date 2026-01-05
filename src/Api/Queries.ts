@@ -1,5 +1,6 @@
 import { KEYS, URL_KEYS } from "../Constants";
 import type { AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, EmployeeApiResponse, Params, ProductApiResponse, RolesApiResponse, UploadResponse } from "../Types";
+import type { BankApiResponse } from "../Types/Bank";
 import type { CompanyApiResponse } from "../Types/Company";
 import { CleanParams } from "../Utils";
 import { Get } from "./Methods";
@@ -32,7 +33,7 @@ export const Queries = {
   useGetAnnouncement: () => useQueries<AnnouncementApiResponse>([KEYS.ANNOUNCEMENT.BASE], () => Get(URL_KEYS.ANNOUNCEMENT.ALL)),
 
   //***************product**************** */
-  useGetProduct: (params?: Params) => useQueries<any>([KEYS.PRODUCT.BASE, params], () => Get(URL_KEYS.PRODUCT.ALL, params)),
+  useGetProduct: (params?: Params) => useQueries<ProductApiResponse>([KEYS.PRODUCT.BASE, params], () => Get(URL_KEYS.PRODUCT.ALL, params)),
 
 
   // ************ Stock ***********
@@ -48,13 +49,7 @@ export const Queries = {
     return useQueries<any>([KEYS.PRODUCT.ALL, cleanedParams], () => Get(URL_KEYS.PRODUCT.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData });
   },
 
-  // ************ payment*
-  // useGetPayments: (params?: Params) =>useQueries<PaymentApiResponse>([KEYS.PAYMENT.BASE, params],() => Get(URL_KEYS.PAYMENT.ALL, params),),
-
-  // ************ product*
-  useGetProduct: (params?: Params) => useQueries<ProductApiResponse>([KEYS.PRODUCT.ALL, params], () => Get(URL_KEYS.PRODUCT.ALL, params)),
-
   //************ bank ********/
 
-  useGetBank: (params?: Params) => useQueries<any>([KEYS.BANK.BASE, params], () => Get(URL_KEYS.BANK.ALL, params), { placeholderData: (previousData: any) => previousData }),
+  useGetBank: (params?: Params) => useQueries<BankApiResponse>([KEYS.BANK.BASE, params], () => Get(URL_KEYS.BANK.ALL, params), ),
 };
