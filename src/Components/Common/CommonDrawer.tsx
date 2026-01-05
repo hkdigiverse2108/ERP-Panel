@@ -1,8 +1,8 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Divider, Drawer, IconButton, Typography, useMediaQuery, useTheme } from "@mui/material";
-import type { CSSProperties } from "@mui/material/styles";
 import { type FC } from "react";
 import type { CommonDrawerProps } from "../../Types";
+import type { SxProps, Theme } from "@mui/material/styles";
 
 const defaultWidth = 420;
 
@@ -10,16 +10,23 @@ const CommonDrawer: FC<CommonDrawerProps> = ({ open, onClose, anchor = "right", 
   const theme = useTheme();
   const isNarrow = useMediaQuery(theme.breakpoints.down(fullScreenBelow));
 
-  const paperSx: CSSProperties | any = {
+  const paperSxBase = {
     width: anchor === "left" || anchor === "right" ? (isNarrow ? "100%" : width) : undefined,
     height: anchor === "top" || anchor === "bottom" ? (isNarrow ? "100%" : undefined) : undefined,
     display: "flex",
     flexDirection: "column",
-    ...((paperProps && (paperProps as any).sx) || {}),
   };
+  const combinedSx = ([paperSxBase, paperProps?.sx] as unknown) as SxProps<Theme>;
 
   return (
-    <Drawer open={open} onClose={onClose} anchor={anchor} ModalProps={{ keepMounted: true }} slotProps={{ paper: { sx: paperSx, ...paperProps } }} {...drawerProps}>
+    <Drawer
+      open={open}
+      onClose={onClose}
+      anchor={anchor}
+      ModalProps={{ keepMounted: true }}
+      slotProps={{ paper: { ...(paperProps || {}), sx: combinedSx } }}
+      {...drawerProps}
+    >
       <Box className="flex justify-between items-center p-3">
         {title && (
           <Typography variant="h6" className="font-medium! text-gray-800 dark:text-gray-200">

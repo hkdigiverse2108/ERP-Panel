@@ -58,7 +58,7 @@ const BankForm = () => {
 
     if (isEditing) {
       const changedFields = GetChangedFields(payload, data);
-      editBank({ ...changedFields, bankId: data._id } as any, { onSuccess: handleSuccess });
+      editBank({ ...changedFields, bankId: data._id }, { onSuccess: handleSuccess });
     } else {
       const cleanedPayload = RemoveEmptyFields(payload) as BankFormValues;
       addBank(cleanedPayload, { onSuccess: handleSuccess });

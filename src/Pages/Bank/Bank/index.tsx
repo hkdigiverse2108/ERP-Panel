@@ -76,11 +76,7 @@ const Bank = () => {
     
     },
    CommonActionColumn({
-      active: (row) =>
-        editBank({
-          bankId: row?._id,   
-          isActive: !row.isActive,
-        } as any),
+      active: (row) => editBank({ bankId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.BANK.ADD_EDIT,
       onDelete: (row) =>
         setRowToDelete({
