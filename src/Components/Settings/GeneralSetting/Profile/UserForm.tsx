@@ -31,8 +31,8 @@ const UserForm = () => {
     },
     email: UserData?.email || "",
     panNumber: UserData?.panNumber || "",
-    role: UserData?.role || "",
-    branchId: UserData?.branchId || "",
+    role: UserData?.role?._id || "",
+    branchId: UserData?.branchId?._id || "",
 
     address: {
       address: UserData?.address?.address || "",
@@ -60,11 +60,11 @@ const UserForm = () => {
 
   const handleSubmit = async (values: EmployeeFormValues, { resetForm }: FormikHelpers<EmployeeFormValues>) => {
     const { ...rest } = values;
-    const payload = { ...rest, companyId: company!._id };
+    const payload = { ...rest, companyId: company?._id };
 
     const changedFields = GetChangedFields(payload, UserData);
     await editEmployee(
-      { ...changedFields, userId: UserData._id },
+      { ...changedFields, userId: UserData?._id },
       {
         onSuccess: (response) => {
           dispatch(setUser(response?.data));

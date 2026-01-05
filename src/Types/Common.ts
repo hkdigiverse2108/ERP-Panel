@@ -1,4 +1,4 @@
-import type { Breakpoint, ButtonProps, DrawerProps, PaperProps as MuiPaperProps } from "@mui/material";
+import type { Breakpoint, ButtonProps, DrawerProps, PaperProps as MuiPaperProps, TextFieldProps } from "@mui/material";
 import type { GridColDef, GridFilterModel, GridPaginationModel, GridRowsProp, GridSortModel, GridValidRowModel } from "@mui/x-data-grid";
 import type { Dayjs } from "dayjs";
 import type { MuiTelInputProps } from "mui-tel-input";
@@ -188,11 +188,14 @@ export interface CommonValidationTextFieldProps {
   onBlur?: (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => void;
   helperText?: string;
   multiline?: boolean;
-  rows?: number;
+  isCurrency?: boolean;
+  color?: TextFieldProps["color"];
+  focused?: boolean;
+  readOnly?: boolean;
 }
 export interface CommonTextFieldProps extends Omit<CommonValidationTextFieldProps, "name"> {
   value: string;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
 }
 
 // ************ Input End ***********
@@ -363,6 +366,13 @@ export interface ModalStateSlice {
   isCreditNoteModal: boolean;
   isOrderModal: boolean;
   isCashControlModal: boolean;
+  isCouponModal: boolean;
+  isRedeemCreditModal: boolean;
+  isCardModal: boolean;
+  isApplyCouponModal: boolean;
+  isPayLaterModal: boolean;
+  isCashModal: boolean;
+  isAdditionalChargeModal: boolean;
 }
 
 // ************ Modal End ***********

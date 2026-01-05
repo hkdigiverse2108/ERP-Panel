@@ -1,4 +1,7 @@
+import type { BranchBase } from "./Branch";
 import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
+import type { CompanyBase } from "./Company";
+import type { RolesBase } from "./Roles";
 
 export interface Address {
   address?: string;
@@ -23,7 +26,7 @@ export interface EmployeeFormValues {
   designation?: string;
   phoneNo?: PhoneNumberType;
   email?: string;
-  branchId?: string; 
+  branchId?: string;
   panNumber?: string;
   role?: string;
   address?: Address;
@@ -34,14 +37,18 @@ export interface EmployeeFormValues {
   target?: number;
   isActive?: boolean;
   _submitAction?: string;
-  companyId?: string 
+  companyId?: string;
 }
 
 export type AddEmployeePayload = EmployeeFormValues;
 
 export type EditEmployeePayload = AddEmployeePayload & { userId: string };
 
-export type EmployeeBase = EmployeeFormValues & CommonDataType;
+export interface EmployeeBase extends Omit<EmployeeFormValues, "branchId" | "role" | "companyId">, CommonDataType {
+  branchId: BranchBase;
+  role: RolesBase;
+  companyId: CompanyBase;
+}
 
 export interface EmployeeDataResponse extends PageStatus {
   user_data: EmployeeBase[];

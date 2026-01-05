@@ -41,11 +41,11 @@ const CustomerForm = () => {
 
   return (
     <>
-      <CommonModal isOpen={open} title={PAGE_TITLE.CUSTOMER[pageMode]} onClose={() => handleClose()} className="max-w-[1000px] m-2 sm:m-5">
+      <CommonModal isOpen={open} title={PAGE_TITLE.CUSTOMER[pageMode]} onClose={() => handleClose()} className="max-w-[1000px]">
         <Formik<CustomerFormValues> enableReinitialize initialValues={initialValues} validationSchema={CustomerFormSchema} onSubmit={handleSubmit}>
           {({ values, dirty }) => (
             <Form noValidate>
-              <Grid container spacing={2}>
+              <Grid container spacing={2} py={1}>
                 <CommonValidationTextField name="name" label="Name" required grid={{ xs: 12, md: 4 }} />
                 <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
                 <CommonPhoneNumber label="WhatsApp No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} />

@@ -35,8 +35,8 @@ const EmployeeForm = () => {
     },
     email: data?.email || "",
     panNumber: data?.panNumber || "",
-    role: data?.role || "",
-    branchId: data?.branchId || "",
+    role: data?.role?._id || "",
+    branchId: data?.branchId?._id || "",
 
     address: {
       address: data?.address?.address || "",
