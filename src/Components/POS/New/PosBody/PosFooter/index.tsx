@@ -16,6 +16,7 @@ import ApplyCoupon from "./ApplyCoupon";
 import PayLater from "./PayLater";
 import Cash from "./Cash";
 import { setMultiplePay } from "../../../../../Store/Slices/PosSlice";
+import AdditionalCharge from "./AdditionalCharge";
 const PosFooter = () => {
   const [value, setValue] = useState<string>("");
   const summaryRowData = [{ label: "Quantity", value: "1.000" }, { label: "MRP", value: "50.00" }, { label: "Tax Amount", value: "7.63" }, { label: "Add Charges+", value: "0.00" }, { label: "Discount", value: "0.00" }, { label: "Flat Discount" }, { label: "Round OFF" }, { label: "Amount", value: "50", highlight: true }];
@@ -30,15 +31,21 @@ const PosFooter = () => {
         </div>
 
         {/* Summary Row */}
-        <Grid container className="flex items-center py-2">
+        <Grid container spacing={{ xs: 1, xl: 0 }} className="flex items-center py-2">
           {summaryRowData.map((item, index) => (
-            <Grid size={{ xs: 6, sm: 1.5 }} key={index} className={`flex flex-col items-center justify-center px-4 ${!item.highlight ? "border-r border-gray-300 dark:border-gray-700" : ""} `}>
+            <Grid size={{ xs: 6, md: 3, xl: 1.5 }}  key={index} className={`flex flex-col items-center justify-center px-4 ${!item.highlight ? "border-r border-gray-300 dark:border-gray-700" : ""} `}>
               {item.label === "Flat Discount" && <CommonTextField label="Flat Discount" value={value} onChange={(e) => setValue(e)} isCurrency />}
               {item.label === "Round OFF" && <CommonTextField label="Round OFF" value={value} onChange={(e) => setValue(e)} />}
               {item.value && (
                 <>
                   <span className={`font-semibold ${item.highlight ? "text-brand-600 text-2xl" : "text-lg text-gray-900 dark:text-gray-100"}`}>{item.value}</span>
-                  {item.label === "Add Charges+" ? <span onClick={() => dispatch(setAdditionalChargeModal())} className={`text-sm font-medium cursor-pointer text-brand-600 mt-1`}>{item.label}</span> : <span className={`text-sm font-medium ${item.highlight ? "text-brand-600" : "text-gray-700 dark:text-gray-400"} mt-1`}>{item.label}</span>}
+                  {item.label === "Add Charges+" ? (
+                    <span onClick={() => dispatch(setAdditionalChargeModal())} className={`text-sm font-medium cursor-pointer text-brand-600 mt-1`}>
+                      {item.label}
+                    </span>
+                  ) : (
+                    <span className={`text-sm font-medium ${item.highlight ? "text-brand-600" : "text-gray-700 dark:text-gray-400"} mt-1`}>{item.label}</span>
+                  )}
                 </>
               )}
             </Grid>
@@ -46,7 +53,7 @@ const PosFooter = () => {
         </Grid>
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-6 gap-2 p-2">
+        <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2 p-2">
           <CommonButton title="Multiple Pay (F12)" variant="contained" startIcon={<VerticalSplitIcon />} onClick={() => dispatch(setMultiplePay())} />
           <CommonButton title="Redeem Credit" variant="contained" startIcon={<RedeemIcon />} onClick={() => dispatch(setRedeemCreditModal())} />
           <CommonButton title="Hold (F6)" variant="contained" startIcon={<PauseIcon />} />
@@ -66,6 +73,7 @@ const PosFooter = () => {
       <ApplyCoupon />
       <PayLater />
       <Cash />
+      <AdditionalCharge />
     </>
   );
 };

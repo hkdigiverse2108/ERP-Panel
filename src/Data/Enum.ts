@@ -40,8 +40,19 @@ export const DEPARTMENT_OPTIONS = [{ label: "Grocery", value: "679a1c6f8f4e1a001
 export const UOM_OPTIONS = [{ label: "KG", value: "679a1c7f8f4e1a001234abd2" }];
 
 export const TAX_OPTIONS = [
-  { label: "GST 5%", value: "679a1c8f8f4e1a001234abd3" },
-  { label: "GST 12%", value: "679a1c9f8f4e1a001234abd4" },
+  { label: "NON GST 0", value: "NON_GST_0" },
+  { label: "EXEMPT 0", value: "EXEMPT_0" },
+  { label: "GST 0", value: "GST_0" },
+  { label: "GST 5%", value: "GST_5" },
+  { label: "GST 12%", value: "GST_12" },
+  { label: "GST 18%", value: "GST_18" },
+  { label: "GST 28%", value: "GST_28" },
+];
+
+export const GROUP_OPTIONS = [
+  { label: "Select Group", value: "" },
+  { label: "Direct Incomes", value: "Direct Incomes" },
+  { label: "Indirect Incomes", value: "Indirect Incomes" },
 ];
 
 export const ORDER_TYPE = [
@@ -136,22 +147,22 @@ export const PAYMENT_MODE = [
 export const CASH_CONTROL = [
   { label: "Opening Balance", value: "openingBalance" },
   { label: "Add Money In", value: "addMoneyIn" },
-]
+];
 
 export const REDEEM_CREDIT_TYPE = [
   { label: "Credit Note", value: "creditNote" },
   { label: "Advance Payment", value: "advancePayment" },
-]
+];
 
-export const PAYMENT_TERMS=[
-  {label:"7 Days",value:"7_days"},
-  {label:"15 Days",value:"15_days"},
-  {label:"30 Days",value:"30_days"},
-  {label:"60 Days",value:"60_days"},
-  {label:"90 Days",value:"90_days"},
-]
+export const PAYMENT_TERMS = [
+  { label: "7 Days", value: "7_days" },
+  { label: "15 Days", value: "15_days" },
+  { label: "30 Days", value: "30_days" },
+  { label: "60 Days", value: "60_days" },
+  { label: "90 Days", value: "90_days" },
+];
 
 export const SEND_REMINDER = [
   { label: "Yes", value: "yes" },
   { label: "No", value: "no" },
-]
+];

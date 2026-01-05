@@ -96,7 +96,7 @@ const CurrentRegister = () => {
                             <CommonValidationTextField
                               name={`nos_${note}`}
                               type="number"
-                              value={nosMap[note] ?? ""}
+                              value={nosMap[note]}
                               onChange={(e: ChangeEvent<HTMLInputElement>) => setNosMap((prev) => ({ ...prev, [note]: Math.max(0, Math.floor(Number(e.target.value) || 0)) }))}
                               inputProps={{
                                 min: 0,

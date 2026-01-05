@@ -3,7 +3,7 @@ import { useField } from "formik";
 import { type FC } from "react";
 import type { CommonSelectProps, CommonValidationSelectProps, SelectOptionType } from "../../Types";
 
-export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, label, required, options, multiple = false, limitTags, size = "small", grid, disabled }) => {
+export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, label, required, options, multiple = false, limitTags, size = "small", grid, disabled , ...props}) => {
   const [field, meta, helpers] = useField<any>({ name });
 
   // Normalize value
@@ -13,6 +13,7 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
 
   const Input = (
     <Autocomplete
+      {...props}
       multiple={multiple}
       options={options}
       limitTags={limitTags}
@@ -29,6 +30,8 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
         }
       }}
       onBlur={() => helpers.setTouched(true)}
+      clearOnEscape
+      disableCloseOnSelect={multiple}
       renderInput={(params) => <TextField {...params} className="capitalize" disabled={disabled} required={required} label={label} size={size} error={meta.touched && Boolean(meta.error)} helperText={meta.touched && meta.error ? meta.error : ""} />}
     />
   );
@@ -36,32 +39,31 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
   return grid ? <Grid size={grid}>{Input}</Grid> : Input;
 };
 
-export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value, onChange, multiple = false, limitTags, size, grid, disabled }) => {
-  const valueObjects = value.map((v) => options.find((o) => o.value === v)).filter(Boolean) as SelectOptionType[];
-  const singleValue = !multiple ? valueObjects[0] ?? null : null;
+export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value, onChange, multiple = false, limitTags, size, grid, disabled , ...props}) => {
+  const selectedValue = multiple ? (value || []).map((v) => options.find((o) => o.value === v)).filter((v): v is SelectOptionType => Boolean(v)) : options.find((o) => o.value === value?.[0]) ?? null;
 
   const Input = (
     <Autocomplete
+      {...props}
       multiple={multiple}
       options={options}
       limitTags={limitTags}
-      value={multiple ? valueObjects : singleValue}
+      value={selectedValue}
       size={size}
       disabled={disabled}
       getOptionLabel={(opt) => opt.label}
       isOptionEqualToValue={(option, val) => option.value === val.value}
-      onChange={(_, newValues) => {
+      onChange={(_, newValue) => {
         if (multiple) {
-          onChange((newValues as SelectOptionType[])?.map((o) => o.value));
+          onChange((newValue as SelectOptionType[]).map((o) => o.value));
         } else {
-          const single = newValues as SelectOptionType | null;
-          onChange(single ? [single.value] : []);
+          const item = newValue as SelectOptionType | null;
+          onChange(item ? [item.value] : []);
         }
       }}
-      filterSelectedOptions
       clearOnEscape
       disableCloseOnSelect={multiple}
-      renderInput={(params) => <TextField {...params} className="capitalize" disabled={disabled} label={label} size="small" />}
+      renderInput={(params) => <TextField {...params} label={label} size="small" className="capitalize" disabled={disabled} />}
     />
   );
 

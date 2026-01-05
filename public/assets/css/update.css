@@ -96,3 +96,7 @@ input[type="number"] {
 .currency-btn {
   @apply rounded-s-sm! rounded-e-none! w-9! h-10! bg-brand-600! text-white! text-xl! hover:bg-brand-600!;
 }
+
+.currency-btn.Mui-disabled{
+  @apply bg-gray-200! text-gray-400! dark:bg-gray-700! dark:text-gray-400!;
+}

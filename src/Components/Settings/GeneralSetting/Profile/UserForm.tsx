@@ -17,7 +17,7 @@ const UserForm = () => {
   const dispatch = useAppDispatch();
   const { company } = useAppSelector((state) => state.company);
   const { user: UserData } = useAppSelector((state) => state.auth);
-  const { data: rolesData } = Queries.useGetRoles({ activeFilter: true });
+  // const { data: rolesData } = Queries.useGetRoles({ activeFilter: true });
   const { data: branchData } = Queries.useGetBranch({ activeFilter: true });
   const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditUser();
 
@@ -31,7 +31,7 @@ const UserForm = () => {
     },
     email: UserData?.email || "",
     panNumber: UserData?.panNumber || "",
-    role: UserData?.role?._id || "",
+    // role: UserData?.role?._id || "",
     branchId: UserData?.branchId?._id || "",
 
     address: {
@@ -89,7 +89,7 @@ const UserForm = () => {
                     <CommonValidationTextField name="fullName" label="Full Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="username" label="User Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="designation" label="User designation" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="role" label="role" options={GenerateOptions(rolesData?.data?.role_data)} grid={{ xs: 12, md: 4 }} />
+                    {/* <CommonValidationSelect name="role" label="role" options={GenerateOptions(rolesData?.data?.role_data)} grid={{ xs: 12, md: 4 }} disabled/> */}
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />

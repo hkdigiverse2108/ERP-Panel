@@ -28,7 +28,7 @@ const InfoRow: FC<{ label: string; value: string }> = ({ label, value }) => {
 const PosSidebar = () => {
   return (
     <>
-      <div className=" p-2 space-y-3">
+      <div className="p-2 space-y-3">
         {/* ACTION GRID */}
         <PosOption />
 

@@ -24,7 +24,7 @@ const PosOption = () => {
 
   return (
     <>
-      <div className="grid grid-cols-3 border border-gray-300 bg-white dark:bg-gray-dark dark:border-gray-700 overflow-hidden rounded-md">
+      <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-3 border border-gray-300 bg-white dark:bg-gray-dark dark:border-gray-700 overflow-hidden rounded-md">
         <ActionItem icon={<Pause />} label="Hold Bill" onClick={() => dispatch(setHoldBillDrawer())} />
         <ActionItem icon={<Payments />} label="Payments" onClick={() => dispatch(setPaymentListModal())} />
         <ActionItem icon={<CardGiftcard />} label="Redeem Loyalty" onClick={() => dispatch(setRedeemLoyaltyModal())} />

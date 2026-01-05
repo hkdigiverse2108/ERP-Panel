@@ -27,7 +27,7 @@ export const EmployeeFormSchema = Yup.object({
   fullName: Validation("string", "FullName"),
   username: Validation("string", "Username"),
   // designation: Validation("string", "Designation", { required: false }),
-  role: Validation("string", "Role", { required: false }),
+  // role: Validation("string", "Role", { required: false }),
   phoneNo: PhoneValidation(),
   email: Validation("string", "Email", { required: false, extraRules: (s) => s.trim().email("Invalid email address") }),
   branchId: Validation("string", "Branch Name", { required: false }),

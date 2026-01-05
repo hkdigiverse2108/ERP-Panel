@@ -51,6 +51,7 @@ export interface CommonSelectProps {
   grid?: GridType;
   required?: boolean;
   disabled?: boolean;
+  variant?: "standard" | "outlined" | "filled";
 }
 
 export interface CommonValidationSelectProps extends Omit<CommonSelectProps, "onChange" | "value"> {
@@ -192,9 +193,11 @@ export interface CommonValidationTextFieldProps {
   color?: TextFieldProps["color"];
   focused?: boolean;
   readOnly?: boolean;
+  rows?: number;
+  onCurrencyLog?: (value: string) => void;
 }
 export interface CommonTextFieldProps extends Omit<CommonValidationTextFieldProps, "name"> {
-  value: string;
+  value: string | number ;
   onChange?: (value: string) => void;
 }
 
@@ -373,6 +376,8 @@ export interface ModalStateSlice {
   isPayLaterModal: boolean;
   isCashModal: boolean;
   isAdditionalChargeModal: boolean;
+  isProductDetailsModal: { open: boolean; data: any | null };
+  isQtyCountModal: { open: boolean; data: any | null };
 }
 
 // ************ Modal End ***********

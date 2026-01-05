@@ -6,7 +6,7 @@ import { useField, type FieldHookConfig } from "formik";
 import { useCallback, useMemo, useState, type FC, type ReactNode } from "react";
 import type { CommonTextFieldProps, CommonValidationTextFieldProps } from "../../Types";
 
-export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ label, name, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, isCurrency, ...props }) => {
+export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ label, name, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, isCurrency, onCurrencyLog, ...props }) => {
   const fieldConfig: FieldHookConfig<string> = { name };
   const [field, meta, helpers] = useField(fieldConfig);
   const [isFocused, setFocused] = useState(false);
@@ -113,7 +113,16 @@ export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ 
       )}
       {isCurrency ? (
         <Box display="flex" alignItems="center">
-          <IconButton className="currency-btn" size="small" onClick={() => setCurrencyType(currencyType === currency ? "%" : currency)}>
+          <IconButton
+            disabled={disabled}
+            className="currency-btn"
+            size="small"
+            onClick={() => {
+              const next = currencyType === currency ? "%" : currency;
+              setCurrencyType(next);
+              onCurrencyLog?.(next);
+            }}
+          >
             {currencyType}
           </IconButton>
 
@@ -134,7 +143,7 @@ export const CommonValidationTextField: FC<CommonValidationTextFieldProps> = ({ 
   );
 };
 
-export const CommonTextField: FC<CommonTextFieldProps> = ({ label, value, onChange, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, isCurrency, ...props }) => {
+export const CommonTextField: FC<CommonTextFieldProps> = ({ label, value, onChange, type = "text", placeholder, required, autoComplete = "off", validating = false, clearable = false, startIcon, endIcon, showPasswordToggle = false, isFormLabel, disabled, grid, isCurrency, onCurrencyLog, ...props }) => {
   const [focused, setFocused] = useState(false);
   const isPassword = type === "password";
   const [show, setShow] = useState(false);
@@ -224,7 +233,16 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({ label, value, onChan
       )}
       {isCurrency ? (
         <Box display="flex" alignItems="center">
-          <IconButton className="currency-btn" size="small" onClick={() => setCurrencyType(currencyType === currency ? "%" : currency)}>
+          <IconButton
+            disabled={disabled}
+            className="currency-btn"
+            size="small"
+            onClick={() => {
+              const next = currencyType === currency ? "%" : currency;
+              setCurrencyType(next);
+              onCurrencyLog?.(next);
+            }}
+          >
             {currencyType}
           </IconButton>
 
