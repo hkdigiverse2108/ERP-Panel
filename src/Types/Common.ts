@@ -192,6 +192,7 @@ export interface CommonValidationTextFieldProps {
   color?: TextFieldProps["color"];
   focused?: boolean;
   readOnly?: boolean;
+  rows?: number;
 }
 export interface CommonTextFieldProps extends Omit<CommonValidationTextFieldProps, "name"> {
   value: string;

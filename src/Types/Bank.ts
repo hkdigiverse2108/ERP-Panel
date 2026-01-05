@@ -5,8 +5,7 @@ export interface BankFormValues {
  _id?: string;
   _submitAction?: string;
   companyId?: string;
- 
-  bankName: string;
+  name?: string;
   ifscCode: string;
   branchName: string;
   accountHolderName: string;
@@ -28,7 +27,11 @@ export interface BankFormValues {
   branchIds?: string[]; 
   isActive?: boolean;
   status?: string;
+  bankId: string;
+ 
 }
+
+
 
 export type AddBankPayload = BankFormValues;
 

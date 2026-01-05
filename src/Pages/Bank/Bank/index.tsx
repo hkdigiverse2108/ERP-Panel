@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonActionColumn } from "../../../Components/Common";
 import { Mutations, Queries } from "../../../Api";
@@ -9,11 +9,11 @@ import { useDataGrid } from "../../../Utils/Hooks";
 import type { AppGridColDef } from "../../../Types";
 import type { BankBase } from "../../../Types/Bank";
 
+
 const Bank = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
-  const [value, setValue] = useState<string[]>([]);
-
+  
   const { data: bankData, isLoading, isFetching } = Queries.useGetBank(params);
   const { mutate: deleteBankMutate } = Mutations.useDeleteBank();
   const { mutate: editBank, isPending: isEditLoading } = Mutations.useEditBank();
@@ -41,18 +41,29 @@ const Bank = () => {
 
   const columns: AppGridColDef<BankBase>[] = [
     {
-      field: "bankName", headerName: "Bank Name",  width: 180,
+      field: "name",
+      headerName: "Bank Name",
+      width: 200,
     },
     {
-      field: "location", headerName: "Location", width: 150,
+      field: "location", headerName: "Location", width: 200,
     },
     {
       field: "accountHolderName", headerName: "Account Holder Name",width: 200,
     },
     {
+      field: "ifscCode", headerName: "IFSC Code",width: 160,
+    },  
+    {
+      field: "Balance",
+      headerName: "Balance",
+      width: 200,
+      
+    },
+    {
       field: "accountNumber",
       headerName: "Account No.",
-      width: 160,
+      width: 200,
       renderCell: (params) => {
         const value = params.value || "";
         return `XXXX${value.slice(-4)}`;
@@ -64,26 +75,17 @@ const Bank = () => {
       width: 250,
     
     },
-    CommonActionColumn({
+   CommonActionColumn({
       active: (row) =>
         editBank({
-          _id: row?._id,
+          bankId: row?._id,   
           isActive: !row.isActive,
-          bankName: "",
-          ifscCode: "",
-          branchName: "",
-          accountHolderName: "",
-          bankAccountNumber: "",
-          country: "",
-          state: "",
-          city: "",
-          bankId: ""
-        }),
+        } as any),
       editRoute: ROUTES.BANK.ADD_EDIT,
       onDelete: (row) =>
         setRowToDelete({
           _id: row?._id,
-          title: row?.bankName,
+          title: row?.name,
         }),
     }),
   ];

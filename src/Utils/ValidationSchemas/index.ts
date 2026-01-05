@@ -42,16 +42,7 @@ export const EmployeeFormSchema = Yup.object({
     postalCode: Validation("string", "ZIP Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid ZIP Code") }),
   }).nullable(),
 
-  // ---------- BANK DETAILS ----------
-  bankDetails: Yup.object({
-    bankName: Validation("string", "Bank Name", { required: false }),
-    branchName: Validation("string", "Branch Name", { required: false }),
-    accountNumber: Validation("number", "Account Number", { required: false }).nullable(),
-    bankHolderName: Validation("string", "Account Holder Name", { required: false }),
-    swiftCode: Validation("string", "Swift Code", { required: false }),
-    IFSCCode: Validation("string", "IFSC Code", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, "Invalid IFSC Code") }),
-  }).nullable(),
-
+  
   // ---------- SALARY ----------
   wages: Validation("number", "Wages", { required: false }).nullable(),
   commission: Validation("number", "Commission", { required: false }).nullable(),
@@ -190,4 +181,20 @@ export const MultiplePaySchema = Yup.object({
       })
     )
     .min(1, "At least one payment is required"),
+});
+
+export const BankFormSchema = Yup.object().shape({
+  name: Yup.string().required("Name is required"),
+  branchName: Yup.string().required("Branch Name is required"),
+  ifscCode: Yup.string()
+    .required("IFSC Code is required")
+    .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, "Invalid IFSC Code format"),
+  swiftCode: Yup.string().nullable(),
+  accountHolderName: Yup.string().required("Account Holder Name is required"),
+  bankAccountNumber: Yup.string().required("Account Number is required").min(9, "Account number too short").max(18, "Account number too long"),
+  zipCode: Yup.number().typeError("Must be a number").nullable(),
+  addressLine1: Yup.string().nullable(),
+});
+export const EditBankFormSchema = BankFormSchema.shape({
+  bankId: Yup.string().required("Bank ID is required"),
 });
