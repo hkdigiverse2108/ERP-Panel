@@ -1,10 +1,11 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 
 export interface BankFormValues {
-  _id?: string;
+ 
+ _id?: string;
   _submitAction?: string;
   companyId?: string;
-
+ 
   bankName: string;
   ifscCode: string;
   branchName: string;
@@ -25,12 +26,13 @@ export interface BankFormValues {
   city: string;
   zipCode?: number;
   branchIds?: string[]; 
+  isActive?: boolean;
   status?: string;
 }
 
 export type AddBankPayload = BankFormValues;
 
-export type EditBankPayload = Partial<AddBankPayload> & { bankId: string };
+export type EditBankPayload = AddBankPayload & { bankId: string };
 
 export type BankBase = BankFormValues & CommonDataType;
 
