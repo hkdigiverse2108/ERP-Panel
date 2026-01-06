@@ -15,3 +15,4 @@ export * from "./Product";
 export * from "./Payment";
 export * from "./POS";
 export * from "./Customer";
+export * from "./Brand";

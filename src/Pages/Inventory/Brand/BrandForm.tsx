@@ -1,18 +1,17 @@
 import { Grid } from "@mui/material";
 import { Form, Formik, useFormikContext, type FormikHelpers, type FormikValues } from "formik";
 import { useEffect, useState, type FC } from "react";
+import { useDispatch } from "react-redux";
 import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonModal } from "../../../Components/Common";
 import { CommonFormImageBox } from "../../../Components/Common/CommonUploadImage/CommonImageBox";
 import { PAGE_TITLE } from "../../../Constants";
+import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
+import { setBrandModal, setSelectedFiles, setUploadModal } from "../../../Store/Slices/ModalSlice";
+import type { BrandFormValues, ImageSyncProps } from "../../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { BrandFormSchema } from "../../../Utils/ValidationSchemas";
-import { useDispatch } from "react-redux";
-import { setBrandModal, setSelectedFiles, setUploadModal } from "../../../Store/Slices/ModalSlice";
-import type { BrandFormValues } from "../../../Types/Brand";
-import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
-import type { ImageSyncProps } from "../../../Types";
 
 const BrandForm: FC = () => {
     const { mutate: addBrand, isPending: isAddLoading } = Mutations.useAddBrand();
@@ -34,8 +33,6 @@ const BrandForm: FC = () => {
         isActive: isEdit?.isActive ?? true,
     };
     const [activeImageKey, setActiveImageKey] = useState<"image" | null>(null);
-    
-
 
     const FormikImageSync = <T extends FormikValues>({
         activeKey,
@@ -84,7 +81,7 @@ const BrandForm: FC = () => {
 
 
     return (
-        <CommonModal title={PAGE_TITLE.INVENTORY.BRAND[pageMode]} isOpen={openModal} onClose={closeModal} className="max-w-125 m-2 sm:m-5">
+        <CommonModal title={PAGE_TITLE.INVENTORY.BRAND[pageMode]} isOpen={openModal} onClose={closeModal} className="max-w-125">
             <Formik<BrandFormValues> enableReinitialize initialValues={initialValues} validationSchema={BrandFormSchema} onSubmit={handleSubmit}>
                 {({ setFieldValue, dirty }) => (
                     <Form noValidate>

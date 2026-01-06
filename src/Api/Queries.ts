@@ -1,7 +1,6 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, EmployeeApiResponse, Params, ProductApiResponse, RolesApiResponse, UploadResponse } from "../Types";
+import type { AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BrandApiResponse, EmployeeApiResponse, Params, ProductApiResponse, RolesApiResponse, UploadResponse } from "../Types";
 import type { BankApiResponse } from "../Types/Bank";
-import type { BrandApiResponse } from "../Types/Brand";
 import type { CompanyApiResponse } from "../Types/Company";
 import { CleanParams } from "../Utils";
 import { Get } from "./Methods";

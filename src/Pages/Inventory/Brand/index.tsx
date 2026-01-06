@@ -1,21 +1,19 @@
+import { Box } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
 import { useMemo } from "react";
+import { useDispatch } from "react-redux";
 import { Mutations, Queries } from "../../../Api";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
+import { BREADCRUMBS } from "../../../Data";
+import { setBrandModal } from "../../../Store/Slices/ModalSlice";
+import type { AppGridColDef, BrandBase } from "../../../Types";
 import { useDataGrid } from "../../../Utils/Hooks";
 import BrandForm from "./BrandForm";
-import { useDispatch } from "react-redux";
-import { setBrandModal } from "../../../Store/Slices/ModalSlice";
-import { Box } from "@mui/material";
-import { BREADCRUMBS } from "../../../Data";
-import type { BrandBase } from "../../../Types/Brand";
-
 
 const Brand = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const dispatch = useDispatch();
-
 
   const { data: BrandsData, isLoading: brandsDataLoading, isFetching: brandsDataFetching } = Queries.useGetBrand(params);
   const { mutate: deleteBrandsMutate } = Mutations.useDeleteBrand();
@@ -37,7 +35,7 @@ const Brand = () => {
     dispatch(setBrandModal({ open: true, data: row }));
   };
 
-  const columns: GridColDef<BrandBase>[] = [
+  const columns: AppGridColDef<BrandBase>[] = [
     {
       field: "image", headerName: "Image", width: 80, renderCell: ({ value }) => value ? <img src={value} style={{ width: 40 }} /> : "-",
     },
@@ -45,8 +43,13 @@ const Brand = () => {
     { field: "code", headerName: "Code", flex: 1 },
     { field: "description", headerName: "Description", flex: 1 },
     {
-      field: "parentBrandId", headerName: "parent Brand", flex: 1, renderCell: ({ value }) =>
-        typeof value === "object" ? value?.name || "-" : value
+      field: "parentBrandId", headerName: "parent Brand", flex: 1,
+      renderCell: ({ value }) => typeof value === "object" ? value?.name || "-" : value,
+      exportFormatter: (value) =>
+        typeof value === "object" && value !== null
+          ? (value as { name?: string })?.name || "-"
+          : "-"
+      ,
     },
     CommonActionColumn({
       active: (row) => editBrand({ brandId: row?._id, isActive: !row.isActive }),
