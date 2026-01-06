@@ -33,14 +33,21 @@ export const KEYS = {
     EDIT: "branch-edit",
     DELETE: "branch-delete",
   },
-  
+
+  BRAND: {
+    BASE: "brand",
+    ADD: "brand-add",
+    EDIT: "brand-edit",
+    DELETE: "brand-delete",
+  },
+
   ROLES: {
     BASE: "role",
     ADD: "role-add",
     EDIT: "role-edit",
     DELETE: "role-delete",
   },
-  
+
   ANNOUNCEMENT: {
     BASE: "announcement",
   },
