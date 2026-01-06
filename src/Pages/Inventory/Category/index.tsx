@@ -11,12 +11,12 @@ import {
 } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import { setBrandModal } from "../../../Store/Slices/ModalSlice";
-import type { AppGridColDef, BrandBase } from "../../../Types";
+import { setCategoryModal } from "../../../Store/Slices/ModalSlice";
 import { useDataGrid } from "../../../Utils/Hooks";
-import BrandForm from "./BrandForm";
+import CategoryForm from "./CategoryForm";
+import type { AppGridColDef, CategoryBase } from "../../../Types";
 
-const Brand = () => {
+const Category = () => {
   const {
     paginationModel,
     setPaginationModel,
@@ -33,40 +33,40 @@ const Brand = () => {
   const dispatch = useDispatch();
 
   const {
-    data: BrandsData,
-    isLoading: brandsDataLoading,
-    isFetching: brandsDataFetching,
-  } = Queries.useGetBrand(params);
-  const { mutate: deleteBrandsMutate } = Mutations.useDeleteBrand();
-  const { mutate: editBrand, isPending: isEditLoading } =
-    Mutations.useEditBrand();
+    data: CategorysData,
+    isLoading: CategorysDataLoading,
+    isFetching: CategorysDataFetching,
+  } = Queries.useGetCategory(params);
+  const { mutate: deleteCategorysMutate } = Mutations.useDeleteCategory();
+  const { mutate: editCategory, isPending: isEditLoading } =
+    Mutations.useEditCategory();
 
-  const allBrands = useMemo(
+  const allCategorys = useMemo(
     () =>
-      BrandsData?.data?.brand_data.map((brand) => ({
-        ...brand,
-        id: brand?._id,
+      CategorysData?.data?.category_data.map((Category) => ({
+        ...Category,
+        id: Category?._id,
       })) || [],
-    [BrandsData]
+    [CategorysData]
   );
-  const totalRows = BrandsData?.data?.totalData || 0;
+  const totalRows = CategorysData?.data?.totalData || 0;
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
-    deleteBrandsMutate(rowToDelete?._id as string, {
+    deleteCategorysMutate(rowToDelete?._id as string, {
       onSuccess: () => setRowToDelete(null),
     });
   };
 
   const handleAdd = () => {
-    dispatch(setBrandModal({ open: true, data: null }));
+    dispatch(setCategoryModal({ open: true, data: null }));
   };
 
-  const handleEdit = (row: BrandBase) => {
-    dispatch(setBrandModal({ open: true, data: row }));
+  const handleEdit = (row: CategoryBase) => {
+    dispatch(setCategoryModal({ open: true, data: row }));
   };
 
-  const columns: AppGridColDef<BrandBase>[] = [
+  const columns: AppGridColDef<CategoryBase>[] = [
     {
       field: "image",
       headerName: "Image",
@@ -78,8 +78,8 @@ const Brand = () => {
     { field: "code", headerName: "Code", flex: 1 },
     { field: "description", headerName: "Description", flex: 1 },
     {
-      field: "parentBrandId",
-      headerName: "parent Brand",
+      field: "parentCategoryId",
+      headerName: "parent Category",
       flex: 1,
       renderCell: ({ value }) =>
         typeof value === "object" ? value?.name || "-" : value,
@@ -90,7 +90,7 @@ const Brand = () => {
     },
     CommonActionColumn({
       active: (row) =>
-        editBrand({ brandId: row?._id, isActive: !row.isActive }),
+        editCategory({ categoryId: row?._id, isActive: !row.isActive }),
       onEdit: (row) => handleEdit(row),
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
     }),
@@ -98,9 +98,9 @@ const Brand = () => {
 
   const CommonDataGridOption = {
     columns,
-    rows: allBrands,
+    rows: allCategorys,
     rowCount: totalRows,
-    loading: brandsDataLoading || brandsDataFetching || isEditLoading,
+    loading: CategorysDataLoading || CategorysDataFetching || isEditLoading,
     isActive,
     setActive,
     handleAdd,
@@ -115,9 +115,9 @@ const Brand = () => {
   return (
     <>
       <CommonBreadcrumbs
-        title={PAGE_TITLE.INVENTORY.BRAND.BASE}
+        title={PAGE_TITLE.INVENTORY.CATEGORY.BASE}
         maxItems={1}
-        breadcrumbs={BREADCRUMBS.BRAND.BASE}
+        breadcrumbs={BREADCRUMBS.CATEGORY.BASE}
       />
       <Box sx={{ p: { xs: 2, md: 3 } }}>
         <CommonCard hideDivider>
@@ -129,10 +129,10 @@ const Brand = () => {
           onClose={() => setRowToDelete(null)}
           onConfirm={() => handleDeleteBtn()}
         />
-        <BrandForm />
+        <CategoryForm />
       </Box>
     </>
   );
 };
 
-export default Brand;
+export default Category;

@@ -40,7 +40,12 @@ export const KEYS = {
     EDIT: "brand-edit",
     DELETE: "brand-delete",
   },
-
+  CATEGORY: {
+    BASE: "category",
+    ADD: "category-add",
+    EDIT: "category-edit",
+    DELETE: "category-delete",
+  },
   ROLES: {
     BASE: "role",
     ADD: "role-add",
