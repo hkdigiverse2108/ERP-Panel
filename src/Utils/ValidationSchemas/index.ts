@@ -42,7 +42,7 @@ export const EmployeeFormSchema = Yup.object({
     postalCode: Validation("string", "ZIP Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid ZIP Code") }),
   }).nullable(),
 
-  
+
   // ---------- SALARY ----------
   wages: Validation("number", "Wages", { required: false }).nullable(),
   commission: Validation("number", "Commission", { required: false }).nullable(),
@@ -57,6 +57,13 @@ export const BranchFormSchema = Yup.object({
   name: Validation("string", "Branch name"),
   address: Validation("string", "Address"),
   isActive: Yup.boolean(),
+});
+export const BrandFormSchema = Yup.object({
+  name: Validation("string", "Brand name"),
+  code: Validation("string", "code"),
+  description: Validation("string", "Description", { required: false }),
+  parentcategory: Validation("string", "Parent Category", { required: false }),
+  isActive: Validation("boolean", "is Active", { required: false }),
 });
 
 export const RolesFormSchema = Yup.object({
