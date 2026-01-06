@@ -4,21 +4,19 @@ import { useNavigate } from "react-router-dom";
 import { CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonActionColumn } from "../../../Components/Common";
 import { Mutations, Queries } from "../../../Api";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BankBreadCrumbs } from "../../../Data";
+import { BREADCRUMBS } from "../../../Data";
 import { useDataGrid } from "../../../Utils/Hooks";
 import type { AppGridColDef } from "../../../Types";
 import type { BankBase } from "../../../Types/Bank";
 
-
 const Bank = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
-  
+
   const { data: bankData, isLoading, isFetching } = Queries.useGetBank(params);
   const { mutate: deleteBankMutate } = Mutations.useDeleteBank();
   const { mutate: editBank, isPending: isEditLoading } = Mutations.useEditBank();
 
- 
   const allBanks = useMemo(
     () =>
       bankData?.data?.bank_data?.map((bank) => ({
@@ -46,36 +44,43 @@ const Bank = () => {
       width: 200,
     },
     {
-      field: "location", headerName: "Location", width: 200,
+      field: "city",
+      headerName: "Location",
+      width: 200,
     },
     {
-      field: "accountHolderName", headerName: "Account Holder Name",width: 200,
+      field: "accountHolderName",
+      headerName: "Account Holder Name",
+      width: 200,
     },
     {
-      field: "ifscCode", headerName: "IFSC Code",width: 160,
-    },  
+      field: "ifscCode",
+      headerName: "IFSC Code",
+      width: 160,
+    },
     {
-      field: "Balance",
+      field: "openingBalance",
       headerName: "Balance",
-      width: 200,
-      
-    },
-    {
-      field: "accountNumber",
-      headerName: "Account No.",
-      width: 200,
-      renderCell: (params) => {
-        const value = params.value || "";
-        return `XXXX${value.slice(-4)}`;
+      width: 160,
+      valueGetter: (_values, row) => {
+        const credit = row.openingBalance?.creditBalance || 0;
+        const debit = row.openingBalance?.debitBalance || 0;
+        return credit - debit;
       },
     },
     {
-      field: "createdBy",
-      headerName: "Created By",
-      width: 250,
-    
+      field: "bankAccountNumber",
+      headerName: "Account No.",
+      width: 200,
     },
-   CommonActionColumn({
+    {
+      field: "addressLine1",
+      headerName: "Address",
+      flex: 1,
+      minWidth: 200,
+    },
+
+    CommonActionColumn({
       active: (row) => editBank({ bankId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.BANK.ADD_EDIT,
       onDelete: (row) =>
@@ -104,7 +109,7 @@ const Bank = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.BANK.BASE} maxItems={1} breadcrumbs={BankBreadCrumbs} />
+      <CommonBreadcrumbs title={PAGE_TITLE.BANK.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.BANK.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonCard hideDivider>

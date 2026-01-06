@@ -166,3 +166,6 @@ export const SEND_REMINDER = [
   { label: "Yes", value: "yes" },
   { label: "No", value: "no" },
 ];
+export const UPI_OPTIONS = [
+  { label: "upi available", value: true },
+];

@@ -1,11 +1,11 @@
 import { Box, Grid } from "@mui/material";
 import { Formik, Form, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CommonValidationTextField, CommonValidationSwitch, CommonValidationSelect } from "../../../Attribute";
+import { CommonValidationTextField, CommonValidationSwitch, CommonValidationSelect, CommonValidationRadio } from "../../../Attribute";
 import { Mutations } from "../../../Api";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { BankFormBreadCrumbs, CityOptionsByState, CountryOptions, StateOptions } from "../../../Data";
+import { BREADCRUMBS, CityOptionsByState, CountryOptions, StateOptions } from "../../../Data";
 import { useAppSelector } from "../../../Store/hooks";
 import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import type { BankFormValues } from "../../../Types/Bank";
@@ -20,9 +20,9 @@ const BankForm = () => {
   const { mutate: addBank, isPending: isAddLoading } = Mutations.useAddBank();
   const { mutate: editBank, isPending: isEditLoading } = Mutations.useEditBank();
 
-
   const isEditing = Boolean(data?._id);
-  
+  const pageMode = isEditing ? "EDIT" : "ADD";
+
   const initialValues: BankFormValues = {
     name: data?.name || "",
     branchName: data?.branchName || "",
@@ -30,19 +30,29 @@ const BankForm = () => {
     swiftCode: data?.swiftCode || "",
     accountHolderName: data?.accountHolderName || "",
     bankAccountNumber: data?.bankAccountNumber || "",
-    openingBalance: data?.openingBalance || { creditBalance: 0, debitBalance: 0 },
+
+    openingBalance: {
+      creditBalance: data?.openingBalance?.creditBalance ?? 0,
+      debitBalance: data?.openingBalance?.debitBalance ?? 0,
+    },
+
+    isUpiAvailable: data?.isUpiAvailable ?? false,
+
     addressLine1: data?.addressLine1 || "",
+    addressLine2: data?.addressLine2 || "",
+
     country: data?.country || "India",
     state: data?.state || "",
     city: data?.city || "",
-    zipCode: data?.zipCode || undefined,
+    zipCode: data?.zipCode || "",
+
+    branchIds: data?.branchIds || [],
+
     isActive: data?.isActive ?? true,
-    bankId: data?.bankId || "",
-    
+    bankId: data?._id || "",
   };
 
   const handleSubmit = async (values: BankFormValues, { resetForm }: FormikHelpers<BankFormValues>) => {
-    
     if (isAddLoading || isEditLoading) return;
 
     const { _submitAction, ...rest } = values;
@@ -50,7 +60,7 @@ const BankForm = () => {
 
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") {
-        resetForm();  
+        resetForm();
       } else {
         navigate(-1);
       }
@@ -67,33 +77,52 @@ const BankForm = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={isEditing ? PAGE_TITLE.BANK.EDIT : PAGE_TITLE.BANK.ADD} maxItems={2} breadcrumbs={BankFormBreadCrumbs} />
+      <CommonBreadcrumbs title={PAGE_TITLE.BANK[pageMode]} breadcrumbs={BREADCRUMBS.BANK[pageMode]} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<BankFormValues> enableReinitialize initialValues={initialValues} validationSchema={BankFormSchema} onSubmit={handleSubmit}>
-          {({ setFieldValue, resetForm, dirty,  values }) => (
+          {({ setFieldValue, resetForm, dirty, values }) => (
             <Form noValidate>
               <Grid container spacing={2}>
                 <CommonCard title="Bank Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationTextField name="name" label="Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="branchName" label="Branch Name" required grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="branchIds" label="Branches" multiple grid={{ xs: 12, md: 4 }} options={[]} />
+
                     <CommonValidationTextField name="ifscCode" label="IFSC Code" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="swiftCode" label="Swift Code" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="accountHolderName" label="Account Holder Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="bankAccountNumber" label="Account Number" required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="openingBalance.creditBalance" label="Opening Balance" type="number" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="zipCode" label="Zip Code" type="number" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="state" label="State" options={StateOptions} grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationSelect name="city" label="City" disabled={!values.state} options={CityOptionsByState[values?.state || ""] || []} grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationSelect name="country" label="Country" options={CountryOptions} disabled grid={{ xs: 12, md: 4 }} required />
 
-                    <CommonValidationTextField name="addressLine1" label="Address" multiline rows={3} grid={{ xs: 12 }} />
+                    <Grid>
+                      <Box sx={{ fontWeight: 600, mb: 1 }}>Opening Balance</Box>
+
+                      <Grid container spacing={2} gap={3}>
+                        <Grid>
+                          <CommonValidationTextField name="openingBalance.creditBalance" label="Credit Balance" type="number" grid={{ xs: 12 }} />
+                        </Grid>
+
+                        <Grid>
+                          <CommonValidationTextField name="openingBalance.debitBalance" label="Debit Balance" type="number" grid={{ xs: 12 }} />
+                        </Grid>
+
+                        <Grid>
+                          <CommonValidationSwitch name="isUpiAvailable" label="UPI Available" />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+
+                    <CommonValidationTextField name="addressLine1" label="Address Line 1" multiline rows={2} grid={{ xs: 12 }} />
+                    <CommonValidationTextField name="addressLine2" label="Address Line 2" multiline rows={2} grid={{ xs: 12 }} />
 
                     {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                   </Grid>
                 </CommonCard>
-
                 <CommonBottomActionBar
                   save={isEditing}
                   clear={!isEditing}
@@ -102,11 +131,9 @@ const BankForm = () => {
                   onClear={() => resetForm({ values: initialValues })}
                   onSave={() => {
                     setFieldValue("_submitAction", "save");
-                   
                   }}
                   onSaveAndNew={() => {
                     setFieldValue("_submitAction", "saveAndNew");
-                   
                   }}
                 />
               </Grid>
