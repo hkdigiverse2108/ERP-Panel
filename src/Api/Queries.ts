@@ -1,7 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, BrandApiResponse, EmployeeApiResponse, Params, ProductApiResponse, RolesApiResponse, UploadResponse } from "../Types";
-import type { BankApiResponse } from "../Types/Bank";
-import type { CompanyApiResponse } from "../Types/Company";
+import type { AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BranchApiResponse, BrandApiResponse, CompanyApiResponse, EmployeeApiResponse, Params, ProductApiResponse, RolesApiResponse, UploadResponse } from "../Types";
 import { CleanParams } from "../Utils";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
