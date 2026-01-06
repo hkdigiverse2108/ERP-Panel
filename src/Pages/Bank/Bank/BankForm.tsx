@@ -1,14 +1,14 @@
 import { Box, Grid } from "@mui/material";
-import { Formik, Form, type FormikHelpers } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CommonValidationTextField, CommonValidationSwitch, CommonValidationSelect, CommonValidationRadio } from "../../../Attribute";
 import { Mutations } from "../../../Api";
+import { CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, CityOptionsByState, CountryOptions, StateOptions } from "../../../Data";
 import { useAppSelector } from "../../../Store/hooks";
+import type { BankFormValues } from "../../../Types";
 import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
-import type { BankFormValues } from "../../../Types/Bank";
 import { BankFormSchema } from "../../../Utils/ValidationSchemas";
 
 const BankForm = () => {

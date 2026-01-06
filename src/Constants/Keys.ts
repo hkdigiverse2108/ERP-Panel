@@ -33,26 +33,30 @@ export const KEYS = {
     EDIT: "branch-edit",
     DELETE: "branch-delete",
   },
-  
+
+  BRAND: {
+    BASE: "brand",
+    ADD: "brand-add",
+    EDIT: "brand-edit",
+    DELETE: "brand-delete",
+  },
+
   ROLES: {
     BASE: "role",
     ADD: "role-add",
     EDIT: "role-edit",
     DELETE: "role-delete",
   },
-  
+
   ANNOUNCEMENT: {
     BASE: "announcement",
   },
 
   PRODUCT: {
     BASE: "product",
-    ROOT: ["product"],
-    ALL: ["product", "all"],
-    DETAILS: (id: string) => ["product", "detail", id],
-    ADD: ["product", "add"],
-    EDIT: ["product", "edit"],
-    DELETE: ["product", "delete"], // mutation
+    ADD: "product-add",
+    EDIT: "product-edit",
+    DELETE: "product-delete",
   },
   STOCK: {
     ROOT: ["stock"],

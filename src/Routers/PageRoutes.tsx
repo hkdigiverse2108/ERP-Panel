@@ -19,6 +19,8 @@ import BankTransaction from "../Pages/Bank/BankTransaction";
 import PaymentList from "../Pages/Bank/Payment";
 import PaymentForm from "../Pages/Bank/Payment/PaymentForm";
 import NewPos from "../Pages/POS/New";
+import Brand from "../Pages/Inventory/Brand";
+import BrandForm from "../Pages/Inventory/Brand/BrandForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -38,20 +40,23 @@ export const PageRoutes = [
   { path: ROUTES.PRODUCT.BASE, element: <Product /> },
   { path: ROUTES.PRODUCT.ADD_EDIT, element: <ProductForm /> },
 
+  { path: ROUTES.BRAND.BASE, element: <Brand /> },
+  { path: ROUTES.BRAND.ADD_EDIT, element: <BrandForm /> },
+
   { path: ROUTES.STOCK.BASE, element: <Stocks /> },
 
   { path: ROUTES.CONTACT.BASE, element: <Contact /> },
   { path: ROUTES.CONTACT.ADD_EDIT, element: <ContactForm /> },
 
-  { path: ROUTES.BANK.BASE, element: <Bank />},
-  { path: ROUTES.BANK.ADD_EDIT, element:<BankForm/>},
+  { path: ROUTES.BANK.BASE, element: <Bank /> },
+  { path: ROUTES.BANK.ADD_EDIT, element: <BankForm /> },
 
-  { path: ROUTES.TRANSACTION.BASE, element: <BankTransaction />},
+  { path: ROUTES.TRANSACTION.BASE, element: <BankTransaction /> },
 
-  { path: ROUTES.PAYMENT.BASE, element: <PaymentList />},
-  { path: ROUTES.PAYMENT.ADD_EDIT, element: <PaymentForm />},
-  
-  { path: ROUTES.POS.NEW, element: <NewPos />},
+  { path: ROUTES.PAYMENT.BASE, element: <PaymentList /> },
+  { path: ROUTES.PAYMENT.ADD_EDIT, element: <PaymentForm /> },
+
+  { path: ROUTES.POS.NEW, element: <NewPos /> },
 ];
 
 export const AuthRoutes = [

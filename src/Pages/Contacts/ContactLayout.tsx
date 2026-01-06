@@ -1,22 +1,20 @@
-import { Box, Grid, RadioGroup, FormControlLabel, Radio } from "@mui/material";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { Box } from "@mui/material";
 
 const ContactLayout = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  // const navigate = useNavigate();
+  // const location = useLocation();
 
-  const [contactType, setContactType] = useState(
-    location.state?.type || "customer"
-  );
+  // const [contactType, setContactType] = useState(
+  //   location.state?.type || "customer"
+  // );
 
-  const handleChange = (e) => {
-    const type = e.target.value;
-    setContactType(type);
+  // const handleChange = (e) => {
+  //   const type = e.target.value;
+  //   setContactType(type);
 
     
-    navigate("/contacts", { state: { type } });
-  };
+  //   navigate("/contacts", { state: { type } });
+  // };
 
   return (
     <Box>
@@ -31,15 +29,15 @@ const ContactLayout = () => {
           p: 2,
         }}
       >
-        <RadioGroup row value={contactType} onChange={handleChange}>
+        {/* <RadioGroup row value={contactType} onChange={handleChange}>
           <FormControlLabel value="customer" control={<Radio />} label="Customer" />
           <FormControlLabel value="vendor" control={<Radio />} label="Vendor / Supplier" />
           <FormControlLabel value="transport" control={<Radio />} label="Transport" />
-        </RadioGroup>
+        </RadioGroup> */}
       </Box>
 
      
-      <Outlet context={{ contactType }} />
+      {/* <Outlet context={{ contactType }} /> */}
     </Box>
   );
 };

@@ -1,13 +1,12 @@
 import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonActionColumn } from "../../../Components/Common";
 import { Mutations, Queries } from "../../../Api";
+import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS } from "../../../Data";
+import { BankBreadCrumbs } from "../../../Data";
+import type { AppGridColDef, BankBase } from "../../../Types";
 import { useDataGrid } from "../../../Utils/Hooks";
-import type { AppGridColDef } from "../../../Types";
-import type { BankBase } from "../../../Types/Bank";
 
 const Bank = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -44,9 +43,7 @@ const Bank = () => {
       width: 200,
     },
     {
-      field: "city",
-      headerName: "Location",
-      width: 200,
+      field: "city", headerName: "Location", width: 200,
     },
     {
       field: "accountHolderName",

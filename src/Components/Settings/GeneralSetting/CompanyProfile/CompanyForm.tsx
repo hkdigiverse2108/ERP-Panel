@@ -3,18 +3,17 @@ import { Form, Formik, useFormikContext, type FormikValues } from "formik";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations } from "../../../../Api";
-import { CommonButton, CommonPhoneNumber, CommonSwitch, CommonValidationTextField, CommonValidationSelect } from "../../../../Attribute";
+import { CommonButton, CommonPhoneNumber, CommonSwitch, CommonValidationSelect, CommonValidationTextField } from "../../../../Attribute";
 import { PAGE_TITLE, ROUTES } from "../../../../Constants";
+import { BREADCRUMBS, CityOptionsByState, CountryOptions, StateOptions, TimeZoneOptions } from "../../../../Data";
 import { setCompany } from "../../../../Store/Slices/CompanySlice";
 import { setSelectedFiles, setUploadModal } from "../../../../Store/Slices/ModalSlice";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
-import type { Params } from "../../../../Types";
+import type { CompanyFormValues, Params } from "../../../../Types";
 import { GetChangedFields } from "../../../../Utils";
 import { CompanyFormSchemas } from "../../../../Utils/ValidationSchemas";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Common";
 import { CommonFormImageBox } from "../../../Common/CommonUploadImage/CommonImageBox";
-import type { CompanyFormValues } from "../../../../Types/Company";
-import { BREADCRUMBS, CityOptionsByState, CountryOptions, StateOptions, TimeZoneOptions } from "../../../../Data";
 type CompanyImageKey = "logo" | "waterMark" | "reportFormatLogo" | "authorizedSignature";
 
 const COMPANY_IMAGES = [

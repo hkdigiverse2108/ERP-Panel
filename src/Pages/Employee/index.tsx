@@ -31,14 +31,15 @@ const Employee = () => {
   const columns: AppGridColDef<EmployeeBase>[] = [
     { field: "username", headerName: "User Name", type: "string", width: 170 },
     { field: "fullName", headerName: "Full Name", width: 170 },
+    { field: "designation", headerName: "designation", width: 170 },
     { field: "email", headerName: "Email", width: 240 },
     CommonPhoneColumns<EmployeeBase>(),
     { field: "panNumber", headerName: "PAN Number", width: 150 },
     { field: "wages", headerName: "Wages", type: "number", width: 150 },
     { field: "extraWages", headerName: "Extra Wages", type: "number", width: 150 },
-    { field: "commission", headerName: "Extra Wages", type: "number", flex: 1, minWidth: 150 },
+    { field: "commission", headerName: "Commission", type: "number", flex: 1, minWidth: 150 },
     CommonActionColumn({
-      active: (row) => editEmployee({ userId: row?._id, companyId: row?.companyId, isActive: !row.isActive }),
+      active: (row) => editEmployee({ userId: row?._id, companyId: row?.companyId?._id, isActive: !row.isActive }),
       editRoute: ROUTES.EMPLOYEE.ADD_EDIT,
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.username }),
     }),

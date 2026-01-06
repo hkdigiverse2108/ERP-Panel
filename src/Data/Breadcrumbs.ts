@@ -11,13 +11,18 @@ export const BREADCRUMBS = {
   },
   PRODUCT: {
     BASE: [{ label: PAGE_TITLE.INVENTORY.PRODUCT.BASE }],
-    ADD: [{ label: PAGE_TITLE.INVENTORY.PRODUCT.BASE, href: ROUTES.PRODUCT.BASE }, { label: PAGE_TITLE.INVENTORY.PRODUCT.ADDEDIT }],
-    EDIT:[{ label: PAGE_TITLE.INVENTORY.PRODUCT.BASE, href: ROUTES.PRODUCT.BASE }, { label: PAGE_TITLE.INVENTORY.PRODUCT.ADDEDIT }],
+    ADD: [{ label: PAGE_TITLE.INVENTORY.PRODUCT.BASE, href: ROUTES.PRODUCT.BASE }, { label: PAGE_TITLE.INVENTORY.PRODUCT.ADD }],
+    EDIT:[{ label: PAGE_TITLE.INVENTORY.PRODUCT.BASE, href: ROUTES.PRODUCT.BASE }, { label: PAGE_TITLE.INVENTORY.PRODUCT.EDIT }],
   },
   BRANCH: {
     BASE: [{ label: PAGE_TITLE.BRANCH.BASE }],
     ADD: [{ label: PAGE_TITLE.BRANCH.BASE, href: ROUTES.BRANCH.BASE }, { label: PAGE_TITLE.BRANCH.ADD }],
     EDIT: [{ label: PAGE_TITLE.BRANCH.BASE, href: ROUTES.BRANCH.BASE }, { label: PAGE_TITLE.BRANCH.EDIT }],
+  },
+    BRAND: {
+    BASE: [{ label: PAGE_TITLE.INVENTORY.BRAND.BASE }],
+    ADD: [{ label: PAGE_TITLE.INVENTORY.BRAND.BASE, href: ROUTES.BRAND.BASE }, { label: PAGE_TITLE.INVENTORY.BRAND.ADD }],
+    EDIT: [{ label: PAGE_TITLE.INVENTORY.BRAND.BASE, href: ROUTES.BRAND.BASE }, { label: PAGE_TITLE.INVENTORY.BRAND.EDIT }],
   },
   PAYMENT: {
     BASE: [{ label: PAGE_TITLE.PAYMENT.BASE }],
@@ -43,3 +48,5 @@ export const ProductFormBreadcrumbs = [{ label: ROUTES.PRODUCT.ADD_EDIT }];
 export const StockBreadcrumbs = [{ label: ROUTES.STOCK.BASE }];
 
 export const transactionBreadCrumbs = [{ label: PAGE_TITLE.TRANSACTION.BASE }];
+export const BrandBreadcrumbs = [{ label: ROUTES.BRAND.BASE }];
+export const BrandFormBreadcrumbs = [{ label: ROUTES.BRAND.ADD_EDIT }];

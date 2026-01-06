@@ -105,18 +105,6 @@ const TopCustomers = () => {
   // -----------------------------
   const columns = [
     {
-      field: "id",
-      headerName: "Sr No",
-      width: 90,
-      hideable: false,
-      sortable: false,
-      filterable: false,
-      renderCell: (params) => {
-        const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
-        return paginationModel.page * paginationModel.pageSize + index + 1;
-      },
-    },
-    {
       field: "name",
       headerName: "Name",
       flex: 1,
@@ -126,12 +114,12 @@ const TopCustomers = () => {
       headerName: "Email",
       flex: 1,
     },
-    {
-      field: "status",
-      headerName: "Status",
-      flex: 1,
-      renderCell: (params) => <span style={{ color: params.row.status === "Active" ? "green" : "red" }}>{params.row.status}</span>,
-    },
+    // {
+    //   field: "status",
+    //   headerName: "Status",
+    //   flex: 1,
+    //   renderCell: (params) => <span style={{ color: params.row.status === "Active" ? "green" : "red" }}>{params.row.status}</span>,
+    // },
   ];
 
   // -----------------------------

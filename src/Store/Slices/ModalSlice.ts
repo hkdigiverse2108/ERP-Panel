@@ -6,6 +6,7 @@ const initialState: ModalStateSlice = {
   selectedFiles: [],
   isModalVideoPlay: { open: false, link: "" },
   isCustomerModal: { open: false, data: null },
+  isBrandModal: { open: false, data: null },
   isPaymentListModal: false,
   isAddPaymentModal: false,
   isRedeemLoyaltyModal: false,
@@ -33,6 +34,9 @@ const ModalSlice = createSlice({
 
     setSelectedFiles: (state, action) => {
       state.selectedFiles = action.payload;
+    },
+    setBrandModal: (state, action) => {
+      state.isBrandModal = action.payload;
     },
 
     clearSelectedFiles: (state) => {
@@ -92,6 +96,6 @@ const ModalSlice = createSlice({
   },
 });
 
-export const { setQtyCountModal, setProductDetailsModal, setAdditionalChargeModal, setCashModal, setPayLaterModal, setApplyCouponModal, setUploadModal, setSelectedFiles, clearSelectedFiles, setModalVideoPlay, setCustomerModal, setPaymentListModal, setAddPaymentModal, setRedeemLoyaltyModal, setCreditNoteModal, setOrderModal, setCashControlModal, setCouponModal, setRedeemCreditModal, setCardModal } = ModalSlice.actions;
+export const { setQtyCountModal, setProductDetailsModal, setAdditionalChargeModal, setCashModal, setPayLaterModal, setApplyCouponModal, setUploadModal, setSelectedFiles, clearSelectedFiles, setModalVideoPlay, setCustomerModal, setPaymentListModal, setAddPaymentModal, setRedeemLoyaltyModal, setCreditNoteModal, setOrderModal, setCashControlModal, setCouponModal, setRedeemCreditModal, setCardModal, setBrandModal } = ModalSlice.actions;
 
 export default ModalSlice.reducer;

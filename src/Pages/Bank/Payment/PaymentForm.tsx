@@ -1,24 +1,21 @@
-import { Box, Grid, RadioGroup, FormControlLabel, Radio } from "@mui/material";
-import { Form, Formik, type FormikHelpers } from "formik";
-import { useLocation, useNavigate } from "react-router-dom";
-import { CommonCard, CommonBottomActionBar, CommonBreadcrumbs } from "../../../Components/Common";
+import { Box, FormControlLabel, Grid, Radio, RadioGroup } from "@mui/material";
+import { Form, Formik } from "formik";
+import { useLocation } from "react-router-dom";
 import { CommonValidationTextField } from "../../../Attribute";
+import { CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import { useAppSelector } from "../../../Store/hooks";
-import { Mutations } from "../../../Api";
-import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import type { PaymentFormValues } from "../../../Types";
 
 const PaymentForm = () => {
   const location = useLocation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { data } = location.state || {};
-  const { company } = useAppSelector((state) => state.company);
+  // const { company } = useAppSelector((state) => state.company);
 
   /* ================= API ================= */
-  const { mutate: addPayment, isPending: isAddLoading } = Mutations.useAddPayment();
-  const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPayment();
+  // const { mutate: addPayment, isPending: isAddLoading } = Mutations.useAddPayment();
+  // const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPayment();
 
   /* ================= MODE ================= */
   const isEditing = Boolean(data?._id);
@@ -41,32 +38,32 @@ const PaymentForm = () => {
   };
 
   /* ================= SUBMIT ================= */
-  const handleSubmit = (values: PaymentFormValues, { resetForm }: FormikHelpers<PaymentFormValues>) => {
-    const { _submitAction, ...rest } = values;
+  const handleSubmit = () => {
+    // const { _submitAction, ...rest } = values;
 
-    const onSuccessHandler = () => {
-      if (_submitAction === "saveAndNew") resetForm({ values: initialValues });
-      else navigate(-1);
-    };
+    // const onSuccessHandler = () => {
+    //   if (_submitAction === "saveAndNew") resetForm({ values: initialValues });
+    //   else navigate(-1);
+    // };
 
     if (isEditing) {
-      const changedFields = GetChangedFields(rest, data);
-      editPayment(
-        {
-          ...changedFields,
-          paymentId: data._id,
-          companyId: company!._id,
-        },
-        { onSuccess: onSuccessHandler }
-      );
+      // const changedFields = GetChangedFields(rest, data);
+      // editPayment(
+      //   {
+      //     ...changedFields,
+      //     // paymentId: data._id,
+      //     // companyId: company!._id,
+      //   },
+      //   { onSuccess: onSuccessHandler }
+      // );
     } else {
-      addPayment(
-        {
-          ...RemoveEmptyFields(rest),
-          companyId: company!._id,
-        },
-        { onSuccess: onSuccessHandler }
-      );
+      // addPayment(
+      //   {
+      //     ...RemoveEmptyFields(rest),
+      //     companyId: company!._id,
+      //   },
+      //   { onSuccess: onSuccessHandler }
+      // );
     }
   };
 
@@ -76,7 +73,7 @@ const PaymentForm = () => {
 
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik enableReinitialize initialValues={initialValues} onSubmit={handleSubmit}>
-          {({ values, setFieldValue, dirty, resetForm }) => (
+          {({ values, setFieldValue}) => (
             <Form noValidate>
               <Grid container spacing={{ xs: 1.5, md: 2 }}>
                 {/* PAYMENT MODE */}
@@ -100,7 +97,7 @@ const PaymentForm = () => {
                   <CommonCard title="Cash Payment Details" grid={{ xs: 12 }}>
                     <Grid container spacing={{ xs: 1.5, md: 2 }} sx={{ p: { xs: 1, md: 2 } }}>
                       <CommonValidationTextField name="party" label="Party" grid={{ xs: 12, sm: 6, md: 4 }} />
-                      <CommonValidationTextField name="paymentDate" type="date" label="Payment Date" grid={{ xs: 12, sm: 6, md: 4 }} InputLabelProps={{ shrink: true }} />
+                      <CommonValidationTextField name="paymentDate" type="date" label="Payment Date" grid={{ xs: 12, sm: 6, md: 4 }}/>
                       <CommonValidationTextField name="amount" type="number" label="Amount" grid={{ xs: 12, sm: 6, md: 4 }} />
                       <CommonValidationTextField name="description" label="Description" grid={{ xs: 12 }} />
 
@@ -137,8 +134,8 @@ const PaymentForm = () => {
                       </RadioGroup>
 
                       <CommonValidationTextField name="party" label="Party" grid={{ xs: 12, sm: 6, md: 4 }} />
-                      <CommonValidationTextField name="paymentDate" type="date" label="Payment Date" grid={{ xs: 12, sm: 6, md: 4 }} InputLabelProps={{ shrink: true }} />
-                      <CommonValidationTextField name="transactionDate" type="date" label="Transaction Date" grid={{ xs: 12, sm: 6, md: 4 }}  InputLabelProps={{ shrink: true }}/>
+                      <CommonValidationTextField name="paymentDate" type="date" label="Payment Date" grid={{ xs: 12, sm: 6, md: 4 }}  />
+                      <CommonValidationTextField name="transactionDate" type="date" label="Transaction Date" grid={{ xs: 12, sm: 6, md: 4 }}  />
                       <CommonValidationTextField name="transactionNo" label="Transaction No" grid={{ xs: 12, sm: 6, md: 4 }} />
                       <CommonValidationTextField name="amount" type="number" label="Amount" grid={{ xs: 12, sm: 6, md: 4 }} />
                       <CommonValidationTextField name="description" label="Description" grid={{ xs: 12 }} />
@@ -147,7 +144,7 @@ const PaymentForm = () => {
                 )}
 
                 {/* ACTION BAR */}
-                <CommonBottomActionBar clear disabled={!dirty} isLoading={isAddLoading || isEditLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                {/* <CommonBottomActionBar clear disabled={!dirty} isLoading={isAddLoading || isEditLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} /> */}
               </Grid>
             </Form>
           )}

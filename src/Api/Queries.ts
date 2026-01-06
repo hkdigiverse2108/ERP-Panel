@@ -1,7 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AnnouncementApiResponse, AppQueryOptions, BranchApiResponse, EmployeeApiResponse, Params, ProductApiResponse, RolesApiResponse, UploadResponse } from "../Types";
-import type { BankApiResponse } from "../Types/Bank";
-import type { CompanyApiResponse } from "../Types/Company";
+import type { AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BranchApiResponse, BrandApiResponse, CompanyApiResponse, EmployeeApiResponse, Params, ProductApiResponse, RolesApiResponse, UploadResponse } from "../Types";
 import { CleanParams } from "../Utils";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
@@ -23,6 +21,9 @@ export const Queries = {
   // ************ Branch ***********
 
   useGetBranch: (params?: Params) => useQueries<BranchApiResponse>([KEYS.BRANCH.BASE, params], () => Get(URL_KEYS.BRANCH.ALL, params)),
+  // ************ Brand ***********
+
+  useGetBrand: (params?: Params) => useQueries<BrandApiResponse>([KEYS.BRAND.BASE, params], () => Get(URL_KEYS.BRAND.ALL, params)),
 
   // ************ Roles ***********
 
@@ -46,7 +47,7 @@ export const Queries = {
   // ************ Stock ***********
   useGetAllProductData: (params?: Params) => {
     const cleanedParams = CleanParams(params);
-    return useQueries<any>([KEYS.PRODUCT.ALL, cleanedParams], () => Get(URL_KEYS.PRODUCT.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData });
+    return useQueries<any>([KEYS.PRODUCT.BASE, cleanedParams], () => Get(URL_KEYS.PRODUCT.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData });
   },
 
   //************ bank ********/
