@@ -44,7 +44,10 @@ const Brand = () => {
     { field: "name", headerName: "Name", flex: 1 },
     { field: "code", headerName: "Code", flex: 1 },
     { field: "description", headerName: "Description", flex: 1 },
-    { field: "parentBrandId", headerName: "parent Brand", flex: 1 },
+    {
+      field: "parentBrandId", headerName: "parent Brand", flex: 1, renderCell: ({ value }) =>
+        typeof value === "object" ? value?.name || "-" : value
+    },
     CommonActionColumn({
       active: (row) => editBrand({ brandId: row?._id, isActive: !row.isActive }),
       onEdit: (row) => handleEdit(row),

@@ -5,16 +5,19 @@ export interface BrandFormValues {
   name?: string;
   description?: string;
   parentBrandId?: string;
-  image?: File | string | null;
+  image?: string | File | null;
   isActive?: boolean;
   _submitAction?: "save" | "saveAndNew";
 }
 
 export type AddBrandPayload = BrandFormValues & { companyId?: string };
 
-export type EditBrandPayload = AddBrandPayload & { brandId: string };
+export type EditBrandPayload = AddBrandPayload & { brandId?: string };
 
-export type BrandBase = BrandFormValues & CommonDataType;
+
+export interface BrandBase extends Omit<BrandFormValues, "parentBrandId">, CommonDataType {
+  parentBrandId?: BrandBase 
+}
 
 export interface BrandDataResponse extends PageStatus {
   brand_data: BrandBase[];

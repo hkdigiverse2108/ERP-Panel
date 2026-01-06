@@ -19,7 +19,7 @@ export function Validation<K extends keyof FieldTypeMap>(...args: FieldSchemaArg
   switch (type) {
     case "string":
       schema = Yup.string() as FieldTypeMap[K];
-      // schema = required ? (schema.required(`${label} is required`) as FieldTypeMap[K]) : (schema.nullable().notRequired() as FieldTypeMap[K]);
+      schema = required ? (schema.required(`${label} is required`) as FieldTypeMap[K]) : (schema.nullable().notRequired() as FieldTypeMap[K]);
       break;
 
     case "boolean":

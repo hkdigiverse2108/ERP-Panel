@@ -5,7 +5,7 @@ import type { MuiTelInputProps } from "mui-tel-input";
 import type { FocusEvent, ReactNode } from "react";
 import * as Yup from "yup";
 import type { CustomerFormValues } from "./Customer";
-import type { BrandFormValues } from "./Brand";
+import type { BrandBase } from "./Brand";
 
 type GridType = number | object | "auto" | "grow";
 
@@ -198,7 +198,7 @@ export interface CommonValidationTextFieldProps {
   onCurrencyLog?: (value: string) => void;
 }
 export interface CommonTextFieldProps extends Omit<CommonValidationTextFieldProps, "name"> {
-  value: string | number ;
+  value: string | number;
   onChange?: (value: string) => void;
 }
 
@@ -364,7 +364,7 @@ export interface ModalStateSlice {
   selectedFiles: string[];
   isModalVideoPlay: { open: boolean; link: string };
   isCustomerModal: { open: boolean; data: CustomerFormValues | null };
-   isBrandModal: { open: boolean; data: BrandFormValues| null };
+  isBrandModal: { open: boolean; data: BrandBase | null };
   isPaymentListModal: boolean;
   isAddPaymentModal: boolean;
   isRedeemLoyaltyModal: boolean;
@@ -389,6 +389,10 @@ export interface ModalStateSlice {
 export type RadioOptionType = {
   label: string;
   value: string;
+};
+export type ImageSyncProps = {
+  activeKey: "image" | null;
+  clearActiveKey: () => void;
 };
 
 export interface CommonRadioProps {

@@ -23,6 +23,8 @@ export interface CommonFormImageBoxProps {
   onDelete?: () => void;
 }
 
+
+
 export const CommonImageBox: FC<commonImageBoxProps> = ({ url, label, type, grid }) => {
   const displayFile =
     type === "image" ? (
@@ -33,6 +35,7 @@ export const CommonImageBox: FC<commonImageBoxProps> = ({ url, label, type, grid
       </Link>
     );
   return (
+    
     <Grid size={grid} className="flex! flex-col! justify-center! items-center! gap-2">
       {label && <p>{label}</p>}
       <Box className="flex items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden" sx={{ width: 150, height: 150 }}>
