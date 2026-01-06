@@ -1,62 +1,40 @@
 import { Box } from "@mui/material";
-import type { GridColDef } from "@mui/x-data-grid";
 import { useMemo } from "react";
-import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { useNavigate } from "react-router-dom";
+import { Queries } from "../../../Api";
+import { CommonBreadcrumbs, CommonCard, CommonDataGrid } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { ProductBase } from "../../../Types";
+import type { AppGridColDef, ProductBase } from "../../../Types";
 import { useDataGrid } from "../../../Utils/Hooks";
-import { useNavigate } from "react-router-dom";
 
 const Product = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
 
-  const { data: productData, isLoading: productLoading, isFetching: productFetching } = Queries.useGetProduct(params);
-  const { mutate: deleteProductMutate } = Mutations.useDeleteProduct();
-  const { mutate: editProduct, isPending: isEditLoading } = Mutations.useEditProduct();
+  const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
 
-  const allProducts = useMemo(() => productData?.data?.product_data.map((prod) => ({ ...prod, id: prod?._id })) || [], [productData]);
-
+  const allProduct = useMemo(() => productData?.data?.product_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [productData]);
   const totalRows = productData?.data?.totalData || 0;
-
-  const handleDeleteBtn = () => {
-    if (!rowToDelete) return;
-    deleteProductMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
-  };
 
   const handleAdd = () => navigate(ROUTES.PRODUCT.ADD_EDIT);
 
- 
-  const columns: GridColDef<ProductBase>[] = [
-    { field: "imageUrl", headerName: "image", width: 150 },
-    { field: "itemCode", headerName: "itemCode", width: 200 },
-    { field: "printName", headerName: "printName", width: 150 },
-    { field: "description", headerName: "description.", width: 180 },
-    { field: "hsnCode", headerName: "hsnCode", width: 160 },
-    { field: "name", headerName: "Product Name", type: "number", width: 140 },
-    { field: "uomId", headerName: "uomId", type: "number", width: 200 },
-    { field: "mrp", headerName: "mrp", type: "number", width: 120 },
-    { field: "sellingPrice", headerName: "sellingPrice", type: "number", width: 120 },
-    { field: "gst", headerName: "gst", type: "number", width: 120 },
-    CommonActionColumn({
-      active: (row) =>
-        editProduct({
-          productId: row?._id,
-          companyId: row?.companyId,
-          isActive: !row.isActive,
-        }),
-      editRoute: ROUTES.PRODUCT.ADD_EDIT,
-      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
-    }),
+  const columns: AppGridColDef<ProductBase>[] = [
+    { field: "images", headerName: "images", width: 170 },
+    { field: "categoryId", headerName: "Category", width: 170 },
+    { field: "brandId", headerName: "Brand", width: 240 },
+    { field: "name", headerName: "Name", width: 150 },
+    { field: "mrp", headerName: "MRP", width: 150 },
+    { field: "sellingPrice", headerName: "Selling Price", width: 150 },
+    { field: "hsnCode", headerName: "HSN", width: 150 },
+    { field: "openingQty", headerName: "Opening Qty", flex: 1, minWidth: 150 },
   ];
 
-  const CommonDataGridOptions = {
+  const CommonDataGridOption = {
     columns,
-    rows: allProducts,
+    rows: allProduct,
     rowCount: totalRows,
-    loading: productLoading || productFetching || isEditLoading,
+    loading: productDataLoading || productDataFetching,
     isActive,
     setActive,
     handleAdd,
@@ -71,12 +49,10 @@ const Product = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PRODUCT.BASE} />
-
-      <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
+      <Box sx={{ p: { xs: 2, md: 3 } }}>
         <CommonCard hideDivider>
-          <CommonDataGrid {...CommonDataGridOptions} />
+          <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
       </Box>
     </>
   );

@@ -47,12 +47,9 @@ export const KEYS = {
 
   PRODUCT: {
     BASE: "product",
-    ROOT: ["product"],
-    ALL: ["product", "all"],
-    DETAILS: (id: string) => ["product", "detail", id],
-    ADD: ["product", "add"],
-    EDIT: ["product", "edit"],
-    DELETE: ["product", "delete"], // mutation
+    ADD: "product-add",
+    EDIT: "product-edit",
+    DELETE: "product-delete",
   },
   STOCK: {
     ROOT: ["stock"],

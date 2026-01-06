@@ -60,17 +60,6 @@ const Stocks = () => {
 
   //  COLUMNS
   const columns = [
-    {
-      field: "id",
-      headerName: "Sr No",
-      width: 90,
-      sortable: false,
-      filterable: false,
-      renderCell: (params: any) => {
-        const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
-        return paginationModel.page * paginationModel.pageSize + index + 1;
-      },
-    },
     { field: "itemCode", headerName: "Item Code", flex: 1 },
     { field: "category", headerName: "Category", flex: 1 },
     { field: "brand", headerName: "Brand", flex: 1 },

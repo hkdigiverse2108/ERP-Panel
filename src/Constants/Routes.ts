@@ -19,7 +19,7 @@ export const ROUTES = {
   },
 
   STOCK: {
-    BASE: "stock",
+    BASE: "/stock",
   },
   CATEGORY_BRAND: "/category-brand",
   DEPARTMENT: "/department",

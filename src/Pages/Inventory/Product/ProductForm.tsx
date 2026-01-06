@@ -1,15 +1,14 @@
 import { Box, Grid, IconButton } from "@mui/material";
-import { Formik, Form, type FormikHelpers } from "formik";
+import { FieldArray, Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations } from "../../../Api";
-import { CommonValidationTextField, CommonSelect, CommonValidationSwitch } from "../../../Attribute";
+import { CommonSelect, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { BRAND_OPTIONS, BREADCRUMBS, CATEGORY_OPTIONS, DEPARTMENT_OPTIONS, PRODUCT_TYPE_OPTIONS, SUB_BRAND_OPTIONS, SUB_CATEGORY_OPTIONS, TAX_OPTIONS, UOM_OPTIONS } from "../../../Data";
+import { BRAND_OPTIONS, BREADCRUMBS, CATEGORY_OPTIONS, DEPARTMENT_OPTIONS, PRODUCT_TYPE_OPTIONS, SUB_BRAND_OPTIONS, SUB_CATEGORY_OPTIONS, TAX_OPTIONS } from "../../../Data";
 import { useAppSelector } from "../../../Store/hooks";
 import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { ProductFormSchema } from "../../../Utils/ValidationSchemas";
-import { FieldArray } from "formik";
 // import { IconButton} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CommonButton } from "../../../Attribute";
@@ -118,22 +117,20 @@ const ProductForm = () => {
                 {/* ---------- GENERAL DETAILS ---------- */}
                 <CommonCard title="General Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationTextField name="itemCode" label="Item Code" required grid={{ xs: 12, md: 6 }} />
-                    <CommonSelect label="Product Type" options={PRODUCT_TYPE_OPTIONS} value={values.productType ? [values.productType] : []} onChange={(v) => setFieldValue("productType", v[0] || "")} grid={{ xs: 12, md: 6 }} />
-                    <CommonValidationTextField name="name" label="Product Name" required grid={{ xs: 12, md: 6 }} />
-                    <CommonValidationTextField name="printName" label="Print Name" grid={{ xs: 12, md: 6 }} />
-                    <CommonValidationTextField name="slug" label="Slug" grid={{ xs: 12, md: 6 }} />
-                    <CommonSelect label="Category" options={CATEGORY_OPTIONS} value={values.categoryId ? [values.categoryId] : []} onChange={(v) => setFieldValue("categoryId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
-                    <CommonSelect label="Sub Category" options={SUB_CATEGORY_OPTIONS} value={values.subCategoryId ? [values.subCategoryId] : []} onChange={(v) => setFieldValue("subCategoryId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
-                    <CommonSelect label="Brand" options={BRAND_OPTIONS} value={values.brandId ? [values.brandId] : []} onChange={(v) => setFieldValue("brandId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
-                    <CommonSelect label="Sub Brand" options={SUB_BRAND_OPTIONS} value={values.subBrandId ? [values.subBrandId] : []} onChange={(v) => setFieldValue("subBrandId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
-                    <CommonSelect label="Department" options={DEPARTMENT_OPTIONS} value={values.departmentId ? [values.departmentId] : []} onChange={(v) => setFieldValue("departmentId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
-                    <CommonSelect label="Brand" options={UOM_OPTIONS} value={values.uomId ? [values.uomId] : []} onChange={(v) => setFieldValue("uomId", v[0] || "")} grid={{ xs: 12, md: 6 }} />
+                    <CommonValidationTextField name="itemCode" label="Item Code" required grid={{ xs: 12, md: 3 }} />
+                    <CommonValidationSelect name="productType" label="Product Type" options={PRODUCT_TYPE_OPTIONS} grid={{ xs: 12, md: 3 }} />
+                    <CommonValidationTextField name="name" label="Product Name" required grid={{ xs: 12, md: 3 }} />
+                    <CommonValidationTextField name="printName" label="Print Name" grid={{ xs: 12, md: 3 }} />
+                    <CommonValidationSelect name="category" label="Category" options={CATEGORY_OPTIONS} grid={{ xs: 12, md: 3 }} />
+                    <CommonValidationSelect name="subCategory" label="Sub Category" options={SUB_CATEGORY_OPTIONS} grid={{ xs: 12, md: 3 }} />
+                    <CommonValidationSelect name="brand" label="Brand" options={BRAND_OPTIONS}  grid={{ xs: 12, md: 3 }} />
+                    <CommonValidationSelect name="subBrandId" label="Sub Brand" options={SUB_BRAND_OPTIONS}  grid={{ xs: 12, md: 3 }} />
+                    <CommonValidationTextField name="hsnCode" label="HSN Code" grid={{ xs: 12, md: 3 }} />
+
+                    <CommonValidationSelect name="departmentId" label="Department" options={DEPARTMENT_OPTIONS} grid={{ xs: 12, md: 3 }} />
                     <CommonValidationTextField name="tags" label="Tags" grid={{ xs: 12, md: 6 }} />
                     <CommonValidationTextField name="net weight" label="Net Weight" grid={{ xs: 12, md: 6 }} />
-
                     <CommonValidationTextField name="description" label="Description" multiline rows={4} grid={{ xs: 12 }} />
-
                     <CommonValidationTextField name="shortNote" label="Short Note" multiline rows={4} grid={{ xs: 12 }} />
                     <CommonCard title="Nutrition" grid={{ xs: 12 }}>
                       <Grid spacing={2} sx={{ p: 2 }}>

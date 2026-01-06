@@ -46,7 +46,7 @@ export const Queries = {
   // ************ Stock ***********
   useGetAllProductData: (params?: Params) => {
     const cleanedParams = CleanParams(params);
-    return useQueries<any>([KEYS.PRODUCT.ALL, cleanedParams], () => Get(URL_KEYS.PRODUCT.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData });
+    return useQueries<any>([KEYS.PRODUCT.BASE, cleanedParams], () => Get(URL_KEYS.PRODUCT.ALL, cleanedParams), { placeholderData: (previousData: any) => previousData });
   },
 
   //************ bank ********/

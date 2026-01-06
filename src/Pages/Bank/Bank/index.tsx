@@ -46,7 +46,7 @@ const Bank = () => {
       width: 200,
     },
     {
-      field: "location", headerName: "Location", width: 200,
+      field: "city", headerName: "Location", width: 200,
     },
     {
       field: "accountHolderName", headerName: "Account Holder Name",width: 200,
@@ -55,7 +55,7 @@ const Bank = () => {
       field: "ifscCode", headerName: "IFSC Code",width: 160,
     },  
     {
-      field: "Balance",
+      field: "openingBalance",
       headerName: "Balance",
       width: 200,
       
