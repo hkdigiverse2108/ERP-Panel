@@ -1,161 +1,80 @@
-import { Box } from "@mui/material";
+import { Box, Grid} from "@mui/material";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Mutations, Queries } from "../../Api";
+import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonPhoneColumns } from "../../Components/Common";
+import { PAGE_TITLE, ROUTES } from "../../Constants";
+import { BREADCRUMBS, CONTACT_TYPE} from "../../Data";
+import type { AppGridColDef} from "../../Types";
+import { useDataGrid } from "../../Utils/Hooks";
+import type { ContactBase } from "../../Types/Contacts";
+import { CommonRadio } from "../../Attribute";
 
 const Contact = () => {
-  // const navigate = useNavigate();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const navigate = useNavigate();
+  const [contactType, setContactType] = useState("");
 
-  //  STATE 
-  // const [contactType, setContactType] = useState("customer");
-  // const [openDelete, setOpenDelete] = useState(false);
-  // const [selectedRow, setSelectedRow] = useState(null);
 
-  // const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({ page: 0, pageSize: 10 });
+  const { data: ContactData, isLoading: ContactDataLoading, isFetching: ContactDataFetching } = Queries.useGetContact(params);
+  const { mutate: deleteContactMutate } = Mutations.useDeleteContact();
+  const { mutate: editContact, isPending: isEditLoading } = Mutations.useEditContact();
 
-  //  TABLE DATA 
-  // const data = {
-  //   customer: [
-  //     {
-  //       id: 1,
-  //       name: "Rahul Sharma",
-  //       contactNo: "9876543210",
-  //       whatsappNo: "9876543210",
-  //       gstin: "27ABCDE1234F1Z5",
-  //       createdBy: "admin@gmail.com",
-  //       loyaltyPoint: 120,
-  //       status: "Active",
-  //     },
-  //   ],
-  //   vendor: [
-  //     {
-  //       id: 1,
-  //       name: "Fresh Bakery Supplier",
-  //       contactNo: "9123456780",
-  //       whatsappNo: "9123456780",
-  //       gstin: "24ABCDE5678F1Z9",
-  //       createdBy: "admin@gmail.com",
-  //       loyaltyPoint: 0,
-  //       status: "Inactive",
-  //     },
-  //   ],
-  //   transport: [
-  //     {
-  //       id: 1,
-  //       name: "Speed Transport",
-  //       contactNo: "9001122334",
-  //       whatsappNo: "9001122334",
-  //       gstin: "29ABCDE9999F1Z1",
-  //       createdBy: "admin@gmail.com",
-  //       loyaltyPoint: 0,
-  //       status: "Active",
-  //     },
-  //   ],
-  // };
+  const allContact = useMemo(() => ContactData?.data?.contact_data.map((con: ContactBase) => ({ ...con, id: con?._id })) || [], [ContactData]);
+  const totalRows = ContactData?.data?.totalData || 0;
 
-  // const rows = data[contactType];
+  const handleDeleteBtn = () => {
+    if (!rowToDelete) return;
+    deleteContactMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
+  };
 
-  //  HANDLERS
-  // const handleAdd = () => {
-  //   navigate(ROUTES.CONTACT.ADD_EDIT, { state: { type: contactType } });
-  // };
+  const handleAdd = () => navigate(ROUTES.CONTACT.ADD_EDIT);
 
-  // const handleEdit = (row) => {
-  //   navigate(ROUTES.CONTACT.ADD_EDIT.replace(":id", row.id), {
-  //     state: { data: row, type: contactType },
-  //   });
-  // };
+  const columns: AppGridColDef<ContactBase>[] = [
+    { field: "firstName", headerName: "Name", flex: 1 },
+    CommonPhoneColumns<ContactBase>(),
+    { field: "whatsappNo", headerName: "WhatsApp No", flex: 1 , renderCell: ({ value }) => typeof value === "object" ? value?.name || "-" : value,exportFormatter: (value) => typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-", },
+    { field: "gstin", headerName: "GSTIN", flex: 1 },
+    { field: "createdBy", headerName: "Created By", flex: 1 },
+    { field: "loyaltyPoint", headerName: "Loyalty Point", flex: 1 },
+    CommonActionColumn({
+      active: (row) => editContact({ contactId: row?._id, isActive: !row.isActive }),
+      editRoute: ROUTES.CONTACT.ADD_EDIT,
+      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.firstName }),
+    }),
+  ];
 
-  // const handleDelete = (row) => {
-  //   setSelectedRow(row);
-  //   setOpenDelete(true);
-  // };
+  const CommonDataGridOption = {
+    columns,
+    rows: allContact,
+    rowCount: totalRows,
+    loading: ContactDataLoading || ContactDataFetching || isEditLoading,
+    isActive,
+    setActive,
+    handleAdd,
+    paginationModel,
+    onPaginationModelChange: setPaginationModel,
+    sortModel,
+    onSortModelChange: setSortModel,
+    filterModel,
+    onFilterModelChange: setFilterModel,
+  };
 
-  // const confirmDelete = () => {
-  //   console.log("Deleted:", selectedRow);
-  //   setOpenDelete(false);
-  // };
+  const topContent =(
+    <CommonRadio value={contactType} onChange={setContactType} options={CONTACT_TYPE} grid={{ xs: "auto" }} />
+  )
 
-  //  COLUMNS 
-  // const columns = [
-  //   {
-  //     field: "id",
-  //     headerName: "Sr No",
-  //     width: 90,
-  //     sortable: false,
-  //     renderCell: (params) => {
-  //       const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
-  //       return paginationModel.page * paginationModel.pageSize + index + 1;
-  //     },
-  //   },
-  //   { field: "name", headerName: "Name", flex: 1 },
-  //   { field: "contactNo", headerName: "Contact No", flex: 1 },
-  //   { field: "whatsappNo", headerName: "WhatsApp No", flex: 1 },
-  //   { field: "gstin", headerName: "GSTIN", flex: 1 },
-  //   { field: "createdBy", headerName: "Created By (Email)", flex: 1 },
-  //   { field: "loyaltyPoint", headerName: "Loyalty Point", flex: 1 },
-  //   {
-  //     field: "status",
-  //     headerName: "Status",
-  //     flex: 1,
-  //     renderCell: (params) => <span style={{ color: params.value === "Active" ? "green" : "red", fontWeight: 500 }}>{params.value}</span>,
-  //   },
-  //   {
-  //     field: "actions",
-  //     headerName: "Actions",
-  //     width: 120,
-  //     sortable: false,
-  //     renderCell: (params) => (
-  //       <Grid container spacing={1}>
-  //         <Grid size="auto">
-  //           <IconButton size="small" color="primary" onClick={() => handleEdit(params.row)}>
-  //             <EditIcon />
-  //           </IconButton>
-  //         </Grid>
-  //         <Grid size="auto">
-  //           <IconButton size="small" color="error" onClick={() => handleDelete(params.row)}>
-  //             <DeleteIcon />
-  //           </IconButton>
-  //         </Grid>
-  //       </Grid>
-  //     ),
-  //   },
-  // ];
-
-  //  TOP CONTENT 
-  // const topContent = (
-  //   <Grid container spacing={2} alignItems="center">
-  //     <Grid size="auto" >
-  //       <RadioGroup row value={contactType} onChange={(e) => setContactType(e.target.value)}>
-  //         <FormControlLabel value="customer" control={<Radio />} label="Customer" />
-  //         <FormControlLabel value="vendor" control={<Radio />} label="Vendor / Supplier" />
-  //         <FormControlLabel value="transport" control={<Radio />} label="Transport" />
-  //       </RadioGroup>
-  //     </Grid>
-
-  //     <Grid size="auto">
-  //       <CommonButton title="ADD" variant="contained" onClick={handleAdd} />
-  //     </Grid>
-  //   </Grid>
-  // );
-
-  //  RENDER 
   return (
-      
-    <Box sx={{ p: { xs: 1, sm: 4, md: 3 } }}>
-      {/* <CommonCard title="Contacts" topContent={topContent}>
-        <CommonDataGrid rows={rows} columns={columns} rowCount={rows.length} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25]} />
-      </CommonCard> */}
+    <>
+      <CommonBreadcrumbs title={PAGE_TITLE.CONTACT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.CONTACT.BASE} />
 
-      {/* Delete Dialog */}
-      {/* <Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
-        <DialogTitle sx={{ color: "red" }}>Confirm Delete</DialogTitle>
-        <DialogContent>Are you sure you want to delete "{selectedRow?.name}"?</DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDelete(false)}>No</Button>
-          <Button color="error" onClick={confirmDelete}>
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog> */}
-    </Box>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <CommonCard topContent={topContent}>
+          <CommonDataGrid {...CommonDataGridOption} />
+        </CommonCard>
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+      </Box>
+    </>
   );
 };
 

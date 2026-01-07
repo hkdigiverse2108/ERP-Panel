@@ -30,6 +30,8 @@ export const PAGE_TITLE = {
   },
   CONTACT: {
     BASE: "Contact",
+    ADD: "Add Contact",
+    EDIT: "Edit Contact",
   },
   INVENTORY: {
     BASE: "inventory",

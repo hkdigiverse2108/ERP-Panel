@@ -9,13 +9,13 @@ const CommonPhoneColumns = <T extends GridValidRowModel & { phoneNo?: PhoneNumbe
   // ✅ UI display
   renderCell: (params) => {
     const phone = params?.row?.phoneNo;
-    return phone ? `+${phone.countryCode} ${phone.phoneNo}` : "-";
+    return phone ? `${phone.countryCode} ${phone.phoneNo}` : "-";
   },
 
   // ✅ Export (PDF / Excel / CSV)
   exportFormatter: (value) => {
     const phone = value as PhoneNumberType | null;
-    return phone ? `+${phone.countryCode} ${phone.phoneNo}` : "-";
+    return phone ? `${phone.countryCode} ${phone.phoneNo}` : "-";
   },
 });
 

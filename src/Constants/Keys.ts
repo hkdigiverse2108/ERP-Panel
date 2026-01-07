@@ -27,6 +27,14 @@ export const KEYS = {
     DELETE: "employee-delete",
   },
 
+  
+  CONTACT: {
+    BASE: "contact",
+    ADD: "contact-add",
+    EDIT: "contact-edit",
+    DELETE: "contact-delete",
+  },
+
   BRANCH: {
     BASE: "branch",
     ADD: "branch-add",

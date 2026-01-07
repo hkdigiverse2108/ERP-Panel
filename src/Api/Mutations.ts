@@ -1,6 +1,7 @@
 import { KEYS, URL_KEYS } from "../Constants";
 import type { AddBankPayload, AddBranchPayload, AddBrandPayload, AddEmployeePayload, AddProductPayload, AddRolesPayload, CallRequestFormValues, CompanyApiResponse, EditBankPayload, EditBranchPayload, EditBrandPayload, EditCompanyPayload, EditEmployeePayload, EditProductPayload, EditRolesPayload, EmployeeApiResponse, LoginPayload, LoginResponse, UploadResponse } from "../Types";
 import type { AddCategoryPayload, EditCategoryPayload } from "../Types/Category";
+import type { AddContactPayload, EditContactPayload } from "../Types/Contacts";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
 
@@ -22,6 +23,12 @@ export const Mutations = {
   useAddEmployee: () => useMutations<AddEmployeePayload, void>([KEYS.EMPLOYEE.ADD, KEYS.EMPLOYEE.BASE], (input) => Post(URL_KEYS.EMPLOYEE.ADD, input)),
   useEditEmployee: () => useMutations<EditEmployeePayload, void>([KEYS.EMPLOYEE.EDIT, KEYS.EMPLOYEE.BASE], (input) => Put(URL_KEYS.EMPLOYEE.EDIT, input)),
   useDeleteEmployee: () => useMutations<string, void>([KEYS.EMPLOYEE.DELETE, KEYS.EMPLOYEE.BASE], (id) => Delete(`${URL_KEYS.EMPLOYEE.BASE}/${id}`)),
+
+  // ************ Contact ***********
+  useAddContact: () => useMutations<AddContactPayload, void>([KEYS.CONTACT.ADD, KEYS.CONTACT.BASE], (input) => Post(URL_KEYS.CONTACT.ADD, input)),
+  useEditContact: () => useMutations<EditContactPayload, void>([KEYS.CONTACT.EDIT, KEYS.CONTACT.BASE], (input) => Put(URL_KEYS.CONTACT.EDIT, input)),
+  useDeleteContact: () => useMutations<string, void>([KEYS.CONTACT.DELETE, KEYS.CONTACT.BASE], (id) => Delete(`${URL_KEYS.CONTACT.BASE}/${id}`)),
+
 
   // ************ Branch ***********
   useAddBranch: () => useMutations<AddBranchPayload, void>([KEYS.BRANCH.ADD, KEYS.BRANCH.BASE], (input) => Post(URL_KEYS.BRANCH.ADD, input)),

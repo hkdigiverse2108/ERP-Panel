@@ -9,7 +9,7 @@ export * from "./Roles";
 export * from "./CallRequest";
 export * from "./Product";
 // export * from "./Stock";
-// export * from "./Contact";
+export * from "./Contacts";
 // export * from "./Bank";
 // export * from "./Transaction";
 export * from "./Payment";

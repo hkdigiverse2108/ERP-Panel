@@ -39,6 +39,17 @@ export const BREADCRUMBS = {
       { label: PAGE_TITLE.BRANCH.EDIT },
     ],
   },
+  CONTACT: {
+    BASE: [{ label: PAGE_TITLE.CONTACT.BASE }],
+    ADD: [
+      { label: PAGE_TITLE.CONTACT.BASE, href: ROUTES.CONTACT.BASE },
+      { label: PAGE_TITLE.CONTACT.ADD },
+    ],
+    EDIT: [
+      { label: PAGE_TITLE.CONTACT.BASE, href: ROUTES.CONTACT.BASE },
+      { label: PAGE_TITLE.CONTACT.EDIT },
+    ],
+  },
   BRAND: {
     BASE: [{ label: PAGE_TITLE.INVENTORY.BRAND.BASE }],
     ADD: [

@@ -6,6 +6,7 @@ const initialState: ModalStateSlice = {
   selectedFiles: [],
   isModalVideoPlay: { open: false, link: "" },
   isCustomerModal: { open: false, data: null },
+  isContactModal: { open: false, data: null },
   isBrandModal: { open: false, data: null },
   isCategoryModal: { open: false, data: null },
   isPaymentListModal: false,
@@ -42,7 +43,9 @@ const ModalSlice = createSlice({
     setCategoryModal: (state, action) => {
       state.isCategoryModal = action.payload;
     },
-
+    setContactModal: (state, action) => {
+      state.isContactModal = action.payload;
+    },
     clearSelectedFiles: (state) => {
       state.selectedFiles = [];
     },
@@ -123,6 +126,7 @@ export const {
   setCardModal,
   setBrandModal,
   setCategoryModal,
+  setContactModal,
 } = ModalSlice.actions;
 
 export default ModalSlice.reducer;
