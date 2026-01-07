@@ -12,7 +12,7 @@ import { useDataGrid } from "../../../Utils/Hooks";
 const Product = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
-  const [value, setValue] = useState<string>("product");
+  const [productType, setProductType] = useState<string>("product");
 
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
 
@@ -49,7 +49,7 @@ const Product = () => {
   };
   const topContent = (
     <>
-      <CommonRadio value={value} onChange={setValue} options={PRODUCT_NOTIFICATION_TYPE} />
+      <CommonRadio value={productType} onChange={setProductType} options={PRODUCT_NOTIFICATION_TYPE} />
     </>
   );
   return (

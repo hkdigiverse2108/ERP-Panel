@@ -34,16 +34,6 @@ export const PAGE_TITLE = {
       ADD: "Add Product",
       EDIT: "Edit Product",
     },
-    BRAND: {
-      BASE: "brand",
-      ADD: "Add brand",
-      EDIT: "Edit brand",
-    },
-    CATEGORY: {
-      BASE: "category",
-      ADD: "Add category",
-      EDIT: "Edit category",
-    },
   },
   CUSTOMER: {
     BASE: "Customer",

@@ -53,21 +53,6 @@ export const EmployeeFormSchema = Yup.object({
   isActive: Yup.boolean(),
 });
 
-export const BrandFormSchema = Yup.object({
-  name: Validation("string", "Brand name"),
-  code: Validation("string", "code"),
-  description: Validation("string", "Description", { required: false }),
-  parentBrandId: Validation("string", "Parent Brand", { required: false }),
-  isActive: Validation("boolean", "is Active", { required: false }),
-});
-export const CategoryFormSchema = Yup.object({
-  name: Validation("string", "Category name"),
-  code: Validation("string", "code"),
-  description: Validation("string", "Description", { required: false }),
-  parentCategoryId: Validation("string", "Parent Category", { required: false }),
-  isActive: Validation("boolean", "is Active", { required: false }),
-});
-
 export const RolesFormSchema = Yup.object({
   name: Validation("string", "Roles name"),
   isActive: Yup.boolean(),

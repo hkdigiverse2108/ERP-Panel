@@ -5,10 +5,8 @@ import type { MuiTelInputProps } from "mui-tel-input";
 import type { FocusEvent, ReactNode } from "react";
 import * as Yup from "yup";
 import type { CustomerFormValues } from "./Customer";
-import type { BrandBase } from "./Brand";
-import type { CategoryBase } from "./Category";
 
-type GridType = number | object | "auto" | "grow";
+export type GridType = number | object | "auto" | "grow";
 
 export interface PhoneNumberType {
   countryCode?: string;
@@ -367,8 +365,6 @@ export interface ModalStateSlice {
   selectedFiles: string[];
   isModalVideoPlay: { open: boolean; link: string };
   isCustomerModal: { open: boolean; data: CustomerFormValues | null };
-  isBrandModal: { open: boolean; data: BrandBase | null };
-  isCategoryModal: { open: boolean; data: CategoryBase |  null };
   isPaymentListModal: boolean;
   isAddPaymentModal: boolean;
   isRedeemLoyaltyModal: boolean;
@@ -415,3 +411,19 @@ export interface CommonValidationRadioProps extends Omit<CommonRadioProps, "valu
 }
 
 // ************ Radio End ***********
+
+
+interface AdvancedSearchFilterOption {
+  label: string;
+  options: { label: string; value: string }[];
+  value: string[];
+  onChange: (values: string[]) => void;
+  multiple?: boolean;
+  limitTags?: number;
+  grid?: GridType;
+}
+
+export interface AdvancedSearchProps {
+  children?: ReactNode;
+  filter?: AdvancedSearchFilterOption[];
+}
