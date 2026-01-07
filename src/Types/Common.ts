@@ -368,7 +368,7 @@ export interface ModalStateSlice {
   isModalVideoPlay: { open: boolean; link: string };
   isCustomerModal: { open: boolean; data: CustomerFormValues | null };
   isBrandModal: { open: boolean; data: BrandBase | null };
-  isCategoryModal: { open: boolean; data: CategoryBase | null };
+  isCategoryModal: { open: boolean; data: CategoryBase |  null };
   isPaymentListModal: boolean;
   isAddPaymentModal: boolean;
   isRedeemLoyaltyModal: boolean;

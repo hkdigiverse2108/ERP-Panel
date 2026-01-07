@@ -7,7 +7,6 @@ export interface CategoryFormValues {
   parentCategoryId?: string;
   image?: string | File | null;
   isActive?: boolean;
-  _submitAction?: "save" | "saveAndNew";
 }
 
 export type AddCategoryPayload = CategoryFormValues & { companyId?: string };

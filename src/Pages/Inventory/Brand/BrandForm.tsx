@@ -64,18 +64,16 @@ const BrandForm: FC = () => {
         dispatch(setBrandModal({ open: false, data: null }));
     }
     const handleSubmit = (values: BrandFormValues, { resetForm }: FormikHelpers<BrandFormValues>) => {
-        const { _submitAction, ...rest } = values;
-
         const onSuccessHandler = () => {
             resetForm()
             closeModal();
         };
 
         if (isEditing) {
-            const changedFields = GetChangedFields(rest);
+            const changedFields = GetChangedFields(values, isEdit as Partial<BrandFormValues>);
             editBrand({ ...changedFields, brandId: isEdit?._id }, { onSuccess: onSuccessHandler });
         } else {
-            addBrand(RemoveEmptyFields(rest), { onSuccess: onSuccessHandler });
+            addBrand(RemoveEmptyFields(values), { onSuccess: onSuccessHandler });
         }
     };
 
@@ -100,7 +98,7 @@ const BrandForm: FC = () => {
                             {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                             <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
                                 <CommonButton variant="outlined" onClick={closeModal} title="Cancel" />
-                                <CommonButton type="submit" variant="contained" title="Save" onClick={() => setFieldValue("_submitAction", "save")} loading={isEditLoading || isAddLoading} disabled={!dirty} />
+                                <CommonButton type="submit" variant="contained" title="Save" loading={isEditLoading || isAddLoading} disabled={!dirty} />
                             </Grid>
                         </Grid>
                     </Form>
