@@ -166,3 +166,8 @@ export const SEND_REMINDER = [
   { label: "Yes", value: "yes" },
   { label: "No", value: "no" },
 ];
+
+export const PRODUCT_NOTIFICATION_TYPE = [
+  { label: "Product", value: "product" },
+  { label: "Product Request", value: "productRequest" },
+];

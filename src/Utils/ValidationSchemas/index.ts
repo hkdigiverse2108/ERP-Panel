@@ -53,11 +53,6 @@ export const EmployeeFormSchema = Yup.object({
   isActive: Yup.boolean(),
 });
 
-export const BranchFormSchema = Yup.object({
-  name: Validation("string", "Branch name"),
-  address: Validation("string", "Address"),
-  isActive: Yup.boolean(),
-});
 export const BrandFormSchema = Yup.object({
   name: Validation("string", "Brand name"),
   code: Validation("string", "code"),

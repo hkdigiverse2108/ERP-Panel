@@ -1,16 +1,18 @@
 import { Box } from "@mui/material";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Queries } from "../../../Api";
+import { CommonRadio } from "../../../Attribute";
 import { CommonBreadcrumbs, CommonCard, CommonDataGrid } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS } from "../../../Data";
+import { BREADCRUMBS, PRODUCT_NOTIFICATION_TYPE } from "../../../Data";
 import type { AppGridColDef, ProductBase } from "../../../Types";
 import { useDataGrid } from "../../../Utils/Hooks";
 
 const Product = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
+  const [value, setValue] = useState<string>("product");
 
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
 
@@ -45,12 +47,16 @@ const Product = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
   };
-
+  const topContent = (
+    <>
+      <CommonRadio value={value} onChange={setValue} options={PRODUCT_NOTIFICATION_TYPE} />
+    </>
+  );
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PRODUCT.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 } }}>
-        <CommonCard hideDivider>
+        <CommonCard topContent={topContent}>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
       </Box>

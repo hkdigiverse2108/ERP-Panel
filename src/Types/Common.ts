@@ -143,6 +143,7 @@ export interface CommonDataGridProps {
   pageSizeOptions?: number[];
   defaultHidden?: string[];
   BoxClass?: string;
+  isExport?: boolean;
 }
 
 export interface CustomToolbarProps {
@@ -153,6 +154,7 @@ export interface CustomToolbarProps {
   handleAdd?: () => void;
   isActive?: boolean;
   setActive?: (active: boolean) => void;
+  isExport?: boolean;
 }
 
 export interface ExportToExcelProps<T extends GridValidRowModel> {
@@ -360,7 +362,7 @@ export interface CommonModalProps {
 type UploadType = "image" | "pdf";
 
 export interface ModalStateSlice {
-  isUploadModal: { open: boolean; type: UploadType };
+  isUploadModal: { open: boolean; type: UploadType ,multiple?: boolean};
   selectedFiles: string[];
   isModalVideoPlay: { open: boolean; link: string };
   isCustomerModal: { open: boolean; data: CustomerFormValues | null };

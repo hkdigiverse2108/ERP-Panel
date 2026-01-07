@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { ModalStateSlice } from "../../Types";
 
 const initialState: ModalStateSlice = {
-  isUploadModal: { open: false, type: "image" },
+  isUploadModal: { open: false, type: "image", multiple: false },
   selectedFiles: [],
   isModalVideoPlay: { open: false, link: "" },
   isCustomerModal: { open: false, data: null },

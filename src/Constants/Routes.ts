@@ -52,10 +52,6 @@ export const ROUTES = {
   USER: {
     EDIT: "/user/edit",
   },
-  BRANCH: {
-    BASE: "/branch",
-    ADD_EDIT: "/branch/add-edit",
-  },
   BANK: {
     BASE: "/bank",
     ADD_EDIT: "/bank/add-edit",

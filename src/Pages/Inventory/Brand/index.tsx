@@ -1,5 +1,4 @@
 import { Box } from "@mui/material";
-import type { GridColDef } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { Mutations, Queries } from "../../../Api";
@@ -37,19 +36,20 @@ const Brand = () => {
 
   const columns: AppGridColDef<BrandBase>[] = [
     {
-      field: "image", headerName: "Image", width: 80, renderCell: ({ value }) => value ? <img src={value} style={{ width: 40 }} /> : "-",
+      field: "image",
+      headerName: "Image",
+      width: 80,
+      renderCell: ({ value }) => (value ? <img src={value} style={{ width: 40 }} /> : "-"),
     },
     { field: "name", headerName: "Name", flex: 1 },
     { field: "code", headerName: "Code", flex: 1 },
     { field: "description", headerName: "Description", flex: 1 },
     {
-      field: "parentBrandId", headerName: "parent Brand", flex: 1,
-      renderCell: ({ value }) => typeof value === "object" ? value?.name || "-" : value,
-      exportFormatter: (value) =>
-        typeof value === "object" && value !== null
-          ? (value as { name?: string })?.name || "-"
-          : "-"
-      ,
+      field: "parentBrandId",
+      headerName: "Parent Brand",
+      flex: 1,
+      renderCell: ({ value }) => (typeof value === "object" ? value?.name || "-" : value),
+      exportFormatter: (value) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
     },
     CommonActionColumn({
       active: (row) => editBrand({ brandId: row?._id, isActive: !row.isActive }),

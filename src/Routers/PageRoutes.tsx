@@ -6,8 +6,6 @@ import { Navigate } from "react-router-dom";
 import { CompanyForm, UserForm } from "../Components/Settings/GeneralSetting";
 import Employees from "../Pages/Employee";
 import EmployeeForm from "../Pages/Employee/EmployeeForm";
-import Branch from "../Pages/Branch";
-import BranchForm from "../Pages/Branch/BranchForm";
 import Product from "../Pages/Inventory/Product";
 import ProductForm from "../Pages/Inventory/Product/ProductForm";
 import Stocks from "../Pages/Inventory/Stock";
@@ -33,9 +31,6 @@ export const PageRoutes = [
 
   { path: ROUTES.EMPLOYEE.BASE, element: <Employees /> },
   { path: ROUTES.EMPLOYEE.ADD_EDIT, element: <EmployeeForm /> },
-
-  { path: ROUTES.BRANCH.BASE, element: <Branch /> },
-  { path: ROUTES.BRANCH.ADD_EDIT, element: <BranchForm /> },
 
   { path: ROUTES.PRODUCT.BASE, element: <Product /> },
   { path: ROUTES.PRODUCT.ADD_EDIT, element: <ProductForm /> },

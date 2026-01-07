@@ -91,8 +91,8 @@ const Stocks = () => {
 
       <div className="m-4 md:m-6">
     
-      <CommonCard title="Stocks">
-        <CommonDataGrid  columns={columns} rows={rows} rowCount={rows.length} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25,]}  />
+      <CommonCard hideDivider>
+        <CommonDataGrid columns={columns} rows={rows} rowCount={rows.length} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25,]}  />
       </CommonCard>
     </div>
     </>

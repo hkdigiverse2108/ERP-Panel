@@ -10,7 +10,6 @@ import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 export const NavItems: NavItem[] = [
   { icon: <GridViewRoundedIcon />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
   { icon: <PeopleIcon />, name: PAGE_TITLE.EMPLOYEE.BASE, path: ROUTES.EMPLOYEE.BASE },
-  { icon: <GridViewRoundedIcon />, name: PAGE_TITLE.BRANCH.BASE, path: ROUTES.BRANCH.BASE },
   { icon: <PersonRoundedIcon />, name: PAGE_TITLE.CONTACT.BASE, path: ROUTES.CONTACT.BASE },
   {
     name: PAGE_TITLE.INVENTORY.BASE,
