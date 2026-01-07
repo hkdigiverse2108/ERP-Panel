@@ -21,6 +21,10 @@ export const ROUTES = {
     BASE: "/brand",
     ADD_EDIT: "/brand/add-edit",
   },
+  CATEGORY: {
+    BASE: "/category",
+    ADD_EDIT: "/category/add-edit",
+  },
   STOCK: {
     BASE: "/stock",
   },
@@ -67,5 +71,5 @@ export const ROUTES = {
   POS: {
     BASE: "/pos",
     NEW: "/pos/new",
-  }
+  },
 } as const;

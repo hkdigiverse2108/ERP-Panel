@@ -37,6 +37,12 @@ export const URL_KEYS = {
     ADD: "/brand/add",
     EDIT: "/brand/edit",
   },
+  CATEGORY: {
+    BASE: "/category",
+    ALL: "/category/all",
+    ADD: "/category/add",
+    EDIT: "/category/edit",
+  },
 
   ROLES: {
     BASE: "/role",

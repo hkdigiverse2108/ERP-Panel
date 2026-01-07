@@ -18,12 +18,21 @@ const Brand = () => {
   const { mutate: deleteBrandsMutate } = Mutations.useDeleteBrand();
   const { mutate: editBrand, isPending: isEditLoading } = Mutations.useEditBrand();
 
-  const allBrands = useMemo(() => BrandsData?.data?.brand_data.map((brand) => ({ ...brand, id: brand?._id })) || [], [BrandsData]);
+  const allBrands = useMemo(
+    () =>
+      BrandsData?.data?.brand_data.map((brand) => ({
+        ...brand,
+        id: brand?._id,
+      })) || [],
+    [BrandsData]
+  );
   const totalRows = BrandsData?.data?.totalData || 0;
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
-    deleteBrandsMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
+    deleteBrandsMutate(rowToDelete?._id as string, {
+      onSuccess: () => setRowToDelete(null),
+    });
   };
 
   const handleAdd = () => {
@@ -46,7 +55,7 @@ const Brand = () => {
     { field: "description", headerName: "Description", flex: 1 },
     {
       field: "parentBrandId",
-      headerName: "Parent Brand",
+      headerName: "parent Brand",
       flex: 1,
       renderCell: ({ value }) => (typeof value === "object" ? value?.name || "-" : value),
       exportFormatter: (value) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),

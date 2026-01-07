@@ -19,6 +19,8 @@ import PaymentForm from "../Pages/Bank/Payment/PaymentForm";
 import NewPos from "../Pages/POS/New";
 import Brand from "../Pages/Inventory/Brand";
 import BrandForm from "../Pages/Inventory/Brand/BrandForm";
+import CategoryForm from "../Pages/Inventory/Category/CategoryForm";
+import Category from "../Pages/Inventory/Category";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -37,6 +39,9 @@ export const PageRoutes = [
 
   { path: ROUTES.BRAND.BASE, element: <Brand /> },
   { path: ROUTES.BRAND.ADD_EDIT, element: <BrandForm /> },
+  
+  { path: ROUTES.CATEGORY.BASE, element: <Category /> },
+  { path: ROUTES.CATEGORY.ADD_EDIT, element: <CategoryForm /> },
 
   { path: ROUTES.STOCK.BASE, element: <Stocks /> },
 
