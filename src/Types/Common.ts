@@ -391,7 +391,7 @@ export type RadioOptionType = {
   value: string;
 };
 export type ImageSyncProps = {
-  activeKey: "image" | null;
+  activeKey: "image" | null | string;
   clearActiveKey: () => void;
 };
 

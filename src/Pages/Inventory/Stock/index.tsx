@@ -1,12 +1,13 @@
-
+import { Box } from "@mui/material";
 import { CommonBreadcrumbs, CommonCard, CommonDataGrid } from "../../../Components/Common";
-import { PAGE_TITLE } from "../../../Constants";
-import { StockBreadcrumbs } from "../../../Data";
+import { PAGE_TITLE, ROUTES } from "../../../Constants";
+import { BREADCRUMBS } from "../../../Data";
 import { useDataGrid } from "../../../Utils/Hooks";
+import { useNavigate } from "react-router-dom";
 
 const Stocks = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({ page: 0, pageSize: 10 });
-
+const navigate = useNavigate()
   const rows = [
     {
       id: 1,
@@ -57,6 +58,7 @@ const Stocks = () => {
       status: "Out of Stock",
     },
   ];
+  const handleAdd = () => navigate(ROUTES.STOCK.ADD_EDIT);
 
   //  COLUMNS
   const columns = [
@@ -86,18 +88,16 @@ const Stocks = () => {
   ];
 
   return (
-     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.STOCK} maxItems={1} breadcrumbs={StockBreadcrumbs} />
+    <>
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.STOCK.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.STOCK.BASE} />
 
-      <div className="m-4 md:m-6">
-    
-      <CommonCard hideDivider>
-        <CommonDataGrid columns={columns} rows={rows} rowCount={rows.length} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25,]}  />
-      </CommonCard>
-    </div>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <CommonCard hideDivider>
+          <CommonDataGrid handleAdd={handleAdd} columns={columns} rows={rows} rowCount={rows.length} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25]} />
+        </CommonCard>
+      </Box>
     </>
   );
 };
 
 export default Stocks;
-  

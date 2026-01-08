@@ -11,6 +11,9 @@ export const BREADCRUMBS = {
     BASE: [{ label: PAGE_TITLE.INVENTORY.PRODUCT.BASE }],
     ADD: [{ label: PAGE_TITLE.INVENTORY.PRODUCT.BASE, href: ROUTES.PRODUCT.BASE }, { label: PAGE_TITLE.INVENTORY.PRODUCT.ADD }],
     EDIT: [{ label: PAGE_TITLE.INVENTORY.PRODUCT.BASE, href: ROUTES.PRODUCT.BASE }, { label: PAGE_TITLE.INVENTORY.PRODUCT.EDIT }],
+    REQUEST:{
+      ADD: [{ label: PAGE_TITLE.INVENTORY.PRODUCT.BASE, href: ROUTES.PRODUCT.BASE }, { label: PAGE_TITLE.INVENTORY.PRODUCT.REQUEST.ADD }],
+    }
   },
   PAYMENT: {
     BASE: [{ label: PAGE_TITLE.PAYMENT.BASE }],
@@ -22,8 +25,10 @@ export const BREADCRUMBS = {
     COMPANY: [{ label: PAGE_TITLE.SETTINGS.GENERAL, href: ROUTES.SETTINGS.GENERAL }, { label: PAGE_TITLE.SETTINGS.COMPANY.EDIT }],
     USER: [{ label: PAGE_TITLE.SETTINGS.GENERAL, href: ROUTES.SETTINGS.GENERAL }, { label: PAGE_TITLE.SETTINGS.USER.EDIT }],
   },
+  STOCK:{
+    BASE:[{label:PAGE_TITLE.INVENTORY.STOCK.BASE}]
+  }
 };
 
-export const StockBreadcrumbs = [{ label: ROUTES.STOCK.BASE }];
 export const BankBreadCrumbs = [{ label: ROUTES.BANK.BASE }];
 export const BankFormBreadCrumbs = [{ label: ROUTES.BANK.ADD_EDIT }];

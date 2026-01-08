@@ -109,7 +109,7 @@ const CompanyProfile = () => {
       <CommonCard title="logo" grid={{ xs: 12 }}>
         <Grid container spacing={2} className="p-4 overflow-auto ">
           {ImageItems.map((item, index) => (
-            <CommonImageBox key={index} url={item.src || `${ImagePath}user/1.jpg`} label={item.label} type={"image"} grid={{ xs: 12, xsm: 6, xl: 3 }} />
+            <CommonImageBox key={index} url={item.src} label={item.label} type={"image"} grid={{ xs: 12, xsm: 6, xl: 3 }} />
           ))}
         </Grid>
       </CommonCard>

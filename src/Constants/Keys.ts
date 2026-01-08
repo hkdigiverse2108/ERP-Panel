@@ -12,7 +12,7 @@ export const KEYS = {
 
   USER: {
     BASE: "user",
-    EDIT: "user-edit"
+    EDIT: "user-edit",
   },
 
   COMPANY: {
@@ -62,6 +62,12 @@ export const KEYS = {
     ADD: "product-add",
     EDIT: "product-edit",
     DELETE: "product-delete",
+  },
+  PRODUCT_REQUEST: {
+    BASE: "product-request",
+    ADD: "product-request-add",
+    EDIT: "product-request-edit",
+    DELETE: "product-request-delete",
   },
   STOCK: {
     ROOT: ["stock"],

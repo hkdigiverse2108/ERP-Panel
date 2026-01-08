@@ -28,11 +28,16 @@ export const PAGE_TITLE = {
   },
   INVENTORY: {
     BASE: "inventory",
-    STOCK: "stock",
     PRODUCT: {
       BASE: "product",
       ADD: "Add Product",
       EDIT: "Edit Product",
+      REQUEST: {
+        ADD: "Add Product Request",
+      },
+    },
+    STOCK:{
+      BASE:"stock"
     },
   },
   CUSTOMER: {

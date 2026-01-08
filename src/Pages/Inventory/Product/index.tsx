@@ -8,6 +8,7 @@ import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, PRODUCT_NOTIFICATION_TYPE } from "../../../Data";
 import type { AppGridColDef, ProductBase } from "../../../Types";
 import { useDataGrid } from "../../../Utils/Hooks";
+import ProductRequest from "./ProductRequest";
 
 const Product = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, params } = useDataGrid();
@@ -19,7 +20,7 @@ const Product = () => {
   const allProduct = useMemo(() => productData?.data?.product_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [productData]);
   const totalRows = productData?.data?.totalData || 0;
 
-  const handleAdd = () => navigate(ROUTES.PRODUCT.ADD_EDIT);
+  const handleAdd = () => navigate(ROUTES.PRODUCT.REQUEST.ADD);
 
   const columns: AppGridColDef<ProductBase>[] = [
     { field: "images", headerName: "images", width: 170 },
@@ -47,6 +48,7 @@ const Product = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
   };
+  
   const topContent = (
     <>
       <CommonRadio value={productType} onChange={setProductType} options={PRODUCT_NOTIFICATION_TYPE} />
@@ -55,10 +57,8 @@ const Product = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PRODUCT.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 } }}>
-        <CommonCard topContent={topContent}>
-          <CommonDataGrid {...CommonDataGridOption} />
-        </CommonCard>
+      <Box sx={{ p: { xs: 2, md: 3 } ,display:"grid"}}>
+        <CommonCard topContent={topContent}>{productType === "product" ? <CommonDataGrid {...CommonDataGridOption} /> : <ProductRequest />}</CommonCard>
       </Box>
     </>
   );

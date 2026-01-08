@@ -81,14 +81,14 @@ const DropzoneWithPreview = () => {
         onDrop={handleDrop} // IMPORTANT
       >
         {/* PREVIEW GRID */}
-        <Grid container spacing={2} className="flex flex-wrap custom-scrollbar overflow-y-auto p-3">
+        <Grid container spacing={2} className="flex flex-wrap custom-scrollbar overflow-y-auto p-3 w-full">
           {files.map((file, index) => (
             <Grid size={{ xs: 6, sm: 4, md: 3 }} key={index} className="relative border rounded-lg overflow-hidden">
               {isImageMode ? (
                 <img src={previews[index]} className="w-full h-full object-cover" />
               ) : (
                 /* PDF Preview Box */
-                <div className="w-full! flex flex-col items-center justify-center p-2">
+                <div className="w-full! flex flex-col items-center justify-center p-5">
                   <PictureAsPdfIcon sx={{ fontSize: 40 }} className="mb-2 opacity-80 text-gray-800 dark:text-gray-300" />
                   <p className="text-xs text-gray-700 dark:text-gray-300 text-center truncate w-full">{file.name}</p>
                 </div>

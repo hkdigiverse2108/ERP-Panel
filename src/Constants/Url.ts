@@ -62,6 +62,12 @@ export const URL_KEYS = {
     EDIT: "/product/edit",
   },
 
+  PRODUCT_REQUEST: {
+    BASE: "/product-request",
+    ALL: "/product-request/all",
+    ADD: "/product-request/add",
+  },
+
   STOCK: {
     BASE: "/stock",
     ALL: "/stock/all",

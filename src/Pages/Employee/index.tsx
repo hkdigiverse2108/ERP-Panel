@@ -61,7 +61,10 @@ const Employee = () => {
     onFilterModelChange: setFilterModel,
   };
 
-  const filter = [CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(branchData?.data?.branch_data), { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(branchData?.data?.branch_data), { xs: 12, sm: 6, md: 3 }),
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(branchData?.data?.branch_data), { xs: 12, sm: 6, md: 3 }),
+  ];
 
   return (
     <>

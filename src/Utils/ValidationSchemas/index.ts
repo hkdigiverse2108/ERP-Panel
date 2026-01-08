@@ -42,7 +42,6 @@ export const EmployeeFormSchema = Yup.object({
     postalCode: Validation("string", "ZIP Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid ZIP Code") }),
   }).nullable(),
 
-
   // ---------- SALARY ----------
   wages: Validation("number", "Wages", { required: false }).nullable(),
   commission: Validation("number", "Commission", { required: false }).nullable(),
@@ -65,37 +64,19 @@ export const CallRequestFormSchema = Yup.object({
   note: Validation("string", "note"),
 });
 
-// ---------- Product Form Schema ----------
-export const ProductFormSchema = Yup.object({
-  itemCode: Validation("string", "Item Code"),
-  productType: Validation("string", "Product Type"),
+// ---------- Product Request Form Schema ----------
+export const ProductRequestFormSchema = Yup.object({
   name: Validation("string", "Product Name"),
   printName: Validation("string", "Print Name", { required: false }),
-  slug: Validation("string", "Slug", { required: false }),
-
-  categoryId: Validation("string", "Category"),
-  subCategoryId: Validation("string", "Sub Category", { required: false }),
-
-  brandId: Validation("string", "Brand", { required: false }),
-  subBrandId: Validation("string", "Sub Brand", { required: false }),
-
-  departmentId: Validation("string", "Department", { required: false }),
-  uomId: Validation("string", "UOM"),
-
-  tags: Validation("string", "Tags", { required: false }),
-
+  category: Validation("string", "Category"),
+  subCategory: Validation("string", "Sub Category", { required: false }),
+  brand: Validation("string", "Brand"),
+  subBrand: Validation("string", "Sub Brand", { required: false }),
+  productType: Validation("string", "Product Type"),
+  hasExpiry: Validation("boolean", "Has Expiry", { required: false }),
   description: Validation("string", "Description", { required: false }),
-  shortNote: Validation("string", "Short Note", { required: false }),
-
-  mrp: Validation("number", "MRP"),
-  sellingPrice: Validation("number", "Selling Price"),
-  purchasePrice: Validation("number", "Purchase Price"),
-  landingCost: Validation("number", "Landing Cost"),
-
-  purchaseTaxId: Validation("string", "Purchase Tax", { required: false }),
-  salesTaxId: Validation("string", "Sales Tax", { required: false }),
-  nutritionalFacts: Validation("string", "Nutritional Facts", { required: false }),
-  status: Validation("string", "Status"),
+  images: Yup.array().of(Yup.mixed().required("Image is required")).min(2, "At least two image is required"),
+  isActive: Yup.boolean(),
 });
 
 export const CompanyFormSchemas = Yup.object({
