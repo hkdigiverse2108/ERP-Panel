@@ -1,12 +1,11 @@
-import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType} from "./Common";
+import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
 
 export interface ContactFormValues {
   firstName?: string;
   lastName?: string;
   email?: string;
-  companyName?: string;
   phoneNo?: PhoneNumberType;
-  whatsappNo?: string;
+  whatsappNo?: PhoneNumberType;
   panNo?: string;
   customerCategory?: string;
   paymentMode?: string;
@@ -14,11 +13,16 @@ export interface ContactFormValues {
   openingBalance?: string;
   customerType?: string;
   vendorType?: string;
+  addressDetails?: addressDetails;
+  isActive?: boolean;
+  _submitAction?: "save" | "saveAndNew";
+}
+export interface addressDetails {
   gstType?: string;
   gstIn?: string;
   contactFirstName?: string;
   contactLastName?: string;
-  contactNo?: string;
+  contactNo?: PhoneNumberType;
   contactEmail?: string;
   addressLine1?: string;
   addressLine2?: string;
@@ -26,16 +30,15 @@ export interface ContactFormValues {
   state?: string;
   city?: string;
   pinCode?: string;
-  isActive?: boolean;
-  _submitAction?: "save" | "saveAndNew";
+  tanNo?: string;
+  companyName?: string;
 }
 export type AddContactPayload = ContactFormValues & { companyId?: string };
 
 export type EditContactPayload = AddContactPayload & { contactId?: string };
 
-
 export interface ContactBase extends Omit<ContactFormValues, "parentContactId">, CommonDataType {
-  parentContactId?: ContactBase 
+  parentContactId?: ContactBase;
 }
 
 export interface ContactDataResponse extends PageStatus {
@@ -44,4 +47,5 @@ export interface ContactDataResponse extends PageStatus {
 
 export interface ContactApiResponse extends MessageStatus {
   data: ContactDataResponse;
-}  
+}
+

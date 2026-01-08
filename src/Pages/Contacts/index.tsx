@@ -1,11 +1,11 @@
-import { Box, Grid} from "@mui/material";
+import { Box } from "@mui/material";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonPhoneColumns } from "../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../Constants";
-import { BREADCRUMBS, CONTACT_TYPE} from "../../Data";
-import type { AppGridColDef} from "../../Types";
+import { BREADCRUMBS, CONTACT_TYPE } from "../../Data";
+import type { AppGridColDef } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
 import type { ContactBase } from "../../Types/Contacts";
 import { CommonRadio } from "../../Attribute";
@@ -14,7 +14,6 @@ const Contact = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
   const [contactType, setContactType] = useState("");
-
 
   const { data: ContactData, isLoading: ContactDataLoading, isFetching: ContactDataFetching } = Queries.useGetContact(params);
   const { mutate: deleteContactMutate } = Mutations.useDeleteContact();
@@ -33,8 +32,8 @@ const Contact = () => {
   const columns: AppGridColDef<ContactBase>[] = [
     { field: "firstName", headerName: "Name", flex: 1 },
     CommonPhoneColumns<ContactBase>(),
-    { field: "whatsappNo", headerName: "WhatsApp No", flex: 1 , renderCell: ({ value }) => typeof value === "object" ? value?.name || "-" : value,exportFormatter: (value) => typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-", },
-    { field: "gstin", headerName: "GSTIN", flex: 1 },
+    CommonPhoneColumns<ContactBase>(),
+    { field: "addressDetails.gstIn", headerName: "GSTIN", flex: 1 },
     { field: "createdBy", headerName: "Created By", flex: 1 },
     { field: "loyaltyPoint", headerName: "Loyalty Point", flex: 1 },
     CommonActionColumn({
@@ -60,9 +59,7 @@ const Contact = () => {
     onFilterModelChange: setFilterModel,
   };
 
-  const topContent =(
-    <CommonRadio value={contactType} onChange={setContactType} options={CONTACT_TYPE} grid={{ xs: "auto" }} />
-  )
+  const topContent = <CommonRadio value={contactType} onChange={setContactType} options={CONTACT_TYPE} grid={{ xs: "auto" }} />;
 
   return (
     <>
