@@ -1,20 +1,20 @@
-import { Box, Grid } from "@mui/material";
-import { useMemo, useState } from "react";
+import { Box } from "@mui/material";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonPhoneColumns } from "../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../Constants";
-import { BREADCRUMBS, PRODUCT_TYPE_OPTIONS } from "../../Data";
+import { BREADCRUMBS } from "../../Data";
 import type { AppGridColDef, EmployeeBase } from "../../Types";
+import { CreateFilter, GenerateOptions } from "../../Utils";
 import { useDataGrid } from "../../Utils/Hooks";
-import { CommonSelect } from "../../Attribute";
 
 const Employee = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
   const navigate = useNavigate();
-  const [value, setValue] = useState<string[]>([]);
 
   const { data: employeeData, isLoading: employeeDataLoading, isFetching: employeeDataFetching } = Queries.useGetEmployee(params);
+  const { data: branchData } = Queries.useGetBranch({ activeFilter: true });
   const { mutate: deleteEmployeeMutate } = Mutations.useDeleteEmployee();
   const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditEmployee();
 
@@ -61,15 +61,13 @@ const Employee = () => {
     onFilterModelChange: setFilterModel,
   };
 
+  const filter = [CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(branchData?.data?.branch_data), { xs: 12, sm: 6, md: 3 })];
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.EMPLOYEE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.EMPLOYEE.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <AdvancedSearch>
-          <Grid size={{ xs: 12, xsm: 6, sm: 3, xxl: 2 }}>
-            <CommonSelect label="Select Location" options={PRODUCT_TYPE_OPTIONS} value={value} onChange={(v) => setValue(v)} limitTags={1} multiple />
-          </Grid>
-        </AdvancedSearch>
+        <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

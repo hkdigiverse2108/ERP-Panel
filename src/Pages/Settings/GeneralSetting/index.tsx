@@ -17,7 +17,7 @@ import { useLocation } from "react-router-dom";
 import { CommonBreadcrumbs } from "../../../Components/Common";
 import { CompanyProfile, Profile, ReportFormats, UserRoles } from "../../../Components/Settings/GeneralSetting";
 import { PAGE_TITLE } from "../../../Constants";
-import { GeneralSettingBreadcrumbs } from "../../../Data";
+import { BREADCRUMBS } from "../../../Data";
 
 const GeneralSetting = () => {
   const location = useLocation();
@@ -44,7 +44,7 @@ const GeneralSetting = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.GENERAL} maxItems={1} breadcrumbs={GeneralSettingBreadcrumbs} />
+      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.GENERAL} maxItems={1} breadcrumbs={BREADCRUMBS.GENERAL_SETTING.BASE} />
       <div className="m-4 md:m-6">
         <Grid container spacing={2}>
           <Grid size={{ xs: 12, md: 3, lg: 3, xl: 2 }}>
