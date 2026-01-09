@@ -21,6 +21,8 @@ import PaymentForm from "../Pages/Bank/Payment/PaymentForm";
 import NewPos from "../Pages/POS/New";
 import Brand from "../Pages/Inventory/Brand";
 import BrandForm from "../Pages/Inventory/Brand/BrandForm";
+import Recipe from "../Pages/Inventory/Recipe";
+import RecipeForm from "../Pages/Inventory/Recipe/RecipeFrom";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -57,6 +59,9 @@ export const PageRoutes = [
   { path: ROUTES.PAYMENT.ADD_EDIT, element: <PaymentForm /> },
 
   { path: ROUTES.POS.NEW, element: <NewPos /> },
+  
+  { path: ROUTES.RECIPE.BASE, element: <Recipe /> },
+  { path: ROUTES.RECIPE.ADD_EDIT, element: <RecipeForm /> },
 ];
 
 export const AuthRoutes = [

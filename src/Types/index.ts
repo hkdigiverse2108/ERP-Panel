@@ -18,3 +18,4 @@ export * from "./Customer";
 export * from "./Brand";
 export * from "./Company";
 export * from "./Bank";
+export * from "./Recipe";

@@ -169,3 +169,12 @@ export const SEND_REMINDER = [
 export const UPI_OPTIONS = [
   { label: "upi available", value: true },
 ];
+export const RECIPE_TYPE_OPTIONS = [
+  { label: "Assemble", value: "assemble" },
+  { label: "Unassemble", value: "unassemble" },
+
+];
+export const RECIPE_TYPE_OPTIONS_SIMPLE = [
+  { label: "Assemble", value: "assemble" },
+  { label: "Unassemble", value: "unassemble" },
+];

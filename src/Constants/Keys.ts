@@ -1,3 +1,5 @@
+
+
 export const KEYS = {
   AUTH: {
     SIGNIN: "admin-signin",
@@ -78,5 +80,11 @@ export const KEYS = {
     ADD: ["payment", "add"],
     EDIT: ["payment", "edit"],
     DELETE: ["payment", "delete"],
+  },
+  RECIPE: {
+    BASE: "recipe",
+    ADD: "recipe-add",
+    EDIT: "recipe-edit",
+    DELETE: "recipe-delete",
   },
 };

@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BranchApiResponse, BrandApiResponse, CompanyApiResponse, EmployeeApiResponse, Params, ProductApiResponse, RolesApiResponse, UploadResponse } from "../Types";
+import type { AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BranchApiResponse, BrandApiResponse, CompanyApiResponse, EmployeeApiResponse, Params, ProductApiResponse, RecipeApiResponse, RolesApiResponse, UploadResponse } from "../Types";
 import { CleanParams } from "../Utils";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
@@ -53,4 +53,8 @@ export const Queries = {
   //************ bank ********/
 
   useGetBank: (params?: Params) => useQueries<BankApiResponse>([KEYS.BANK.BASE, params], () => Get(URL_KEYS.BANK.ALL, params), ),
+
+  //************ recipe ********/
+
+  useGetRecipe: (params?: Params) => useQueries<RecipeApiResponse>([KEYS.RECIPE.BASE, params], () => Get(URL_KEYS.RECIPE.ALL, params), ),
 };

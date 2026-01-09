@@ -32,6 +32,7 @@ export const ROUTES = {
   PRODUCT_B2B_MAPPING: "/product-b2b-mapping",
   RECIPE: {
     BASE: "/recipe",
+    ADD_EDIT: "/recipe/add-edit",
   },
   MATERIAL_CONSUMPTION: {
     BASE: "/material-consumption",
@@ -71,5 +72,5 @@ export const ROUTES = {
   POS: {
     BASE: "/pos",
     NEW: "/pos/new",
-  }
+  },
 } as const;

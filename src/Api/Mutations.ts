@@ -1,5 +1,6 @@
 import { KEYS, URL_KEYS } from "../Constants";
 import type { AddBankPayload, AddBranchPayload, AddBrandPayload, AddEmployeePayload, AddProductPayload, AddRolesPayload, CallRequestFormValues, CompanyApiResponse, EditBankPayload, EditBranchPayload, EditBrandPayload, EditCompanyPayload, EditEmployeePayload, EditProductPayload, EditRolesPayload, EmployeeApiResponse, LoginPayload, LoginResponse, UploadResponse } from "../Types";
+import type { AddRecipePayload, EditRecipePayload } from "../Types/Recipe";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
 
@@ -53,4 +54,9 @@ export const Mutations = {
   useAddPayment: () => useMutations<FormData, any>([KEYS.PAYMENT.ADD], (input) => Post(URL_KEYS.PAYMENT.ADD, input)),
   useEditPayment: () => useMutations<FormData, any>([KEYS.PAYMENT.EDIT], (input) => Put(URL_KEYS.PAYMENT.EDIT, input)),
   useDeletePayment: () => useMutations<{ id: string }, void>([KEYS.PAYMENT.DELETE], (id) => Delete(`${URL_KEYS.PAYMENT.BASE}/${id}`)),
+
+  //************** recipe **************** */
+  useAddRecipe: () => useMutations<AddRecipePayload, void>([KEYS.RECIPE.ADD], (input) => Post(URL_KEYS.RECIPE.ADD, input)),
+  useEditRecipe: () => useMutations<EditRecipePayload, void>([KEYS.RECIPE.EDIT], (input) => Put(URL_KEYS.RECIPE.EDIT, input)),
+  useDeleteRecipe: () => useMutations<string, void>([KEYS.RECIPE.DELETE], (id) => Delete(`${URL_KEYS.RECIPE.BASE}/${id}`)),
 };
