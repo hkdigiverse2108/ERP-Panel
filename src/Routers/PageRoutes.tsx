@@ -14,10 +14,12 @@ import Employees from "../Pages/Employee";
 import EmployeeForm from "../Pages/Employee/EmployeeForm";
 import Product from "../Pages/Inventory/Product";
 import ProductRequestForm from "../Pages/Inventory/Product/ProductRequestForm";
+import Recipe from "../Pages/Inventory/Recipe";
+import RecipeForm from "../Pages/Inventory/Recipe/RecipeFrom";
 import Stocks from "../Pages/Inventory/Stock";
+import StockForm from "../Pages/Inventory/Stock/StockForm";
 import NewPos from "../Pages/POS/New";
 import GeneralSetting from "../Pages/Settings/GeneralSetting";
-import StockForm from "../Pages/Inventory/Stock/StockForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -49,6 +51,9 @@ export const PageRoutes = [
   { path: ROUTES.PAYMENT.ADD_EDIT, element: <PaymentForm /> },
 
   { path: ROUTES.POS.NEW, element: <NewPos /> },
+  
+  { path: ROUTES.RECIPE.BASE, element: <Recipe /> },
+  { path: ROUTES.RECIPE.ADD_EDIT, element: <RecipeForm /> },
 ];
 
 export const AuthRoutes = [

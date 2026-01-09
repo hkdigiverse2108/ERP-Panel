@@ -38,7 +38,7 @@ export const SUB_BRAND_OPTIONS = [{ label: "Premium", value: "679a1c5f8f4e1a0012
 
 export const DEPARTMENT_OPTIONS = [
   { label: "First Shop", value: "firstShop" },
-  { label: "Bakery", value: "bakery" }
+  { label: "Bakery", value: "bakery" },
 ];
 
 export const UOM_OPTIONS = [{ label: "KG", value: "679a1c7f8f4e1a001234abd2" }];
@@ -174,4 +174,15 @@ export const SEND_REMINDER = [
 export const PRODUCT_NOTIFICATION_TYPE = [
   { label: "Product", value: "product" },
   { label: "Product Request", value: "productRequest" },
+];
+
+export const UPI_OPTIONS = [{ label: "upi available", value: true }];
+
+export const RECIPE_TYPE_OPTIONS = [
+  { label: "Assemble", value: "assemble" },
+  { label: "Unassemble", value: "unassemble" },
+];
+export const RECIPE_TYPE_OPTIONS_SIMPLE = [
+  { label: "Assemble", value: "assemble" },
+  { label: "Unassemble", value: "unassemble" },
 ];

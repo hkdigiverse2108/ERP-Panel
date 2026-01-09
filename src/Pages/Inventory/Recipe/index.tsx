@@ -1,0 +1,97 @@
+import { Box } from "@mui/material";
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { Mutations, Queries } from "../../../Api";
+import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { PAGE_TITLE, ROUTES } from "../../../Constants";
+import { BREADCRUMBS } from "../../../Data";
+import type { AppGridColDef } from "../../../Types";
+import { useDataGrid } from "../../../Utils/Hooks";
+import type { RecipeBase } from "../../../Types/Recipe";
+
+const Recipe = () => {
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+
+  const navigate = useNavigate();
+  const { data, isLoading, isFetching } = Queries.useGetRecipe(params);
+  const { mutate: deleteRecipe } = Mutations.useDeleteRecipe();
+  const { mutate: editRecipe, isPending: isEditLoading } = Mutations.useEditRecipe();
+
+  const rows = useMemo(() => data?.data?.recipe_data.map((r) => ({ ...r, id: r?._id })) || [], [data]);
+
+  const totalRows = data?.data?.totalData || 0;
+
+  const handleAdd = () => navigate(ROUTES.RECIPE.ADD_EDIT);
+
+  const handleDelete = () => {
+    if (!rowToDelete) return;
+    deleteRecipe(rowToDelete?._id as string, {
+      onSuccess: () => setRowToDelete(null),
+    });
+  };
+
+  const columns: AppGridColDef<RecipeBase>[] = [
+    { field: "recipeNo", headerName: "Recipe No", width: 150 },
+    { field: "recipeName", headerName: "Recipe Name", width: 220 },
+    { field: "recipeDate", headerName: "Recipe Date", width: 150, valueGetter: (v) => new Date(v).toLocaleDateString() },
+    { field: "recipeType", headerName: "Recipe Type", width: 160, },
+    {
+      field: "rawProducts",
+      headerName: "Raw Items",
+      width: 120,
+      //  valueGetter: ({ value }) => value.length,
+    },
+    {
+      field: "finalProducts",
+      headerName: "Final Items",
+      width: 120,
+      //  valueGetter: ({ value }) => value.length,
+    },
+
+    CommonActionColumn({
+      active: (row) =>
+        editRecipe({
+          recipeId: row._id,
+          status: row.status === "active" ? "inactive" : "active",
+        }),
+      editRoute: ROUTES.RECIPE.ADD_EDIT,
+      onDelete: (row) => setRowToDelete({ _id: row._id, title: row.recipeName }),
+    }),
+  ];
+
+  const gridOptions = {
+    columns,
+    rows,
+    rowCount: totalRows,
+    loading: isLoading || isFetching || isEditLoading,
+    isActive,
+    setActive,
+    handleAdd,
+    paginationModel,
+    onPaginationModelChange: setPaginationModel,
+    sortModel,
+    onSortModelChange: setSortModel,
+    filterModel,
+    onFilterModelChange: setFilterModel,
+  };
+
+  return (
+    <>
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.RECIPE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.RECIPE.BASE} />
+
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        {/* <Grid item xs={12} sm={4}>
+            <CommonSelect label="Recipe Type" value={value} options={RECIPE_TYPE_OPTIONS} multiple />
+          </Grid> */}
+
+        <CommonCard hideDivider>
+          <CommonDataGrid {...gridOptions} />
+        </CommonCard>
+
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDelete} />
+      </Box>
+    </>
+  );
+};
+
+export default Recipe;

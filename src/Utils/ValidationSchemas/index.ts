@@ -159,17 +159,21 @@ export const MultiplePaySchema = Yup.object({
 });
 
 export const BankFormSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-  branchName: Yup.string().required("Branch Name is required"),
-  ifscCode: Yup.string()
-    .required("IFSC Code is required")
-    .matches(/^[A-Z]{4}0[A-Z0-9]{6}$/, "Invalid IFSC Code format"),
-  swiftCode: Yup.string().nullable(),
-  accountHolderName: Yup.string().required("Account Holder Name is required"),
-  bankAccountNumber: Yup.string().required("Account Number is required").min(9, "Account number too short").max(18, "Account number too long"),
-  zipCode: Yup.number().typeError("Must be a number").nullable(),
-  addressLine1: Yup.string().nullable(),
+  name: Validation("string", "Name"),
+  branchName: Validation("string", "Branch Name"),
+  accountHolderName: Validation("string", "Account Holder Name"),
+  bankAccountNumber: Validation("string", "Account Number"),
+  ifscCode: Validation("string", "IFSC Code"),
+  swiftCode: Validation("string", "Swift Code", { required: false }),
+  openingBalance: Yup.object({
+    creditBalance: Validation("number", "Credit Balance", { required: false }).nullable(),
+    debitBalance: Validation("number", "Debit Balance", { required: false }).nullable(),
+  }).nullable(),
 });
-export const EditBankFormSchema = BankFormSchema.shape({
-  bankId: Yup.string().required("Bank ID is required"),
+
+export const RecipeFormSchema = Yup.object({  
+  recipeName: Validation("string", "Name"),
+  recipeDate: Validation("string", "Recipe Date"),
+  recipeNo: Validation("string", "Recipe No"),
+  recipeType: Validation("string", "Recipe Type"),  
 });

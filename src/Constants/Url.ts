@@ -90,4 +90,10 @@ export const URL_KEYS = {
     EDIT: "/payment/edit",
     ALL: "/payment/all",
   },
+  RECIPE: {
+    BASE: "/recipe",
+    ADD: "/recipe/add",
+    EDIT: "/recipe/edit",
+    ALL: "/recipe/all",
+  },
 } as const;

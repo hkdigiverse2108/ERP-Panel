@@ -16,3 +16,4 @@ export * from "./Company";
 export * from "./Bank";
 export * from "./Category";
 export * from "./ProductRequest";
+export * from "./Recipe";

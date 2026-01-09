@@ -399,7 +399,7 @@ export type ImageSyncProps = {
 export interface CommonRadioProps {
   label?: string;
   value: string;
-  options: RadioOptionType[];
+  options?: RadioOptionType[];
   onChange: (value: string) => void;
   row?: boolean;
   disabled?: boolean;
