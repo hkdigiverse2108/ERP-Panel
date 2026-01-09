@@ -35,7 +35,11 @@ export const SUB_CATEGORY_OPTIONS = [{ label: "Whole Wheat", value: "679a1c3d8f4
 export const BRAND_OPTIONS = [{ label: "Organic Brand", value: "679a1c4e8f4e1a001234abcf" }];
 
 export const SUB_BRAND_OPTIONS = [{ label: "Premium", value: "679a1c5f8f4e1a001234abd0" }];
-export const DEPARTMENT_OPTIONS = [{ label: "Grocery", value: "679a1c6f8f4e1a001234abd1" }];
+
+export const DEPARTMENT_OPTIONS = [
+  { label: "First Shop", value: "firstShop" },
+  { label: "Bakery", value: "bakery" }
+];
 
 export const UOM_OPTIONS = [{ label: "KG", value: "679a1c7f8f4e1a001234abd2" }];
 

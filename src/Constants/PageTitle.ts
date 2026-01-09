@@ -37,7 +37,9 @@ export const PAGE_TITLE = {
       },
     },
     STOCK:{
-      BASE:"stock"
+      BASE:"stock",
+      ADD:"Add Stock",
+      EDIT:"Edit Stock"
     },
   },
   CUSTOMER: {

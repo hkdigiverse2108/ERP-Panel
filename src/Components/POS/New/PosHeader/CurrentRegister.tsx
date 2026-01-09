@@ -70,13 +70,13 @@ const CurrentRegister = () => {
                       <table className="w-full text-sm">
                         <tbody>
                           {Sales.map((item, index) => (
-                            <tr key={index} className="bg-white dark:bg-gray-800 odd:bg-gray-50 dark:odd:bg-gray-900">
+                            <tr key={index} className="bg-white dark:bg-gray-800 odd:bg-gray-50 dark:odd:bg-gray-dark">
                               <th className="px-3 py-2 text-start font-medium text-gray-600 dark:text-gray-300">{item.label}</th>
                               <td className="px-3 py-2 text-right font-medium dark:text-gray-100">{item.value.toFixed(2)}</td>
                             </tr>
                           ))}
 
-                          <tr className="font-semibold bg-gray-100 dark:bg-gray-dark dark:text-gray-100">
+                          <tr className="font-semibold bg-gray-100 dark:bg-gray-900 dark:text-gray-100">
                             <th className="px-3 py-2 text-start">Total Sales</th>
                             <td className="px-3 py-2 text-right">{totalSales.toFixed(2)}</td>
                           </tr>
@@ -86,7 +86,7 @@ const CurrentRegister = () => {
 
                     <div className="border border-gray-200 dark:border-gray-600 rounded-md overflow-hidden">
                       <table className="w-full text-sm h-full">
-                        <thead className="bg-gray-100 text-gray-700 dark:bg-gray-dark dark:text-gray-100">
+                        <thead className="bg-gray-100 text-gray-700 dark:bg-gray-900 dark:text-gray-100">
                           <tr>
                             <th className="px-3 py-2 text-left">Currency</th>
                             <th className="px-3 py-2">Nos</th>
@@ -95,7 +95,7 @@ const CurrentRegister = () => {
                         </thead>
                         <tbody>
                           {currencyNotes.map((note) => (
-                            <tr key={note} className="bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-900">
+                            <tr key={note} className="bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark">
                               <td className="px-3 py-2 text-start font-medium text-gray-600 dark:text-gray-300">₹{note}</td>
                               <td className="px-3">
                                 <CommonValidationTextField name={`nos.${note}`} type="text" />
@@ -103,7 +103,7 @@ const CurrentRegister = () => {
                               <td className="px-3 py-2 text-right dark:text-gray-100">{getAmount(note).toFixed(2)}</td>
                             </tr>
                           ))}
-                          <tr className="font-semibold bg-gray-100 dark:bg-gray-dark dark:text-gray-100">
+                          <tr className="font-semibold bg-gray-100 dark:bg-gray-900 dark:text-gray-100">
                             <th className="px-3 py-2 text-start" colSpan={2}>
                               Total
                             </th>

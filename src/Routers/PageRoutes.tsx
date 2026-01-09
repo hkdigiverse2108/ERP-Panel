@@ -17,6 +17,7 @@ import ProductRequestForm from "../Pages/Inventory/Product/ProductRequestForm";
 import Stocks from "../Pages/Inventory/Stock";
 import NewPos from "../Pages/POS/New";
 import GeneralSetting from "../Pages/Settings/GeneralSetting";
+import StockForm from "../Pages/Inventory/Stock/StockForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -34,6 +35,7 @@ export const PageRoutes = [
   { path: ROUTES.PRODUCT.REQUEST.ADD, element: <ProductRequestForm /> },
 
   { path: ROUTES.STOCK.BASE, element: <Stocks /> },
+  { path: ROUTES.STOCK.ADD_EDIT, element: <StockForm /> },
 
   { path: ROUTES.CONTACT.BASE, element: <Contact /> },
   { path: ROUTES.CONTACT.ADD_EDIT, element: <ContactForm /> },

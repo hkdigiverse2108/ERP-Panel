@@ -52,6 +52,7 @@ export interface CommonSelectProps {
   required?: boolean;
   disabled?: boolean;
   variant?: "standard" | "outlined" | "filled";
+  placeholder?: string;
 }
 
 export interface CommonValidationSelectProps extends Omit<CommonSelectProps, "onChange" | "value"> {
