@@ -24,6 +24,12 @@ export const URL_KEYS = {
     ADD: "/user/add",
     EDIT: "/user/edit",
   },
+    CONTACT: {
+    BASE: "/contacts",
+    ALL: "/contacts/all",
+    ADD: "/contacts/add",
+    EDIT: "/contacts/edit",
+  },
 
   BRANCH: {
     BASE: "/branch",

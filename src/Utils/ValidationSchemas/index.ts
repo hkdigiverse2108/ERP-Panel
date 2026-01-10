@@ -177,3 +177,24 @@ export const RecipeFormSchema = Yup.object({
   recipeNo: Validation("string", "Recipe No"),
   recipeType: Validation("string", "Recipe Type"),  
 });
+
+export const ContactFormSchema = Yup.object({
+  name: Validation("string", "Name"),
+  email: Validation("string", "Email", { required: false, extraRules: (s) => s.email("Invalid email address") }),
+  companyName: Validation("string", "Company Name"),
+  mobileNo: Validation("string", "Mobile No", { extraRules: (s) => s.matches(/^[0-9]{10}$/, "Mobile number must be 10 digits") }),
+  whatsappNo: Validation("string", "WhatsApp No", { extraRules: (s) => s.matches(/^[0-9]{10}$/, "WhatsApp number must be 10 digits") }),
+  panNo: Validation("string", "PAN No", { extraRules: (s) => s.matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
+  paymentMode: Validation("string", "Payment Mode"),
+  gstType: Validation("string", "GST Type"),
+  gstin: Validation("string", "GSTIN"),
+  addressName: Validation("string", "Address Name"),
+  addressCompany: Validation("string", "Address Company"),
+  addressContact: Validation("string", "Address Contact"),
+  addressEmail: Validation("string", "Address Email", { required: false, extraRules: (s) => s.email("Invalid email address") }),
+  address: Validation("string", "Address"),
+  country: Validation("string", "Country"),
+  state: Validation("string", "State"),
+  city: Validation("string", "City"),
+  pinCode: Validation("string", "Pin Code", { extraRules: (s) => s.matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
+});
