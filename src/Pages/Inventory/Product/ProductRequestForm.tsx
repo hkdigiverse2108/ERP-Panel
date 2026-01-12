@@ -40,8 +40,7 @@ const ProductRequestForm = () => {
   const FormikImageSync = <T extends FormikValues>({ activeKey, clearActiveKey }: ImageSyncProps) => {
     const { selectedFiles } = useAppSelector((state) => state.modal);
     const { setFieldValue, values } = useFormikContext<T>();
-console.log(selectedFiles);
-console.log(values);
+
     useEffect(() => {
       if (!selectedFiles.length || !activeKey) return;
       const merged = [...(values[activeKey] || []), ...selectedFiles].filter((v, i, arr) => arr.indexOf(v) === i);

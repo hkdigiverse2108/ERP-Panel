@@ -18,22 +18,24 @@ export const RemoveEmptyFields = <T extends Record<string, any>>(obj: T): Partia
   return result;
 };
 
-export const GetChangedFields = <T extends Record<string, any>>(newVal: T, oldVal: Partial<T> = {}): Partial<T> => {
+export const GetChangedFields = <T extends Record<string, any>>(newVal: T, oldVal?: Partial<T>): Partial<T> => {
   const changed: Partial<T> = {};
 
   (Object.keys(newVal) as (keyof T)[]).forEach((key) => {
     const newValue = newVal[key];
-    const oldValue = oldVal[key];
+    const oldValue = oldVal?.[key];
 
-    // ❌ Object / Array skip
-    if (typeof newValue === "object" && newValue !== null) return;
+    if (newValue === undefined) return;
 
-    const isEmpty = (v: any) => v === "" || v === null || v === undefined;
+    if (typeof newValue === "object" && newValue !== null && !Array.isArray(newValue)) {
+      const nested = GetChangedFields(newValue as Record<string, any>, (oldValue as Record<string, any>) ?? {});
 
-    // ❌ both old & new empty → ignore
-    if (isEmpty(newValue) && isEmpty(oldValue)) return;
+      if (Object.keys(nested).length > 0) {
+        changed[key] = nested as T[keyof T];
+      }
+      return;
+    }
 
-    // ✅ changed OR cleared value
     if (newValue !== oldValue) {
       changed[key] = newValue;
     }
@@ -45,26 +47,26 @@ export const GetChangedFields = <T extends Record<string, any>>(newVal: T, oldVa
 // export const GetChangedFields = <T extends Record<string, any>>(newVal: T, oldVal?: Partial<T>): Partial<T> => {
 //   const changed: Partial<T> = {};
 
-//   (Object.keys(newVal) as (keyof T)[]).forEach((key) => {
-//     const newValue = newVal[key];
-//     const oldValue = oldVal?.[key];
+//   Object.keys(newVal).forEach((key) => {
+//     const k = key as keyof T;
+//     const newValue = newVal[k];
+//     const oldValue = oldVal?.[k];
 
 //     if (newValue === undefined) return;
 
 //     if (typeof newValue === "object" && newValue !== null && !Array.isArray(newValue)) {
-//       const nested = GetChangedFields(newValue as Record<string, any>, (oldValue as Record<string, any>) ?? {});
+//       const nested = GetChangedFields(newValue, (oldValue ?? {}) as Record<string, any>);
 
 //       if (Object.keys(nested).length > 0) {
-//         changed[key] = nested as T[keyof T];
+//         changed[k] = nested as T[keyof T];
 //       }
 //       return;
 //     }
 
 //     if (newValue !== oldValue) {
-//       changed[key] = newValue;
+//       changed[k] = newValue;
 //     }
 //   });
 
 //   return changed;
 // };
-
