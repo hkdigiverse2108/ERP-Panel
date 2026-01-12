@@ -2,30 +2,40 @@ import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations } from "../../Api";
-import { CommonValidationTextField as CommonTextField, CommonSwitch, CommonPhoneNumber, CommonRadio, CommonValidationSelect } from "../../Attribute";
+import { CommonValidationTextField as CommonTextField, CommonSwitch, CommonPhoneNumber, CommonRadio, CommonValidationSelect, CommonValidationRadio } from "../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
-import { BREADCRUMBS, CityOptionsByState, CONTACT_TYPE, CountryOptions, StateOptions } from "../../Data";
+import { BREADCRUMBS, CityOptionsByState, CONTACT_CATEGORY_CUSTOMER, CONTACT_CATEGORY_SUPPLIER, CONTACT_TYPE, CountryOptions, CUSTOMER_CATEGORY, PAYMENT_MODE, PAYMENT_TERMS, StateOptions } from "../../Data";
 import { useAppSelector } from "../../Store/hooks";
 import type { ContactFormValues } from "../../Types";
 import { GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { ContactFormSchema } from "../../Utils/ValidationSchemas";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const ContactForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
+  
   const { company } = useAppSelector((state) => state.company);
 
-  const [contactType, setContactType] = useState("");
+  const [contactType, setContactType] = useState("customer");
 
   const { mutate: addContact, isPending: isAddLoading } = Mutations.useAddContact();
   const { mutate: editContact, isPending: isEditLoading } = Mutations.useEditContact();
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
+
   const address = data?.addressDetails?.[0];
+
+  const bank = data?.bankDetails?.[0];
+  useEffect(() => {
+    if (data?.contactType) {
+      setContactType(data.contactType);
+    }
+  }, [data]);
+
   const initialValues: ContactFormValues = {
     //  GENERAL DETAILS
     firstName: data?.firstName || "",
@@ -43,12 +53,21 @@ const ContactForm = () => {
     customerCategory: data?.customerCategory || "",
     paymentMode: data?.paymentMode || "",
     paymentTerms: data?.paymentTerms || "",
-    openingBalance: data?.openingBalance || "",
+    openingBalance: {
+      debitBalance: data?.debitBalance || "",
+      creditBalance: data?.creditBalance || "",
+    },
     customerType: data?.customerType || "retailer",
     vendorType: data?.vendorType || "manufacturer",
     isActive: data?.isActive ?? true,
-    //  ADDRESS DETAILS
+    dob: data?.dobType || "",
+    anniversaryDate: data?.anniversaryDateType || "",
+    telephoneNo: data?.telephoneNoType || "",
+    remarks: data?.remarksType || "",
+    supplierType: data?.supplierType || "manufacturer",
+    transporterId: data?.transporterIdType || "",
 
+    //  ADDRESS DETAILS
     addressDetails: {
       gstType: address?.gstType || "",
       gstIn: address?.gstIn || "",
@@ -62,6 +81,15 @@ const ContactForm = () => {
       city: address?.city || "",
       pinCode: address?.pinCode || "",
       companyName: address?.companyName || "",
+      tanNo: address?.companyName || "",
+    },
+
+    //BANK DETAILS
+    bankDetails: {
+      ifscCode: bank?.ifscCodeType || "",
+      name: bank?.nameType || "",
+      branch: bank?.branchType || "",
+      accountNumber: bank?.accountNumberType || "",
     },
   };
 
@@ -80,7 +108,17 @@ const ContactForm = () => {
       await addContact(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
   };
-  const topContent = <CommonRadio value={contactType} onChange={setContactType} options={CONTACT_TYPE} grid={{ xs: "auto" }} />;
+  const topContent = (
+    <CommonRadio
+      value={contactType}
+      onChange={setContactType}
+      options={CONTACT_TYPE.map((opt) => ({
+        ...opt,
+        disabled: isEditing && (opt.value === "supplier" || opt.value === "transporter"),
+      }))}
+      grid={{ xs: "auto" }}
+    />
+  );
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.CONTACT[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.CONTACT[pageMode]} />
@@ -97,12 +135,30 @@ const ContactForm = () => {
                     <CommonTextField name="email" label="Email" grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="addressDetails.companyName" label="Company Name" required grid={{ xs: 12, md: 6 }} />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 6 }} required />
-                    <CommonPhoneNumber label="Whatsapp No." countryCodeName="whatsappNo.countryCode" numberName="whatsappNo.phoneNo" grid={{ xs: 12, md: 6 }} required />
+                    {(contactType === "supplier" || contactType === "customer") && <CommonPhoneNumber label="Whatsapp No." countryCodeName="whatsappNo.countryCode" numberName="whatsappNo.phoneNo" grid={{ xs: 12, md: 6 }} />}
+
+                    <CommonTextField name="telephoneNo" label="Telephone No" required grid={{ xs: 12, md: 6 }} />
+                    <CommonTextField name="remarks" label="Remarks" grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="panNo" label="PAN No" required grid={{ xs: 12, md: 6 }} />
-                    <CommonTextField name="paymentMode" label="Payment Mode" required grid={{ xs: 12, md: 6 }} />
-                    <CommonTextField name="paymentTerms" label="Payment Terms" grid={{ xs: 12, md: 6 }} />
-                    <CommonTextField name="openingBalance" label="Opening Balance" type="number" grid={{ xs: 12, md: 6 }} />
-                    <CommonTextField name="customerCategory" label="Customer Category" grid={{ xs: 12, md: 6 }} />
+                    <CommonValidationSelect name="paymentMode" label="Payment Mode" options={PAYMENT_MODE} required grid={{ xs: 12, md: 6 }} />
+                    <CommonValidationSelect name="paymentTerms" label="Payment Terms" options={PAYMENT_TERMS} grid={{ xs: 12, md: 6 }} />
+
+                    <CommonTextField name="openingBalance.debitBalance" label="Debit Balance" type="number" grid={{ xs: 12, md: 3 }} />
+                    <CommonTextField name="openingBalance.creditBalance" label="Credit Balance" type="number" grid={{ xs: 12, md: 3 }} />
+                    {contactType === "supplier" && <CommonTextField name="addressDetails.tanNo" label="Tan No" type="number" grid={{ xs: 12, md: 6 }} />}
+
+                    {contactType === "customer" && <CommonValidationSelect name="customerCategory" label="Customer Category" options={CUSTOMER_CATEGORY} grid={{ xs: 12, md: 6 }} />}
+
+                    <CommonTextField name="dob" label="Date Of Birth" type="date" grid={{ xs: 12, md: 3 }} />
+                    <CommonTextField name="anniversaryDate" label="anniversary Date" type="date" grid={{ xs: 12, md: 3 }} />
+                    {contactType === "customer" && <CommonValidationRadio name="customerType" label="Customer Type" options={CONTACT_CATEGORY_CUSTOMER} row />}
+                    {contactType === "supplier" && <CommonValidationRadio name="supplierType" label="Supplier Type" options={CONTACT_CATEGORY_SUPPLIER} row grid={{ xs: 12 }} />}
+
+                    {contactType === "supplier" && <CommonTextField name="ifscCode" label="Bank IfscCode" grid={{ xs: 12, md: 6 }} />}
+                    {contactType === "supplier" && <CommonTextField name="name" label="Bank Name" grid={{ xs: 12, md: 6 }} />}
+                    {contactType === "supplier" && <CommonTextField name="branch" label="Bank Branch" grid={{ xs: 12, md: 6 }} />}
+                    {contactType === "supplier" && <CommonTextField name="accountNumber" label="Account Number" grid={{ xs: 12, md: 6 }} />}
+                    {contactType === "transporter" && <CommonTextField name="transporterId" label="Transport Id" grid={{ xs: 12, md: 6 }} />}
                   </Grid>
                 </CommonCard>
 
@@ -120,7 +176,7 @@ const ContactForm = () => {
                     <CommonTextField name="addressDetails.addressLine2" label="Addressline2" required grid={{ xs: 12, md: 6 }} />
                     <CommonValidationSelect name="addressDetails.state" label="State" disabled={!values.addressDetails?.country} options={StateOptions} grid={{ xs: 12, md: 6 }} required />
                     <CommonValidationSelect name="addressDetails.city" label="City" disabled={!values.addressDetails?.state} options={CityOptionsByState[values?.addressDetails?.state || ""] || []} grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationSelect name="addressDetails.country" label="Country"  options={CountryOptions} required grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="addressDetails.country" label="Country" options={CountryOptions} required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="addressDetails.pinCode" label="Pin Code" required grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>

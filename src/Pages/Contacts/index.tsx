@@ -13,7 +13,7 @@ import { CommonRadio } from "../../Attribute";
 const Contact = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
-  const [contactType, setContactType] = useState("");
+  const [contactType, setContactType] = useState("customer");
 
   const { data: ContactData, isLoading: ContactDataLoading, isFetching: ContactDataFetching } = Queries.useGetContact(params);
   const { mutate: deleteContactMutate } = Mutations.useDeleteContact();
@@ -31,11 +31,11 @@ const Contact = () => {
 
   const columns: AppGridColDef<ContactBase>[] = [
     { field: "firstName", headerName: "Name", flex: 1 },
-    CommonPhoneColumns<ContactBase>(),
-    CommonPhoneColumns<ContactBase>(),
+    CommonPhoneColumns<ContactBase>("phoneNo", "Phone No"),
+    CommonPhoneColumns<ContactBase>("whatsappNo", "WhatsApp No"),
     { field: "addressDetails.gstIn", headerName: "GSTIN", flex: 1 },
     { field: "createdBy", headerName: "Created By", flex: 1 },
-    { field: "loyaltyPoint", headerName: "Loyalty Point", flex: 1 },
+    { field: "loyaltyPoints", headerName: "Loyalty Point", flex: 1 },
     CommonActionColumn({
       active: (row) => editContact({ contactId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.CONTACT.ADD_EDIT,
@@ -66,9 +66,8 @@ const Contact = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.CONTACT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.CONTACT.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <CommonCard topContent={topContent}>
-          <CommonDataGrid {...CommonDataGridOption} />
-        </CommonCard>
+        <CommonCard topContent={topContent}><CommonDataGrid {...CommonDataGridOption} /> </CommonCard>
+
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       </Box>
     </>

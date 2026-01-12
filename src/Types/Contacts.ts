@@ -10,12 +10,23 @@ export interface ContactFormValues {
   customerCategory?: string;
   paymentMode?: string;
   paymentTerms?: string;
-  openingBalance?: string;
+  openingBalance?:{
+    creditBalance?: string;
+    debitBalance?: string;
+  };
   customerType?: string;
   vendorType?: string;
   addressDetails?: addressDetails;
   isActive?: boolean;
   _submitAction?: "save" | "saveAndNew";
+  loyaltyPoints?: number;
+  dob?: string;
+  anniversaryDate?: string;
+  telephoneNo?: string;
+  remarks?: string;
+  supplierType?: string;
+  bankDetails?: bankDetails;
+  transporterId?: string;
 }
 export interface addressDetails {
   gstType?: string;
@@ -33,6 +44,14 @@ export interface addressDetails {
   tanNo?: string;
   companyName?: string;
 }
+
+export interface bankDetails {
+ifscCode?: string;
+name?: string;
+branch?: string;
+accountNumber?: string;
+}
+
 export type AddContactPayload = ContactFormValues & { companyId?: string };
 
 export type EditContactPayload = AddContactPayload & { contactId?: string };

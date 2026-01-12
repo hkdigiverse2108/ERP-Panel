@@ -64,9 +64,9 @@ export const ORDER_TYPE = [
 ];
 
 export const CONTACT_TYPE = [
-   { label: "customer", value: "customer" },
-   { label: "supplier", value: "supplier" },
-   { label: "transporter", value: "transporter" },
+  { label: "Customer", value: "customer" },
+  { label: "Supplier", value: "supplier" },
+  { label: "Transporter", value: "transporter" },
 ];
 
 export const USER_TYPE = [
@@ -190,4 +190,23 @@ export const RECIPE_TYPE_OPTIONS = [
 export const RECIPE_TYPE_OPTIONS_SIMPLE = [
   { label: "Assemble", value: "assemble" },
   { label: "Unassemble", value: "unassemble" },
+];
+
+export const CUSTOMER_CATEGORY = [
+  { label: "Retail", value: "retail" },
+  { label: "Customer", value: "customer" },
+];
+
+export const CONTACT_CATEGORY_CUSTOMER = [
+  { label: "Retailer", value: "retailer" },
+  { label: "Wholesaler", value: "wholesaler" },
+  { label: "Merchant", value: "merchant" },
+  { label: "Other", value: "other" },
+];
+
+export const CONTACT_CATEGORY_SUPPLIER = [
+  { label: "Manufacturer", value: "manufacturer" },
+  { label: "Stockiest", value: "stockiest" },
+  { label: "Trader", value: "trader" },
+  { label: "Other", value: "other" },
 ];
