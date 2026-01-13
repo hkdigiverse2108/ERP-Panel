@@ -172,6 +172,13 @@ export interface ExportToPDFProps<T extends GridValidRowModel> {
   fileName?: string;
 }
 
+export interface CommonObjectNameColumnOptions {
+  headerName?: string;
+  width?: number;
+  flex?: number;
+  minWidth?: number;
+}
+
 // ************ Table End ***********
 
 // ************ Input Start ***********
