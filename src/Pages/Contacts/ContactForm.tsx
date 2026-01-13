@@ -16,7 +16,8 @@ const ContactForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
-  
+  console.log("Location Data:", data);
+
   const { company } = useAppSelector((state) => state.company);
 
   const [contactType, setContactType] = useState("customer");
@@ -43,29 +44,32 @@ const ContactForm = () => {
     email: data?.email || "",
     phoneNo: {
       countryCode: data?.phoneNo?.countryCode || "",
-      phoneNo: data?.phoneNo?.phoneNo || "",
+      phoneNo: data?.phoneNo?.phoneNo?.toString() || "",
     },
+
     whatsappNo: {
       countryCode: data?.whatsappNo?.countryCode || "",
-      phoneNo: data?.whatsappNo?.whatsappNo || "",
+      phoneNo: data?.whatsappNo?.phoneNo?.toString() || "",
     },
+
     panNo: data?.panNo || "",
     customerCategory: data?.customerCategory || "",
     paymentMode: data?.paymentMode || "",
     paymentTerms: data?.paymentTerms || "",
     openingBalance: {
-      debitBalance: data?.debitBalance || "",
-      creditBalance: data?.creditBalance || "",
+      debitBalance: data?.openingBalance?.debitBalance || "",
+      creditBalance: data?.openingBalance?.creditBalance || "",
     },
     customerType: data?.customerType || "retailer",
     vendorType: data?.vendorType || "manufacturer",
     isActive: data?.isActive ?? true,
-    dob: data?.dobType || "",
-    anniversaryDate: data?.anniversaryDateType || "",
-    telephoneNo: data?.telephoneNoType || "",
-    remarks: data?.remarksType || "",
-    supplierType: data?.supplierType || "manufacturer",
-    transporterId: data?.transporterIdType || "",
+    dob: data?.dob ? data.dob.split("T")[0] : "",
+    anniversaryDate: data?.anniversaryDate ? data.anniversaryDate.split("T")[0] : "",
+    telephoneNo: data?.telephoneNo || "",
+    remarks: data?.remarks || "",
+    supplierType: data?.supplier || "manufacturer",
+    transporterId: data?.transporterId || "",
+    companyName: data?.companyName || "",
 
     //  ADDRESS DETAILS
     addressDetails: {
@@ -80,16 +84,16 @@ const ContactForm = () => {
       state: address?.state || "",
       city: address?.city || "",
       pinCode: address?.pinCode || "",
-      companyName: address?.companyName || "",
+      contactCompanyName: address?.contactCompanyName || "",
       tanNo: address?.companyName || "",
     },
 
     //BANK DETAILS
     bankDetails: {
-      ifscCode: bank?.ifscCodeType || "",
-      name: bank?.nameType || "",
-      branch: bank?.branchType || "",
-      accountNumber: bank?.accountNumberType || "",
+      ifscCode: bank?.ifscCode || "",
+      name: bank?.name || "",
+      branch: bank?.branch || "",
+      accountNumber: bank?.accountNumber || "",
     },
   };
 
@@ -133,7 +137,7 @@ const ContactForm = () => {
                     <CommonTextField name="firstName" label="First Name" required grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="lastName" label="Last Name" required grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="email" label="Email" grid={{ xs: 12, md: 6 }} />
-                    <CommonTextField name="addressDetails.companyName" label="Company Name" required grid={{ xs: 12, md: 6 }} />
+                    <CommonTextField name="companyName" label="Company Name" required grid={{ xs: 12, md: 6 }} />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 6 }} required />
                     {(contactType === "supplier" || contactType === "customer") && <CommonPhoneNumber label="Whatsapp No." countryCodeName="whatsappNo.countryCode" numberName="whatsappNo.phoneNo" grid={{ xs: 12, md: 6 }} />}
 
@@ -154,10 +158,10 @@ const ContactForm = () => {
                     {contactType === "customer" && <CommonValidationRadio name="customerType" label="Customer Type" options={CONTACT_CATEGORY_CUSTOMER} row />}
                     {contactType === "supplier" && <CommonValidationRadio name="supplierType" label="Supplier Type" options={CONTACT_CATEGORY_SUPPLIER} row grid={{ xs: 12 }} />}
 
-                    {contactType === "supplier" && <CommonTextField name="ifscCode" label="Bank IfscCode" grid={{ xs: 12, md: 6 }} />}
-                    {contactType === "supplier" && <CommonTextField name="name" label="Bank Name" grid={{ xs: 12, md: 6 }} />}
-                    {contactType === "supplier" && <CommonTextField name="branch" label="Bank Branch" grid={{ xs: 12, md: 6 }} />}
-                    {contactType === "supplier" && <CommonTextField name="accountNumber" label="Account Number" grid={{ xs: 12, md: 6 }} />}
+                    {contactType === "supplier" && <CommonTextField name="bankDetails.ifscCode" label="Bank IfscCode" grid={{ xs: 12, md: 6 }} />}
+                    {contactType === "supplier" && <CommonTextField name="bankDetails.name" label="Bank Name" grid={{ xs: 12, md: 6 }} />}
+                    {contactType === "supplier" && <CommonTextField name="bankDetails.branch" label="Bank Branch" grid={{ xs: 12, md: 6 }} />}
+                    {contactType === "supplier" && <CommonTextField name="bankDetails.accountNumber" label="Account Number" grid={{ xs: 12, md: 6 }} />}
                     {contactType === "transporter" && <CommonTextField name="transporterId" label="Transport Id" grid={{ xs: 12, md: 6 }} />}
                   </Grid>
                 </CommonCard>
@@ -169,7 +173,7 @@ const ContactForm = () => {
                     <CommonTextField name="addressDetails.gstIn" label="GSTIN" required grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="addressDetails.contactFirstName" label="Contact First Name" required grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="addressDetails.contactLastName" label="Contact Last Name" required grid={{ xs: 12, md: 6 }} />
-                    <CommonTextField name="addressDetails.companyName" label="Contact Company Name" required grid={{ xs: 12, md: 6 }} />
+                    <CommonTextField name="addressDetails.contactCompanyName" label="Contact Company Name" required grid={{ xs: 12, md: 6 }} />
                     <CommonPhoneNumber label="Phone No." countryCodeName="addressDetails.contactNo.countryCode" numberName="addressDetails.contactNo.phoneNo" grid={{ xs: 12, md: 6 }} required />
                     <CommonTextField name="addressDetails.contactEmail" label="Email" required grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="addressDetails.addressLine1" label="Addressline1" required grid={{ xs: 12, md: 6 }} />

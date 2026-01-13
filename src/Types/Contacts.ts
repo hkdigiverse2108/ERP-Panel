@@ -27,6 +27,7 @@ export interface ContactFormValues {
   supplierType?: string;
   bankDetails?: bankDetails;
   transporterId?: string;
+  companyName?: string;
 }
 export interface addressDetails {
   gstType?: string;
@@ -42,7 +43,7 @@ export interface addressDetails {
   city?: string;
   pinCode?: string;
   tanNo?: string;
-  companyName?: string;
+  contactCompanyName?: string;
 }
 
 export interface bankDetails {
