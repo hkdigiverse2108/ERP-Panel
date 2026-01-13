@@ -156,30 +156,64 @@ export const BankFormSchema = Yup.object().shape({
   }).nullable(),
 });
 
-export const RecipeFormSchema = Yup.object({  
+export const RecipeFormSchema = Yup.object({
   recipeName: Validation("string", "Name"),
   recipeDate: Validation("string", "Recipe Date"),
   recipeNo: Validation("string", "Recipe No"),
-  recipeType: Validation("string", "Recipe Type"),  
+  recipeType: Validation("string", "Recipe Type"),
 });
 
 export const ContactFormSchema = Yup.object({
-  name: Validation("string", "Name"),
+  firstName: Validation("string", "First Name"),
+  lastName: Validation("string", "Last Name"),
   email: Validation("string", "Email", { required: false, extraRules: (s) => s.email("Invalid email address") }),
   companyName: Validation("string", "Company Name"),
-  mobileNo: Validation("string", "Mobile No", { extraRules: (s) => s.matches(/^[0-9]{10}$/, "Mobile number must be 10 digits") }),
-  whatsappNo: Validation("string", "WhatsApp No", { extraRules: (s) => s.matches(/^[0-9]{10}$/, "WhatsApp number must be 10 digits") }),
-  panNo: Validation("string", "PAN No", { extraRules: (s) => s.matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
+  phoneNo: PhoneValidation(),
+  whatsappNo: PhoneValidation("whatsapp No"),
+  panNo: Validation("string", "PAN No", {
+    extraRules: (s) => s.matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number"),
+  }),
   paymentMode: Validation("string", "Payment Mode"),
-  gstType: Validation("string", "GST Type"),
-  gstin: Validation("string", "GSTIN"),
-  addressName: Validation("string", "Address Name"),
-  addressCompany: Validation("string", "Address Company"),
-  addressContact: Validation("string", "Address Contact"),
-  addressEmail: Validation("string", "Address Email", { required: false, extraRules: (s) => s.email("Invalid email address") }),
-  address: Validation("string", "Address"),
-  country: Validation("string", "Country"),
-  state: Validation("string", "State"),
-  city: Validation("string", "City"),
-  pinCode: Validation("string", "Pin Code", { extraRules: (s) => s.matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
+  paymentTerms: Validation("string", "Payment Terms", { required: false }),
+  openingBalance: Yup.object().shape({
+    debitBalance: Validation("number", "Debit Balance", { required: false }),
+    creditBalance: Validation("number", "Credit Balance", { required: false }),
+  }),
+  customerCategory: Validation("string", "Customer Category", { required: false }),
+  customerType: Validation("string", "Customer Type", { required: false }),
+  supplierType: Validation("string", "Supplier Type", { required: false }),
+  transporterId: Validation("string", "Transporter Id", { required: false }),
+  dob: Validation("string", "Date of Birth", { required: false }),
+  anniversaryDate: Validation("string", "Anniversary Date", { required: false }),
+  telephoneNo: Validation("string", "Telephone No"),
+  remarks: Validation("string", "Remarks", { required: false }),
+
+  // ADDRESS DETAILS
+  addressDetails: Yup.object().shape({
+    gstType: Validation("string", "GST Type"),
+    gstIn: Validation("string", "GSTIN"),
+    contactFirstName: Validation("string", "Contact First Name"),
+    contactLastName: Validation("string", "Contact Last Name"),
+    contactCompanyName: Validation("string", "Contact Company Name"),
+    contactNo: PhoneValidation("contact No"),
+    contactEmail: Validation("string", "Email", {
+      extraRules: (s) => s.email("Invalid email address"),
+    }),
+    addressLine1: Validation("string", "Address Line 1"),
+    addressLine2: Validation("string", "Address Line 2"),
+    country: Validation("string", "Country"),
+    state: Validation("string", "State"),
+    city: Validation("string", "City"),
+    pinCode: Validation("string", "Pin Code", {
+      extraRules: (s) => s.matches(/^[0-9]{6}$/, "Pin code must be 6 digits"),
+    }),
+  }),
+
+  // BANK DETAILS
+  bankDetails: Yup.object().shape({
+    ifscCode: Validation("string", "IFSC Code", { required: false }),
+    name: Validation("string", "Bank Name", { required: false }),
+    branch: Validation("string", "Bank Branch", { required: false }),
+    accountNumber: Validation("string", "Account Number", { required: false }),
+  }),
 });

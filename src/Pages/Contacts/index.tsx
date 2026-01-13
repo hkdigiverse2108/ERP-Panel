@@ -37,7 +37,7 @@ const Contact = () => {
     { field: "createdBy", headerName: "Created By", flex: 1 },
     { field: "loyaltyPoints", headerName: "Loyalty Point", flex: 1 },
     CommonActionColumn({
-      active: (row) => editContact({ contactId: row?._id, isActive: !row.isActive }),
+      active: (row) => editContact({ userId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.CONTACT.ADD_EDIT,
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.firstName }),
     }),

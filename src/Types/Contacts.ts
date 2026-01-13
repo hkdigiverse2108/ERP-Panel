@@ -16,7 +16,7 @@ export interface ContactFormValues {
   };
   customerType?: string;
   vendorType?: string;
-  addressDetails?: addressDetails;
+  addressDetails?: AddressDetailsArray;
   isActive?: boolean;
   _submitAction?: "save" | "saveAndNew";
   loyaltyPoints?: number;
@@ -27,23 +27,27 @@ export interface ContactFormValues {
   supplierType?: string;
   bankDetails?: bankDetails;
   transporterId?: string;
-}
-export interface addressDetails {
-  gstType?: string;
-  gstIn?: string;
-  contactFirstName?: string;
-  contactLastName?: string;
-  contactNo?: PhoneNumberType;
-  contactEmail?: string;
-  addressLine1?: string;
-  addressLine2?: string;
-  country?: string;
-  state?: string;
-  city?: string;
-  pinCode?: string;
-  tanNo?: string;
   companyName?: string;
 }
+export interface AddressDetails {
+  gstType: string;
+  gstIn: string;
+  contactFirstName: string;
+  contactLastName: string;
+  contactNo: PhoneNumberType;
+  contactEmail: string;
+  addressLine1: string;
+  addressLine2: string;
+  country: string;
+  state: string;
+  city: string;
+  pinCode: string;
+  tanNo: string;
+  contactCompanyName: string;
+}
+
+export type AddressDetailsArray = AddressDetails[];
+
 
 export interface bankDetails {
 ifscCode?: string;
@@ -52,9 +56,9 @@ branch?: string;
 accountNumber?: string;
 }
 
-export type AddContactPayload = ContactFormValues & { companyId?: string };
+export type AddContactPayload = ContactFormValues;
 
-export type EditContactPayload = AddContactPayload & { contactId?: string };
+export type EditContactPayload = AddContactPayload & { userId: string };
 
 export interface ContactBase extends Omit<ContactFormValues, "parentContactId">, CommonDataType {
   parentContactId?: ContactBase;
