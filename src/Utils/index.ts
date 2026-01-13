@@ -1,5 +1,6 @@
 export * from "./DateFormatted";
 export * from "./FormHelpers";
+export * from "./DateConfig";
 import { STORAGE_KEYS } from "../Constants";
 import type { GridType, Params, SelectOptionType } from "../Types";
 

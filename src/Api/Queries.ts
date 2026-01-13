@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BranchApiResponse, BrandApiResponse, CategoryApiResponse, CompanyApiResponse, ContactApiResponse, EmployeeApiResponse, Params, ProductApiResponse, ProductRequestApiResponse, RecipeApiResponse, RolesApiResponse, UploadResponse } from "../Types";
+import type { AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BranchApiResponse, BrandApiResponse, CategoryApiResponse, CompanyApiResponse, ContactApiResponse, EmployeeApiResponse, Params, ProductApiResponse, RecipeApiResponse, RolesApiResponse, UploadResponse } from "../Types";
 import { CleanParams } from "../Utils";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
@@ -40,7 +40,6 @@ export const Queries = {
 
   //***************product**************** */
   useGetProduct: (params?: Params) => useQueries<ProductApiResponse>([KEYS.PRODUCT.BASE, params], () => Get(URL_KEYS.PRODUCT.ALL, params)),
-  useGetProductRequest: (params?: Params) => useQueries<ProductRequestApiResponse>([KEYS.PRODUCT_REQUEST.BASE, params], () => Get(URL_KEYS.PRODUCT_REQUEST.ALL, params)),
 
   // ************ Stock ***********
 

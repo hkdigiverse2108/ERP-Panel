@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Mutations } from "../../../../Api";
 import { CommonButton, CommonPhoneNumber, CommonSwitch, CommonValidationSelect, CommonValidationTextField } from "../../../../Attribute";
 import { PAGE_TITLE, ROUTES } from "../../../../Constants";
-import { BREADCRUMBS, CityOptionsByState, CountryOptions, StateOptions, TimeZoneOptions } from "../../../../Data";
+import { BREADCRUMBS, CityOptionsByState, CountryOptions, DATE_FORMATS, StateOptions, TimeZoneOptions } from "../../../../Data";
 import { setCompany } from "../../../../Store/Slices/CompanySlice";
 import { setSelectedFiles, setUploadModal } from "../../../../Store/Slices/ModalSlice";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
@@ -194,7 +194,7 @@ const CompanyForm = () => {
                     <CommonValidationTextField name="outletSize" label="Outlet Size (sq. ft.)" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="fssaiNo" label="FSSAI No" grid={{ xs: 12, md: 4 }} />
                     {/* <CommonValidationTextField name="currency" label="currency" grid={{ xs: 12, md: 4 }} /> */}
-                    <CommonValidationTextField name="printDateFormat" label="Print Date Format" grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="printDateFormat" label="Print Date Format" options={DATE_FORMATS} grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="decimalPoint" label="Decimal Point" grid={{ xs: 12, md: 4 }} />
 
                     <CommonSwitch name="allowRoundOff" label="Allow Round Off" value={values.allowRoundOff} onChange={(checked) => setFieldValue("allowRoundOff", checked)} grid={{ xs: 12 }} />

@@ -73,12 +73,6 @@ export const KEYS = {
     EDIT: "product-edit",
     DELETE: "product-delete",
   },
-  PRODUCT_REQUEST: {
-    BASE: "product-request",
-    ADD: "product-request-add",
-    EDIT: "product-request-edit",
-    DELETE: "product-request-delete",
-  },
   STOCK: {
     ROOT: ["stock"],
     ALL: ["stock", "all"],

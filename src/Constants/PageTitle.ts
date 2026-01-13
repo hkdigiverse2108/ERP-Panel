@@ -34,9 +34,6 @@ export const PAGE_TITLE = {
       BASE: "product",
       ADD: "Add Product",
       EDIT: "Edit Product",
-      REQUEST: {
-        ADD: "Add Product Request",
-      },
     },
     STOCK:{
       BASE:"stock",
