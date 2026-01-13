@@ -37,8 +37,6 @@ export const Mutations = {
   useEditProduct: () => useMutations<EditProductPayload, void>([KEYS.PRODUCT.EDIT, KEYS.PRODUCT.BASE], (input) => Put(URL_KEYS.PRODUCT.EDIT, input)),
   useDeleteProduct: () => useMutations<string, void>([KEYS.PRODUCT.DELETE, KEYS.PRODUCT.BASE], (id) => Delete(`${URL_KEYS.PRODUCT.BASE}/${id}`)),
 
-  useAddProductRequest: () => useMutations<AddProductRequestPayload, void>([KEYS.PRODUCT_REQUEST.ADD, KEYS.PRODUCT_REQUEST.BASE], (input) => Post(URL_KEYS.PRODUCT_REQUEST.ADD, input)),
-
   // ************ Call Request ***********
   useAddCallRequest: () => useMutations<CallRequestFormValues, void>([KEYS.CALL_REQUEST.ADD], (input) => Post(URL_KEYS.CALL_REQUEST.ADD, input)),
 

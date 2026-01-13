@@ -210,3 +210,10 @@ export const CONTACT_CATEGORY_SUPPLIER = [
   { label: "Trader", value: "trader" },
   { label: "Other", value: "other" },
 ];
+
+export const DATE_FORMATS = [
+  { label: "DD/MM/YYYY", value: "DD/MM/YYYY" },
+  { label: "DD-MM-YYYY", value: "DD-MM-YYYY" },
+  { label: "DD.MM.YYYY", value: "DD.MM.YYYY" },
+  { label: "DD Month YYYY", value: "DD MMMM YYYY" },
+];

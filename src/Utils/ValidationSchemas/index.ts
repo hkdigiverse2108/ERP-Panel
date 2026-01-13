@@ -64,21 +64,6 @@ export const CallRequestFormSchema = Yup.object({
   note: Validation("string", "note"),
 });
 
-// ---------- Product Request Form Schema ----------
-export const ProductRequestFormSchema = Yup.object({
-  name: Validation("string", "Product Name"),
-  printName: Validation("string", "Print Name", { required: false }),
-  category: Validation("string", "Category"),
-  subCategory: Validation("string", "Sub Category", { required: false }),
-  brand: Validation("string", "Brand"),
-  subBrand: Validation("string", "Sub Brand", { required: false }),
-  productType: Validation("string", "Product Type"),
-  hasExpiry: Validation("boolean", "Has Expiry", { required: false }),
-  description: Validation("string", "Description", { required: false }),
-  images: Yup.array().of(Yup.mixed().required("Image is required")).min(2, "At least two image is required"),
-  isActive: Yup.boolean(),
-});
-
 export const CompanyFormSchemas = Yup.object({
   name: Validation("string", "Company Name"),
   displayName: Validation("string", "display Name"),

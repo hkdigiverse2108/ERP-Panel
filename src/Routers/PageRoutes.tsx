@@ -13,7 +13,6 @@ import Dashboard from "../Pages/Dashboard";
 import Employees from "../Pages/Employee";
 import EmployeeForm from "../Pages/Employee/EmployeeForm";
 import Product from "../Pages/Inventory/Product";
-import ProductRequestForm from "../Pages/Inventory/Product/ProductRequestForm";
 import Recipe from "../Pages/Inventory/Recipe";
 import RecipeForm from "../Pages/Inventory/Recipe/RecipeFrom";
 import Stocks from "../Pages/Inventory/Stock";
@@ -34,7 +33,6 @@ export const PageRoutes = [
   { path: ROUTES.EMPLOYEE.ADD_EDIT, element: <EmployeeForm /> },
 
   { path: ROUTES.PRODUCT.BASE, element: <Product /> },
-  { path: ROUTES.PRODUCT.REQUEST.ADD, element: <ProductRequestForm /> },
 
   { path: ROUTES.STOCK.BASE, element: <Stocks /> },
   { path: ROUTES.STOCK.ADD_EDIT, element: <StockForm /> },

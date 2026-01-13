@@ -1,26 +1,21 @@
 import { Box } from "@mui/material";
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 import { Queries } from "../../../Api";
-import { CommonRadio } from "../../../Attribute";
 import { CommonBreadcrumbs, CommonCard, CommonDataGrid } from "../../../Components/Common";
-import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS, PRODUCT_NOTIFICATION_TYPE } from "../../../Data";
+import { PAGE_TITLE } from "../../../Constants";
+import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, ProductBase } from "../../../Types";
 import { useDataGrid } from "../../../Utils/Hooks";
-import ProductRequest from "./ProductRequest";
 
 const Product = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, params } = useDataGrid();
-  const navigate = useNavigate();
-  const [productType, setProductType] = useState<string>("product");
 
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
 
   const allProduct = useMemo(() => productData?.data?.product_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [productData]);
   const totalRows = productData?.data?.totalData || 0;
 
-  const handleAdd = () => navigate(ROUTES.PRODUCT.REQUEST.ADD);
+  const handleAdd = () => {};
 
   const columns: AppGridColDef<ProductBase>[] = [
     { field: "images", headerName: "images", width: 170 },
@@ -48,17 +43,15 @@ const Product = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
   };
-  
-  const topContent = (
-    <>
-      <CommonRadio value={productType} onChange={setProductType} options={PRODUCT_NOTIFICATION_TYPE} />
-    </>
-  );
+
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PRODUCT.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 } ,display:"grid"}}>
-        <CommonCard topContent={topContent}>{productType === "product" ? <CommonDataGrid {...CommonDataGridOption} /> : <ProductRequest />}</CommonCard>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
+        <CommonCard >
+          <CommonDataGrid {...CommonDataGridOption} />{" "}
+        </CommonCard>
       </Box>
     </>
   );
