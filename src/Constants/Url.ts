@@ -24,7 +24,7 @@ export const URL_KEYS = {
     ADD: "/user/add",
     EDIT: "/user/edit",
   },
-    CONTACT: {
+  CONTACT: {
     BASE: "/contacts",
     ALL: "/contacts/all",
     ADD: "/contacts/add",
@@ -39,17 +39,28 @@ export const URL_KEYS = {
   },
   BRAND: {
     BASE: "/brand",
+    DROPDOWN: "/brand/dropdown",
     ALL: "/brand/all",
     ADD: "/brand/add",
     EDIT: "/brand/edit",
   },
   CATEGORY: {
     BASE: "/category",
+    DROPDOWN: "/category/dropdown",
     ALL: "/category/all",
     ADD: "/category/add",
     EDIT: "/category/edit",
   },
-
+  TAX: {
+    BASE: "/tax",
+    DROPDOWN: "/tax/dropdown",
+    ALL: "/tax/all",
+  },
+  UOM: {
+    BASE: "/uom",
+    ALL: "/uom/all",
+    DROPDOWN: "/uom/dropdown",
+  },
   ROLES: {
     BASE: "/role",
     ALL: "/role/all",

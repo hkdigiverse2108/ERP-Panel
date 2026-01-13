@@ -15,7 +15,7 @@ const AdvancedSearch: FC<AdvancedSearchProps> = ({ children, filter = [] }) => {
         <AccordionDetails>
           <Grid container spacing={1.5} className="flex items-center">
             {filter.map((item, i) => (
-              <CommonSelect key={i} label={item.label} options={item.options} value={item.value} onChange={item.onChange} multiple={item.multiple} limitTags={item.limitTags ?? 1} grid={item.grid} />
+              <CommonSelect key={i} label={item.label} options={item.options} value={item.value} onChange={item.onChange} multiple={item.multiple} limitTags={item.limitTags ?? 1} grid={item.grid} isLoading={item.isLoading} />
             ))}
             {children}
           </Grid>

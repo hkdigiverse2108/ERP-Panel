@@ -38,7 +38,7 @@ export const GenerateOptions = (data?: { _id: string; name?: string; firstName?:
   });
 };
 
-export const CreateFilter = (label: string, filterKey: string, advancedFilter: Record<string, string[]>, updateAdvancedFilter: (key: string, value: string[]) => void, options: SelectOptionType[], grid?: GridType, multiple?: boolean, limitTags?: number) => ({
+export const CreateFilter = (label: string, filterKey: string, advancedFilter: Record<string, string[]>, updateAdvancedFilter: (key: string, value: string[]) => void, options: SelectOptionType[], isLoading?: boolean, grid?: GridType, multiple?: boolean, limitTags?: number) => ({
   label,
   options,
   value: advancedFilter[filterKey] || [],
@@ -46,4 +46,5 @@ export const CreateFilter = (label: string, filterKey: string, advancedFilter: R
   limitTags,
   onChange: (val: string[]) => updateAdvancedFilter(filterKey, val),
   grid,
+  isLoading,
 });

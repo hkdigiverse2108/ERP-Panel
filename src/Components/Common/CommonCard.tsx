@@ -21,7 +21,7 @@ const CommonCard: FC<CommonCardProps> = ({ title, children, grid = { xs: 12 }, p
           <Grid container spacing={1.5} className="flex! max-xsm:flex-col! items-center justify-between p-3">
             {title && (
               <Grid size="auto">
-                <Typography variant="subtitle1" fontWeight={600} px={0.5} py={0.7} className="text-gray-700! dark:text-gray-200!">
+                <Typography variant="subtitle1" fontWeight={600} px={0.5} py={0.7} className="text-gray-700! dark:text-gray-200! capitalize">
                   {title}
                 </Typography>
               </Grid>

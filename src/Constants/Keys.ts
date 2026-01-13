@@ -1,5 +1,3 @@
-
-
 export const KEYS = {
   AUTH: {
     SIGNIN: "admin-signin",
@@ -29,7 +27,6 @@ export const KEYS = {
     DELETE: "employee-delete",
   },
 
-  
   CONTACT: {
     BASE: "contact",
     ADD: "contact-add",
@@ -55,6 +52,13 @@ export const KEYS = {
     ADD: "category-add",
     EDIT: "category-edit",
     DELETE: "category-delete",
+  },
+  TAX: {
+    BASE: "tax",
+  },
+  UOM: {
+    BASE: "/uom",
+    ALL: "/uom/all",
   },
   ROLES: {
     BASE: "role",

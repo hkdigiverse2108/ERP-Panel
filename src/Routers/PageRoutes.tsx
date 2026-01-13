@@ -19,6 +19,7 @@ import Stocks from "../Pages/Inventory/Stock";
 import StockForm from "../Pages/Inventory/Stock/StockForm";
 import NewPos from "../Pages/POS/New";
 import GeneralSetting from "../Pages/Settings/GeneralSetting";
+import ProductForm from "../Pages/Inventory/Product/ProductForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -33,6 +34,7 @@ export const PageRoutes = [
   { path: ROUTES.EMPLOYEE.ADD_EDIT, element: <EmployeeForm /> },
 
   { path: ROUTES.PRODUCT.BASE, element: <Product /> },
+  { path: ROUTES.PRODUCT.ADD_EDIT, element: <ProductForm /> },
 
   { path: ROUTES.STOCK.BASE, element: <Stocks /> },
   { path: ROUTES.STOCK.ADD_EDIT, element: <StockForm /> },

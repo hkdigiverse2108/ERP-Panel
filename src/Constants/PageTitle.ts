@@ -31,9 +31,10 @@ export const PAGE_TITLE = {
   INVENTORY: {
     BASE: "inventory",
     PRODUCT: {
-      BASE: "product",
+      BASE: "Product",
       ADD: "Add Product",
       EDIT: "Edit Product",
+      STOCK: "Available stock Product",
     },
     STOCK:{
       BASE:"stock",

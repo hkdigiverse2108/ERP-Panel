@@ -20,3 +20,5 @@ export * from "./Company";
 export * from "./Bank";
 export * from "./Category";
 export * from "./Recipe";
+export * from "./Tax";
+export * from "./Uom";

@@ -1,6 +1,14 @@
 import * as Yup from "yup";
 import { Validation } from "./Validation";
 
+const RequiredWhenTrue = (dependentField: string, message: string, baseSchema: Yup.AnySchema) => {
+  return baseSchema.when(dependentField, {
+    is: true,
+    then: (schema) => schema.required(`${message} is required`),
+    otherwise: (schema) => schema.notRequired(),
+  });
+};
+
 // ---------- Reusable helpers ----------
 
 // const ImageSchema = (label: string, required = true) => Validation("array", label, required ? { minItems: 1 } : { required: false });
@@ -216,4 +224,56 @@ export const ContactFormSchema = Yup.object({
     branch: Validation("string", "Bank Branch", { required: false }),
     accountNumber: Validation("string", "Account Number", { required: false }),
   }),
+});
+
+
+
+export const ProductFormSchema = Yup.object({
+  productType: Validation("string", "Product Type"),
+  name: Validation("string", "Product Name"),
+  printName: Validation("string", "Print Name"),
+  hsnCode: Validation("string", "HSN Code", { required: false }),
+  categoryId: Validation("string", "Category"),
+  subCategoryId: Validation("string", "Sub Category", { required: false }),
+  brandId: Validation("string", "Brand"),
+  subBrandId: Validation("string", "Sub Brand", { required: false }),
+  purchaseTaxId: Validation("string", "Purchase Tax"),
+  isPurchaseTaxIncluding: Yup.boolean(),
+  salesTaxId: Validation("string", "Sales Tax"),
+  isSalesTaxIncluding: Yup.boolean(),
+  cessPercentage: Validation("number", "Cess Percentage", { required: false }),
+  manageMultipleBatch: Validation("boolean", "Multiple Batch", { required: false }),
+  hasExpiry: RequiredWhenTrue("manageMultipleBatch", "Has Expiry", Yup.boolean()),
+  expiryDays: RequiredWhenTrue("hasExpiry", "Expiry Days", Yup.number()),
+  calculateExpiryOn: RequiredWhenTrue("hasExpiry", "Expiry Calculation", Yup.string()),
+  expiryReferenceDate: RequiredWhenTrue("hasExpiry", "Expiry Reference Date", Yup.string()),
+
+  isExpiryProductSaleable: Yup.boolean(),
+  ingredients: Validation("string", "Ingredients", { required: false }),
+  shortDescription: Validation("string", "Short Description", { required: false }),
+  description: Validation("string", "Description", { required: false }),
+  nutrition: Yup.array().of(
+    Yup.object({
+      name: Validation("string", "Nutrition Name", { required: false }),
+      value: Validation("string", "Nutrition Value", { required: false }),
+    })
+  ),
+  netWeight: Validation("number", "Net Weight", { required: false }),
+  masterQty: Validation("number", "Master Quantity", { required: false }),
+  purchasePrice: Validation("number", "Purchase Price"),
+  landingCost: Validation("number", "Landing Cost"),
+  mrp: Validation("number", "MRP"),
+  sellingDiscount: Validation("number", "Selling Discount"),
+  sellingPrice: Validation("number", "Selling Price"),
+  sellingMargin: Validation("number", "Selling Margin"),
+  retailerDiscount: Validation("number", "Retailer Discount"),
+  retailerPrice: Validation("number", "Retailer Price"),
+  retailerMargin: Validation("number", "Retailer Margin"),
+  wholesalerDiscount: Validation("number", "Wholesaler Discount"),
+  wholesalerMargin: Validation("number", "Wholesaler Margin"),
+  wholesalerPrice: Validation("number", "Wholesaler Price"),
+  minimumQty: Validation("number", "Minimum Quantity"),
+  openingQty: Validation("number", "Opening Quantity", { required: false }),
+  images: Yup.array().of(Yup.mixed().required("Image is required")).min(2, "At least two image is required"),
+  isActive: Yup.boolean(),
 });

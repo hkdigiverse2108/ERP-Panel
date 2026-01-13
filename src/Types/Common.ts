@@ -426,17 +426,36 @@ export interface CommonValidationRadioProps extends Omit<CommonRadioProps, "valu
 
 // ************ Radio End ***********
 
-interface AdvancedSearchFilterOption {
+// ************ Advanced Search Start ***********
+
+export interface AdvancedSearchFilterOption {
   label: string;
-  options: { label: string; value: string }[];
+  options: SelectOptionType[];
   value: string[];
   onChange: (values: string[]) => void;
   multiple?: boolean;
   limitTags?: number;
   grid?: GridType;
+  isLoading?: boolean;
 }
 
 export interface AdvancedSearchProps {
   children?: ReactNode;
   filter?: AdvancedSearchFilterOption[];
 }
+
+// ************ Advanced Search End ***********
+
+// ************ Quill Input Start ***********
+
+export interface CommonValidationQuillInputProps {
+  label?: string;
+  name: string;
+  required?: boolean;
+  placeholder?: string;
+  disabled?: boolean;
+  grid?: number | object;
+  modules?: any;
+}
+
+// ************ Quill Input End ***********

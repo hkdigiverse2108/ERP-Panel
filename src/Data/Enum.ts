@@ -16,7 +16,6 @@ export const EMPLOYEE_STATUS = ["active", "inactive"] as const;
 export const INVOICE_PAYMENT_STATUS = ["paid", "unpaid", "partial"] as const;
 export const LOYALTY_STATUS = ["active", "inactive"] as const;
 export const LOYALTY_TYPE = ["points", "cashback"] as const;
-export const PRODUCT_EXPIRY_TYPE = ["MFG", "expiry"] as const;
 export const SUPPLIER_PAYMENT_STATUS = ["paid", "unpaid", "partial"] as const;
 export const VOUCHAR_TYPE = ["journal", "payment", "receipt", "expense", "contra"] as const;
 
@@ -41,6 +40,10 @@ export const DEPARTMENT_OPTIONS = [
 ];
 
 export const UOM_OPTIONS = [{ label: "KG", value: "679a1c7f8f4e1a001234abd2" }];
+
+export const TOOLBAR_OPTIONS = [["bold", "italic", "underline"], ["blockquote", "code-block"], [{ header: 1 }, { header: 2 }], [{ list: "ordered" }, { list: "bullet" }, { list: "check" }], [{ script: "sub" }, { script: "super" }], [{ indent: "-1" }, { indent: "+1" }], [{ direction: "rtl" }], [{ size: ["small", false, "large", "huge"] }], [{ header: [1, 2, 3, 4, 5, 6, false] }], [{ color: [] }, { background: [] }], [{ align: [] }]];
+export const CHAT_TOOLBAR_OPTIONS = [["bold", "italic"], ["blockquote"], ["link"], [{ header: 1 }, { header: 2 }], [{ list: "ordered" }, { list: "bullet" }, { list: "check" }], [{ script: "sub" }, { script: "super" }], [{ indent: "-1" }, { indent: "+1" }], [{ header: [1, 2, 3, 4, 5, 6, false] }], [{ align: [] }], ["clean"]];
+
 
 export const TAX_OPTIONS = [
   { label: "NON GST 0", value: "NON_GST_0" },
@@ -216,4 +219,9 @@ export const DATE_FORMATS = [
   { label: "DD-MM-YYYY", value: "DD-MM-YYYY" },
   { label: "DD.MM.YYYY", value: "DD.MM.YYYY" },
   { label: "DD Month YYYY", value: "DD MMMM YYYY" },
+];
+
+export const PRODUCT_EXPIRY_TYPE = [
+  { label: "MFG", value: "MFG" },
+  { label: "EXP", value: "expiry" },
 ];
