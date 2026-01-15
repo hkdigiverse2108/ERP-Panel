@@ -13,13 +13,15 @@ import Dashboard from "../Pages/Dashboard";
 import Employees from "../Pages/Employee";
 import EmployeeForm from "../Pages/Employee/EmployeeForm";
 import Product from "../Pages/Inventory/Product";
+import ItemForm from "../Pages/Inventory/Product/ItemForm";
+import ProductForm from "../Pages/Inventory/Product/ProductForm";
 import Recipe from "../Pages/Inventory/Recipe";
 import RecipeForm from "../Pages/Inventory/Recipe/RecipeFrom";
 import Stocks from "../Pages/Inventory/Stock";
-import StockForm from "../Pages/Inventory/Stock/StockForm";
+import StockVerification from "../Pages/Inventory/StockVerification";
 import NewPos from "../Pages/POS/New";
 import GeneralSetting from "../Pages/Settings/GeneralSetting";
-import ProductForm from "../Pages/Inventory/Product/ProductForm";
+import StockVerificationForm from "../Pages/Inventory/StockVerification/StockVerificationForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -35,9 +37,11 @@ export const PageRoutes = [
 
   { path: ROUTES.PRODUCT.BASE, element: <Product /> },
   { path: ROUTES.PRODUCT.ADD_EDIT, element: <ProductForm /> },
+  { path: ROUTES.PRODUCT.ITEM_ADD_EDIT, element: <ItemForm /> },
 
   { path: ROUTES.STOCK.BASE, element: <Stocks /> },
-  { path: ROUTES.STOCK.ADD_EDIT, element: <StockForm /> },
+  { path: ROUTES.STOCK_VERIFICATION.BASE, element: <StockVerification /> },
+  { path: ROUTES.STOCK_VERIFICATION.ADD_EDIT, element: <StockVerificationForm /> },
 
   { path: ROUTES.CONTACT.BASE, element: <Contact /> },
   { path: ROUTES.CONTACT.ADD_EDIT, element: <ContactForm /> },

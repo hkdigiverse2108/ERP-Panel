@@ -10,7 +10,7 @@ import { BREADCRUMBS, DEPARTMENT_OPTIONS } from "../../../Data";
 import { GenerateOptions } from "../../../Utils";
 import type { ProductBase } from "../../../Types";
 
-const StockForm = () => {
+const StockVerificationForm = () => {
   const [searchValue, setSearchValue] = useState<string[]>([""]);
   const [enterRemark, setEnterRemark] = useState("");
 
@@ -180,4 +180,4 @@ const StockForm = () => {
   );
 };
 
-export default StockForm;
+export default StockVerificationForm;

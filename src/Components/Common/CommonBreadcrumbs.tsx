@@ -4,7 +4,7 @@ import type { BreadcrumbHeaderProps, BreadcrumbItem } from "../../Types";
 import { ROUTES } from "../../Constants";
 import { Link } from "react-router-dom";
 
-const CommonBreadcrumbs: FC<BreadcrumbHeaderProps> = ({ title, maxItems = 2, breadcrumbs = [] }) => {
+const CommonBreadcrumbs: FC<BreadcrumbHeaderProps> = ({ title, maxItems = 3, breadcrumbs = [] }) => {
   const finalBreadcrumbs: BreadcrumbItem[] = [{ label: "Home", href: ROUTES.DASHBOARD }, ...breadcrumbs];
   const validMaxItems = Math.max(maxItems, 2);
   

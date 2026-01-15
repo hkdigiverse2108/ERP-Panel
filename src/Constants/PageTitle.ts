@@ -34,12 +34,21 @@ export const PAGE_TITLE = {
       BASE: "Product",
       ADD: "Add Product",
       EDIT: "Edit Product",
-      STOCK: "Available stock Product",
+      ITEM: {
+        BASE: "Available Product Item",
+        ADD: "Add Product Item",
+        EDIT: "Edit Product Item",
+      },
     },
-    STOCK:{
-      BASE:"stock",
-      ADD:"Add Stock",
-      EDIT:"Edit Stock"
+    STOCK: {
+      BASE: "stock",
+      ADD: "Add Stock",
+      EDIT: "Edit Stock",
+    },
+    STOCK_VERIFICATION: {
+      BASE: "stock verification",
+      ADD: "Add Stock Verification",
+      EDIT: "Edit Stock Verification",
     },
     RECIPE: {
       BASE: "recipe",

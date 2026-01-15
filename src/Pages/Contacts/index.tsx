@@ -31,8 +31,8 @@ const Contact = () => {
 
   const columns: AppGridColDef<ContactBase>[] = [
     { field: "firstName", headerName: "Name", flex: 1 },
-    CommonPhoneColumns<ContactBase>("phoneNo", "Phone No"),
-    CommonPhoneColumns<ContactBase>("whatsappNo", "WhatsApp No"),
+    CommonPhoneColumns<ContactBase>("phoneNo", { headerName: "Phone No" }),
+    CommonPhoneColumns<ContactBase>("whatsappNo", { headerName: "WhatsApp No" }),
     { field: "addressDetails.gstIn", headerName: "GSTIN", flex: 1 },
     { field: "createdBy", headerName: "Created By", flex: 1 },
     { field: "loyaltyPoints", headerName: "Loyalty Point", flex: 1 },

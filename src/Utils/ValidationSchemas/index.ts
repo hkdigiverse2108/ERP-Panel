@@ -277,3 +277,15 @@ export const ProductFormSchema = Yup.object({
   images: Yup.array().of(Yup.mixed().required("Image is required")).min(2, "At least two image is required"),
   isActive: Yup.boolean(),
 });
+
+export const ProductItemFormSchema = Yup.object({
+  productId: Validation("string", "Product"),
+  uomId: Validation("string", "UOM"),
+  purchasePrice: Validation("number", "Purchase Price"),
+  landingCost: Validation("number", "Landing Cost"),
+  mrp: Validation("number", "MRP"),
+  sellingDiscount: Validation("number", "Selling Discount"),
+  sellingPrice: Validation("number", "Selling Price"),
+  sellingMargin: Validation("number", "Selling Margin"),
+  qty: Validation("number", "Quantity"),
+});

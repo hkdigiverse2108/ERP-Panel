@@ -23,7 +23,7 @@ export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows
   /* -----------------------------------------------
      Filter exportable columns
   ----------------------------------------------- */
-  const exportableColumns = columns.filter((col) => !col.disableExport && col.field !== "actions");
+  const exportableColumns = columns.filter((col) => !col.disableExport && col.field !== "actions" && col.field !== "images");
 
   /* -----------------------------------------------
      Table headers
@@ -39,9 +39,9 @@ export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows
 
       const rawValue = (row as Record<string, unknown>)[col.field];
 
-   if ("exportFormatter" in col && typeof col.exportFormatter === "function") {
-      return col.exportFormatter(rawValue, row);
-    }
+      if ("exportFormatter" in col && typeof col.exportFormatter === "function") {
+        return col.exportFormatter(rawValue, row);
+      }
 
       return normalizeExportValue(rawValue);
     })

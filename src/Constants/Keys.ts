@@ -78,12 +78,10 @@ export const KEYS = {
     DELETE: "product-delete",
   },
   STOCK: {
-    ROOT: ["stock"],
-    ALL: ["stock", "all"],
-    DETAILS: (id: string) => ["stock", "detail", id],
+    BASE: "stock",
+    ADD: "stock-add",
   },
   CALL_REQUEST: {
-    ROOT: ["call-request"],
     ADD: "call-request",
   },
   BANK: {
