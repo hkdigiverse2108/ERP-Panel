@@ -10,7 +10,7 @@ export interface ContactFormValues {
   customerCategory?: string;
   paymentMode?: string;
   paymentTerms?: string;
-  openingBalance?:{
+  openingBalance?: {
     creditBalance?: string;
     debitBalance?: string;
   };
@@ -18,7 +18,6 @@ export interface ContactFormValues {
   vendorType?: string;
   addressDetails?: AddressDetailsArray;
   isActive?: boolean;
-  _submitAction?: "save" | "saveAndNew";
   loyaltyPoints?: number;
   dob?: string;
   anniversaryDate?: string;
@@ -28,6 +27,7 @@ export interface ContactFormValues {
   bankDetails?: bankDetails;
   transporterId?: string;
   companyName?: string;
+  _submitAction?: "save" | "saveAndNew";
 }
 export interface AddressDetails {
   gstType: string;
@@ -48,17 +48,16 @@ export interface AddressDetails {
 
 export type AddressDetailsArray = AddressDetails[];
 
-
 export interface bankDetails {
-ifscCode?: string;
-name?: string;
-branch?: string;
-accountNumber?: string;
+  ifscCode?: string;
+  name?: string;
+  branch?: string;
+  accountNumber?: string;
 }
 
 export type AddContactPayload = ContactFormValues;
 
-export type EditContactPayload = AddContactPayload & { userId: string };
+export type EditContactPayload = AddContactPayload & { contactId: string };
 
 export interface ContactBase extends Omit<ContactFormValues, "parentContactId">, CommonDataType {
   parentContactId?: ContactBase;
@@ -71,4 +70,3 @@ export interface ContactDataResponse extends PageStatus {
 export interface ContactApiResponse extends MessageStatus {
   data: ContactDataResponse;
 }
-

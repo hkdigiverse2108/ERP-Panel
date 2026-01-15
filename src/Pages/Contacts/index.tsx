@@ -31,13 +31,12 @@ const Contact = () => {
 
   const columns: AppGridColDef<ContactBase>[] = [
     { field: "firstName", headerName: "Name", flex: 1 },
-    CommonPhoneColumns<ContactBase>("phoneNo", "Phone No"),
-    CommonPhoneColumns<ContactBase>("whatsappNo", "WhatsApp No"),
+    CommonPhoneColumns<ContactBase>("phoneNo", { headerName: "Phone No" }),
+    CommonPhoneColumns<ContactBase>("whatsappNo", { headerName: "WhatsApp No" }),
     { field: "addressDetails.gstIn", headerName: "GSTIN", flex: 1 },
-    { field: "createdBy", headerName: "Created By", flex: 1 },
     { field: "loyaltyPoints", headerName: "Loyalty Point", flex: 1 },
     CommonActionColumn({
-      active: (row) => editContact({ userId: row?._id, isActive: !row.isActive }),
+      active: (row) => editContact({ contactId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.CONTACT.ADD_EDIT,
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.firstName }),
     }),
@@ -57,6 +56,7 @@ const Contact = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    defaultHidden: [],
   };
 
   const topContent = <CommonRadio value={contactType} onChange={setContactType} options={CONTACT_TYPE} grid={{ xs: "auto" }} />;
@@ -66,7 +66,9 @@ const Contact = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.CONTACT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.CONTACT.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <CommonCard topContent={topContent}><CommonDataGrid {...CommonDataGridOption} /> </CommonCard>
+        <CommonCard topContent={topContent}>
+          <CommonDataGrid {...CommonDataGridOption} />{" "}
+        </CommonCard>
 
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       </Box>

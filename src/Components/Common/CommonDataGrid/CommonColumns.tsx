@@ -27,14 +27,20 @@ export const CommonPhoneColumns = <T extends GridValidRowModel, K extends keyof 
 
     // ✅ UI display
     renderCell: (params) => {
-      const phone = params.row?.[colField] as PhoneNumberType | undefined;
-      return phone ? `+${phone.countryCode} ${phone.phoneNo}` : "-";
+      const phone = params.value as PhoneNumberType | null | undefined;
+
+      if (!phone || typeof phone !== "object") return "-";
+
+      return phone.countryCode && phone.phoneNo ? `+${phone.countryCode} ${phone.phoneNo}` : "-";
     },
 
-    // ✅ Export (PDF / Excel / CSV)
+    // ✅ Export safe
     exportFormatter: (value) => {
-      const phone = value as PhoneNumberType | null;
-      return phone ? `+${phone.countryCode} ${phone.phoneNo}` : "-";
+      const phone = value as PhoneNumberType | null | undefined;
+
+      if (!phone || typeof phone !== "object") return "-";
+
+      return phone.countryCode && phone.phoneNo ? `+${phone.countryCode} ${phone.phoneNo}` : "-";
     },
   };
 };
