@@ -41,7 +41,7 @@ const ContactForm = () => {
     city: addr?.city || "",
     pinCode: addr?.pinCode || "",
     contactCompanyName: addr?.contactCompanyName || "",
-  
+
     contactNo: {
       countryCode: addr?.contactNo?.countryCode || "",
       phoneNo: addr?.contactNo?.phoneNo != null ? String(addr.contactNo.phoneNo) : "",
@@ -80,7 +80,7 @@ const ContactForm = () => {
     supplierType: data?.supplier || "",
     transporterId: data?.transporterId || "",
     companyName: data?.companyName || "",
-      tanNo: data?.tanNo || "",
+    tanNo: data?.tanNo || "",
 
     // ADDRESS DETAILS
     addressDetails: data?.addressDetails?.length ? data.addressDetails.map(mapAddress) : [mapAddress()],
