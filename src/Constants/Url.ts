@@ -84,6 +84,14 @@ export const URL_KEYS = {
     BASE: "/stock",
     ALL: "/stock/all",
     ADD: "/stock/add",
+    BULK_ADJUSTMENT: "/stock/bulk-adjustment",
+  },
+
+  STOCK_VERIFICATION: {
+    BASE: "/stock-verification",
+    ALL: "/stock-verification/all",
+    ADD: "/stock-verification/add",
+    EDIT: "/stock-verification/edit",
   },
 
   CALL_REQUEST: {

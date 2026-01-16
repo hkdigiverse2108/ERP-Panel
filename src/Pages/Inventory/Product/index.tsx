@@ -2,18 +2,21 @@ import { Box, Grid } from "@mui/material";
 import type { GridRenderCellParams } from "@mui/x-data-grid";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Queries } from "../../../Api";
-import { CommonButton, CommonTextField } from "../../../Attribute";
-import { AdvancedSearch, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonObjectNameColumn } from "../../../Components/Common";
+import { Mutations, Queries } from "../../../Api";
+import { CommonButton, CommonTextField, CommonValidationSelect } from "../../../Attribute";
+import { AdvancedSearch, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS, PRODUCT_TYPE_OPTIONS } from "../../../Data";
+import { BREADCRUMBS, CONSUMPTION_TYPE, PRODUCT_TYPE_OPTIONS } from "../../../Data";
 import type { AppGridColDef, ProductBase, ProductWithRemoveQty } from "../../../Types";
 import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
+import { Form, Formik } from "formik";
+import { ProductItemRemoveFormSchema } from "../../../Utils/ValidationSchemas";
 
 const Product = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
   const [isRemoveItem, setRemoveItem] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -26,17 +29,32 @@ const Product = () => {
   const subCategoryId = advancedFilter?.categoryFilter?.[0] || "";
   const { data: subCategoryData, isLoading: subCategoryDataLoading } = Queries.useGetCategoryDropdown({ parentCategoryFilter: subCategoryId }, Boolean(subCategoryId));
 
+  const { mutate: addStockBulkAdjustment, isPending: isAddLoading } = Mutations.useAddStockBulkAdjustment();
+
   const allProduct = useMemo<ProductWithRemoveQty[]>(() => productData?.data?.product_data.map((emp) => ({ ...emp, id: emp?._id, removeQty: null })) || [], [productData]);
   const totalRows = productData?.data?.totalData || 0;
 
   const [gridRows, setGridRows] = useState<ProductWithRemoveQty[]>([]);
-  const data = gridRows.filter((r) => r.removeQty !== null);
-  console.log("data", data);
 
   useEffect(() => setGridRows(allProduct), [allProduct]);
 
   const handleAdd = () => navigate(ROUTES.PRODUCT.ADD_EDIT);
   const handleAddItem = () => navigate(ROUTES.PRODUCT.ITEM_ADD_EDIT);
+
+  const data = gridRows.filter((r) => r.removeQty != null).map(({ removeQty, _id }) => ({ qty: removeQty, productId: _id }));
+
+  const handleRemoveItem = async (values: { remark: string }) => {
+    const obj = {
+      items: data,
+      remark: values.remark,
+    };
+    await addStockBulkAdjustment(obj, {
+      onSuccess: () => {
+        setRemoveItem(!isRemoveItem);
+        setOpenModal(!openModal);
+      },
+    });
+  };
 
   const columns: AppGridColDef<ProductBase>[] = [
     {
@@ -106,10 +124,10 @@ const Product = () => {
     <Grid size={"auto"}>
       <Grid container spacing={1}>
         <Grid size={"auto"}>
-          <CommonButton variant="contained" title="Add Item" onClick={handleAddItem} />
+          <CommonButton variant="contained" title="Add Item" size="medium" onClick={handleAddItem} />
         </Grid>
         <Grid size={"auto"}>
-          <CommonButton variant="contained" title="Remove Item" onClick={() => setRemoveItem(!isRemoveItem)} />
+          <CommonButton variant="contained" title="Remove Item" size="medium" onClick={() => setRemoveItem(!isRemoveItem)} />
         </Grid>
       </Grid>
     </Grid>
@@ -122,7 +140,25 @@ const Product = () => {
         <AdvancedSearch filter={filter} />
         <CommonCard title={PAGE_TITLE.INVENTORY.PRODUCT.ITEM.BASE} topContent={topContent}>
           <CommonDataGrid {...CommonDataGridOption} />
+          {isRemoveItem && (
+            <Grid container sx={{ p: 2 }}>
+              <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
+                <CommonButton variant="outlined" onClick={() => setRemoveItem(!isRemoveItem)} title="Cancel" />
+                <CommonButton type="submit" variant="contained" title="Save" disabled={data.length === 0} loading={isAddLoading} onClick={() => setOpenModal(!openModal)} />
+              </Grid>
+            </Grid>
+          )}
         </CommonCard>
+        <CommonModal title="Remove Item" isOpen={openModal} onClose={() => setOpenModal(!openModal)} className="max-w-125 m-2 sm:m-5">
+          <Formik initialValues={{ remark: "" }} enableReinitialize validationSchema={ProductItemRemoveFormSchema} onSubmit={handleRemoveItem}>
+            <Form noValidate>
+              <Grid sx={{ p: 1 }} container spacing={2}>
+                <CommonValidationSelect name="remark" label="Consumption Type" options={CONSUMPTION_TYPE} grid={{ xs: 12 }} required />
+                <CommonButton type="submit" variant="contained" title="Save" size="medium" loading={isAddLoading} fullWidth grid={{ xs: 12 }} />
+              </Grid>
+            </Form>
+          </Formik>
+        </CommonModal>
       </Box>
     </>
   );

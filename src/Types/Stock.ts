@@ -18,6 +18,14 @@ export type AddStockPayload = StockFormValues;
 
 export type EditStockPayload = AddStockPayload & { stockId: string };
 
+export type AddStockBulkAdjustmentPayload = {
+  items: {
+    qty: number | null;
+    productId: string;
+  }[];
+  remark: string;
+};
+
 export type StockBase = StockFormValues & CommonDataType;
 
 export interface StockDataResponse extends PageStatus {

@@ -23,7 +23,7 @@ const Stock = () => {
     CommonObjectNameColumn("subCategoryId", { headerName: "Sub Category Name", width: 200 }),
     CommonObjectNameColumn("brandId", { headerName: "Brand Name", width: 200 }),
     CommonObjectNameColumn("subBrandId", { headerName: "Sub Brand Name", width: 200 }),
-    { field: "qty", headerName: "Available Qty", flex: 1, minWidth: 150 },
+    { field: "availableQty", headerName: "Available Qty", flex: 1, minWidth: 150 },
   ];
 
   const CommonDataGridOption = {

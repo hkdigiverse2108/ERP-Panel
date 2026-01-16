@@ -58,4 +58,6 @@ export const Queries = {
   //*************** stock **************** */
   useGetStock: (params?: Params) => useQueries<StockApiResponse>([KEYS.STOCK.BASE, params], () => Get(URL_KEYS.STOCK.ALL, params)),
 
+  useGetStockVerification: (params?: Params) => useQueries<StockApiResponse>([KEYS.STOCK_VERIFICATION.BASE, params], () => Get(URL_KEYS.STOCK_VERIFICATION.ALL, params)),
+
 };

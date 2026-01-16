@@ -80,6 +80,11 @@ export const KEYS = {
   STOCK: {
     BASE: "stock",
     ADD: "stock-add",
+    BULK_ADJUSTMENT: "stock-bulk-adjustment",
+  },
+  STOCK_VERIFICATION: {
+    BASE: "stock-verification",
+    ADD: "stock-verification-add",
   },
   CALL_REQUEST: {
     ADD: "call-request",

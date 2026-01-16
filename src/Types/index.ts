@@ -8,7 +8,7 @@ export * from "./Announcement";
 export * from "./Roles";
 export * from "./CallRequest";
 export * from "./Product";
-// export * from "./Stock";
+export * from "./Stock";
 export * from "./Contacts";
 // export * from "./Bank";
 // export * from "./Transaction";

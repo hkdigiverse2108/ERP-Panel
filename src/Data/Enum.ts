@@ -225,3 +225,10 @@ export const PRODUCT_EXPIRY_TYPE = [
   { label: "MFG", value: "MFG" },
   { label: "EXP", value: "expiry" },
 ];
+
+export const CONSUMPTION_TYPE= [
+  { label: "Expired", value: "expired" },
+  { label: "Sample", value: "sample" },
+  { label: "Production", value: "production" },
+  { label: "Scrap/Wastage", value: "scrap/wastage" },
+]

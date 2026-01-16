@@ -316,3 +316,7 @@ export const ProductItemFormSchema = Yup.object({
   sellingMargin: Validation("number", "Selling Margin"),
   qty: Validation("number", "Quantity"),
 });
+
+export const ProductItemRemoveFormSchema = Yup.object({
+  remark: Validation("string", "Consumption Type"),
+});

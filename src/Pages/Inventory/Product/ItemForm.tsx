@@ -7,7 +7,7 @@ import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../C
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { StockFormValues } from "../../../Types/Stock";
-import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
+import { GenerateOptions, RemoveEmptyFields } from "../../../Utils";
 import { ProductItemFormSchema } from "../../../Utils/ValidationSchemas";
 
 const ItemForm = () => {
@@ -19,7 +19,6 @@ const ItemForm = () => {
   const { data: UOMData, isLoading: UOMDataLoading } = Queries.useGetUomDropdown();
 
   const { mutate: addStock, isPending: isAddLoading } = Mutations.useAddStock();
-  const { mutate: editProduct, isPending: isEditLoading } = Mutations.useEditProduct();
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
@@ -44,12 +43,8 @@ const ItemForm = () => {
       if (_submitAction === "saveAndNew") resetForm();
       else navigate(-1);
     };
-    if (isEditing) {
-      const changedFields = GetChangedFields(rest, data);
-      await editProduct({ ...changedFields, productId: data._id }, { onSuccess: handleSuccess });
-    } else {
       await addStock(RemoveEmptyFields(rest), { onSuccess: handleSuccess });
-    }
+   
   };
 
   return (
@@ -79,7 +74,7 @@ const ItemForm = () => {
                   </CommonCard>
 
                   {/* ---------- ACTION BAR ---------- */}
-                  <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isAddLoading || isEditLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                  <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isAddLoading } onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
                 </Grid>
               </Form>
             );

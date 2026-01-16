@@ -442,6 +442,7 @@ export interface AdvancedSearchFilterOption {
 export interface AdvancedSearchProps {
   children?: ReactNode;
   filter?: AdvancedSearchFilterOption[];
+  defaultExpanded?: boolean;
 }
 
 // ************ Advanced Search End ***********
