@@ -16,20 +16,17 @@ export interface FinalRecipeProduct extends RecipeProductItem {
 
 export interface RecipeFormValues {
   id?: string;
-  recipeName?: string;
-  recipeDate?: string | Date;
+  Name?: string;
+  Date?: string | Date;
   recipeNo?: string;
-  recipeType?: string;
+  Type?: string;
   companyId?: string;
   rawProducts?: RawRecipeProduct[];
   rawrecipeId?: string;
-  finalProducts?: FinalRecipeProduct[];
-  status?: "active" | "inactive";
+  finalProducts?: FinalRecipeProduct;
   _submitAction?: string;
    isActive?: boolean;
   value?: { length: number };
-  
-
 }
 
 export type AddRecipePayload = RecipeFormValues;

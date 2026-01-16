@@ -4,19 +4,20 @@ import { Box, Grid } from "@mui/material";
 import { FieldArray, Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonButton, CommonDatePicker, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
+import { CommonButton, CommonSwitch, CommonValidationDatePicker, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, RECIPE_TYPE_OPTIONS } from "../../../Data";
+import { useAppSelector } from "../../../Store/hooks";
 import type { RecipeFormValues } from "../../../Types";
-import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
+import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { RecipeFormSchema } from "../../../Utils/ValidationSchemas";
-import dayjs from "dayjs";
 
 const RecipeForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
+  const { company } = useAppSelector((state) => state.company);
 
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
@@ -26,39 +27,34 @@ const RecipeForm = () => {
   const { mutate: editRecipe, isPending: isEditLoading } = Mutations.useEditRecipe();
 
   const initialValues: RecipeFormValues = {
-    recipeName: data?.recipeName || "",
-    recipeNo: data?.recipeNo || "",
-    recipeDate: data?.recipeDate ?? null,
-    recipeType: data?.recipeType || "",
-
+    Name: data?.Name || "",
+    recipeNo: data?.No || "",
+    Date: data?.Date || DateConfig.utc().toISOString(),
+    Type: data?.recipeType || "",
+    isActive: data?.isActive ?? true,
     rawProducts: [
       {
         productId: data?.rawProducts?.[0]?.productId ?? "",
-        itemCode: "",
         mrp: data?.rawProducts?.[0]?.mrp ?? null,
         useQty: data?.rawProducts?.[0]?.useQty ?? null,
       },
     ],
 
-    finalProducts: [
-      {
-        productId: data?.finalProducts?.[0]?.productId ?? "",
-        itemCode: "",
-        mrp: data?.finalProducts?.[0]?.mrp ?? null,
-        qtyGenerate: data?.finalProducts?.[0]?.qtyGenerate ?? null,
-      },
-    ],
+    finalProducts: {
+      productId: data?.finalProducts?.productId ?? "",
+      mrp: data?.finalProducts?.mrp ?? null,
+      qtyGenerate: data?.finalProducts?.qtyGenerate ?? null,
+    },
   };
 
   const handleSubmit = async (values: RecipeFormValues, { resetForm }: FormikHelpers<RecipeFormValues>) => {
     const { _submitAction, ...rest } = values;
-    const payload = { ...rest };
+    const payload = { ...rest, companyId: company!._id };
 
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
       else navigate(-1);
     };
-
     if (isEditing) {
       const changedFields = GetChangedFields(payload, data);
       await editRecipe({ ...changedFields, recipeId: data._id }, { onSuccess: handleSuccess });
@@ -66,7 +62,6 @@ const RecipeForm = () => {
       await addRecipe(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
   };
-
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.RECIPE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.RECIPE[pageMode]} />
@@ -79,10 +74,10 @@ const RecipeForm = () => {
                 {/* BASIC DETAILS */}
                 <CommonCard title="Recipe Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationTextField name="recipeName" label="Recipe Name" required grid={{ xs: 12, md: 3 }} />
+                    <CommonValidationTextField name="Name" label="Recipe Name" required grid={{ xs: 12, md: 3 }} />
                     <CommonValidationTextField name="recipeNo" label="Recipe No" required grid={{ xs: 12, md: 3 }} />
-                    <CommonDatePicker name="recipeDate" label="Recipe Date" grid={{ xs: 12, md: 3 }} value={values.recipeDate ? dayjs(values.recipeDate) : null} onChange={(value) => setFieldValue("recipeDate", value ? value.toISOString() : "")} />
-                    <CommonValidationSelect name="recipeType" label="Recipe Type" options={RECIPE_TYPE_OPTIONS} required grid={{ xs: 12, md: 3 }} />
+                    <CommonValidationDatePicker name="Date" label="Recipe Date" grid={{ xs: 12, md: 3 }} />
+                    <CommonValidationSelect name="Type" label="Recipe Type" options={RECIPE_TYPE_OPTIONS} required grid={{ xs: 12, md: 3 }} />
                   </Grid>
                 </CommonCard>
 
@@ -130,45 +125,25 @@ const RecipeForm = () => {
                 {/* FINAL PRODUCTS */}
                 <CommonCard title="Final Products" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <FieldArray name="finalProducts">
-                      {({ push, remove }) =>
-                        values.finalProducts?.map((_, index) => (
-                          <>
-                            <CommonValidationSelect name={`finalProducts.${index}.productId`} label="Product" options={GenerateOptions(productData?.data.product_data)} required grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="finalProducts.productId" label="Product" options={GenerateOptions(productData?.data.product_data)} required grid={{ xs: 12, md: 4 }} />
 
-                            <CommonValidationTextField name={`finalProducts.${index}.qtyGenerate`} label="Qty Generate" type="number" required grid={{ xs: 12, md: 3 }} />
+                    <CommonValidationTextField name="finalProducts.qtyGenerate" label="Qty Generate" type="number" required grid={{ xs: 12, md: 3 }} />
 
-                            <CommonValidationTextField name={`finalProducts.${index}.mrp`} label="MRP" type="number" grid={{ xs: 12, md: 3 }} />
-
-                            <Grid gap={1}>
-                              {(values?.finalProducts?.length || 0) > 1 && (
-                                <CommonButton size="small" variant="outlined" color="error" onClick={() => remove(index)}>
-                                  <DeleteIcon />
-                                </CommonButton>
-                              )}
-
-                              {index === (values.finalProducts?.length || 1) - 1 && (
-                                <CommonButton size="small" variant="outlined" onClick={() => push({ productId: "", itemCode: "", mrp: null, qtyGenerate: null })}>
-                                  <AddIcon />
-                                </CommonButton>
-                              )}
-                            </Grid>
-                          </>
-                        ))
-                      }
-                    </FieldArray>
+                    <CommonValidationTextField name="finalProducts.mrp" label="MRP" type="number" grid={{ xs: 12, md: 3 }} />
                   </Grid>
                 </CommonCard>
+
+                {!isEditing && <CommonSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                 <CommonBottomActionBar
                   save={isEditing}
                   clear={!isEditing}
                   disabled={!dirty}
-                  isLoading={isAddLoading || isEditLoading}
+                  isLoading={isEditLoading || isAddLoading}
                   onClear={() => resetForm({ values: initialValues })}
-                  onSave={async () => {
+                  onSave={() => {
                     setFieldValue("_submitAction", "save");
                   }}
-                  onSaveAndNew={async () => {
+                  onSaveAndNew={() => {
                     setFieldValue("_submitAction", "saveAndNew");
                   }}
                 />

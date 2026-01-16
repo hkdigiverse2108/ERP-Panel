@@ -169,8 +169,24 @@ export const RecipeFormSchema = Yup.object({
   recipeDate: Validation("string", "Recipe Date"),
   recipeNo: Validation("string", "Recipe No"),
   recipeType: Validation("string", "Recipe Type"),
-});
 
+  rawProducts: Yup.array()
+    .of(
+      Yup.object({
+        productId: Validation("string", "Product"),
+        useQty: Validation("number", "Use Qty").required("Use Qty is required"),
+        mrp: Validation("number", "MRP").nullable(),
+      })
+    )
+    .min(1, "At least one raw product is required"),
+
+  // FINAL PRODUCTS (OBJECT)
+  finalProducts: Yup.object({
+    productId: Validation("string", "Product"),
+    qtyGenerate: Validation("number", "Qty Generate").required("Qty Generate is required"),
+    mrp: Validation("number", "MRP").nullable(),
+  }),
+});
 
 const AddressSchema = Yup.object().shape({
   gstType: Validation("string", "GST Type"),
@@ -252,8 +268,6 @@ export const getContactFormSchema = () => {
     }),
   });
 };
-
-
 
 export const ProductFormSchema = Yup.object({
   productType: Validation("string", "Product Type"),
