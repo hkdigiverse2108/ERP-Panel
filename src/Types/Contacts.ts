@@ -10,6 +10,7 @@ export interface ContactFormValues {
   customerCategory?: string;
   paymentMode?: string;
   paymentTerms?: string;
+  tanNo?: string;
   openingBalance?: {
     creditBalance?: string;
     debitBalance?: string;
@@ -42,7 +43,7 @@ export interface AddressDetails {
   state: string;
   city: string;
   pinCode: string;
-  tanNo: string;
+
   contactCompanyName: string;
 }
 

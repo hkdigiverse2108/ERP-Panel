@@ -41,7 +41,7 @@ const ContactForm = () => {
     city: addr?.city || "",
     pinCode: addr?.pinCode || "",
     contactCompanyName: addr?.contactCompanyName || "",
-    tanNo: addr?.tanNo || "",
+  
     contactNo: {
       countryCode: addr?.contactNo?.countryCode || "",
       phoneNo: addr?.contactNo?.phoneNo != null ? String(addr.contactNo.phoneNo) : "",
@@ -80,6 +80,7 @@ const ContactForm = () => {
     supplierType: data?.supplier || "",
     transporterId: data?.transporterId || "",
     companyName: data?.companyName || "",
+      tanNo: data?.tanNo || "",
 
     // ADDRESS DETAILS
     addressDetails: data?.addressDetails?.length ? data.addressDetails.map(mapAddress) : [mapAddress()],
@@ -154,7 +155,7 @@ const ContactForm = () => {
                     <CommonValidationSelect name="paymentTerms" label="Payment Terms" options={PAYMENT_TERMS} grid={{ xs: 12, md: 6 }} />
                     <CommonTextField name="openingBalance.debitBalance" label="Debit Balance" grid={{ xs: 12, md: 3 }} />
                     <CommonTextField name="openingBalance.creditBalance" label="Credit Balance" grid={{ xs: 12, md: 3 }} />
-                    {contactType === "supplier" && <CommonTextField name="addressDetails.tanNo" label="Tan No" type="number" grid={{ xs: 12, md: 6 }} />}
+                    {contactType === "supplier" && <CommonTextField name="tanNo" label="Tan No"  grid={{ xs: 12, md: 6 }} />}
                     {contactType === "customer" && <CommonValidationSelect name="customerCategory" label="Customer Category" options={CUSTOMER_CATEGORY} grid={{ xs: 12, md: 6 }} />}
                     <CommonValidationDatePicker name="dob" label="Date Of Birth" grid={{ xs: 12, md: 3 }} />
                     <CommonValidationDatePicker name="anniversaryDate" label="anniversary Date" grid={{ xs: 12, md: 3 }} />
