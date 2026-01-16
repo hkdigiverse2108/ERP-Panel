@@ -1,17 +1,20 @@
 import { Box, Grid } from "@mui/material";
-import { useMemo } from "react";
+import type { GridRenderCellParams } from "@mui/x-data-grid";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Mutations, Queries } from "../../../Api";
-import { CommonButton } from "../../../Attribute";
-import { AdvancedSearch, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
+import { Queries } from "../../../Api";
+import { CommonButton, CommonTextField } from "../../../Attribute";
+import { AdvancedSearch, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, PRODUCT_TYPE_OPTIONS } from "../../../Data";
-import type { AppGridColDef, ProductBase } from "../../../Types";
+import type { AppGridColDef, ProductBase, ProductWithRemoveQty } from "../../../Types";
 import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
 
 const Product = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
+  const [isRemoveItem, setRemoveItem] = useState(false);
+
   const navigate = useNavigate();
 
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
@@ -23,41 +26,61 @@ const Product = () => {
   const subCategoryId = advancedFilter?.categoryFilter?.[0] || "";
   const { data: subCategoryData, isLoading: subCategoryDataLoading } = Queries.useGetCategoryDropdown({ parentCategoryFilter: subCategoryId }, Boolean(subCategoryId));
 
-  // const { mutate: editProduct, isPending: isEditLoading } = Mutations.useEditProduct();
-  const { mutate: deleteProductMutate } = Mutations.useDeleteProduct();
-
-  const allProduct = useMemo(() => productData?.data?.product_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [productData]);
+  const allProduct = useMemo<ProductWithRemoveQty[]>(() => productData?.data?.product_data.map((emp) => ({ ...emp, id: emp?._id, removeQty: null })) || [], [productData]);
   const totalRows = productData?.data?.totalData || 0;
 
-  const handleAdd = () => navigate(ROUTES.PRODUCT.ADD_EDIT);
+  const [gridRows, setGridRows] = useState<ProductWithRemoveQty[]>([]);
+  const data = gridRows.filter((r) => r.removeQty !== null);
+  console.log("data", data);
 
-  const handleDeleteBtn = () => {
-    if (!rowToDelete) return;
-    deleteProductMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
-  };
+  useEffect(() => setGridRows(allProduct), [allProduct]);
+
+  const handleAdd = () => navigate(ROUTES.PRODUCT.ADD_EDIT);
+  const handleAddItem = () => navigate(ROUTES.PRODUCT.ITEM_ADD_EDIT);
 
   const columns: AppGridColDef<ProductBase>[] = [
-    { field: "name", headerName: "Name", width: 150 },
+    {
+      field: "images",
+      headerName: "Image",
+      renderCell: ({ value }) => {
+        if (!value || !Array.isArray(value) || !value[0]) return "-";
+        return <img src={value[0]} alt="product" style={{ width: 50, height: 45, objectFit: "cover", borderRadius: 4 }} />;
+      },
+    },
+    { field: "name", headerName: "Name", width: 200 },
     CommonObjectNameColumn<ProductBase>("categoryId", { headerName: "Category", width: 200 }),
     CommonObjectNameColumn<ProductBase>("brandId", { headerName: "Brand", width: 240 }),
     { field: "mrp", headerName: "MRP", width: 150 },
     { field: "sellingPrice", headerName: "Selling Price", width: 150 },
     { field: "hsnCode", headerName: "HSN", width: 150 },
-    { field: "additionalInfo", headerName: "additionalInfo", width: 150 },
-    { field: "shortDescription", headerName: "shortDescription", width: 150 },
     { field: "openingQty", headerName: "Opening Qty", flex: 1, minWidth: 150 },
-    // CommonActionColumn({
-    //   active: (row) => editProduct({ productId: row?._id, isActive: !row.isActive }),
-    //   editRoute: ROUTES.PRODUCT.ADD_EDIT,
-    //   onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
-    // }),
+    ...(isRemoveItem
+      ? [
+          {
+            field: "removeQty",
+            headerName: "Remove Qty",
+            flex: 1,
+            minWidth: 150,
+            renderCell: (params: GridRenderCellParams) => (
+              <CommonTextField
+                type="number"
+                value={params.value ?? 0}
+                onChange={(event) => {
+                  const newValue = Number(event || 0);
+                  setGridRows((prev) => prev.map((r) => (r.id === params.id ? { ...r, removeQty: newValue } : r)));
+                }}
+              />
+            ),
+          },
+        ]
+      : []),
   ];
 
   const CommonDataGridOption = {
     columns,
-    rows: allProduct,
+    rows: gridRows,
     rowCount: totalRows,
-    loading: productDataLoading || productDataFetching ,
+    loading: productDataLoading || productDataFetching,
     isActive,
     setActive,
     handleAdd,
@@ -83,10 +106,10 @@ const Product = () => {
     <Grid size={"auto"}>
       <Grid container spacing={1}>
         <Grid size={"auto"}>
-          <CommonButton variant="contained" title="Add Stock" />
+          <CommonButton variant="contained" title="Add Item" onClick={handleAddItem} />
         </Grid>
         <Grid size={"auto"}>
-          <CommonButton variant="contained" title="Add Remove" />
+          <CommonButton variant="contained" title="Remove Item" onClick={() => setRemoveItem(!isRemoveItem)} />
         </Grid>
       </Grid>
     </Grid>
@@ -97,10 +120,9 @@ const Product = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PRODUCT.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <AdvancedSearch filter={filter} />
-        <CommonCard title={PAGE_TITLE.INVENTORY.PRODUCT.STOCK} topContent={topContent}>
+        <CommonCard title={PAGE_TITLE.INVENTORY.PRODUCT.ITEM.BASE} topContent={topContent}>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       </Box>
     </>
   );

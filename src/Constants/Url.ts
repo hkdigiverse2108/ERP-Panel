@@ -74,6 +74,7 @@ export const URL_KEYS = {
 
   PRODUCT: {
     BASE: "/product",
+    DROPDOWN: "/product/dropdown",
     ADD: "/product/add",
     ALL: "/product/all",
     EDIT: "/product/edit",
@@ -82,7 +83,7 @@ export const URL_KEYS = {
   STOCK: {
     BASE: "/stock",
     ALL: "/stock/all",
-    ONE: (id: string) => `/stock/${id}`,
+    ADD: "/stock/add",
   },
 
   CALL_REQUEST: {

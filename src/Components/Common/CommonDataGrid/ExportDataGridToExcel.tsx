@@ -4,7 +4,7 @@ import * as XLSX from "xlsx";
 import type { ExportToExcelProps } from "../../../Types";
 
 export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, rows, fileName = "data.xlsx" }: ExportToExcelProps<T>): void => {
-  const exportableColumns = columns.filter((col) => !col.disableExport && col.field !== "actions");
+  const exportableColumns = columns.filter((col) => !col.disableExport && col.field !== "actions" && col.field !== "images");
 
   const excelData: Record<string, unknown>[] = rows.map((row, index) => {
     const record: Record<string, unknown> = {};

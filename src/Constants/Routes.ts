@@ -16,6 +16,7 @@ export const ROUTES = {
   PRODUCT: {
     BASE: "/product",
     ADD_EDIT: "/product/add-edit",
+    ITEM_ADD_EDIT: "/product/item/add-edit",
   },
   STOCK: {
     BASE: "/stock",
@@ -36,6 +37,7 @@ export const ROUTES = {
   },
   STOCK_VERIFICATION: {
     BASE: "/stock-verification",
+    ADD_EDIT: "/stock-verification/add-edit",
   },
   MATERIAL_CREATION: {
     BASE: "/material-creation",
