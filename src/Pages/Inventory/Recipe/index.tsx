@@ -52,7 +52,7 @@ const Recipe = () => {
       active: (row) =>
         editRecipe({
           recipeId: row._id,
-          status: row.status === "active" ? "inactive" : "active",
+          isActive: !row.isActive,
         }),
       editRoute: ROUTES.RECIPE.ADD_EDIT,
       onDelete: (row) => setRowToDelete({ _id: row._id, title: row.recipeName }),
