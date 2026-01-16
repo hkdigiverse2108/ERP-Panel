@@ -72,6 +72,8 @@ const Contact = () => {
 
     { field: "gstIn", headerName: "GSTIN", flex: 1, minWidth: 130 },
     { field: "gstType", headerName: "GST Type", flex: 1, minWidth: 120 },
+    { field: "tanNo", headerName: "TAN No", flex: 1, minWidth: 130 },
+    { field: "transporterId", headerName: "Transporter ID", flex: 1, minWidth: 120 },
 
     { field: "loyaltyPoints", headerName: "Loyalty Point", flex: 1, minWidth: 120 },
     { field: "panNo", headerName: "PAN No", flex: 1, minWidth: 120 },
@@ -114,7 +116,7 @@ const Contact = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
 
-    defaultHidden: ["email", "companyName", "dob", "anniversaryDate", "customerType", "telephoneNo", "panNo", "accountNumber", "branchName", "ifscCode", "bankName", "addressLine1", "addressLine2", "city", "state", "country", "pinCode", "gstIn", "gstType"],
+    defaultHidden: ["email", "companyName", "dob", "anniversaryDate", "customerType", "telephoneNo", "panNo", "accountNumber", "branchName", "ifscCode", "bankName", "addressLine1", "addressLine2", "city", "state", "country", "pinCode", "gstIn", "gstType","transporterId","tanNo"],
   };
 
   const topContent = <CommonRadio value={contactType} onChange={setContactType} options={CONTACT_TYPE} grid={{ xs: "auto" }} />;
