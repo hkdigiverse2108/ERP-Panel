@@ -20,38 +20,41 @@ const Contact = () => {
   const { data: ContactData, isLoading, isFetching } = Queries.useGetContact(params);
   const { mutate: deleteContactMutate } = Mutations.useDeleteContact();
   const { mutate: editContact, isPending: isEditLoading } = Mutations.useEditContact();
-
-  // 🔥 FIXED MAPPING (addressDetails is ARRAY)
+  // 🔥 FILTERED MAPPING BASED ON contactType
   const allContact = useMemo(() => {
     return (
-      ContactData?.data?.contact_data.map((con: ContactBase) => {
-        const address = con?.addressDetails?.[0]; // first address
+      ContactData?.data?.contact_data
+        .map((con: ContactBase) => {
+          const address = con?.addressDetails?.[0];
 
-        return {
-          ...con,
-          id: con?._id,
-
-          // Bank
-          bankName: con?.bankDetails?.name,
-          ifscCode: con?.bankDetails?.ifscCode,
-          branchName: con?.bankDetails?.branch,
-          accountNumber: con?.bankDetails?.accountNumber,
-
-          // Address
-          addressLine1: address?.addressLine1,
-          addressLine2: address?.addressLine2,
-          city: address?.city,
-          state: address?.state,
-          country: address?.country,
-          pinCode: address?.pinCode,
-
-          // GST
-          gstIn: address?.gstIn,
-          gstType: address?.gstType,
-        };
-      }) || []
+          return {
+            ...con,
+            id: con?._id,
+            // Bank
+            bankName: con?.bankDetails?.name,
+            ifscCode: con?.bankDetails?.ifscCode,
+            branchName: con?.bankDetails?.branch,
+            accountNumber: con?.bankDetails?.accountNumber,
+            // Address
+            addressLine1: address?.addressLine1,
+            addressLine2: address?.addressLine2,
+            city: address?.city,
+            state: address?.state,
+            country: address?.country,
+            pinCode: address?.pinCode,
+            // GST
+            gstIn: address?.gstIn,
+            gstType: address?.gstType,
+          };
+        })
+        .filter((con) => {
+          if (contactType === "transporter") return Boolean(con.transporterId);
+          if (contactType === "supplier") return Boolean(con.tanNo);
+          if (contactType === "customer") return !con.transporterId && !con.tanNo;
+          return true;
+        }) || []
     );
-  }, [ContactData]);
+  }, [ContactData, contactType]);
 
   const totalRows = ContactData?.data?.totalData || 0;
 
@@ -116,7 +119,7 @@ const Contact = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
 
-    defaultHidden: ["email", "companyName", "dob", "anniversaryDate", "customerType", "telephoneNo", "panNo", "accountNumber", "branchName", "ifscCode", "bankName", "addressLine1", "addressLine2", "city", "state", "country", "pinCode", "gstIn", "gstType","transporterId","tanNo"],
+    defaultHidden: ["email", "companyName", "dob", "anniversaryDate", "customerType", "telephoneNo", "panNo", "accountNumber", "branchName", "ifscCode", "bankName", "addressLine1", "addressLine2", "city", "state", "country", "pinCode", "gstIn", "gstType", "transporterId", "tanNo"],
   };
 
   const topContent = <CommonRadio value={contactType} onChange={setContactType} options={CONTACT_TYPE} grid={{ xs: "auto" }} />;
