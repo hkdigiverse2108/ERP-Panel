@@ -170,7 +170,7 @@ const ContactForm = () => {
                     <CommonTextField name="companyName" label="Company Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
                     {["supplier","customer"].includes(contactType) && <CommonPhoneNumber label="Whatsapp No." countryCodeName="whatsappNo.countryCode" numberName="whatsappNo.phoneNo" grid={{ xs: 12, md: 4 }} />}
-                     <CommonTextField name="telephoneNo" label="Telephone No" required grid={{ xs: 12, md: 4 }} />
+                    <CommonTextField name="telephoneNo" label="Telephone No" required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="remarks" label="Remarks" grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="panNo" label="PAN No" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="paymentMode" label="Payment Mode" options={PAYMENT_MODE} required grid={{ xs: 12, md: 4 }} />
