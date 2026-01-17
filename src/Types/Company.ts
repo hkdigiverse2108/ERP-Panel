@@ -15,7 +15,6 @@ export interface CompanyFormValues {
   state?: string;
   country?: string;
   pinCode?: string;
-  timeZone?: string;
 
   bankName?: string;
   bankIFSC?: string;

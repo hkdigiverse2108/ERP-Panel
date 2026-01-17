@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Mutations } from "../../../../Api";
 import { CommonButton, CommonPhoneNumber, CommonSwitch, CommonValidationSelect, CommonValidationTextField } from "../../../../Attribute";
 import { PAGE_TITLE, ROUTES } from "../../../../Constants";
-import { BREADCRUMBS, CityOptionsByState, CountryOptions, DATE_FORMATS, StateOptions, TimeZoneOptions } from "../../../../Data";
+import { BREADCRUMBS, CityOptionsByState, CountryOptions, DATE_FORMATS, StateOptions } from "../../../../Data";
 import { setCompany } from "../../../../Store/Slices/CompanySlice";
 import { setSelectedFiles, setUploadModal } from "../../../../Store/Slices/ModalSlice";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
@@ -53,7 +53,6 @@ const CompanyForm = () => {
     state: companyData.state || "",
     country: "India",
     pinCode: companyData.pinCode || null,
-    timeZone: companyData.timeZone || "",
 
     // bankName: companyData.bankName || "",
     // bankIFSC: companyData.bankIFSC || "",
@@ -162,7 +161,6 @@ const CompanyForm = () => {
                     <CommonValidationSelect name="state" label="State" disabled={!values?.country} options={StateOptions} grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationSelect name="city" label="City" disabled={!values?.state} options={CityOptionsByState[values?.state || ""] || []} grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="pinCode" label="Pin Code" grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationSelect name="timeZone" label="Time Zone" disabled options={TimeZoneOptions[values?.country || ""] || []} grid={{ xs: 12, md: 4 }} required />
                   </Grid>
                 </CommonCard>
 

@@ -403,7 +403,9 @@ export interface ModalStateSlice {
 export type RadioOptionType = {
   label: string;
   value: string;
+  disabled?: boolean;
 };
+
 export type ImageSyncProps = {
   activeKey: "image" | null | string;
   clearActiveKey: () => void;

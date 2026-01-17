@@ -1,9 +1,6 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 
 export interface BankFormValues {
- 
- _id?: string;
-  _submitAction?: string;
   companyId?: string;
   name?: string;
   ifscCode?: string;
@@ -24,14 +21,13 @@ export interface BankFormValues {
   state?: string;
   city?: string;
   zipCode?: number;
-  branchIds?: string[]; 
+  branchIds?: string[];
   isActive?: boolean;
   status?: string;
   bankId?: string;
- 
+  _id?: string;
+  _submitAction?: string;
 }
-
-
 
 export type AddBankPayload = BankFormValues;
 

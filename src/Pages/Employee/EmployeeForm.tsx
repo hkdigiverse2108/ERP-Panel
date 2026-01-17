@@ -48,7 +48,7 @@ const EmployeeForm = () => {
     },
 
     bankDetails: {
-      bankName: data?.bankDetails?.bankName || "",
+      name: data?.bankDetails?.name || "",
       branchName: data?.bankDetails?.branchName || "",
       accountNumber: data?.bankDetails?.accountNumber || null,
       bankHolderName: data?.bankDetails?.bankHolderName || "",
@@ -115,7 +115,7 @@ const EmployeeForm = () => {
                 {/* BANK DETAILS */}
                 <CommonCard title="Bank Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationTextField name="bankDetails.bankName" label="Bank Name" grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="bankDetails.name" label="Bank Name" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="bankDetails.branchName" label="Branch Name" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="bankDetails.accountNumber" label="Account No." type="number" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="bankDetails.bankHolderName" label="Account Holder Name" grid={{ xs: 12, md: 4 }} />

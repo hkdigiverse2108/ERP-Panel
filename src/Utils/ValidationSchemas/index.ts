@@ -87,7 +87,6 @@ export const CompanyFormSchemas = Yup.object({
   state: Validation("string", "State"),
   country: Validation("string", "country"),
   pinCode: Validation("string", "pinCode", { extraRules: (s) => s.trim().matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
-  timeZone: Validation("string", "timeZone", { required: false }),
 
   upiId: Validation("string", "upiId", { required: false }),
 

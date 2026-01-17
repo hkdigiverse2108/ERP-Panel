@@ -37,7 +37,7 @@ const Profile = () => {
     {
       title: "Bank Details",
       items: [
-        { label: "Bank Name", value: user?.bankDetails?.bankName },
+        { label: "Bank Name", value: user?.bankDetails?.name },
         { label: "Bank IFSC", value: user?.bankDetails?.IFSCCode },
         { label: "Branch Name", value: user?.bankDetails?.branchName },
         { label: "Account Holder Name", value: user?.bankDetails?.bankHolderName },

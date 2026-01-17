@@ -17,8 +17,7 @@ const Layout = () => {
   const location = useLocation();
 
   const { user } = useAppSelector((state) => state.auth);
-  const { data: userData, isLoading: userLoading } = Queries.useGetUserdata(user?._id);
-
+  const { data: userData, isLoading: userLoading } = Queries.useGetSingleUser(user?._id);
   const { data: companyData, isLoading: companyLoading } = Queries.useGetSingleCompany(user?.companyId?._id);
 
   useEffect(() => {
