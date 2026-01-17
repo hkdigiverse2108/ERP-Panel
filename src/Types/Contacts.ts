@@ -1,4 +1,26 @@
 import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
+export interface AddressDetails {
+  gstType?: string;
+  gstIn?: string;
+  contactFirstName?: string;
+  contactLastName?: string;
+  contactNo?: PhoneNumberType;
+  contactEmail?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  pinCode?: string;
+
+  contactCompanyName: string;
+}
+export interface bankDetails {
+  ifscCode?: string;
+  name?: string;
+  branch?: string;
+  accountNumber?: string;
+}
 
 export interface ContactFormValues {
   firstName?: string;
@@ -17,7 +39,7 @@ export interface ContactFormValues {
   };
   customerType?: string;
   vendorType?: string;
-  addressDetails?: AddressDetailsArray;
+  addressDetails?: AddressDetails[];
   isActive?: boolean;
   loyaltyPoints?: number;
   dob?: string;
@@ -29,31 +51,6 @@ export interface ContactFormValues {
   transporterId?: string;
   companyName?: string;
   _submitAction?: "save" | "saveAndNew";
-}
-export interface AddressDetails {
-  gstType: string;
-  gstIn: string;
-  contactFirstName: string;
-  contactLastName: string;
-  contactNo: PhoneNumberType;
-  contactEmail: string;
-  addressLine1: string;
-  addressLine2: string;
-  country: string;
-  state: string;
-  city: string;
-  pinCode: string;
-
-  contactCompanyName: string;
-}
-
-export type AddressDetailsArray = AddressDetails[];
-
-export interface bankDetails {
-  ifscCode?: string;
-  name?: string;
-  branch?: string;
-  accountNumber?: string;
 }
 
 export type AddContactPayload = ContactFormValues;
