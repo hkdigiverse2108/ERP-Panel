@@ -9,6 +9,7 @@ const RequiredWhenTrue = (dependentField: string, message: string, baseSchema: Y
   });
 };
 
+
 // ---------- Reusable helpers ----------
 
 // const ImageSchema = (label: string, required = true) => Validation("array", label, required ? { minItems: 1 } : { required: false });
@@ -187,28 +188,28 @@ export const RecipeFormSchema = Yup.object({
   }),
 });
 
-const AddressSchema = Yup.object().shape({
-  gstType: Validation("string", "GST Type"),
-  gstIn: Validation("string", "GSTIN"),
+const ContactAddressSchema = Yup.object().shape({
+  gstType: Validation("string", "GST Type", { required: false }),
+  gstIn: Yup.string().when("gstType", {
+    is: "UnRegistered",
+    then: (schema) => schema.notRequired().nullable(),
+    otherwise: (schema) => schema.required("GSTIN is required"),
+  }),
   contactFirstName: Validation("string", "Contact First Name"),
-  contactLastName: Validation("string", "Contact Last Name"),
-  contactCompanyName: Validation("string", "Contact Company Name"),
-  contactNo: PhoneValidation("Contact No"),
-  contactEmail: Validation("string", "Email", {
-    extraRules: (s) => s.email("Invalid email address"),
-  }),
-  addressLine1: Validation("string", "Address Line 1"),
-  addressLine2: Validation("string", "Address Line 2"),
-  country: Validation("string", "Country"),
-  state: Validation("string", "State"),
-  city: Validation("string", "City"),
-  pinCode: Validation("string", "Pin Code", {
-    extraRules: (s) => s.matches(/^[0-9]{6}$/, "Pin code must be 6 digits"),
-  }),
+  contactLastName: Validation("string", "Contact Last Name", { required: false }),
+  contactCompanyName: Validation("string", "Contact Company Name", { required: false }),
+  contactNo: PhoneValidation("Contact No", { requiredCountryCode: false, requiredNumber: false }) ,
+  contactEmail: Validation("string", "Email", { required: false, extraRules: (s) => s.email("Invalid email address") }),
+  addressLine1: Validation("string", "Address Line 1", { required: false }),
+  addressLine2: Validation("string", "Address Line 2", { required: false }),
+  country: Validation("string", "Country", { required: false }),
+  state: Validation("string", "State", { required: false }),
+  city: Validation("string", "City", { required: false }),
+  pinCode: Validation("string", "Pin Code", { required: false, extraRules: (s) => s.matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
   tanNo: Validation("string", "Tan No", { required: false }),
 });
 
-const BaseSchema = {
+const ContactBaseSchema = {
   firstName: Validation("string", "First Name"),
   lastName: Validation("string", "Last Name"),
   email: Validation("string", "Email", { required: false, extraRules: (s) => s.email("Invalid email address") }),
@@ -228,7 +229,7 @@ const BaseSchema = {
   anniversaryDate: Validation("string", "Anniversary Date", { required: false }),
   telephoneNo: Validation("string", "Telephone No"),
   remarks: Validation("string", "Remarks", { required: false }),
-  addressDetails: Yup.array().of(AddressSchema).min(1),
+  addressDetails: Yup.array().of(ContactAddressSchema).min(1),
   bankDetails: Yup.object().shape({
     ifscCode: Validation("string", "IFSC Code", { required: false }),
     name: Validation("string", "Bank Name", { required: false }),
@@ -238,35 +239,14 @@ const BaseSchema = {
 };
 
 // ---------- Complete Contact Schema with conditional fields ----------
-export const getContactFormSchema = () => {
-  return Yup.object().shape({
-    ...BaseSchema,
+export const getContactFormSchema = Yup.object({
+  ...ContactBaseSchema,
+  customerCategory: Validation("string", "Customer Category", { required: false }),
+  customerType: Validation("string", "Customer Type", { required: false }),
+  supplierType: Validation("string", "Supplier Type", { required: false }),
+  transporterId: Validation("string", "Transporter Id", { required: false }),
+});
 
-    customerCategory: Yup.string().when("$contactType", {
-      is: "customer",
-      then: (schema) => schema.required("Customer Category is required"),
-      otherwise: (schema) => schema.notRequired(),
-    }),
-
-    customerType: Yup.string().when("$contactType", {
-      is: "customer",
-      then: (schema) => schema.required("Customer Type is required"),
-      otherwise: (schema) => schema.notRequired(),
-    }),
-
-    supplierType: Yup.string().when("$contactType", {
-      is: "supplier",
-      then: (schema) => schema.required("Supplier Type is required"),
-      otherwise: (schema) => schema.notRequired(),
-    }),
-
-    transporterId: Yup.string().when("$contactType", {
-      is: "transporter",
-      then: (schema) => schema.required("Transporter Id is required"),
-      otherwise: (schema) => schema.notRequired(),
-    }),
-  });
-};
 
 export const ProductFormSchema = Yup.object({
   productType: Validation("string", "Product Type"),
