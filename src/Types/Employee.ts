@@ -12,7 +12,7 @@ export interface Address {
 }
 
 export interface BankDetails {
-  bankName?: string;
+  name?: string;
   branchName?: string;
   accountNumber?: string;
   bankHolderName?: string;
@@ -56,4 +56,8 @@ export interface EmployeeDataResponse extends PageStatus {
 
 export interface EmployeeApiResponse extends MessageStatus {
   data: EmployeeDataResponse;
+}
+
+export interface SingleEmployeeApiResponse extends MessageStatus {
+  data: EmployeeBase[];
 }

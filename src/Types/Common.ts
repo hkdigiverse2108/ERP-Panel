@@ -403,7 +403,9 @@ export interface ModalStateSlice {
 export type RadioOptionType = {
   label: string;
   value: string;
+  disabled?: boolean;
 };
+
 export type ImageSyncProps = {
   activeKey: "image" | null | string;
   clearActiveKey: () => void;
@@ -417,6 +419,7 @@ export interface CommonRadioProps {
   row?: boolean;
   disabled?: boolean;
   grid?: GridType;
+  readOnly?: boolean;
 }
 
 export interface CommonValidationRadioProps extends Omit<CommonRadioProps, "value" | "onChange"> {

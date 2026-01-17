@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import { Link } from "react-router-dom";
 import { CommonSwitch } from "../../../../Attribute";
-import { ImagePath, ROUTES } from "../../../../Constants";
+import { ROUTES } from "../../../../Constants";
 import { useAppSelector } from "../../../../Store/hooks";
 import { CommonCard, CommonImageBox } from "../../../Common";
 
@@ -31,7 +31,6 @@ const CompanyProfile = () => {
         { label: "State", value: company?.state },
         { label: "Country", value: company?.country },
         { label: "Pin Code", value: company?.pinCode },
-        { label: "Timezone", value: company?.timeZone },
         { label: "Web Site", value: company?.webSite },
       ],
     },

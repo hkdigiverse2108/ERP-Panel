@@ -46,7 +46,7 @@ const Contact = () => {
     { field: "tanNo", headerName: "TAN No", width: 150 },
     { field: "transporterId", headerName: "Transporter ID", width: 240 },
 
-    { field: "loyaltyPoints", headerName: "Loyalty Point", width: 240 },
+    { field: "loyaltyPoints", headerName: "Loyalty Point",flex: 1, minWidth: 240 },
     { field: "panNo", headerName: "PAN No", width: 120 },
     { field: "telephoneNo", headerName: "Telephone No", width: 150 },
     { field: "customerType", headerName: "Customer Type", width: 150 },
@@ -63,7 +63,7 @@ const Contact = () => {
     { field: "pinCode", headerName: "Pin Code", width: 120 },
     { field: "city", headerName: "City", width: 120 },
     { field: "state", headerName: "State", width: 120 },
-    { field: "country", headerName: "Country", width: 120 },
+    { field: "country", headerName: "Country",flex: 1, minWidth: 120 },
 
     CommonActionColumn({
       active: (row) => editContact({ contactId: row?._id, isActive: !row.isActive }),

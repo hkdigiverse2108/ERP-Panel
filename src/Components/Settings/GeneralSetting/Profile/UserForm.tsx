@@ -32,7 +32,7 @@ const UserForm = () => {
     email: UserData?.email || "",
     panNumber: UserData?.panNumber || "",
     // role: UserData?.role?._id || "",
-    branchId: UserData?.branchId?._id || "",
+    branchId: UserData?.branchId || "",
 
     address: {
       address: UserData?.address?.address || "",
@@ -43,7 +43,7 @@ const UserForm = () => {
     },
 
     bankDetails: {
-      bankName: UserData?.bankDetails?.bankName || "",
+      name: UserData?.bankDetails?.name || "",
       branchName: UserData?.bankDetails?.branchName || "",
       accountNumber: UserData?.bankDetails?.accountNumber || null,
       bankHolderName: UserData?.bankDetails?.bankHolderName || "",
@@ -111,7 +111,7 @@ const UserForm = () => {
                 {/* BANK DETAILS */}
                 <CommonCard title="Bank Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationTextField name="bankDetails.bankName" label="Bank Name" grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="bankDetails.name" label="Bank Name" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="bankDetails.branchName" label="Branch Name" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="bankDetails.accountNumber" label="Account No." type="number" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="bankDetails.bankHolderName" label="Account Holder Name" grid={{ xs: 12, md: 4 }} />

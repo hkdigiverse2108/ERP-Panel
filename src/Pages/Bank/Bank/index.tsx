@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BankBreadCrumbs, BREADCRUMBS } from "../../../Data";
+import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, BankBase } from "../../../Types";
 import { useDataGrid } from "../../../Utils/Hooks";
 
