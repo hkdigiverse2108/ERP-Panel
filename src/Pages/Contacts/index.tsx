@@ -6,9 +6,8 @@ import { Mutations, Queries } from "../../Api";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonPhoneColumns } from "../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS, CONTACT_TYPE } from "../../Data";
-import type { AppGridColDef } from "../../Types";
+import type { AppGridColDef, ContactBase } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
-import { transformContactData, filterContactByType } from "../../Utils/FormHelpers";
 import { CommonRadio } from "../../Attribute";
 
 const Contact = () => {
@@ -17,14 +16,12 @@ const Contact = () => {
   const navigate = useNavigate();
   const [contactType, setContactType] = useState("customer");
 
-  const { data: ContactData, isLoading, isFetching } = Queries.useGetContact(params);
+  const { data: contactData, isLoading: contactDataLoading, isFetching: contactDataFetching } = Queries.useGetContact(params);
   const { mutate: deleteContactMutate } = Mutations.useDeleteContact();
   const { mutate: editContact, isPending: isEditLoading } = Mutations.useEditContact();
 
-  // Get filtered and transformed contacts
-  const allContact = ContactData?.data?.contact_data?.map(transformContactData).filter((con) => filterContactByType(con, contactType)) || [];
-
-  const totalRows = ContactData?.data?.totalData || 0;
+  const allContact = contactData?.data?.contact_data.map((contact: ContactBase) => ({ ...contact, id: contact?._id })) || [];
+  const totalRows = contactData?.data?.totalData || 0;
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
@@ -46,10 +43,14 @@ const Contact = () => {
     { field: "tanNo", headerName: "TAN No", width: 150 },
     { field: "transporterId", headerName: "Transporter ID", width: 240 },
 
-    { field: "loyaltyPoints", headerName: "Loyalty Point",flex: 1, minWidth: 240 },
+    { field: "loyaltyPoints", headerName: "Loyalty Point", flex: 1, minWidth: 240 },
     { field: "panNo", headerName: "PAN No", width: 120 },
     { field: "telephoneNo", headerName: "Telephone No", width: 150 },
     { field: "customerType", headerName: "Customer Type", width: 150 },
+    { field: "email", headerName: "Email", width: 220 },
+    { field: "companyName", headerName: "Company Name", width: 220 },
+    { field: "dob", headerName: "Date of Birth", width: 160 },
+    { field: "anniversaryDate", headerName: "Anniversary Date", width: 180 },
 
     // Bank
     { field: "bankName", headerName: "Bank Name", width: 150 },
@@ -63,7 +64,7 @@ const Contact = () => {
     { field: "pinCode", headerName: "Pin Code", width: 120 },
     { field: "city", headerName: "City", width: 120 },
     { field: "state", headerName: "State", width: 120 },
-    { field: "country", headerName: "Country",flex: 1, minWidth: 120 },
+    { field: "country", headerName: "Country", flex: 1, minWidth: 120 },
 
     CommonActionColumn({
       active: (row) => editContact({ contactId: row?._id, isActive: !row.isActive }),
@@ -76,7 +77,7 @@ const Contact = () => {
     columns,
     rows: allContact,
     rowCount: totalRows,
-    loading: isLoading || isFetching || isEditLoading,
+    loading: contactDataLoading || contactDataFetching || isEditLoading,
     isActive,
     setActive,
     handleAdd,
