@@ -148,7 +148,7 @@ const ContactForm = () => {
       onChange={setContactType}
       options={CONTACT_TYPE.map((opt) => ({
         ...opt,
-        disabled: isEditing && (opt.value === "supplier" || opt.value === "transporter"),
+        disabled: isEditing && opt.value !== data?.contactType,
       }))}
       grid={{ xs: "auto" }}
     />

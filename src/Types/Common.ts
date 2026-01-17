@@ -419,6 +419,7 @@ export interface CommonRadioProps {
   row?: boolean;
   disabled?: boolean;
   grid?: GridType;
+  readOnly?: boolean;
 }
 
 export interface CommonValidationRadioProps extends Omit<CommonRadioProps, "value" | "onChange"> {
