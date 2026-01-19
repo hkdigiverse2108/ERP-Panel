@@ -404,6 +404,7 @@ export type RadioOptionType = {
   label: string;
   value: string;
   disabled?: boolean;
+  default?: boolean;
 };
 
 export type ImageSyncProps = {

@@ -93,7 +93,7 @@ const ContactForm = () => {
     customerType: data?.customerType || "",
     vendorType: data?.vendorType || "",
     isActive: data?.isActive ?? true,
-    dob: data?.dob ? data.dob :"",
+    dob: data?.dob ? data.dob : "",
     anniversaryDate: data?.anniversaryDate ? data.anniversaryDate : "",
     telephoneNo: data?.telephoneNo || "",
     remarks: data?.remarks || "",
@@ -169,7 +169,7 @@ const ContactForm = () => {
                     <CommonTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="companyName" label="Company Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
-                    {["supplier","customer"].includes(contactType) && <CommonPhoneNumber label="Whatsapp No." countryCodeName="whatsappNo.countryCode" numberName="whatsappNo.phoneNo" grid={{ xs: 12, md: 4 }} />}
+                    {["supplier", "customer"].includes(contactType) && <CommonPhoneNumber label="Whatsapp No." countryCodeName="whatsappNo.countryCode" numberName="whatsappNo.phoneNo" grid={{ xs: 12, md: 4 }} />}
                     <CommonTextField name="telephoneNo" label="Telephone No" required grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="remarks" label="Remarks" grid={{ xs: 12, md: 4 }} />
                     <CommonTextField name="panNo" label="PAN No" required grid={{ xs: 12, md: 4 }} />
@@ -211,27 +211,26 @@ const ContactForm = () => {
                           return (
                             <Box key={index} mb={2} border="1px solid #ddd" p={2} borderRadius={1}>
                               <Grid container spacing={2}>
-                                <CommonValidationSelect name={`addressDetails.${index}.gstType`} label="GST Type" options={GST_TYPE} grid={{ xs: 12, md: 3 }} />
-                                <CommonTextField name={`addressDetails.${index}.gstIn`} label="GSTIN" required disabled={values.addressDetails?.[index]?.gstType === "UnRegistered"} grid={{ xs: 12, md: 3 }} />
-                                <CommonTextField name={`addressDetails.${index}.contactFirstName`} label="Contact First Name" required grid={{ xs: 12, md: 3 }} />
-                                <CommonTextField name={`addressDetails.${index}.contactLastName`} label="Contact Last Name" grid={{ xs: 12, md: 3 }} />
+                                <CommonValidationSelect name={`addressDetails.${index}.gstType`} label="GST Type" options={GST_TYPE} grid={{ xs: 12, md: 4 }} />
+                                <CommonTextField name={`addressDetails.${index}.gstIn`} label="GSTIN" required disabled={values.addressDetails?.[index]?.gstType === "UnRegistered"} grid={{ xs: 12, md: 4 }} />
+                                <CommonTextField name={`addressDetails.${index}.contactFirstName`} label="Contact First Name" required grid={{ xs: 12, md: 4 }} />
+                                <CommonTextField name={`addressDetails.${index}.contactLastName`} label="Contact Last Name" grid={{ xs: 12, md: 4 }} />
+                                <CommonTextField name={`addressDetails.${index}.contactCompanyName`} label="Company Name" grid={{ xs: 12, md: 4 }} />
 
-                                <CommonTextField name={`addressDetails.${index}.contactCompanyName`} label="Company Name" grid={{ xs: 12, md: 3 }} />
+                                <CommonPhoneNumber label="Phone No." countryCodeName={`addressDetails.${index}.contactNo.countryCode`} numberName={`addressDetails.${index}.contactNo.phoneNo`} grid={{ xs: 12, md: 4 }} />
 
-                                <CommonPhoneNumber label="Phone No." countryCodeName={`addressDetails.${index}.contactNo.countryCode`} numberName={`addressDetails.${index}.contactNo.phoneNo`} grid={{ xs: 12, md: 3 }} />
+                                <CommonTextField name={`addressDetails.${index}.contactEmail`} label="Email" grid={{ xs: 12, md: 4 }} />
 
-                                <CommonTextField name={`addressDetails.${index}.contactEmail`} label="Email" grid={{ xs: 12, md: 3 }} />
+                                <CommonTextField name={`addressDetails.${index}.addressLine1`} label="Address Line 1" multiline  grid={{ xs: 12, md: 4 }} />
+                                <CommonTextField name={`addressDetails.${index}.addressLine2`} label="Address Line 2" multiline  grid={{ xs: 12, md: 4 }} />
 
-                                <CommonTextField name={`addressDetails.${index}.addressLine1`} label="Address Line 1" grid={{ xs: 12, md: 3 }} />
-                                <CommonTextField name={`addressDetails.${index}.addressLine2`} label="Address Line 2" grid={{ xs: 12, md: 3 }} />
+                                <CommonValidationSelect name={`addressDetails.${index}.country`} label="Country" options={CountryOptions} required grid={{ xs: 12, md: 4 }} />
 
-                                <CommonValidationSelect name={`addressDetails.${index}.country`} label="Country" options={CountryOptions} required grid={{ xs: 12, md: 2 }} />
+                                <CommonValidationSelect name={`addressDetails.${index}.state`} label="State" options={StateOptions} required grid={{ xs: 12, md: 4 }} />
 
-                                <CommonValidationSelect name={`addressDetails.${index}.state`} label="State" options={StateOptions} required grid={{ xs: 12, md: 2 }} />
+                                <CommonValidationSelect name={`addressDetails.${index}.city`} label="City" options={(selectedState && CityOptionsByState[selectedState]) || []} required grid={{ xs: 12, md: 4 }} />
 
-                                <CommonValidationSelect name={`addressDetails.${index}.city`} label="City" options={(selectedState && CityOptionsByState[selectedState]) || []} required grid={{ xs: 12, md: 2 }} />
-
-                                <CommonTextField name={`addressDetails.${index}.pinCode`} label="Pin Code" grid={{ xs: 12, md: 2 }} />
+                                <CommonTextField name={`addressDetails.${index}.pinCode`} label="Pin Code" grid={{ xs: 12, md: 4 }} />
 
                                 {(values?.addressDetails?.length || 0) > 1 && (
                                   <Grid size={12}>
