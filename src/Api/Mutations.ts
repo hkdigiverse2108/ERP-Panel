@@ -55,7 +55,7 @@ export const Mutations = {
   // useDeletePayment: () => useMutations<{ id: string }, void>([KEYS.PAYMENT.DELETE], (id) => Delete(`${URL_KEYS.PAYMENT.BASE}/${id}`)),
 
   //************** recipe **************** */
-  useAddRecipe: () => useMutations<AddRecipePayload, void>([KEYS.RECIPE.ADD], (input) => Post(URL_KEYS.RECIPE.ADD, input)),
-  useEditRecipe: () => useMutations<EditRecipePayload, void>([KEYS.RECIPE.EDIT], (input) => Put(URL_KEYS.RECIPE.EDIT, input)),
-  useDeleteRecipe: () => useMutations<string, void>([KEYS.RECIPE.DELETE], (id) => Delete(`${URL_KEYS.RECIPE.BASE}/${id}`)),
+  useAddRecipe: () => useMutations<AddRecipePayload, void>([KEYS.RECIPE.ADD, KEYS.RECIPE.BASE], (input) => Post(URL_KEYS.RECIPE.ADD, input)),
+  useEditRecipe: () => useMutations<EditRecipePayload, void>([KEYS.RECIPE.EDIT, KEYS.RECIPE.BASE], (input) => Put(URL_KEYS.RECIPE.EDIT, input)),
+  useDeleteRecipe: () => useMutations<string, void>([KEYS.RECIPE.DELETE, KEYS.RECIPE.BASE], (id) => Delete(`${URL_KEYS.RECIPE.BASE}/${id}`)),
 };

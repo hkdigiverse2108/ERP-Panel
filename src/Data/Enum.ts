@@ -44,7 +44,6 @@ export const UOM_OPTIONS = [{ label: "KG", value: "679a1c7f8f4e1a001234abd2" }];
 export const TOOLBAR_OPTIONS = [["bold", "italic", "underline"], ["blockquote", "code-block"], [{ header: 1 }, { header: 2 }], [{ list: "ordered" }, { list: "bullet" }, { list: "check" }], [{ script: "sub" }, { script: "super" }], [{ indent: "-1" }, { indent: "+1" }], [{ direction: "rtl" }], [{ size: ["small", false, "large", "huge"] }], [{ header: [1, 2, 3, 4, 5, 6, false] }], [{ color: [] }, { background: [] }], [{ align: [] }]];
 export const CHAT_TOOLBAR_OPTIONS = [["bold", "italic"], ["blockquote"], ["link"], [{ header: 1 }, { header: 2 }], [{ list: "ordered" }, { list: "bullet" }, { list: "check" }], [{ script: "sub" }, { script: "super" }], [{ indent: "-1" }, { indent: "+1" }], [{ header: [1, 2, 3, 4, 5, 6, false] }], [{ align: [] }], ["clean"]];
 
-
 export const TAX_OPTIONS = [
   { label: "NON GST 0", value: "NON_GST_0" },
   { label: "EXEMPT 0", value: "EXEMPT_0" },
@@ -67,7 +66,7 @@ export const ORDER_TYPE = [
 ];
 
 export const CONTACT_TYPE = [
-  { label: "Customer", value: "customer" },
+  { label: "Customer", value: "customer", default: true },
   { label: "Supplier", value: "supplier" },
   { label: "Transporter", value: "transporter" },
 ];
@@ -226,9 +225,9 @@ export const PRODUCT_EXPIRY_TYPE = [
   { label: "EXP", value: "expiry" },
 ];
 
-export const CONSUMPTION_TYPE= [
+export const CONSUMPTION_TYPE = [
   { label: "Expired", value: "expired" },
   { label: "Sample", value: "sample" },
   { label: "Production", value: "production" },
   { label: "Scrap/Wastage", value: "scrap/wastage" },
-]
+];

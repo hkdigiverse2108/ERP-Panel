@@ -16,8 +16,16 @@ const Recipe = () => {
   const { data, isLoading, isFetching } = Queries.useGetRecipe(params);
   const { mutate: deleteRecipe } = Mutations.useDeleteRecipe();
   const { mutate: editRecipe, isPending: isEditLoading } = Mutations.useEditRecipe();
-
-  const rows = useMemo(() => data?.data?.recipe_data.map((r) => ({ ...r, id: r?._id })) || [], [data]);
+  const rows = useMemo(() => {
+    return (
+      data?.data?.recipe_data.map((r) => ({
+        ...r,
+        id: r?._id,
+        rawProducts: r.rawProducts || [],
+        finalProducts: r.finalProducts || {},
+      })) || []
+    );
+  }, [data]);
 
   const totalRows = data?.data?.totalData || 0;
 
@@ -31,23 +39,10 @@ const Recipe = () => {
   };
 
   const columns: AppGridColDef<RecipeBase>[] = [
-    { field: "recipeNo", headerName: "Recipe No", width: 150 },
-    { field: "Name", headerName: "Recipe Name", width: 220 },
-    { field: "Date", headerName: "Recipe Date", width: 150, valueGetter: (v) => new Date(v).toLocaleDateString() },
-    { field: "Type", headerName: "Recipe Type", width: 160, },
-    {
-      field: "rawProducts",
-      headerName: "Raw Items",
-      width: 120,
-      //  valueGetter: ({ value }) => value.length,
-    },
-    {
-      field: "finalProducts",
-      headerName: "Final Items",
-      width: 120,
-      //  valueGetter: ({ value }) => value.length,
-    },
-
+    { field: "number", headerName: "Recipe No", width: 150 },
+    { field: "name", headerName: "Recipe Name", width: 220 },
+    { field: "date", headerName: "Recipe Date", width: 150, valueGetter: (v) => new Date(v).toLocaleDateString() },
+    { field: "type", headerName: "Recipe Type", width: 150, flex: 1 },
     CommonActionColumn({
       active: (row) =>
         editRecipe({
@@ -55,7 +50,7 @@ const Recipe = () => {
           isActive: !row.isActive,
         }),
       editRoute: ROUTES.RECIPE.ADD_EDIT,
-      onDelete: (row) => setRowToDelete({ _id: row._id, title: row.Name }),
+      onDelete: (row) => setRowToDelete({ _id: row._id, title: row.name }),
     }),
   ];
 

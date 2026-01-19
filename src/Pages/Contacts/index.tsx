@@ -1,6 +1,6 @@
 // Contact.tsx
 import { Box } from "@mui/material";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonPhoneColumns } from "../../Components/Common";
@@ -11,10 +11,10 @@ import { useDataGrid } from "../../Utils/Hooks";
 import { CommonRadio } from "../../Attribute";
 
 const Contact = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive,updateAdvancedFilter, advancedFilter, params } = useDataGrid();
 
   const navigate = useNavigate();
-  const [contactType, setContactType] = useState("customer");
+  // const [contactType, setContactType] = useState("customer");
 
   const { data: contactData, isLoading: contactDataLoading, isFetching: contactDataFetching } = Queries.useGetContact(params);
   const { mutate: deleteContactMutate } = Mutations.useDeleteContact();
@@ -31,6 +31,15 @@ const Contact = () => {
   };
 
   const handleAdd = () => navigate(ROUTES.CONTACT.ADD_EDIT);
+
+  const handleContactTypeChange = (value: string) => {
+    // setContactType(value);
+    updateAdvancedFilter("contactType", [value]);
+  };
+
+  useEffect(() => {
+    updateAdvancedFilter("contactType", [CONTACT_TYPE[0].value]);
+  }, []);
 
   const columns: AppGridColDef<any>[] = [
     { field: "firstName", headerName: "Name", width: 240 },
@@ -90,7 +99,7 @@ const Contact = () => {
     defaultHidden: ["email", "companyName", "dob", "anniversaryDate", "customerType", "telephoneNo", "panNo", "accountNumber", "branchName", "ifscCode", "bankName", "addressLine1", "addressLine2", "city", "state", "country", "pinCode", "gstIn", "gstType", "transporterId", "tanNo"],
   };
 
-  const topContent = <CommonRadio value={contactType} onChange={setContactType} options={CONTACT_TYPE} grid={{ xs: "auto" }} />;
+  const topContent = <CommonRadio value={advancedFilter?.contactType?.[0]} onChange={handleContactTypeChange} options={CONTACT_TYPE} grid={{ xs: "auto" }} />;
 
   return (
     <>

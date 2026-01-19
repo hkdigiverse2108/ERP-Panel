@@ -178,28 +178,29 @@ export const BankFormSchema = Yup.object().shape({
 });
 
 export const RecipeFormSchema = Yup.object({
-  recipeName: Validation("string", "Name"),
-  recipeDate: Validation("string", "Recipe Date"),
-  recipeNo: Validation("string", "Recipe No"),
-  recipeType: Validation("string", "Recipe Type"),
+  name: Validation("string", "name"),
+  date: Yup.mixed().required("Date is required"),
+  number: Validation("string", "number"),
+  type: Validation("string", "type"),
 
   rawProducts: Yup.array()
     .of(
       Yup.object({
-        productId: Validation("string", "Product"),
+        productId: Validation("string", "Product").required("Product is required"),
         useQty: Validation("number", "Use Qty").required("Use Qty is required"),
         mrp: Validation("number", "MRP").nullable(),
       }),
     )
-    .min(1, "At least one raw product is required"),
+    .min(1, "At least one raw product is required")
+    .required("Raw products are required"),
 
-  // FINAL PRODUCTS (OBJECT)
   finalProducts: Yup.object({
-    productId: Validation("string", "Product"),
+    productId: Validation("string", "Product").required("Product is required"),
     qtyGenerate: Validation("number", "Qty Generate").required("Qty Generate is required"),
     mrp: Validation("number", "MRP").nullable(),
-  }),
+  }).required("Final product is required"),
 });
+
 
 const ContactAddressSchema = Yup.object().shape({
   gstType: Validation("string", "GST Type", { required: false }),
@@ -215,10 +216,10 @@ const ContactAddressSchema = Yup.object().shape({
   contactEmail: Validation("string", "Email", { required: false, extraRules: (s) => s.email("Invalid email address") }),
   addressLine1: Validation("string", "Address Line 1", { required: false }),
   addressLine2: Validation("string", "Address Line 2", { required: false }),
-  country: Validation("string", "Country", { required: false }),
-  state: Validation("string", "State", { required: false }),
-  city: Validation("string", "City", { required: false }),
-  pinCode: Validation("string", "Pin Code", { required: false, extraRules: (s) => s.matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
+  country: Validation("string", "Country"),
+  state: Validation("string", "State"),
+  city: Validation("string", "City"),
+  pinCode: Validation("string", "Pin Code", {required: false, extraRules: (s) => s.matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
   tanNo: Validation("string", "Tan No", { required: false }),
 });
 
