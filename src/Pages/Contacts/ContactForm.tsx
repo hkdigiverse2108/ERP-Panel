@@ -1,11 +1,11 @@
 import { Box, Grid } from "@mui/material";
 import { FieldArray, Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Mutations } from "../../Api";
+import { Mutations, Queries } from "../../Api";
 import { CommonValidationTextField as CommonTextField, CommonSwitch, CommonPhoneNumber, CommonRadio, CommonValidationSelect, CommonValidationRadio, CommonValidationDatePicker, CommonButton } from "../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
-import { BREADCRUMBS, CityOptionsByState, CONTACT_CATEGORY_CUSTOMER, CONTACT_CATEGORY_SUPPLIER, CONTACT_TYPE, CountryOptions, CUSTOMER_CATEGORY, GST_TYPE, PAYMENT_MODE, PAYMENT_TERMS, StateOptions } from "../../Data";
+import { BREADCRUMBS, CONTACT_CATEGORY_CUSTOMER, CONTACT_CATEGORY_SUPPLIER, CONTACT_TYPE, CUSTOMER_CATEGORY, GST_TYPE, PAYMENT_MODE, PAYMENT_TERMS } from "../../Data";
 import { useAppSelector } from "../../Store/hooks";
 import type { ContactFormValues } from "../../Types";
 import { GetChangedFields, RemoveEmptyFields } from "../../Utils";
@@ -206,7 +206,7 @@ const ContactForm = () => {
                     {({ push, remove }) => (
                       <Box p={2}>
                         {values?.addressDetails?.map((_, index) => {
-                          const selectedState = values.addressDetails?.[index]?.state;
+                          // const selectedState = values.addressDetails?.[index]?.state;
 
                           return (
                             <Box key={index} mb={2} border="1px solid #ddd" p={2} borderRadius={1}>
@@ -221,14 +221,14 @@ const ContactForm = () => {
 
                                 <CommonTextField name={`addressDetails.${index}.contactEmail`} label="Email" grid={{ xs: 12, md: 4 }} />
 
-                                <CommonTextField name={`addressDetails.${index}.addressLine1`} label="Address Line 1" multiline  grid={{ xs: 12, md: 4 }} />
-                                <CommonTextField name={`addressDetails.${index}.addressLine2`} label="Address Line 2" multiline  grid={{ xs: 12, md: 4 }} />
+                                <CommonTextField name={`addressDetails.${index}.addressLine1`} label="Address Line 1" multiline grid={{ xs: 12, md: 4 }} />
+                                <CommonTextField name={`addressDetails.${index}.addressLine2`} label="Address Line 2" multiline grid={{ xs: 12, md: 4 }} />
 
-                                <CommonValidationSelect name={`addressDetails.${index}.country`} label="Country" options={CountryOptions} required grid={{ xs: 12, md: 4 }} />
+                                <DependentSelect name={`addressDetails.${index}.country`} label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
 
-                                <CommonValidationSelect name={`addressDetails.${index}.state`} label="State" options={StateOptions} required grid={{ xs: 12, md: 4 }} />
+                                <DependentSelect params={values?.addressDetails?.[index]?.country} name={`addressDetails.${index}.state`} label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.addressDetails?.[index]?.country} required />
 
-                                <CommonValidationSelect name={`addressDetails.${index}.city`} label="City" options={(selectedState && CityOptionsByState[selectedState]) || []} required grid={{ xs: 12, md: 4 }} />
+                                <DependentSelect params={values?.addressDetails?.[index]?.state} name={`addressDetails.${index}.city`} label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.addressDetails?.[index]?.state} required />
 
                                 <CommonTextField name={`addressDetails.${index}.pinCode`} label="Pin Code" grid={{ xs: 12, md: 4 }} />
 
@@ -277,3 +277,9 @@ const ContactForm = () => {
 };
 
 export default ContactForm;
+
+{
+  /* <DependentSelect name="country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
+                    <DependentSelect params={values?.country} name="state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.country} required />
+                    <DependentSelect params={values?.state} name="city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.state} required /> */
+}
