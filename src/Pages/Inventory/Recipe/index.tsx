@@ -32,9 +32,9 @@ const Recipe = () => {
 
   const columns: AppGridColDef<RecipeBase>[] = [
     { field: "recipeNo", headerName: "Recipe No", width: 150 },
-    { field: "recipeName", headerName: "Recipe Name", width: 220 },
-    { field: "recipeDate", headerName: "Recipe Date", width: 150, valueGetter: (v) => new Date(v).toLocaleDateString() },
-    { field: "recipeType", headerName: "Recipe Type", width: 160, },
+    { field: "Name", headerName: "Recipe Name", width: 220 },
+    { field: "Date", headerName: "Recipe Date", width: 150, valueGetter: (v) => new Date(v).toLocaleDateString() },
+    { field: "Type", headerName: "Recipe Type", width: 160, },
     {
       field: "rawProducts",
       headerName: "Raw Items",
@@ -55,7 +55,7 @@ const Recipe = () => {
           isActive: !row.isActive,
         }),
       editRoute: ROUTES.RECIPE.ADD_EDIT,
-      onDelete: (row) => setRowToDelete({ _id: row._id, title: row.recipeName }),
+      onDelete: (row) => setRowToDelete({ _id: row._id, title: row.Name }),
     }),
   ];
 
