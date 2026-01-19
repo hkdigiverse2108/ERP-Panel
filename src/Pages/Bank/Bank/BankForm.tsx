@@ -1,11 +1,11 @@
 import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Mutations } from "../../../Api";
+import { Mutations, Queries } from "../../../Api";
 import { CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { BREADCRUMBS, CityOptionsByState, CountryOptions, StateOptions } from "../../../Data";
+import { BREADCRUMBS } from "../../../Data";
 import { useAppSelector } from "../../../Store/hooks";
 import type { BankFormValues } from "../../../Types";
 import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
@@ -36,12 +36,12 @@ const BankForm = () => {
       debitBalance: data?.openingBalance?.debitBalance ?? 0,
     },
 
-    isUpiAvailable: data?.isUpiAvailable ?? false,
+    upiId: data?.upiId || "",
 
     addressLine1: data?.addressLine1 || "",
     addressLine2: data?.addressLine2 || "",
 
-    country: data?.country || "India",
+    country: data?.country || "",
     state: data?.state || "",
     city: data?.city || "",
     zipCode: data?.zipCode || "",
@@ -89,36 +89,19 @@ const BankForm = () => {
                     <CommonValidationTextField name="name" label="Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="branchName" label="Branch Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="branchIds" label="Branches" multiple grid={{ xs: 12, md: 4 }} options={[]} />
-
                     <CommonValidationTextField name="ifscCode" label="IFSC Code" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="swiftCode" label="Swift Code" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="accountHolderName" label="Account Holder Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="bankAccountNumber" label="Account Number" required grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="upiId" label="UPI ID" grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="openingBalance.creditBalance" label="Credit Balance" type="number" grid={{ xs: 12, sm: 2 }} />
+                    <CommonValidationTextField name="openingBalance.debitBalance" label="Debit Balance" type="number" grid={{ xs: 12, sm: 2 }} />
+                    <CommonValidationTextField name="addressLine1" label="Address Line 1" multiline grid={{ xs: 12, md: 6 }} />
+                    <CommonValidationTextField name="addressLine2" label="Address Line 2" multiline grid={{ xs: 12, md: 6 }} />
+                    <DependentSelect name="country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
+                    <DependentSelect params={values?.country} name="state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.country} required />
+                    <DependentSelect params={values?.state} name="city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.state} required />
                     <CommonValidationTextField name="zipCode" label="Zip Code" type="number" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="state" label="State" options={StateOptions} grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationSelect name="city" label="City" disabled={!values.state} options={CityOptionsByState[values?.state || ""] || []} grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationSelect name="country" label="Country" options={CountryOptions} disabled grid={{ xs: 12, md: 4 }} required />
-
-                    <Grid>
-                      <Box sx={{ fontWeight: 600, mb: 1 }}>Opening Balance</Box>
-
-                      <Grid container spacing={2} gap={3}>
-                        <Grid>
-                          <CommonValidationTextField name="openingBalance.creditBalance" label="Credit Balance" type="number" grid={{ xs: 12 }} />
-                        </Grid>
-
-                        <Grid>
-                          <CommonValidationTextField name="openingBalance.debitBalance" label="Debit Balance" type="number" grid={{ xs: 12 }} />
-                        </Grid>
-
-                        <Grid>
-                          <CommonValidationSwitch name="isUpiAvailable" label="UPI Available" />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-
-                    <CommonValidationTextField name="addressLine1" label="Address Line 1" multiline rows={2} grid={{ xs: 12 }} />
-                    <CommonValidationTextField name="addressLine2" label="Address Line 2" multiline rows={2} grid={{ xs: 12 }} />
 
                     {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                   </Grid>

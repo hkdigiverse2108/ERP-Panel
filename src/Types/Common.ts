@@ -52,6 +52,7 @@ export interface CommonSelectProps {
   grid?: GridType;
   required?: boolean;
   disabled?: boolean;
+  readOnly?: boolean;
   variant?: "standard" | "outlined" | "filled";
   placeholder?: string;
   syncFieldName?: string;
@@ -247,6 +248,9 @@ export interface BreadcrumbHeaderProps {
 // ************ Breadcrumb Start ***********
 
 // ************ Validation Yup schema Start ***********
+
+export type Primitive = string | number;
+export type DepValue = Primitive | Primitive[] | undefined;
 
 export type FieldSchemaArgs<K extends keyof FieldTypeMap> = [type: K, options?: FieldOptions<FieldTypeMap[K]>] | [type: K, label: string, options?: FieldOptions<FieldTypeMap[K]>];
 
@@ -463,3 +467,29 @@ export interface CommonValidationQuillInputProps {
 }
 
 // ************ Quill Input End ***********
+
+// ************ Dependent Select End ***********
+
+export type ApiOption = {
+  _id: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
+  title?: string;
+};
+
+export type DependentSelectProps<T extends ApiOption, P = string | undefined> = {
+  params?: P;
+  name: string;
+  label: string;
+  grid: GridType;
+  required?: boolean;
+  disabled?: boolean;
+  enabled?: boolean;
+  query: (params?: P, enabled?: boolean) => {
+    data?: { data: T[] };
+    isLoading: boolean;
+  };
+};
+
+// ************ Dependent Select End ***********

@@ -2,15 +2,15 @@ import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../../Api";
-import { CommonPhoneNumber, CommonValidationTextField, CommonValidationSelect } from "../../../../Attribute";
+import { CommonPhoneNumber, CommonValidationSelect, CommonValidationTextField } from "../../../../Attribute";
 import { PAGE_TITLE } from "../../../../Constants";
-import { BREADCRUMBS, CityOptionsByState, CountryOptions, StateOptions } from "../../../../Data";
+import { BREADCRUMBS } from "../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
+import { setUser } from "../../../../Store/Slices/AuthSlice";
 import type { EmployeeFormValues } from "../../../../Types";
 import { GenerateOptions, GetChangedFields } from "../../../../Utils";
 import { EmployeeFormSchema } from "../../../../Utils/ValidationSchemas";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Common";
-import { setUser } from "../../../../Store/Slices/AuthSlice";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../../Common";
 
 const UserForm = () => {
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ const UserForm = () => {
 
     address: {
       address: UserData?.address?.address || "",
-      country: "India",
+      country: UserData?.address?.country || "",
       state: UserData?.address?.state || "",
       city: UserData?.address?.city || "",
       postalCode: UserData?.address?.postalCode || null,
@@ -71,7 +71,7 @@ const UserForm = () => {
           resetForm();
           navigate(-1);
         },
-      }
+      },
     );
   };
 
@@ -101,9 +101,9 @@ const UserForm = () => {
                 <CommonCard title="Address Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationTextField name="address.address" label="Address" required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="address.state" label="State" disabled={!values.address?.country} options={StateOptions} grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationSelect name="address.city" label="City" disabled={!values.address?.state} options={CityOptionsByState[values?.address?.state || ""] || []} grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationSelect name="address.country" label="Country" disabled options={CountryOptions} required grid={{ xs: 12, md: 4 }} />
+                    <DependentSelect name="address.country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
+                    <DependentSelect params={values?.address?.country} name="address.state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.address?.country} required />
+                    <DependentSelect params={values?.address?.state} name="address.city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.address?.state} required />
                     <CommonValidationTextField name="address.postalCode" label="ZIP Code" required type="number" grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>

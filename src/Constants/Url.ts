@@ -116,4 +116,11 @@ export const URL_KEYS = {
     EDIT: "/recipe/edit",
     ALL: "/recipe/all",
   },
+  LOCATION: {
+    BASE: "/location",
+    ALL: "/location/all",
+    COUNTRY: "/location/country",
+    STATE: "/location/state",
+    CITY: "/location/city",
+  },
 } as const;

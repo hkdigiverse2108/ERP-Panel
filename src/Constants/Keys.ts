@@ -107,4 +107,10 @@ export const KEYS = {
     EDIT: "recipe-edit",
     DELETE: "recipe-delete",
   },
+  LOCATION: {
+    BASE: "location",
+    ADD: "location-add",
+    EDIT: "location-edit",
+    DELETE: "location-delete",
+  },
 };

@@ -2,17 +2,17 @@ import { Box, Grid } from "@mui/material";
 import { Form, Formik, useFormikContext, type FormikValues } from "formik";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Mutations } from "../../../../Api";
+import { Mutations, Queries } from "../../../../Api";
 import { CommonButton, CommonPhoneNumber, CommonSwitch, CommonValidationSelect, CommonValidationTextField } from "../../../../Attribute";
 import { PAGE_TITLE, ROUTES } from "../../../../Constants";
-import { BREADCRUMBS, CityOptionsByState, CountryOptions, DATE_FORMATS, StateOptions } from "../../../../Data";
+import { BREADCRUMBS, DATE_FORMATS } from "../../../../Data";
 import { setCompany } from "../../../../Store/Slices/CompanySlice";
 import { setSelectedFiles, setUploadModal } from "../../../../Store/Slices/ModalSlice";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
 import type { CompanyFormValues, Params } from "../../../../Types";
 import { GetChangedFields } from "../../../../Utils";
 import { CompanyFormSchemas } from "../../../../Utils/ValidationSchemas";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Common";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../../Common";
 import { CommonFormImageBox } from "../../../Common/CommonUploadImage/CommonImageBox";
 type CompanyImageKey = "logo" | "waterMark" | "reportFormatLogo" | "authorizedSignature";
 
@@ -51,7 +51,7 @@ const CompanyForm = () => {
     address: companyData.address || "",
     city: companyData.city || "",
     state: companyData.state || "",
-    country: "India",
+    country: companyData.country || "",
     pinCode: companyData.pinCode || null,
 
     // bankName: companyData.bankName || "",
@@ -100,7 +100,7 @@ const CompanyForm = () => {
           dispatch(setCompany(response?.data));
           navigate(ROUTES.SETTINGS.GENERAL, { state: 1 });
         },
-      }
+      },
     );
   };
   const FormikImageSync = <T extends FormikValues>({ activeKey, clearActiveKey }: Params) => {
@@ -157,9 +157,9 @@ const CompanyForm = () => {
                 <CommonCard title="Communication Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationTextField name="address" label="Address" grid={{ xs: 12, md: 4 }} multiline required />
-                    <CommonValidationSelect name="country" label="Country" disabled options={CountryOptions} required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="state" label="State" disabled={!values?.country} options={StateOptions} grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationSelect name="city" label="City" disabled={!values?.state} options={CityOptionsByState[values?.state || ""] || []} grid={{ xs: 12, md: 4 }} required />
+                    <DependentSelect name="country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
+                    <DependentSelect params={values?.country} name="state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.country} required />
+                    <DependentSelect params={values?.state} name="city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.state} required />
                     <CommonValidationTextField name="pinCode" label="Pin Code" grid={{ xs: 12, md: 4 }} required />
                   </Grid>
                 </CommonCard>

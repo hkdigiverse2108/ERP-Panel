@@ -14,7 +14,7 @@ export interface BankFormValues {
     debitBalance?: number;
   };
   
-  isUpiAvailable?: boolean;
+  upiId?: string;
   addressLine1?: string;
   addressLine2?: string;
   country?: string;
