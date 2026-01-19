@@ -50,6 +50,7 @@ export interface ProductFormValues {
   wholesalerMargin?: number | null;
   minimumQty?: number | null;
   openingQty?: number | null;
+  qty?: number | null;
   isActive?: boolean;
   images?: string[];
   _submitAction?: string;

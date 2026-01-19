@@ -16,7 +16,7 @@ const StockVerificationForm = () => {
 
   const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown();
   const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown();
-  const { data: productData, isLoading: productDataLoading } = Queries.useGetProduct();
+  const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown();
 
   interface StockFormProps {
     id: string;
@@ -40,7 +40,7 @@ const StockVerificationForm = () => {
     price: product.purchasePrice ?? 0,
     mrp: product.mrp ?? 0,
     sellingPrice: product.sellingPrice ?? 0,
-    systemQty: 10,
+    systemQty: product.qty ?? 0,
     physicalQty: 0,
     differenceQty: 0,
     differenceAmount: (product.landingCost ?? 0) * 0,
@@ -94,14 +94,14 @@ const StockVerificationForm = () => {
                   value={searchValue}
                   label="Search Product"
                   placeholder="Search Product"
-                  options={GenerateOptions(productData?.data?.product_data)}
+                  options={GenerateOptions(productData?.data)}
                   grid={{ xs: 12, sm: 6 }}
                   isLoading={productDataLoading}
                   onChange={(selected: string[]) => {
                     setSearchValue(selected);
                     if (!selected.length) return;
 
-                    const product = productData?.data?.product_data.find((p) => p._id === selected[0]);
+                    const product = productData?.data.find((p) => p._id === selected[0]);
                     if (!product) return;
 
                     setRows((prev) => {
@@ -113,7 +113,7 @@ const StockVerificationForm = () => {
 
                       return [createRowFromProduct(product), ...prev];
                     });
-                    setSearchValue([]);
+                    // setSearchValue([]);
                   }}
                 />
                 <CommonTextField label="Enter Remark" placeholder="Enter Remark" grid={{ xs: 12, sm: 6 }} value={enterRemark} onChange={(e) => setEnterRemark(e)} />

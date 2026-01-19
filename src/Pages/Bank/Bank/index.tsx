@@ -42,9 +42,7 @@ const Bank = () => {
       headerName: "Bank Name",
       width: 200,
     },
-    {
-      field: "city", headerName: "Location", width: 200,
-    },
+   
     {
       field: "accountHolderName",
       headerName: "Account Holder Name",

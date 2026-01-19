@@ -52,7 +52,6 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
 
 export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value, onChange, multiple = false, limitTags, size, grid, disabled,readOnly, isLoading, ...props }) => {
   const selectedValue = multiple ? (value || []).map((v) => options.find((o) => o.value === v)).filter((v): v is SelectOptionType => Boolean(v)) : options.find((o) => o.value === value?.[0]) ?? null;
-
   const Input = (
     <Autocomplete
       {...props}

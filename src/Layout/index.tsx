@@ -29,13 +29,13 @@ const Layout = () => {
     if (userData) {
       dispatch(setUser(userData?.data));
     }
-  }, [userData, userLoading]);
+  }, [dispatch, userData, userLoading]);
 
   useEffect(() => {
     if (companyData) {
       dispatch(setCompany(companyData?.data));
     }
-  }, [companyData, companyLoading]);
+  }, [companyData, companyLoading, dispatch]);
 
   useEffect(() => {
     const handleResize = () => {
