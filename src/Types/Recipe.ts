@@ -3,7 +3,7 @@ import type { ProductBase } from "./Product";
 
 export interface RecipeProductItem {
   itemCode?: string | null;
-  productId?: object;
+  productId?: string | ProductBase;
   mrp?: number;
 }
 export interface RawRecipeProduct extends RecipeProductItem {
@@ -16,10 +16,10 @@ export interface FinalRecipeProduct extends RecipeProductItem {
 
 export interface RecipeFormValues {
   id?: string;
-  Name?: string;
-  Date?: string | Date;
-  recipeNo?: string;
-  Type?: string;
+  name?: string;
+  date?: string | Date;
+  number?: string;
+  type?: string;
   companyId?: string;
   rawProducts?: RawRecipeProduct[];
   rawrecipeId?: string;
