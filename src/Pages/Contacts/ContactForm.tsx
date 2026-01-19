@@ -258,7 +258,7 @@ const ContactForm = () => {
                 <CommonBottomActionBar
                   save={isEditing}
                   clear={!isEditing}
-                  disabled={!dirty || isAddLoading || isEditLoading}
+                  disabled={!dirty}
                   isLoading={isAddLoading || isEditLoading}
                   onClear={() => resetForm({ values: initialValues })}
                   onSave={() => {
