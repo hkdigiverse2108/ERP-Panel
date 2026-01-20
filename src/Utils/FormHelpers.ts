@@ -18,6 +18,33 @@ export const RemoveEmptyFields = <T extends Record<string, any>>(obj: T): Partia
   return result;
 };
 
+// export const RemoveEmptyFields = <T extends Record<string, any>>(obj: T): Partial<T> => {
+//   const result: Partial<T> = {};
+
+//   Object.entries(obj).forEach(([key, value]) => {
+//     if (value === null || value === undefined || value === "") return;
+
+//     // ⚠️ phone object — API level only
+//     if (typeof value === "object" && value !== null && !Array.isArray(value) && "countryCode" in value && "phoneNo" in value) {
+//       if (!value.phoneNo) return; // ⛔ do NOT keep partial phone
+//       result[key as keyof T] = value;
+//       return;
+//     }
+
+//     if (typeof value === "object" && !Array.isArray(value)) {
+//       const cleaned = RemoveEmptyFields(value);
+//       if (Object.keys(cleaned).length > 0) {
+//         result[key as keyof T] = cleaned as T[keyof T];
+//       }
+//       return;
+//     }
+
+//     result[key as keyof T] = value;
+//   });
+
+//   return result;
+// };
+
 export const GetChangedFields = (newVal: Record<string, any>, oldVal: Record<string, any> = {}): Record<string, any> => {
   const changed: Record<string, any> = {};
 

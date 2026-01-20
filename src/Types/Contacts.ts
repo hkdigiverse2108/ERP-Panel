@@ -1,5 +1,6 @@
 import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
-export interface AddressDetails {
+import type { LocationBase } from "./Location";
+export interface Address {
   gstType?: string;
   gstIn?: string;
   contactFirstName?: string;
@@ -12,10 +13,16 @@ export interface AddressDetails {
   state?: string;
   city?: string;
   pinCode?: string;
-
   contactCompanyName: string;
 }
-export interface bankDetails {
+
+export interface AddressApi extends Omit<Address, "country" | "state" | "city"> {
+  country?: LocationBase;
+  state?: LocationBase;
+  city?: LocationBase;
+}
+
+export interface BankDetails {
   ifscCode?: string;
   name?: string;
   branch?: string;
@@ -23,6 +30,7 @@ export interface bankDetails {
 }
 
 export interface ContactFormValues {
+  contactType?: string;
   firstName?: string;
   lastName?: string;
   email?: string;
@@ -39,7 +47,7 @@ export interface ContactFormValues {
   };
   customerType?: string;
   vendorType?: string;
-  addressDetails?: AddressDetails[];
+  address?: Address[];
   isActive?: boolean;
   loyaltyPoints?: number;
   dob?: string;
@@ -47,18 +55,19 @@ export interface ContactFormValues {
   telephoneNo?: string;
   remarks?: string;
   supplierType?: string;
-  bankDetails?: bankDetails;
+  bankDetails?: BankDetails;
   transporterId?: string;
   companyName?: string;
   _submitAction?: "save" | "saveAndNew";
 }
 
-export type AddContactPayload = ContactFormValues;
+export type AddContactPayload = ContactFormValues & { companyId?: string };
+
 
 export type EditContactPayload = AddContactPayload & { contactId: string };
 
-export interface ContactBase extends Omit<ContactFormValues, "parentContactId">, CommonDataType {
-  parentContactId?: ContactBase;
+export interface ContactBase extends Omit<ContactFormValues, "address">, CommonDataType {
+  address?: AddressApi[];
 }
 
 export interface ContactDataResponse extends PageStatus {
