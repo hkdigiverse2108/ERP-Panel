@@ -67,7 +67,7 @@ const RecipeForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.RECIPE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.RECIPE[pageMode]} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
-        <Formik<RecipeFormValues> enableReinitialize initialValues={initialValues} validationSchema={RecipeFormSchema} onSubmit={handleSubmit}>
+        <Formik<RecipeFormValues> initialValues={initialValues} validationSchema={RecipeFormSchema} onSubmit={handleSubmit}>
           {({ values, setFieldValue, resetForm, dirty }) => (
             <Form noValidate>
               <Grid container spacing={2}>
