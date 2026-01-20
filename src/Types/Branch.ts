@@ -1,17 +1,63 @@
-import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
+import type { CompanyBase } from "./Company";
 
-export interface BranchFormValues {
+export interface BranchAddress {
   address?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  pinCode?: string;
+  timeZone?: string;
+}
+export interface BranchFormValues {
+  companyId?: string;
   name?: string;
+  displayName?: string;
+  contactName?: string;
+
+  phoneNo?: PhoneNumberType;
+  telephoneNumber?: string;
+  email?: string;
+  userName?: string;
+  password?: string;
+  yearInterval?: string;
+
+  gstRegistrationType?: string;
+  gstIdentificationNumber?: string;
+  panNo?: string;
+
+  webSite?: string;
+  fssaiNo?: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  pinCode?: string;
+  timeZone?: string;
+  address?: BranchAddress;
+
+  bankId?: string;
+  upiId?: string;
+  bankName?: string;
+  bankIFSC?: string;
+  branchName?: string;
+  accountHolderName?: string;
+  bankAccountNumber?: string;
+
+  outletSize?: string;
+  userIds?: string[];
+
   isActive?: boolean;
+
   _submitAction?: string;
 }
+export type AddBranchPayload = BranchFormValues;
 
-export type AddBranchPayload = BranchFormValues & { companyId?: string };
-
-export type EditBranchPayload = AddBranchPayload & { branchId: string };
-
-export type BranchBase = BranchFormValues & CommonDataType;
+export type EditBranchPayload = BranchFormValues & {
+  branchId: string;
+};
+export interface BranchBase extends Omit<BranchFormValues, "companyId" | "password" | "_submitAction">, CommonDataType {
+  companyId: CompanyBase;
+}
 
 export interface BranchDataResponse extends PageStatus {
   branch_data: BranchBase[];
@@ -19,4 +65,7 @@ export interface BranchDataResponse extends PageStatus {
 
 export interface BranchApiResponse extends MessageStatus {
   data: BranchDataResponse;
+}
+export interface BranchDropdownApiResponse extends MessageStatus {
+  data: BranchBase[];
 }

@@ -6,6 +6,7 @@ import type { FocusEvent, ReactNode } from "react";
 import * as Yup from "yup";
 import type { ContactBase } from "./Contacts";
 import type { CustomerFormValues } from "./Customer";
+import type { LocationBase } from "./Location";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -303,6 +304,20 @@ export interface CommonDataType {
   updatedAt: string;
 }
 
+export interface AddressBase {
+  address?: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  pinCode?: string;
+}
+
+export interface AddressApi extends Omit<AddressBase, "country" | "state" | "city"> {
+  country?: LocationBase;
+  state?: LocationBase;
+  city?: LocationBase;
+}
+
 // ************ Common Api Data Type End ***********
 
 // ************ Common Switch Start ***********
@@ -487,7 +502,10 @@ export type DependentSelectProps<T extends ApiOption, P = string | undefined> = 
   required?: boolean;
   disabled?: boolean;
   enabled?: boolean;
-  query: (params?: P, enabled?: boolean) => {
+  query: (
+    params?: P,
+    enabled?: boolean,
+  ) => {
     data?: { data: T[] };
     isLoading: boolean;
   };

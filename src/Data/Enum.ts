@@ -1,3 +1,5 @@
+import type { CompanyFormValues } from "../Types";
+
 export const PRODUCT_TYPE = ["finished", "raw_material", "semi_finished", "service", "non_inventory"] as const;
 
 export const RECIPE_TYPE = ["assemble", "unassemble"] as const;
@@ -231,3 +233,5 @@ export const CONSUMPTION_TYPE = [
   { label: "Production", value: "production" },
   { label: "Scrap/Wastage", value: "scrap/wastage" },
 ];
+
+export const BANK_UI_FIELDS: (keyof CompanyFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber", "upiId"];

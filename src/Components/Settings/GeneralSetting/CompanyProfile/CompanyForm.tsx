@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../../Api";
 import { CommonButton, CommonPhoneNumber, CommonSwitch, CommonValidationSelect, CommonValidationTextField } from "../../../../Attribute";
 import { PAGE_TITLE, ROUTES } from "../../../../Constants";
-import { BREADCRUMBS, DATE_FORMATS } from "../../../../Data";
+import { BANK_UI_FIELDS, BREADCRUMBS, DATE_FORMATS } from "../../../../Data";
 import { setCompany } from "../../../../Store/Slices/CompanySlice";
 import { setSelectedFiles, setUploadModal } from "../../../../Store/Slices/ModalSlice";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
-import type { CompanyFormValues, Params } from "../../../../Types";
-import { GetChangedFields } from "../../../../Utils";
+import type { BankBase, CompanyFormValues, Params } from "../../../../Types";
+import { GenerateOptions, GetChangedFields } from "../../../../Utils";
 import { CompanyFormSchemas } from "../../../../Utils/ValidationSchemas";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../../Common";
 import { CommonFormImageBox } from "../../../Common/CommonUploadImage/CommonImageBox";
@@ -31,6 +31,7 @@ const CompanyForm = () => {
   const dispatch = useAppDispatch();
 
   const [activeKey, setActiveKey] = useState<CompanyImageKey | null>(null);
+  const { data: bankData, isLoading: bankDataLoading } = Queries.useGetBankDropdown({ companyFilter: companyData?._id }, Boolean(companyData?._id));
 
   const initialValues: CompanyFormValues = {
     name: companyData.name || "",
@@ -48,18 +49,21 @@ const CompanyForm = () => {
     },
     customerCareNumber: companyData.customerCareNumber || "",
 
-    address: companyData.address || "",
-    city: companyData.city || "",
-    state: companyData.state || "",
-    country: companyData.country || "",
-    pinCode: companyData.pinCode || null,
+    address: {
+      address: companyData?.address?.address || "",
+      country: companyData?.address?.country?._id || "",
+      state: companyData?.address?.state?._id || "",
+      city: companyData?.address?.city?._id || "",
+      pinCode: companyData?.address?.pinCode || null,
+    },
 
-    // bankName: companyData.bankName || "",
-    // bankIFSC: companyData.bankIFSC || "",
-    upiId: companyData.upiId || "",
-    // branchName: companyData.branchName || "",
-    // accountHolderName: companyData.accountHolderName || "",
-    // bankAccountNumber: companyData.bankAccountNumber || "",
+    bankId: companyData?.bankId?._id || "",
+    upiId: "",
+    bankName: "",
+    bankIFSC: "",
+    branchName: "",
+    accountHolderName: "",
+    bankAccountNumber: "",
 
     userName: companyData.userName || "",
     GSTRegistrationType: companyData.GSTRegistrationType || "",
@@ -89,9 +93,8 @@ const CompanyForm = () => {
     const newData = {
       ...values,
     };
-
     const payload = GetChangedFields(newData, companyData);
-    console.log(payload);
+    BANK_UI_FIELDS.forEach((field) => delete (payload as CompanyFormValues)[field]);
 
     editCompanyMutate(
       { companyId: companyData?._id, ...payload },
@@ -121,6 +124,27 @@ const CompanyForm = () => {
     return null;
   };
 
+  const FormikBankSync = ({ bankData }: { bankData?: BankBase[] }) => {
+    const { values, setFieldValue } = useFormikContext<CompanyFormValues>();
+
+    const setBankFields = (bank?: BankBase) => {
+      setFieldValue("bankName", bank?.name ?? "");
+      setFieldValue("bankIFSC", bank?.ifscCode ?? "");
+      setFieldValue("branchName", bank?.branchName ?? "");
+      setFieldValue("accountHolderName", bank?.accountHolderName ?? "");
+      setFieldValue("bankAccountNumber", bank?.bankAccountNumber ?? "");
+      setFieldValue("upiId", bank?.upiId ?? "");
+    };
+
+    useEffect(() => {
+      if (!values.bankId) return setBankFields();
+
+      const bank = bankData?.find((b) => b._id === values.bankId);
+      setBankFields(bank);
+    }, [values.bankId, bankData]);
+
+    return null;
+  };
   const handleUpload = (key: CompanyImageKey) => {
     setActiveKey(key);
     dispatch(setUploadModal({ open: true, type: "image" }));
@@ -137,6 +161,7 @@ const CompanyForm = () => {
         <Formik<CompanyFormValues> enableReinitialize initialValues={initialValues} validationSchema={CompanyFormSchemas} onSubmit={handleOnSubmit}>
           {({ values, setFieldValue, dirty }) => (
             <Form noValidate>
+              <FormikBankSync bankData={bankData?.data} />
               <FormikImageSync activeKey={activeKey} clearActiveKey={() => setActiveKey(null)} />
               <Grid container spacing={2}>
                 {/* BASIC DETAILS */}
@@ -156,23 +181,24 @@ const CompanyForm = () => {
                 {/* COMMUNICATION */}
                 <CommonCard title="Communication Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationTextField name="address" label="Address" grid={{ xs: 12, md: 4 }} multiline required />
-                    <DependentSelect name="country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
-                    <DependentSelect params={values?.country} name="state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.country} required />
-                    <DependentSelect params={values?.state} name="city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.state} required />
-                    <CommonValidationTextField name="pinCode" label="Pin Code" grid={{ xs: 12, md: 4 }} required />
+                    <CommonValidationTextField name="address.address" label="Address" grid={{ xs: 12, md: 4 }} multiline required />
+                    <DependentSelect name="address.country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
+                    <DependentSelect params={values?.address?.country} name="address.state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.address?.country} required />
+                    <DependentSelect params={values?.address?.state} name="address.city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.address?.state} required />
+                    <CommonValidationTextField name="address.pinCode" label="Pin Code" type="number" grid={{ xs: 12, md: 4 }} required />
                   </Grid>
                 </CommonCard>
 
                 {/* BANK */}
                 <CommonCard title="Bank Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    {/* <CommonValidationTextField name="bankIFSC" label="IFSC Code" grid={{ xs: 12, md: 4 }} /> */}
-                    {/* <CommonValidationTextField name="bankName" label="Bank Name" grid={{ xs: 12, md: 4 }} /> */}
-                    {/* <CommonValidationTextField name="branchName" label="branch Name" grid={{ xs: 12, md: 4 }} /> */}
-                    {/* <CommonValidationTextField name="accountHolderName" label="Account Holder Name" grid={{ xs: 12, md: 4 }} /> */}
-                    <CommonValidationTextField name="upiId" label="UPI ID" grid={{ xs: 12, md: 4 }} />
-                    {/* <CommonValidationTextField name="bankAccountNumber" label="Account No." grid={{ xs: 12, md: 4 }} /> */}
+                    <CommonValidationSelect name="bankId" label="Select Bank" options={GenerateOptions(bankData?.data)} isLoading={bankDataLoading} grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="bankIFSC" label="IFSC Code" grid={{ xs: 12, md: 4 }} disabled />
+                    <CommonValidationTextField name="bankName" label="Bank Name" grid={{ xs: 12, md: 4 }} disabled />
+                    <CommonValidationTextField name="branchName" label="branch Name" grid={{ xs: 12, md: 4 }} disabled />
+                    <CommonValidationTextField name="accountHolderName" label="Account Holder Name" grid={{ xs: 12, md: 4 }} disabled />
+                    <CommonValidationTextField name="upiId" label="UPI ID" grid={{ xs: 12, md: 4 }} disabled />
+                    <CommonValidationTextField name="bankAccountNumber" label="Account No." grid={{ xs: 12, md: 4 }} disabled />
                   </Grid>
                 </CommonCard>
 

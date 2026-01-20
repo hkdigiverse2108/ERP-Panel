@@ -28,10 +28,10 @@ const Profile = () => {
       title: "Address Details",
       items: [
         { label: "Address", value: user?.address?.address },
-        { label: "City", value: user?.address?.city },
-        { label: "State", value: user?.address?.state },
-        { label: "Country", value: user?.address?.country },
-        { label: "Pin Code", value: user?.address?.postalCode },
+        { label: "City", value: user?.address?.city?.name },
+        { label: "State", value: user?.address?.state?.name },
+        { label: "Country", value: user?.address?.country?.name },
+        { label: "Pin Code", value: user?.address?.pinCode },
       ],
     },
     {

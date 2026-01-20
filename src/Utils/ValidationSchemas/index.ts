@@ -60,7 +60,7 @@ export const EmployeeFormSchema = Yup.object({
     country: Validation("string", "Country"),
     state: Validation("string", "State"),
     city: Validation("string", "City"),
-    postalCode: Validation("string", "ZIP Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid ZIP Code") }),
+    pinCode: Validation("string", "Pin Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid Pin Code") }),
   }).nullable(),
 
   // ---------- SALARY ----------
@@ -95,11 +95,13 @@ export const CompanyFormSchemas = Yup.object({
   phoneNo: PhoneValidation(),
   ownerNo: PhoneValidation(),
 
-  address: Validation("string", "address"),
-  city: Validation("string", "city"),
-  state: Validation("string", "State"),
-  country: Validation("string", "country"),
-  pinCode: Validation("string", "pinCode", { extraRules: (s) => s.trim().matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
+  address: Yup.object({
+    address: Validation("string", "Address"),
+    country: Validation("string", "Country"),
+    state: Validation("string", "State"),
+    city: Validation("string", "City"),
+    pinCode: Validation("string", "Pin Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid Pin Code") }),
+  }).nullable(),
 
   upiId: Validation("string", "upiId", { required: false }),
 
@@ -175,6 +177,14 @@ export const BankFormSchema = Yup.object().shape({
     creditBalance: Validation("number", "Credit Balance", { required: false }).nullable(),
     debitBalance: Validation("number", "Debit Balance", { required: false }).nullable(),
   }).nullable(),
+  address: Yup.object({
+    addressLine1: Validation("string", "Address Line1"),
+    addressLine2: Validation("string", "Address Line2", { required: false }),
+    country: Validation("string", "Country"),
+    state: Validation("string", "State"),
+    city: Validation("string", "City"),
+    pinCode: Validation("string", "Pin Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid Pin Code") }),
+  }).nullable(),
 });
 
 export const RecipeFormSchema = Yup.object({
@@ -201,7 +211,6 @@ export const RecipeFormSchema = Yup.object({
   }).required("Final product is required"),
 });
 
-
 const ContactAddressSchema = Yup.object().shape({
   gstType: Validation("string", "GST Type", { required: false }),
   gstIn: Yup.string().when("gstType", {
@@ -219,7 +228,7 @@ const ContactAddressSchema = Yup.object().shape({
   country: Validation("string", "Country"),
   state: Validation("string", "State"),
   city: Validation("string", "City"),
-  pinCode: Validation("string", "Pin Code", {required: false, extraRules: (s) => s.matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
+  pinCode: Validation("string", "Pin Code", { required: false, extraRules: (s) => s.matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
   tanNo: Validation("string", "Tan No", { required: false }),
 });
 

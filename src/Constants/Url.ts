@@ -33,6 +33,7 @@ export const URL_KEYS = {
 
   BRANCH: {
     BASE: "/branch",
+    DROPDOWN: "/branch/dropdown",
     ALL: "/branch/all",
     ADD: "/branch/add",
     EDIT: "/branch/edit",
@@ -63,6 +64,7 @@ export const URL_KEYS = {
   },
   ROLES: {
     BASE: "/role",
+    DROPDOWN: "/role/dropdown",
     ALL: "/role/all",
     ADD: "/role/add",
     EDIT: "/role/edit",
@@ -100,6 +102,7 @@ export const URL_KEYS = {
   },
   BANK: {
     BASE: "/bank",
+    DROPDOWN: "/bank/dropdown",
     ADD: "/bank/add",
     EDIT: "/bank/edit",
     ALL: "/bank/all",

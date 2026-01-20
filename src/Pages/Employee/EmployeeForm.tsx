@@ -17,8 +17,8 @@ const EmployeeForm = () => {
   const { data } = location.state || {};
   const { company } = useAppSelector((state) => state.company);
 
-  const { data: rolesData } = Queries.useGetRoles({ activeFilter: true });
-  const { data: branchData } = Queries.useGetBranch({ activeFilter: true });
+  const { data: rolesData , isLoading: rolesDataLoading} = Queries.useGetRolesDropdown();
+  const { data: branchData , isLoading: branchDataLoading} = Queries.useGetBranchDropdown();
   const { mutate: addEmployee, isPending: isAddLoading } = Mutations.useAddEmployee();
   const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditEmployee();
 
@@ -40,10 +40,10 @@ const EmployeeForm = () => {
 
     address: {
       address: data?.address?.address || "",
-      country: data?.address?.country || "",
-      state: data?.address?.state || "",
-      city: data?.address?.city || "",
-      postalCode: data?.address?.postalCode || null,
+      country: data?.address?.country?._id || "",
+      state: data?.address?.state?._id || "",
+      city: data?.address?.city?._id || "",
+      pinCode: data?.address?.pinCode || null,
     },
 
     bankDetails: {
@@ -64,7 +64,7 @@ const EmployeeForm = () => {
 
   const handleSubmit = async (values: EmployeeFormValues, { resetForm }: FormikHelpers<EmployeeFormValues>) => {
     const { _submitAction, ...rest } = values;
-    const payload = { ...rest, companyId: company!._id };
+    const payload = { ...rest, companyId: company!._id ,userType : "employee"};
 
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
@@ -92,11 +92,11 @@ const EmployeeForm = () => {
                     <CommonValidationTextField name="fullName" label="Full Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="username" label="User Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="designation" label="User designation" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="role" label="role" options={GenerateOptions(rolesData?.data?.role_data)} grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="role" label="role" options={GenerateOptions(rolesData?.data)} isLoading={rolesDataLoading} grid={{ xs: 12, md: 4 }} />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="branchId" label="branch" options={GenerateOptions(branchData?.data?.branch_data)} grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="branchId" label="branch" options={GenerateOptions(branchData?.data)} isLoading={branchDataLoading} grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
 
@@ -107,7 +107,7 @@ const EmployeeForm = () => {
                     <DependentSelect name="address.country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
                     <DependentSelect params={values?.address?.country} name="address.state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.address?.country} required />
                     <DependentSelect params={values?.address?.state} name="address.city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.address?.state} required />
-                    <CommonValidationTextField name="address.postalCode" label="ZIP Code" required type="number" grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="address.pinCode" label="Pin Code" required type="number" grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
 

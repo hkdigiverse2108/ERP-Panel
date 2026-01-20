@@ -1,15 +1,7 @@
 import type { BranchBase } from "./Branch";
-import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
+import type { AddressApi, AddressBase, CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { RolesBase } from "./Roles";
-
-export interface Address {
-  address?: string;
-  country?: string;
-  state?: string;
-  city?: string;
-  postalCode?: string;
-}
 
 export interface BankDetails {
   name?: string;
@@ -29,12 +21,13 @@ export interface EmployeeFormValues {
   branchId?: string;
   panNumber?: string;
   role?: string;
-  address?: Address;
+  address?: AddressBase;
   bankDetails?: BankDetails;
   wages?: number;
   commission?: number;
   extraWages?: number;
   target?: number;
+  userType?: string;
   isActive?: boolean;
   _submitAction?: string;
   companyId?: string;
@@ -44,10 +37,11 @@ export type AddEmployeePayload = EmployeeFormValues;
 
 export type EditEmployeePayload = AddEmployeePayload & { userId: string };
 
-export interface EmployeeBase extends Omit<EmployeeFormValues, "branchId" | "role" | "companyId">, CommonDataType {
+export interface EmployeeBase extends Omit<EmployeeFormValues, "branchId" | "role" | "companyId" | "address">, CommonDataType {
   branchId: BranchBase;
   role: RolesBase;
   companyId: CompanyBase;
+  address: AddressApi;
 }
 
 export interface EmployeeDataResponse extends PageStatus {
