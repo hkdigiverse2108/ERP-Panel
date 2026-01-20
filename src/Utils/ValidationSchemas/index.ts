@@ -201,7 +201,6 @@ export const RecipeFormSchema = Yup.object({
   }).required("Final product is required"),
 });
 
-
 const ContactAddressSchema = Yup.object().shape({
   gstType: Validation("string", "GST Type", { required: false }),
   gstIn: Yup.string().when("gstType", {
@@ -212,15 +211,14 @@ const ContactAddressSchema = Yup.object().shape({
   contactFirstName: Validation("string", "Contact First Name"),
   contactLastName: Validation("string", "Contact Last Name", { required: false }),
   contactCompanyName: Validation("string", "Contact Company Name", { required: false }),
-  contactNo: PhoneValidation("Contact No", { requiredCountryCode: false, requiredNumber: false }),
+  contactNo: PhoneValidation("Contact No", { requiredCountryCode: false, requiredNumber: false }).nullable().notRequired(),
   contactEmail: Validation("string", "Email", { required: false, extraRules: (s) => s.email("Invalid email address") }),
   addressLine1: Validation("string", "Address Line 1", { required: false }),
   addressLine2: Validation("string", "Address Line 2", { required: false }),
   country: Validation("string", "Country"),
   state: Validation("string", "State"),
   city: Validation("string", "City"),
-  pinCode: Validation("string", "Pin Code", {required: false, extraRules: (s) => s.matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
-  tanNo: Validation("string", "Tan No", { required: false }),
+  pinCode: Validation("string", "Pin Code", { required: false, extraRules: (s) => s.matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
 });
 
 const ContactBaseSchema = {
@@ -242,8 +240,9 @@ const ContactBaseSchema = {
   dob: Validation("string", "Date of Birth", { required: false }),
   anniversaryDate: Validation("string", "Anniversary Date", { required: false }),
   telephoneNo: Validation("string", "Telephone No"),
+  tanNo: Validation("string", "Tan No", { required: false }),
   remarks: Validation("string", "Remarks", { required: false }),
-  addressDetails: Yup.array().of(ContactAddressSchema).min(1),
+  address: Yup.array().of(ContactAddressSchema).min(1),
   bankDetails: Yup.object().shape({
     ifscCode: Validation("string", "IFSC Code", { required: false }),
     name: Validation("string", "Bank Name", { required: false }),
@@ -258,7 +257,7 @@ export const getContactFormSchema = Yup.object({
   customerCategory: Validation("string", "Customer Category", { required: false }),
   customerType: Validation("string", "Customer Type", { required: false }),
   supplierType: Validation("string", "Supplier Type", { required: false }),
-  transporterId: Validation("string", "Transporter Id", { required: false }),
+  transporterId: RequiredWhen("contactType", ["transporter"], "Transporter Id", "string"),
 });
 
 export const ProductFormSchema = Yup.object({
