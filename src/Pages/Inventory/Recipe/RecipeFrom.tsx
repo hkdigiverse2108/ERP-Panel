@@ -49,7 +49,6 @@ const RecipeForm = () => {
   const handleSubmit = async (values: RecipeFormValues, { resetForm }: FormikHelpers<RecipeFormValues>) => {
     const { _submitAction, ...rest } = values;
     const payload = { ...rest, companyId: company!._id };
-    console.log("Form Submission Data:", { values, payload });
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
       else navigate(-1);
