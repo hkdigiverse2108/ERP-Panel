@@ -39,9 +39,9 @@ const Recipe = () => {
   };
 
   const columns: AppGridColDef<RecipeBase>[] = [
-    { field: "number", headerName: "Recipe No", width: 150 },
-    { field: "name", headerName: "Recipe Name", width: 220 },
-    { field: "date", headerName: "Recipe Date", width: 150, valueGetter: (v) => new Date(v).toLocaleDateString() },
+    { field: "number", headerName: "Recipe No", width: 200 },
+    { field: "name", headerName: "Recipe Name", width: 270 },
+    { field: "date", headerName: "Recipe Date", width: 220, valueGetter: (v) => new Date(v).toLocaleDateString() },
     { field: "type", headerName: "Recipe Type", width: 150, flex: 1 },
     CommonActionColumn({
       active: (row) =>
