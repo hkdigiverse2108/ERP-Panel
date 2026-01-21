@@ -10,6 +10,7 @@ import type { AppGridColDef, ContactBase } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
 import { CommonRadio } from "../../Attribute";
 import { CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
+import { FormatDate } from "../../Utils";
 
 const Contact = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, updateAdvancedFilter, advancedFilter, params } = useDataGrid();
@@ -59,8 +60,8 @@ const Contact = () => {
     { field: "customerType", headerName: "Customer Type", width: 150 },
     { field: "email", headerName: "Email", width: 220 },
     { field: "companyName", headerName: "Company Name", width: 220 },
-    { field: "dob", headerName: "Date of Birth", width: 160 },
-    { field: "anniversaryDate", headerName: "Anniversary Date", width: 180 },
+    { field: "dob", headerName: "Date of Birth", width: 160 ,valueGetter: (v) => FormatDate(v)},
+    { field: "anniversaryDate", headerName: "Anniversary Date", width: 180 ,valueGetter: (v) => FormatDate(v)},
     CommonObjectPropertyColumn<ContactBase>("bankName", "bankDetails", "name", { headerName: "Bank name", width: 300 }),
     CommonObjectPropertyColumn<ContactBase>("ifscCode", "bankDetails", "ifscCode", { headerName: "IFSC Code", width: 300 }),
     CommonObjectPropertyColumn<ContactBase>("branchName", "bankDetails", "branch", { headerName: "Branch Name", width: 300 }),
