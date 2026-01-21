@@ -8,6 +8,7 @@ import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef } from "../../../Types";
 import { useDataGrid } from "../../../Utils/Hooks";
 import type { RecipeBase } from "../../../Types/Recipe";
+import { FormatDate } from "../../../Utils";
 
 const Recipe = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -41,7 +42,7 @@ const Recipe = () => {
   const columns: AppGridColDef<RecipeBase>[] = [
     { field: "number", headerName: "Recipe No", width: 200 },
     { field: "name", headerName: "Recipe Name", width: 270 },
-    { field: "date", headerName: "Recipe Date", width: 220, valueGetter: (v) => new Date(v).toLocaleDateString() },
+    { field: "date", headerName: "Recipe Date", width: 220, valueGetter: (v) => FormatDate(v) },
     { field: "type", headerName: "Recipe Type", width: 150, flex: 1 },
     CommonActionColumn({
       active: (row) =>
