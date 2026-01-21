@@ -61,27 +61,10 @@ const Contact = () => {
     { field: "companyName", headerName: "Company Name", width: 220 },
     { field: "dob", headerName: "Date of Birth", width: 160 },
     { field: "anniversaryDate", headerName: "Anniversary Date", width: 180 },
-    CommonObjectPropertyColumn<ContactBase>("bankName", "bankDetails", "name", { headerName: "Bank name",width: 300 }),
-    {
-      field: "ifscCode",
-      headerName: "IFSC Code",
-      width: 150,
-      valueGetter: (_value, row) => row?.bankDetails?.ifscCode || "",
-    },
-
-    {
-      field: "branchName",
-      headerName: "Branch",
-      width: 150,
-      valueGetter: (_value, row) => row?.bankDetails?.branch || "",
-    },
-
-    {
-      field: "accountNumber",
-      headerName: "Account No",
-      width: 160,
-      valueGetter: (_value, row) => row?.bankDetails?.accountNumber || "",
-    },
+    CommonObjectPropertyColumn<ContactBase>("bankName", "bankDetails", "name", { headerName: "Bank name", width: 300 }),
+    CommonObjectPropertyColumn<ContactBase>("ifscCode", "bankDetails", "ifscCode", { headerName: "IFSC Code", width: 300 }),
+    CommonObjectPropertyColumn<ContactBase>("branchName", "bankDetails", "branch", { headerName: "Branch Name", width: 300 }),
+    CommonObjectPropertyColumn<ContactBase>("accountNumber", "bankDetails", "accountNumber", { headerName: "Account Number", width: 300 }),
 
     // Address
     {
