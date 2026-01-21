@@ -11,7 +11,7 @@ import { useDataGrid } from "../../Utils/Hooks";
 import { CommonRadio } from "../../Attribute";
 
 const Contact = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive,updateAdvancedFilter, advancedFilter, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, updateAdvancedFilter, advancedFilter, params } = useDataGrid();
 
   const navigate = useNavigate();
   // const [contactType, setContactType] = useState("customer");
@@ -41,7 +41,7 @@ const Contact = () => {
     updateAdvancedFilter("contactType", [CONTACT_TYPE[0].value]);
   }, []);
 
-  const columns: AppGridColDef<any>[] = [
+  const columns: AppGridColDef<ContactBase>[] = [
     { field: "firstName", headerName: "Name", width: 240 },
 
     CommonPhoneColumns("phoneNo", { headerName: "Phone No", width: 240 }),
@@ -62,18 +62,74 @@ const Contact = () => {
     { field: "anniversaryDate", headerName: "Anniversary Date", width: 180 },
 
     // Bank
-    { field: "bankName", headerName: "Bank Name", width: 150 },
-    { field: "ifscCode", headerName: "IFSC Code", width: 150 },
-    { field: "branchName", headerName: "Branch", width: 150 },
-    { field: "accountNumber", headerName: "Account No", width: 160 },
+    {
+      field: "bankName",
+      headerName: "Bank Name",
+      width: 150,
+      valueGetter: (_value, row) => row?.bankDetails?.name || "",
+    },
+
+    {
+      field: "ifscCode",
+      headerName: "IFSC Code",
+      width: 150,
+      valueGetter: (_value, row) => row?.bankDetails?.ifscCode || "",
+    },
+
+    {
+      field: "branchName",
+      headerName: "Branch",
+      width: 150,
+      valueGetter: (_value, row) => row?.bankDetails?.branch || "",
+    },
+
+    {
+      field: "accountNumber",
+      headerName: "Account No",
+      width: 160,
+      valueGetter: (_value, row) => row?.bankDetails?.accountNumber || "",
+    },
 
     // Address
-    { field: "addressLine1", headerName: "Address Line 1", width: 180 },
-    { field: "addressLine2", headerName: "Address Line 2", width: 180 },
-    { field: "pinCode", headerName: "Pin Code", width: 120 },
-    { field: "city", headerName: "City", width: 120 },
-    { field: "state", headerName: "State", width: 120 },
-    { field: "country", headerName: "Country", flex: 1, minWidth: 120 },
+    {
+      field: "addressLine1",
+      headerName: "Address Line 1",
+      width: 180,
+      valueGetter: (_value, row) => row?.address?.[0]?.addressLine1 || "",
+    },
+
+    {
+      field: "addressLine2",
+      headerName: "Address Line 2",
+      width: 180,
+      valueGetter: (_value, row) => row?.address?.[0]?.addressLine2 || "",
+    },
+    {
+      field: "pinCode",
+      headerName: "Pin Code",
+      width: 120,
+      valueGetter: (_value, row) => row?.address?.[0]?.pinCode || "",
+    },
+
+    {
+      field: "city",
+      headerName: "City",
+      width: 120,
+      valueGetter: (_value, row) => row?.address?.[0]?.city?.name || "",
+    },
+    {
+      field: "state",
+      headerName: "State",
+      width: 120,
+      valueGetter: (_value, row) => row?.address?.[0]?.state?.name || "",
+    },
+
+    {
+      field: "country",
+      headerName: "Country",
+      width: 120,
+      valueGetter: (_value, row) => row?.address?.[0]?.country?.name || "",
+    },
 
     CommonActionColumn({
       active: (row) => editContact({ contactId: row?._id, isActive: !row.isActive }),
