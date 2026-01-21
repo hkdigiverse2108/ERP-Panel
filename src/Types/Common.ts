@@ -162,6 +162,8 @@ export interface CustomToolbarProps {
   setActive?: (active: boolean) => void;
   isExport?: boolean;
   fileName?: string;
+  filterModel: GridFilterModel;
+  onFilterModelChange: (model: GridFilterModel) => void;
 }
 
 export interface ExportToExcelProps<T extends GridValidRowModel> {
