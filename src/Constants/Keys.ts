@@ -47,12 +47,14 @@ export const KEYS = {
     EDIT: "brand-edit",
     DELETE: "brand-delete",
   },
+
   CATEGORY: {
     BASE: "category",
     ADD: "category-add",
     EDIT: "category-edit",
     DELETE: "category-delete",
   },
+
   TAX: {
     BASE: "tax",
   },
@@ -112,5 +114,12 @@ export const KEYS = {
     ADD: "location-add",
     EDIT: "location-edit",
     DELETE: "location-delete",
+  },
+
+  BILLOFLIVEPRODUCT: {
+    BASE: "billofliveproduct",
+    ADD: "billofliveproduct-add",
+    EDIT: "billofliveproduct-edit",
+    DELETE: "billofliveproduct-delete",
   },
 };

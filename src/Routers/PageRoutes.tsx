@@ -22,6 +22,8 @@ import StockVerification from "../Pages/Inventory/StockVerification";
 import NewPos from "../Pages/POS/New";
 import GeneralSetting from "../Pages/Settings/GeneralSetting";
 import StockVerificationForm from "../Pages/Inventory/StockVerification/StockVerificationForm";
+import BillOfMaterials from "../Pages/Inventory/BillOfMaterials";
+import BillOfMaterialsForm from "../Pages/Inventory/BillOfMaterials/BillOfMaterialForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, element: <Dashboard /> },
@@ -55,9 +57,12 @@ export const PageRoutes = [
   { path: ROUTES.PAYMENT.ADD_EDIT, element: <PaymentForm /> },
 
   { path: ROUTES.POS.NEW, element: <NewPos /> },
-  
+
   { path: ROUTES.RECIPE.BASE, element: <Recipe /> },
   { path: ROUTES.RECIPE.ADD_EDIT, element: <RecipeForm /> },
+
+  { path: ROUTES.BILLOFMATERIALS.BASE, element: <BillOfMaterials /> },
+  { path: ROUTES.BILLOFMATERIALS.ADD_EDIT, element: <BillOfMaterialsForm /> },
 ];
 
 export const AuthRoutes = [

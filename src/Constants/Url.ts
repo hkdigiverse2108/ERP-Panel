@@ -115,6 +115,7 @@ export const URL_KEYS = {
   },
   RECIPE: {
     BASE: "/recipe",
+    DROPDOWN: "/recipe/dropdown",
     ADD: "/recipe/add",
     EDIT: "/recipe/edit",
     ALL: "/recipe/all",
@@ -125,5 +126,11 @@ export const URL_KEYS = {
     COUNTRY: "/location/country",
     STATE: "/location/state",
     CITY: "/location/city",
+  },
+  BILLOFLIVEPRODUCT: {
+    BASE: "/bill-of-live-product",
+    ALL: "/bill-of-live-product/all",
+    ADD: "/bill-of-live-product/add",
+    EDIT: "/bill-of-live-product/edit",
   },
 } as const;

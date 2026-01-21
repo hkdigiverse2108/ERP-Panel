@@ -1,5 +1,6 @@
 import { KEYS, URL_KEYS } from "../Constants";
 import type { AddBankPayload, AddContactPayload, AddEmployeePayload, AddProductPayload, AddRecipePayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, CallRequestFormValues, CompanyApiResponse, EditBankPayload, EditCompanyPayload, EditContactPayload, EditEmployeePayload, EditProductPayload, EditRecipePayload, EditRolesPayload, EmployeeApiResponse, LoginPayload, LoginResponse, UploadResponse } from "../Types";
+import type { AddBillOfLiveProductPayload, EditBillOfLiveProductPayload } from "../Types/BillOfMaterials";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
 
@@ -58,4 +59,9 @@ export const Mutations = {
   useAddRecipe: () => useMutations<AddRecipePayload, void>([KEYS.RECIPE.ADD, KEYS.RECIPE.BASE], (input) => Post(URL_KEYS.RECIPE.ADD, input)),
   useEditRecipe: () => useMutations<EditRecipePayload, void>([KEYS.RECIPE.EDIT, KEYS.RECIPE.BASE], (input) => Put(URL_KEYS.RECIPE.EDIT, input)),
   useDeleteRecipe: () => useMutations<string, void>([KEYS.RECIPE.DELETE, KEYS.RECIPE.BASE], (id) => Delete(`${URL_KEYS.RECIPE.BASE}/${id}`)),
+
+  //************** bill of materials **************** */
+  useAddBillOfLiveProduct: () => useMutations<AddBillOfLiveProductPayload, void>([KEYS.BILLOFLIVEPRODUCT.ADD, KEYS.BILLOFLIVEPRODUCT.BASE], (input) => Post(URL_KEYS.BILLOFLIVEPRODUCT.ADD, input)),
+  useEditBillOfLiveProduct: () => useMutations<EditBillOfLiveProductPayload, void>([KEYS.BILLOFLIVEPRODUCT.EDIT, KEYS.BILLOFLIVEPRODUCT.BASE], (input) => Put(URL_KEYS.BILLOFLIVEPRODUCT.EDIT, input)),
+  useDeleteBillOfLiveProduct: () => useMutations<string, void>([KEYS.BILLOFLIVEPRODUCT.DELETE, KEYS.BILLOFLIVEPRODUCT.BASE], (id) => Delete(`${URL_KEYS.BILLOFLIVEPRODUCT.BASE}/${id}`)),
 };

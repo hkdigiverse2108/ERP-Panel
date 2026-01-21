@@ -47,3 +47,7 @@ export interface RecipeDataResponse extends PageStatus {
 export interface RecipeApiResponse extends MessageStatus {
   data: RecipeDataResponse;
 }
+
+export interface RecipeDropdownApiResponse extends MessageStatus {
+  data: RecipeBase[];
+}

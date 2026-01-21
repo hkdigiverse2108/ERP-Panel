@@ -1,5 +1,6 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BankDropdownApiResponse, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, ContactApiResponse, CountryApiResponse, EmployeeApiResponse, Params, ProductApiResponse, ProductDropDownApiResponse, RecipeApiResponse, RolesApiResponse, RolesDropdownApiResponse, SingleEmployeeApiResponse, StockApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomDropdownApiResponse, UploadResponse } from "../Types";
+import type { AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BankDropdownApiResponse, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, ContactApiResponse, CountryApiResponse, EmployeeApiResponse, Params, ProductApiResponse, ProductDropDownApiResponse, RecipeApiResponse, RecipeDropdownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SingleEmployeeApiResponse, StockApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomDropdownApiResponse, UploadResponse } from "../Types";
+import type { BillOfLiveProductApiResponse } from "../Types/BillOfMaterials";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 
@@ -56,6 +57,7 @@ export const Queries = {
 
   //************ recipe ********/
   useGetRecipe: (params?: Params) => useQueries<RecipeApiResponse>([KEYS.RECIPE.BASE, params], () => Get(URL_KEYS.RECIPE.ALL, params)),
+  useGetRecipeDropdown: (params?: Params, enabled?: boolean) => useQueries<RecipeDropdownApiResponse>([KEYS.RECIPE.BASE, params], () => Get(URL_KEYS.RECIPE.DROPDOWN, params), { enabled: enabled }),
 
   //*************** stock **************** */
   useGetStock: (params?: Params) => useQueries<StockApiResponse>([KEYS.STOCK.BASE, params], () => Get(URL_KEYS.STOCK.ALL, params)),
@@ -65,4 +67,9 @@ export const Queries = {
   useGetCountryLocation: () => useQueries<CountryApiResponse>([KEYS.LOCATION.BASE], () => Get(URL_KEYS.LOCATION.COUNTRY)),
   useGetStateLocation: (id?: string) => useQueries<CountryApiResponse>([KEYS.LOCATION.BASE, id], () => Get(`${URL_KEYS.LOCATION.STATE}/${id}`), { enabled: !!id }),
   useGetCityLocation: (id?: string) => useQueries<CountryApiResponse>([KEYS.LOCATION.BASE, id], () => Get(`${URL_KEYS.LOCATION.CITY}/${id}`), { enabled: !!id }),
+
+  
+  //************ bill of materials ********/
+  useGetBillOfLiveProduct: (params?: Params) => useQueries<BillOfLiveProductApiResponse>([KEYS.BILLOFLIVEPRODUCT.BASE, params], () => Get(URL_KEYS.BILLOFLIVEPRODUCT.ALL, params)),
+
 };
