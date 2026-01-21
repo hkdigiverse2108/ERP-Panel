@@ -29,7 +29,7 @@ export const RemoveEmptyFields = <T extends Record<string, any>>(obj: T): Partia
 //       if (!value.phoneNo) return; // ⛔ do NOT keep partial phone
 //       result[key as keyof T] = value;
 //       return;
-//     }
+//     }           
 
 //     if (typeof value === "object" && !Array.isArray(value)) {
 //       const cleaned = RemoveEmptyFields(value);

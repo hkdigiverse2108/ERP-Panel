@@ -149,6 +149,7 @@ export interface CommonDataGridProps {
   defaultHidden?: string[];
   BoxClass?: string;
   isExport?: boolean;
+  fileName?: string;
 }
 
 export interface CustomToolbarProps {
@@ -160,18 +161,21 @@ export interface CustomToolbarProps {
   isActive?: boolean;
   setActive?: (active: boolean) => void;
   isExport?: boolean;
+  fileName?: string;
 }
 
 export interface ExportToExcelProps<T extends GridValidRowModel> {
   columns: readonly GridColDef[];
   rows: readonly T[];
   fileName?: string;
+  title?: string;
 }
 
 export interface ExportToPDFProps<T extends GridValidRowModel> {
   columns: readonly GridColDef[];
   rows: readonly T[];
   fileName?: string;
+  title?: string;
 }
 
 export interface CommonObjectNameColumnOptions {

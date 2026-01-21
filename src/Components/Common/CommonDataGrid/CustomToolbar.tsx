@@ -12,9 +12,11 @@ import { CommonButton, CommonSwitch } from "../../../Attribute";
 import type { CustomToolbarProps } from "../../../Types";
 import { ExportDataGridToExcel } from "./ExportDataGridToExcel";
 import { ExportDataGridToPDF } from "./ExportDataGridToPDF";
+import { useAppSelector } from "../../../Store/hooks";
 
-const CustomToolbar: FC<CustomToolbarProps> = ({ apiRef, columns, rows, rowCount, handleAdd, isActive, setActive, isExport = true }) => {
+const CustomToolbar: FC<CustomToolbarProps> = ({ fileName, apiRef, columns, rows, rowCount, handleAdd, isActive, setActive, isExport = true }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { user } = useAppSelector((state) => state.auth);
 
   return (
     <Toolbar>
@@ -56,13 +58,14 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ apiRef, columns, rows, rowCount
                 ExportDataGridToExcel({
                   columns,
                   rows,
-                  fileName: "employees.xlsx",
+                  fileName: fileName,
+                  title: user?.fullName,
                 });
                 setAnchorEl(null);
               }}
             >
               <GridOnIcon fontSize="small" sx={{ mr: 1 }} />
-              Download as Excel
+              Excel
             </MenuItem>
 
             {/* PRINT */}
@@ -82,7 +85,8 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ apiRef, columns, rows, rowCount
                 ExportDataGridToPDF({
                   columns,
                   rows,
-                  fileName: "employees.pdf",
+                  fileName: fileName,
+                  title: user?.fullName,
                 });
                 setAnchorEl(null);
               }}

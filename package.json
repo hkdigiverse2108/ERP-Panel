@@ -36,7 +36,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.9.6",
     "tailwindcss": "^4.1.17",
-    "xlsx": "^0.18.5",
+    "xlsx-js-style": "^1.2.0",
     "yup": "^1.7.1"
   },
   "devDependencies": {
