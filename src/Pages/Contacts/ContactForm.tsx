@@ -10,7 +10,7 @@ import { useAppSelector } from "../../Store/hooks";
 import type { ContactFormValues } from "../../Types";
 import { GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { getContactFormSchema } from "../../Utils/ValidationSchemas";
-import type { AddContactPayload, Address, AddressApi } from "../../Types/Contacts";
+import type { AddContactPayload, Address, ContactAddressApi } from "../../Types/Contacts";
 
 const ContactForm = () => {
   const location = useLocation();
@@ -45,7 +45,7 @@ const ContactForm = () => {
     },
   };
 
-  const mapAddress = (addr?: AddressApi) => ({
+  const mapAddress = (addr?: ContactAddressApi) => ({
     gstType: addr?.gstType || "UnRegistered",
     gstIn: addr?.gstIn || "",
     contactFirstName: addr?.contactFirstName || "",

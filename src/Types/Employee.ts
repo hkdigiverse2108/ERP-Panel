@@ -3,7 +3,7 @@ import type { AddressApi, AddressBase, CommonDataType, MessageStatus, PageStatus
 import type { CompanyBase } from "./Company";
 import type { RolesBase } from "./Roles";
 
-export interface BankDetails {
+export interface EmployeeBankDetails {
   name?: string;
   branchName?: string;
   accountNumber?: string;
@@ -22,7 +22,7 @@ export interface EmployeeFormValues {
   panNumber?: string;
   role?: string;
   address?: AddressBase;
-  bankDetails?: BankDetails;
+  bankDetails?: EmployeeBankDetails;
   wages?: number;
   commission?: number;
   extraWages?: number;

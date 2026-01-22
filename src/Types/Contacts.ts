@@ -16,13 +16,13 @@ export interface Address {
   contactCompanyName: string;
 }
 
-export interface AddressApi extends Omit<Address, "country" | "state" | "city"> {
+export interface ContactAddressApi extends Omit<Address, "country" | "state" | "city"> {
   country?: LocationBase;
   state?: LocationBase;
   city?: LocationBase;
 }
 
-export interface BankDetails {
+export interface ContactBankDetails {
   ifscCode?: string;
   name?: string;
   branch?: string;
@@ -55,7 +55,7 @@ export interface ContactFormValues {
   telephoneNo?: string;
   remarks?: string;
   supplierType?: string;
-  bankDetails?: BankDetails;
+  bankDetails?: ContactBankDetails;
   transporterId?: string;
   companyName?: string;
   _submitAction?: "save" | "saveAndNew";
@@ -67,7 +67,7 @@ export type AddContactPayload = ContactFormValues & { companyId?: string };
 export type EditContactPayload = AddContactPayload & { contactId: string };
 
 export interface ContactBase extends Omit<ContactFormValues, "address">, CommonDataType {
-  address?: AddressApi[];
+  address?: ContactAddressApi[];
 }
 
 export interface ContactDataResponse extends PageStatus {
