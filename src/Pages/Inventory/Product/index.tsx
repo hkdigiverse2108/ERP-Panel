@@ -71,7 +71,7 @@ const Product = () => {
     { field: "mrp", headerName: "MRP", width: 150 },
     { field: "sellingPrice", headerName: "Selling Price", width: 150 },
     { field: "hsnCode", headerName: "HSN", width: 150 },
-    { field: "openingQty", headerName: "Opening Qty", flex: 1, minWidth: 150 },
+    { field: "qty", headerName: "Qty", flex: 1, minWidth: 150 },
     ...(isRemoveItem
       ? [
           {

@@ -187,6 +187,12 @@ export interface CommonObjectNameColumnOptions {
   minWidth?: number;
 }
 
+export interface CommonActionColumnProps<T> {
+  editRoute?: string;
+  onEdit?: (row: T) => void;
+  onDelete?: (row: T) => void;
+  active?: (row: T) => void;
+}
 // ************ Table End ***********
 
 // ************ Input Start ***********
