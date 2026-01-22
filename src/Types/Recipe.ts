@@ -12,6 +12,10 @@ export interface RawRecipeProduct extends RecipeProductItem {
 
 export interface FinalRecipeProduct extends RecipeProductItem {
   qtyGenerate?: number;
+  mfgDate?: string;
+  expiryDays?: number;
+  expDate?: string;
+  batchNo?: string;
 }
 
 export interface RecipeFormValues {
@@ -25,7 +29,7 @@ export interface RecipeFormValues {
   rawrecipeId?: string;
   finalProducts?: FinalRecipeProduct;
   _submitAction?: string;
-   isActive?: boolean;
+  isActive?: boolean;
   value?: { length: number };
 }
 
@@ -35,8 +39,7 @@ export type EditRecipePayload = AddRecipePayload & { recipeId: string };
 
 // export type RecipeBase = RecipeFormValues & CommonDataType;
 
-export interface RecipeBase extends Omit<RecipeFormValues, "productId">,
-    CommonDataType {
+export interface RecipeBase extends Omit<RecipeFormValues, "productId">, CommonDataType {
   productId: ProductBase;
 }
 

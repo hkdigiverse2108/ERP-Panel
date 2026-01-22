@@ -34,7 +34,7 @@ const BillOfMaterials = () => {
 
   const totalRows = data?.data?.totalData || 0;
 
-  const handleAdd = () => navigate(ROUTES.BILLOFMATERIALS.ADD_EDIT);
+  const handleAdd = () => navigate(ROUTES.BILLOFMATERIALS.ADD_EDIT , { state: { no :data?.data?.totalData} });
 
   const handleDelete = () => {
     if (!rowToDelete) return;
