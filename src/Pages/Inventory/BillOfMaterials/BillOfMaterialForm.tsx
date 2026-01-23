@@ -1,229 +1,238 @@
+import ClearIcon from "@mui/icons-material/Clear";
 import { Box, Grid } from "@mui/material";
-import { Form, Formik, type FormikHelpers, type FormikProps } from "formik";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Form, Formik } from "formik";
+import { useState } from "react";
 import { Mutations, Queries } from "../../../Api";
-import { CommonButton, CommonSelect, CommonSwitch, CommonTextField, CommonValidationDatePicker, CommonValidationTextField } from "../../../Attribute";
+import { CommonButton, CommonSelect, CommonTextField, CommonSwitch, CommonValidationDatePicker, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import { useAppSelector } from "../../../Store/hooks";
-import { DateConfig, GenerateOptions, RemoveEmptyFields } from "../../../Utils";
-import { RecipeFormSchema } from "../../../Utils/ValidationSchemas";
-import type { BillOfLiveProductFormValues } from "../../../Types/BillOfMaterials";
-import { useRef, useState } from "react";
 import type { ProductBase, RecipeBase } from "../../../Types";
-import { ClearIcon } from "@mui/x-date-pickers-pro";
+import { GenerateOptions, DateConfig } from "../../../Utils";
+import { useLocation } from "react-router-dom";
+
+interface BomRow {
+  id: string;
+  recipeId: string;
+  name: string;
+  qty: number;
+  purchasePrice: number;
+  landingCost: number;
+  mrp: number;
+  sellingPrice: number;
+  expiryDays: number;
+  mfgDate: string | null;
+  expDate: string | null;
+  useQty?: number;
+}
 
 const BillOfMaterialForm = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { data, no } = location.state || {};
-  const { company } = useAppSelector((state) => state.company);
-
-  const formikRef = useRef<FormikProps<BillOfLiveProductFormValues>>(null);
-
-  const [selectedRecipeIds, setSelectedRecipeIds] = useState<string[]>([]);
-  const [selectedRecipes, setSelectedRecipes] = useState<RecipeBase[]>([]);
-
   const { data: recipeData } = Queries.useGetRecipe({ activeFilter: true });
+  const [selectedRecipeIds, setSelectedRecipeIds] = useState<string[]>([]);
+  const location = useLocation();
+  const { data, no } = location.state || {};
+  const [rows, setRows] = useState<BomRow[]>([]);
 
   const isEditing = Boolean(data?._id);
-  const pageMode = isEditing ? "EDIT" : "ADD";
   const bomNumber = isEditing ? data?.number : String((Number(no) || 0) + 1);
 
-  const { mutate: addBillOfMaterial, isPending: isAddLoading } = Mutations.useAddBillOfLiveProduct();
+  const createRowFromRecipe = (recipe: RecipeBase): BomRow => {
+    const product = recipe.finalProducts?.productId as ProductBase;
+    return {
+      id: product._id,
+      recipeId: recipe._id,
+      name: product.name ?? "",
+      qty: recipe.finalProducts?.qtyGenerate ?? 1,
+      purchasePrice: product.purchasePrice ?? 0,
+      landingCost: product.landingCost ?? 0,
+      mrp: recipe.finalProducts?.mrp ?? 0,
+      sellingPrice: product.sellingPrice ?? 0,
+      expiryDays: recipe.finalProducts?.expiryDays ?? 0,
+      mfgDate: null,
+      expDate: null,
+    };
+  };
+  const handleRecipeChange = (ids: string[]) => {
+    setSelectedRecipeIds(ids);
+    if (!ids.length) {
+      setRows([]);
+      return;
+    }
 
-  const { mutate: editBillOfMaterial, isPending: isEditLoading } = Mutations.useEditBillOfLiveProduct();
+    const recipes = recipeData?.data?.recipe_data.filter((r) => ids.includes(r._id)) || [];
+    setRows(recipes.map(createRowFromRecipe));
+  };
 
-  const initialValues: BillOfLiveProductFormValues = {
+  const handleCut = (recipeId: string) => {
+    const updated = selectedRecipeIds.filter((id) => id !== recipeId);
+    handleRecipeChange(updated);
+  };
+
+  const updateRow = (id: string, data: Partial<BomRow>) => {
+    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, ...data } : r)));
+  };
+  const initialValues = {
     number: bomNumber,
     date: DateConfig.utc().toISOString(),
-    recipeId: [],
     allowReverseCalculation: false,
-    isActive: true,
   };
-
-  const handleSubmit = async (values: BillOfLiveProductFormValues, { resetForm }: FormikHelpers<BillOfLiveProductFormValues>) => {
-    const payload = {
-      ...values,
-      companyId: company!._id,
-    };
-
-    const onSuccess = () => {
-      resetForm();
-      navigate(-1);
-    };
-
-    isEditing ? editBillOfMaterial({ ...payload, billOfLiveProductId: data._id }, { onSuccess }) : addBillOfMaterial(RemoveEmptyFields(payload), { onSuccess });
-  };
+  const handleSubmit = () => {};
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.BILLOFMATERIALS[pageMode]} breadcrumbs={BREADCRUMBS.BILLOFMATERIALS[pageMode]} />
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.BILLOFMATERIALS.ADD} breadcrumbs={BREADCRUMBS.BILLOFMATERIALS.ADD} />
 
-      <Box sx={{ p: 3, mb: 8 }}>
-        <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={RecipeFormSchema} onSubmit={handleSubmit}>
-          {({ resetForm, dirty }) => (
-            <Form noValidate>
-              <Grid container spacing={2}>
-                {/* HEADER */}
-                <Grid size={12}>
-                  <CommonCard>
-                    <Box p={2} display="flex" flexWrap="wrap" gap={2}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <CommonCard hideDivider>
+          <Grid container spacing={2} sx={{ p: 2 }}>
+            <Grid size={12}>
+              <Formik enableReinitialize initialValues={initialValues} onSubmit={handleSubmit}>
+                {() => (
+                  <Form>
+                    <Grid container spacing={2}>
                       <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 3 }} />
+                      <CommonValidationTextField name="text" label="BIM" disabled grid={{ xs: 12, md: 2 }} />
+                      <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 2 }} />
 
-                      <CommonTextField value="BOM" label="BOM" disabled grid={{ xs: 12, md: 3 }} />
-
-                      <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 3 }} />
-
-                      <CommonSelect
-                        value={selectedRecipeIds}
-                        label="Recipe"
-                        multiple
-                        grid={{ xs: 12, md: 3 }}
-                        limitTags={1}
-                        options={GenerateOptions(recipeData?.data?.recipe_data)}
-                        onChange={(ids: string[]) => {
-                          setSelectedRecipeIds(ids);
-                          formikRef.current?.setFieldValue("recipeId", ids);
-
-                          const recipes = recipeData?.data?.recipe_data.filter((r) => ids.includes(r._id)) || [];
-
-                          setSelectedRecipes(recipes);
-                        }}
-                      />
+                      <CommonSelect value={selectedRecipeIds} label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 5 }} options={GenerateOptions(recipeData?.data?.recipe_data)} onChange={handleRecipeChange} />
 
                       <CommonSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
-                    </Box>
-                  </CommonCard>
-                </Grid>
+                    </Grid>
+                  </Form>
+                )}
+              </Formik>
+            </Grid>
 
-                {/* PRODUCT DETAILS */}
-                <Grid size={12}>
-                  <CommonCard title="Product Details">
-                    <div className="w-full bg-white dark:bg-gray-dark">
-                      <div className="lg:h-[500px] max-h-[500px] overflow-x-auto custom-scrollbar dark:border-gray-600 rounded-md">
-                        <table className="w-full text-sm">
-                          <thead className="sticky top-0 bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-100">
-                            <tr>
-                              <th className="p-2 text-center whitespace-nowrap">Sr No</th>
-                              <th className="p-2 text-start">Product</th>
-                              <th className="p-2 text-center whitespace-nowrap">Qty</th>
-                              <th className="p-2 text-center whitespace-nowrap">Purchase Price</th>
-                              <th className="p-2 text-center whitespace-nowrap">Landing Cost</th>
-                              <th className="p-2 text-center whitespace-nowrap">MRP</th>
-                              <th className="p-2 text-center whitespace-nowrap">Selling Price</th>
-                              <th className="p-2 text-center whitespace-nowrap">Mfg</th>
-                              <th className="p-2 text-center whitespace-nowrap">Expiry Days</th>
-                              <th className="p-2 text-center whitespace-nowrap">Exp Date</th>
-                              <th className="p-2 text-center whitespace-nowrap">Action</th>
-                            </tr>
-                          </thead>
+            {/* ================= TABLE ================= */}
+            <Grid size={12}>
+              <CommonCard title="Product Details">
+                <div className="w-full bg-white dark:bg-gray-dark">
+                  <div className="lg:h-[350px] max-h-[350px] overflow-x-auto custom-scrollbar">
+                    <table className="w-full text-sm ">
+                      <thead className="sticky top-0 z-10 bg-gray-100 dark:text-gray-100 text-gray-700 dark:bg-gray-900">
+                        <tr>
+                          <th className="p-2">Sr No</th>
+                          <th className="p-2 text-start">Product</th>
+                          <th className="p-2">Qty</th>
+                          <th className="p-2">Purchase Price</th>
+                          <th className="p-2">Landing Cost</th>
+                          <th className="p-2">MRP</th>
+                          <th className="p-2">Selling Price</th>
+                          <th className="p-2">MFG Date</th>
+                          <th className="p-2">Expiry Days</th>
+                          <th className="p-2">EXP Date</th>
+                          <th className="p-2">Action</th>
+                        </tr>
+                      </thead>
 
-                          <tbody>
-                            {selectedRecipes.map((recipe, i) => (
-                              <>
-                                {/* RECIPE NAME */}
-                                <tr className="bg-blue-50 dark:bg-blue-900/20">
-                                  <td colSpan={11} className="px-3 py-2 font-semibold text-blue-600 dark:text-blue-400">
-                                    {recipe.name}
-                                  </td>
-                                </tr>
+                      <tbody>
+                        {rows.map((row, i) => {
+                          const recipe = recipeData?.data?.recipe_data.find((r) => r._id === row.recipeId);
 
-                                {/* FINAL PRODUCT */}
-                                <tr className="even:bg-gray-50 dark:even:bg-gray-dark text-gray-700 dark:text-gray-200">
-                                  <td className="p-2 text-center">{i + 1}</td>
+                          return (
+                            <>
+                              <tr className="bg-blue-50 dark:bg-blue-900/20">
+                                <td colSpan={11} className="px-3 py-2 font-semibold text-blue-600 dark:text-blue-400">
+                                  {recipe?.name}
+                                </td>
+                              </tr>
+                              {/* ===== FINAL PRODUCT ===== */}
+                              <tr className="text-center bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark text-gray-600 dark:text-gray-300">
+                                <td className="p-2 text-center">{i + 1}</td>
 
-                                  <td className="p-2 text-start">{(recipe.finalProducts?.productId as ProductBase)?.name}</td>
+                                <td className="p-2 min-w-35 w-35 text-start">{row.name}</td>
 
-                                  <td className="p-2">
-                                    <CommonTextField type="number" value={recipe.finalProducts?.qtyGenerate ?? 0} />
-                                  </td>
-                                  <td className="p-2">
-                                    <CommonTextField type="number" value={(recipe.finalProducts?.productId as ProductBase)?.purchasePrice ?? 0} />
-                                  </td>
+                                <td className="p-2 min-w-30 w-30">
+                                  <CommonTextField type="number" value={row.qty} onChange={(v) => updateRow(row.id, { qty: Number(v) })} />
+                                </td>
 
-                                  <td className="p-2">
-                                    <CommonTextField type="number" value={(recipe.finalProducts?.productId as ProductBase)?.landingCost ?? 0} />
-                                  </td>
+                                <td className="p-2 min-w-30 w-30">
+                                  <CommonTextField type="number" value={row.purchasePrice} onChange={(v) => updateRow(row.id, { purchasePrice: Number(v) })} />
+                                </td>
+                                <td className="p-2 min-w-30 w-30">
+                                  <CommonTextField type="number" value={row.landingCost} onChange={(v) => updateRow(row.id, { landingCost: Number(v) })} />
+                                </td>
 
-                                  <td className="p-2">
-                                    <CommonTextField type="number" value={recipe.finalProducts?.mrp ?? 0} />
-                                  </td>
+                                <td className="p-2 min-w-30 w-30">
+                                  <CommonTextField type="number" value={row.mrp} onChange={(v) => updateRow(row.id, { mrp: Number(v) })} />
+                                </td>
 
-                                  <td className="p-2">
-                                    <CommonTextField type="number" value={(recipe.finalProducts?.productId as ProductBase)?.sellingPrice ?? 0} />
-                                  </td>
+                                <td className="p-2 min-w-30 w-30">
+                                  <CommonTextField type="number" value={row.sellingPrice} onChange={(v) => updateRow(row.id, { sellingPrice: Number(v) })} />
+                                </td>
 
-                                  <td className="p-2">
-                                    <CommonValidationDatePicker name={`mfg_${recipe._id}`} />
-                                  </td>
+                                <td className="p-2 min-w-30 w-30">
+                                  <CommonTextField type="date" value={row.mfgDate ?? ""} onChange={(v) => updateRow(row.id, { mfgDate: v })} />
+                                </td>
 
-                                  <td className="p-2">
-                                    <CommonTextField type="number" disabled value={recipe.finalProducts?.expiryDays ?? 0} />
-                                  </td>
+                                <td>{row.expiryDays}</td>
 
-                                  <td className="p-2">
-                                    <CommonValidationDatePicker name={`exp_${recipe._id}`} />
-                                  </td>
+                                <td>
+                                  <CommonTextField
+                                    type="date"
+                                    value={row.expDate ?? ""}
+                                    onChange={(v) =>
+                                      updateRow(row.id, {
+                                        expDate: v,
+                                      })
+                                    }
+                                  />
+                                </td>
 
-                                  <td className="p-2">
-                                    <CommonButton
-                                      size="small"
-                                      color="error"
-                                      variant="outlined"
-                                      onClick={() => {
-                                        setSelectedRecipeIds((prev) => prev.filter((id) => id !== recipe._id));
-                                        setSelectedRecipes((prev) => prev.filter((r) => r._id !== recipe._id));
-                                      }}
-                                    >
-                                      <ClearIcon />
-                                    </CommonButton>
-                                  </td>
-                                </tr>
-
-                                {/* RAW MATERIAL */}
-                                <tr>
-                                  <td colSpan={10} className="pl-12 py-4">
-                                    <table className="w-full text-sm border border-gray-200 dark:border-gray-600 rounded-md">
-                                      <thead className="bg-gray-100 dark:bg-gray-900">
-                                        <tr>
-                                          <th className="p-2">Sr No</th>
-                                          <th className="p-2 text-start">Raw Product</th>
-                                          <th className="p-2 text-center">Available Qty</th>
-                                          <th className="p-2 text-center">Use Qty</th>
-                                        </tr>
-                                      </thead>
-
-                                      <tbody>
-                                        {recipe.rawProducts?.map((raw, index) => (
-                                          <tr key={index} className="even:bg-gray-50 dark:even:bg-gray-dark">
-                                            <td className="p-2 text-center">{index + 1}</td>
-                                            <td className="p-2">{(raw.productId as ProductBase)?.name}</td>
-                                            <td className="p-2 text-center">{(raw.productId as ProductBase)?.qty ?? "-"}</td>
-                                            <td className="p-2">
-                                              <CommonTextField type="number" value={raw.useQty ?? 0} />
-                                            </td>
+                                <td>
+                                  <CommonButton size="small" color="error" onClick={() => handleCut(row.recipeId)}>
+                                    <ClearIcon />
+                                  </CommonButton>
+                                </td>
+                              </tr>
+                              {/* ===== RAW MATERIAL TABLE ===== */}
+                              {recipe?.rawProducts?.length ? (
+                                <tr className="bg-white dark:bg-gray-800">
+                                  <td colSpan={10} className="p-4">
+                                    <div className="border border-gray-200 dark:border-gray-600 rounded-md overflow-hidden">
+                                      <table className="w-full text-sm">
+                                        <thead className="bg-gray-100 dark:bg-gray-900">
+                                          <tr>
+                                            <th>Sr No</th>
+                                            <th>Raw Product</th>
+                                            <th>Available Qty</th>
+                                            <th>Use Qty</th>
                                           </tr>
-                                        ))}
-                                      </tbody>
-                                    </table>
+                                        </thead>
+
+                                        <tbody>
+                                          {recipe.rawProducts.map((raw, index) => (
+                                            <tr key={index} className="even:bg-gray-50 dark:even:bg-gray-dark">
+                                              <td className="text-center">{index + 1}</td>
+
+                                              <td>{(raw.productId as ProductBase)?.name}</td>
+
+                                              <td className="text-center">{(raw.productId as ProductBase)?.qty}</td>
+
+                                              <td>
+                                                <CommonTextField type="number" value={raw.useQty ?? 0} onChange={(v) => updateRow(row.id, { useQty: Number(v) })} />
+                                              </td>
+                                            </tr>
+                                          ))}
+                                        </tbody>
+                                      </table>
+                                    </div>
                                   </td>
                                 </tr>
-                              </>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </CommonCard>
-                </Grid>
+                              ) : null}
+                            </>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </CommonCard>
+            </Grid>
 
-                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isAddLoading || isEditLoading} onClear={() => resetForm()} />
-              </Grid>
-            </Form>
-          )}
-        </Formik>
+            <CommonBottomActionBar save />
+          </Grid>
+        </CommonCard>
       </Box>
     </>
   );
