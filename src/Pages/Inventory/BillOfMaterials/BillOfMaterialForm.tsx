@@ -3,7 +3,7 @@ import { Box, Grid } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { Mutations, Queries } from "../../../Api";
-import { CommonButton, CommonSelect, CommonTextField, CommonSwitch, CommonValidationDatePicker, CommonValidationTextField, CommonDatePicker } from "../../../Attribute";
+import { CommonButton, CommonTextField, CommonValidationDatePicker, CommonValidationTextField, CommonDatePicker, CommonValidationSelect, CommonValidationSwitch } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
@@ -45,7 +45,7 @@ const BillOfMaterialForm = () => {
   const isEditing = Boolean(data?._id);
 
   const [rows, setRows] = useState<BomRow[]>([]);
-  const [selectedRecipeIds, setSelectedRecipeIds] = useState<string[]>([]);
+
   const pageMode = isEditing ? "EDIT" : "ADD";
 
   const bomNumber = isEditing ? data?.number : String((Number(no) || 0) + 1);
@@ -85,19 +85,25 @@ const BillOfMaterialForm = () => {
   /* ---------------- RECIPE CHANGE (ADD MODE ONLY) ---------------- */
 
   const handleRecipeChange = (ids: string[]) => {
-    setSelectedRecipeIds(ids);
-
-    const recipes = recipeData?.data?.recipe_data.filter((r) => ids.includes(r._id)) || [];
-
-    const newRows = recipes.map(createRowFromRecipe);
+    const allRecipes = recipeData?.data?.recipe_data || [];
 
     setRows((prev) => {
-      const existing = prev.filter((r) => ids.includes(r.recipeId));
-      const existingRecipeIds = existing.map((r) => r.recipeId);
+      const map = new Map(prev.map((r) => [r.recipeId, r]));
 
-      const added = newRows.filter((r) => !existingRecipeIds.includes(r.recipeId));
+      const result: BomRow[] = [];
 
-      return [...existing, ...added];
+      ids.forEach((id) => {
+        const existing = map.get(id);
+
+        if (existing) {
+          result.push(existing);
+        } else {
+          const recipe = allRecipes.find((r) => r._id === id);
+          if (recipe) result.push(createRowFromRecipe(recipe));
+        }
+      });
+
+      return result;
     });
   };
 
@@ -105,10 +111,14 @@ const BillOfMaterialForm = () => {
     setRows((prev) => prev.map((row) => (row.id === id ? { ...row, ...data } : row)));
   };
   const handleCut = (recipeId: string) => {
-    setSelectedRecipeIds((prev) => prev.filter((id) => id !== recipeId));
+    const current: string[] = formikRef.current?.values?.recipeId || [];
 
+    const updated = current.filter((id) => id !== recipeId);
+
+    formikRef.current?.setFieldValue("recipeId", updated);
     setRows((prev) => prev.filter((row) => row.recipeId !== recipeId));
   };
+
   const updateRawQty = (rowId: string, index: number, value: number) => {
     setRows((prev) =>
       prev.map((row) =>
@@ -121,37 +131,38 @@ const BillOfMaterialForm = () => {
       ),
     );
   };
+//   const findRecipeIdByProduct = (productId: string) => {
+//   const recipe = recipeData?.data?.recipe_data.find(
+//     (r) => r.finalProducts?.productId?._id === productId
+//   );
+//   return recipe?._id || "";
+// };
 
-  /* ---------------- EDIT MODE DATA LOAD ---------------- */
+//   useEffect(() => {
+//     if (!isEditing || !data || !recipeData?.data?.recipe_data?.length) return;
 
-  useEffect(() => {
-    if (!isEditing || !data || !recipeData?.data?.recipe_data?.length) return;
-
-    const mapped: BomRow[] = (data.productDetails ?? []).map((item, index) => ({
-      id: item.productId._id,
-
-      recipeId: data.recipeId?.[index] || "",
-
-      name: item.productId.name ?? "",
-      qty: item.qty,
-      purchasePrice: item.purchasePrice ?? 0,
-      landingCost: item.landingCost ?? 0,
-      mrp: item.mrp ?? 0,
-      sellingPrice: item.sellingPrice ?? 0,
-      expiryDays: item.expiryDays ?? 0,
-      mfgDate: item.mfgDate ?? null,
-      expDate: item.expiryDate ?? null,
-      rawProducts:
-        item.ingredients?.map((ing) => ({
-          productId: ing.productId as ProductBase,
-          availableQty: ing.availableQty ?? 0,
-          useQty: ing.useQty,
-        })) || [],
-    }));
-
-    setRows(mapped);
-    setSelectedRecipeIds(data.recipeId ?? []);
-  }, [isEditing, data, recipeData]);
+//     const mapped: BomRow[] = (data.productDetails ?? []).map((item, index) => ({
+//       id: item.productId._id,
+//       recipeId: findRecipeIdByProduct(item.productId._id),
+//       name: item.productId.name ?? "",
+//       qty: item.qty,
+//       purchasePrice: item.purchasePrice ?? 0,
+//       landingCost: item.landingCost ?? 0,
+//       mrp: item.mrp ?? 0,
+//       sellingPrice: item.sellingPrice ?? 0,
+//       expiryDays: item.expiryDays ?? 0,
+//       mfgDate: item.mfgDate ?? null,
+//       expDate: item.expiryDate ?? null,
+//       rawProducts:
+//         item.ingredients?.map((ing) => ({
+//           productId: ing.productId as ProductBase,
+//           availableQty: ing.availableQty ?? 0,
+//           useQty: ing.useQty,
+//         })) || [],
+//     }));
+//     setRows(mapped);
+//     formikRef.current?.setFieldValue("recipeId", data.recipeId ?? [], false);
+//   }, [isEditing, data, recipeData?.data?.recipe_data?.length]);
 
   /* ---------------- FORM ---------------- */
 
@@ -159,6 +170,7 @@ const BillOfMaterialForm = () => {
     number: isEditing ? data!.number : bomNumber,
     date: isEditing ? data!.date : DateConfig.utc().toISOString(),
     allowReverseCalculation: data?.allowReverseCalculation ?? false,
+    recipeId: isEditing ? (data?.recipeId ?? []) : [],
   };
 
   /* ---------------- SUBMIT ---------------- */
@@ -187,6 +199,7 @@ const BillOfMaterialForm = () => {
       editBOM(
         {
           billOfLiveProductId: data!._id,
+          recipeId: values.recipeId,
           productDetails,
         },
         {
@@ -199,6 +212,7 @@ const BillOfMaterialForm = () => {
           number: values.number,
           date: values.date,
           allowReverseCalculation: values.allowReverseCalculation,
+          recipeId: values.recipeId,
           productDetails,
         },
         {
@@ -216,21 +230,33 @@ const BillOfMaterialForm = () => {
         <CommonCard hideDivider>
           <Grid container spacing={2} sx={{ p: 2 }}>
             <Grid size={12}>
-              <Formik<BillOfLiveProductFormValues> innerRef={formikRef} enableReinitialize initialValues={initialValues} onSubmit={handleSubmit}>
-                {() => (
-                  <Form>
-                    <Grid container spacing={2}>
-                      <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 3 }} />
-                      <CommonValidationTextField name="text" label="BIM" disabled grid={{ xs: 12, md: 2 }} />
-                      <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 2 }} />
+              {recipeData?.data?.recipe_data?.length ? (
+                <Formik
+                  enableReinitialize={isEditing}
+                  innerRef={formikRef}
+                  initialValues={initialValues}
+                  onSubmit={handleSubmit}
+                  validate={(values) => {
+                    handleRecipeChange(values.recipeId || []);
+                    return {};
+                  }}
+                >
+                  {() => {
+                    return (
+                      <Form noValidate>
+                        <Grid container spacing={2}>
+                          <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 3 }} />
+                          <CommonValidationTextField name="text" label="BIM" disabled grid={{ xs: 12, md: 2 }} />
+                          <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 2 }} />
 
-                      <CommonSelect value={selectedRecipeIds} label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 5 }} options={GenerateOptions(recipeData?.data?.recipe_data)} onChange={handleRecipeChange} />
-
-                      <CommonSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
-                    </Grid>
-                  </Form>
-                )}
-              </Formik>
+                          <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 5 }} options={GenerateOptions(recipeData?.data?.recipe_data)} />
+                          <CommonValidationSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
+                        </Grid>
+                      </Form>
+                    );
+                  }}
+                </Formik>
+              ) : null}
             </Grid>
 
             {/* ================= TABLE ================= */}

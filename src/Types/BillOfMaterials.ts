@@ -10,7 +10,6 @@ export interface IngredientUI {
   useQty: number;
 }
 
-
 export interface BillOfLiveProductDetailUI {
   productId: ProductBase;
   qty: number;
@@ -27,6 +26,7 @@ export interface BillOfLiveProductDetailUI {
   batchNo?: string;
 
   ingredients?: IngredientUI[];
+  recipeId?: string;
 }
 
 /* ================= FORM ================= */
@@ -102,7 +102,13 @@ export interface BillOfLiveProductApiResponse extends MessageStatus {
   data: BillOfLiveProductDataResponse;
 }
 
-export type SelectOption = {
-  label: string;
-  value: string;
-};
+
+
+
+
+
+
+
+
+
+
