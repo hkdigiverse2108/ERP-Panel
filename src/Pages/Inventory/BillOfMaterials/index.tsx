@@ -74,7 +74,7 @@ const BillOfMaterials = () => {
       active: (row) =>
         editBOM({
           billOfLiveProductId: row._id,
-          isActive: !row.isActive,
+          // isActive: !row.isActive,
         }),
       editRoute: ROUTES.BILLOFMATERIALS.ADD_EDIT,
       onDelete: (row) =>

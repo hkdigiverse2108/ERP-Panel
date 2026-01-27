@@ -1,16 +1,16 @@
 import ClearIcon from "@mui/icons-material/Clear";
 import { Box, Grid } from "@mui/material";
 import { Form, Formik } from "formik";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonButton, CommonTextField, CommonValidationDatePicker, CommonValidationTextField, CommonDatePicker, CommonValidationSelect, CommonValidationSwitch } from "../../../Attribute";
+import { CommonButton, CommonDatePicker, CommonTextField, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { ProductBase, RecipeBase } from "../../../Types";
-import { GenerateOptions, DateConfig } from "../../../Utils";
-import { useLocation, useNavigate } from "react-router-dom";
 import type { BillOfLiveProductBase, BillOfLiveProductFormValues } from "../../../Types/BillOfMaterials";
+import { DateConfig, GenerateOptions } from "../../../Utils";
 
 interface BomRow {
   id: string;
