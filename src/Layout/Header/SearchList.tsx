@@ -14,7 +14,7 @@ const SearchList = () => {
 
     return NavItems.filter((item) => {
       const matchMain = item.name.toLowerCase().includes(query.toLowerCase());
-      const matchSub = item?.subItems?.some((s) => s.name.toLowerCase().includes(query.toLowerCase()));
+      const matchSub = item?.children?.some((s) => s.name.toLowerCase().includes(query.toLowerCase()));
       return matchMain || matchSub;
     });
   }, [query]);
@@ -39,9 +39,9 @@ const SearchList = () => {
               </div>
 
               {/* Subitems */}
-              {section.subItems && (
+              {section.children && (
                 <ul className="ml-6 mt-2 space-y-1 border-l border-gray-300 pl-3 dark:border-gray-700">
-                  {section.subItems.map((sub, subIdx) => (
+                  {section.children.map((sub, subIdx) => (
                     <li key={subIdx} className="text-sm text-gray-700 dark:text-gray-300 hover:text-brand-500 cursor-pointer">
                       {sub.name}
                     </li>
