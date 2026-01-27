@@ -2,15 +2,15 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { Box, Grid } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useEffect, useState } from "react";
-import { Queries } from "../../../Api";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonSelect, CommonTextField, CommonValidationSelect } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { ProductBase } from "../../../Types";
+import type { ProductBase, StockVerificationFormValues, StockVerificationRow } from "../../../Types";
 import { GenerateOptions } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
-import { useLocation, useNavigate } from "react-router-dom";
 
 const StockVerificationForm = () => {
   const [searchValue, setSearchValue] = useState<string[]>([""]);
@@ -25,23 +25,12 @@ const StockVerificationForm = () => {
   const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown();
   const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown();
 
-  interface StockFormProps {
-    id: string;
-    name: string;
-    landingCost: number;
-    price: number;
-    mrp: number;
-    sellingPrice: number;
-    systemQty: number;
-    physicalQty: number;
-    differenceQty: number;
-    differenceAmount: number;
-  }
+  const { mutate: addStock, isPending: isAddLoading } = Mutations.useAddStockVerification();
 
-  const [rows, setRows] = useState<StockFormProps[]>([]);
+  const [rows, setRows] = useState<StockVerificationRow[]>([]);
 
-  const createRowFromProduct = (product: ProductBase): StockFormProps => ({
-    id: product._id,
+  const createRowFromProduct = (product: ProductBase): StockVerificationRow => ({
+    productId: product._id,
     name: product.name ?? "",
     landingCost: product.landingCost ?? 0,
     price: product.purchasePrice ?? 0,
@@ -49,33 +38,53 @@ const StockVerificationForm = () => {
     sellingPrice: product.sellingPrice ?? 0,
     systemQty: product.qty ?? 0,
     physicalQty: 0,
-    differenceQty: 0,
-    differenceAmount: (product.landingCost ?? 0) * 0,
+    differenceQty: 0 - (product.qty ?? 0),
+    differenceAmount: (product.landingCost ?? 0) * (0 - (product.qty ?? 0)),
   });
 
-  const updateRow = (id: string, data: Partial<StockFormProps>) => {
+  const updateRow = (id: string, data: Partial<StockVerificationRow>) => {
     setRows((prev) =>
       prev.map((r) => {
-        if (r.id !== id) return r;
+        if (r.productId !== id) return r;
 
         const updated = { ...r, ...data };
-        const differenceQty = updated.physicalQty - updated.systemQty;
+        const differenceQty = updated?.physicalQty - updated?.systemQty;
 
-        return { ...updated, differenceQty, differenceAmount: updated.landingCost * differenceQty };
+        return { ...updated, differenceQty, differenceAmount: updated?.landingCost * differenceQty };
       }),
     );
   };
 
-  const removeRow = (id: string) => setRows((prev) => prev.filter((r) => r.id !== id));
-  const totalDifferenceQty = rows.reduce((sum, r) => sum + r.physicalQty, 0);
+  const removeRow = (id: string) => setRows((prev) => prev.filter((r) => r.productId !== id));
+  const totalDifferenceQty = rows.reduce((sum, r) => sum + r?.physicalQty, 0);
 
-  const totalDifferenceAmount = rows.reduce((sum, r) => sum + r.differenceAmount, 0);
+  const totalDifferenceAmount = rows.reduce((sum, r) => sum + r?.differenceAmount, 0);
 
-  const initialValues = {
-    categoryId: null,
-    brandId: null,
-  };
   const handleSubmit = () => {};
+
+  const handleStockSubmit = async () => {
+    const items = rows.map((r) => ({
+      productId: r.productId,
+      landingCost: r.landingCost,
+      price: r.price,
+      mrp: r.mrp,
+      sellingPrice: r.sellingPrice,
+      systemQty: r.systemQty,
+      physicalQty: r.physicalQty,
+      differenceQty: r.differenceQty,
+      differenceAmount: r.differenceAmount,
+    }));
+    const payload: StockVerificationFormValues = {
+      items,
+      totalProducts: rows.length,
+      totalPhysicalQty: totalDifferenceQty,
+      differenceAmount: totalDifferenceAmount,
+      status: "pending",
+      remark: enterRemark,
+    };
+    await addStock(payload);
+    console.log("payload", payload);
+  };
 
   useEffect(() => {
     const hasAccess = isEditing ? permission.edit : permission.add;
@@ -88,7 +97,7 @@ const StockVerificationForm = () => {
         <CommonCard hideDivider>
           <Grid container spacing={2} sx={{ p: 2 }}>
             <Grid size={12}>
-              <Formik enableReinitialize initialValues={initialValues} onSubmit={handleSubmit}>
+              <Formik enableReinitialize initialValues={{ categoryId: null, brandId: null }} onSubmit={handleSubmit}>
                 {({ dirty }) => (
                   <Form noValidate>
                     <Grid container spacing={2}>
@@ -117,10 +126,10 @@ const StockVerificationForm = () => {
                     if (!product) return;
 
                     setRows((prev) => {
-                      const existing = prev.find((r) => r.id === product._id);
+                      const existing = prev.find((r) => r.productId === product._id);
 
                       if (existing) {
-                        return prev.map((r) => (r.id === product._id ? { ...r, physicalQty: r.physicalQty + 1, differenceQty: r.physicalQty + 1 - r.systemQty, differenceAmount: (r.landingCost ?? 0) * (r.physicalQty + 1) } : r));
+                        return prev.map((r) => (r.productId === product._id ? { ...r, physicalQty: r.physicalQty + 1, differenceQty: r.physicalQty + 1 - r.systemQty, differenceAmount: (r.landingCost ?? 0) * (r.physicalQty + 1) } : r));
                       }
 
                       return [createRowFromProduct(product), ...prev];
@@ -154,7 +163,7 @@ const StockVerificationForm = () => {
                     <tbody>
                       {rows.map((row, i) => {
                         return (
-                          <tr key={row.id} className="text-center bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark text-gray-600 dark:text-gray-300">
+                          <tr key={row.productId} className="text-center bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark text-gray-600 dark:text-gray-300">
                             <td className="p-2 text-center">{i + 1}</td>
                             <td className="p-2 min-w-60 w-60 text-start">{row.name}</td>
                             <td className="p-2 ">{row.landingCost}</td>
@@ -163,12 +172,12 @@ const StockVerificationForm = () => {
                             <td className="p-2 ">{row.sellingPrice}</td>
                             <td className="p-2 ">{row.systemQty}</td>
                             <td className="p-2 min-w-35 w-35">
-                              <CommonTextField type="number" value={row.physicalQty} onChange={(e) => updateRow(row.id, { physicalQty: Number(e) })} />
+                              <CommonTextField type="number" value={row.physicalQty} onChange={(e) => updateRow(row.productId, { physicalQty: Number(e) })} />
                             </td>
                             <td className="p-2 ">{row.differenceQty}</td>
                             <td className="p-2">{row.differenceAmount.toFixed(2)}</td>
                             <td className="p-2">
-                              <CommonButton color="error" variant="outlined" size="small" onClick={() => removeRow(row.id)}>
+                              <CommonButton color="error" variant="outlined" size="small" onClick={() => removeRow(row.productId)}>
                                 <ClearIcon />
                               </CommonButton>
                             </td>
@@ -189,7 +198,7 @@ const StockVerificationForm = () => {
                 </div>
               </div>
             </Grid>
-            <CommonBottomActionBar save isLoading={false} onSave={() => {}} />
+            <CommonBottomActionBar save isLoading={isAddLoading} disabled={rows.length === 0} onSave={() => handleStockSubmit()} />
           </Grid>
         </CommonCard>
       </Box>

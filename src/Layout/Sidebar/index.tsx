@@ -57,11 +57,11 @@ const Sidebar = () => {
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const allowedNavItems = useMemo(() => filterNavItems(NavItems, permission), [permission]);
 
-  const isActive = useCallback((path: string) => location.pathname === path, [location.pathname]);
+  const isActive = useCallback((path: string) => location.pathname === path || location.pathname.startsWith(path + "/"), [location.pathname]);
 
   useEffect(() => {
     allowedNavItems.forEach((menu, index) => {
-      if (menu.children?.some((sub) => sub.path === location.pathname)) {
+      if (menu.children?.some((sub) => location.pathname === sub.path || location.pathname.startsWith(sub.path + "/"))) {
         setOpenSubmenu({ type: "main", index });
       }
     });

@@ -15,9 +15,9 @@ const StockVerification = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE);
 
-  const { data: stockData, isLoading: stockDataLoading, isFetching: stockDataFetching } = Queries.useGetStock(params);
+  const { data: stockData, isLoading: stockDataLoading, isFetching: stockDataFetching } = Queries.useGetStockVerification(params);
 
-  const allStock = useMemo(() => stockData?.data?.stock_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [stockData]);
+  const allStock = useMemo(() => stockData?.data?.stockVerification_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [stockData]);
   const totalRows = stockData?.data?.totalData || 0;
 
   const handleAdd = () => navigate(ROUTES.STOCK_VERIFICATION.ADD_EDIT);
