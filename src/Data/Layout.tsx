@@ -9,12 +9,12 @@ import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 
 export const NavItems: NavItem[] = [
   { icon: <GridViewRoundedIcon />, name: PAGE_TITLE.DASHBOARD, path: ROUTES.DASHBOARD },
-  { icon: <PeopleIcon />, name: PAGE_TITLE.EMPLOYEE.BASE, path: ROUTES.EMPLOYEE.BASE },
+  { icon: <PeopleIcon />, name: PAGE_TITLE.USER.BASE, path: ROUTES.USERS.BASE },
   { icon: <PersonRoundedIcon />, name: PAGE_TITLE.CONTACT.BASE, path: ROUTES.CONTACT.BASE },
   {
     name: PAGE_TITLE.INVENTORY.BASE,
     icon: <SettingsIcon />,
-    subItems: [
+    children: [
       { name: PAGE_TITLE.INVENTORY.PRODUCT.BASE, path: ROUTES.PRODUCT.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.STOCK.BASE, path: ROUTES.STOCK.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.RECIPE.BASE, path: ROUTES.RECIPE.BASE, pro: false },
@@ -23,9 +23,9 @@ export const NavItems: NavItem[] = [
     ],
   },
   {
-    name: PAGE_TITLE.BANK.BASE,
+    name: PAGE_TITLE.BANK_CASH.BASE,
     icon: <AccountBalanceIcon />,
-    subItems: [
+    children: [
       { name: PAGE_TITLE.BANK.BASE, path: ROUTES.BANK.BASE },
       { name: PAGE_TITLE.TRANSACTION.BASE, path: ROUTES.TRANSACTION.BASE },
       { name: PAGE_TITLE.PAYMENT.BASE, path: ROUTES.PAYMENT.BASE },
@@ -34,11 +34,11 @@ export const NavItems: NavItem[] = [
   {
     name: PAGE_TITLE.POS.BASE,
     icon: <PointOfSaleIcon />,
-    subItems: [{ name: PAGE_TITLE.POS.NEW, path: ROUTES.POS.NEW }],
+    children: [{ name: PAGE_TITLE.POS.NEW, path: ROUTES.POS.NEW }],
   },
   {
     name: PAGE_TITLE.SETTINGS.BASE,
     icon: <SettingsIcon />,
-    subItems: [{ name: PAGE_TITLE.SETTINGS.GENERAL, path: ROUTES.SETTINGS.GENERAL, pro: false }],
+    children: [{ name: PAGE_TITLE.SETTINGS.GENERAL, path: ROUTES.SETTINGS.GENERAL, pro: false }],
   },
 ];

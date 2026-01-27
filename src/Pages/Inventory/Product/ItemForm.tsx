@@ -11,10 +11,12 @@ import { GenerateOptions, RemoveEmptyFields } from "../../../Utils";
 import { ProductItemFormSchema } from "../../../Utils/ValidationSchemas";
 import { useEffect } from "react";
 import type { ProductBase } from "../../../Types";
+import { usePagePermission } from "../../../Utils/Hooks";
 
 const ItemForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK.BASE);
 
   const { data } = location.state || {};
   const { data: ProductData, isLoading: ProductDataLoading } = Queries.useGetProductDropdown();
@@ -70,7 +72,11 @@ const ItemForm = () => {
     };
     await addStock(RemoveEmptyFields(rest), { onSuccess: handleSuccess });
   };
-
+  
+  useEffect(() => {
+    const hasAccess = isEditing ? permission.edit : permission.add;
+    if (!hasAccess) navigate(-1);
+  }, [isEditing, permission, navigate]);
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.PRODUCT.ITEM[pageMode]} breadcrumbs={BREADCRUMBS.PRODUCT.ITEM[pageMode]} />

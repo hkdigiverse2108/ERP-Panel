@@ -20,11 +20,11 @@ export const KEYS = {
     EDIT: "company-edit",
   },
 
-  EMPLOYEE: {
-    BASE: "employee",
-    ADD: "employee-add",
-    EDIT: "employee-edit",
-    DELETE: "employee-delete",
+  USERS: {
+    BASE: "user",
+    ADD: "user-add",
+    EDIT: "user-edit",
+    DELETE: "user-delete",
   },
 
   CONTACT: {
@@ -121,5 +121,11 @@ export const KEYS = {
     ADD: "billofliveproduct-add",
     EDIT: "billofliveproduct-edit",
     DELETE: "billofliveproduct-delete",
+  },
+
+  PERMISSION: {
+    BASE: "permission",
+    EDIT: "permission-edit",
+    DETAILS: "permission-details",
   },
 };

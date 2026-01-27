@@ -6,11 +6,12 @@ import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, Comm
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, BankBase } from "../../../Types";
-import { useDataGrid } from "../../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 
 const Bank = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
+  const permission = usePagePermission(PAGE_TITLE.BANK.BASE);
 
   const { data: bankData, isLoading, isFetching } = Queries.useGetBank(params);
   const { mutate: deleteBankMutate } = Mutations.useDeleteBank();
@@ -22,7 +23,7 @@ const Bank = () => {
         ...bank,
         id: bank?._id,
       })) || [],
-    [bankData]
+    [bankData],
   );
 
   const totalRows = bankData?.data?.totalData || 0;
@@ -37,22 +38,9 @@ const Bank = () => {
   const handleAdd = () => navigate(ROUTES.BANK.ADD_EDIT);
 
   const columns: AppGridColDef<BankBase>[] = [
-    {
-      field: "name",
-      headerName: "Bank Name",
-      width: 200,
-    },
-   
-    {
-      field: "accountHolderName",
-      headerName: "Account Holder Name",
-      width: 200,
-    },
-    {
-      field: "ifscCode",
-      headerName: "IFSC Code",
-      width: 160,
-    },
+    { field: "name", headerName: "Bank Name", width: 200 },
+    { field: "accountHolderName", headerName: "Account Holder Name", width: 200 },
+    { field: "ifscCode", headerName: "IFSC Code", width: 160 },
     {
       field: "openingBalance",
       headerName: "Balance",
@@ -63,27 +51,19 @@ const Bank = () => {
         return credit - debit;
       },
     },
-    {
-      field: "bankAccountNumber",
-      headerName: "Account No.",
-      width: 200,
-    },
-    {
-      field: "addressLine1",
-      headerName: "Address",
-      flex: 1,
-      minWidth: 200,
-    },
-
-    CommonActionColumn({
-      active: (row) => editBank({ bankId: row?._id, isActive: !row.isActive }),
-      editRoute: ROUTES.BANK.ADD_EDIT,
-      onDelete: (row) =>
-        setRowToDelete({
-          _id: row?._id,
-          title: row?.name,
-        }),
-    }),
+    { field: "bankAccountNumber", headerName: "Account No.", width: 200 },
+    { field: "addressLine1", headerName: "Address", flex: 1, minWidth: 200 },
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<BankBase>({
+            ...(permission?.edit && {
+              active: (row) => editBank({ bankId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.BANK.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+          }),
+        ]
+      : []),
   ];
 
   const CommonDataGridOption = {
@@ -93,7 +73,7 @@ const Bank = () => {
     loading: isLoading || isFetching || isEditLoading,
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,

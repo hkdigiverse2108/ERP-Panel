@@ -6,13 +6,14 @@ import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef } from "../../../Types";
 import type { StockBase } from "../../../Types/Stock";
-import { useDataGrid } from "../../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { useNavigate } from "react-router-dom";
 
 const StockVerification = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, params } = useDataGrid();
 
   const navigate = useNavigate();
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE);
 
   const { data: stockData, isLoading: stockDataLoading, isFetching: stockDataFetching } = Queries.useGetStock(params);
 
@@ -38,7 +39,7 @@ const StockVerification = () => {
     loading: stockDataLoading || stockDataFetching,
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,

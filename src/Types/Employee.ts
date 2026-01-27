@@ -28,6 +28,7 @@ export interface EmployeeFormValues {
   extraWages?: number;
   target?: number;
   userType?: string;
+  password?: string;
   isActive?: boolean;
   _submitAction?: string;
   companyId?: string;

@@ -7,7 +7,7 @@ import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, Comm
 import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS, CONTACT_TYPE } from "../../Data";
 import type { AppGridColDef, ContactBase } from "../../Types";
-import { useDataGrid } from "../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 import { CommonRadio } from "../../Attribute";
 import { CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
 import { FormatDate } from "../../Utils";
@@ -16,7 +16,7 @@ const Contact = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, updateAdvancedFilter, advancedFilter, params } = useDataGrid();
 
   const navigate = useNavigate();
-  // const [contactType, setContactType] = useState("customer");
+  const permission = usePagePermission(PAGE_TITLE.CONTACT.BASE);
 
   const { data: contactData, isLoading: contactDataLoading, isFetching: contactDataFetching } = Queries.useGetContact(params);
   const { mutate: deleteContactMutate } = Mutations.useDeleteContact();
@@ -35,7 +35,6 @@ const Contact = () => {
   const handleAdd = () => navigate(ROUTES.CONTACT.ADD_EDIT);
 
   const handleContactTypeChange = (value: string) => {
-    // setContactType(value);
     updateAdvancedFilter("contactType", [value]);
   };
 
@@ -60,8 +59,8 @@ const Contact = () => {
     { field: "customerType", headerName: "Customer Type", width: 150 },
     { field: "email", headerName: "Email", width: 220 },
     { field: "companyName", headerName: "Company Name", width: 220 },
-    { field: "dob", headerName: "Date of Birth", width: 160 ,valueGetter: (v) => FormatDate(v)},
-    { field: "anniversaryDate", headerName: "Anniversary Date", width: 180 ,valueGetter: (v) => FormatDate(v)},
+    { field: "dob", headerName: "Date of Birth", width: 160, valueGetter: (v) => FormatDate(v) },
+    { field: "anniversaryDate", headerName: "Anniversary Date", width: 180, valueGetter: (v) => FormatDate(v) },
     CommonObjectPropertyColumn<ContactBase>("bankName", "bankDetails", "name", { headerName: "Bank name", width: 300 }),
     CommonObjectPropertyColumn<ContactBase>("ifscCode", "bankDetails", "ifscCode", { headerName: "IFSC Code", width: 300 }),
     CommonObjectPropertyColumn<ContactBase>("branchName", "bankDetails", "branch", { headerName: "Branch Name", width: 300 }),
@@ -107,12 +106,17 @@ const Contact = () => {
       width: 120,
       valueGetter: (_value, row) => row?.address?.[0]?.country?.name || "",
     },
-
-    CommonActionColumn({
-      active: (row) => editContact({ contactId: row?._id, isActive: !row.isActive }),
-      editRoute: ROUTES.CONTACT.ADD_EDIT,
-      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.firstName }),
-    }),
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<ContactBase>({
+            ...(permission?.edit && {
+              active: (row) => editContact({ contactId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.CONTACT.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.firstName }) }),
+          }),
+        ]
+      : []),
   ];
 
   const CommonDataGridOption = {
@@ -122,7 +126,7 @@ const Contact = () => {
     loading: contactDataLoading || contactDataFetching || isEditLoading,
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,

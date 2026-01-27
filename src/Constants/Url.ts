@@ -18,7 +18,7 @@ export const URL_KEYS = {
     ADD: "/company/add",
     EDIT: "/company/edit",
   },
-  EMPLOYEE: {
+  USERS: {
     BASE: "/user",
     ALL: "/user/all",
     ADD: "/user/add",
@@ -132,5 +132,12 @@ export const URL_KEYS = {
     ALL: "/bill-of-live-product/all",
     ADD: "/bill-of-live-product/add",
     EDIT: "/bill-of-live-product/edit",
+  },
+  PERMISSION: {
+    BASE: "/permission",
+    DETAILS: "/permission/details",
+    CHILD: "/permission/child/details",
+    ALL: "/permission/all",
+    EDIT: "/permission/edit",
   },
 } as const;

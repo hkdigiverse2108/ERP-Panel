@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { CompanyForm, UserForm } from "../Components/Settings/GeneralSetting";
-import { ROUTES } from "../Constants";
+import { PAGE_TITLE, ROUTES } from "../Constants";
 import SignInForm from "../Pages/Auth/SignInForm";
 import Bank from "../Pages/Bank/Bank";
 import BankForm from "../Pages/Bank/Bank/BankForm";
@@ -24,45 +24,47 @@ import GeneralSetting from "../Pages/Settings/GeneralSetting";
 import StockVerificationForm from "../Pages/Inventory/StockVerification/StockVerificationForm";
 import BillOfMaterials from "../Pages/Inventory/BillOfMaterials";
 import BillOfMaterialsForm from "../Pages/Inventory/BillOfMaterials/BillOfMaterialForm";
+import Permission from "../Pages/Employee/Permission";
 
 export const PageRoutes = [
-  { path: ROUTES.HOME, element: <Dashboard /> },
+  { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
 
-  { path: ROUTES.DASHBOARD, element: <Dashboard /> },
+  { path: ROUTES.DASHBOARD, name: PAGE_TITLE.DASHBOARD, element: <Dashboard /> },
 
-  { path: ROUTES.SETTINGS.GENERAL, element: <GeneralSetting /> },
-  { path: ROUTES.COMPANY.EDIT, element: <CompanyForm /> },
-  { path: ROUTES.USER.EDIT, element: <UserForm /> },
+  { path: ROUTES.SETTINGS.GENERAL, name: PAGE_TITLE.SETTINGS.GENERAL, element: <GeneralSetting /> },
+  { path: ROUTES.COMPANY.EDIT, name: PAGE_TITLE.CONTACT.BASE, element: <CompanyForm /> },
+  { path: ROUTES.USER.EDIT, name: PAGE_TITLE.USER.BASE, element: <UserForm /> },
 
-  { path: ROUTES.EMPLOYEE.BASE, element: <Employees /> },
-  { path: ROUTES.EMPLOYEE.ADD_EDIT, element: <EmployeeForm /> },
+  { path: ROUTES.USERS.BASE, name: PAGE_TITLE.USER.BASE, element: <Employees /> },
+  { path: ROUTES.USERS.ADD_EDIT, name: PAGE_TITLE.USER.BASE, element: <EmployeeForm /> },
+  { path: ROUTES.USERS.PERMISSION_ADD_EDIT, name: PAGE_TITLE.USER.BASE, element: <Permission /> },
 
-  { path: ROUTES.PRODUCT.BASE, element: <Product /> },
-  { path: ROUTES.PRODUCT.ADD_EDIT, element: <ProductForm /> },
-  { path: ROUTES.PRODUCT.ITEM_ADD_EDIT, element: <ItemForm /> },
+  { path: ROUTES.PRODUCT.BASE, name: PAGE_TITLE.INVENTORY.PRODUCT.BASE, element: <Product /> },
+  { path: ROUTES.PRODUCT.ADD_EDIT, name: PAGE_TITLE.INVENTORY.PRODUCT.BASE, element: <ProductForm /> },
+  { path: ROUTES.PRODUCT.ITEM_ADD_EDIT, name: PAGE_TITLE.INVENTORY.PRODUCT.ITEM.BASE, element: <ItemForm /> },
 
-  { path: ROUTES.STOCK.BASE, element: <Stocks /> },
-  { path: ROUTES.STOCK_VERIFICATION.BASE, element: <StockVerification /> },
-  { path: ROUTES.STOCK_VERIFICATION.ADD_EDIT, element: <StockVerificationForm /> },
+  { path: ROUTES.STOCK.BASE, name: PAGE_TITLE.INVENTORY.STOCK.BASE, element: <Stocks /> },
+  { path: ROUTES.STOCK_VERIFICATION.BASE, name: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE, element: <StockVerification /> },
+  { path: ROUTES.STOCK_VERIFICATION.ADD_EDIT, name: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE, element: <StockVerificationForm /> },
 
-  { path: ROUTES.CONTACT.BASE, element: <Contact /> },
-  { path: ROUTES.CONTACT.ADD_EDIT, element: <ContactForm /> },
+  { path: ROUTES.CONTACT.BASE, name: PAGE_TITLE.CONTACT.BASE, element: <Contact /> },
+  { path: ROUTES.CONTACT.ADD_EDIT, name: PAGE_TITLE.CONTACT.BASE, element: <ContactForm /> },
 
-  { path: ROUTES.BANK.BASE, element: <Bank /> },
-  { path: ROUTES.BANK.ADD_EDIT, element: <BankForm /> },
+  { path: ROUTES.BANK.BASE, name: PAGE_TITLE.BANK.BASE, element: <Bank /> },
+  { path: ROUTES.BANK.ADD_EDIT, name: PAGE_TITLE.BANK.BASE, element: <BankForm /> },
 
-  { path: ROUTES.TRANSACTION.BASE, element: <BankTransaction /> },
+  { path: ROUTES.TRANSACTION.BASE, name: PAGE_TITLE.TRANSACTION.BASE, element: <BankTransaction /> },
 
-  { path: ROUTES.PAYMENT.BASE, element: <PaymentList /> },
-  { path: ROUTES.PAYMENT.ADD_EDIT, element: <PaymentForm /> },
+  { path: ROUTES.PAYMENT.BASE, name: PAGE_TITLE.PAYMENT.BASE, element: <PaymentList /> },
+  { path: ROUTES.PAYMENT.ADD_EDIT, name: PAGE_TITLE.PAYMENT.BASE, element: <PaymentForm /> },
 
-  { path: ROUTES.POS.NEW, element: <NewPos /> },
+  { path: ROUTES.POS.NEW, name: PAGE_TITLE.POS.BASE, element: <NewPos /> },
 
-  { path: ROUTES.RECIPE.BASE, element: <Recipe /> },
-  { path: ROUTES.RECIPE.ADD_EDIT, element: <RecipeForm /> },
+  { path: ROUTES.RECIPE.BASE, name: PAGE_TITLE.INVENTORY.RECIPE.BASE, element: <Recipe /> },
+  { path: ROUTES.RECIPE.ADD_EDIT, name: PAGE_TITLE.INVENTORY.RECIPE.BASE, element: <RecipeForm /> },
 
-  { path: ROUTES.BILLOFMATERIALS.BASE, element: <BillOfMaterials /> },
-  { path: ROUTES.BILLOFMATERIALS.ADD_EDIT, element: <BillOfMaterialsForm /> },
+  { path: ROUTES.BILLOFMATERIALS.BASE, name: PAGE_TITLE.INVENTORY.BILLOFMATERIALS.BASE, element: <BillOfMaterials /> },
+  { path: ROUTES.BILLOFMATERIALS.ADD_EDIT, name: PAGE_TITLE.INVENTORY.BILLOFMATERIALS.BASE, element: <BillOfMaterialsForm /> },
 ];
 
 export const AuthRoutes = [

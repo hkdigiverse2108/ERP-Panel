@@ -10,12 +10,15 @@ import { useAppSelector } from "../../../Store/hooks";
 import type { BankFormValues, BranchBase } from "../../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { BankFormSchema } from "../../../Utils/ValidationSchemas";
+import { usePagePermission } from "../../../Utils/Hooks";
+import { useEffect } from "react";
 
 const BankForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
   const { company } = useAppSelector((state) => state.company);
+  const permission = usePagePermission(PAGE_TITLE.BANK.BASE);
 
   const { data: branchData, isLoading: branchDataLoading } = Queries.useGetBranchDropdown();
 
@@ -48,7 +51,7 @@ const BankForm = () => {
       pinCode: data?.address?.pinCode || "",
     },
 
-    branchIds: Array.isArray(data?.branchIds) ? data.branchIds.map((b:BranchBase) => b._id) : [],
+    branchIds: Array.isArray(data?.branchIds) ? data.branchIds.map((b: BranchBase) => b._id) : [],
 
     isActive: data?.isActive ?? true,
   };
@@ -76,6 +79,10 @@ const BankForm = () => {
     }
   };
 
+  useEffect(() => {
+    const hasAccess = isEditing ? permission.edit : permission.add;
+    if (!hasAccess) navigate(-1);
+  }, [isEditing, permission, navigate]);
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.BANK[pageMode]} breadcrumbs={BREADCRUMBS.BANK[pageMode]} />

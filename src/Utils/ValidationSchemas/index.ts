@@ -53,7 +53,8 @@ export const EmployeeFormSchema = Yup.object({
   email: Validation("string", "Email", { required: false, extraRules: (s) => s.trim().email("Invalid email address") }),
   branchId: Validation("string", "Branch Name", { required: false }),
   panNumber: Validation("string", "PAN Number", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
-
+  password: Validation("string", "Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
+  role: Validation("string", "Role"),
   // ---------- ADDRESS ----------
   address: Yup.object({
     address: Validation("string", "Address"),

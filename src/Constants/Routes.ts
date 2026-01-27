@@ -1,6 +1,7 @@
 export const ROUTES = {
   HOME: "/",
   DASHBOARD: "/dashboard",
+  ACCESS_DENIED: "/access-denied",
   AUTH: {
     SIGNIN: "/auth/signin",
   },
@@ -8,9 +9,10 @@ export const ROUTES = {
     BASE: "/contact",
     ADD_EDIT: "/edit/add",
   },
-  EMPLOYEE: {
-    BASE: "/employee",
-    ADD_EDIT: "/employee/add-edit",
+  USERS: {
+    BASE: "/user",
+    ADD_EDIT: "/user/add-edit",
+    PERMISSION_ADD_EDIT: "/user/permission/add-edit",
   },
 
   PRODUCT: {

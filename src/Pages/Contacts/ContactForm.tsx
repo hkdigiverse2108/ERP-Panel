@@ -11,12 +11,15 @@ import type { ContactFormValues } from "../../Types";
 import { GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { getContactFormSchema } from "../../Utils/ValidationSchemas";
 import type { AddContactPayload, Address, ContactAddressApi } from "../../Types/Contacts";
+import { usePagePermission } from "../../Utils/Hooks";
+import { useEffect } from "react";
 
 const ContactForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
   const { company } = useAppSelector((state) => state.company);
+  const permission = usePagePermission(PAGE_TITLE.CONTACT.BASE);
 
   const { mutate: addContact, isPending: isAddLoading } = Mutations.useAddContact();
   const { mutate: editContact, isPending: isEditLoading } = Mutations.useEditContact();
@@ -146,6 +149,11 @@ const ContactForm = () => {
       grid={{ xs: "auto" }}
     />
   );
+
+  useEffect(() => {
+    const hasAccess = isEditing ? permission.edit : permission.add;
+    if (!hasAccess) navigate(-1);
+  }, [isEditing, permission, navigate]);
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.CONTACT[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.CONTACT[pageMode]} />

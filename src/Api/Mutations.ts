@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AddBankPayload, AddContactPayload, AddEmployeePayload, AddProductPayload, AddRecipePayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, CallRequestFormValues, CompanyApiResponse, EditBankPayload, EditCompanyPayload, EditContactPayload, EditEmployeePayload, EditProductPayload, EditRecipePayload, EditRolesPayload, EmployeeApiResponse, LoginPayload, LoginResponse, UploadResponse } from "../Types";
+import type { AddBankPayload, AddContactPayload, AddEmployeePayload, AddProductPayload, AddRecipePayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, CallRequestFormValues, CompanyApiResponse, EditBankPayload, EditCompanyPayload, EditContactPayload, EditEmployeePayload, EditPermissionPayload, EditProductPayload, EditRecipePayload, EditRolesPayload, EmployeeApiResponse, LoginPayload, LoginResponse, UploadResponse } from "../Types";
 import type { AddBillOfLiveProductPayload, EditBillOfLiveProductPayload } from "../Types/BillOfMaterials";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
@@ -19,9 +19,9 @@ export const Mutations = {
   useEditCompany: () => useMutations<EditCompanyPayload, CompanyApiResponse>([KEYS.COMPANY.EDIT], (input) => Put(URL_KEYS.COMPANY.EDIT, input)),
 
   // ************ Employee ***********
-  useAddEmployee: () => useMutations<AddEmployeePayload, void>([KEYS.EMPLOYEE.ADD, KEYS.EMPLOYEE.BASE], (input) => Post(URL_KEYS.EMPLOYEE.ADD, input)),
-  useEditEmployee: () => useMutations<EditEmployeePayload, void>([KEYS.EMPLOYEE.EDIT, KEYS.EMPLOYEE.BASE], (input) => Put(URL_KEYS.EMPLOYEE.EDIT, input)),
-  useDeleteEmployee: () => useMutations<string, void>([KEYS.EMPLOYEE.DELETE, KEYS.EMPLOYEE.BASE], (id) => Delete(`${URL_KEYS.EMPLOYEE.BASE}/${id}`)),
+  useAddEmployee: () => useMutations<AddEmployeePayload, void>([KEYS.USERS.ADD, KEYS.USERS.BASE], (input) => Post(URL_KEYS.USERS.ADD, input)),
+  useEditEmployee: () => useMutations<EditEmployeePayload, void>([KEYS.USERS.EDIT, KEYS.USERS.BASE], (input) => Put(URL_KEYS.USERS.EDIT, input)),
+  useDeleteEmployee: () => useMutations<string, void>([KEYS.USERS.DELETE, KEYS.USERS.BASE], (id) => Delete(`${URL_KEYS.USERS.BASE}/${id}`)),
 
   // ************ Contact ***********
   useAddContact: () => useMutations<AddContactPayload, void>([KEYS.CONTACT.ADD, KEYS.CONTACT.BASE], (input) => Post(URL_KEYS.CONTACT.ADD, input)),
@@ -64,4 +64,7 @@ export const Mutations = {
   useAddBillOfLiveProduct: () => useMutations<AddBillOfLiveProductPayload, void>([KEYS.BILLOFLIVEPRODUCT.ADD, KEYS.BILLOFLIVEPRODUCT.BASE], (input) => Post(URL_KEYS.BILLOFLIVEPRODUCT.ADD, input)),
   useEditBillOfLiveProduct: () => useMutations<EditBillOfLiveProductPayload, void>([KEYS.BILLOFLIVEPRODUCT.EDIT, KEYS.BILLOFLIVEPRODUCT.BASE], (input) => Put(URL_KEYS.BILLOFLIVEPRODUCT.EDIT, input)),
   useDeleteBillOfLiveProduct: () => useMutations<string, void>([KEYS.BILLOFLIVEPRODUCT.DELETE, KEYS.BILLOFLIVEPRODUCT.BASE], (id) => Delete(`${URL_KEYS.BILLOFLIVEPRODUCT.BASE}/${id}`)),
+
+  //*************** Permission **************** */
+  useEditUserPermission: () => useMutations<EditPermissionPayload, void>([KEYS.PERMISSION.DETAILS], (input) => Put(URL_KEYS.PERMISSION.EDIT, input)),
 };

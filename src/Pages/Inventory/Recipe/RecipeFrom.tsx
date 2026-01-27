@@ -4,7 +4,7 @@ import { Box, Grid, Stack } from "@mui/material";
 import { FieldArray, Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonButton, CommonSwitch, CommonValidationDatePicker, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
+import { CommonButton, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, RECIPE_TYPE_OPTIONS } from "../../../Data";
@@ -88,11 +88,11 @@ const RecipeForm = () => {
                         {values.rawProducts?.map((_, index) => {
                           const rawProducts = values.rawProducts || [];
                           return (
-                            <Box key={index} mb={2} display="flex" flexWrap="wrap" gap={2}>
-                              <CommonValidationSelect name={`rawProducts.${index}.productId`} label="Product" options={GenerateOptions(productData?.data.product_data)} required grid={{ xs: 12, md: 3 }} />
+                            <Box key={index} display="flex" flexWrap="wrap" gap={2}>
+                              <CommonValidationSelect name={`rawProducts.${index}.productId`} label="Product" options={GenerateOptions(productData?.data.product_data)} required grid={{ xs: 12, md: 4 }} />
                               <CommonValidationTextField name={`rawProducts.${index}.useQty`} label="Use Qty" type="number" required grid={{ xs: 12, md: 3 }} />
                               <CommonValidationTextField name={`rawProducts.${index}.mrp`} label="MRP" type="number" grid={{ xs: 12, md: 3 }} />
-                              <Grid size={{ xs: 12, md: 3 }}>
+                              <Grid size={{ xs: 12, md: 2 }}>
                                 <Stack direction="row" spacing={1}>
                                 {rawProducts.length > 1 && (
                                   <CommonButton size="small" variant="outlined" color="error" onClick={() => remove(index)}>
@@ -123,7 +123,7 @@ const RecipeForm = () => {
                   </Box>
                 </CommonCard>
 
-                {!isEditing && <CommonSwitch name="isActive" label="Is Active" />}
+                {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" />}
 
                 <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isAddLoading || isEditLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>

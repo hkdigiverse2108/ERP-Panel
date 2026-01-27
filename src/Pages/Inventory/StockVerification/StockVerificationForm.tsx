@@ -1,7 +1,7 @@
 import ClearIcon from "@mui/icons-material/Clear";
 import { Box, Grid } from "@mui/material";
 import { Form, Formik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Queries } from "../../../Api";
 import { CommonButton, CommonSelect, CommonTextField, CommonValidationSelect } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
@@ -9,11 +9,18 @@ import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { ProductBase } from "../../../Types";
 import { GenerateOptions } from "../../../Utils";
+import { usePagePermission } from "../../../Utils/Hooks";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const StockVerificationForm = () => {
   const [searchValue, setSearchValue] = useState<string[]>([""]);
   const [enterRemark, setEnterRemark] = useState("");
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE);
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  const { data } = location.state || {};
+  const isEditing = Boolean(data?._id);
   const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown();
   const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown();
   const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown();
@@ -55,7 +62,7 @@ const StockVerificationForm = () => {
         const differenceQty = updated.physicalQty - updated.systemQty;
 
         return { ...updated, differenceQty, differenceAmount: updated.landingCost * differenceQty };
-      })
+      }),
     );
   };
 
@@ -69,6 +76,11 @@ const StockVerificationForm = () => {
     brandId: null,
   };
   const handleSubmit = () => {};
+
+  useEffect(() => {
+    const hasAccess = isEditing ? permission.edit : permission.add;
+    if (!hasAccess) navigate(-1);
+  }, [isEditing, permission, navigate]);
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.ADD} maxItems={3} breadcrumbs={BREADCRUMBS.STOCK_VERIFICATION.ADD} />
@@ -186,7 +198,3 @@ const StockVerificationForm = () => {
 };
 
 export default StockVerificationForm;
-
-
-
-

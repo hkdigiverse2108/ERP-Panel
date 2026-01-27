@@ -120,6 +120,8 @@ export interface UseDataGridOptions {
   initialSort?: GridSortModel;
   initialFilter?: GridFilterModel;
   active?: boolean;
+  debounceDelay?: number;
+  pagination?: boolean;
 }
 
 export interface CommonDataGridProps {
@@ -134,8 +136,8 @@ export interface CommonDataGridProps {
   setActive?: (active: boolean) => void;
 
   // Pagination
-  paginationModel: GridPaginationModel;
-  onPaginationModelChange: (model: GridPaginationModel) => void;
+  paginationModel?: GridPaginationModel;
+  onPaginationModelChange?: (model: GridPaginationModel) => void;
 
   // Sorting
   sortModel: GridSortModel;
@@ -150,6 +152,7 @@ export interface CommonDataGridProps {
   BoxClass?: string;
   isExport?: boolean;
   fileName?: string;
+  pagination?: boolean;
 }
 
 export interface CustomToolbarProps {
@@ -189,6 +192,7 @@ export interface CommonObjectNameColumnOptions {
 
 export interface CommonActionColumnProps<T> {
   editRoute?: string;
+  permissionRoute?: string;
   onEdit?: (row: T) => void;
   onDelete?: (row: T) => void;
   active?: (row: T) => void;
@@ -524,3 +528,20 @@ export type DependentSelectProps<T extends ApiOption, P = string | undefined> = 
 };
 
 // ************ Dependent Select End ***********
+export type ControlPlacement = "start" | "between";
+
+export interface CommonValidationCheckboxProps {
+  name: string;
+  label?: string;
+  required?: boolean;
+  disabled?: boolean;
+  isFormLabel?: boolean;
+  grid?: GridType;
+  checkboxPlacement?: ControlPlacement;
+  syncFieldName?: string;
+}
+
+export interface CommonCheckboxProps extends CommonValidationCheckboxProps {
+  value?: boolean;
+  onChange?: (value: boolean) => void;
+}

@@ -12,11 +12,12 @@ export const PAGE_TITLE = {
       EDIT: "Edit User",
     },
   },
-  EMPLOYEE: {
-    BASE: "Employee",
-    LIST: "Employee List",
-    ADD: "Add Employee",
-    EDIT: "Edit Employee",
+  USER: {
+    BASE: "User",
+    LIST: "User List",
+    ADD: "Add User",
+    EDIT: "Edit User",
+    PERMISSION: "User Permission",
   },
   ROLES: {
     BASE: "User Roles",
@@ -65,6 +66,9 @@ export const PAGE_TITLE = {
     BASE: "Customer",
     ADD: "Add Customer",
     EDIT: "Edit Customer",
+  },
+  BANK_CASH:{
+    BASE: "Bank / Cash",
   },
   BANK: {
     BASE: "Bank",

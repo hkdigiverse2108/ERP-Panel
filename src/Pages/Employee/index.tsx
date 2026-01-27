@@ -6,13 +6,14 @@ import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, Comm
 import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
 import type { AppGridColDef, EmployeeBase } from "../../Types";
-import { useDataGrid } from "../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
 
 const Employee = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
+  const permission = usePagePermission(PAGE_TITLE.USER.BASE);
 
-  const { data: employeeData, isLoading: employeeDataLoading, isFetching: employeeDataFetching } = Queries.useGetEmployee(params);
+  const { data: employeeData, isLoading: employeeDataLoading, isFetching: employeeDataFetching } = Queries.useGetEmployee({...params});
   const { mutate: deleteEmployeeMutate } = Mutations.useDeleteEmployee();
   const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditEmployee();
 
@@ -24,7 +25,7 @@ const Employee = () => {
     deleteEmployeeMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
   };
 
-  const handleAdd = () => navigate(ROUTES.EMPLOYEE.ADD_EDIT);
+  const handleAdd = () => navigate(ROUTES.USERS.ADD_EDIT);
 
   const columns: AppGridColDef<EmployeeBase>[] = [
     { field: "username", headerName: "User Name", type: "string", width: 170 },
@@ -36,11 +37,18 @@ const Employee = () => {
     { field: "wages", headerName: "Wages", type: "number", width: 150 },
     { field: "extraWages", headerName: "Extra Wages", type: "number", width: 150 },
     { field: "commission", headerName: "Commission", type: "number", flex: 1, minWidth: 150 },
-    CommonActionColumn({
-      active: (row) => editEmployee({ userId: row?._id, companyId: row?.companyId?._id, isActive: !row.isActive }),
-      editRoute: ROUTES.EMPLOYEE.ADD_EDIT,
-      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.username }),
-    }),
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<EmployeeBase>({
+            ...(permission?.edit && {
+              permissionRoute: ROUTES.USERS.PERMISSION_ADD_EDIT,
+              active: (row) => editEmployee({ userId: row?._id, companyId: row?.companyId?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.USERS.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.username }) }),
+          }),
+        ]
+      : []),
   ];
 
   const CommonDataGridOption = {
@@ -50,7 +58,7 @@ const Employee = () => {
     loading: employeeDataLoading || employeeDataFetching || isEditLoading,
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,
@@ -61,7 +69,7 @@ const Employee = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.EMPLOYEE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.EMPLOYEE.BASE} />
+      <CommonBreadcrumbs title={PAGE_TITLE.USER.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.USERS.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />

@@ -9,7 +9,7 @@ import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, CONSUMPTION_TYPE, PRODUCT_TYPE_OPTIONS } from "../../../Data";
 import type { AppGridColDef, ProductBase, ProductWithRemoveQty } from "../../../Types";
 import { CreateFilter, GenerateOptions } from "../../../Utils";
-import { useDataGrid } from "../../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { Form, Formik } from "formik";
 import { ProductItemRemoveFormSchema } from "../../../Utils/ValidationSchemas";
 
@@ -17,7 +17,8 @@ const Product = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
   const [isRemoveItem, setRemoveItem] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.PRODUCT.BASE);
+  const permissionItem = usePagePermission(PAGE_TITLE.INVENTORY.STOCK.BASE);
   const navigate = useNavigate();
 
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
@@ -101,7 +102,7 @@ const Product = () => {
     loading: productDataLoading || productDataFetching,
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,
@@ -123,12 +124,16 @@ const Product = () => {
   const topContent = (
     <Grid size={"auto"}>
       <Grid container spacing={1}>
-        <Grid size={"auto"}>
-          <CommonButton variant="contained" title="Add Item" size="medium" onClick={handleAddItem} />
-        </Grid>
-        <Grid size={"auto"}>
-          <CommonButton variant="contained" title="Remove Item" size="medium" onClick={() => setRemoveItem(!isRemoveItem)} />
-        </Grid>
+        {permissionItem?.add && (
+          <Grid size={"auto"}>
+            <CommonButton variant="contained" title="Add Item" size="medium" onClick={handleAddItem} />
+          </Grid>
+        )}
+        {permissionItem?.delete && (
+          <Grid size={"auto"}>
+            <CommonButton variant="contained" title="Remove Item" size="medium" onClick={() => setRemoveItem(!isRemoveItem)} />
+          </Grid>
+        )}
       </Grid>
     </Grid>
   );

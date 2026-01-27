@@ -2,10 +2,11 @@ import { PAGE_TITLE } from "../Constants";
 import { ROUTES } from "../Constants";
 
 export const BREADCRUMBS = {
-  EMPLOYEE: {
-    BASE: [{ label: PAGE_TITLE.EMPLOYEE.BASE }],
-    ADD: [{ label: PAGE_TITLE.EMPLOYEE.BASE, href: ROUTES.EMPLOYEE.BASE }, { label: PAGE_TITLE.EMPLOYEE.ADD }],
-    EDIT: [{ label: PAGE_TITLE.EMPLOYEE.BASE, href: ROUTES.EMPLOYEE.BASE }, { label: PAGE_TITLE.EMPLOYEE.EDIT }],
+  USERS: {
+    BASE: [{ label: PAGE_TITLE.USER.BASE }],
+    ADD: [{ label: PAGE_TITLE.USER.BASE, href: ROUTES.USERS.BASE }, { label: PAGE_TITLE.USER.ADD }],
+    EDIT: [{ label: PAGE_TITLE.USER.BASE, href: ROUTES.USERS.BASE }, { label: PAGE_TITLE.USER.EDIT }],
+    PERMISSION: [{ label: PAGE_TITLE.USER.BASE, href: ROUTES.USERS.BASE }, { label: PAGE_TITLE.USER.PERMISSION }],
   },
   PRODUCT: {
     BASE: [{ label: PAGE_TITLE.INVENTORY.PRODUCT.BASE }],
