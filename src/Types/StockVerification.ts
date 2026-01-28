@@ -1,5 +1,5 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
-
+import type { ProductBase } from "./Product";
 
 export interface StockVerificationItem {
   productId: string;
@@ -11,6 +11,7 @@ export interface StockVerificationItem {
   physicalQty: number;
   differenceQty: number;
   differenceAmount: number;
+  approvedQty: number;
 }
 
 export interface StockVerificationRow extends StockVerificationItem {
@@ -18,19 +19,26 @@ export interface StockVerificationRow extends StockVerificationItem {
 }
 
 export interface StockVerificationFormValues {
-  items: StockVerificationItem[];
-  totalProducts: number;
-  totalPhysicalQty: number;
-  differenceAmount: number;
-  status: "pending" | "approved" | "rejected";
+  items?: StockVerificationItem[];
+  totalProducts?: number;
+  totalPhysicalQty?: number;
+  totalDifferenceAmount?: number;
+  approvedQty?: number;
+  stockVerificationNo?: string;
+  totalApprovedQty?: number;
+  status?: "pending" | "approved" | "rejected" | string;
   remark?: string;
 }
 
 export type AddStockVerificationPayload = StockVerificationFormValues;
 
-export type EditStockVerificationPayload = AddStockVerificationPayload & { StockVerificationId: string };
+export type EditStockVerificationPayload = AddStockVerificationPayload & { stockVerificationId?: string };
 
-export type StockVerificationBase = StockVerificationFormValues & CommonDataType;
+export interface StockVerificationBase extends Omit<StockVerificationFormValues, "items">, CommonDataType {
+  items: (Omit<StockVerificationItem, "productId"> & {
+    productId: ProductBase;
+  })[];
+}
 
 export interface StockVerificationDataResponse extends PageStatus {
   stockVerification_data: StockVerificationBase[];

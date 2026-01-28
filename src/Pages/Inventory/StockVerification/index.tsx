@@ -1,42 +1,106 @@
 import { Box } from "@mui/material";
+import { GridFooterContainer, useGridApiContext, type GridRenderCellParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
-import { Queries } from "../../../Api";
-import { CommonBreadcrumbs, CommonCard, CommonDataGrid } from "../../../Components/Common";
+import { useNavigate } from "react-router-dom";
+import { Mutations, Queries } from "../../../Api";
+import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { AppGridColDef } from "../../../Types";
-import type { StockBase } from "../../../Types/Stock";
+import type { AppGridColDef, StockVerificationBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { useNavigate } from "react-router-dom";
+import { FormatDate } from "../../../Utils";
 
 const StockVerification = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
 
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE);
 
-  const { data: stockData, isLoading: stockDataLoading, isFetching: stockDataFetching } = Queries.useGetStockVerification(params);
+  const { data: stockVerificationData, isLoading: stockVerificationDataLoading, isFetching: stockVerificationDataFetching } = Queries.useGetStockVerification(params);
+  const { mutate: deleteStockVerificationMutate } = Mutations.useDeleteStockVerification();
 
-  const allStock = useMemo(() => stockData?.data?.stockVerification_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [stockData]);
-  const totalRows = stockData?.data?.totalData || 0;
+  const allStock = useMemo(() => stockVerificationData?.data?.stockVerification_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [stockVerificationData]);
+  const totalRows = stockVerificationData?.data?.totalData || 0;
 
   const handleAdd = () => navigate(ROUTES.STOCK_VERIFICATION.ADD_EDIT);
 
-  const columns: AppGridColDef<StockBase>[] = [
-    { field: "name", headerName: "Stock Verification No.", width: 300 },
-    { field: "categoryId", headerName: "Stock verification Date", width: 150 },
-    { field: "subCategoryId", headerName: "Total Products", width: 150 },
-    { field: "subCategoryId", headerName: "Total Physical Qty", width: 150 },
-    { field: "brandId", headerName: "Difference Amount", width: 150 },
-    { field: "subBrandId", headerName: "Approved Qty", width: 150 },
-    { field: "qty", headerName: "Created By", flex: 1, minWidth: 150 },
+  const handleDeleteBtn = () => {
+    if (!rowToDelete) return;
+    deleteStockVerificationMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
+  };
+
+  const columns: AppGridColDef<StockVerificationBase>[] = [
+    { field: "stockVerificationNo", headerName: "Stock Verification No.",flex:1, minWidth: 200 },
+    { field: "createdAt", headerName: "Stock Verification Date", flex:1, minWidth: 200, renderCell: (params) => FormatDate(params.row.createdAt) },
+    { field: "totalProducts", headerName: "Total Products", width: 200 },
+    { field: "totalPhysicalQty", headerName: "Total Physical Qty", width: 200 },
+    { field: "totalDifferenceAmount", headerName: "Difference Amount", width: 200 },
+    { field: "totalApprovedQty", headerName: "Approved Qty", width: 200 },
+    { field: "status", headerName: "Status",headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+    ...(permission?.edit || permission?.delete
+      ? [
+          {
+            ...CommonActionColumn<StockVerificationBase>({
+              ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
+              ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
+            }),
+            renderCell: (params: GridRenderCellParams<any, StockVerificationBase>) =>
+              params.row.status === "pending"
+                ? CommonActionColumn<StockVerificationBase>({
+                    ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
+                    ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
+                  }).renderCell?.(params)
+                : "-",
+          },
+        ]
+      : []),
   ];
+
+  const StockVerificationFooter = ({ summary }: any) => {
+    const apiRef = useGridApiContext();
+
+    const visibleColumns = apiRef.current.getVisibleColumns();
+
+    return (
+      <GridFooterContainer sx={{ overflowX: "auto", px: 0, width: "fit-content" }}>
+        <Box sx={{ display: "flex", minWidth: "max-content" }}>
+          {visibleColumns.map((col) => {
+            let value = "";
+
+            if (col.field === "totalProducts") value = summary.totalProducts;
+            if (col.field === "totalPhysicalQty") value = summary.totalPhysicalQty;
+            if (col.field === "totalDifferenceAmount") value = summary.totalDifferenceAmount.toFixed(2);
+            if (col.field === "totalApprovedQty") value = summary.totalApprovedQty;
+
+            return (
+              <Box key={col.field} sx={{ flex: `0 0 ${col.computedWidth}px`, px: 1, py: 1, fontWeight: 600, whiteSpace: "nowrap", textAlign: "left" }}>
+                {value}
+              </Box>
+            );
+          })}
+        </Box>
+      </GridFooterContainer>
+    );
+  };
+
+  const summary = useMemo(() => {
+    return allStock.reduce(
+      (acc, row) => {
+        acc.totalProducts += Number(row.totalProducts || 0);
+        acc.totalPhysicalQty += Number(row.totalPhysicalQty || 0);
+        acc.totalDifferenceAmount += Number(row.totalDifferenceAmount || 0);
+        acc.totalApprovedQty += Number(row.totalApprovedQty || 0);
+        return acc;
+      },
+      { totalProducts: 0, totalPhysicalQty: 0, totalDifferenceAmount: 0, totalApprovedQty: 0 },
+    );
+  }, [allStock]);
 
   const CommonDataGridOption = {
     columns,
     rows: allStock,
     rowCount: totalRows,
-    loading: stockDataLoading || stockDataFetching,
+    loading: stockVerificationDataLoading || stockVerificationDataFetching,
     isActive,
     setActive,
     ...(permission?.add && { handleAdd }),
@@ -46,6 +110,9 @@ const StockVerification = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    slots: {
+      bottomContainer: () => <StockVerificationFooter summary={summary} />,
+    },
   };
 
   return (
@@ -55,6 +122,7 @@ const StockVerification = () => {
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       </Box>
     </>
   );

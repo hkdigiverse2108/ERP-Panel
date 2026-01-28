@@ -237,3 +237,9 @@ export const CONSUMPTION_TYPE = [
 ];
 
 export const BANK_UI_FIELDS: (keyof CompanyFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber", "upiId"];
+
+export const DATA_STATUS = [
+  { label: "Pending", value: "pending" },
+  { label: "Approved", value: "approved" },
+  { label: "Rejected", value: "rejected" },
+];

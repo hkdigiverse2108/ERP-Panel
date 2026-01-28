@@ -87,6 +87,8 @@ export const KEYS = {
   STOCK_VERIFICATION: {
     BASE: "stock-verification",
     ADD: "stock-verification-add",
+    EDIT: "stock-verification-edit",
+    DELETE: "stock-verification-delete",
   },
   CALL_REQUEST: {
     ADD: "call-request",

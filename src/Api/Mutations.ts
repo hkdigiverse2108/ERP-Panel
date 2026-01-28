@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AddBankPayload, AddContactPayload, AddEmployeePayload, AddProductPayload, AddRecipePayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddStockVerificationPayload, CallRequestFormValues, CompanyApiResponse, EditBankPayload, EditCompanyPayload, EditContactPayload, EditEmployeePayload, EditPermissionPayload, EditProductPayload, EditRecipePayload, EditRolesPayload, EmployeeApiResponse, LoginPayload, LoginResponse, UploadResponse } from "../Types";
+import type { AddBankPayload, AddContactPayload, AddEmployeePayload, AddProductPayload, AddRecipePayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddStockVerificationPayload, CallRequestFormValues, CompanyApiResponse, EditBankPayload, EditCompanyPayload, EditContactPayload, EditEmployeePayload, EditPermissionPayload, EditProductPayload, EditRecipePayload, EditRolesPayload, EditStockVerificationPayload, EmployeeApiResponse, LoginPayload, LoginResponse, UploadResponse } from "../Types";
 import type { AddBillOfLiveProductPayload, EditBillOfLiveProductPayload } from "../Types/BillOfMaterials";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
@@ -44,6 +44,8 @@ export const Mutations = {
 
   // ************ Stock Verification ***********
   useAddStockVerification: () => useMutations<AddStockVerificationPayload, void>([KEYS.STOCK_VERIFICATION.ADD, KEYS.STOCK_VERIFICATION.BASE], (input) => Post(URL_KEYS.STOCK_VERIFICATION.ADD, input)),
+  useEditStockVerification: () => useMutations<EditStockVerificationPayload, void>([KEYS.STOCK_VERIFICATION.EDIT, KEYS.STOCK_VERIFICATION.BASE], (input) => Put(URL_KEYS.STOCK_VERIFICATION.EDIT, input)),
+  useDeleteStockVerification: () => useMutations<string, void>([KEYS.STOCK_VERIFICATION.DELETE, KEYS.STOCK_VERIFICATION.BASE], (id) => Delete(`${URL_KEYS.STOCK_VERIFICATION.BASE}/${id}`)),
 
   // ************ Call Request ***********
   useAddCallRequest: () => useMutations<CallRequestFormValues, void>([KEYS.CALL_REQUEST.ADD], (input) => Post(URL_KEYS.CALL_REQUEST.ADD, input)),

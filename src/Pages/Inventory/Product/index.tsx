@@ -66,13 +66,15 @@ const Product = () => {
         return <img src={value[0]} alt="product" style={{ width: 50, height: 45, objectFit: "cover", borderRadius: 4 }} />;
       },
     },
-    { field: "name", headerName: "Name", width: 200 },
-    CommonObjectNameColumn<ProductBase>("categoryId", { headerName: "Category", width: 200 }),
-    CommonObjectNameColumn<ProductBase>("brandId", { headerName: "Brand", width: 240 }),
-    { field: "mrp", headerName: "MRP", width: 150 },
+    { field: "name", headerName: "Name", width: 250 },
+    { field: "printName", headerName: "Print Name", width: 200 },
+    CommonObjectNameColumn<ProductBase>("categoryId", { headerName: "Category", width: 150 }),
+    CommonObjectNameColumn<ProductBase>("brandId", { headerName: "Brand", width: 150 }),
+    CommonObjectNameColumn<ProductBase>("purchaseTaxId", { headerName: "Purchase Tax", width: 150 }),
+    CommonObjectNameColumn<ProductBase>("salesTaxId", { headerName: "Sales Tax", width: 150 }),
+    { field: "mrp", headerName: "MRP", width: 100 },
     { field: "sellingPrice", headerName: "Selling Price", width: 150 },
-    { field: "hsnCode", headerName: "HSN", width: 150 },
-    { field: "qty", headerName: "Qty", flex: 1, minWidth: 150 },
+    { field: "qty", headerName: "Qty", flex: 1, minWidth: 120 },
     ...(isRemoveItem
       ? [
           {
