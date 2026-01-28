@@ -71,7 +71,7 @@ export const Queries = {
   useGetCityLocation: (id?: string) => useQueries<CountryApiResponse>([KEYS.LOCATION.BASE, id], () => Get(`${URL_KEYS.LOCATION.CITY}/${id}`), { enabled: !!id }),
 
   //************ bill of materials ********/
-  useGetBillOfLiveProduct: (params?: Params) => useQueries<BillOfLiveProductApiResponse>([KEYS.BILLOFLIVEPRODUCT.BASE, params], () => Get(URL_KEYS.BILLOFLIVEPRODUCT.ALL, params)),
+  useGetBillOfLiveProduct: (params?: Params) => useQueries<BillOfLiveProductApiResponse>([KEYS.BILL_OF_Live_Product.BASE, params], () => Get(URL_KEYS.BILL_OF_Live_Product.ALL, params)),
 
   //*************** Permission **************** */
   useGetPermissionDetails: (params?: Params, enabled?: boolean) => useQueries<PermissionDetailsApiResponse>([KEYS.PERMISSION.DETAILS, params], () => Get(URL_KEYS.PERMISSION.DETAILS, params), { enabled: enabled }),

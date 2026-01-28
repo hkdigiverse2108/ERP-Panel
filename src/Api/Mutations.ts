@@ -63,10 +63,10 @@ export const Mutations = {
   useEditRecipe: () => useMutations<EditRecipePayload, void>([KEYS.RECIPE.EDIT, KEYS.RECIPE.BASE], (input) => Put(URL_KEYS.RECIPE.EDIT, input)),
   useDeleteRecipe: () => useMutations<string, void>([KEYS.RECIPE.DELETE, KEYS.RECIPE.BASE], (id) => Delete(`${URL_KEYS.RECIPE.BASE}/${id}`)),
 
-  //************** bill of materials **************** */
-  useAddBillOfLiveProduct: () => useMutations<AddBillOfLiveProductPayload, void>([KEYS.BILLOFLIVEPRODUCT.ADD, KEYS.BILLOFLIVEPRODUCT.BASE], (input) => Post(URL_KEYS.BILLOFLIVEPRODUCT.ADD, input)),
-  useEditBillOfLiveProduct: () => useMutations<EditBillOfLiveProductPayload, void>([KEYS.BILLOFLIVEPRODUCT.EDIT, KEYS.BILLOFLIVEPRODUCT.BASE], (input) => Put(URL_KEYS.BILLOFLIVEPRODUCT.EDIT, input)),
-  useDeleteBillOfLiveProduct: () => useMutations<string, void>([KEYS.BILLOFLIVEPRODUCT.DELETE, KEYS.BILLOFLIVEPRODUCT.BASE], (id) => Delete(`${URL_KEYS.BILLOFLIVEPRODUCT.BASE}/${id}`)),
+  //************** bill of live product **************** */
+  useAddBillOfLiveProduct: () => useMutations<AddBillOfLiveProductPayload, void>([KEYS.BILL_OF_Live_Product.ADD, KEYS.BILL_OF_Live_Product.BASE], (input) => Post(URL_KEYS.BILL_OF_Live_Product.ADD, input)),
+  useEditBillOfLiveProduct: () => useMutations<EditBillOfLiveProductPayload, void>([KEYS.BILL_OF_Live_Product.EDIT, KEYS.BILL_OF_Live_Product.BASE], (input) => Put(URL_KEYS.BILL_OF_Live_Product.EDIT, input)),
+  useDeleteBillOfLiveProduct: () => useMutations<string, void>([KEYS.BILL_OF_Live_Product.DELETE, KEYS.BILL_OF_Live_Product.BASE], (id) => Delete(`${URL_KEYS.BILL_OF_Live_Product.BASE}/${id}`)),
 
   //*************** Permission **************** */
   useEditUserPermission: () => useMutations<EditPermissionPayload, void>([KEYS.PERMISSION.DETAILS], (input) => Put(URL_KEYS.PERMISSION.EDIT, input)),

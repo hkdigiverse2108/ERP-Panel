@@ -116,7 +116,7 @@ export const KEYS = {
     DELETE: "location-delete",
   },
 
-  BILLOFLIVEPRODUCT: {
+  BILL_OF_Live_Product: {
     BASE: "billofliveproduct",
     ADD: "billofliveproduct-add",
     EDIT: "billofliveproduct-edit",

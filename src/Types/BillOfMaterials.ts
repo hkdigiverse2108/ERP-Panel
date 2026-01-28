@@ -1,5 +1,6 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { ProductBase } from "./Product";
+import type { RecipeBase } from "./Recipe";
 
 /* ================= UI MODELS ================= */
 
@@ -13,6 +14,7 @@ export interface IngredientUI {
 export interface BillOfLiveProductDetailUI {
   productId: ProductBase;
   qty: number;
+  recipe?: RecipeBase;
 
   purchasePrice?: number;
   landingCost?: number;
@@ -26,7 +28,6 @@ export interface BillOfLiveProductDetailUI {
   batchNo?: string;
 
   ingredients?: IngredientUI[];
-  recipeId?: string;
 }
 
 /* ================= FORM ================= */
@@ -79,6 +80,7 @@ export type AddBillOfLiveProductPayload = {
 
 export type EditBillOfLiveProductPayload = AddBillOfLiveProductPayload & {
   billOfLiveProductId: string;
+  isActive?: boolean;
 };
 
 /* ================= BASE ================= */
@@ -86,7 +88,7 @@ export type EditBillOfLiveProductPayload = AddBillOfLiveProductPayload & {
 export interface BillOfLiveProductBase extends CommonDataType {
   number?: string;
   date?: string;
-  recipeId?: string[];
+  recipeId?: RecipeBase[];
   allowReverseCalculation?: boolean;
   productDetails?: BillOfLiveProductDetailUI[];
   isActive?: boolean;
@@ -101,14 +103,3 @@ export interface BillOfLiveProductDataResponse extends PageStatus {
 export interface BillOfLiveProductApiResponse extends MessageStatus {
   data: BillOfLiveProductDataResponse;
 }
-
-
-
-
-
-
-
-
-
-
-

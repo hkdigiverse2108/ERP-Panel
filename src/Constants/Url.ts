@@ -127,7 +127,7 @@ export const URL_KEYS = {
     STATE: "/location/state",
     CITY: "/location/city",
   },
-  BILLOFLIVEPRODUCT: {
+ BILL_OF_Live_Product: {
     BASE: "/bill-of-live-product",
     ALL: "/bill-of-live-product/all",
     ADD: "/bill-of-live-product/add",

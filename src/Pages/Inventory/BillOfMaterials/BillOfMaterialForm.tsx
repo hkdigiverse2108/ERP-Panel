@@ -1,16 +1,18 @@
 import ClearIcon from "@mui/icons-material/Clear";
 import { Box, Grid } from "@mui/material";
-import { Form, Formik } from "formik";
-import { useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Form, Formik, useFormikContext } from "formik";
+import type { FormikProps } from "formik";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Mutations, Queries } from "../../../Api";
-import { CommonButton, CommonDatePicker, CommonTextField, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
+import { CommonButton, CommonTextField, CommonValidationDatePicker, CommonValidationTextField, CommonDatePicker, CommonValidationSelect, CommonValidationSwitch } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { ProductBase, RecipeBase } from "../../../Types";
+import { GenerateOptions, DateConfig } from "../../../Utils";
+import { useLocation, useNavigate } from "react-router-dom";
 import type { BillOfLiveProductBase, BillOfLiveProductFormValues } from "../../../Types/BillOfMaterials";
-import { DateConfig, GenerateOptions } from "../../../Utils";
+import type { BillOfLiveProductDetailUI } from "../../../Types/BillOfMaterials";
 
 interface BomRow {
   id: string;
@@ -30,7 +32,35 @@ interface BomRow {
     useQty: number;
   }[];
 }
+const RecipeWatcher = ({ onChange }: { onChange: (ids: string[]) => void }) => {
+  const { values } = useFormikContext<BillOfLiveProductFormValues>();
+  const prevKey = useRef<string>("");
+  const ids = values.recipeId || [];
+  const onChangeRef = useRef(onChange);
+  const idsKey = ids.join(",");
 
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
+
+  useEffect(() => {
+    if (idsKey !== prevKey.current) {
+      prevKey.current = idsKey;
+      onChangeRef.current(ids);
+    }
+  }, [idsKey]);
+  return null;
+};
+const BIM_PREFIX = "BIM";
+const parseBimNumber = (value?: string) => {
+  if (!value) return "";
+  const match = value.match(/\d+/);
+  return match ? match[0] : "";
+};
+const formatBimNumber = (num?: string | number) => {
+  if (!num) return "";
+  return `${BIM_PREFIX} ${num}`;
+};
 const BillOfMaterialForm = () => {
   const { data: recipeData } = Queries.useGetRecipe({ activeFilter: true });
 
@@ -54,7 +84,7 @@ const BillOfMaterialForm = () => {
 
   const { mutate: editBOM, isPending: isEditLoading } = Mutations.useEditBillOfLiveProduct();
 
-  const formikRef = useRef<any>(null);
+  const formikRef = useRef<FormikProps<BillOfLiveProductFormValues> | null>(null);
 
   /* ---------------- CREATE ROW FROM RECIPE ---------------- */
 
@@ -73,105 +103,104 @@ const BillOfMaterialForm = () => {
       expiryDays: recipe.finalProducts?.expiryDays ?? 0,
       mfgDate: DateConfig.utc().toISOString(),
       expDate: null,
-      rawProducts:
-        recipe.rawProducts?.map((r) => ({
-          productId: r.productId as ProductBase,
-          availableQty: (r.productId as ProductBase)?.qty ?? 0,
-          useQty: r.useQty ?? 0,
-        })) || [],
+      rawProducts: recipe.rawProducts?.map((r) => ({ productId: r.productId as ProductBase, availableQty: (r.productId as ProductBase)?.qty ?? 0, useQty: r.useQty ?? 0 })) || [],
     };
   };
 
-  /* ---------------- RECIPE CHANGE (ADD MODE ONLY) ---------------- */
+  /* ---------------- MERGE HELPERS ---------------- */
 
-  const handleRecipeChange = (ids: string[]) => {
+  const mergeRow = (recipe: RecipeBase, saved?: BillOfLiveProductDetailUI, existing?: BomRow): BomRow => {
+    const base = createRowFromRecipe(recipe);
+
+    // Merge saved BOM detail over recipe defaults
+    const withSaved: BomRow = {
+      ...base,
+      qty: saved?.qty ?? base.qty,
+      purchasePrice: saved?.purchasePrice ?? base.purchasePrice,
+      landingCost: saved?.landingCost ?? base.landingCost,
+      mrp: saved?.mrp ?? base.mrp,
+      sellingPrice: saved?.sellingPrice ?? base.sellingPrice,
+      mfgDate: saved?.mfgDate ?? base.mfgDate,
+      expiryDays: saved?.expiryDays ?? base.expiryDays,
+      expDate: saved?.expiryDate ?? base.expDate,
+      rawProducts:
+        base.rawProducts?.map((raw) => {
+          const matchedSaved = saved?.ingredients?.find((ing) => ing.productId._id === raw.productId._id);
+          return { ...raw, useQty: matchedSaved?.useQty ?? raw.useQty, availableQty: matchedSaved?.availableQty ?? raw.availableQty };
+        }) ?? [],
+    };
+    if (!existing) return withSaved;
+    return {
+      ...withSaved,
+      ...existing,
+      rawProducts:
+        withSaved.rawProducts?.map((raw) => {
+          const matchedExisting = existing.rawProducts?.find((r) => r.productId._id === raw.productId._id);
+          return matchedExisting ? { ...raw, ...matchedExisting } : raw;
+        }) ?? [],
+    };
+  };
+
+  const buildRowsFromSelection = (ids: string[], prevRows: BomRow[], productDetails?: BillOfLiveProductDetailUI[]) => {
     const allRecipes = recipeData?.data?.recipe_data || [];
 
-    setRows((prev) => {
-      const map = new Map(prev.map((r) => [r.recipeId, r]));
-
-      const result: BomRow[] = [];
-
-      ids.forEach((id) => {
-        const existing = map.get(id);
-
-        if (existing) {
-          result.push(existing);
-        } else {
-          const recipe = allRecipes.find((r) => r._id === id);
-          if (recipe) result.push(createRowFromRecipe(recipe));
-        }
-      });
-
-      return result;
-    });
+    return ids
+      .map((id) => {
+        const recipe = allRecipes.find((r) => r._id === id);
+        if (!recipe) return null;
+        const finalProductId = (recipe.finalProducts?.productId as ProductBase)?._id;
+        const savedDetail = productDetails?.find((pd) => pd.productId?._id === finalProductId);
+        const existing = prevRows.find((r) => r.recipeId === id);
+        return mergeRow(recipe, savedDetail, existing);
+      })
+      .filter(Boolean) as BomRow[];
   };
 
   const updateRow = (id: string, data: Partial<BomRow>) => {
     setRows((prev) => prev.map((row) => (row.id === id ? { ...row, ...data } : row)));
   };
   const handleCut = (recipeId: string) => {
-    const current: string[] = formikRef.current?.values?.recipeId || [];
-
+    const current: string[] = formikRef.current?.values?.recipeId ?? [];
     const updated = current.filter((id) => id !== recipeId);
-
     formikRef.current?.setFieldValue("recipeId", updated);
     setRows((prev) => prev.filter((row) => row.recipeId !== recipeId));
   };
 
   const updateRawQty = (rowId: string, index: number, value: number) => {
-    setRows((prev) =>
-      prev.map((row) =>
-        row.id === rowId
-          ? {
-              ...row,
-              rawProducts: row.rawProducts?.map((raw, i) => (i === index ? { ...raw, useQty: value } : raw)),
-            }
-          : row,
-      ),
-    );
+    setRows((prev) => prev.map((row) => (row.id === rowId ? { ...row, rawProducts: row.rawProducts?.map((raw, i) => (i === index ? { ...raw, useQty: value } : raw)) } : row)));
   };
-//   const findRecipeIdByProduct = (productId: string) => {
-//   const recipe = recipeData?.data?.recipe_data.find(
-//     (r) => r.finalProducts?.productId?._id === productId
-//   );
-//   return recipe?._id || "";
-// };
 
-//   useEffect(() => {
-//     if (!isEditing || !data || !recipeData?.data?.recipe_data?.length) return;
+  const initialSyncKeyRef = useRef<string>("");
 
-//     const mapped: BomRow[] = (data.productDetails ?? []).map((item, index) => ({
-//       id: item.productId._id,
-//       recipeId: findRecipeIdByProduct(item.productId._id),
-//       name: item.productId.name ?? "",
-//       qty: item.qty,
-//       purchasePrice: item.purchasePrice ?? 0,
-//       landingCost: item.landingCost ?? 0,
-//       mrp: item.mrp ?? 0,
-//       sellingPrice: item.sellingPrice ?? 0,
-//       expiryDays: item.expiryDays ?? 0,
-//       mfgDate: item.mfgDate ?? null,
-//       expDate: item.expiryDate ?? null,
-//       rawProducts:
-//         item.ingredients?.map((ing) => ({
-//           productId: ing.productId as ProductBase,
-//           availableQty: ing.availableQty ?? 0,
-//           useQty: ing.useQty,
-//         })) || [],
-//     }));
-//     setRows(mapped);
-//     formikRef.current?.setFieldValue("recipeId", data.recipeId ?? [], false);
-//   }, [isEditing, data, recipeData?.data?.recipe_data?.length]);
+  useEffect(() => {
+    const ids = formikRef.current?.values?.recipeId ?? [];
+    if (!ids.length || !recipeData?.data?.recipe_data?.length) return;
+
+    const key = ids.join(",");
+    if (key === initialSyncKeyRef.current) return;
+    initialSyncKeyRef.current = key;
+
+    setRows((prev) => buildRowsFromSelection(ids, prev, data?.productDetails));
+  }, [recipeData, data?.productDetails, isEditing]);
 
   /* ---------------- FORM ---------------- */
 
-  const initialValues: BillOfLiveProductFormValues = {
-    number: isEditing ? data!.number : bomNumber,
-    date: isEditing ? data!.date : DateConfig.utc().toISOString(),
-    allowReverseCalculation: data?.allowReverseCalculation ?? false,
-    recipeId: isEditing ? (data?.recipeId ?? []) : [],
-  };
+  const initialValues: BillOfLiveProductFormValues = useMemo(
+    () => ({
+      number: isEditing ? parseBimNumber(data?.number) : bomNumber,
+      date: isEditing ? data?.date : DateConfig.utc().toISOString(),
+      allowReverseCalculation: data?.allowReverseCalculation ?? false,
+      recipeId: data?.recipeId?.map((b: RecipeBase) => b._id) ?? [],
+    }),
+    [isEditing, bomNumber, data?.number, data?.date, data?.allowReverseCalculation, data?.recipeId],
+  );
+
+  const syncRowsFromRecipeIds = useCallback(
+    (ids: string[]) => {
+      setRows((prev) => buildRowsFromSelection(ids, prev, data?.productDetails));
+    },
+    [buildRowsFromSelection, data?.productDetails],
+  );
 
   /* ---------------- SUBMIT ---------------- */
 
@@ -196,67 +225,34 @@ const BillOfMaterialForm = () => {
     }));
 
     if (isEditing) {
-      editBOM(
-        {
-          billOfLiveProductId: data!._id,
-          recipeId: values.recipeId,
-          productDetails,
-        },
-        {
-          onSuccess: () => navigate(ROUTES.BILLOFMATERIALS.BASE),
-        },
-      );
+      editBOM({ billOfLiveProductId: data!._id, recipeId: values.recipeId, productDetails, number: formatBimNumber(values.number) }, { onSuccess: () => navigate(ROUTES.BILL_OF_Live_Product.BASE) });
     } else {
-      addBOM(
-        {
-          number: values.number,
-          date: values.date,
-          allowReverseCalculation: values.allowReverseCalculation,
-          recipeId: values.recipeId,
-          productDetails,
-        },
-        {
-          onSuccess: () => navigate(ROUTES.BILLOFMATERIALS.BASE),
-        },
-      );
+      addBOM({ number: formatBimNumber(values.number), date: values.date, allowReverseCalculation: values.allowReverseCalculation, recipeId: values.recipeId, productDetails }, { onSuccess: () => navigate(ROUTES.BILL_OF_Live_Product.BASE) });
     }
   };
-
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.BILLOFMATERIALS[pageMode]} breadcrumbs={BREADCRUMBS.BILLOFMATERIALS[pageMode]} />
-
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.BILL_OF_Live_Product[pageMode]} breadcrumbs={BREADCRUMBS.BILL_OF_Live_Product[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonCard hideDivider>
           <Grid container spacing={2} sx={{ p: 2 }}>
             <Grid size={12}>
-              {recipeData?.data?.recipe_data?.length ? (
-                <Formik
-                  enableReinitialize={isEditing}
-                  innerRef={formikRef}
-                  initialValues={initialValues}
-                  onSubmit={handleSubmit}
-                  validate={(values) => {
-                    handleRecipeChange(values.recipeId || []);
-                    return {};
-                  }}
-                >
-                  {() => {
-                    return (
-                      <Form noValidate>
-                        <Grid container spacing={2}>
-                          <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 3 }} />
-                          <CommonValidationTextField name="text" label="BIM" disabled grid={{ xs: 12, md: 2 }} />
-                          <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 2 }} />
-
-                          <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 5 }} options={GenerateOptions(recipeData?.data?.recipe_data)} />
-                          <CommonValidationSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
-                        </Grid>
-                      </Form>
-                    );
-                  }}
+              {(recipeData?.data?.recipe_data?.length ?? 0) > 0 && (
+                <Formik enableReinitialize innerRef={formikRef} initialValues={initialValues} onSubmit={handleSubmit}>
+                  {() => (
+                    <Form noValidate>
+                      <RecipeWatcher onChange={syncRowsFromRecipeIds} />
+                      <Grid container spacing={2}>
+                        <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 3 }} />
+                        <CommonValidationTextField name="text" label="BIM" disabled grid={{ xs: 12, md: 2 }} />
+                        <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 2 }} />
+                        <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 5 }} options={GenerateOptions(recipeData?.data?.recipe_data)} />
+                        <CommonValidationSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
+                      </Grid>
+                    </Form>
+                  )}
                 </Formik>
-              ) : null}
+              )}
             </Grid>
 
             {/* ================= TABLE ================= */}
@@ -336,25 +332,24 @@ const BillOfMaterialForm = () => {
                               {/* ===== RAW MATERIAL TABLE ===== */}
                               {row.rawProducts?.length ? (
                                 <tr className="bg-white dark:bg-gray-800">
-                                  <td colSpan={10} className="p-4">
+                                  <td colSpan={11} className="p-4">
                                     <div className="border border-gray-200 dark:border-gray-600 rounded-md overflow-hidden">
                                       <table className="w-full text-sm">
                                         <thead className="bg-gray-100 dark:bg-gray-900">
                                           <tr>
-                                            <th>Sr No</th>
-                                            <th>Raw Product</th>
-                                            <th>Available Qty</th>
-                                            <th>Use Qty</th>
+                                            <th className="p-2">Sr No</th>
+                                            <th className="p-2 text-start">Raw Product</th>
+                                            <th className="p-2">Available Qty</th>
+                                            <th className="p-2">Use Qty</th>
                                           </tr>
                                         </thead>
-
                                         <tbody>
                                           {row.rawProducts.map((raw, index) => (
                                             <tr key={index} className="even:bg-gray-50 dark:even:bg-gray-dark">
-                                              <td className="text-center">{index + 1}</td>
-                                              <td>{raw.productId?.name}</td>
-                                              <td className="text-center">{raw.availableQty}</td>
-                                              <td>
+                                              <td className="text-center p-2">{index + 1}</td>
+                                              <td className="text-start p-2">{raw.productId?.name}</td>
+                                              <td className="text-center p-2">{raw.availableQty}</td>
+                                              <td className="text-center p-2">
                                                 <CommonTextField type="number" value={raw.useQty ?? 0} onChange={(v) => updateRawQty(row.id, index, Number(v))} />
                                               </td>
                                             </tr>
@@ -381,5 +376,4 @@ const BillOfMaterialForm = () => {
     </>
   );
 };
-
 export default BillOfMaterialForm;

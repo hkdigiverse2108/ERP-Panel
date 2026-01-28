@@ -12,29 +12,17 @@ import type { BillOfLiveProductBase } from "../../../Types/BillOfMaterials";
 
 const BillOfMaterials = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
-
   const navigate = useNavigate();
-
   const { data, isLoading, isFetching } = Queries.useGetBillOfLiveProduct(params);
-
   const { mutate: deleteBOM } = Mutations.useDeleteBillOfLiveProduct();
-
   const { mutate: editBOM, isPending: isEditLoading } = Mutations.useEditBillOfLiveProduct();
-
   const rows = useMemo(() => {
-    return (
-      data?.data?.billOfLiveProduct_data.map((item) => ({
-        ...item,
-        id: item._id,
-
-        createdByName: item.createdBy || "",
-      })) || []
-    );
+    return data?.data?.billOfLiveProduct_data.map((item) => ({ ...item, id: item._id, createdByName: item.createdBy || "" })) || [];
   }, [data]);
 
   const totalRows = data?.data?.totalData || 0;
 
-  const handleAdd = () => navigate(ROUTES.BILLOFMATERIALS.ADD_EDIT , { state: { no :data?.data?.totalData} });
+  const handleAdd = () => navigate(ROUTES.BILL_OF_Live_Product.ADD_EDIT, { state: { no: data?.data?.totalData } });
 
   const handleDelete = () => {
     if (!rowToDelete) return;
@@ -43,47 +31,7 @@ const BillOfMaterials = () => {
     });
   };
 
-  const columns: AppGridColDef<BillOfLiveProductBase>[] = [
-    {
-      field: "number",
-      headerName: "Bill Of Materials No.",
-      width: 220,
-    },
-
-    {
-      field: "date",
-      headerName: "Bill Of Materials Date",
-      width: 220,
-      valueGetter: (v) => FormatDate(v),
-    },
-
-    {
-      field: "locationName",
-      headerName: "Location",
-      width: 220,
-      flex: 1,
-    },
-
-    {
-      field: "createdByName",
-      headerName: "Created By",
-      width: 220,
-    },
-
-    CommonActionColumn({
-      active: (row) =>
-        editBOM({
-          billOfLiveProductId: row._id,
-          // isActive: !row.isActive,
-        }),
-      editRoute: ROUTES.BILLOFMATERIALS.ADD_EDIT,
-      onDelete: (row) =>
-        setRowToDelete({
-          _id: row._id,
-          title: row.number,
-        }),
-    }),
-  ];
+  const columns: AppGridColDef<BillOfLiveProductBase>[] = [{ field: "number", headerName: "Bill Of Materials No.", width: 250 }, { field: "date", headerName: "Bill Of Materials Date", width: 270, valueGetter: (v) => FormatDate(v) }, { field: "createdByName", headerName: "Created By", flex: 1 }, CommonActionColumn({ active: (row) => editBOM({ billOfLiveProductId: row._id, isActive: !row.isActive }), editRoute: ROUTES.BILL_OF_Live_Product.ADD_EDIT, onDelete: (row) => setRowToDelete({ _id: row._id, title: row.number }) })];
 
   const gridOptions = {
     columns,
@@ -103,13 +51,12 @@ const BillOfMaterials = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.BILLOFMATERIALS.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.BILLOFMATERIALS.BASE} />
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY. BILL_OF_Live_Product.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.BILL_OF_Live_Product.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonCard hideDivider>
           <CommonDataGrid {...gridOptions} />
         </CommonCard>
-
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDelete} />
       </Box>
     </>

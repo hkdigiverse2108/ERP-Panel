@@ -63,8 +63,8 @@ export const PageRoutes = [
   { path: ROUTES.RECIPE.BASE, name: PAGE_TITLE.INVENTORY.RECIPE.BASE, element: <Recipe /> },
   { path: ROUTES.RECIPE.ADD_EDIT, name: PAGE_TITLE.INVENTORY.RECIPE.BASE, element: <RecipeForm /> },
 
-  { path: ROUTES.BILLOFMATERIALS.BASE, name: PAGE_TITLE.INVENTORY.BILLOFMATERIALS.BASE, element: <BillOfMaterials /> },
-  { path: ROUTES.BILLOFMATERIALS.ADD_EDIT, name: PAGE_TITLE.INVENTORY.BILLOFMATERIALS.BASE, element: <BillOfMaterialsForm /> },
+  { path: ROUTES.BILL_OF_Live_Product.BASE, name: PAGE_TITLE.INVENTORY.BILL_OF_Live_Product.BASE, element: <BillOfMaterials /> },
+  { path: ROUTES.BILL_OF_Live_Product.ADD_EDIT, name: PAGE_TITLE.INVENTORY.BILL_OF_Live_Product.BASE, element: <BillOfMaterialsForm /> },
 ];
 
 export const AuthRoutes = [

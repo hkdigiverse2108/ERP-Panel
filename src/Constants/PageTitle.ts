@@ -56,10 +56,10 @@ export const PAGE_TITLE = {
       ADD: "Add recipe",
       EDIT: "Edit recipe",
     },
-    BILLOFMATERIALS: {
-      BASE: "Bill Of Materials",
-      ADD: "Add Bill Of Materials",
-      EDIT: "Edit Bill Of Materials",
+    BILL_OF_Live_Product: {
+      BASE: "Bill Of Live Product",
+      ADD: "Add Bill Of Live Product",
+      EDIT: "Edit Bill Of Live Product",
     },
   },
   CUSTOMER: {
@@ -67,7 +67,7 @@ export const PAGE_TITLE = {
     ADD: "Add Customer",
     EDIT: "Edit Customer",
   },
-  BANK_CASH:{
+  BANK_CASH: {
     BASE: "Bank / Cash",
   },
   BANK: {

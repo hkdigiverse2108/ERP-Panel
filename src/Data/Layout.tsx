@@ -19,7 +19,7 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.INVENTORY.STOCK.BASE, path: ROUTES.STOCK.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.RECIPE.BASE, path: ROUTES.RECIPE.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE, path: ROUTES.STOCK_VERIFICATION.BASE },
-      { name: PAGE_TITLE.INVENTORY.BILLOFMATERIALS.BASE, path: ROUTES.BILLOFMATERIALS.BASE },
+      { name: PAGE_TITLE.INVENTORY.BILL_OF_Live_Product.BASE, path: ROUTES.BILL_OF_Live_Product.BASE },
     ],
   },
   {
