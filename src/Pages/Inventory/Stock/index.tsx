@@ -18,12 +18,12 @@ const Stock = () => {
 
 
   const columns: AppGridColDef<StockBase>[] = [
-    { field: "name", headerName: "Product Name", width: 300 },//
-    CommonObjectNameColumn("categoryId", { headerName: "Category Name", width: 200 }),
-    CommonObjectNameColumn("subCategoryId", { headerName: "Sub Category Name", width: 200 }),
-    CommonObjectNameColumn("brandId", { headerName: "Brand Name", width: 200 }),
-    CommonObjectNameColumn("subBrandId", { headerName: "Sub Brand Name", width: 200 }),
-    { field: "availableQty", headerName: "Available Qty", flex: 1, minWidth: 150 },
+    { field: "name", headerName: "Product Name", width: 320 },//
+    CommonObjectNameColumn("categoryId", { headerName: "Category Name", width: 230 }),
+    CommonObjectNameColumn("subCategoryId", { headerName: "Sub Category Name", width: 230 }),
+    CommonObjectNameColumn("brandId", { headerName: "Brand Name", width: 230 }),
+    CommonObjectNameColumn("subBrandId", { headerName: "Sub Brand Name", width: 230 }),
+    { field: "availableQty", headerName: "Available Qty", flex: 1, minWidth: 200 },
   ];
 
   const CommonDataGridOption = {
