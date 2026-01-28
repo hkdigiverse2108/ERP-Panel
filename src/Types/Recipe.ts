@@ -37,7 +37,6 @@ export type AddRecipePayload = RecipeFormValues;
 
 export type EditRecipePayload = AddRecipePayload & { recipeId: string };
 
-// export type RecipeBase = RecipeFormValues & CommonDataType;
 
 export interface RecipeBase extends Omit<RecipeFormValues, "productId">, CommonDataType {
   productId: ProductBase;
