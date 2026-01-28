@@ -140,4 +140,10 @@ export const URL_KEYS = {
     ALL: "/permission/all",
     EDIT: "/permission/edit",
   },
+  SUPPLIER_BILL: {
+    BASE: "/supplier-bill",
+    ALL: "/supplier-bill/all",
+    ADD: "/supplier-bill/add",
+    EDIT: "/supplier-bill/edit",
+  },
 } as const;

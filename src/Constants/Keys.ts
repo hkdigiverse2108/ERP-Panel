@@ -128,4 +128,10 @@ export const KEYS = {
     EDIT: "permission-edit",
     DETAILS: "permission-details",
   },
+  SUPPLIER_BILL: {
+    BASE: "supplier-bill",
+    ADD: "supplier-bill-add",
+    EDIT: "supplier-bill-edit",
+    DELETE: "supplier-bill-delete",
+  },
 };

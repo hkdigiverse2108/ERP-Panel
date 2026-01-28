@@ -26,10 +26,12 @@ export const ROUTES = {
   },
   CATEGORY_BRAND: "/category-brand",
   DEPARTMENT: "/department",
+
   BILL_OF_Live_Product: {
     BASE: "/bill-of-live-product",
     ADD_EDIT: "/bill-of-live-product/add-edit",
   },
+
   PRODUCT_B2B_MAPPING: "/product-b2b-mapping",
   RECIPE: {
     BASE: "/recipe",
@@ -71,4 +73,8 @@ export const ROUTES = {
     BASE: "/pos",
     NEW: "/pos/new",
   },
+  SUPPLIER_BILL:{
+    BASE: "/supplier-bill",
+    ADD_EDIT: "/supplier-bill/add-edit",
+  }
 } as const;

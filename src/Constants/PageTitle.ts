@@ -87,4 +87,12 @@ export const PAGE_TITLE = {
     BASE: "POS",
     NEW: "New POS",
   },
+  PURCHASE: {
+    BASE: "Purchase",
+    SUPPLIER_BILL: {
+      BASE: "Supplier Bill",
+      ADD: "Add Supplier Bill",
+      EDIT: "Edit Supplier Bill",
+    },
+  },
 } as const;
