@@ -10,7 +10,7 @@ import { useDataGrid } from "../../../Utils/Hooks";
 import { FormatDate } from "../../../Utils";
 import type { BillOfLiveProductBase } from "../../../Types/BillOfMaterials";
 
-const BillOfMaterials = () => {
+const BillOfLiveProduct = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
   const { data, isLoading, isFetching } = Queries.useGetBillOfLiveProduct(params);
@@ -31,7 +31,7 @@ const BillOfMaterials = () => {
     });
   };
 
-  const columns: AppGridColDef<BillOfLiveProductBase>[] = [{ field: "number", headerName: "Bill Of Materials No.", width: 250 }, { field: "date", headerName: "Bill Of Materials Date", width: 270, valueGetter: (v) => FormatDate(v) }, { field: "createdByName", headerName: "Created By", flex: 1 }, CommonActionColumn({ active: (row) => editBOM({ billOfLiveProductId: row._id, isActive: !row.isActive }), editRoute: ROUTES.BILL_OF_Live_Product.ADD_EDIT, onDelete: (row) => setRowToDelete({ _id: row._id, title: row.number }) })];
+  const columns: AppGridColDef<BillOfLiveProductBase>[] = [{ field: "number", headerName: "Bill Of Materials No.", width: 400 }, { field: "date", headerName: "Bill Of Materials Date", valueGetter: (v) => FormatDate(v), flex: 1 }, CommonActionColumn({ active: (row) => editBOM({ billOfLiveProductId: row._id, isActive: !row.isActive }), editRoute: ROUTES.BILL_OF_Live_Product.ADD_EDIT, onDelete: (row) => setRowToDelete({ _id: row._id, title: row.number }) })];
 
   const gridOptions = {
     columns,
@@ -51,7 +51,7 @@ const BillOfMaterials = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY. BILL_OF_Live_Product.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.BILL_OF_Live_Product.BASE} />
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.BILL_OF_Live_Product.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.BILL_OF_Live_Product.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonCard hideDivider>
@@ -63,4 +63,4 @@ const BillOfMaterials = () => {
   );
 };
 
-export default BillOfMaterials;
+export default BillOfLiveProduct;

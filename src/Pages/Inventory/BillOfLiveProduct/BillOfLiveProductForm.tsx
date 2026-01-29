@@ -61,7 +61,7 @@ const formatBimNumber = (num?: string | number) => {
   if (!num) return "";
   return `${BIM_PREFIX} ${num}`;
 };
-const BillOfMaterialForm = () => {
+const BillOfLiveProductForm = () => {
   const { data: recipeData } = Queries.useGetRecipe({ activeFilter: true });
 
   const navigate = useNavigate();
@@ -233,7 +233,7 @@ const BillOfMaterialForm = () => {
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.BILL_OF_Live_Product[pageMode]} breadcrumbs={BREADCRUMBS.BILL_OF_Live_Product[pageMode]} />
-      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2, mb: 10 }}>
         <CommonCard hideDivider>
           <Grid container spacing={2} sx={{ p: 2 }}>
             <Grid size={12}>
@@ -259,7 +259,7 @@ const BillOfMaterialForm = () => {
             <Grid size={12}>
               <CommonCard title="Product Details">
                 <div className="w-full bg-white dark:bg-gray-dark">
-                  <div className="lg:h-[350px] max-h-[350px] overflow-x-auto custom-scrollbar">
+                  <div className="lg:max-h-[500px] min-h-auto! overflow-x-auto custom-scrollbar">
                     <table className="w-full text-sm ">
                       <thead className="sticky top-0 z-10 bg-gray-100 dark:text-gray-100 text-gray-700 dark:bg-gray-900">
                         <tr>
@@ -376,4 +376,4 @@ const BillOfMaterialForm = () => {
     </>
   );
 };
-export default BillOfMaterialForm;
+export default BillOfLiveProductForm;

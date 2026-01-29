@@ -9,7 +9,7 @@ import type { SupplierBillBase } from "../../../Types/SupplierBill";
 import type { AppGridColDef } from "../../../Types";
 import { FormatDate } from "../../../Utils";
 import { BREADCRUMBS } from "../../../Data";
-import SupplierBillStats from "../../../Components/Supplier/SupplierBillStats";
+import CommonStatsCard from "../../../Components/Common/CommonStartCard";
 type FilterType = "all" | "unpaid";
 
 const SupplierBill = () => {
@@ -72,9 +72,7 @@ const SupplierBill = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE} breadcrumbs={BREADCRUMBS.SUPPLIER_BILL.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <CommonCard>
-          <SupplierBillStats stats={stats} />
-        </CommonCard>
+        <CommonStatsCard stats={stats} />
         <CommonCard
           topContent={
             <ToggleButtonGroup size="small" exclusive value={filter} onChange={(_, v) => v && setFilter(v)}>
