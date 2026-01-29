@@ -1,16 +1,11 @@
-import { Grid, Paper, Typography } from "@mui/material";
+import { Grid, Paper, Typography, Box, useTheme } from "@mui/material";
 import type { FC } from "react";
 import type { SxProps, Theme } from "@mui/material/styles";
-import { CommonCard } from ".";
-
-/* ======================================================
-   TYPES
-====================================================== */
 
 export interface CommonStatsItem {
   label: string;
   value: number | string;
-  color?: string; 
+  color?: string; // optional tailwind bg
 }
 
 interface CommonStatsCardProps {
@@ -20,57 +15,28 @@ interface CommonStatsCardProps {
     sm?: number;
     md?: number;
     lg?: number;
-    xl?: number;
   };
   paperSx?: SxProps<Theme>;
 }
 
-/* ======================================================
-   COMPONENT
-====================================================== */
+const CommonStatsCard: FC<CommonStatsCardProps> = ({ stats, grid = { xs: 12, sm: 6, md: 4 }, paperSx }) => {
+  const theme = useTheme();
 
-const CommonStatsCard: FC<CommonStatsCardProps> = ({ stats, grid = { xs: 12, sm: 4, md:3 }, paperSx }) => {
   return (
-    <CommonCard>
-      <Grid container spacing={5} p={2}>
+    <Box width="100%">
+      <Grid container spacing={3}>
         {stats.map((item, index) => (
-          <Grid key={index} size={grid}>
-            <Paper
-              elevation={0}
-              className={item.color}
-              sx={{
-                backgroundColor: "#e8f0ff",
-                borderRadius: 3, 
-                minHeight: 110,
-                px: 2,
-                py: 2.5,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                textAlign: "center",
-                ...paperSx,
-              }}
-            >
-              <Typography variant="h5" fontWeight={700} sx={{ lineHeight: 1.1 }}>
-                {item.value}
-              </Typography>
-
-              <Typography
-                variant="body2"
-                sx={{
-                  mt: 0.5,
-                  color: "text.secondary",
-                  fontWeight: 500,
-                }}
-              >
-                {item.label}
-              </Typography>
-            </Paper>
+          <Grid key={index} size={grid} display="flex" justifyContent="center">
+            <Box textAlign="center">
+              <Paper elevation={0} className={item.color} sx={{ borderRadius: 3, width: 110, height: 70, display: "flex", alignItems: "center", justifyContent: "center", mb: 1, backgroundColor: theme.palette.mode === "dark" ? "#1e293b" : "#edf3ff", color: theme.palette.mode === "dark" ? "#ffffff" : "#1e293b", transition: "0.2s ease", ...paperSx }}>
+                <Typography sx={{ fontSize: 22, fontWeight: 700, lineHeight: 1 }}>{item.value}</Typography>
+              </Paper>
+              <Typography sx={{ fontSize: 13, fontWeight: 500, color: theme.palette.mode === "dark" ? "grey.400" : "text.secondary" }}>{item.label}</Typography>
+            </Box>
           </Grid>
         ))}
       </Grid>
-    </CommonCard>
+    </Box>
   );
 };
 
