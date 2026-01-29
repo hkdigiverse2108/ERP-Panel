@@ -6,7 +6,7 @@ import { Mutations, Queries } from "../../../Api";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { AppGridColDef, StockVerificationBase } from "../../../Types";
+import type { AppGridColDef, StockVerificationBase, StockVerificationFormValues } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { FormatDate } from "../../../Utils";
 
@@ -44,7 +44,7 @@ const StockVerification = () => {
               ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
               ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
             }),
-            renderCell: (params: GridRenderCellParams<any, StockVerificationBase>) =>
+            renderCell: (params: GridRenderCellParams<StockVerificationBase>) =>
               params.row.status === "pending"
                 ? CommonActionColumn<StockVerificationBase>({
                     ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
@@ -56,7 +56,7 @@ const StockVerification = () => {
       : []),
   ];
 
-  const StockVerificationFooter = ({ summary }: any) => {
+  const StockVerificationFooter = ({ summary }: { summary: StockVerificationFormValues}) => {
     const apiRef = useGridApiContext();
 
     const visibleColumns = apiRef.current.getVisibleColumns();
@@ -65,11 +65,11 @@ const StockVerification = () => {
       <GridFooterContainer sx={{ overflowX: "auto", px: 0, width: "fit-content" }}>
         <Box sx={{ display: "flex", minWidth: "max-content" }}>
           {visibleColumns.map((col) => {
-            let value = "";
+            let value: string | number | undefined = "";
 
             if (col.field === "totalProducts") value = summary.totalProducts;
             if (col.field === "totalPhysicalQty") value = summary.totalPhysicalQty;
-            if (col.field === "totalDifferenceAmount") value = summary.totalDifferenceAmount.toFixed(2);
+            if (col.field === "totalDifferenceAmount") value = summary?.totalDifferenceAmount?.toFixed(2);
             if (col.field === "totalApprovedQty") value = summary.totalApprovedQty;
 
             return (
