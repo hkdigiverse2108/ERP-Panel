@@ -97,7 +97,6 @@ const SupplierBill = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
   };
-
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE} breadcrumbs={BREADCRUMBS.SUPPLIER_BILL.BASE} />
@@ -107,11 +106,9 @@ const SupplierBill = () => {
         <CommonCard>
           <CommonDataGrid {...gridOptions} />
         </CommonCard>
-
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
       </Box>
     </>
   );
 };
-
 export default SupplierBill;
