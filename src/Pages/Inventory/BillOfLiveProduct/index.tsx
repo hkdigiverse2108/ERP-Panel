@@ -31,7 +31,7 @@ const BillOfLiveProduct = () => {
     });
   };
 
-  const columns: AppGridColDef<BillOfLiveProductBase>[] = [{ field: "number", headerName: "Bill Of Materials No.", width: 400 }, { field: "date", headerName: "Bill Of Materials Date", valueGetter: (v) => FormatDate(v), flex: 1 }, CommonActionColumn({ active: (row) => editBOM({ billOfLiveProductId: row._id, isActive: !row.isActive }), editRoute: ROUTES.BILL_OF_Live_Product.ADD_EDIT, onDelete: (row) => setRowToDelete({ _id: row._id, title: row.number }) })];
+  const columns: AppGridColDef<BillOfLiveProductBase>[] = [{ field: "number", headerName: "Bill Of Live Product No.", width: 400 }, { field: "date", headerName: "Bill Of Live Product Date", valueGetter: (v) => FormatDate(v), flex: 1 }, CommonActionColumn({ active: (row) => editBOM({ billOfLiveProductId: row._id, isActive: !row.isActive }), editRoute: ROUTES.BILL_OF_Live_Product.ADD_EDIT, onDelete: (row) => setRowToDelete({ _id: row._id, title: row.number }) })];
 
   const gridOptions = {
     columns,

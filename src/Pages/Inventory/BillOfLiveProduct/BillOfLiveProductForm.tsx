@@ -51,7 +51,7 @@ const RecipeWatcher = ({ onChange }: { onChange: (ids: string[]) => void }) => {
   }, [idsKey]);
   return null;
 };
-const BIM_PREFIX = "BIM";
+const BOLP_PREFIX = "BOLP";
 const parseBimNumber = (value?: string) => {
   if (!value) return "";
   const match = value.match(/\d+/);
@@ -59,7 +59,7 @@ const parseBimNumber = (value?: string) => {
 };
 const formatBimNumber = (num?: string | number) => {
   if (!num) return "";
-  return `${BIM_PREFIX} ${num}`;
+  return `${BOLP_PREFIX} ${num}`;
 };
 const BillOfLiveProductForm = () => {
   const { data: recipeData } = Queries.useGetRecipe({ activeFilter: true });
@@ -244,7 +244,7 @@ const BillOfLiveProductForm = () => {
                       <RecipeWatcher onChange={syncRowsFromRecipeIds} />
                       <Grid container spacing={2}>
                         <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 3 }} />
-                        <CommonValidationTextField name="text" label="BIM" disabled grid={{ xs: 12, md: 2 }} />
+                        <CommonValidationTextField name="text" label="BOLP" disabled grid={{ xs: 12, md: 2 }} />
                         <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 2 }} />
                         <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 5 }} options={GenerateOptions(recipeData?.data?.recipe_data)} />
                         <CommonValidationSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
