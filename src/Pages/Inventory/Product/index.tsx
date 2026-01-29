@@ -44,10 +44,10 @@ const Product = () => {
 
   const data = gridRows.filter((r) => r.removeQty != null).map(({ removeQty, _id }) => ({ qty: removeQty, productId: _id }));
 
-  const handleRemoveItem = async (values: { remark: string }) => {
+  const handleRemoveItem = async (values: { type: string }) => {
     const obj = {
       items: data,
-      remark: values.remark,
+      type: values.type,
     };
     await addStockBulkAdjustment(obj, {
       onSuccess: () => {
@@ -67,14 +67,11 @@ const Product = () => {
       },
     },
     { field: "name", headerName: "Name", width: 250 },
-    { field: "printName", headerName: "Print Name", width: 200 },
+    { field: "printName", headerName: "Print Name", width: 150 },
     CommonObjectNameColumn<ProductBase>("categoryId", { headerName: "Category", width: 150 }),
     CommonObjectNameColumn<ProductBase>("brandId", { headerName: "Brand", width: 150 }),
     CommonObjectNameColumn<ProductBase>("purchaseTaxId", { headerName: "Purchase Tax", width: 150 }),
     CommonObjectNameColumn<ProductBase>("salesTaxId", { headerName: "Sales Tax", width: 150 }),
-    { field: "mrp", headerName: "MRP", width: 100 },
-    { field: "sellingPrice", headerName: "Selling Price", width: 150 },
-    { field: "qty", headerName: "Qty", flex: 1, minWidth: 120 },
     ...(isRemoveItem
       ? [
           {
@@ -95,6 +92,9 @@ const Product = () => {
           },
         ]
       : []),
+    { field: "mrp", headerName: "MRP", width: 100 },
+    { field: "sellingPrice", headerName: "Selling Price", width: 150 },
+    { field: "qty", headerName: "Qty", flex: 1, minWidth: 120 },
   ];
 
   const CommonDataGridOption = {
@@ -157,10 +157,10 @@ const Product = () => {
           )}
         </CommonCard>
         <CommonModal title="Remove Item" isOpen={openModal} onClose={() => setOpenModal(!openModal)} className="max-w-125 m-2 sm:m-5">
-          <Formik initialValues={{ remark: "" }} enableReinitialize validationSchema={ProductItemRemoveFormSchema} onSubmit={handleRemoveItem}>
+          <Formik initialValues={{ type: "" }} enableReinitialize validationSchema={ProductItemRemoveFormSchema} onSubmit={handleRemoveItem}>
             <Form noValidate>
               <Grid sx={{ p: 1 }} container spacing={2}>
-                <CommonValidationSelect name="remark" label="Consumption Type" options={CONSUMPTION_TYPE} grid={{ xs: 12 }} required />
+                <CommonValidationSelect name="type" label="Consumption Type" options={CONSUMPTION_TYPE} grid={{ xs: 12 }} required />
                 <CommonButton type="submit" variant="contained" title="Save" size="medium" loading={isAddLoading} fullWidth grid={{ xs: 12 }} />
               </Grid>
             </Form>

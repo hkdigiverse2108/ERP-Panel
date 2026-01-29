@@ -11,7 +11,7 @@ import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { FormatDate } from "../../../Utils";
 
 const StockVerification = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, params } = useDataGrid({active: false});
 
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE);
@@ -101,8 +101,6 @@ const StockVerification = () => {
     rows: allStock,
     rowCount: totalRows,
     loading: stockVerificationDataLoading || stockVerificationDataFetching,
-    isActive,
-    setActive,
     ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,

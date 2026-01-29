@@ -335,5 +335,5 @@ export const ProductItemFormSchema = Yup.object({
 });
 
 export const ProductItemRemoveFormSchema = Yup.object({
-  remark: Validation("string", "Consumption Type"),
+  type: Validation("string", "Consumption Type"),
 });
