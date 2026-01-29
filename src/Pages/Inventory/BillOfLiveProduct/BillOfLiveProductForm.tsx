@@ -319,12 +319,12 @@ const BillOfLiveProductForm = () => {
 
                                 <td>{row.expiryDays}</td>
 
-                                <td>
+                                <td className="p-2 min-w-30 w-30">
                                   <CommonDatePicker name="expDate" value={row.expDate ?? ""} onChange={(v) => updateRow(row.id, { expDate: v })} />
                                 </td>
 
-                                <td>
-                                  <CommonButton size="small" color="error" onClick={() => handleCut(row.recipeId)}>
+                                <td className="p-2">
+                                  <CommonButton size="small" color="error" variant="outlined" onClick={() => handleCut(row.recipeId)}>
                                     <ClearIcon />
                                   </CommonButton>
                                 </td>
