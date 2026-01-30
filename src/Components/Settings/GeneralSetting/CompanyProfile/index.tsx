@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import { Link } from "react-router-dom";
 import { CommonSwitch } from "../../../../Attribute";
-import { ImagePath, ROUTES } from "../../../../Constants";
+import { ROUTES } from "../../../../Constants";
 import { useAppSelector } from "../../../../Store/hooks";
 import { CommonCard, CommonImageBox } from "../../../Common";
 
@@ -26,24 +26,23 @@ const CompanyProfile = () => {
     {
       title: "Communication Details",
       items: [
-        { label: "Address", value: company?.address },
-        { label: "City", value: company?.city },
-        { label: "State", value: company?.state },
-        { label: "Country", value: company?.country },
-        { label: "Pin Code", value: company?.pinCode },
-        { label: "Timezone", value: company?.timeZone },
+        { label: "Address", value: company?.address?.address },
+        { label: "City", value: company?.address?.city?.name },
+        { label: "State", value: company?.address?.state?.name },
+        { label: "Country", value: company?.address?.country?.name },
+        { label: "Pin Code", value: company?.address?.pinCode },
         { label: "Web Site", value: company?.webSite },
       ],
     },
     {
       title: "Bank Details",
       items: [
-        { label: "Bank Name", value: company?.bankName },
-        { label: "Bank IFSC", value: company?.bankIFSC },
-        { label: "UPI", value: company?.upiId },
-        { label: "Branch Name", value: company?.branch },
-        { label: "Account Holder Name", value: company?.accountHolderName },
-        { label: "Bank Account No.", value: company?.bankAccountNumber },
+        { label: "Bank Name", value: company?.bankId?.name },
+        { label: "Bank IFSC", value: company?.bankId?.ifscCode },
+        { label: "UPI", value: company?.bankId?.upi },
+        { label: "Branch Name", value: company?.bankId?.branchName },
+        { label: "Account Holder Name", value: company?.bankId?.accountHolderName },
+        { label: "Bank Account No.", value: company?.bankId?.bankAccountNumber },
       ],
     },
     {
@@ -109,7 +108,7 @@ const CompanyProfile = () => {
       <CommonCard title="logo" grid={{ xs: 12 }}>
         <Grid container spacing={2} className="p-4 overflow-auto ">
           {ImageItems.map((item, index) => (
-            <CommonImageBox key={index} url={item.src || `${ImagePath}user/1.jpg`} label={item.label} type={"image"} grid={{ xs: 12, xsm: 6, xl: 3 }} />
+            <CommonImageBox key={index} url={item.src} label={item.label} type={"image"} grid={{ xs: 12, xsm: 6, xl: 3 }} />
           ))}
         </Grid>
       </CommonCard>

@@ -10,9 +10,9 @@ export const CommonValidationRadio: FC<CommonValidationRadioProps> = ({ name, la
     <FormControl error={meta.touched && Boolean(meta.error)} disabled={disabled}>
       {label && <FormLabel required={required}>{label}</FormLabel>}
 
-      <RadioGroup row={row} value={field.value ?? ""} onChange={(e) => helpers.setValue(e.target.value)} onBlur={() => helpers.setTouched(true)}>
-        {options.map((opt) => (
-          <FormControlLabel key={opt.value} value={opt.value} control={<Radio />} label={opt.label} />
+      <RadioGroup row={row} value={field.value ?? ""} defaultValue={options?.find((opt) => opt.default)?.value} onChange={(e) => helpers.setValue(e.target.value)} onBlur={() => helpers.setTouched(true)}>
+        {options?.map((opt) => (
+          <FormControlLabel key={opt.value} value={opt.value} control={<Radio />} label={opt.label} disabled={opt.disabled}/>
         ))}
       </RadioGroup>
 
@@ -29,9 +29,9 @@ export const CommonRadio: FC<CommonRadioProps> = ({ label, value, options, onCha
     <FormControl disabled={disabled}>
       {label && <FormLabel>{label}</FormLabel>}
 
-      <RadioGroup row={row} value={value} onChange={(e) => onChange(e.target.value)}>
-        {options.map((opt) => (
-          <FormControlLabel key={opt.value} value={opt.value} control={<Radio />} label={opt.label} />
+      <RadioGroup row={row} value={value} defaultValue={options?.find((opt) => opt.default)?.value} onChange={(e) => onChange(e.target.value)}>
+        {options?.map((opt) => (
+          <FormControlLabel key={opt.value} value={opt.value} control={<Radio />} label={opt.label} disabled={opt.disabled}/>
         ))}
       </RadioGroup>
     </FormControl>

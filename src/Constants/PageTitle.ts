@@ -12,16 +12,12 @@ export const PAGE_TITLE = {
       EDIT: "Edit User",
     },
   },
-  EMPLOYEE: {
-    BASE: "Employee",
-    LIST: "Employee List",
-    ADD: "Add Employee",
-    EDIT: "Edit Employee",
-  },
-  BRANCH: {
-    BASE: "Branch",
-    ADD: "Add Branch",
-    EDIT: "Edit Branch",
+  USER: {
+    BASE: "User",
+    LIST: "User List",
+    ADD: "Add User",
+    EDIT: "Edit User",
+    PERMISSION: "User Permission",
   },
   ROLES: {
     BASE: "User Roles",
@@ -30,30 +26,49 @@ export const PAGE_TITLE = {
   },
   CONTACT: {
     BASE: "Contact",
+    ADD: "Add Contact",
+    EDIT: "Edit Contact",
   },
   INVENTORY: {
     BASE: "inventory",
-    STOCK: "stock",
     PRODUCT: {
-      BASE: "product",
+      BASE: "Product",
       ADD: "Add Product",
       EDIT: "Edit Product",
+      ITEM: {
+        BASE: "Available Product Item",
+        ADD: "Add Product Item",
+        EDIT: "Edit Product Item",
+      },
     },
-    BRAND: {
-      BASE: "brand",
-      ADD: "Add brand",
-      EDIT: "Edit brand",
+    STOCK: {
+      BASE: "stock",
+      ADD: "Add Stock",
+      EDIT: "Edit Stock",
+    },
+    STOCK_VERIFICATION: {
+      BASE: "stock verification",
+      ADD: "Add Stock Verification",
+      EDIT: "Edit Stock Verification",
     },
     RECIPE: {
       BASE: "recipe",
       ADD: "Add recipe",
       EDIT: "Edit recipe",
     },
+    BILLOFMATERIALS: {
+      BASE: "Bill Of Materials",
+      ADD: "Add Bill Of Materials",
+      EDIT: "Edit Bill Of Materials",
+    },
   },
   CUSTOMER: {
     BASE: "Customer",
     ADD: "Add Customer",
     EDIT: "Edit Customer",
+  },
+  BANK_CASH:{
+    BASE: "Bank / Cash",
   },
   BANK: {
     BASE: "Bank",

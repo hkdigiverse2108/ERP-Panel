@@ -1,12 +1,11 @@
+import type { GridColDef, GridValueGetter } from "@mui/x-data-grid";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import { useMemo, type FC } from "react";
-import CustomToolbar from "./CustomToolbar";
 import type { CommonDataGridProps } from "../../../Types";
-import type { GridColDef, GridValueGetter } from "@mui/x-data-grid";
-import { Box } from "@mui/material";
+import CustomToolbar from "./CustomToolbar";
 import NoRowsOverlay from "./NoRowsOverlay";
 
-const CommonDataGrid: FC<CommonDataGridProps> = ({ columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass, handleAdd, isActive, setActive }) => {
+const CommonDataGrid: FC<CommonDataGridProps> = ({ isExport, pagination, fileName, columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass, handleAdd, isActive, setActive }) => {
   const apiRef = useGridApiRef();
 
   const visibilityModel = useMemo(() => {
@@ -34,7 +33,7 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({ columns, rows, rowCount, load
         width: 90,
         sortable: false,
         filterable: false,
-        valueGetter: (_value, row) => paginationModel.page * paginationModel.pageSize + rows.findIndex((r) => r.id === row.id) + 1,
+        valueGetter: (_value, row) => (paginationModel ? paginationModel?.page * paginationModel?.pageSize + rows.findIndex((r) => r.id === row.id) + 1 : rows.findIndex((r) => r.id === row.id) + 1),
       },
       ...columnsWithFallback,
     ];
@@ -49,18 +48,20 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({ columns, rows, rowCount, load
         rowCount={rowCount}
         loading={loading}
         slots={{
-          toolbar: () => <CustomToolbar apiRef={apiRef} columns={fixedColumns} rows={rows} rowCount={rowCount} handleAdd={handleAdd} isActive={isActive} setActive={setActive} />,
+          toolbar: () => <CustomToolbar filterModel={filterModel} onFilterModelChange={onFilterModelChange} isExport={isExport} fileName={fileName} apiRef={apiRef} columns={fixedColumns} rows={rows} rowCount={rowCount} handleAdd={handleAdd} isActive={isActive} setActive={setActive} />,
           noRowsOverlay: () => <NoRowsOverlay />,
-          noResultsOverlay: () => <Box sx={{ p: 2, textAlign: "center" }}>No matching results</Box>,
+          // noResultsOverlay: () => <Box sx={{ p: 2, textAlign: "center" }}>No matching results</Box>,
         }}
         showToolbar
         initialState={{
           columns: { columnVisibilityModel: visibilityModel },
         }}
+        hideFooter={pagination === false}
+        hideFooterPagination={pagination === false}
         paginationMode="server"
         paginationModel={paginationModel}
         onPaginationModelChange={onPaginationModelChange}
-        pageSizeOptions={[5, 10, 50, 100, { value: rowCount, label: "All" }]}
+        pageSizeOptions={[5, 10, 50, 100]}
         sortingMode="client"
         sortModel={sortModel}
         onSortModelChange={onSortModelChange}

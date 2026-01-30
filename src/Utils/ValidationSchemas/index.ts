@@ -1,5 +1,26 @@
 import * as Yup from "yup";
 import { Validation } from "./Validation";
+import type { DepValue, Primitive } from "../../Types";
+
+const RequiredWhenTrue = (dependentField: string, message: string, baseSchema: Yup.AnySchema) => {
+  return baseSchema.when(dependentField, {
+    is: true,
+    then: (schema) => schema.required(`${message} is required`),
+    otherwise: (schema) => schema.notRequired(),
+  });
+};
+
+export const RequiredWhen = (dependentField: string, requiredValues: Primitive[], label: string, type: "string" | "number" = "string") => {
+  return Yup.mixed().when(dependentField, (value: DepValue) => {
+    const match = Array.isArray(value) ? value.some((v) => requiredValues.includes(v)) : requiredValues.includes(value as Primitive);
+
+    if (match) {
+      return Validation(type, label);
+    }
+
+    return Validation(type, label, { required: false });
+  });
+};
 
 // ---------- Reusable helpers ----------
 
@@ -32,16 +53,16 @@ export const EmployeeFormSchema = Yup.object({
   email: Validation("string", "Email", { required: false, extraRules: (s) => s.trim().email("Invalid email address") }),
   branchId: Validation("string", "Branch Name", { required: false }),
   panNumber: Validation("string", "PAN Number", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
-
+  password: Validation("string", "Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
+  role: Validation("string", "Role"),
   // ---------- ADDRESS ----------
   address: Yup.object({
     address: Validation("string", "Address"),
     country: Validation("string", "Country"),
     state: Validation("string", "State"),
     city: Validation("string", "City"),
-    postalCode: Validation("string", "ZIP Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid ZIP Code") }),
+    pinCode: Validation("string", "Pin Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid Pin Code") }),
   }).nullable(),
-
 
   // ---------- SALARY ----------
   wages: Validation("number", "Wages", { required: false }).nullable(),
@@ -51,19 +72,6 @@ export const EmployeeFormSchema = Yup.object({
 
   // ---------- STATUS ----------
   isActive: Yup.boolean(),
-});
-
-export const BranchFormSchema = Yup.object({
-  name: Validation("string", "Branch name"),
-  address: Validation("string", "Address"),
-  isActive: Yup.boolean(),
-});
-export const BrandFormSchema = Yup.object({
-  name: Validation("string", "Brand name"),
-  code: Validation("string", "code"),
-  description: Validation("string", "Description", { required: false }),
-  parentBrandId: Validation("string", "Parent Brand", { required: false }),
-  isActive: Validation("boolean", "is Active", { required: false }),
 });
 
 export const RolesFormSchema = Yup.object({
@@ -78,39 +86,6 @@ export const CallRequestFormSchema = Yup.object({
   note: Validation("string", "note"),
 });
 
-// ---------- Product Form Schema ----------
-export const ProductFormSchema = Yup.object({
-  itemCode: Validation("string", "Item Code"),
-  productType: Validation("string", "Product Type"),
-  name: Validation("string", "Product Name"),
-  printName: Validation("string", "Print Name", { required: false }),
-  slug: Validation("string", "Slug", { required: false }),
-
-  categoryId: Validation("string", "Category"),
-  subCategoryId: Validation("string", "Sub Category", { required: false }),
-
-  brandId: Validation("string", "Brand", { required: false }),
-  subBrandId: Validation("string", "Sub Brand", { required: false }),
-
-  departmentId: Validation("string", "Department", { required: false }),
-  uomId: Validation("string", "UOM"),
-
-  tags: Validation("string", "Tags", { required: false }),
-
-  description: Validation("string", "Description", { required: false }),
-  shortNote: Validation("string", "Short Note", { required: false }),
-
-  mrp: Validation("number", "MRP"),
-  sellingPrice: Validation("number", "Selling Price"),
-  purchasePrice: Validation("number", "Purchase Price"),
-  landingCost: Validation("number", "Landing Cost"),
-
-  purchaseTaxId: Validation("string", "Purchase Tax", { required: false }),
-  salesTaxId: Validation("string", "Sales Tax", { required: false }),
-  nutritionalFacts: Validation("string", "Nutritional Facts", { required: false }),
-  status: Validation("string", "Status"),
-});
-
 export const CompanyFormSchemas = Yup.object({
   name: Validation("string", "Company Name"),
   displayName: Validation("string", "display Name"),
@@ -121,12 +96,13 @@ export const CompanyFormSchemas = Yup.object({
   phoneNo: PhoneValidation(),
   ownerNo: PhoneValidation(),
 
-  address: Validation("string", "address"),
-  city: Validation("string", "city"),
-  state: Validation("string", "State"),
-  country: Validation("string", "country"),
-  pinCode: Validation("string", "pinCode", { extraRules: (s) => s.trim().matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
-  timeZone: Validation("string", "timeZone", { required: false }),
+  address: Yup.object({
+    address: Validation("string", "Address"),
+    country: Validation("string", "Country"),
+    state: Validation("string", "State"),
+    city: Validation("string", "City"),
+    pinCode: Validation("string", "Pin Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid Pin Code") }),
+  }).nullable(),
 
   upiId: Validation("string", "upiId", { required: false }),
 
@@ -185,7 +161,7 @@ export const MultiplePaySchema = Yup.object({
         upiId: Yup.string().when("paymentMode", ([paymentMode], schema) => (paymentMode === "upi" ? Validation("string", "UPI ID") : schema.nullable())),
         bankAccountNo: Yup.string().when("paymentMode", ([paymentMode], schema) => (paymentMode === "bank" ? Validation("string", "Bank Account No") : schema.nullable())),
         chequeNo: Yup.string().when("paymentMode", ([paymentMode], schema) => (paymentMode === "cheque" ? Validation("string", "Cheque No") : schema.nullable())),
-      })
+      }),
     )
     .min(1, "At least one payment is required"),
 });
@@ -197,15 +173,167 @@ export const BankFormSchema = Yup.object().shape({
   bankAccountNumber: Validation("string", "Account Number"),
   ifscCode: Validation("string", "IFSC Code"),
   swiftCode: Validation("string", "Swift Code", { required: false }),
+  upiId: Validation("string", "UPI ID", { required: false, extraRules: (s) => s.trim().matches(/^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/, "Invalid UPI ID") }),
   openingBalance: Yup.object({
     creditBalance: Validation("number", "Credit Balance", { required: false }).nullable(),
     debitBalance: Validation("number", "Debit Balance", { required: false }).nullable(),
   }).nullable(),
+  address: Yup.object({
+    addressLine1: Validation("string", "Address Line1"),
+    addressLine2: Validation("string", "Address Line2", { required: false }),
+    country: Validation("string", "Country"),
+    state: Validation("string", "State"),
+    city: Validation("string", "City"),
+    pinCode: Validation("string", "Pin Code", { extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid Pin Code") }),
+  }).nullable(),
 });
 
-export const RecipeFormSchema = Yup.object({  
-  recipeName: Validation("string", "Name"),
-  recipeDate: Validation("string", "Recipe Date"),
-  recipeNo: Validation("string", "Recipe No"),
-  recipeType: Validation("string", "Recipe Type"),  
+export const RecipeFormSchema = Yup.object({
+  name: Validation("string", "name"),
+  date: Yup.mixed().required("Date is required"),
+  number: Validation("string", "number"),
+  type: Validation("string", "type"),
+
+  rawProducts: Yup.array()
+    .of(
+      Yup.object({
+        productId: Validation("string", "Product").required("Product is required"),
+        useQty: Validation("number", "Use Qty").required("Use Qty is required"),
+        mrp: Validation("number", "MRP").nullable(),
+      }),
+    )
+    .min(1, "At least one raw product is required")
+    .required("Raw products are required"),
+
+  finalProducts: Yup.object({
+    productId: Validation("string", "Product").required("Product is required"),
+    qtyGenerate: Validation("number", "Qty Generate").required("Qty Generate is required"),
+    mrp: Validation("number", "MRP").nullable(),
+  }).required("Final product is required"),
+});
+
+const ContactAddressSchema = Yup.object().shape({
+  gstType: Validation("string", "GST Type", { required: false }),
+  gstIn: Yup.string().when("gstType", {
+    is: "UnRegistered",
+    then: (schema) => schema.notRequired().nullable(),
+    otherwise: (schema) => schema.required("GSTIN is required"),
+  }),
+  contactFirstName: Validation("string", "Contact First Name"),
+  contactLastName: Validation("string", "Contact Last Name", { required: false }),
+  contactCompanyName: Validation("string", "Contact Company Name", { required: false }),
+  contactNo: PhoneValidation("Contact No", { requiredCountryCode: false, requiredNumber: false }).nullable().notRequired(),
+  contactEmail: Validation("string", "Email", { required: false, extraRules: (s) => s.email("Invalid email address") }),
+  addressLine1: Validation("string", "Address Line 1", { required: false }),
+  addressLine2: Validation("string", "Address Line 2", { required: false }),
+  country: Validation("string", "Country"),
+  state: Validation("string", "State"),
+  city: Validation("string", "City"),
+  pinCode: Validation("string", "Pin Code", { required: false, extraRules: (s) => s.matches(/^[0-9]{6}$/, "Pin code must be 6 digits") }),
+  tanNo: Validation("string", "Tan No", { required: false }),
+});
+
+const ContactBaseSchema = {
+  firstName: Validation("string", "First Name"),
+  lastName: Validation("string", "Last Name"),
+  email: Validation("string", "Email", { required: false, extraRules: (s) => s.email("Invalid email address") }),
+  companyName: Validation("string", "Company Name"),
+  phoneNo: PhoneValidation(),
+  whatsappNo: PhoneValidation("Whatsapp No", { requiredNumber: false, requiredCountryCode: false }),
+  panNo: Validation("string", "PAN No", {
+    extraRules: (s) => s.matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number"),
+  }),
+  paymentMode: Validation("string", "Payment Mode"),
+  paymentTerms: Validation("string", "Payment Terms", { required: false }),
+  openingBalance: Yup.object().shape({
+    debitBalance: Validation("number", "Debit Balance", { required: false }),
+    creditBalance: Validation("number", "Credit Balance", { required: false }),
+  }),
+  dob: Validation("string", "Date of Birth", { required: false }),
+  anniversaryDate: Validation("string", "Anniversary Date", { required: false }),
+  telephoneNo: Validation("string", "Telephone No"),
+  tanNo: Validation("string", "Tan No", { required: false }),
+  remarks: Validation("string", "Remarks", { required: false }),
+  address: Yup.array().of(ContactAddressSchema).min(1),
+  bankDetails: Yup.object().shape({
+    ifscCode: Validation("string", "IFSC Code", { required: false }),
+    name: Validation("string", "Bank Name", { required: false }),
+    branch: Validation("string", "Bank Branch", { required: false }),
+    accountNumber: Validation("string", "Account Number", { required: false }),
+  }),
+};
+
+// ---------- Complete Contact Schema with conditional fields ----------
+export const getContactFormSchema = Yup.object({
+  ...ContactBaseSchema,
+  customerCategory: Validation("string", "Customer Category", { required: false }),
+  customerType: Validation("string", "Customer Type", { required: false }),
+  supplierType: Validation("string", "Supplier Type", { required: false }),
+  transporterId: RequiredWhen("contactType", ["transporter"], "Transporter Id", "string"),
+});
+
+export const ProductFormSchema = Yup.object({
+  productType: Validation("string", "Product Type"),
+  name: Validation("string", "Product Name"),
+  printName: Validation("string", "Print Name"),
+  hsnCode: Validation("string", "HSN Code", { required: false }),
+  categoryId: Validation("string", "Category"),
+  subCategoryId: Validation("string", "Sub Category", { required: false }),
+  brandId: Validation("string", "Brand"),
+  subBrandId: Validation("string", "Sub Brand", { required: false }),
+  purchaseTaxId: Validation("string", "Purchase Tax"),
+  isPurchaseTaxIncluding: Yup.boolean(),
+  salesTaxId: Validation("string", "Sales Tax"),
+  isSalesTaxIncluding: Yup.boolean(),
+  cessPercentage: Validation("number", "Cess Percentage", { required: false }),
+  manageMultipleBatch: Validation("boolean", "Multiple Batch", { required: false }),
+  hasExpiry: RequiredWhenTrue("manageMultipleBatch", "Has Expiry", Yup.boolean()),
+  expiryDays: RequiredWhenTrue("hasExpiry", "Expiry Days", Yup.number()),
+  calculateExpiryOn: RequiredWhenTrue("hasExpiry", "Expiry Calculation", Yup.string()),
+  expiryReferenceDate: RequiredWhenTrue("hasExpiry", "Expiry Reference Date", Yup.string()),
+
+  isExpiryProductSaleable: Yup.boolean(),
+  ingredients: Validation("string", "Ingredients", { required: false }),
+  shortDescription: Validation("string", "Short Description", { required: false }),
+  description: Validation("string", "Description", { required: false }),
+  nutrition: Yup.array().of(
+    Yup.object({
+      name: Validation("string", "Nutrition Name", { required: false }),
+      value: Validation("string", "Nutrition Value", { required: false }),
+    }),
+  ),
+  netWeight: Validation("number", "Net Weight", { required: false }),
+  masterQty: Validation("number", "Master Quantity", { required: false }),
+  purchasePrice: Validation("number", "Purchase Price"),
+  landingCost: Validation("number", "Landing Cost"),
+  mrp: Validation("number", "MRP"),
+  sellingDiscount: Validation("number", "Selling Discount"),
+  sellingPrice: Validation("number", "Selling Price"),
+  sellingMargin: Validation("number", "Selling Margin"),
+  retailerDiscount: Validation("number", "Retailer Discount"),
+  retailerPrice: Validation("number", "Retailer Price"),
+  retailerMargin: Validation("number", "Retailer Margin"),
+  wholesalerDiscount: Validation("number", "Wholesaler Discount"),
+  wholesalerMargin: Validation("number", "Wholesaler Margin"),
+  wholesalerPrice: Validation("number", "Wholesaler Price"),
+  minimumQty: Validation("number", "Minimum Quantity"),
+  openingQty: Validation("number", "Opening Quantity", { required: false }),
+  images: Yup.array().of(Yup.mixed().required("Image is required")).min(2, "At least two image is required"),
+  isActive: Yup.boolean(),
+});
+
+export const ProductItemFormSchema = Yup.object({
+  productId: Validation("string", "Product"),
+  uomId: Validation("string", "UOM"),
+  purchasePrice: Validation("number", "Purchase Price"),
+  landingCost: Validation("number", "Landing Cost"),
+  mrp: Validation("number", "MRP"),
+  sellingDiscount: Validation("number", "Selling Discount"),
+  sellingPrice: Validation("number", "Selling Price"),
+  sellingMargin: Validation("number", "Selling Margin"),
+  qty: Validation("number", "Quantity"),
+});
+
+export const ProductItemRemoveFormSchema = Yup.object({
+  remark: Validation("string", "Consumption Type"),
 });

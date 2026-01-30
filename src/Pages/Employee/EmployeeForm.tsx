@@ -2,24 +2,26 @@ import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
-import { CommonPhoneNumber, CommonValidationTextField, CommonValidationSelect, CommonValidationSwitch } from "../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../Components/Common";
+import { CommonPhoneNumber, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../Attribute";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
-import { BREADCRUMBS, CityOptionsByState, CountryOptions, StateOptions } from "../../Data";
+import { BREADCRUMBS } from "../../Data";
 import { useAppSelector } from "../../Store/hooks";
 import type { EmployeeFormValues } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { EmployeeFormSchema } from "../../Utils/ValidationSchemas";
-
+import { useEffect } from "react";
+import { usePagePermission } from "../../Utils/Hooks";
 
 const EmployeeForm = () => {
    const navigate = useNavigate();
   const location = useLocation();
   const { data } = location.state || {};
   const { company } = useAppSelector((state) => state.company);
+  const permission = usePagePermission(PAGE_TITLE.USER.BASE);
 
-  const { data: rolesData } = Queries.useGetRoles({ activeFilter: true });
-  const { data: branchData } = Queries.useGetBranch({ activeFilter: true });
+  const { data: rolesData, isLoading: rolesDataLoading } = Queries.useGetRolesDropdown();
+  const { data: branchData, isLoading: branchDataLoading } = Queries.useGetBranchDropdown();
   const { mutate: addEmployee, isPending: isAddLoading } = Mutations.useAddEmployee();
   const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditEmployee();
 
@@ -38,17 +40,18 @@ const EmployeeForm = () => {
     panNumber: data?.panNumber || "",
     role: data?.role?._id || "",
     branchId: data?.branchId?._id || "",
-
+    password: data?.showPassword || "",
+    userType: data?.userType || "employee",
     address: {
       address: data?.address?.address || "",
-      country: "India",
-      state: data?.address?.state || "",
-      city: data?.address?.city || "",
-      postalCode: data?.address?.postalCode || null,
+      country: data?.address?.country?._id || "",
+      state: data?.address?.state?._id || "",
+      city: data?.address?.city?._id || "",
+      pinCode: data?.address?.pinCode || null,
     },
 
     bankDetails: {
-      bankName: data?.bankDetails?.bankName || "",
+      name: data?.bankDetails?.name || "",
       branchName: data?.bankDetails?.branchName || "",
       accountNumber: data?.bankDetails?.accountNumber || null,
       bankHolderName: data?.bankDetails?.bankHolderName || "",
@@ -65,7 +68,7 @@ const EmployeeForm = () => {
 
   const handleSubmit = async (values: EmployeeFormValues, { resetForm }: FormikHelpers<EmployeeFormValues>) => {
     const { _submitAction, ...rest } = values;
-    const payload = { ...rest, companyId: company!._id };
+    const payload = { ...rest, companyId: company!._id, userType: "employee" };
 
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
@@ -79,12 +82,16 @@ const EmployeeForm = () => {
     }
   };
 
+  useEffect(() => {
+    const hasAccess = isEditing ? permission.edit : permission.add;
+    if (!hasAccess) navigate(-1);
+  }, [isEditing, permission, navigate]);
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.EMPLOYEE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.EMPLOYEE[pageMode]} />
+      <CommonBreadcrumbs title={PAGE_TITLE.USER[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.USERS[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<EmployeeFormValues> enableReinitialize initialValues={initialValues} validationSchema={EmployeeFormSchema} onSubmit={handleSubmit}>
-          {({ resetForm, setFieldValue, dirty ,values}) => (
+          {({ resetForm, setFieldValue, dirty, values }) => (
             <Form noValidate>
               <Grid container spacing={2}>
                 {/* BASIC DETAILS */}
@@ -93,11 +100,12 @@ const EmployeeForm = () => {
                     <CommonValidationTextField name="fullName" label="Full Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="username" label="User Name" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="designation" label="User designation" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="role" label="role" options={GenerateOptions(rolesData?.data?.role_data)} grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="role" label="role" options={GenerateOptions(rolesData?.data)} isLoading={rolesDataLoading} grid={{ xs: 12, md: 4 }} required/>
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="branchId" label="branch" options={GenerateOptions(branchData?.data?.branch_data)} grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="branchId" label="branch" options={GenerateOptions(branchData?.data)} isLoading={branchDataLoading} grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="password" label="Password" type="password" showPasswordToggle required grid={{ xs: 10, md: 4 }} />
                   </Grid>
                 </CommonCard>
 
@@ -105,17 +113,17 @@ const EmployeeForm = () => {
                 <CommonCard title="Address Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationTextField name="address.address" label="Address" required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="address.state" label="State" disabled={!values.address?.country} options={StateOptions} grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationSelect name="address.city" label="City" disabled={!values.address?.state} options={CityOptionsByState[values?.address?.state || ""] || []} grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationSelect name="address.country" label="Country" disabled options={CountryOptions} required grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="address.postalCode" label="ZIP Code" required type="number" grid={{ xs: 12, md: 4 }} />
+                    <DependentSelect name="address.country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
+                    <DependentSelect params={values?.address?.country} name="address.state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.address?.country} required />
+                    <DependentSelect params={values?.address?.state} name="address.city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.address?.state} required />
+                    <CommonValidationTextField name="address.pinCode" label="Pin Code" required type="number" grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
 
                 {/* BANK DETAILS */}
                 <CommonCard title="Bank Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
-                    <CommonValidationTextField name="bankDetails.bankName" label="Bank Name" grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="bankDetails.name" label="Bank Name" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="bankDetails.branchName" label="Branch Name" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="bankDetails.accountNumber" label="Account No." type="number" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="bankDetails.bankHolderName" label="Account Holder Name" grid={{ xs: 12, md: 4 }} />

@@ -1,6 +1,7 @@
 export const ROUTES = {
   HOME: "/",
   DASHBOARD: "/dashboard",
+  ACCESS_DENIED: "/access-denied",
   AUTH: {
     SIGNIN: "/auth/signin",
   },
@@ -8,21 +9,20 @@ export const ROUTES = {
     BASE: "/contact",
     ADD_EDIT: "/edit/add",
   },
-  EMPLOYEE: {
-    BASE: "/employee",
-    ADD_EDIT: "/employee/add-edit",
+  USERS: {
+    BASE: "/user",
+    ADD_EDIT: "/user/add-edit",
+    PERMISSION_ADD_EDIT: "/user/permission/add-edit",
   },
 
   PRODUCT: {
     BASE: "/product",
     ADD_EDIT: "/product/add-edit",
-  },
-  BRAND: {
-    BASE: "/brand",
-    ADD_EDIT: "/brand/add-edit",
+    ITEM_ADD_EDIT: "/product/item/add-edit",
   },
   STOCK: {
     BASE: "/stock",
+    ADD_EDIT: "/stock/add-edit",
   },
   CATEGORY_BRAND: "/category-brand",
   DEPARTMENT: "/department",
@@ -39,6 +39,7 @@ export const ROUTES = {
   },
   STOCK_VERIFICATION: {
     BASE: "/stock-verification",
+    ADD_EDIT: "/stock-verification/add-edit",
   },
   MATERIAL_CREATION: {
     BASE: "/material-creation",
@@ -52,10 +53,6 @@ export const ROUTES = {
   },
   USER: {
     EDIT: "/user/edit",
-  },
-  BRANCH: {
-    BASE: "/branch",
-    ADD_EDIT: "/branch/add-edit",
   },
   BANK: {
     BASE: "/bank",
@@ -72,5 +69,9 @@ export const ROUTES = {
   POS: {
     BASE: "/pos",
     NEW: "/pos/new",
+  },
+  BILLOFMATERIALS: {
+    BASE: "/bill-of-materials",
+    ADD_EDIT: "/bill-of-materials/add-edit",
   },
 } as const;

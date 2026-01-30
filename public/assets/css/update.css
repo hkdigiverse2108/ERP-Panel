@@ -30,6 +30,10 @@
   @apply min-h-auto!;
 }
 
+.MuiDataGrid-cell {
+  outline: none !important;
+}
+
 .dark .MuiDataGrid-withBorderColor,
 .dark .MuiDataGrid-cell {
   @apply dark:border-gray-700!;
@@ -62,6 +66,10 @@
   @apply dark:text-gray-300!;
 }
 
+.MuiDataGrid-cell.MuiDataGrid-cell--textLeft{
+  @apply items-center! flex!;
+}
+
 /* ************ Table End *********** */
 
 /* ************ Input Start *********** */
@@ -82,6 +90,38 @@ input[type="number"]::-webkit-inner-spin-button {
 
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+.ql-container {
+  @apply h-[100px]! custom-scrollbar! border border-gray-200 dark:border-gray-600!;
+}
+
+.ql-editor {
+  @apply h-full! custom-scrollbar!;
+}
+
+.ql-toolbar.ql-snow,
+.ql-container.ql-snow {
+  @apply border border-gray-300 dark:border-gray-600! rounded-sm;
+}
+
+.ql-snow .ql-picker {
+  @apply text-gray-800 dark:text-gray-400!;
+}
+
+.ql-snow .ql-stroke {
+  @apply stroke-gray-800 dark:stroke-gray-400!;
+}
+
+.ql-snow .ql-fill,
+.ql-snow .ql-stroke.ql-fill {
+  @apply fill-gray-800 dark:fill-gray-400!;
+}
+
+.Mui-error .MuiOutlinedInput-notchedOutline,
+.is-invalid .ql-toolbar.ql-snow,
+.is-invalid .ql-container.ql-snow {
+  @apply border-red-500!;
 }
 
 /* ************ Input End *********** */

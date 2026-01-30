@@ -18,28 +18,53 @@ export const URL_KEYS = {
     ADD: "/company/add",
     EDIT: "/company/edit",
   },
-  EMPLOYEE: {
+  USERS: {
     BASE: "/user",
     ALL: "/user/all",
     ADD: "/user/add",
     EDIT: "/user/edit",
   },
+  CONTACT: {
+    BASE: "/contacts",
+    ALL: "/contacts/all",
+    ADD: "/contacts/add",
+    EDIT: "/contacts/edit",
+  },
 
   BRANCH: {
     BASE: "/branch",
+    DROPDOWN: "/branch/dropdown",
     ALL: "/branch/all",
     ADD: "/branch/add",
     EDIT: "/branch/edit",
   },
   BRAND: {
     BASE: "/brand",
+    DROPDOWN: "/brand/dropdown",
     ALL: "/brand/all",
     ADD: "/brand/add",
     EDIT: "/brand/edit",
   },
-
+  CATEGORY: {
+    BASE: "/category",
+    DROPDOWN: "/category/dropdown",
+    ALL: "/category/all",
+    ADD: "/category/add",
+    EDIT: "/category/edit",
+  },
+  TAX: {
+    BASE: "/tax",
+    DROPDOWN: "/tax/dropdown",
+    ALL: "/tax/all",
+  },
+  UOM: {
+    BASE: "/uom",
+    ALL: "/uom/all",
+    DROPDOWN: "/uom/dropdown",
+  },
   ROLES: {
     BASE: "/role",
+    DROPDOWN: "/role/dropdown",
     ALL: "/role/all",
     ADD: "/role/add",
     EDIT: "/role/edit",
@@ -51,6 +76,7 @@ export const URL_KEYS = {
 
   PRODUCT: {
     BASE: "/product",
+    DROPDOWN: "/product/dropdown",
     ADD: "/product/add",
     ALL: "/product/all",
     EDIT: "/product/edit",
@@ -59,7 +85,15 @@ export const URL_KEYS = {
   STOCK: {
     BASE: "/stock",
     ALL: "/stock/all",
-    ONE: (id: string) => `/stock/${id}`,
+    ADD: "/stock/add",
+    BULK_ADJUSTMENT: "/stock/bulk-adjustment",
+  },
+
+  STOCK_VERIFICATION: {
+    BASE: "/stock-verification",
+    ALL: "/stock-verification/all",
+    ADD: "/stock-verification/add",
+    EDIT: "/stock-verification/edit",
   },
 
   CALL_REQUEST: {
@@ -68,6 +102,7 @@ export const URL_KEYS = {
   },
   BANK: {
     BASE: "/bank",
+    DROPDOWN: "/bank/dropdown",
     ADD: "/bank/add",
     EDIT: "/bank/edit",
     ALL: "/bank/all",
@@ -80,8 +115,29 @@ export const URL_KEYS = {
   },
   RECIPE: {
     BASE: "/recipe",
+    DROPDOWN: "/recipe/dropdown",
     ADD: "/recipe/add",
     EDIT: "/recipe/edit",
     ALL: "/recipe/all",
+  },
+  LOCATION: {
+    BASE: "/location",
+    ALL: "/location/all",
+    COUNTRY: "/location/country",
+    STATE: "/location/state",
+    CITY: "/location/city",
+  },
+  BILLOFLIVEPRODUCT: {
+    BASE: "/bill-of-live-product",
+    ALL: "/bill-of-live-product/all",
+    ADD: "/bill-of-live-product/add",
+    EDIT: "/bill-of-live-product/edit",
+  },
+  PERMISSION: {
+    BASE: "/permission",
+    DETAILS: "/permission/details",
+    CHILD: "/permission/child/details",
+    ALL: "/permission/all",
+    EDIT: "/permission/edit",
   },
 } as const;

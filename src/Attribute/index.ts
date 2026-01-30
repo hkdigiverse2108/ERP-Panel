@@ -6,4 +6,6 @@ export * from "./FormFields/CommonSwitch";
 export * from "./FormFields/CommonPhoneNumber";
 export * from "./FormFields/CommonRadio";
 export * from "./FormFields/CommonDateSelector";
+export * from "./FormFields/CommonQuillInput";
+export * from "./FormFields/CommonCheckbox";
 export * from "./Notification/index";

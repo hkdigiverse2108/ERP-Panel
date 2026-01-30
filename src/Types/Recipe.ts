@@ -3,7 +3,7 @@ import type { ProductBase } from "./Product";
 
 export interface RecipeProductItem {
   itemCode?: string | null;
-  productId?: object;
+  productId?: string | ProductBase;
   mrp?: number;
 }
 export interface RawRecipeProduct extends RecipeProductItem {
@@ -12,24 +12,25 @@ export interface RawRecipeProduct extends RecipeProductItem {
 
 export interface FinalRecipeProduct extends RecipeProductItem {
   qtyGenerate?: number;
+  mfgDate?: string;
+  expiryDays?: number;
+  expDate?: string;
+  batchNo?: string;
 }
 
 export interface RecipeFormValues {
   id?: string;
-  recipeName?: string;
-  recipeDate?: string | Date;
-  recipeNo?: string;
-  recipeType?: string;
+  name?: string;
+  date?: string | Date;
+  number?: string;
+  type?: string;
   companyId?: string;
   rawProducts?: RawRecipeProduct[];
   rawrecipeId?: string;
-  finalProducts?: FinalRecipeProduct[];
-  status?: "active" | "inactive";
+  finalProducts?: FinalRecipeProduct;
   _submitAction?: string;
-   isActive?: boolean;
+  isActive?: boolean;
   value?: { length: number };
-  
-
 }
 
 export type AddRecipePayload = RecipeFormValues;
@@ -38,8 +39,7 @@ export type EditRecipePayload = AddRecipePayload & { recipeId: string };
 
 // export type RecipeBase = RecipeFormValues & CommonDataType;
 
-export interface RecipeBase extends Omit<RecipeFormValues, "productId">,
-    CommonDataType {
+export interface RecipeBase extends Omit<RecipeFormValues, "productId">, CommonDataType {
   productId: ProductBase;
 }
 
@@ -49,4 +49,8 @@ export interface RecipeDataResponse extends PageStatus {
 
 export interface RecipeApiResponse extends MessageStatus {
   data: RecipeDataResponse;
+}
+
+export interface RecipeDropdownApiResponse extends MessageStatus {
+  data: RecipeBase[];
 }

@@ -28,16 +28,16 @@ const Profile = () => {
       title: "Address Details",
       items: [
         { label: "Address", value: user?.address?.address },
-        { label: "City", value: user?.address?.city },
-        { label: "State", value: user?.address?.state },
-        { label: "Country", value: user?.address?.country },
-        { label: "Pin Code", value: user?.address?.postalCode },
+        { label: "City", value: user?.address?.city?.name },
+        { label: "State", value: user?.address?.state?.name },
+        { label: "Country", value: user?.address?.country?.name },
+        { label: "Pin Code", value: user?.address?.pinCode },
       ],
     },
     {
       title: "Bank Details",
       items: [
-        { label: "Bank Name", value: user?.bankDetails?.bankName },
+        { label: "Bank Name", value: user?.bankDetails?.name },
         { label: "Bank IFSC", value: user?.bankDetails?.IFSCCode },
         { label: "Branch Name", value: user?.bankDetails?.branchName },
         { label: "Account Holder Name", value: user?.bankDetails?.bankHolderName },

@@ -1,103 +1,56 @@
-
-import { CommonBreadcrumbs, CommonCard, CommonDataGrid } from "../../../Components/Common";
+import { Box } from "@mui/material";
+import { useMemo } from "react";
+import { Queries } from "../../../Api";
+import { CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { StockBreadcrumbs } from "../../../Data";
+import { BREADCRUMBS } from "../../../Data";
+import type { AppGridColDef } from "../../../Types";
+import type { StockBase } from "../../../Types/Stock";
 import { useDataGrid } from "../../../Utils/Hooks";
 
-const Stocks = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid({ page: 0, pageSize: 10 });
+const Stock = () => {
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, params } = useDataGrid();
 
-  const rows = [
-    {
-      id: 1,
-      itemCode: "STK001",
-      category: "Cake",
-      brand: "FreshBake",
-      name: "Chocolate Cake",
-      mrp: 500,
-      sellingPrice: 450,
-      hsn: "1905",
-      availableQty: 20,
-      status: "In Stock",
-    },
-    {
-      id: 2,
-      itemCode: "STK002",
-      category: "Bread",
-      brand: "DailyFresh",
-      name: "Brown Bread",
-      mrp: 60,
-      sellingPrice: 55,
-      hsn: "1905",
-      availableQty: 20,
-      status: "In Stock",
-    },
-    {
-      id: 3,
-      itemCode: "STK003",
-      category: "cupcake",
-      brand: "DailyFresh",
-      name: "Brown Bread",
-      mrp: 45,
-      sellingPrice: 40,
-      hsn: "1905",
-      availableQty: 80,
-      status: "In Stock",
-    },
-    {
-      id: 4,
-      itemCode: "STK004",
-      category: "Bread",
-      brand: "DailyFresh",
-      name: "Brown Bread",
-      mrp: 60,
-      sellingPrice: 55,
-      hsn: "1905",
-      availableQty: 0,
-      status: "Out of Stock",
-    },
+  const { data: stockData, isLoading: stockDataLoading, isFetching: stockDataFetching } = Queries.useGetStock(params);
+
+  const allStock = useMemo(() => stockData?.data?.stock_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [stockData]);
+  const totalRows = stockData?.data?.totalData || 0;
+
+
+  const columns: AppGridColDef<StockBase>[] = [
+    { field: "name", headerName: "Product Name", width: 300 },//
+    CommonObjectNameColumn("categoryId", { headerName: "Category Name", width: 200 }),
+    CommonObjectNameColumn("subCategoryId", { headerName: "Sub Category Name", width: 200 }),
+    CommonObjectNameColumn("brandId", { headerName: "Brand Name", width: 200 }),
+    CommonObjectNameColumn("subBrandId", { headerName: "Sub Brand Name", width: 200 }),
+    { field: "availableQty", headerName: "Available Qty", flex: 1, minWidth: 150 },
   ];
 
-  //  COLUMNS
-  const columns = [
-    { field: "itemCode", headerName: "Item Code", flex: 1 },
-    { field: "category", headerName: "Category", flex: 1 },
-    { field: "brand", headerName: "Brand", flex: 1 },
-    { field: "name", headerName: "Item Name", flex: 1 },
-    { field: "mrp", headerName: "MRP", flex: 1 },
-    { field: "sellingPrice", headerName: "Selling Price", flex: 1 },
-    { field: "hsn", headerName: "HSN", flex: 1 },
-    { field: "availableQty", headerName: "Available Qty", flex: 1 },
-    {
-      field: "status",
-      headerName: "Stock Status",
-      flex: 1,
-      renderCell: (params: any) => (
-        <span
-          style={{
-            color: params.value === "In Stock" ? "green" : "red",
-            fontWeight: 500,
-          }}
-        >
-          {params.value}
-        </span>
-      ),
-    },
-  ];
+  const CommonDataGridOption = {
+    columns,
+    rows: allStock,
+    rowCount: totalRows,
+    loading: stockDataLoading || stockDataFetching,
+    isActive,
+    setActive,
+    paginationModel,
+    onPaginationModelChange: setPaginationModel,
+    sortModel,
+    onSortModelChange: setSortModel,
+    filterModel,
+    onFilterModelChange: setFilterModel,
+  };
 
   return (
-     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.STOCK} maxItems={1} breadcrumbs={StockBreadcrumbs} />
-
-      <div className="m-4 md:m-6">
-    
-      <CommonCard title="Stocks">
-        <CommonDataGrid  columns={columns} rows={rows} rowCount={rows.length} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel} pageSizeOptions={[5, 10, 25,]}  />
-      </CommonCard>
-    </div>
+    <>
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.STOCK.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.STOCK.BASE} />
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <CommonCard hideDivider>
+          <CommonDataGrid {...CommonDataGridOption} />
+        </CommonCard>
+      </Box>
     </>
   );
 };
 
-export default Stocks;
-  
+export default Stock;

@@ -7,7 +7,6 @@ export interface BrandFormValues {
   parentBrandId?: string;
   image?: string | File | null;
   isActive?: boolean;
-  _submitAction?: "save" | "saveAndNew";
 }
 
 export type AddBrandPayload = BrandFormValues & { companyId?: string };
@@ -25,4 +24,8 @@ export interface BrandDataResponse extends PageStatus {
 
 export interface BrandApiResponse extends MessageStatus {
   data: BrandDataResponse;
+}  
+
+export interface BrandDropdownApiResponse extends MessageStatus {
+  data: BrandBase[];
 }  

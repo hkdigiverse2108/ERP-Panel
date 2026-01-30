@@ -1,4 +1,5 @@
-import type { CommonDataType, MessageStatus, PhoneNumberType } from "./Common";
+import type { BankBase } from "./Bank";
+import type { AddressApi, AddressBase, CommonDataType, MessageStatus, PhoneNumberType } from "./Common";
 
 export interface CompanyFormValues {
   name?: string;
@@ -10,16 +11,13 @@ export interface CompanyFormValues {
   ownerNo?: PhoneNumberType;
   customerCareNumber?: string;
 
-  address?: string;
-  city?: string;
-  state?: string;
-  country?: string;
-  pinCode?: string;
-  timeZone?: string;
+  address?: AddressBase;
 
+  bankId?: string;
+
+  upiId?: string;
   bankName?: string;
   bankIFSC?: string;
-  upiId?: string;
   branchName?: string;
   accountHolderName?: string;
   bankAccountNumber?: string;
@@ -50,7 +48,10 @@ export interface CompanyFormValues {
 
 export type EditCompanyPayload = CompanyFormValues & { companyId: string };
 
-export type CompanyBase = CompanyFormValues & CommonDataType;
+export interface CompanyBase extends Omit<CompanyFormValues, "address" | "bankId">, CommonDataType {
+  address: AddressApi;
+  bankId?: BankBase;
+}
 
 export interface CompanyApiResponse extends MessageStatus {
   data: CompanyBase;

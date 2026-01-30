@@ -1,5 +1,3 @@
-
-
 export const KEYS = {
   AUTH: {
     SIGNIN: "admin-signin",
@@ -14,7 +12,7 @@ export const KEYS = {
 
   USER: {
     BASE: "user",
-    EDIT: "user-edit"
+    EDIT: "user-edit",
   },
 
   COMPANY: {
@@ -22,11 +20,18 @@ export const KEYS = {
     EDIT: "company-edit",
   },
 
-  EMPLOYEE: {
-    BASE: "employee",
-    ADD: "employee-add",
-    EDIT: "employee-edit",
-    DELETE: "employee-delete",
+  USERS: {
+    BASE: "user",
+    ADD: "user-add",
+    EDIT: "user-edit",
+    DELETE: "user-delete",
+  },
+
+  CONTACT: {
+    BASE: "contact",
+    ADD: "contact-add",
+    EDIT: "contact-edit",
+    DELETE: "contact-delete",
   },
 
   BRANCH: {
@@ -43,6 +48,20 @@ export const KEYS = {
     DELETE: "brand-delete",
   },
 
+  CATEGORY: {
+    BASE: "category",
+    ADD: "category-add",
+    EDIT: "category-edit",
+    DELETE: "category-delete",
+  },
+
+  TAX: {
+    BASE: "tax",
+  },
+  UOM: {
+    BASE: "/uom",
+    ALL: "/uom/all",
+  },
   ROLES: {
     BASE: "role",
     ADD: "role-add",
@@ -61,12 +80,15 @@ export const KEYS = {
     DELETE: "product-delete",
   },
   STOCK: {
-    ROOT: ["stock"],
-    ALL: ["stock", "all"],
-    DETAILS: (id: string) => ["stock", "detail", id],
+    BASE: "stock",
+    ADD: "stock-add",
+    BULK_ADJUSTMENT: "stock-bulk-adjustment",
+  },
+  STOCK_VERIFICATION: {
+    BASE: "stock-verification",
+    ADD: "stock-verification-add",
   },
   CALL_REQUEST: {
-    ROOT: ["call-request"],
     ADD: "call-request",
   },
   BANK: {
@@ -86,5 +108,24 @@ export const KEYS = {
     ADD: "recipe-add",
     EDIT: "recipe-edit",
     DELETE: "recipe-delete",
+  },
+  LOCATION: {
+    BASE: "location",
+    ADD: "location-add",
+    EDIT: "location-edit",
+    DELETE: "location-delete",
+  },
+
+  BILLOFLIVEPRODUCT: {
+    BASE: "billofliveproduct",
+    ADD: "billofliveproduct-add",
+    EDIT: "billofliveproduct-edit",
+    DELETE: "billofliveproduct-delete",
+  },
+
+  PERMISSION: {
+    BASE: "permission",
+    EDIT: "permission-edit",
+    DETAILS: "permission-details",
   },
 };

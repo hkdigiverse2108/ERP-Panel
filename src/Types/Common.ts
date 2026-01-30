@@ -4,10 +4,11 @@ import type { Dayjs } from "dayjs";
 import type { MuiTelInputProps } from "mui-tel-input";
 import type { FocusEvent, ReactNode } from "react";
 import * as Yup from "yup";
+import type { ContactBase } from "./Contacts";
 import type { CustomerFormValues } from "./Customer";
-import type { BrandBase } from "./Brand";
+import type { LocationBase } from "./Location";
 
-type GridType = number | object | "auto" | "grow";
+export type GridType = number | object | "auto" | "grow";
 
 export interface PhoneNumberType {
   countryCode?: string;
@@ -52,7 +53,11 @@ export interface CommonSelectProps {
   grid?: GridType;
   required?: boolean;
   disabled?: boolean;
+  readOnly?: boolean;
   variant?: "standard" | "outlined" | "filled";
+  placeholder?: string;
+  syncFieldName?: string;
+  isLoading?: boolean;
 }
 
 export interface CommonValidationSelectProps extends Omit<CommonSelectProps, "onChange" | "value"> {
@@ -115,6 +120,8 @@ export interface UseDataGridOptions {
   initialSort?: GridSortModel;
   initialFilter?: GridFilterModel;
   active?: boolean;
+  debounceDelay?: number;
+  pagination?: boolean;
 }
 
 export interface CommonDataGridProps {
@@ -129,8 +136,8 @@ export interface CommonDataGridProps {
   setActive?: (active: boolean) => void;
 
   // Pagination
-  paginationModel: GridPaginationModel;
-  onPaginationModelChange: (model: GridPaginationModel) => void;
+  paginationModel?: GridPaginationModel;
+  onPaginationModelChange?: (model: GridPaginationModel) => void;
 
   // Sorting
   sortModel: GridSortModel;
@@ -143,6 +150,9 @@ export interface CommonDataGridProps {
   pageSizeOptions?: number[];
   defaultHidden?: string[];
   BoxClass?: string;
+  isExport?: boolean;
+  fileName?: string;
+  pagination?: boolean;
 }
 
 export interface CustomToolbarProps {
@@ -153,20 +163,40 @@ export interface CustomToolbarProps {
   handleAdd?: () => void;
   isActive?: boolean;
   setActive?: (active: boolean) => void;
+  isExport?: boolean;
+  fileName?: string;
+  filterModel: GridFilterModel;
+  onFilterModelChange: (model: GridFilterModel) => void;
 }
 
 export interface ExportToExcelProps<T extends GridValidRowModel> {
   columns: readonly GridColDef[];
   rows: readonly T[];
   fileName?: string;
+  title?: string;
 }
 
 export interface ExportToPDFProps<T extends GridValidRowModel> {
   columns: readonly GridColDef[];
   rows: readonly T[];
   fileName?: string;
+  title?: string;
 }
 
+export interface CommonObjectNameColumnOptions {
+  headerName?: string;
+  width?: number;
+  flex?: number;
+  minWidth?: number;
+}
+
+export interface CommonActionColumnProps<T> {
+  editRoute?: string;
+  permissionRoute?: string;
+  onEdit?: (row: T) => void;
+  onDelete?: (row: T) => void;
+  active?: (row: T) => void;
+}
 // ************ Table End ***********
 
 // ************ Input Start ***********
@@ -186,6 +216,7 @@ export interface CommonValidationTextFieldProps {
   endIcon?: ReactNode;
   showPasswordToggle?: boolean;
   disabled?: boolean;
+  currencyDisabled?: boolean;
   onFocus?: (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => void;
   onBlur?: (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => void;
   helperText?: string;
@@ -234,6 +265,9 @@ export interface BreadcrumbHeaderProps {
 // ************ Breadcrumb Start ***********
 
 // ************ Validation Yup schema Start ***********
+
+export type Primitive = string | number;
+export type DepValue = Primitive | Primitive[] | undefined;
 
 export type FieldSchemaArgs<K extends keyof FieldTypeMap> = [type: K, options?: FieldOptions<FieldTypeMap[K]>] | [type: K, label: string, options?: FieldOptions<FieldTypeMap[K]>];
 
@@ -286,6 +320,20 @@ export interface CommonDataType {
   updatedAt: string;
 }
 
+export interface AddressBase {
+  address?: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  pinCode?: string;
+}
+
+export interface AddressApi extends Omit<AddressBase, "country" | "state" | "city"> {
+  country?: LocationBase;
+  state?: LocationBase;
+  city?: LocationBase;
+}
+
 // ************ Common Api Data Type End ***********
 
 // ************ Common Switch Start ***********
@@ -298,6 +346,7 @@ export interface CommonValidationSwitchProps {
   isFormLabel?: boolean;
   grid?: GridType;
   switchPlacement?: "start" | "between";
+  syncFieldName?: string;
 }
 
 export interface CommonSwitchProps extends CommonValidationSwitchProps {
@@ -360,11 +409,11 @@ export interface CommonModalProps {
 type UploadType = "image" | "pdf";
 
 export interface ModalStateSlice {
-  isUploadModal: { open: boolean; type: UploadType };
+  isUploadModal: { open: boolean; type: UploadType; multiple?: boolean };
   selectedFiles: string[];
   isModalVideoPlay: { open: boolean; link: string };
   isCustomerModal: { open: boolean; data: CustomerFormValues | null };
-  isBrandModal: { open: boolean; data: BrandBase | null };
+  isContactModal: { open: boolean; data: ContactBase | null };
   isPaymentListModal: boolean;
   isAddPaymentModal: boolean;
   isRedeemLoyaltyModal: boolean;
@@ -389,9 +438,12 @@ export interface ModalStateSlice {
 export type RadioOptionType = {
   label: string;
   value: string;
+  disabled?: boolean;
+  default?: boolean;
 };
+
 export type ImageSyncProps = {
-  activeKey: "image" | null;
+  activeKey: "image" | null | string;
   clearActiveKey: () => void;
 };
 
@@ -403,6 +455,7 @@ export interface CommonRadioProps {
   row?: boolean;
   disabled?: boolean;
   grid?: GridType;
+  readOnly?: boolean;
 }
 
 export interface CommonValidationRadioProps extends Omit<CommonRadioProps, "value" | "onChange"> {
@@ -411,3 +464,84 @@ export interface CommonValidationRadioProps extends Omit<CommonRadioProps, "valu
 }
 
 // ************ Radio End ***********
+
+// ************ Advanced Search Start ***********
+
+export interface AdvancedSearchFilterOption {
+  label: string;
+  options: SelectOptionType[];
+  value: string[];
+  onChange: (values: string[]) => void;
+  multiple?: boolean;
+  limitTags?: number;
+  grid?: GridType;
+  isLoading?: boolean;
+}
+
+export interface AdvancedSearchProps {
+  children?: ReactNode;
+  filter?: AdvancedSearchFilterOption[];
+  defaultExpanded?: boolean;
+}
+
+// ************ Advanced Search End ***********
+
+// ************ Quill Input Start ***********
+
+export interface CommonValidationQuillInputProps {
+  label?: string;
+  name: string;
+  required?: boolean;
+  placeholder?: string;
+  disabled?: boolean;
+  grid?: number | object;
+  modules?: any;
+}
+
+// ************ Quill Input End ***********
+
+// ************ Dependent Select End ***********
+
+export type ApiOption = {
+  _id: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
+  title?: string;
+};
+
+export type DependentSelectProps<T extends ApiOption, P = string | undefined> = {
+  params?: P;
+  name: string;
+  label: string;
+  grid: GridType;
+  required?: boolean;
+  disabled?: boolean;
+  enabled?: boolean;
+  query: (
+    params?: P,
+    enabled?: boolean,
+  ) => {
+    data?: { data: T[] };
+    isLoading: boolean;
+  };
+};
+
+// ************ Dependent Select End ***********
+export type ControlPlacement = "start" | "between";
+
+export interface CommonValidationCheckboxProps {
+  name: string;
+  label?: string;
+  required?: boolean;
+  disabled?: boolean;
+  isFormLabel?: boolean;
+  grid?: GridType;
+  checkboxPlacement?: ControlPlacement;
+  syncFieldName?: string;
+}
+
+export interface CommonCheckboxProps extends CommonValidationCheckboxProps {
+  value?: boolean;
+  onChange?: (value: boolean) => void;
+}

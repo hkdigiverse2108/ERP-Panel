@@ -1,127 +1,71 @@
+import type { BrandBase } from "./Brand";
+import type { CategoryBase } from "./Category";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
-export interface NutritionInfo {
-  name: string;
-  value: string;
-}
-export interface ProductFormValues {
-  itemCode: string;
-  name: string;
-  printName?: string;
 
+export type ProductWithRemoveQty = ProductBase & { id: string; removeQty: number | null };
+
+export interface NutritionInfo {
+  name?: string;
+  value?: string;
+  _id?: string;
+}
+
+export interface ProductFormValues {
+  productType?: string;
+  name?: string;
+  printName?: string;
+  hsnCode?: string;
   categoryId?: string;
   subCategoryId?: string;
+  purchaseTaxId?: string;
+  isPurchaseTaxIncluding?: boolean;
   brandId?: string;
   subBrandId?: string;
-
-  productType?: string;
-
-  uomId: string;
-
-  purchasePrice?: number;
-  landingCost?: number;
-  mrp?: number;
-  sellingPrice?: number;
-  sellingDiscount?: number;
-  sellingMargin?: number;
-
-  retailerDiscount?: number;
-  retailerPrice?: number;
-  retailerMargin?: number;
-
-  wholesalerDiscount?: number;
-  wholesalerPrice?: number;
-  wholesalerMargin?: number;
-
-  onlinePrice?: number;
-
-  minimumQty?: number;
-  openingQty?: number;
-  masterQty?: number;
-
-  hsnCode?: string;
-  purchaseTaxId?: string;
   salesTaxId?: string;
-
-  isPurchaseTaxIncluding?: boolean;
   isSalesTaxIncluding?: boolean;
-  cessPercentage?: number;
-
+  cessPercentage?: number | null;
   manageMultipleBatch?: boolean;
-  isExpiryProductSaleable?: boolean;
   hasExpiry?: boolean;
-
-  expiryDays?: number;
+  expiryDays?: number | null;
   calculateExpiryOn?: string;
   expiryReferenceDate?: string;
-
+  isExpiryProductSaleable?: boolean;
   ingredients?: string;
-  description?: string;
   shortDescription?: string;
-
-  netWeight?: number;
-
+  description?: string;
   nutrition?: NutritionInfo[];
-
+  netWeight?: number | null;
+  masterQty?: number | null;
+  purchasePrice?: number | null;
+  landingCost?: number | null;
+  mrp?: number | null;
+  sellingDiscount?: number | null;
+  sellingPrice?: number | null;
+  sellingMargin?: number | null;
+  retailerDiscount?: number | null;
+  retailerPrice?: number | null;
+  retailerMargin?: number | null;
+  wholesalerDiscount?: number | null;
+  wholesalerPrice?: number | null;
+  wholesalerMargin?: number | null;
+  minimumQty?: number | null;
+  openingQty?: number | null;
+  qty?: number | null;
+  isActive?: boolean;
   images?: string[];
-
-  additionalInfo?: string | null;
+  _submitAction?: string;
 }
-// export interface ProductFormValues {
-//   variants?: any;
-//   _id?: string;
-//   _submitAction?: string;
-//   companyId?: string;
-
-//   itemCode?: string;
-//   name?: string;
-//   printName?: string;
-//   slug?: string;
-//   productType?: string;
-//   categoryId?: string;
-//   subCategoryId?: string;
-//   brandId?: string;
-//   subBrandId?: string;
-//   departmentId?: string;
-//   uomId?: string;
-//   purchaseTaxId?: string;
-//   salesTaxId?: string;
-//   isPurchaseTaxInclusive?: boolean;
-//   isSalesTaxInclusive?: boolean;
-//   cessPercentage?: number;
-//   mrp?: number;
-//   sellingPrice?: number;
-//   purchasePrice?: number;
-//   landingCost?: number;
-//   masterQuantity?: number;
-//   minimumQuantity?: number;
-//   hsnCode?: string;
-//   expiryDays?: string;
-//   expiryType?: string;
-//   shortDescription?: string;
-//   description?: string;
-//   netWeight?: string;
-//   nutritionInfo?: string;
-//   ingredients?: string;
-//   image?: string;
-
-//   manageBatch?: boolean;
-//   hasExpiry?: boolean;
-//   status?: string;
-
-//   code?: string;
-//   category?: string;
-//   price?: number;
-//   quantity?: number;
-//   gst?: number;
-//   isActive?: boolean;
-//   imageUrl?: string;
-// }
 
 export type AddProductPayload = ProductFormValues;
 
 export type EditProductPayload = AddProductPayload & { productId: string };
 
-export type ProductBase = ProductFormValues & CommonDataType;
+export interface ProductBase extends Omit<ProductFormValues, "categoryId" | "subCategoryId" | "brandId" | "subBrandId">, CommonDataType {
+  categoryId?: CategoryBase;
+  subCategoryId?: CategoryBase;
+  brandId?: BrandBase;
+  subBrandId?: BrandBase;
+}
 
 export interface ProductDataResponse extends PageStatus {
   product_data: ProductBase[];
@@ -129,4 +73,7 @@ export interface ProductDataResponse extends PageStatus {
 
 export interface ProductApiResponse extends MessageStatus {
   data: ProductDataResponse;
+}
+export interface ProductDropDownApiResponse extends MessageStatus {
+  data: ProductBase[];
 }
