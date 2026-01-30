@@ -1,3 +1,7 @@
+VITE_PORT=4442
+VITE_API_BASE_URL=http://localhost:4001
+# VITE_API_BASE_URL=https://dev-api.ai-setu.cloud
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
