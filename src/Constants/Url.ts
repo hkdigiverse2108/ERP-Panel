@@ -96,6 +96,13 @@ export const URL_KEYS = {
     EDIT: "/stock-verification/edit",
   },
 
+  MATERIAL_CONSUMPTION: {
+    BASE: "/material-consumption",
+    ALL: "/material-consumption/all",
+    ADD: "/material-consumption/add",
+    EDIT: "/material-consumption/edit",
+  },
+
   CALL_REQUEST: {
     BASE: "/call-request",
     ADD: "/call-request/add",
@@ -127,7 +134,7 @@ export const URL_KEYS = {
     STATE: "/location/state",
     CITY: "/location/city",
   },
- BILL_OF_Live_Product: {
+  BILL_OF_Live_Product: {
     BASE: "/bill-of-live-product",
     ALL: "/bill-of-live-product/all",
     ADD: "/bill-of-live-product/add",

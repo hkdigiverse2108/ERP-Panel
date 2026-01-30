@@ -27,6 +27,8 @@ import BillOfMaterialsForm from "../Pages/Inventory/BillOfLiveProduct/BillOfLive
 import Permission from "../Pages/Employee/Permission";
 import SupplierBill from "../Pages/Purchase/SupplierBill";
 import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
+import MaterialConsumption from "../Pages/Inventory/MaterialConsumption";
+import MaterialConsumptionForm from "../Pages/Inventory/MaterialConsumption/MaterialConsumptionForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -68,8 +70,11 @@ export const PageRoutes = [
   { path: ROUTES.BILL_OF_Live_Product.BASE, name: PAGE_TITLE.INVENTORY.BILL_OF_Live_Product.BASE, element: <BillOfMaterials /> },
   { path: ROUTES.BILL_OF_Live_Product.ADD_EDIT, name: PAGE_TITLE.INVENTORY.BILL_OF_Live_Product.BASE, element: <BillOfMaterialsForm /> },
 
-    { path: ROUTES.SUPPLIER_BILL.BASE, name: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE, element: <SupplierBill /> },
+  { path: ROUTES.SUPPLIER_BILL.BASE, name: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE, element: <SupplierBill /> },
   { path: ROUTES.SUPPLIER_BILL.ADD_EDIT, name: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE, element: <SupplierBillForm /> },
+
+  { path: ROUTES.MATERIAL_CONSUMPTION.BASE, name: PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE, element: <MaterialConsumption /> },
+  { path: ROUTES.MATERIAL_CONSUMPTION.ADD_EDIT, name: PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE, element: <MaterialConsumptionForm /> },
 ];
 
 export const AuthRoutes = [

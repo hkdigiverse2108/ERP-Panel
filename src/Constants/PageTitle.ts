@@ -61,6 +61,11 @@ export const PAGE_TITLE = {
       ADD: "Add Bill Of Live Product",
       EDIT: "Edit Bill Of Live Product",
     },
+    MATERIAL_CONSUMPTION: {
+      BASE: "Material Consumption",
+      ADD: "Add Material Consumption",
+      EDIT: "Edit Material Consumption",
+    },
   },
   CUSTOMER: {
     BASE: "Customer",

@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BankDropdownApiResponse, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, ContactApiResponse, CountryApiResponse, EmployeeApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, ProductApiResponse, ProductDropDownApiResponse, RecipeApiResponse, RecipeDropdownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SingleEmployeeApiResponse, StockApiResponse, StockVerificationApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomDropdownApiResponse, UploadResponse } from "../Types";
+import type { AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BankDropdownApiResponse, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, ContactApiResponse, CountryApiResponse, EmployeeApiResponse, MaterialConsumptionApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, ProductApiResponse, ProductDropDownApiResponse, RecipeApiResponse, RecipeDropdownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SingleEmployeeApiResponse, StockApiResponse, StockVerificationApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomDropdownApiResponse, UploadResponse } from "../Types";
 import type { BillOfLiveProductApiResponse } from "../Types/BillOfMaterials";
 import type { SupplierBillApiResponse } from "../Types/SupplierBill";
 import { Get } from "./Methods";
@@ -80,4 +80,7 @@ export const Queries = {
 
   //************ Supplier Bill ********/
   useGetSupplierBillDetails: (params?: Params) => useQueries<SupplierBillApiResponse>([KEYS.SUPPLIER_BILL.BASE, params], () => Get(URL_KEYS.SUPPLIER_BILL.ALL, params)),
+
+    //*************** Material Consumption **************** */
+  useGetMaterialConsumption: (params?: Params) => useQueries<MaterialConsumptionApiResponse>([KEYS.MATERIAL_CONSUMPTION.BASE, params], () => Get(URL_KEYS.MATERIAL_CONSUMPTION.ALL, params)),
 };
