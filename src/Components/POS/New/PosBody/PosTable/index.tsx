@@ -15,17 +15,14 @@ type PosRow = {
   product: string;
   qty: number;
   mrp: number;
-  unit: string;
   discount: number;
   addDisc: number;
 };
 
 const PosTable = () => {
-  const [isCurrencyType, setIsCurrencyType] = useState("");
-
   const [rows, setRows] = useState<PosRow[]>([
-    { id: 1, salesman: ["Dhruvi Bakery"], itemCode: "CK-BC-DN-002", product: "Butter Cookies 400g/800g", qty: 1, mrp: 300, unit: "GM", discount: 0, addDisc: 0 },
-    { id: 2, salesman: ["Dhruvi Bakery"], itemCode: "CK-BC-UN-001", product: "Butter Cookies 75g/150g/500g", qty: 2, mrp: 50, unit: "GM", discount: 0, addDisc: 0 },
+    { id: 1, salesman: ["Dhruvi Bakery"], itemCode: "CK-BC-DN-002", product: "Butter Cookies 400g/800g", qty: 1, mrp: 300, discount: 0, addDisc: 0 },
+    { id: 2, salesman: ["Dhruvi Bakery"], itemCode: "CK-BC-UN-001", product: "Butter Cookies 75g/150g/500g", qty: 2, mrp: 50, discount: 0, addDisc: 0 },
   ]);
 
   const dispatch = useAppDispatch();
@@ -35,8 +32,8 @@ const PosTable = () => {
   const removeRow = (id: number) => setRows((prev) => prev.filter((r) => r.id !== id));
 
   const calcUnitCost = (row: PosRow) => {
-    const discountAmount = isCurrencyType === "%" ? (row.mrp * row.discount) / 100 : row.discount;
-    const addDiscountAmount = isCurrencyType === "%" ? (row.mrp * row.addDisc) / 100 : row.addDisc;
+    const discountAmount = row.discount;
+    const addDiscountAmount = row.addDisc;
     return Math.max(0, row.mrp - discountAmount - addDiscountAmount);
   };
 
@@ -56,7 +53,6 @@ const PosTable = () => {
                 <th className="p-2 text-start">Product</th>
                 <th className="p-2">Qty</th>
                 <th className="p-2">MRP</th>
-                <th className="p-2">Unit</th>
                 <th className="p-2">Discount</th>
                 <th className="p-2">Add Disc</th>
                 <th className="p-2">Unit Cost</th>
@@ -90,7 +86,7 @@ const PosTable = () => {
                           <RemoveIcon />
                         </CommonButton>
 
-                        <span className="w-10" onClick={() => dispatch(setQtyCountModal({ open: true, date: row }))}>
+                        <span className="w-20 py-1 border-b border-gray-300 dark:border-gray-600" onClick={() => dispatch(setQtyCountModal({ open: true, date: row }))}>
                           {row.qty}
                         </span>
 
@@ -102,11 +98,9 @@ const PosTable = () => {
 
                     {/* MRP */}
                     <td className="p-2">{row.mrp.toFixed(2)}</td>
-                    <td className="p-2">{row.unit}</td>
-
                     {/* DISCOUNT */}
                     <td className="p-2 min-w-32 w-32">
-                      <CommonTextField type="number" value={row.discount} onChange={(e) => updateRow(row.id, { discount: Number(e) })} isCurrency onCurrencyLog={(val) => setIsCurrencyType(val)} />
+                      <CommonTextField type="number" value={row.discount} onChange={(e) => updateRow(row.id, { discount: Number(e) })} isCurrency currencyDisabled />
                     </td>
 
                     {/* ADD DISCOUNT */}
