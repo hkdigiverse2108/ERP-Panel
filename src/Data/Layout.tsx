@@ -20,6 +20,7 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.INVENTORY.RECIPE.BASE, path: ROUTES.RECIPE.BASE, pro: false },
       { name: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE, path: ROUTES.STOCK_VERIFICATION.BASE },
       { name: PAGE_TITLE.INVENTORY.BILL_OF_Live_Product.BASE, path: ROUTES.BILL_OF_Live_Product.BASE },
+      { name: PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE, path: ROUTES.MATERIAL_CONSUMPTION.BASE },
     ],
   },
   {
@@ -44,6 +45,6 @@ export const NavItems: NavItem[] = [
   {
     name: PAGE_TITLE.PURCHASE.BASE,
     icon: <SettingsIcon />,
-    children: [{ name: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE, path: ROUTES.SUPPLIER_BILL.BASE}],
+    children: [{ name: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE, path: ROUTES.SUPPLIER_BILL.BASE }],
   },
 ];

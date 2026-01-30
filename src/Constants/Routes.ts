@@ -39,6 +39,7 @@ export const ROUTES = {
   },
   MATERIAL_CONSUMPTION: {
     BASE: "/material-consumption",
+    ADD_EDIT: "/material-consumption/add-edit",
   },
   STOCK_VERIFICATION: {
     BASE: "/stock-verification",
@@ -73,8 +74,8 @@ export const ROUTES = {
     BASE: "/pos",
     NEW: "/pos/new",
   },
-  SUPPLIER_BILL:{
+  SUPPLIER_BILL: {
     BASE: "/supplier-bill",
     ADD_EDIT: "/supplier-bill/add-edit",
-  }
+  },
 } as const;

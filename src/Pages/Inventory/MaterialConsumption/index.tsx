@@ -1,0 +1,95 @@
+import { Box } from "@mui/material";
+import { type GridColDef } from "@mui/x-data-grid";
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { Mutations, Queries } from "../../../Api";
+import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
+import { PAGE_TITLE, ROUTES } from "../../../Constants";
+import { BREADCRUMBS } from "../../../Data";
+import type { MaterialConsumptionBase } from "../../../Types";
+import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+
+const MaterialConsumption = () => {
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
+  const navigate = useNavigate();
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE);
+
+  const { data: materialConsumptionData, isLoading: materialConsumptionDataLoading, isFetching: materialConsumptionDataFetching } = Queries.useGetMaterialConsumption(params);
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown();
+  const { mutate: deleteMaterialConsumptionMutate } = Mutations.useDeleteMaterialConsumption();
+  const { mutate: editMaterialConsumption, isPending: isEditLoading } = Mutations.useEditMaterialConsumption();
+
+  const allMaterialConsumptions = useMemo(() => materialConsumptionData?.data?.material_consumption_data.map((item) => ({ ...item, id: item?._id })) || [], [materialConsumptionData]);
+  const totalRows = materialConsumptionData?.data?.totalData || 0;
+
+  const handleDeleteBtn = () => {
+    if (!rowToDelete) return;
+    deleteMaterialConsumptionMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
+  };
+
+  const handleAdd = () => navigate(ROUTES.MATERIAL_CONSUMPTION.ADD_EDIT);
+
+  const columns: GridColDef<MaterialConsumptionBase>[] = [
+    CommonObjectNameColumn<MaterialConsumptionBase>("branchId", { headerName: "Branch", width: 200 }),
+    { field: "number", headerName: "MC No.", width: 100 },
+    { field: "type", headerName: "Type", width: 150 },
+    { field: "totalQty", type: "number", headerName: "Total Qty", width: 150 },
+    { field: "totalAmount", type: "number", headerName: "Total Amount", width: 150 },
+    { field: "date", headerName: "Date", width: 150, renderCell: (params) => FormatDate(params.row.date) },
+    { field: "remark", headerName: "Remark", flex: 1, minWidth: 200 },
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<MaterialConsumptionBase>({
+            ...(permission?.edit && {
+              active: (row) => editMaterialConsumption({ materialConsumptionId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.MATERIAL_CONSUMPTION.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.number }) }),
+          }),
+        ]
+      : []),
+  ];
+
+  const summary = useMemo(() => {
+    return CalculateGridSummary(allMaterialConsumptions, ["totalQty", "totalAmount"]);
+  }, [allMaterialConsumptions]);
+
+  const CommonDataGridOption = {
+    columns,
+    rows: allMaterialConsumptions,
+    rowCount: totalRows,
+    loading: materialConsumptionDataLoading || materialConsumptionDataFetching || isEditLoading,
+    isActive,
+    setActive,
+    ...(permission?.add && { handleAdd }),
+    paginationModel,
+    onPaginationModelChange: setPaginationModel,
+    sortModel,
+    onSortModelChange: setSortModel,
+    filterModel,
+    onFilterModelChange: setFilterModel,
+    slots: {
+      bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
+    },
+  };
+
+  const filter = [
+    CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }), // branchFilter
+  ];
+
+  return (
+    <>
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.MATERIAL_CONSUMPTION.BASE} />
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch filter={filter} />
+        <CommonCard hideDivider>
+          <CommonDataGrid {...CommonDataGridOption} />
+        </CommonCard>
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+      </Box>
+    </>
+  );
+};
+
+export default MaterialConsumption;

@@ -90,6 +90,13 @@ export const KEYS = {
     EDIT: "stock-verification-edit",
     DELETE: "stock-verification-delete",
   },
+  MATERIAL_CONSUMPTION: {
+    BASE: "material-consumption",
+    ADD: "material-consumption-add",
+    EDIT: "material-consumption-edit",
+    DELETE: "material-consumption-delete",
+  },
+
   CALL_REQUEST: {
     ADD: "call-request",
   },

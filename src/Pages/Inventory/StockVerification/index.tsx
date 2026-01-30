@@ -1,17 +1,17 @@
 import { Box } from "@mui/material";
-import { GridFooterContainer, useGridApiContext, type GridRenderCellParams } from "@mui/x-data-grid";
+import { type GridRenderCellParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { AppGridColDef, StockVerificationBase, StockVerificationFormValues } from "../../../Types";
-import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import type { AppGridColDef, StockVerificationBase } from "../../../Types";
 import { FormatDate } from "../../../Utils";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 
 const StockVerification = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, params } = useDataGrid({active: false});
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, params } = useDataGrid({ active: false });
 
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE);
@@ -30,13 +30,13 @@ const StockVerification = () => {
   };
 
   const columns: AppGridColDef<StockVerificationBase>[] = [
-    { field: "stockVerificationNo", headerName: "Stock Verification No.",flex:1, minWidth: 200 },
-    { field: "createdAt", headerName: "Stock Verification Date", flex:1, minWidth: 200, renderCell: (params) => FormatDate(params.row.createdAt) },
+    { field: "stockVerificationNo", headerName: "Stock Verification No.", flex: 1, minWidth: 200 },
+    { field: "createdAt", headerName: "Stock Verification Date", flex: 1, minWidth: 200, renderCell: (params) => FormatDate(params.row.createdAt) },
     { field: "totalProducts", headerName: "Total Products", width: 200 },
     { field: "totalPhysicalQty", headerName: "Total Physical Qty", width: 200 },
     { field: "totalDifferenceAmount", headerName: "Difference Amount", width: 200 },
     { field: "totalApprovedQty", headerName: "Approved Qty", width: 200 },
-    { field: "status", headerName: "Status",headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
     ...(permission?.edit || permission?.delete
       ? [
           {
@@ -56,44 +56,8 @@ const StockVerification = () => {
       : []),
   ];
 
-  const StockVerificationFooter = ({ summary }: { summary: StockVerificationFormValues}) => {
-    const apiRef = useGridApiContext();
-
-    const visibleColumns = apiRef.current.getVisibleColumns();
-
-    return (
-      <GridFooterContainer sx={{ overflowX: "auto", px: 0, width: "fit-content" }}>
-        <Box sx={{ display: "flex", minWidth: "max-content" }}>
-          {visibleColumns.map((col) => {
-            let value: string | number | undefined = "";
-
-            if (col.field === "totalProducts") value = summary.totalProducts;
-            if (col.field === "totalPhysicalQty") value = summary.totalPhysicalQty;
-            if (col.field === "totalDifferenceAmount") value = summary?.totalDifferenceAmount?.toFixed(2);
-            if (col.field === "totalApprovedQty") value = summary.totalApprovedQty;
-
-            return (
-              <Box key={col.field} sx={{ flex: `0 0 ${col.computedWidth}px`, px: 1, py: 1, fontWeight: 600, whiteSpace: "nowrap", textAlign: "left" }}>
-                {value}
-              </Box>
-            );
-          })}
-        </Box>
-      </GridFooterContainer>
-    );
-  };
-
   const summary = useMemo(() => {
-    return allStock.reduce(
-      (acc, row) => {
-        acc.totalProducts += Number(row.totalProducts || 0);
-        acc.totalPhysicalQty += Number(row.totalPhysicalQty || 0);
-        acc.totalDifferenceAmount += Number(row.totalDifferenceAmount || 0);
-        acc.totalApprovedQty += Number(row.totalApprovedQty || 0);
-        return acc;
-      },
-      { totalProducts: 0, totalPhysicalQty: 0, totalDifferenceAmount: 0, totalApprovedQty: 0 },
-    );
+    return CalculateGridSummary(allStock, ["totalProducts", "totalPhysicalQty", "totalDifferenceAmount", "totalApprovedQty"]);
   }, [allStock]);
 
   const CommonDataGridOption = {
@@ -109,7 +73,7 @@ const StockVerification = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     slots: {
-      bottomContainer: () => <StockVerificationFooter summary={summary} />,
+      bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },
   };
 
