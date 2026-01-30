@@ -233,7 +233,7 @@ export const CONSUMPTION_TYPE = [
   { label: "Expired", value: "expired" },
   { label: "Sample", value: "sample" },
   { label: "Production", value: "production" },
-  { label: "Scrap/Wastage", value: "scrap/wastage" },
+  { label: "Scrap / Wastage", value: "scrap_wastage" },
 ];
 
 export const BANK_UI_FIELDS: (keyof CompanyFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber", "upiId"];
