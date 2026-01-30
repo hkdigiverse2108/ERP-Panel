@@ -23,7 +23,7 @@ const Recipe = () => {
 
   const handleAdd = () => navigate(ROUTES.RECIPE.ADD_EDIT);
 
-  const handleDelete = () => {
+  const handleDeleteBtn = () => {
     if (!rowToDelete) return;
     deleteRecipe(rowToDelete?._id as string, {
       onSuccess: () => setRowToDelete(null),
@@ -88,7 +88,7 @@ const Recipe = () => {
           <CommonDataGrid {...gridOptions} />
         </CommonCard>
 
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDelete} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={()=>handleDeleteBtn()} />
       </Box>
     </>
   );

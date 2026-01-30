@@ -47,7 +47,7 @@ const Employee = () => {
 
   const CommonDataGridOption = {
     columns,
-    rows: allEmployee,
+    rows: allEmployee, 
     rowCount: totalRows,
     loading: employeeDataLoading || employeeDataFetching || isEditLoading,
     isActive,

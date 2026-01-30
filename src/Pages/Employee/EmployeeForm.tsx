@@ -13,8 +13,8 @@ import { EmployeeFormSchema } from "../../Utils/ValidationSchemas";
 
 
 const EmployeeForm = () => {
+   const navigate = useNavigate();
   const location = useLocation();
-  const navigate = useNavigate();
   const { data } = location.state || {};
   const { company } = useAppSelector((state) => state.company);
 
