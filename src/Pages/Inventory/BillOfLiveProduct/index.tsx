@@ -6,13 +6,14 @@ import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, Comm
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef } from "../../../Types";
-import { useDataGrid } from "../../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { FormatDate } from "../../../Utils";
 import type { BillOfLiveProductBase } from "../../../Types/BillOfMaterials";
 
 const BillOfLiveProduct = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.BILL_OF_Live_Product.BASE);
   const { data, isLoading, isFetching } = Queries.useGetBillOfLiveProduct(params);
   const { mutate: deleteBOM } = Mutations.useDeleteBillOfLiveProduct();
   const { mutate: editBOM, isPending: isEditLoading } = Mutations.useEditBillOfLiveProduct();
@@ -31,8 +32,19 @@ const BillOfLiveProduct = () => {
     });
   };
 
-  const columns: AppGridColDef<BillOfLiveProductBase>[] = [{ field: "number", headerName: "Bill Of Live Product No.", width: 400 }, { field: "date", headerName: "Bill Of Live Product Date", valueGetter: (v) => FormatDate(v), flex: 1 }, CommonActionColumn({ active: (row) => editBOM({ billOfLiveProductId: row._id, isActive: !row.isActive }), editRoute: ROUTES.BILL_OF_Live_Product.ADD_EDIT, onDelete: (row) => setRowToDelete({ _id: row._id, title: row.number }) })];
-
+  const columns: AppGridColDef<BillOfLiveProductBase>[] = [
+    { field: "number", headerName: "Bill Of Live Product No.", width: 400 },
+    { field: "date", headerName: "Bill Of Live Product Date", valueGetter: (v) => FormatDate(v), flex: 1 },
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<BillOfLiveProductBase>({
+            ...(permission?.edit && { active: (row) => editBOM({ billOfLiveProductId: row?._id, isActive: !row.isActive }), editRoute: ROUTES.BILL_OF_Live_Product.ADD_EDIT }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row.number }) }),
+          }),
+        ]
+      : []),
+  ];
+  
   const gridOptions = {
     columns,
     rows,

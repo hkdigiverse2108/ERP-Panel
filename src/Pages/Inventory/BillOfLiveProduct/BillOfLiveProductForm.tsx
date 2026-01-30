@@ -13,6 +13,7 @@ import { GenerateOptions, DateConfig } from "../../../Utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { BillOfLiveProductBase, BillOfLiveProductFormValues } from "../../../Types/BillOfMaterials";
 import type { BillOfLiveProductDetailUI } from "../../../Types/BillOfMaterials";
+import { usePagePermission } from "../../../Utils/Hooks";
 
 interface BomRow {
   id: string;
@@ -66,7 +67,7 @@ const BillOfLiveProductForm = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.BILL_OF_Live_Product.BASE);
   const { data, no } = location.state as {
     data?: BillOfLiveProductBase;
     no?: number;
@@ -111,8 +112,6 @@ const BillOfLiveProductForm = () => {
 
   const mergeRow = (recipe: RecipeBase, saved?: BillOfLiveProductDetailUI, existing?: BomRow): BomRow => {
     const base = createRowFromRecipe(recipe);
-
-    // Merge saved BOM detail over recipe defaults
     const withSaved: BomRow = {
       ...base,
       qty: saved?.qty ?? base.qty,
@@ -230,6 +229,10 @@ const BillOfLiveProductForm = () => {
       addBOM({ number: formatBimNumber(values.number), date: values.date, allowReverseCalculation: values.allowReverseCalculation, recipeId: values.recipeId, productDetails }, { onSuccess: () => navigate(ROUTES.BILL_OF_Live_Product.BASE) });
     }
   };
+  useEffect(() => {
+    const hasAccess = isEditing ? permission.edit : permission.add;
+    if (!hasAccess) navigate(-1);
+  }, [isEditing, permission, navigate]);
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.BILL_OF_Live_Product[pageMode]} breadcrumbs={BREADCRUMBS.BILL_OF_Live_Product[pageMode]} />
