@@ -11,6 +11,7 @@ export const URL_KEYS = {
   USER: {
     BASE: "/user",
     EDIT: "/user/edit",
+    DROPDOWN: "/user/dropdown",
   },
   COMPANY: {
     BASE: "/company",

@@ -20,7 +20,7 @@ const PosFilter = () => {
     setValue(value);
     const product = productDropdown?.data?.find((item) => item._id === value[0]);
     dispatch(setProductDataModal(product));
-    setValue([]);
+    // setValue([]);
   };
 
   const handleCustomerChange = (value: string[]) => {

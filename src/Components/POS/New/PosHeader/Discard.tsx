@@ -1,14 +1,22 @@
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import InfoIcon from '@mui/icons-material/Info';
-import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import InfoIcon from "@mui/icons-material/Info";
+import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import { Tooltip } from "@mui/material";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { CommonButton } from "../../../../Attribute";
+import { clearProductDataModal } from "../../../../Store/Slices/PosSlice";
 import { CommonModal } from "../../../Common";
 
 const Discard = () => {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleDiscard = () => {
+    dispatch(clearProductDataModal());
+    setOpen(false);
+  };
 
   return (
     <>
@@ -24,8 +32,12 @@ const Discard = () => {
           </div>
           <h2 className="mb-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">Discard Sale ?</h2>
           <div className="flex gap-3">
-            <CommonButton onClick={() => setOpen(false)} variant="outlined" startIcon={<ThumbDownAltIcon />}>Cancel</CommonButton>
-            <CommonButton onClick={() => setOpen(false)} variant="contained" startIcon={<ThumbUpAltIcon />}>ok!</CommonButton>
+            <CommonButton onClick={() => setOpen(false)} variant="outlined" startIcon={<ThumbDownAltIcon />}>
+              Cancel
+            </CommonButton>
+            <CommonButton onClick={handleDiscard} variant="contained" startIcon={<ThumbUpAltIcon />}>
+              ok!
+            </CommonButton>
           </div>
         </div>
       </CommonModal>

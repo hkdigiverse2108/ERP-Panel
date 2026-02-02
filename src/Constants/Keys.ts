@@ -13,6 +13,7 @@ export const KEYS = {
   USER: {
     BASE: "user",
     EDIT: "user-edit",
+    DROPDOWN: "user-dropdown",
   },
 
   COMPANY: {
