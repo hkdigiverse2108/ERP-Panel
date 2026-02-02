@@ -46,6 +46,11 @@ export interface SupplierBillReturnProductSummary {
   roundOff?: number;
   netAmount?: number;
 }
+export interface TermsAndCondition {
+  _id: string;
+  termsCondition: string;
+  isDefault?: boolean;
+}
 
 export interface SupplierBillReturnProductDetails {
   item?: SupplierBillReturnProductItem[];
