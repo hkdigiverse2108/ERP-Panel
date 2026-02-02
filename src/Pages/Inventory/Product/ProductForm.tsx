@@ -1,5 +1,5 @@
 import ClearIcon from "@mui/icons-material/Clear";
-import { Box, Grid, IconButton } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { FieldArray, Form, Formik, useFormikContext, type FormikHelpers, type FormikValues } from "formik";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -13,8 +13,8 @@ import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
 import { setSelectedFiles, setUploadModal } from "../../../Store/Slices/ModalSlice";
 import type { ImageSyncProps, NutritionInfo, ProductFormValues } from "../../../Types";
 import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
-import { ProductFormSchema } from "../../../Utils/ValidationSchemas";
 import { usePagePermission } from "../../../Utils/Hooks";
+import { ProductFormSchema } from "../../../Utils/ValidationSchemas";
 
 const ProductForm = () => {
   const location = useLocation();
@@ -175,13 +175,13 @@ const ProductForm = () => {
                             <>
                               <Box p={2} className="border border-gray-300 dark:border-gray-600 rounded-sm">
                                 {values?.nutrition?.map((_, vIndex) => (
-                                  <Grid key={vIndex} container spacing={2} sx={{ xs: 12 }} py={1}>
+                                  <Grid key={vIndex} container spacing={1} sx={{ xs: 12 }} py={1}>
                                     <CommonValidationTextField name={`nutrition.${vIndex}.name`} label="Nutrition Name" grid={{ xs: 12, md: 6 }} />
-                                    <CommonValidationTextField name={`nutrition.${vIndex}.value`} label="Nutrition Value" grid={{ xs: 12, md: 5.5 }} />
+                                    <CommonValidationTextField name={`nutrition.${vIndex}.value`} label="Nutrition Value" grid={{ xs: 9, sm:10, md: 5 }} />
                                     {(values?.nutrition?.length || 0) > 1 && (
-                                      <IconButton color="error" size="small" onClick={() => remove(vIndex)}>
+                                      <CommonButton variant="outlined" color="error" sx={{ minWidth: 40 }} size="small" onClick={() => remove(vIndex)}>
                                         <ClearIcon />
-                                      </IconButton>
+                                      </CommonButton>
                                     )}
                                   </Grid>
                                 ))}
