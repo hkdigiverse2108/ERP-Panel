@@ -7,10 +7,14 @@ import { CommonTextField } from "../../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setHoldBillDrawer } from "../../../../../../Store/Slices/DrawerSlice";
 import { CommonDrawer } from "../../../../../Common";
+import { Queries } from '../../../../../../Api';
 
 const HoldBill = () => {
   const { isHoldBillDrawer } = useAppSelector((stale) => stale.drawer);
   const [value, setValue] = useState<string>("");
+
+  const { data: holdBills } = Queries.useGetPosHoldOrder();
+console.log(holdBills);
 
   const dispatch = useAppDispatch();
 

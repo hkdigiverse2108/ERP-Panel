@@ -5,7 +5,6 @@ import type { MuiTelInputProps } from "mui-tel-input";
 import type { FocusEvent, ReactNode } from "react";
 import * as Yup from "yup";
 import type { ContactBase } from "./Contacts";
-import type { CustomerFormValues } from "./Customer";
 import type { LocationBase } from "./Location";
 
 export type GridType = number | object | "auto" | "grow";
@@ -416,7 +415,7 @@ export interface ModalStateSlice {
   isUploadModal: { open: boolean; type: UploadType; multiple?: boolean };
   selectedFiles: string[];
   isModalVideoPlay: { open: boolean; link: string };
-  isCustomerModal: { open: boolean; data: CustomerFormValues | null };
+  isCustomerModal: { open: boolean; data: ContactBase | null };
   isContactModal: { open: boolean; data: ContactBase | null };
   isPaymentListModal: boolean;
   isAddPaymentModal: boolean;
