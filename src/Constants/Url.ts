@@ -155,4 +155,9 @@ export const URL_KEYS = {
     ADD: "/supplier-bill/add",
     EDIT: "/supplier-bill/edit",
   },
+  POS: {
+    BASE: "/pos",
+    HOLD_ORDER: "/pos-order/hold",
+    ADD: "/pos-order/add",
+  },
 } as const;

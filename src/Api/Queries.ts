@@ -85,4 +85,7 @@ export const Queries = {
 
   //*************** Material Consumption **************** */
   useGetMaterialConsumption: (params?: Params) => useQueries<MaterialConsumptionApiResponse>([KEYS.MATERIAL_CONSUMPTION.BASE, params], () => Get(URL_KEYS.MATERIAL_CONSUMPTION.ALL, params)),
+
+  //*************** POS **************** */
+  useGetPosHoldOrder: (params?: Params) => useQueries<any>([KEYS.POS.BASE, params], () => Get(URL_KEYS.POS.HOLD_ORDER, params)),
 };

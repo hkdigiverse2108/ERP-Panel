@@ -173,7 +173,7 @@ const ContactForm = () => {
         <Formik initialValues={initialValues} validationSchema={getContactFormSchema} onSubmit={handleSubmit}>
           {({ resetForm, setFieldValue, dirty, values }) => (
             <Form noValidate>
-              <AddressDependencyHandler count={values.address.length} />
+              <AddressDependencyHandler count={values?.address?.length || 0} />
               <Grid container spacing={2}>
                 {/* GENERAL DETAILS */}
                 <CommonCard topContent={topContent} title="General Details" grid={{ xs: 12 }}>

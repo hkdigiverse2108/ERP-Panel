@@ -144,4 +144,11 @@ export const KEYS = {
     EDIT: "supplier-bill-edit",
     DELETE: "supplier-bill-delete",
   },
+  POS: {
+    BASE: "pos",
+    HOLD_ORDER: "pos-order-hold",
+    ADD:"pos-add",
+    EDIT:"pos-edit",
+    DELETE:"pos-delete",
+  },
 };
