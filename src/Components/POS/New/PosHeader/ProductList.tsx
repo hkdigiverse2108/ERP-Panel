@@ -13,9 +13,9 @@ const ProductList = () => {
   const [value, setValue] = useState<string[]>([]);
   const dispatch = useAppDispatch();
 
-  const { data: category, isLoading: categoryLoading } = Queries.useGetCategoryDropdown();
+  const { data: category, isLoading: categoryLoading } = Queries.useGetCategoryDropdown({}, open);
   const id = value[0] || "";
-  const { data: productDropdown, isLoading: productDropdownLoading } = Queries.useGetProductDropdown({ categoryFilter: id });
+  const { data: productDropdown, isLoading: productDropdownLoading } = Queries.useGetProductDropdown(id ? { categoryFilter: id } : {}, open);
 
   const handleProductChange = (id: string) => {
     const product = productDropdown?.data?.find((item) => item._id === id);

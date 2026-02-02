@@ -11,7 +11,7 @@ import type { ContactFormValues } from "../../Types";
 import { GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { getContactFormSchema } from "../../Utils/ValidationSchemas";
 import type { AddContactPayload, Address, ContactAddressApi } from "../../Types/Contacts";
-import { usePagePermission } from "../../Utils/Hooks";
+import { useDependentReset, usePagePermission } from "../../Utils/Hooks";
 import { useEffect } from "react";
 
 const ContactForm = () => {
@@ -150,6 +150,18 @@ const ContactForm = () => {
     />
   );
 
+  const AddressDependencyHandler = ({ count }: { count: number }) => {
+    const dependencies = [];
+
+    for (let i = 0; i < count; i++) {
+      dependencies.push({ when: `address.${i}.country`, reset: [`address.${i}.state`, `address.${i}.city`] }, { when: `address.${i}.state`, reset: [`address.${i}.city`] });
+    }
+
+    useDependentReset(dependencies);
+
+    return null;
+  };
+
   useEffect(() => {
     const hasAccess = isEditing ? permission.edit : permission.add;
     if (!hasAccess) navigate(-1);
@@ -161,6 +173,7 @@ const ContactForm = () => {
         <Formik initialValues={initialValues} validationSchema={getContactFormSchema} onSubmit={handleSubmit}>
           {({ resetForm, setFieldValue, dirty, values }) => (
             <Form noValidate>
+              <AddressDependencyHandler count={values.address.length} />
               <Grid container spacing={2}>
                 {/* GENERAL DETAILS */}
                 <CommonCard topContent={topContent} title="General Details" grid={{ xs: 12 }}>

@@ -1,6 +1,6 @@
 import PrintIcon from "@mui/icons-material/Print";
 import { Grid, Tooltip } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CommonRadio, CommonSelect } from "../../../../Attribute";
 import { ORDER_TYPE } from "../../../../Data";
 // import CFB from "./CFB";
@@ -12,13 +12,19 @@ import Discard from "./Discard";
 import FullScreen from "./FullScreen";
 import ProductList from "./ProductList";
 import WiFi from "./WiFi";
+import { useAppSelector } from "../../../../Store/hooks";
 
 const PosHeader = () => {
   const [contactType, setContactType] = useState("Walk In");
-  const [value, setValue] = useState<string[]>([]);
+  const { user } = useAppSelector((state) => state.auth);
 
   const { data: userDropdown, isLoading: userDropdownLoading } = Queries.useGetUserDropdown();
+  const selectedUserId = userDropdown?.data?.find((item) => item._id === user?._id)?._id;
+  const [value, setValue] = useState<string[]>([]);
 
+  useEffect(() => {
+    if (selectedUserId) setValue([selectedUserId]);
+  }, [selectedUserId]);
   return (
     <div className={`z-50 flex bg-white dark:bg-gray-900 lg:border-b border-gray-200 dark:border-gray-800 transition-all duration-300 w-full!`}>
       <Grid spacing={{ xs: 1, lg: 0 }} container className="flex justify-between items-center p-2 w-full">

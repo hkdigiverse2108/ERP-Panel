@@ -1,12 +1,12 @@
 import { Grid } from "@mui/material";
-import { Formik } from "formik";
-import { Form } from "react-router-dom";
+import { Form, Formik } from "formik";
 import { Queries } from "../../../../Api";
 import { CommonButton, CommonPhoneNumber, CommonValidationDatePicker, CommonValidationTextField } from "../../../../Attribute";
 import { PAGE_TITLE } from "../../../../Constants";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
 import { setCustomerModal } from "../../../../Store/Slices/ModalSlice";
 import type { CustomerFormValues } from "../../../../Types";
+import { useDependentReset } from "../../../../Utils/Hooks";
 import { CustomerFormSchema } from "../../../../Utils/ValidationSchemas";
 import { CommonModal, DependentSelect } from "../../../Common";
 
@@ -32,6 +32,14 @@ const CustomerForm = () => {
     },
   };
 
+  const AddressDependencyHandler = () => {
+    useDependentReset([
+      { when: "address.country", reset: ["address.state", "address.city"] },
+      { when: "address.state", reset: ["address.city"] },
+    ]);
+    return null;
+  };
+
   const handleClose = () => dispatch(setCustomerModal({ open: false, data: null }));
 
   const handleSubmit = (values: CustomerFormValues) => {
@@ -44,16 +52,17 @@ const CustomerForm = () => {
         <Formik<CustomerFormValues> enableReinitialize initialValues={initialValues} validationSchema={CustomerFormSchema} onSubmit={handleSubmit}>
           {({ values, dirty }) => (
             <Form noValidate>
+              <AddressDependencyHandler />
               <Grid container spacing={2} py={1}>
                 <CommonValidationTextField name="name" label="Name" required grid={{ xs: 12, md: 4 }} />
                 <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
-                <CommonPhoneNumber label="WhatsApp No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} />
+                <CommonPhoneNumber label="WhatsApp No." countryCodeName="whatsappNo.countryCode" numberName="whatsappNo.phoneNo" grid={{ xs: 12, md: 4 }} />
                 <CommonValidationDatePicker name="dateOfBirth" label="Date Of Birth" grid={{ xs: 12, md: 4 }} />
                 <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                 <CommonValidationTextField name="address.address" label="Address" grid={{ xs: 12, md: 4 }} />
-                <DependentSelect name="address.country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required />
-                <DependentSelect params={values?.address?.country} name="address.state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.address?.country} required />
-                <DependentSelect params={values?.address?.state} name="address.city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.address?.state} required />
+                <DependentSelect name="address.country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} />
+                <DependentSelect params={values?.address?.country} name="address.state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.address?.country} />
+                <DependentSelect params={values?.address?.state} name="address.city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.address?.state} />
                 <CommonValidationTextField name="address.pinCode" label="Pin Code" grid={{ xs: 12, md: 4 }} />
                 <Grid size={12} sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
                   <CommonButton variant="outlined" onClick={() => handleClose()} title="Cancel" />
