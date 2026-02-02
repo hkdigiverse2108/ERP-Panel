@@ -77,3 +77,7 @@ export interface ContactDataResponse extends PageStatus {
 export interface ContactApiResponse extends MessageStatus {
   data: ContactDataResponse;
 }
+
+export interface ContactDropdownApiResponse extends PageStatus {
+  data: ContactBase[];
+}

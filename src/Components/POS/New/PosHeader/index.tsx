@@ -3,8 +3,8 @@ import { useState } from "react";
 import { CommonRadio, CommonSelect } from "../../../../Attribute";
 import { ORDER_TYPE, USER_TYPE } from "../../../../Data";
 import PrintIcon from "@mui/icons-material/Print";
-import CFB from "./CFB";
-import WeightScale from "./WeightScale";
+// import CFB from "./CFB";
+// import WeightScale from "./WeightScale";
 import ProductList from "./ProductList";
 import WiFi from "./WiFi";
 import Discard from "./Discard";
@@ -25,13 +25,13 @@ const PosHeader = () => {
         </Grid>
         <Grid size={{ xs: 12, lg: 6, xl: 4 }} gap={1} className="flex max-sm:justify-between  lg:justify-end">
           <WiFi />
-          <CFB />
+          {/* <CFB /> */}
           <Tooltip title="Last Bill Print">
             <div className="head-icon">
               <PrintIcon sx={{ fontSize: { xs: 20, md: 22 } }} />
             </div>
           </Tooltip>
-          <WeightScale />
+          {/* <WeightScale /> */}
           <ProductList />
           <Discard />
           <FullScreen />

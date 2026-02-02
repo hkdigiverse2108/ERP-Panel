@@ -1,7 +1,7 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { Grid, Tooltip } from "@mui/material";
 import { Form, Formik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../../Attribute";
 import { BAUD_RATE } from "../../../../Data";
 import { CommonModal } from "../../../Common";
@@ -40,11 +40,6 @@ const CurrentRegister = () => {
   const totalSales = Sales.reduce((sum, i) => sum + i.value, 0);
 
   const currencyNotes = [1, 2, 5, 10, 20, 50, 100, 200, 500];
-  // const getAmount = (note: number) => {
-  //   return (nosMap[note] || 0) * note;
-  // };
-
-  // const totalAmount = currencyNotes.reduce((sum, note) => sum + getAmount(note), 0);
 
   const handleSubmit = () => {};
 
@@ -56,13 +51,16 @@ const CurrentRegister = () => {
         </div>
       </Tooltip>
       <CommonModal isOpen={open} onClose={() => setOpen(!open)} title="Current Register (20 Nov 2025 12:35 pm - 30 Dec 2025 11:59 am )" className="max-w-[1100px] m-2 sm:m-5">
-        <div className="flex flex-col items-center text-center">
+        <div className="flex flex-col items-center text-center pt-1">
           <Formik initialValues={initialValues} enableReinitialize onSubmit={handleSubmit}>
-            {({ values }) => {
+            {({ values, setFieldValue }) => {
               const getAmount = (note: number) => (Number(values.nos?.[note]) || 0) * note;
               console.log(values);
 
               const totalAmount = currencyNotes.reduce((sum, note) => sum + getAmount(note), 0);
+              useEffect(() => {
+                setFieldValue("physicalDrawer", totalAmount.toFixed(2));
+              }, [setFieldValue, totalAmount, values]);
               return (
                 <Form noValidate className="flex flex-col gap-5">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -118,7 +116,7 @@ const CurrentRegister = () => {
                         <CommonValidationTextField name="bankTransfer" label="Bank Transfer" grid={{ xs: 12 }} />
                         <CommonValidationTextField name="cashFlow" label="Cash Flow" grid={{ xs: 12 }} />
                         <CommonValidationTextField name="totalCashLeftInDrawer" label="Total Cash Left In Drawer" grid={{ xs: 12 }} />
-                        <CommonValidationTextField name="physicalDrawer" label="Physical Drawer" required grid={{ xs: 12 }} />
+                        <CommonValidationTextField name="physicalDrawer" label="Physical Drawer" type="number" grid={{ xs: 12 }} required />
                         <CommonValidationTextField name="closingNote" label="Closing Note" grid={{ xs: 12 }} rows={3} multiline />
                       </Grid>
                     </div>

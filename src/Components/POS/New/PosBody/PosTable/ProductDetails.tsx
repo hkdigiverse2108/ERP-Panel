@@ -5,18 +5,17 @@ import { CommonModal } from "../../../../Common";
 const ProductDetails = () => {
   const { isProductDetailsModal } = useAppSelector((state) => state.modal);
   const dispatch = useAppDispatch();
-  // const ProductDetails = isProductDetailsModal.data || null;
-  // console.log("ProductDetails",ProductDetails);
-  
+
   const ProductData = [
-    { title: "Display Name", value: "Butter Cookies 400g/800g" },
-    { title: "Available Stock", value: "1.00" },
-    { title: "Department", value: "Bakery" },
-    { title: "Category", value: "Cookies" },
-    { title: "Brand", value: "Unibic - Premium" },
-    { title: "Unit", value: "GM" },
-    { title: "Tax Rate", value: "18" },
-    { title: "HSN Code", value: "19053100" },
+    { title: "landing Cost", value: isProductDetailsModal.data?.landingCost },
+    { title: "product Type", value: isProductDetailsModal.data?.productType },
+    { title: "purchase Price", value: isProductDetailsModal.data?.purchasePrice },
+    { title: "selling Margin", value: isProductDetailsModal.data?.sellingMargin },
+    { title: "mrp", value: isProductDetailsModal.data?.mrp },
+    { title: "name", value: isProductDetailsModal.data?.name },
+    { title: "qty", value: isProductDetailsModal.data?.qty },
+    { title: "selling Discount", value: isProductDetailsModal.data?.sellingDiscount },
+    { title: "selling Price", value: isProductDetailsModal.data?.sellingPrice },
   ];
 
   return (
@@ -33,8 +32,8 @@ const ProductDetails = () => {
             <tbody>
               {ProductData.map((item, index) => (
                 <tr key={index} className="bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark">
-                  <td className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">{item.title}</td>
-                  <td className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">{item.value}</td>
+                  <td className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300 capitalize">{item.title}</td>
+                  <td className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300 capitalize">{item.value}</td>
                 </tr>
               ))}
             </tbody>

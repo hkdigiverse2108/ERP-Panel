@@ -102,7 +102,7 @@ const EmployeeForm = () => {
                     <CommonValidationTextField name="designation" label="User designation" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="role" label="role" options={GenerateOptions(rolesData?.data)} isLoading={rolesDataLoading} grid={{ xs: 12, md: 4 }} required/>
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} required/>
                     <CommonValidationTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="branchId" label="branch" options={GenerateOptions(branchData?.data)} isLoading={branchDataLoading} grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="password" label="Password" type="password" showPasswordToggle required grid={{ xs: 10, md: 4 }} />

@@ -3,15 +3,14 @@ import type { PhoneNumberType } from "./Common";
 export interface CustomerFormValues {
   name?: string;
   phoneNo?: PhoneNumberType;
+  whatsappNo?: PhoneNumberType;
   dateOfBirth?: string;
-  anniversaryDate?: string;
   email?: string;
-  address?: string;
-  country?: string;
-  state?: string;
-  city?: string;
-  gstType?: string;
-  gstNo?: string;
-  gstName?: string;
-  gstAddress?: string;
+  address: {
+    address?: string;
+    country?: string;
+    state?: string;
+    city?: string;
+    pinCode?: string;
+  };
 }
