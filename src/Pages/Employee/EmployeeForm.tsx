@@ -11,7 +11,7 @@ import type { EmployeeFormValues } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { EmployeeFormSchema } from "../../Utils/ValidationSchemas";
 import { useEffect } from "react";
-import { usePagePermission } from "../../Utils/Hooks";
+import { useDependentReset, usePagePermission } from "../../Utils/Hooks";
 
 const EmployeeForm = () => {
   const location = useLocation();
@@ -82,6 +82,14 @@ const EmployeeForm = () => {
     }
   };
 
+  const AddressDependencyHandler = () => {
+    useDependentReset([
+      { when: "address.country", reset: ["address.state", "address.city"] },
+      { when: "address.state", reset: ["address.city"] },
+    ]);
+    return null;
+  };
+
   useEffect(() => {
     const hasAccess = isEditing ? permission.edit : permission.add;
     if (!hasAccess) navigate(-1);
@@ -93,6 +101,7 @@ const EmployeeForm = () => {
         <Formik<EmployeeFormValues> enableReinitialize initialValues={initialValues} validationSchema={EmployeeFormSchema} onSubmit={handleSubmit}>
           {({ resetForm, setFieldValue, dirty, values }) => (
             <Form noValidate>
+              <AddressDependencyHandler />
               <Grid container spacing={2}>
                 {/* BASIC DETAILS */}
                 <CommonCard title="Basic Details" grid={{ xs: 12 }}>
@@ -102,7 +111,7 @@ const EmployeeForm = () => {
                     <CommonValidationTextField name="designation" label="User designation" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="role" label="role" options={GenerateOptions(rolesData?.data)} isLoading={rolesDataLoading} grid={{ xs: 12, md: 4 }} required/>
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} required/>
                     <CommonValidationTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="branchId" label="branch" options={GenerateOptions(branchData?.data)} isLoading={branchDataLoading} grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="password" label="Password" type="password" showPasswordToggle required grid={{ xs: 10, md: 4 }} />

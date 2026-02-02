@@ -243,3 +243,8 @@ export const DATA_STATUS = [
   { label: "Approved", value: "approved" },
   { label: "Rejected", value: "rejected" },
 ];
+
+export const REVERSE_CHARGE = [];
+export const TAX_TYPE = [];
+export const account_Ledgers = [];
+

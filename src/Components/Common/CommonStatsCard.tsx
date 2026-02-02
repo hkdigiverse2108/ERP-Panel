@@ -1,21 +1,17 @@
 import { Grid, Paper, Typography, Box, useTheme } from "@mui/material";
 import type { FC } from "react";
 import type { SxProps, Theme } from "@mui/material/styles";
+import type { GridType } from "../../Types";
 
 export interface CommonStatsItem {
   label: string;
   value: number | string;
-  color?: string; // optional tailwind bg
+  color?: string;
 }
 
 interface CommonStatsCardProps {
   stats: CommonStatsItem[];
-  grid?: {
-    xs?: number;
-    sm?: number;
-    md?: number;
-    lg?: number;
-  };
+  grid?: GridType;
   paperSx?: SxProps<Theme>;
 }
 

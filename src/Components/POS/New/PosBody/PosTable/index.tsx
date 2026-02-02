@@ -1,46 +1,21 @@
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { useState } from "react";
-import { CommonButton, CommonSelect, CommonTextField } from "../../../../../Attribute";
-import { USER_TYPE } from "../../../../../Data";
-import { useAppDispatch } from "../../../../../Store/hooks";
+import { CommonButton, CommonTextField } from "../../../../../Attribute";
+import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setProductDetailsModal, setQtyCountModal } from "../../../../../Store/Slices/ModalSlice";
+import { removeProduct, updateProduct } from "../../../../../Store/Slices/PosSlice";
+import type { PosProductDataModal } from "../../../../../Types";
 import ProductDetails from "./ProductDetails";
 import QtyCount from "./QtyCount";
-
-type PosRow = {
-  id: number;
-  salesman: string[];
-  itemCode: string;
-  product: string;
-  qty: number;
-  mrp: number;
-  unit: string;
-  discount: number;
-  addDisc: number;
-};
-
+import CloseIcon from "@mui/icons-material/Close";
 const PosTable = () => {
-  const [isCurrencyType, setIsCurrencyType] = useState("");
-
-  const [rows, setRows] = useState<PosRow[]>([
-    { id: 1, salesman: ["Dhruvi Bakery"], itemCode: "CK-BC-DN-002", product: "Butter Cookies 400g/800g", qty: 1, mrp: 300, unit: "GM", discount: 0, addDisc: 0 },
-    { id: 2, salesman: ["Dhruvi Bakery"], itemCode: "CK-BC-UN-001", product: "Butter Cookies 75g/150g/500g", qty: 2, mrp: 50, unit: "GM", discount: 0, addDisc: 0 },
-  ]);
-
+  const { productDataModal } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
+  const updateRow = (_id: string, data: Partial<PosProductDataModal>) => dispatch(updateProduct({ _id, data }));
 
-  const updateRow = (id: number, data: Partial<PosRow>) => setRows((prev) => prev.map((r) => (r.id === id ? { ...r, ...data } : r)));
+  const removeRow = (_id: string) => dispatch(removeProduct(_id));
 
-  const removeRow = (id: number) => setRows((prev) => prev.filter((r) => r.id !== id));
-
-  const calcUnitCost = (row: PosRow) => {
-    const discountAmount = isCurrencyType === "%" ? (row.mrp * row.discount) / 100 : row.discount;
-    const addDiscountAmount = isCurrencyType === "%" ? (row.mrp * row.addDisc) / 100 : row.addDisc;
-    return Math.max(0, row.mrp - discountAmount - addDiscountAmount);
-  };
-
-  const calcNetAmount = (row: PosRow) => (calcUnitCost(row) * row.qty).toFixed(2);
+  const calcNetAmount = (row: PosProductDataModal) => ((row.sellingPrice - row.discount) * row.sellingQty).toFixed(2);
   const roundQty = (val: number) => Number(val.toFixed(2));
 
   return (
@@ -50,51 +25,48 @@ const PosTable = () => {
           <table className="w-full text-sm ">
             <thead className="sticky top-0 z-10 bg-gray-100 dark:text-gray-100 text-gray-700 dark:bg-gray-900">
               <tr>
-                <th className="p-2">#</th>
-                <th className="p-2">Salesman</th>
-                <th className="p-2">Itemcode</th>
+                <th className="p-2">Sr No.</th>
                 <th className="p-2 text-start">Product</th>
+                <th className="p-2">Available Qty</th>
                 <th className="p-2">Qty</th>
                 <th className="p-2">MRP</th>
-                <th className="p-2">Unit</th>
                 <th className="p-2">Discount</th>
-                <th className="p-2">Add Disc</th>
+                <th className="p-2">Additional Disc</th>
                 <th className="p-2">Unit Cost</th>
                 <th className="p-2">Net Amount</th>
                 <th className="p-2"></th>
               </tr>
             </thead>
-
             <tbody>
-              {rows.map((row, i) => {
-                const unitCost = calcUnitCost(row);
+              {productDataModal.map((row, i) => {
+                const netAmount = row.sellingPrice - row.discount;
+                const isAvailable = netAmount >= row.mrp;
 
                 return (
-                  <tr key={row.id} className="text-center bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark text-gray-600 dark:text-gray-300">
+                  <tr key={row._id} className={`text-center text-gray-600 dark:text-gray-300 ${isAvailable ? "bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark" : "bg-red-50 dark:bg-red-900"}`}>
                     <td className="p-2 text-center">{i + 1}</td>
-                    <td className="p-2 min-w-40 w-40">
-                      <CommonSelect label="Salesman" options={USER_TYPE} value={row.salesman} onChange={(value) => updateRow(row.id, { salesman: value })} />
-                    </td>
 
-                    <td className="p-2 min-w-40 w-40">{row.itemCode}</td>
-                    <td className="p-2 min-w-60 w-60 text-start">
+                    <td className="p-2 min-w-70 w-90 text-start">
                       <a href="#" onClick={() => dispatch(setProductDetailsModal({ open: true, data: row }))} className="text-blue-600 underline">
-                        {row.product}
+                        {row.name}
                       </a>
                     </td>
+
+                    {/* AVAILABLE QTY */}
+                    <td className="p-2 min-w-30 w-30">{row.qty}</td>
 
                     {/* QTY */}
                     <td className="p-2 min-w-30 w-30">
                       <div className="flex gap-1 justify-center items-center cursor-pointer">
-                        <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row.id, { qty: roundQty(Math.max(0.1, row.qty - 0.1)) })}>
+                        <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, { sellingQty: roundQty(Math.max(0.1, row.sellingQty - 0.1)) })}>
                           <RemoveIcon />
                         </CommonButton>
 
-                        <span className="w-10" onClick={() => dispatch(setQtyCountModal({ open: true, date: row }))}>
-                          {row.qty}
+                        <span className="w-25 py-1 border-b border-gray-300 dark:border-gray-600" onClick={() => dispatch(setQtyCountModal({ open: true, data: row }))}>
+                          {row.sellingQty}
                         </span>
 
-                        <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row.id, { qty: roundQty(row.qty + 0.1) })}>
+                        <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, { sellingQty: roundQty(row.sellingQty + 0.1) })} disabled={row.sellingQty >= (row.qty ?? Infinity)}>
                           <AddIcon />
                         </CommonButton>
                       </div>
@@ -102,29 +74,27 @@ const PosTable = () => {
 
                     {/* MRP */}
                     <td className="p-2">{row.mrp.toFixed(2)}</td>
-                    <td className="p-2">{row.unit}</td>
-
                     {/* DISCOUNT */}
-                    <td className="p-2 min-w-32 w-32">
-                      <CommonTextField type="number" value={row.discount} onChange={(e) => updateRow(row.id, { discount: Number(e) })} isCurrency onCurrencyLog={(val) => setIsCurrencyType(val)} />
+                    <td className="p-2 min-w-32 w-35">
+                      <CommonTextField type="number" value={row.discount || 0} onChange={(e) => updateRow(row._id, { discount: Number(e) })} isCurrency currencyDisabled />
                     </td>
 
                     {/* ADD DISCOUNT */}
-                    <td className="p-2 min-w-32 w-32">
-                      <CommonTextField type="number" value={row.addDisc} onChange={(e) => updateRow(row.id, { addDisc: Number(e) })} isCurrency disabled />
+                    <td className="p-2 min-w-32 w-35">
+                      <CommonTextField type="number" value={row.sellingDiscount || 0} onChange={(e) => updateRow(row._id, { sellingDiscount: Number(e) })} isCurrency disabled />
                     </td>
 
                     {/* UNIT COST */}
-                    <td className="p-2">{unitCost.toFixed(2)}</td>
+                    <td className="p-2">{netAmount}</td>
 
                     {/* NET AMOUNT */}
                     <td className="p-2 font-medium">{calcNetAmount(row)}</td>
 
                     {/* REMOVE */}
                     <td className="p-2">
-                      <button className="text-red-500 text-lg" onClick={() => removeRow(row.id)}>
-                        ✕
-                      </button>
+                      <CommonButton variant="outlined" size="small" color="error" sx={{ minWidth: 40 }} onClick={() => removeRow(row._id)}>
+                        <CloseIcon />
+                      </CommonButton>
                     </td>
                   </tr>
                 );

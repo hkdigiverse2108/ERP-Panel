@@ -11,6 +11,7 @@ export const URL_KEYS = {
   USER: {
     BASE: "/user",
     EDIT: "/user/edit",
+    DROPDOWN: "/user/dropdown",
   },
   COMPANY: {
     BASE: "/company",
@@ -26,6 +27,7 @@ export const URL_KEYS = {
   },
   CONTACT: {
     BASE: "/contacts",
+    DROPDOWN: "/contacts/dropdown",
     ALL: "/contacts/all",
     ADD: "/contacts/add",
     EDIT: "/contacts/edit",

@@ -34,11 +34,11 @@ const Contact = () => {
   const handleAdd = () => navigate(ROUTES.CONTACT.ADD_EDIT);
 
   const handleContactTypeChange = (value: string) => {
-    updateAdvancedFilter("contactType", [value]);
+    updateAdvancedFilter("typeFilter", [value]);
   };
 
   useEffect(() => {
-    updateAdvancedFilter("contactType", [CONTACT_TYPE[0].value]);
+    updateAdvancedFilter("typeFilter", [CONTACT_TYPE[0].value]);
   }, []);
 
   const columns: AppGridColDef<ContactBase>[] = [
