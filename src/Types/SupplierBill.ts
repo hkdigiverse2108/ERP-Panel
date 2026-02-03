@@ -130,6 +130,35 @@ export interface SupplierBillFormValues {
 
   _submitAction?: string;
 }
+/* ===================== ROW TYPES FOR UI ===================== */
+
+export interface ProductRow {
+  productId: string;
+  itemCode: string;
+  qty: string | number;
+  freeQty: string | number;
+  unit: string;
+  unitCost: string | number;
+  mrp: string | number;
+  sellingPrice: string | number;
+  disc1: string | number;
+  disc2: string | number;
+  taxableAmount: string | number;
+  taxAmount: string | number;
+  landingCost: string | number;
+  margin: string | number;
+  totalAmount: string | number;
+  mfgDate: string;
+  expiryDate: string;
+}
+
+export interface AdditionalChargeRow {
+  chargeId: string;
+  taxableAmount: string;
+  tax: string;
+  taxAmount: string;
+  totalAmount: string;
+}
 
 /* ===================== API ===================== */
 

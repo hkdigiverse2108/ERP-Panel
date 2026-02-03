@@ -3,26 +3,28 @@ import AddIcon from "@mui/icons-material/Add";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
 
 import { CommonButton, CommonSelect, CommonTextField } from "../../../Attribute";
-import type { TermsAndCondition } from "../../../Types/SupplierBill";
+import type { TermsAndCondition, ProductRow } from "../../../Types/SupplierBill";
 import type { FC } from "react";
 import CommonTabPanel from "../../../Components/Common/CommonTabPanel";
 
 interface SupplierBillTabsProps {
   tabValue: number;
   setTabValue: (value: number) => void;
-  rows: any[];
+  rows: ProductRow[];
   handleAdd: () => void;
   handleCut: (index: number) => void;
+  handleRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
   termsList: TermsAndCondition[];
   notes: string;
   setNotes: (value: string) => void;
   setOpenModal: (value: boolean) => void;
-  returnRows: any[];
+  returnRows: ProductRow[];
   handleAddReturn: () => void;
   handleCutReturn: (index: number) => void;
+  handleReturnRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
 }
 
-const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, rows, handleAdd, handleCut, termsList, notes, setNotes, setOpenModal, returnRows, handleAddReturn, handleCutReturn }) => {
+const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, notes, setNotes, setOpenModal, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange }) => {
   return (
     <>
       {/* ================= TABS HEADER ================= */}
@@ -77,52 +79,52 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
                     <td className="p-2">{index + 1}</td>
 
                     <td className="p-2 min-w-60">
-                      <CommonSelect label="Search Product" value={[]} options={[]} onChange={() => {}} />
+                      <CommonSelect label="Search Product" value={rows[index].productId ? [rows[index].productId] : []} options={[]} onChange={(v) => handleRowChange(index, "productId", v)} />
                     </td>
 
                     {/* Qty */}
                     <td className="p-2 min-w-28">
-                      <CommonTextField type="number" value="" />
+                      <CommonTextField type="number" value={rows[index].qty} onChange={(v) => handleRowChange(index, "qty", v)} />
                     </td>
                     {/* Free Qty */}
                     <td className="p-2 min-w-28">
-                      <CommonTextField type="number" value="" />
+                      <CommonTextField type="number" value={rows[index].freeQty} onChange={(v) => handleRowChange(index, "freeQty", v)} />
                     </td>
                     {/* MRP */}
                     <td className="p-2 min-w-28">
-                      <CommonTextField type="number" value="" />
+                      <CommonTextField type="number" value={rows[index].mrp} onChange={(v) => handleRowChange(index, "mrp", v)} />
                     </td>
                     {/* Selling */}
                     <td className="p-2 min-w-28">
-                      <CommonTextField type="number" value="" />
+                      <CommonTextField type="number" value={rows[index].sellingPrice} onChange={(v) => handleRowChange(index, "sellingPrice", v)} />
                     </td>
                     {/* Disc 1 */}
                     <td className="p-2 min-w-28">
-                      <CommonTextField type="number" value="" isCurrency currencyDisabled />
+                      <CommonTextField type="number" value={rows[index].disc1} onChange={(v) => handleRowChange(index, "disc1", v)} isCurrency currencyDisabled />
                     </td>
                     {/* Disc 2 */}
                     <td className="p-2 min-w-28">
-                      <CommonTextField type="number" value="" isCurrency currencyDisabled />
+                      <CommonTextField type="number" value={rows[index].disc2} onChange={(v) => handleRowChange(index, "disc2", v)} isCurrency currencyDisabled />
                     </td>
                     {/* Taxable */}
                     <td className="p-2 min-w-28">
-                      <CommonTextField type="number" value="" />
+                      <CommonTextField type="number" value={rows[index].taxableAmount} onChange={(v) => handleRowChange(index, "taxableAmount", v)} />
                     </td>
                     {/* Tax */}
                     <td className="p-2 min-w-28">
-                      <CommonTextField type="number" value="" />
+                      <CommonTextField type="number" value={rows[index].taxAmount} onChange={(v) => handleRowChange(index, "taxAmount", v)} />
                     </td>
                     {/* Landing */}
                     <td className="p-2 min-w-28">
-                      <CommonTextField type="number" value="" />
+                      <CommonTextField type="number" value={rows[index].landingCost} onChange={(v) => handleRowChange(index, "landingCost", v)} />
                     </td>
                     {/* Margin */}
                     <td className="p-2 min-w-28">
-                      <CommonTextField type="number" value="" />
+                      <CommonTextField type="number" value={rows[index].margin} onChange={(v) => handleRowChange(index, "margin", v)} />
                     </td>
                     {/* Total */}
                     <td className="p-2 min-w-28">
-                      <CommonTextField type="number" value="" />
+                      <CommonTextField type="number" value={rows[index].totalAmount} onChange={(v) => handleRowChange(index, "totalAmount", v)} />
                     </td>
                   </tr>
                 ))}
@@ -143,8 +145,8 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
               </CommonButton>
             </Box>
 
-            <table className="w-full text-sm border border-gray-200 dark:border-gray-700">
-              <thead className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-200">
+            <table className="w-full text-sm border">
+              <thead className="bg-gray-100">
                 <tr>
                   <th className="p-2 w-10">#</th>
                   <th className="p-2 text-left">Condition</th>
@@ -152,7 +154,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
               </thead>
               <tbody>
                 {termsList.map((term, index) => (
-                  <tr key={term._id} className="text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700">
+                  <tr key={term._id}>
                     <td className="p-2">{index + 1}</td>
                     <td className="p-2">{term.termsCondition}</td>
                   </tr>
@@ -210,28 +212,28 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
                     </td>
                     <td className="p-2">{index + 1}</td>
                     <td className="p-2 min-w-60 w-60  text-start">
-                      <CommonSelect label="Search Product" value={[]} options={[]} onChange={() => {}} />
+                      <CommonSelect label="Search Product" value={returnRows[index].productId ? [returnRows[index].productId] : []} options={[]} onChange={(v) => handleReturnRowChange(index, "productId", v)} />
                     </td>
                     <td className="p-2">
-                      <CommonTextField type="number" value="" />
+                      <CommonTextField type="number" value={returnRows[index].qty} onChange={(v) => handleReturnRowChange(index, "qty", v)} />
                     </td>
                     <td className="p-2">
-                      <CommonTextField type="number" value="" isCurrency currencyDisabled />
+                      <CommonTextField type="number" value={returnRows[index].disc1} onChange={(v) => handleReturnRowChange(index, "disc1", v)} isCurrency currencyDisabled />
                     </td>
                     <td className="p-2">
-                      <CommonTextField type="number" value="" isCurrency currencyDisabled />
+                      <CommonTextField type="number" value={returnRows[index].disc2} onChange={(v) => handleReturnRowChange(index, "disc2", v)} isCurrency currencyDisabled />
                     </td>
                     <td className="p-2">
-                      <CommonTextField type="number" value="" disabled />
+                      <CommonTextField type="number" value={returnRows[index].taxableAmount} disabled />
                     </td>
                     <td className="p-2">
-                      <CommonTextField type="number" value="" />
+                      <CommonTextField type="number" value={returnRows[index].taxAmount} onChange={(v) => handleReturnRowChange(index, "taxAmount", v)} />
                     </td>
                     <td className="p-2">
-                      <CommonTextField type="number" value="" />
+                      <CommonTextField type="number" value={returnRows[index].landingCost} onChange={(v) => handleReturnRowChange(index, "landingCost", v)} />
                     </td>
                     <td className="p-2">
-                      <CommonTextField type="number" value="" />
+                      <CommonTextField type="number" value={returnRows[index].totalAmount} onChange={(v) => handleReturnRowChange(index, "totalAmount", v)} />
                     </td>
                   </tr>
                 ))}
@@ -240,8 +242,8 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
                   <td colSpan={4} className="p-2 text-right">
                     Total
                   </td>
-                  <td className="p-2 text-center">0</td>
-                  <td colSpan={8}></td>
+                  <td className="p-2 text-center">{returnRows.reduce((a, b) => a + (parseFloat(String(b.qty)) || 0), 0)}</td>
+                  <td colSpan={5}></td>
                 </tr>
               </tbody>
             </table>
@@ -252,12 +254,12 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
             <Box className="border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-200">
               <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700">
                 <span>Gross</span>
-                <span>0</span>
+                <span>{returnRows.reduce((a, b) => a + (parseFloat(String(b.taxableAmount)) || 0), 0).toFixed(2)}</span>
               </Box>
 
               <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700">
                 <span>Tax Amount</span>
-                <span>0</span>
+                <span>{returnRows.reduce((a, b) => a + (parseFloat(String(b.taxAmount)) || 0), 0).toFixed(2)}</span>
               </Box>
 
               <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700 text-blue-600">
@@ -266,7 +268,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
               </Box>
               <Box className="flex justify-between p-3 text-lg font-semibold">
                 <span>Net Amount</span>
-                <span>0</span>
+                <span>{returnRows.reduce((a, b) => a + (parseFloat(String(b.totalAmount)) || 0), 0).toFixed(2)}</span>
               </Box>
             </Box>
           </Box>

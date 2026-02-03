@@ -3,16 +3,18 @@ import AddIcon from "@mui/icons-material/Add";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { CommonButton, CommonSelect, CommonTextField } from "../../../Attribute";
 import type { FC } from "react";
+import type { AdditionalChargeRow } from "../../../Types/SupplierBill";
 
 interface AdditionalChargesSectionProps {
   showAdditionalCharge: boolean;
   setShowAdditionalCharge: (value: boolean) => void;
-  additionalChargeRows: any[];
+  additionalChargeRows: AdditionalChargeRow[];
   handleAddAdditionalCharge: () => void;
   handleCutAdditionalCharge: (index: number) => void;
+  handleAdditionalChargeRowChange: (index: number, field: keyof AdditionalChargeRow, value: string | number | string[]) => void;
 }
 
-const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAdditionalCharge, setShowAdditionalCharge, additionalChargeRows, handleAddAdditionalCharge, handleCutAdditionalCharge }) => {
+const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAdditionalCharge, setShowAdditionalCharge, additionalChargeRows, handleAddAdditionalCharge, handleCutAdditionalCharge, handleAdditionalChargeRowChange }) => {
   return (
     <>
       {!showAdditionalCharge && (
@@ -22,16 +24,7 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
       )}
 
       {showAdditionalCharge && (
-        <Box
-          sx={{
-            mt: 2,
-            border: "1px solid",
-            borderColor: "divider",
-            borderRadius: 1,
-            p: 2,
-            bgcolor: "background.paper",
-          }}
-        >
+        <Box sx={{ mt: 2, border: "1px solid", borderColor: "divider", borderRadius: 1, p: 2, bgcolor: "background.paper" }}>
           {/* ===== HEADER ===== */}
           <Box display="flex" justifyContent="flex-end" mb={1}>
             <CommonButton size="small" color="error" variant="outlined" onClick={() => setShowAdditionalCharge(false)}>
@@ -73,18 +66,18 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
                     <td className="p-2">{index + 1}</td>
 
                     <td className="p-2 min-w-80 w-80">
-                      <CommonSelect label="Search Additional" value={[]} options={[]} onChange={() => {}} />
+                      <CommonSelect label="Search Additional" value={additionalChargeRows[index].chargeId ? [additionalChargeRows[index].chargeId] : []} options={[]} onChange={(v) => handleAdditionalChargeRowChange(index, "chargeId", v)} />
                     </td>
 
                     <td className="p-2 min-w-80 w-80">
-                      <CommonTextField type="number" value="" />
+                      <CommonTextField type="number" value={additionalChargeRows[index].taxableAmount} onChange={(v) => handleAdditionalChargeRowChange(index, "taxableAmount", v)} />
                     </td>
 
                     <td className="p-2 min-w-80 w-80">
-                      <CommonSelect value={[]} options={[]} onChange={() => {}} />
+                      <CommonSelect value={additionalChargeRows[index].tax ? [additionalChargeRows[index].tax] : []} options={[]} onChange={(v) => handleAdditionalChargeRowChange(index, "tax", v)} />
                     </td>
 
-                    <td className="p-2 text-right">0</td>
+                    <td className="p-2 text-right">{additionalChargeRows[index].totalAmount || 0}</td>
                   </tr>
                 ))}
 
@@ -92,7 +85,7 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
                   <td colSpan={5} className="p-2 text-right">
                     Total
                   </td>
-                  <td className="p-2 text-right">0</td>
+                  <td className="p-2 text-right">{additionalChargeRows.reduce((a, b) => a + (parseFloat(b.totalAmount) || 0), 0).toFixed(2)}</td>
                 </tr>
               </tbody>
             </table>
@@ -110,15 +103,21 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
           </Box>
           <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700">
             <span>Gross Amount</span>
-            <span>0</span>
+            <span>
+              {additionalChargeRows.reduce((a, b) => a + (parseFloat(b.taxableAmount) || 0), 0).toFixed(2)}
+            </span>
           </Box>
           <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700">
             <span>Taxable Amount</span>
-            <span>0</span>
+            <span>
+              {additionalChargeRows.reduce((a, b) => a + (parseFloat(b.taxableAmount) || 0), 0).toFixed(2)}
+            </span>
           </Box>
           <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700 text-blue-600">
             <span>Tax</span>
-            <span>0</span>
+            <span>
+              {additionalChargeRows.reduce((a, b) => a + (parseFloat(b.taxAmount) || 0), 0).toFixed(2)}
+            </span>
           </Box>
           <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700 text-blue-600">
             <span>Roundoff</span>
@@ -126,7 +125,9 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
           </Box>
           <Box className="flex justify-between p-3 text-lg font-semibold">
             <span>Net Amount</span>
-            <span>0</span>
+            <span>
+              {additionalChargeRows.reduce((a, b) => a + (parseFloat(b.totalAmount) || 0), 0).toFixed(2)}
+            </span>
           </Box>
         </Box>
       </Box>
