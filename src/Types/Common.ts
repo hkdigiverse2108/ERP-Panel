@@ -153,7 +153,6 @@ export interface CommonDataGridProps {
   fileName?: string;
   pagination?: boolean;
 
-  
   slots?: any;
   slotProps?: GridSlotsComponentsProps;
 }
@@ -547,4 +546,9 @@ export interface CommonValidationCheckboxProps {
 export interface CommonCheckboxProps extends CommonValidationCheckboxProps {
   value?: boolean;
   onChange?: (value: boolean) => void;
+}
+export interface TabPanelProps {
+  children?: ReactNode;
+  index: number;
+  value: number;
 }
