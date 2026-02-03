@@ -11,6 +11,7 @@ export const URL_KEYS = {
   USER: {
     BASE: "/user",
     EDIT: "/user/edit",
+    DROPDOWN: "/user/dropdown",
   },
   COMPANY: {
     BASE: "/company",
@@ -153,5 +154,10 @@ export const URL_KEYS = {
     ALL: "/supplier-bill/all",
     ADD: "/supplier-bill/add",
     EDIT: "/supplier-bill/edit",
+  },
+  POS: {
+    BASE: "/pos",
+    HOLD_ORDER: "/pos-order/hold",
+    ADD: "/pos-order/add",
   },
 } as const;

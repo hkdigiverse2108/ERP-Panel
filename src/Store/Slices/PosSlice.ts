@@ -32,8 +32,11 @@ const PosSlice = createSlice({
     removeProduct: (state, action) => {
       state.productDataModal = state.productDataModal.filter((item) => item._id !== action.payload);
     },
+    clearProductDataModal: (state) => {
+      state.productDataModal = [];
+    },
   },
 });
 
-export const { setMultiplePay, setProductDataModal, updateProduct, removeProduct } = PosSlice.actions;
+export const { setMultiplePay, setProductDataModal, updateProduct, removeProduct, clearProductDataModal } = PosSlice.actions;
 export default PosSlice.reducer;

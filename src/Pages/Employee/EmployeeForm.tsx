@@ -11,7 +11,7 @@ import type { EmployeeFormValues } from "../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../Utils";
 import { EmployeeFormSchema } from "../../Utils/ValidationSchemas";
 import { useEffect } from "react";
-import { usePagePermission } from "../../Utils/Hooks";
+import { useDependentReset, usePagePermission } from "../../Utils/Hooks";
 
 const EmployeeForm = () => {
   const location = useLocation();
@@ -82,6 +82,14 @@ const EmployeeForm = () => {
     }
   };
 
+  const AddressDependencyHandler = () => {
+    useDependentReset([
+      { when: "address.country", reset: ["address.state", "address.city"] },
+      { when: "address.state", reset: ["address.city"] },
+    ]);
+    return null;
+  };
+
   useEffect(() => {
     const hasAccess = isEditing ? permission.edit : permission.add;
     if (!hasAccess) navigate(-1);
@@ -93,6 +101,7 @@ const EmployeeForm = () => {
         <Formik<EmployeeFormValues> enableReinitialize initialValues={initialValues} validationSchema={EmployeeFormSchema} onSubmit={handleSubmit}>
           {({ resetForm, setFieldValue, dirty, values }) => (
             <Form noValidate>
+              <AddressDependencyHandler />
               <Grid container spacing={2}>
                 {/* BASIC DETAILS */}
                 <CommonCard title="Basic Details" grid={{ xs: 12 }}>

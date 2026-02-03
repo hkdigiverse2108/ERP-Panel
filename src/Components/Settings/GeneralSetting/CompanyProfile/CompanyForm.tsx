@@ -14,6 +14,7 @@ import { GenerateOptions, GetChangedFields } from "../../../../Utils";
 import { CompanyFormSchemas } from "../../../../Utils/ValidationSchemas";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../../Common";
 import { CommonFormImageBox } from "../../../Common/CommonUploadImage/CommonImageBox";
+import { useDependentReset } from "../../../../Utils/Hooks";
 type CompanyImageKey = "logo" | "waterMark" | "reportFormatLogo" | "authorizedSignature";
 
 const COMPANY_IMAGES = [
@@ -145,6 +146,14 @@ const CompanyForm = () => {
 
     return null;
   };
+
+  const AddressDependencyHandler = () => {
+    useDependentReset([
+      { when: "address.country", reset: ["address.state", "address.city"] },
+      { when: "address.state", reset: ["address.city"] },
+    ]);
+    return null;
+  };
   const handleUpload = (key: CompanyImageKey) => {
     setActiveKey(key);
     dispatch(setUploadModal({ open: true, type: "image" }));
@@ -161,6 +170,7 @@ const CompanyForm = () => {
         <Formik<CompanyFormValues> enableReinitialize initialValues={initialValues} validationSchema={CompanyFormSchemas} onSubmit={handleOnSubmit}>
           {({ values, setFieldValue, dirty }) => (
             <Form noValidate>
+              <AddressDependencyHandler />
               <FormikBankSync bankData={bankData?.data} />
               <FormikImageSync activeKey={activeKey} clearActiveKey={() => setActiveKey(null)} />
               <Grid container spacing={2}>

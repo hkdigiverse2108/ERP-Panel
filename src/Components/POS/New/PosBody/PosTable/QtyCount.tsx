@@ -6,6 +6,7 @@ import { updateProduct } from "../../../../../Store/Slices/PosSlice";
 import { CommonModal } from "../../../../Common";
 
 const keypad = ["1", "2", "3", "+10", "4", "5", "6", "+20", "7", "8", "9", "+50", "C", "0", ".", "⌫"];
+const MIN_QTY = 0.1;
 
 const QtyCount = () => {
   const { isQtyCountModal } = useAppSelector((state) => state.modal);
@@ -22,7 +23,7 @@ const QtyCount = () => {
   // 🔒 Clamp qty between 0 and stock qty
   const clampQty = (val: number) => {
     if (val > maxQty) return maxQty;
-    if (val < 0) return 0;
+    if (val < MIN_QTY) return MIN_QTY;
     return Number(val.toFixed(2));
   };
 

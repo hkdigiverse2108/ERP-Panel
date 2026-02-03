@@ -94,7 +94,7 @@ export const CompanyFormSchemas = Yup.object({
   supportEmail: Validation("string", "support Email", { extraRules: (s) => s.trim().email("Invalid email address") }),
   customerCareNumber: Validation("string", "customer Care Number"),
   phoneNo: PhoneValidation(),
-  ownerNo: PhoneValidation(),
+  ownerNo: PhoneValidation("Owner No"),
 
   address: Yup.object({
     address: Validation("string", "Address"),
@@ -141,12 +141,19 @@ export const WeightScaleFormSchema = Yup.object({
 });
 
 export const CustomerFormSchema = Yup.object({
-  baudRate: Validation("string", "Baud Rate"),
-  dataBits: Validation("string", "Data Bits"),
-  stopBits: Validation("string", "Stop Bits"),
-  parity: Validation("string", "Parity"),
-  flowControl: Validation("string", "Flow Control"),
-  precision: Validation("string", "Precision"),
+  firstName: Validation("string", "First Name"),
+  lastName: Validation("string", "Last Name"),
+  email: Validation("string", "Email", { required: false }),
+  phoneNo: PhoneValidation(),
+  whatsappNo: PhoneValidation("Whatsapp No", { requiredNumber: false, requiredCountryCode: false }),
+  dob: Validation("string", "Date Of Birth", { required: false }),
+  address: Yup.object({
+    addressLine1: Validation("string", "Address", { required: false }),
+    country: Validation("string", "Country", { required: false }),
+    state: Validation("string", "State", { required: false }),
+    city: Validation("string", "City", { required: false }),
+    pinCode: Validation("string", "Pin Code", { required: false, extraRules: (s) => s.matches(/^[0-9]{5,6}$/, "Invalid Pin Code") }),
+  }).nullable(),
 });
 
 export const MultiplePaySchema = Yup.object({

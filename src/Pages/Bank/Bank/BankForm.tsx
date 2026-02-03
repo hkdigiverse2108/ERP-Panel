@@ -10,7 +10,7 @@ import { useAppSelector } from "../../../Store/hooks";
 import type { BankFormValues, BranchBase } from "../../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { BankFormSchema } from "../../../Utils/ValidationSchemas";
-import { usePagePermission } from "../../../Utils/Hooks";
+import { useDependentReset, usePagePermission } from "../../../Utils/Hooks";
 import { useEffect } from "react";
 
 const BankForm = () => {
@@ -79,6 +79,14 @@ const BankForm = () => {
     }
   };
 
+  const AddressDependencyHandler = () => {
+    useDependentReset([
+      { when: "address.country", reset: ["address.state", "address.city"] },
+      { when: "address.state", reset: ["address.city"] },
+    ]);
+    return null;
+  };
+
   useEffect(() => {
     const hasAccess = isEditing ? permission.edit : permission.add;
     if (!hasAccess) navigate(-1);
@@ -91,6 +99,7 @@ const BankForm = () => {
         <Formik<BankFormValues> enableReinitialize initialValues={initialValues} validationSchema={BankFormSchema} onSubmit={handleSubmit}>
           {({ setFieldValue, resetForm, dirty, values }) => (
             <Form noValidate>
+              <AddressDependencyHandler />
               <Grid container spacing={2}>
                 <CommonCard title="Bank Details" grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>

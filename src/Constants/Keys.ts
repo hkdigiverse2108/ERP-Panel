@@ -13,6 +13,7 @@ export const KEYS = {
   USER: {
     BASE: "user",
     EDIT: "user-edit",
+    DROPDOWN: "user-dropdown",
   },
 
   COMPANY: {
@@ -142,5 +143,12 @@ export const KEYS = {
     ADD: "supplier-bill-add",
     EDIT: "supplier-bill-edit",
     DELETE: "supplier-bill-delete",
+  },
+  POS: {
+    BASE: "pos",
+    HOLD_ORDER: "pos-order-hold",
+    ADD:"pos-add",
+    EDIT:"pos-edit",
+    DELETE:"pos-delete",
   },
 };
