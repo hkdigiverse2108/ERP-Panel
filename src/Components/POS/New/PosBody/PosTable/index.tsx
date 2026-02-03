@@ -1,22 +1,52 @@
 import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { useEffect, useMemo } from "react";
 import { CommonButton, CommonTextField } from "../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setProductDetailsModal, setQtyCountModal } from "../../../../../Store/Slices/ModalSlice";
-import { removeProduct, updateProduct } from "../../../../../Store/Slices/PosSlice";
+import { removeProduct, setTotalAmount, setTotalDiscount, setTotalMep, setTotalQty, setTotalTaxAmount, updateProduct } from "../../../../../Store/Slices/PosSlice";
 import type { PosProductDataModal } from "../../../../../Types";
 import ProductDetails from "./ProductDetails";
 import QtyCount from "./QtyCount";
-import CloseIcon from "@mui/icons-material/Close";
+
 const PosTable = () => {
-  const { productDataModal } = useAppSelector((state) => state.pos);
+  const { PosProduct } = useAppSelector((state) => state.pos);
+  const productData = PosProduct.product;
+
   const dispatch = useAppDispatch();
   const updateRow = (_id: string, data: Partial<PosProductDataModal>) => dispatch(updateProduct({ _id, data }));
 
   const removeRow = (_id: string) => dispatch(removeProduct(_id));
 
-  const calcNetAmount = (row: PosProductDataModal) => ((row.sellingPrice - row.discount) * row.sellingQty).toFixed(2);
-  const roundQty = (val: number) => Number(val.toFixed(2));
+  const calcNetAmount = (row: PosProductDataModal) => ((row.sellingPrice - row.discount) * row.sellingQty)?.toFixed(2);
+  const roundQty = (val: number) => Number(val?.toFixed(2));
+
+  const totalQty = useMemo(() => productData?.reduce((acc, row) => acc + row.sellingQty, 0), [productData]);
+  const totalMep = useMemo(() => productData?.reduce((acc, row) => acc + row.mrp * row.sellingQty, 0), [productData]);
+
+  const calcTotalTaxAmount = (row: PosProductDataModal) => {
+    const net = Number(calcNetAmount(row)) || 0;
+    const taxRate = row.salesTaxId?.percentage || 0;
+
+    if (row.isSalesTaxIncluding) {
+      return (net - net / (1 + taxRate / 100))?.toFixed(2);
+    }
+
+    return ((net * taxRate) / 100)?.toFixed(2);
+  };
+
+  const totalTaxAmount = useMemo(() => productData?.reduce((acc, row) => acc + Number(calcTotalTaxAmount(row)), 0) ?? 0, [productData]);
+  const totalDiscount = useMemo(() => productData?.reduce((acc, row) => acc + row.discount * row.sellingQty, 0), [productData]);
+  const totalAmount = useMemo(() => productData?.reduce((acc, row) => acc + Number(calcNetAmount(row)), 0) ?? 0, [productData]);
+
+  useEffect(() => {
+    dispatch(setTotalQty(totalQty));
+    dispatch(setTotalMep(totalMep));
+    dispatch(setTotalDiscount(totalDiscount));
+    dispatch(setTotalTaxAmount(totalTaxAmount));
+    dispatch(setTotalAmount(totalAmount));
+  }, [totalMep, totalDiscount, dispatch, totalQty, totalTaxAmount, totalAmount]);
 
   return (
     <>
@@ -38,9 +68,21 @@ const PosTable = () => {
               </tr>
             </thead>
             <tbody>
-              {productDataModal.map((row, i) => {
-                const netAmount = row.sellingPrice - row.discount;
-                const isAvailable = netAmount >= row.mrp;
+              {productData?.map((row, i) => {
+                const unitCost = row.sellingPrice - row.discount;
+                const calcAmount = (row: PosProductDataModal) => {
+                  const net = unitCost || 0;
+                  const taxRate = row.salesTaxId?.percentage || 0;
+
+                  if (row.isSalesTaxIncluding) {
+                    return net?.toFixed(2);
+                  }
+
+                  return ((net * taxRate) / 100 + net)?.toFixed(2);
+                };
+
+                const isAvailable = unitCost >= (row.purchasePrice ?? 0);
+                const getMaxDiscount = (row: PosProductDataModal) => Number(row.sellingPrice) || 0;
 
                 return (
                   <tr key={row._id} className={`text-center text-gray-600 dark:text-gray-300 ${isAvailable ? "bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark" : "bg-red-50 dark:bg-red-900"}`}>
@@ -56,13 +98,13 @@ const PosTable = () => {
                     <td className="p-2 min-w-30 w-30">{row.qty}</td>
 
                     {/* QTY */}
-                    <td className="p-2 min-w-30 w-30">
+                    <td className="p-2 min-w-30 w-30 ">
                       <div className="flex gap-1 justify-center items-center cursor-pointer">
                         <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, { sellingQty: roundQty(Math.max(0.1, row.sellingQty - 0.1)) })}>
                           <RemoveIcon />
                         </CommonButton>
 
-                        <span className="w-25 py-1 border-b border-gray-300 dark:border-gray-600" onClick={() => dispatch(setQtyCountModal({ open: true, data: row }))}>
+                        <span className="w-20 py-1 overflow-hidden" onClick={() => dispatch(setQtyCountModal({ open: true, data: row }))}>
                           {row.sellingQty}
                         </span>
 
@@ -73,10 +115,10 @@ const PosTable = () => {
                     </td>
 
                     {/* MRP */}
-                    <td className="p-2">{row.mrp.toFixed(2)}</td>
+                    <td className="p-2">{row.mrp?.toFixed(2)}</td>
                     {/* DISCOUNT */}
                     <td className="p-2 min-w-32 w-35">
-                      <CommonTextField type="number" value={row.discount || 0} onChange={(e) => updateRow(row._id, { discount: Number(e) })} isCurrency currencyDisabled />
+                      <CommonTextField type="number" value={row.discount || 0} onChange={(e) => updateRow(row._id, { discount: Math.min(Number(e) || 0, getMaxDiscount(row)) })} isCurrency currencyDisabled />
                     </td>
 
                     {/* ADD DISCOUNT */}
@@ -85,10 +127,10 @@ const PosTable = () => {
                     </td>
 
                     {/* UNIT COST */}
-                    <td className="p-2">{netAmount}</td>
+                    <td className="p-2">{calcAmount(row)}</td>
 
                     {/* NET AMOUNT */}
-                    <td className="p-2 font-medium">{calcNetAmount(row)}</td>
+                    <td className="p-2 font-medium">{Number(calcAmount(row)) * row.sellingQty}</td>
 
                     {/* REMOVE */}
                     <td className="p-2">
