@@ -1,16 +1,17 @@
-import { Box } from "@mui/material";
+import { Box, Tab, Tabs } from "@mui/material";
 import { Form, Formik, useFormikContext, type FormikHelpers, type FormikProps } from "formik";
 import { useLocation } from "react-router-dom";
 import { CommonButton, CommonDatePicker, CommonSelect, CommonSwitch, CommonTextField, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { DateConfig, GenerateOptions } from "../../../Utils";
-import type { Supplier, SupplierBillFormValues } from "../../../Types/SupplierBill";
+import type { Supplier, SupplierBillFormValues, TermsAndCondition } from "../../../Types/SupplierBill";
 import { account_Ledgers, BREADCRUMBS, PAYMENT_TERMS, REVERSE_CHARGE, TAX_TYPE } from "../../../Data";
 import { Mutations, Queries } from "../../../Api";
 import { useEffect, useRef, useState } from "react";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
 import AddIcon from "@mui/icons-material/Add";
+import TermsAndConditionModal from "./TermsAndConditionModal";
 const SupplierWatcher = ({ suppliers, onChange }: { suppliers: Supplier[]; onChange: (supplier: Supplier | null) => void }) => {
   const { values } = useFormikContext<SupplierBillFormValues>();
   useEffect(() => {
