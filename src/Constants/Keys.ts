@@ -151,4 +151,10 @@ export const KEYS = {
     EDIT:"pos-edit",
     DELETE:"pos-delete",
   },
+  ADDITIONAL_CHARGES: {
+    BASE: "additional-charge",
+    ADD: "additional-charge-add",
+    EDIT: "additional-charge-edit",
+    DELETE: "additional-charge-delete",
+  }
 };

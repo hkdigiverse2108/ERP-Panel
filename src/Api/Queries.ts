@@ -1,5 +1,6 @@
 import { KEYS, URL_KEYS } from "../Constants";
 import type { AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BankDropdownApiResponse, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, ContactApiResponse, ContactDropdownApiResponse, CountryApiResponse, EmployeeApiResponse, MaterialConsumptionApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, ProductApiResponse, ProductDropDownApiResponse, ProductSingleApiResponse, RecipeApiResponse, RecipeDropdownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SingleEmployeeApiResponse, StockApiResponse, StockVerificationApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomDropdownApiResponse, UploadResponse } from "../Types";
+import type { AdditionalChargersApiResponse } from "../Types/AdditionalCharges";
 import type { BillOfLiveProductApiResponse } from "../Types/BillOfMaterials";
 import type { SupplierBillApiResponse } from "../Types/SupplierBill";
 import { Get } from "./Methods";
@@ -89,4 +90,6 @@ export const Queries = {
 
   //*************** POS **************** */
   useGetPosHoldOrder: (params?: Params) => useQueries<any>([KEYS.POS.BASE, params], () => Get(URL_KEYS.POS.HOLD_ORDER, params)),
+  //*************** Additional Chargers **************** */
+  useGetAdditionalCharges: (params?: Params) => useQueries<AdditionalChargersApiResponse>([KEYS.ADDITIONAL_CHARGES.BASE, params], () => Get(URL_KEYS.ADDITIONAL_CHARGES.ALL, params)),
 };

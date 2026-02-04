@@ -160,4 +160,10 @@ export const URL_KEYS = {
     HOLD_ORDER: "/pos-order/hold",
     ADD: "/pos-order/add",
   },
+  ADDITIONAL_CHARGES: {
+    BASE: "/additional-charge",
+    ALL: "/additional-charge/all",
+    ADD: "/additional-charge/add",
+    EDIT: "/additional-charge/edit",
+  }
 } as const;

@@ -1,8 +1,74 @@
+import { Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useDataGrid } from "../../../../Utils/Hooks";
+import { PAGE_TITLE, ROUTES } from "../../../../Constants";
+import { Mutations, Queries } from "../../../../Api";
+import type { AdditionalChargesBase } from "../../../../Types/AdditionalCharges";
+import type { AppGridColDef } from "../../../../Types";
+import { CommonActionColumn, CommonBreadcrumbs, CommonDataGrid, CommonDeleteModal } from "../../../Common";
+import { BREADCRUMBS } from "../../../../Data";
+
 const AdditionalCharges = () => {
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const navigate = useNavigate();
+  const { data: additional_charge_data, isLoading: additionalChargesDataLoading, isFetching: additionalChargesDataFetching } = Queries.useGetAdditionalCharges(params);
+  console.log("AdditionalCharges API data:", additional_charge_data);
+  const { mutate: deleteAdditionalChargesMutate } = Mutations.useDeleteAdditionalCharges();
+  const { mutate: editAdditionalCharges, isPending: isEditLoading } = Mutations.useEditAdditionalCharges();
+  const allRows =
+    additional_charge_data?.data?.additional_charge_data?.map((additionalCharges: AdditionalChargesBase) => ({
+      ...additionalCharges,
+      id: additionalCharges._id,
+    })) || [];
+  const totalRows = additional_charge_data?.data?.totalData || 0;
+
+  const handleDeleteBtn = () => {
+    if (!rowToDelete) return;
+    deleteAdditionalChargesMutate(rowToDelete?._id as string, {
+      onSuccess: () => setRowToDelete(null),
+    });
+  };
+
+  const handleAdd = () => navigate(ROUTES.ADDITIONAL_CHARGES.ADD_EDIT);
+  const columns: AppGridColDef<AdditionalChargesBase>[] = [
+    { field: "name", headerName: "Additional Charge", width: 240 },
+    { field: "defaultValue", headerName: "Default Value", width: 160, valueGetter: (_v, row) => (row.defaultValue ? `${row.defaultValue.value} (${row.defaultValue.type})` : "") },
+    { field: "hsnSac", headerName: "HSN Code", width: 150 },
+    { field: "createdBy", headerName: "Created By", flex: 1 },
+    CommonActionColumn<AdditionalChargesBase>({
+      active: (row) => editAdditionalCharges({ additionalChargeId: row?._id, isActive: !row.isActive }),
+      editRoute: ROUTES.ADDITIONAL_CHARGES.ADD_EDIT,
+      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
+    }),
+  ];
+
+  const CommonDataGridOption = {
+    columns,
+    rows: allRows,
+    rowCount: totalRows,
+    loading: additionalChargesDataLoading || additionalChargesDataFetching || isEditLoading,
+    isActive,
+    setActive,
+    handleAdd,
+    paginationModel,
+    onPaginationModelChange: setPaginationModel,
+    sortModel,
+    onSortModelChange: setSortModel,
+    filterModel,
+    onFilterModelChange: setFilterModel,
+  };
+
   return (
     <>
-      <h1>Additional Charges</h1>
+      <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.ADDITIONAL_CHARGES.BASE} />
+
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <CommonDataGrid {...CommonDataGridOption} />
+
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
+      </Box>
     </>
   );
 };
+
 export default AdditionalCharges;
