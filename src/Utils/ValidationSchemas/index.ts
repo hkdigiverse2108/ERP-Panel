@@ -79,6 +79,18 @@ export const RolesFormSchema = Yup.object({
   isActive: Yup.boolean(),
 });
 
+export const AdditionalChargesFormSchema = Yup.object({
+  name: Validation("string", "Additional charge name"),
+  type: Validation("string", "Type"),
+  taxId: Validation("string", "Tax", { required: false }).nullable(),
+  hsnSac: Validation("string", "HSN/SAC", { required: false }),
+  defaultValue: Yup.object({
+    value: Validation("number", "Value", { required: false }),
+    type: Validation("string", "Value Type", { required: false }),
+  }).nullable(),
+  isActive: Yup.boolean(),
+});
+
 export const CallRequestFormSchema = Yup.object({
   businessName: Validation("string", "Business Name"),
   contactName: Validation("string", "Contact Name"),
