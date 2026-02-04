@@ -24,9 +24,9 @@ const ProductForm = () => {
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.PRODUCT.BASE);
 
   const { data } = location.state || {};
-  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown();
+  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
-  const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown();
+  const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true });
 
   const { mutate: addProduct, isPending: isAddLoading } = Mutations.useAddProduct();
   const { mutate: editProduct, isPending: isEditLoading } = Mutations.useEditProduct();
@@ -177,7 +177,7 @@ const ProductForm = () => {
                                 {values?.nutrition?.map((_, vIndex) => (
                                   <Grid key={vIndex} container spacing={1} sx={{ xs: 12 }} py={1}>
                                     <CommonValidationTextField name={`nutrition.${vIndex}.name`} label="Nutrition Name" grid={{ xs: 12, md: 6 }} />
-                                    <CommonValidationTextField name={`nutrition.${vIndex}.value`} label="Nutrition Value" grid={{ xs: 9, sm:10, md: 5 }} />
+                                    <CommonValidationTextField name={`nutrition.${vIndex}.value`} label="Nutrition Value" grid={{ xs: 9, sm: 10, md: 5 }} />
                                     {(values?.nutrition?.length || 0) > 1 && (
                                       <CommonButton variant="outlined" color="error" sx={{ minWidth: 40 }} size="small" onClick={() => remove(vIndex)}>
                                         <ClearIcon />
