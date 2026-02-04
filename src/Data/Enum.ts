@@ -244,7 +244,14 @@ export const DATA_STATUS = [
   { label: "Rejected", value: "rejected" },
 ];
 
-export const REVERSE_CHARGE = [];
-export const TAX_TYPE = [];
-export const account_Ledgers = [];
+export const REVERSE_CHARGE = [
+  { label: "Yes", value: "true" },
+  { label: "No", value: "false" },
+];
 
+export const TAX_TYPE = [
+  { label: "Default", value: "default" },
+  { label: "Tax Inclusive", value: "taxInclusive" },
+  { label: "Tax Exclusive", value: "taxExclusive" },
+  { label: "Out Of Scope", value: "outOfScope" },
+];

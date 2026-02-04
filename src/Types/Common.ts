@@ -153,7 +153,6 @@ export interface CommonDataGridProps {
   fileName?: string;
   pagination?: boolean;
 
-  
   slots?: any;
   slotProps?: GridSlotsComponentsProps;
 }
@@ -200,6 +199,25 @@ export interface CommonActionColumnProps<T> {
   onDelete?: (row: T) => void;
   active?: (row: T) => void;
 }
+
+export interface CommonTableColumn<T> {
+  key: string;
+  header: string;
+  headerClass?: string;
+  bodyClass?: string;
+  render?: (row: T, index: number) => ReactNode;
+  footer?: ReactNode | ((data: T[]) => ReactNode);
+  footerClass?: string;
+}
+
+export interface CommonTableProps<T> {
+  data: T[];
+  columns: CommonTableColumn<T>[];
+  rowKey: (row: T) => string;
+  getRowClass?: (row: T, index: number) => string;
+  showFooter?: boolean;
+}
+
 // ************ Table End ***********
 
 // ************ Input Start ***********
@@ -547,4 +565,9 @@ export interface CommonValidationCheckboxProps {
 export interface CommonCheckboxProps extends CommonValidationCheckboxProps {
   value?: boolean;
   onChange?: (value: boolean) => void;
+}
+export interface TabPanelProps {
+  children?: ReactNode;
+  index: number;
+  value: number;
 }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Queries } from "../../../../Api";
 import { CommonSelect } from "../../../../Attribute";
 import { useAppDispatch } from "../../../../Store/hooks";
-import { setProductDataModal } from "../../../../Store/Slices/PosSlice";
+import { addOrUpdateProduct } from "../../../../Store/Slices/PosSlice";
 import { GenerateOptions } from "../../../../Utils";
 import { CommonDrawer } from "../../../Common";
 
@@ -19,7 +19,7 @@ const ProductList = () => {
 
   const handleProductChange = (id: string) => {
     const product = productDropdown?.data?.find((item) => item._id === id);
-    dispatch(setProductDataModal(product));
+    dispatch(addOrUpdateProduct(product));
   };
 
   return (

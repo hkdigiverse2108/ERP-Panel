@@ -1,5 +1,6 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { ProductBase } from "./Product";
+export type { ProductBase };
 import type { ContactBase } from "./Contacts";
 
 /* ===================== SUPPLIER ===================== */
@@ -19,6 +20,8 @@ export interface SupplierBillProductItem {
   discount2?: number;
   taxAmount?: number;
   total?: number;
+  mfgDate?: string;
+  expiryDate?: string;
 }
 
 export interface SupplierBillProductDetails {
@@ -45,6 +48,11 @@ export interface SupplierBillReturnProductSummary {
   taxAmount?: number;
   roundOff?: number;
   netAmount?: number;
+}
+export interface TermsAndCondition {
+  _id: string;
+  termsCondition: string;
+  isDefault?: boolean;
 }
 
 export interface SupplierBillReturnProductDetails {
@@ -124,6 +132,35 @@ export interface SupplierBillFormValues {
   isActive?: boolean;
 
   _submitAction?: string;
+}
+/* ===================== ROW TYPES FOR UI ===================== */
+
+export interface ProductRow {
+  productId: string;
+  itemCode: string;
+  qty: string | number;
+  freeQty: string | number;
+  unit: string;
+  unitCost: string | number;
+  mrp: string | number;
+  sellingPrice: string | number;
+  disc1: string | number;
+  disc2: string | number;
+  taxableAmount: string | number;
+  taxAmount: string | number;
+  landingCost: string | number;
+  margin: string | number;
+  totalAmount: string | number;
+  mfgDate: string;
+  expiryDate: string;
+}
+
+export interface AdditionalChargeRow {
+  chargeId: string;
+  taxableAmount: string;
+  tax: string;
+  taxAmount: string;
+  totalAmount: string;
 }
 
 /* ===================== API ===================== */
