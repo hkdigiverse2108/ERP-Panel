@@ -5,7 +5,8 @@ import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { CommonButton, CommonSelect, CommonTextField } from "../../../Attribute";
 import type { TermsAndCondition, ProductRow } from "../../../Types/SupplierBill";
 import type { FC } from "react";
-import CommonTabPanel from "../../../Components/Common/CommonTabPanel";
+import { CommonTabPanel } from "../../../Components/Common";
+
 
 interface SupplierBillTabsProps {
   tabValue: number;
