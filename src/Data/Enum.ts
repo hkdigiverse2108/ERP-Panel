@@ -245,13 +245,13 @@ export const DATA_STATUS = [
 ];
 
 export const REVERSE_CHARGE = [
-  { label: "No", value: "no" },
-  { label: "Yes", value: "yes" },
+  { label: "Yes", value: "true" },
+  { label: "No", value: "false" },
 ];
+
 export const TAX_TYPE = [
   { label: "Default", value: "default" },
   { label: "Tax Inclusive", value: "taxInclusive" },
   { label: "Tax Exclusive", value: "taxExclusive" },
   { label: "Out Of Scope", value: "outOfScope" },
 ];
-

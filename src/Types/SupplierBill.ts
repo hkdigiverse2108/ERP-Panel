@@ -1,5 +1,6 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { ProductBase } from "./Product";
+export type { ProductBase };
 import type { ContactBase } from "./Contacts";
 
 /* ===================== SUPPLIER ===================== */
@@ -19,6 +20,8 @@ export interface SupplierBillProductItem {
   discount2?: number;
   taxAmount?: number;
   total?: number;
+  mfgDate?: string;
+  expiryDate?: string;
 }
 
 export interface SupplierBillProductDetails {

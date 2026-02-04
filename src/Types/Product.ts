@@ -53,6 +53,8 @@ export interface ProductFormValues {
   openingQty?: number | null;
   qty?: number | null;
   isActive?: boolean;
+  itemCode?: string;
+  unit?: string;
   images?: string[];
   _submitAction?: string;
 }
