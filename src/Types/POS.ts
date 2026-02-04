@@ -15,7 +15,23 @@ export interface PosProductDataModal extends Omit<ProductBase, "sellingPrice" | 
   sellingPrice: number;
   mrp: number;
 }
+
+interface PosProductType {
+  product: PosProductDataModal[];
+  customerId: string;
+  salesmanId: string;
+  totalQty: number;
+  totalMep: number;
+  totalTaxAmount: number;
+  totalCharges: number;
+  totalDiscount: number;
+  totalFlatDiscount: number;
+  totalRoundOFF: number;
+  totalAmount: number;
+}
+
 export interface PosSliceState {
   isMultiplePay: boolean;
   productDataModal: PosProductDataModal[];
+  PosProduct: PosProductType;
 }

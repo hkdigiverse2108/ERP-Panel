@@ -8,7 +8,7 @@ import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
 import { Grid } from "@mui/material";
 import { useState } from "react";
 import { CommonButton, CommonTextField } from "../../../../../Attribute";
-import { useAppDispatch } from "../../../../../Store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setAdditionalChargeModal, setApplyCouponModal, setCardModal, setCashModal, setPayLaterModal, setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
 import RedeemCredit from "./RedeemCredit";
 import CardDetails from "./CardDetails";
@@ -17,9 +17,21 @@ import PayLater from "./PayLater";
 import Cash from "./Cash";
 import { setMultiplePay } from "../../../../../Store/Slices/PosSlice";
 import AdditionalCharge from "./AdditionalCharge";
+
 const PosFooter = () => {
   const [value, setValue] = useState<string>("");
-  const summaryRowData = [{ label: "Quantity", value: "1.000" }, { label: "MRP", value: "50.00" }, { label: "Tax Amount", value: "7.63" }, { label: "Add Charges+", value: "0.00" }, { label: "Discount", value: "0.00" }, { label: "Flat Discount" }, { label: "Round OFF" }, { label: "Amount", value: "50", highlight: true }];
+  const { PosProduct } = useAppSelector((state) => state.pos);
+
+  const summaryRowData = [
+    { label: "Quantity", value: PosProduct.totalQty }, //totalQty
+    { label: "MRP", value: PosProduct.totalMep }, //totalMrp
+    { label: "Tax Amount", value: PosProduct.totalTaxAmount }, //totalTaxAmount
+    { label: "Add Charges+", value: PosProduct.totalCharges }, //totalCharges
+    { label: "Discount", value: PosProduct.totalDiscount }, //totalDiscount
+    { label: "Flat Discount" }, //totalFlatDiscount
+    { label: "Round OFF" },
+    { label: "Amount", value: PosProduct.totalAmount, highlight: true },
+  ];
   const dispatch = useAppDispatch();
 
   return (
@@ -33,12 +45,12 @@ const PosFooter = () => {
         {/* Summary Row */}
         <Grid container spacing={{ xs: 1, xl: 0 }} className="flex items-center py-2">
           {summaryRowData.map((item, index) => (
-            <Grid size={{ xs: 6, md: 3, xl: 1.5 }}  key={index} className={`flex flex-col items-center justify-center px-4 ${!item.highlight ? "border-r border-gray-300 dark:border-gray-700" : ""} `}>
+            <Grid size={{ xs: 6, md: 3, xl: 1.5 }} key={index} className={`flex flex-col items-center justify-center px-4 ${!item.highlight ? "border-r border-gray-300 dark:border-gray-700" : ""} `}>
               {item.label === "Flat Discount" && <CommonTextField label="Flat Discount" value={value} onChange={(e) => setValue(e)} isCurrency />}
               {item.label === "Round OFF" && <CommonTextField label="Round OFF" value={value} onChange={(e) => setValue(e)} />}
-              {item.value && (
+              {item.value !== undefined && (
                 <>
-                  <span className={`font-semibold ${item.highlight ? "text-brand-600 text-2xl" : "text-lg text-gray-900 dark:text-gray-100"}`}>{item.value}</span>
+                  <span className={`font-semibold ${item.highlight ? "text-brand-600 text-2xl" : "text-lg text-gray-900 dark:text-gray-100"}`}>{item.value.toString()}</span>
                   {item.label === "Add Charges+" ? (
                     <span onClick={() => dispatch(setAdditionalChargeModal())} className={`text-sm font-medium cursor-pointer text-brand-600 mt-1`}>
                       {item.label}
