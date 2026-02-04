@@ -6,21 +6,20 @@ import PauseIcon from "@mui/icons-material/Pause";
 import RedeemIcon from "@mui/icons-material/Redeem";
 import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
 import { Grid } from "@mui/material";
-import { useState } from "react";
 import { CommonButton, CommonTextField } from "../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setAdditionalChargeModal, setApplyCouponModal, setCardModal, setCashModal, setPayLaterModal, setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
-import RedeemCredit from "./RedeemCredit";
-import CardDetails from "./CardDetails";
-import ApplyCoupon from "./ApplyCoupon";
-import PayLater from "./PayLater";
-import Cash from "./Cash";
-import { setMultiplePay } from "../../../../../Store/Slices/PosSlice";
+import { setMultiplePay, setRemarks, setTotalFlatDiscount, setTotalRoundOFF } from "../../../../../Store/Slices/PosSlice";
 import AdditionalCharge from "./AdditionalCharge";
+import ApplyCoupon from "./ApplyCoupon";
+import CardDetails from "./CardDetails";
+import Cash from "./Cash";
+import PayLater from "./PayLater";
+import RedeemCredit from "./RedeemCredit";
 
 const PosFooter = () => {
-  const [value, setValue] = useState<string>("");
   const { PosProduct } = useAppSelector((state) => state.pos);
+  const dispatch = useAppDispatch();
 
   const summaryRowData = [
     { label: "Quantity", value: PosProduct.totalQty }, //totalQty
@@ -32,22 +31,21 @@ const PosFooter = () => {
     { label: "Round OFF" },
     { label: "Amount", value: PosProduct.totalAmount, highlight: true },
   ];
-  const dispatch = useAppDispatch();
 
   return (
     <>
       <div className="w-full bg-white dark:bg-gray-dark">
         {/* Remarks */}
         <div className="p-2">
-          <CommonTextField label="Remarks" placeholder="Remarks" value={value} onChange={(e) => setValue(e)} />
+          <CommonTextField label="Remarks" placeholder="Remarks" value={PosProduct.remarks} onChange={(e) => dispatch(setRemarks(e))} />
         </div>
 
         {/* Summary Row */}
         <Grid container spacing={{ xs: 1, xl: 0 }} className="flex items-center py-2">
           {summaryRowData.map((item, index) => (
             <Grid size={{ xs: 6, md: 3, xl: 1.5 }} key={index} className={`flex flex-col items-center justify-center px-4 ${!item.highlight ? "border-r border-gray-300 dark:border-gray-700" : ""} `}>
-              {item.label === "Flat Discount" && <CommonTextField label="Flat Discount" value={value} onChange={(e) => setValue(e)} isCurrency />}
-              {item.label === "Round OFF" && <CommonTextField label="Round OFF" value={value} onChange={(e) => setValue(e)} />}
+              {item.label === "Flat Discount" && <CommonTextField label="Flat Discount" value={PosProduct.totalFlatDiscount} onChange={(e) => dispatch(setTotalFlatDiscount(e))} isCurrency />}
+              {item.label === "Round OFF" && <CommonTextField label="Round OFF" value={PosProduct.totalRoundOFF} onChange={(e) => dispatch(setTotalRoundOFF(e))} />}
               {item.value !== undefined && (
                 <>
                   <span className={`font-semibold ${item.highlight ? "text-brand-600 text-2xl" : "text-lg text-gray-900 dark:text-gray-100"}`}>{item.value.toString()}</span>

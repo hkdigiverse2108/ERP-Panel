@@ -13,4 +13,6 @@ import { CommonPhoneColumns, CommonObjectNameColumn } from "./CommonDataGrid/Com
 import AdvancedSearch from "./AdvancedSearch";
 import { CommonDataGridSummaryFooter, CalculateGridSummary } from "./CommonDataGrid/CommonDataGridSummaryFooter";
 import CommonStatsCard from "./CommonStatsCard";
-export { CommonDataGridSummaryFooter, CalculateGridSummary, DependentSelect, CommonDrawer, CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonUpload, CommonModal, CommonActionColumn, CommonDeleteModal, CommonBottomActionBar, CommonImageBox, CommonPhoneColumns, CommonObjectNameColumn, AdvancedSearch, CommonStatsCard };
+import CommonTable from "./CommonTable";
+
+export { CommonDataGridSummaryFooter, CalculateGridSummary, DependentSelect, CommonDrawer, CommonCard, CommonDataGrid, CommonBreadcrumbs, CommonUpload, CommonModal, CommonActionColumn, CommonDeleteModal, CommonBottomActionBar, CommonImageBox, CommonPhoneColumns, CommonObjectNameColumn, AdvancedSearch, CommonStatsCard, CommonTable };

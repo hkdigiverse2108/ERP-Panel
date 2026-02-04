@@ -9,11 +9,12 @@ export interface WeightScaleFormValues {
   precision?: string;
 }
 
-export interface PosProductDataModal extends Omit<ProductBase, "sellingPrice" | "mrp"> {
+export interface PosProductDataModal extends Omit<ProductBase, "sellingPrice" | "mrp" | "sellingDiscount"> {
   sellingQty: number;
   discount: number;
   sellingPrice: number;
   mrp: number;
+  sellingDiscount: number;
 }
 
 interface PosProductType {
@@ -27,6 +28,7 @@ interface PosProductType {
   totalDiscount: number;
   totalFlatDiscount: number;
   totalRoundOFF: number;
+  remarks: string;
   totalAmount: number;
 }
 

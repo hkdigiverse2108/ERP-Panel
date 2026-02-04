@@ -1,17 +1,17 @@
 import { Box, Grid } from "@mui/material";
 import { Form, Formik, useFormikContext, type FormikHelpers } from "formik";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
+import { CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
+import type { ProductBase } from "../../../Types";
 import type { StockFormValues } from "../../../Types/Stock";
 import { GenerateOptions, RemoveEmptyFields } from "../../../Utils";
-import { ProductItemFormSchema } from "../../../Utils/ValidationSchemas";
-import { useEffect } from "react";
-import type { ProductBase } from "../../../Types";
 import { usePagePermission } from "../../../Utils/Hooks";
+import { ProductItemFormSchema } from "../../../Utils/ValidationSchemas";
 
 const ItemForm = () => {
   const location = useLocation();
@@ -31,13 +31,12 @@ const ItemForm = () => {
     productId: data?.productId?._id || "",
     uomId: data?.uomId?._id || "",
     purchasePrice: 0,
-    landingCost:  0,
+    landingCost: 0,
     mrp: 0,
     sellingDiscount: 0,
-    sellingPrice:  0,
-    sellingMargin:  0,
-    qty:  0,
-    isActive: data?.isActive || true,
+    sellingPrice: 0,
+    sellingMargin: 0,
+    qty: 0,
   };
 
   const FormikProductSync = ({ productData }: { productData?: ProductBase[] }) => {
@@ -72,7 +71,7 @@ const ItemForm = () => {
     };
     await addStock(RemoveEmptyFields(rest), { onSuccess: handleSuccess });
   };
-  
+
   useEffect(() => {
     const hasAccess = isEditing ? permission.edit : permission.add;
     if (!hasAccess) navigate(-1);
@@ -100,7 +99,6 @@ const ItemForm = () => {
                       <CommonValidationTextField name="sellingPrice" label="Selling Price" type="number" required grid={{ xs: 12, sm: 6, xl: 4 }} />
                       <CommonValidationTextField name="sellingMargin" label="selling Margin" type="number" required grid={{ xs: 12, sm: 6, xl: 4 }} isCurrency currencyDisabled />
                       <CommonValidationTextField name="qty" label="Qty" type="number" grid={{ xs: 12, sm: 6, xl: 4 }} required />
-                      {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                     </Grid>
                   </CommonCard>
 
