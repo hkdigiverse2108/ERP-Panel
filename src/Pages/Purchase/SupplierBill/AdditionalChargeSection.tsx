@@ -12,9 +12,11 @@ interface AdditionalChargesSectionProps {
   handleAddAdditionalCharge: () => void;
   handleCutAdditionalCharge: (index: number) => void;
   handleAdditionalChargeRowChange: (index: number, field: keyof AdditionalChargeRow, value: string | number | string[]) => void;
+  taxOptions: { label: string; value: string }[];
+  isTaxLoading: boolean;
 }
 
-const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAdditionalCharge, setShowAdditionalCharge, additionalChargeRows, handleAddAdditionalCharge, handleCutAdditionalCharge, handleAdditionalChargeRowChange }) => {
+const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAdditionalCharge, setShowAdditionalCharge, additionalChargeRows, handleAddAdditionalCharge, handleCutAdditionalCharge, handleAdditionalChargeRowChange, taxOptions, isTaxLoading }) => {
   return (
     <>
       {!showAdditionalCharge && (
@@ -74,7 +76,7 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
                     </td>
 
                     <td className="p-2 min-w-80 w-80">
-                      <CommonSelect value={additionalChargeRows[index].tax ? [additionalChargeRows[index].tax] : []} options={[]} onChange={(v) => handleAdditionalChargeRowChange(index, "tax", v)} />
+                      <CommonSelect value={additionalChargeRows[index].tax ? [additionalChargeRows[index].tax] : []} options={taxOptions} isLoading={isTaxLoading} onChange={(v) => handleAdditionalChargeRowChange(index, "tax", v)} />
                     </td>
 
                     <td className="p-2 text-right">{additionalChargeRows[index].totalAmount || 0}</td>
@@ -103,30 +105,24 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
           </Box>
           <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700">
             <span>Gross Amount</span>
-            <span>
-              {additionalChargeRows.reduce((a, b) => a + (parseFloat(b.taxableAmount) || 0), 0).toFixed(2)}
-            </span>
+            <span>{additionalChargeRows.reduce((a, b) => a + (parseFloat(b.taxableAmount) || 0), 0).toFixed(2)}</span>
           </Box>
           <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700">
             <span>Taxable Amount</span>
-            <span>
-              {additionalChargeRows.reduce((a, b) => a + (parseFloat(b.taxableAmount) || 0), 0).toFixed(2)}
-            </span>
+            <span>{additionalChargeRows.reduce((a, b) => a + (parseFloat(b.taxableAmount) || 0), 0).toFixed(2)}</span>
           </Box>
           <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700 text-blue-600">
             <span>Tax</span>
-            <span>
-              {additionalChargeRows.reduce((a, b) => a + (parseFloat(b.taxAmount) || 0), 0).toFixed(2)}
-            </span>
+            <span>{additionalChargeRows.reduce((a, b) => a + (parseFloat(b.taxAmount) || 0), 0).toFixed(2)}</span>
           </Box>
           <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700 text-blue-600">
             <span>Roundoff</span>
-            <span>0</span>
+            <span>{(Math.round(additionalChargeRows.reduce((a, b) => a + (parseFloat(b.totalAmount) || 0), 0)) - additionalChargeRows.reduce((a, b) => a + (parseFloat(b.totalAmount) || 0), 0)).toFixed(2)}</span>
           </Box>
           <Box className="flex justify-between p-3 text-lg font-semibold">
             <span>Net Amount</span>
             <span>
-              {additionalChargeRows.reduce((a, b) => a + (parseFloat(b.totalAmount) || 0), 0).toFixed(2)}
+              <span>{Math.round(additionalChargeRows.reduce((a, b) => a + (parseFloat(b.totalAmount) || 0), 0)).toFixed(2)}</span>
             </span>
           </Box>
         </Box>

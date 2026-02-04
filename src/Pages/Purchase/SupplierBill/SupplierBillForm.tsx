@@ -51,6 +51,10 @@ const SupplierBillForm = () => {
   const [selectedTermIds, setSelectedTermIds] = useState<string[]>([]);
   const [notes, setNotes] = useState<string>("");
   const [showAdditionalCharge, setShowAdditionalCharge] = useState(false);
+  const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
+  const taxOptions = GenerateOptions(TaxData?.data || []);
+  const { data: ProductsData, isLoading: ProductsDataLoading } = Queries.useGetProductDropdown();
+  const productOptions = GenerateOptions(ProductsData?.data);
 
   const mapProductRows = (): SupplierBillProductDetails => {
     const item = rows.map((r) => ({
@@ -96,6 +100,23 @@ const SupplierBillForm = () => {
     const margin = mrp - landingCost;
     return { ...row, taxableAmount: taxableAmount.toFixed(2), totalAmount: totalAmount.toFixed(2), landingCost: landingCost.toFixed(2), margin: margin.toFixed(2) };
   };
+  const calculateReturnRow = (row: ProductRow): ProductRow => {
+    const qty = parseFloat(String(row.qty)) || 0;
+    const landingCost = parseFloat(String(row.landingCost)) || 0;
+    const disc1 = parseFloat(String(row.disc1)) || 0;
+    const disc2 = parseFloat(String(row.disc2)) || 0;
+    const taxAmount = parseFloat(String(row.taxAmount)) || 0;
+
+    const baseAmount = qty * landingCost;
+    const taxableAmount = Math.max(0, baseAmount - disc1 - disc2);
+    const totalAmount = taxableAmount + taxAmount;
+
+    return {
+      ...row,
+      taxableAmount: taxableAmount.toFixed(2),
+      totalAmount: totalAmount.toFixed(2),
+    };
+  };
 
   const handleRowChange = (index: number, field: keyof ProductRow, value: string | number | string[]) => {
     setRows((prev) => {
@@ -112,6 +133,7 @@ const SupplierBillForm = () => {
       const newRows = [...prev];
       const finalValue = Array.isArray(value) ? value[0] : value;
       newRows[index] = { ...newRows[index], [field]: finalValue };
+      newRows[index] = calculateReturnRow(newRows[index]);
       return newRows;
     });
   };
@@ -234,10 +256,10 @@ const SupplierBillForm = () => {
                 </CommonCard>
               </Form>
               <CommonCard hideDivider>
-                <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} termsList={termsList} notes={notes} setNotes={setNotes} setOpenModal={setOpenModal} />
+                <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} termsList={termsList} notes={notes} setNotes={setNotes} setOpenModal={setOpenModal} productOptions={productOptions} isProductLoading={ProductsDataLoading} />
               </CommonCard>
               <CommonCard grid={{ xs: 12 }}>
-                <AdditionalChargesSection showAdditionalCharge={showAdditionalCharge} setShowAdditionalCharge={setShowAdditionalCharge} additionalChargeRows={additionalChargeRows} handleAddAdditionalCharge={handleAddAdditionalCharge} handleCutAdditionalCharge={handleCutAdditionalCharge} handleAdditionalChargeRowChange={handleAdditionalChargeRowChange} />
+                <AdditionalChargesSection showAdditionalCharge={showAdditionalCharge} setShowAdditionalCharge={setShowAdditionalCharge} additionalChargeRows={additionalChargeRows} handleAddAdditionalCharge={handleAddAdditionalCharge} handleCutAdditionalCharge={handleCutAdditionalCharge} handleAdditionalChargeRowChange={handleAdditionalChargeRowChange} taxOptions={taxOptions} isTaxLoading={TaxDataLoading} />
               </CommonCard>
               <CommonBottomActionBar save isLoading={isAddLoading || isEditLoading} onSave={() => formikRef.current?.submitForm()} />
             </>

@@ -7,7 +7,6 @@ import type { TermsAndCondition, ProductRow } from "../../../Types/SupplierBill"
 import type { FC } from "react";
 import { CommonTabPanel } from "../../../Components/Common";
 
-
 interface SupplierBillTabsProps {
   tabValue: number;
   setTabValue: (value: number) => void;
@@ -23,9 +22,11 @@ interface SupplierBillTabsProps {
   handleAddReturn: () => void;
   handleCutReturn: (index: number) => void;
   handleReturnRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
+  productOptions: { label: string; value: string }[];
+  isProductLoading: boolean;
 }
 
-const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, notes, setNotes, setOpenModal, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange }) => {
+const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, notes, setNotes, setOpenModal, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading }) => {
   return (
     <>
       {/* ================= TABS HEADER ================= */}
@@ -80,7 +81,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
                     <td className="p-2">{index + 1}</td>
 
                     <td className="p-2 min-w-60">
-                      <CommonSelect label="Search Product" value={rows[index].productId ? [rows[index].productId] : []} options={[]} onChange={(v) => handleRowChange(index, "productId", v)} />
+                      <CommonSelect label="Search Product" value={rows[index].productId ? [rows[index].productId] : []} options={productOptions} isLoading={isProductLoading} onChange={(v) => handleRowChange(index, "productId", v)} />
                     </td>
 
                     {/* Qty */}
@@ -129,6 +130,33 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
                     </td>
                   </tr>
                 ))}
+                <tr className="bg-gray-100 font-semibold">
+                  <td colSpan={3} className="p-2 text-right">
+                    Total
+                  </td>
+                  {/* Qty */}
+                  <td className="p-2 text-center">{rows.reduce((a, b) => a + (+b.qty || 0), 0)}</td>
+                  {/* Free Qty */}
+                  <td className="p-2 text-center">{rows.reduce((a, b) => a + (+b.freeQty || 0), 0)}</td>
+                  {/* MRP */}
+                  <td></td>
+                  {/* Selling */}
+                  <td></td>
+                  {/* Disc 1 */}
+                  <td></td>
+                  {/* Disc 2 */}
+                  <td></td>
+                  {/* Taxable */}
+                  <td className="p-2 text-right">{rows.reduce((a, b) => a + (+b.taxableAmount || 0), 0).toFixed(2)}</td>
+                  {/* Tax */}
+                  <td className="p-2 text-right">{rows.reduce((a, b) => a + (+b.taxAmount || 0), 0).toFixed(2)}</td>
+                  {/* Landing */}
+                  <td></td>
+                  {/* Margin */}
+                  <td></td>
+                  {/* Total */}
+                  <td className="p-2 text-right">{rows.reduce((a, b) => a + (+b.totalAmount || 0), 0).toFixed(2)}</td>
+                </tr>
               </tbody>
             </table>
           </Box>
@@ -213,7 +241,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
                     </td>
                     <td className="p-2">{index + 1}</td>
                     <td className="p-2 min-w-60 w-60  text-start">
-                      <CommonSelect label="Search Product" value={returnRows[index].productId ? [returnRows[index].productId] : []} options={[]} onChange={(v) => handleReturnRowChange(index, "productId", v)} />
+                      <CommonSelect label="Search Product" value={returnRows[index].productId ? [returnRows[index].productId] : []} options={productOptions} isLoading={isProductLoading} onChange={(v) => handleReturnRowChange(index, "productId", v)} />
                     </td>
                     <td className="p-2">
                       <CommonTextField type="number" value={returnRows[index].qty} onChange={(v) => handleReturnRowChange(index, "qty", v)} />
@@ -234,7 +262,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
                       <CommonTextField type="number" value={returnRows[index].landingCost} onChange={(v) => handleReturnRowChange(index, "landingCost", v)} />
                     </td>
                     <td className="p-2">
-                      <CommonTextField type="number" value={returnRows[index].totalAmount} onChange={(v) => handleReturnRowChange(index, "totalAmount", v)} />
+                      <CommonTextField type="number" value={returnRows[index].totalAmount} onChange={(v) => handleReturnRowChange(index, "totalAmount", v)} disabled/>
                     </td>
                   </tr>
                 ))}
@@ -265,11 +293,11 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
 
               <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700 text-blue-600">
                 <span>Roundoff</span>
-                <span>0.0</span>
+                <span>{(Math.round(returnRows.reduce((a, b) => a + (parseFloat(String(b.totalAmount)) || 0), 0)) - returnRows.reduce((a, b) => a + (parseFloat(String(b.totalAmount)) || 0), 0)).toFixed(2)}</span>
               </Box>
               <Box className="flex justify-between p-3 text-lg font-semibold">
                 <span>Net Amount</span>
-                <span>{returnRows.reduce((a, b) => a + (parseFloat(String(b.totalAmount)) || 0), 0).toFixed(2)}</span>
+                <span>{Math.round(returnRows.reduce((a, b) => a + (parseFloat(String(b.totalAmount)) || 0), 0)).toFixed(2)}</span>
               </Box>
             </Box>
           </Box>
@@ -278,5 +306,4 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
     </>
   );
 };
-
 export default SupplierBillTabs;
