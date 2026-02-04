@@ -22,11 +22,11 @@ const Product = () => {
   const navigate = useNavigate();
 
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
-  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown();
+  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
   const brandId = advancedFilter?.brandFilter?.[0] || "";
   const { data: subBrandData, isLoading: subBrandDataLoading } = Queries.useGetBrandDropdown({ parentBrandFilter: brandId }, Boolean(brandId));
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
-  const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown();
+  const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true });
   const subCategoryId = advancedFilter?.categoryFilter?.[0] || "";
   const { data: subCategoryData, isLoading: subCategoryDataLoading } = Queries.useGetCategoryDropdown({ parentCategoryFilter: subCategoryId }, Boolean(subCategoryId));
 

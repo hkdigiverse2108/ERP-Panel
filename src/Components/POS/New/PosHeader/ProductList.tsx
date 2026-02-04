@@ -13,7 +13,7 @@ const ProductList = () => {
   const [value, setValue] = useState<string[]>([]);
   const dispatch = useAppDispatch();
 
-  const { data: category, isLoading: categoryLoading } = Queries.useGetCategoryDropdown({}, open);
+  const { data: category, isLoading: categoryLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true }, open);
   const id = value[0] || "";
   const { data: productDropdown, isLoading: productDropdownLoading } = Queries.useGetProductDropdown(id ? { categoryFilter: id } : {}, open);
 
