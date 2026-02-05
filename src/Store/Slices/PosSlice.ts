@@ -5,17 +5,19 @@ const initialState: PosSliceState = {
   isMultiplePay: false,
   productDataModal: [],
   PosProduct: {
-    product: [],
+    items: [],
     customerId: "",
+    orderType: "walk_in",
     salesmanId: "",
     totalQty: 0,
     totalMep: 0,
     totalTaxAmount: 0,
-    totalCharges: 0,
     totalDiscount: 0,
-    totalFlatDiscount: 0,
-    totalRoundOFF: 0,
-    remarks: "",
+    totalAdditionalCharge: 0,
+    flatDiscountAmount: 0,
+    additionalCharges: [],
+    roundOff: 0,
+    remark: "",
     totalAmount: 0,
   },
 };
@@ -31,12 +33,12 @@ const PosSlice = createSlice({
     addOrUpdateProduct: (state, action) => {
       if (!action.payload || !action.payload._id) return;
 
-      const existingProduct = state.PosProduct.product.find((item) => item._id === action.payload._id);
+      const existingProduct = state.PosProduct.items.find((item) => item._id === action.payload._id);
 
       if (existingProduct) {
         existingProduct.sellingQty += 1;
       } else {
-        state.PosProduct.product.push({
+        state.PosProduct.items.push({
           ...action.payload,
           sellingQty: 1,
           discount: 0,
@@ -45,18 +47,22 @@ const PosSlice = createSlice({
     },
 
     updateProduct: (state, action) => {
-      const row = state.PosProduct.product.find((item) => item._id === action.payload._id);
+      const row = state.PosProduct.items.find((item) => item._id === action.payload._id);
       if (row) Object.assign(row, action.payload.data);
     },
     removeProduct: (state, action) => {
-      state.PosProduct.product = state.PosProduct.product.filter((item) => item._id !== action.payload);
+      state.PosProduct.items = state.PosProduct.items.filter((item) => item._id !== action.payload);
     },
     clearProductDataModal: (state) => {
-      state.PosProduct.product = [];
+      state.PosProduct.items = [];
     },
 
     setCustomerId: (state, action) => {
       state.PosProduct.customerId = action.payload;
+    },
+
+    setOrderType: (state, action) => {
+      state.PosProduct.orderType = action.payload;
     },
 
     setSalesmanId: (state, action) => {
@@ -75,17 +81,20 @@ const PosSlice = createSlice({
     setTotalTaxAmount: (state, action) => {
       state.PosProduct.totalTaxAmount = action.payload;
     },
-    setTotalCharges: (state, action) => {
-      state.PosProduct.totalCharges = action.payload;
+    setTotalAdditionalCharge: (state, action) => {
+      state.PosProduct.totalAdditionalCharge = action.payload;
     },
-    setTotalFlatDiscount: (state, action) => {
-      state.PosProduct.totalFlatDiscount = action.payload;
+    setFlatDiscountAmount: (state, action) => {
+      state.PosProduct.flatDiscountAmount = action.payload;
     },
-    setTotalRoundOFF: (state, action) => {
-      state.PosProduct.totalRoundOFF = action.payload;
+    setAdditionalCharges: (state, action) => {
+      state.PosProduct.additionalCharges = action.payload;
+    },
+    setRoundOff: (state, action) => {
+      state.PosProduct.roundOff = action.payload;
     },
     setRemarks: (state, action) => {
-      state.PosProduct.remarks = action.payload;
+      state.PosProduct.remark = action.payload;
     },
     setTotalAmount: (state, action) => {
       state.PosProduct.totalAmount = action.payload;
@@ -93,5 +102,5 @@ const PosSlice = createSlice({
   },
 });
 
-export const { setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesmanId, setTotalMep, setTotalDiscount, setTotalTaxAmount, setTotalCharges, setTotalFlatDiscount, setTotalRoundOFF, setTotalAmount, setTotalQty, setRemarks } = PosSlice.actions;
+export const { setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesmanId, setTotalMep, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType } = PosSlice.actions;
 export default PosSlice.reducer;

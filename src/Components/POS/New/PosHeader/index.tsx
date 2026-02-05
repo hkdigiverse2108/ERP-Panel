@@ -5,7 +5,7 @@ import { Queries } from "../../../../Api";
 import { CommonRadio, CommonSelect } from "../../../../Attribute";
 import { ORDER_TYPE } from "../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
-import { setSalesmanId } from "../../../../Store/Slices/PosSlice";
+import { setOrderType, setSalesmanId } from "../../../../Store/Slices/PosSlice";
 import { GenerateOptions } from "../../../../Utils";
 import CurrentRegister from "./CurrentRegister";
 import Discard from "./Discard";
@@ -14,8 +14,8 @@ import ProductList from "./ProductList";
 import WiFi from "./WiFi";
 
 const PosHeader = () => {
-  const [contactType, setContactType] = useState("Walk In");
   const { user } = useAppSelector((state) => state.auth);
+  const { PosProduct } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
 
   const { data: userDropdown, isLoading: userDropdownLoading } = Queries.useGetUserDropdown();
@@ -39,7 +39,7 @@ const PosHeader = () => {
       <Grid spacing={{ xs: 1, lg: 0 }} container className="flex justify-between items-center p-2 w-full">
         <Grid size={{ xs: 12, lg: 6, xl: 8 }}>
           <Grid container spacing={{ xs: 1, sm: 2 }} className="flex max-sm:justify-center items-center w-full">
-            <CommonRadio value={contactType} onChange={setContactType} options={ORDER_TYPE} grid={{ xs: "auto" }} />
+            <CommonRadio value={PosProduct.orderType} onChange={(e) => dispatch(setOrderType(e))} options={ORDER_TYPE} grid={{ xs: "auto" }} />
             <CommonSelect label="Select Salesman" options={GenerateOptions(userDropdown?.data)} isLoading={userDropdownLoading} value={value} onChange={handleChange} limitTags={1} grid={{ xs: 12, xsm: 6, lg: 4, xl: 3 }} />
           </Grid>
         </Grid>

@@ -5,7 +5,7 @@ import { useEffect, useMemo } from "react";
 import { CommonButton, CommonTextField } from "../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setProductDetailsModal, setQtyCountModal } from "../../../../../Store/Slices/ModalSlice";
-import { removeProduct, setTotalAmount, setTotalDiscount, setTotalMep, setTotalQty, setTotalRoundOFF, setTotalTaxAmount, updateProduct } from "../../../../../Store/Slices/PosSlice";
+import { removeProduct, setTotalAmount, setTotalDiscount, setTotalMep, setTotalQty, setRoundOff, setTotalTaxAmount, updateProduct } from "../../../../../Store/Slices/PosSlice";
 import type { CommonTableColumn, PosProductDataModal } from "../../../../../Types";
 import ProductDetails from "./ProductDetails";
 import QtyCount from "./QtyCount";
@@ -13,7 +13,7 @@ import { CommonTable } from "../../../../Common";
 
 const PosTable = () => {
   const { PosProduct } = useAppSelector((state) => state.pos);
-  const productData = PosProduct.product;
+  const productData = PosProduct.items;
 
   const dispatch = useAppDispatch();
   const updateRow = (_id: string, data: Partial<PosProductDataModal>) => dispatch(updateProduct({ _id, data }));
@@ -40,7 +40,7 @@ const PosTable = () => {
   const totalTaxAmount = useMemo(() => productData?.reduce((acc, row) => acc + Number(calcTotalTaxAmount(row, true)), 0) ?? 0, [productData]);
   const totalDiscount = useMemo(() => productData?.reduce((acc, row) => acc + row.discount * row.sellingQty, 0), [productData]);
   const totalAmount = useMemo(() => productData?.reduce((acc, row) => acc + Number(calcTotalTaxAmount(row, false)), 0) ?? 0, [productData]);
-  const finalAmount = useMemo(() => (totalAmount - PosProduct.totalFlatDiscount).toFixed(2), [totalAmount, PosProduct.totalFlatDiscount]);
+  const finalAmount = useMemo(() => (totalAmount - PosProduct.flatDiscountAmount + Number(PosProduct.totalAdditionalCharge)).toFixed(2), [totalAmount, PosProduct.flatDiscountAmount, PosProduct.totalAdditionalCharge]);
   const roundedAmount = useMemo(() => {
     const amt = Number(finalAmount);
     const decimal = amt % 1;
@@ -56,7 +56,7 @@ const PosTable = () => {
     dispatch(setTotalDiscount(totalDiscount?.toFixed(2)));
     dispatch(setTotalTaxAmount(totalTaxAmount?.toFixed(2)));
     dispatch(setTotalAmount(roundedAmount?.toFixed(0)));
-    dispatch(setTotalRoundOFF(Number(roundOffAmount)?.toFixed(2)));
+    dispatch(setRoundOff(Number(roundOffAmount)?.toFixed(2)));
   }, [totalMep, totalDiscount, dispatch, totalQty, totalTaxAmount, roundOffAmount, roundedAmount]);
 
   const columns: CommonTableColumn<PosProductDataModal>[] = [

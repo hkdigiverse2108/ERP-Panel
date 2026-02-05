@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BankDropdownApiResponse, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, ContactApiResponse, ContactDropdownApiResponse, CountryApiResponse, EmployeeApiResponse, MaterialConsumptionApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, ProductApiResponse, ProductDropDownApiResponse, ProductSingleApiResponse, RecipeApiResponse, RecipeDropdownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SingleEmployeeApiResponse, StockApiResponse, StockVerificationApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomDropdownApiResponse, UploadResponse } from "../Types";
+import type { AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BankDropdownApiResponse, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, ContactApiResponse, ContactDropdownApiResponse, CountryApiResponse, EmployeeApiResponse, MaterialConsumptionApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, PosHoldOrderApiResponse, ProductApiResponse, ProductDropDownApiResponse, ProductSingleApiResponse, RecipeApiResponse, RecipeDropdownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SingleEmployeeApiResponse, StockApiResponse, StockVerificationApiResponse, TaxApiResponse, TaxDropdownApiResponse, UomDropdownApiResponse, UploadResponse } from "../Types";
 import type { BillOfLiveProductApiResponse } from "../Types/BillOfMaterials";
 import type { SupplierBillApiResponse } from "../Types/SupplierBill";
 import { Get } from "./Methods";
@@ -88,5 +88,5 @@ export const Queries = {
   useGetMaterialConsumption: (params?: Params) => useQueries<MaterialConsumptionApiResponse>([KEYS.MATERIAL_CONSUMPTION.BASE, params], () => Get(URL_KEYS.MATERIAL_CONSUMPTION.ALL, params)),
 
   //*************** POS **************** */
-  useGetPosHoldOrder: (params?: Params) => useQueries<any>([KEYS.POS.BASE, params], () => Get(URL_KEYS.POS.HOLD_ORDER, params)),
+  useGetPosHoldOrder: (params?: Params, enabled?: boolean) => useQueries<PosHoldOrderApiResponse>([KEYS.POS.BASE, params], () => Get(URL_KEYS.POS.HOLD_ORDER, params), { enabled: enabled }),
 };
