@@ -40,6 +40,11 @@ export type SelectOptionType = {
   label: string;
   value: string;
 };
+export interface CommonStatsItem {
+  label: string;
+  value: number | string;
+  color?: string;
+}
 
 export interface CommonSelectProps {
   label?: string;

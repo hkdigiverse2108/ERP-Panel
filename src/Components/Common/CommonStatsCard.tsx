@@ -1,13 +1,7 @@
 import { Grid, Paper, Typography, Box, useTheme } from "@mui/material";
 import type { FC } from "react";
 import type { SxProps, Theme } from "@mui/material/styles";
-import type { GridType } from "../../Types";
-
-export interface CommonStatsItem {
-  label: string;
-  value: number | string;
-  color?: string;
-}
+import type { CommonStatsItem, GridType } from "../../Types";
 
 interface CommonStatsCardProps {
   stats: CommonStatsItem[];
