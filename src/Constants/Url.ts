@@ -165,5 +165,10 @@ export const URL_KEYS = {
     ALL: "/additional-charge/all",
     ADD: "/additional-charge/add",
     EDIT: "/additional-charge/edit",
-  }
+  },
+  ACCOUNT_GROUP: {
+    BASE: "/account-group",
+    DROPDOWN: "/account-group/dropdown",
+    ALL: "/account-group/all",
+  },
 } as const;

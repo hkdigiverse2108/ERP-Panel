@@ -156,5 +156,8 @@ export const KEYS = {
     ADD: "additional-charge-add",
     EDIT: "additional-charge-edit",
     DELETE: "additional-charge-delete",
-  }
+  },
+  ACCOUNT_GROUP: {
+    BASE: "account-group",
+  },
 };

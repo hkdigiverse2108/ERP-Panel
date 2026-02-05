@@ -2,7 +2,7 @@ import { Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import type { FC } from "react";
 import { Mutations, Queries } from "../../../../Api";
-import { CommonButton, CommonValidationTextField, CommonValidationSwitch, CommonValidationSelect } from "../../../../Attribute";
+import { CommonButton, CommonValidationTextField, CommonValidationSwitch, CommonValidationSelect, CommonValidationRadio } from "../../../../Attribute";
 import { PAGE_TITLE } from "../../../../Constants";
 import type { AdditionalChargesBase, AdditionalChargesFormValues } from "../../../../Types/AdditionalCharges";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../../Utils";
@@ -19,6 +19,7 @@ const AdditionalChargesForm: FC<Props> = ({ openModal, setOpenModal, isEdit }) =
   const { mutate: addAdditionalCharge, isPending: isAddLoading } = Mutations.useAddAdditionalCharges();
   const { mutate: editAdditionalCharge, isPending: isEditLoading } = Mutations.useEditAdditionalCharges();
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
+  const { data: AccountGroupData, isLoading: AccountGroupDataLoading } = Queries.useGetAccountGroupDropdown();
 
   const isEditing = Boolean(isEdit?._id);
 
@@ -53,6 +54,16 @@ const AdditionalChargesForm: FC<Props> = ({ openModal, setOpenModal, isEdit }) =
       });
     }
   };
+  const topContent = (
+    <CommonValidationRadio
+      name="additionalChargetype"
+      options={[
+        { label: "Purchase", value: "purchase" },
+        { label: "Sales", value: "sales" },
+      ]}
+      grid={{ xs: "auto" }}
+    />
+  );
 
   return (
     <CommonModal title={isEditing ? PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.EDIT : PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.ADD} isOpen={openModal} onClose={() => setOpenModal(false)} className="max-w-125 m-2 sm:m-5">
@@ -60,7 +71,7 @@ const AdditionalChargesForm: FC<Props> = ({ openModal, setOpenModal, isEdit }) =
         {({ dirty }) => (
           <Form noValidate>
             <Grid container spacing={2}>
-              <CommonCard hideDivider grid={{ xs: 12 }}>
+              <CommonCard topContent={topContent} grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
                   <CommonValidationTextField name="name" label="Additional Charge" required grid={{ xs: 12 }} />
 
@@ -68,7 +79,7 @@ const AdditionalChargesForm: FC<Props> = ({ openModal, setOpenModal, isEdit }) =
 
                   <CommonValidationSelect name="taxId" label="Select Tax" isLoading={TaxDataLoading} options={GenerateOptions(TaxData?.data)} required grid={{ xs: 12 }} />
 
-                  <CommonValidationSelect name="accountGroupId" label="Select Group" options={[]} required grid={{ xs: 12 }} />
+                  <CommonValidationSelect name="accountGroupId" label="Select Group" isLoading={AccountGroupDataLoading} options={GenerateOptions(AccountGroupData?.data)} required grid={{ xs: 12 }} />
 
                   <CommonValidationTextField name="hsnSac" label="HSN / SAC" grid={{ xs: 12 }} />
 
