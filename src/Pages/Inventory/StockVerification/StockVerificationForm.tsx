@@ -25,8 +25,8 @@ const StockVerificationForm = () => {
   const isEditing = Boolean(updateData?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
 
-  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown();
-  const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown();
+  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
+  const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true });
   const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown(filter);
 
   const { mutate: addStock, isPending: isAddLoading } = Mutations.useAddStockVerification();
@@ -90,7 +90,7 @@ const StockVerificationForm = () => {
 
   const totalDifferenceAmount = rows.reduce((sum, r) => sum + r?.differenceAmount, 0);
 
-  const handleSubmit = (values: { categoryId: string; brandId: string }) => setFilter({  categoryFilter: values.categoryId, brandFilter: values.brandId });
+  const handleSubmit = (values: { categoryId: string; brandId: string }) => setFilter({ categoryFilter: values.categoryId, brandFilter: values.brandId });
 
   const handleStockSubmit = async () => {
     const items = rows.map((r) => ({
@@ -112,7 +112,7 @@ const StockVerificationForm = () => {
       totalDifferenceAmount: totalDifferenceAmount,
       totalApprovedQty: totalApprovedQty,
       status: status[0],
-    ...(enterRemark && { remark: enterRemark })
+      ...(enterRemark && { remark: enterRemark }),
     };
     const handleSuccess = () => navigate(-1);
 
@@ -139,8 +139,8 @@ const StockVerificationForm = () => {
                   {({ dirty }) => (
                     <Form noValidate>
                       <Grid container spacing={2}>
-                        <CommonValidationSelect name="categoryId" label="Category" placeholder="Category & Subcategory Selection" options={GenerateOptions(CategoryData?.data)} isLoading={CategoryDataLoading} grid={{ xs: 12, sm: 6, md: 4 }} />
-                        <CommonValidationSelect name="brandId" label="Brand" placeholder="Brand & Subbrand Selection" options={GenerateOptions(BrandsData?.data)} isLoading={BrandsDataLoading} grid={{ xs: 12, md: 4 }} />
+                        <CommonValidationSelect name="categoryId" label="Category" placeholder="Category Selection" options={GenerateOptions(CategoryData?.data)} isLoading={CategoryDataLoading} grid={{ xs: 12, sm: 6, md: 4 }} />
+                        <CommonValidationSelect name="brandId" label="Brand" placeholder="Brand Selection" options={GenerateOptions(BrandsData?.data)} isLoading={BrandsDataLoading} grid={{ xs: 12, md: 4 }} />
                         <CommonButton type="submit" variant="contained" title="Apply" disabled={!dirty} />
                       </Grid>
                     </Form>
