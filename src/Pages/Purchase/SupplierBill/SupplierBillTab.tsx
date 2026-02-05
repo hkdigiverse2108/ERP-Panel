@@ -24,9 +24,11 @@ interface SupplierBillTabsProps {
   handleReturnRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
   productOptions: { label: string; value: string }[];
   isProductLoading: boolean;
+  returnRoundOffAmount: string | number;
+  onReturnRoundOffAmountChange: (value: string | number) => void;
 }
 
-const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, notes, setNotes, setOpenModal, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading }) => {
+const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, notes, setNotes, setOpenModal, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange }) => {
   return (
     <>
       {/* ================= TABS HEADER ================= */}
@@ -175,7 +177,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
                 New Term
               </CommonButton>
             </Box>
-            
+
             <table className="w-full text-sm border">
               <thead className="bg-gray-100">
                 <tr>
@@ -294,13 +296,15 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
                 <span>{returnRows.reduce((a, b) => a + (parseFloat(String(b.taxAmount)) || 0), 0).toFixed(2)}</span>
               </Box>
 
-              <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700 text-blue-600">
+              <Box className="flex justify-between items-center p-2 border-b border-gray-200 dark:border-gray-700 text-blue-600">
                 <span>Roundoff</span>
-                <span>{(Math.round(returnRows.reduce((a, b) => a + (parseFloat(String(b.totalAmount)) || 0), 0)) - returnRows.reduce((a, b) => a + (parseFloat(String(b.totalAmount)) || 0), 0)).toFixed(2)}</span>
+                <Box width={100}>
+                  <CommonTextField type="number" value={returnRoundOffAmount} onChange={onReturnRoundOffAmountChange} />
+                </Box>
               </Box>
               <Box className="flex justify-between p-3 text-lg font-semibold">
                 <span>Net Amount</span>
-                <span>{Math.round(returnRows.reduce((a, b) => a + (parseFloat(String(b.totalAmount)) || 0), 0)).toFixed(2)}</span>
+                <span>{(returnRows.reduce((a, b) => a + (parseFloat(String(b.totalAmount)) || 0), 0) + (parseFloat(String(returnRoundOffAmount)) || 0)).toFixed(2)}</span>
               </Box>
             </Box>
           </Box>

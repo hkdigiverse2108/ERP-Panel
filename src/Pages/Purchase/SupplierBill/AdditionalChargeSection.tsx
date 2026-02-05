@@ -26,9 +26,11 @@ interface AdditionalChargesSectionProps {
   };
   isAdditionalChargeLoading: boolean;
   additionalChargeOptions: { label: string; value: string }[];
+  roundOffAmount: string | number;
+  onRoundOffAmountChange: (value: string | number) => void;
 }
 
-const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAdditionalCharge, setShowAdditionalCharge, additionalChargeRows, handleAddAdditionalCharge, handleCutAdditionalCharge, handleAdditionalChargeRowChange, taxOptions, isTaxLoading, flatDiscount, onFlatDiscountChange, summary, isAdditionalChargeLoading, additionalChargeOptions }) => {
+const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAdditionalCharge, setShowAdditionalCharge, additionalChargeRows, handleAddAdditionalCharge, handleCutAdditionalCharge, handleAdditionalChargeRowChange, taxOptions, isTaxLoading, flatDiscount, onFlatDiscountChange, summary, isAdditionalChargeLoading, additionalChargeOptions, roundOffAmount, onRoundOffAmountChange }) => {
   return (
     <>
       {!showAdditionalCharge && (
@@ -131,9 +133,11 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
             <span>Tax</span>
             <span>{summary.taxAmount.toFixed(2)}</span>
           </Box>
-          <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700 text-blue-600">
+          <Box className="flex justify-between items-center p-2 border-b border-gray-200 dark:border-gray-700 text-blue-600">
             <span>Roundoff</span>
-            <span>{summary.roundOff.toFixed(2)}</span>
+            <Box width={100}>
+              <CommonTextField type="number" value={roundOffAmount} onChange={onRoundOffAmountChange} />
+            </Box>
           </Box>
           <Box className="flex justify-between p-3 text-lg font-semibold">
             <span>Net Amount</span>

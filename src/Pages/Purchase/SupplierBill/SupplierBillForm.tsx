@@ -56,6 +56,8 @@ const SupplierBillForm = () => {
   const [flatDiscount, setFlatDiscount] = useState<string | number>(0);
   const { data: additionalchargedata, isLoading: additionalchargeLoading } = Queries.useGetAdditionalChargeDropdown();
   const additionalChargeOptions = GenerateOptions(additionalchargedata?.data);
+  const [roundOffAmount, setRoundOffAmount] = useState<string | number>(0);
+  const [returnRoundOffAmount, setReturnRoundOffAmount] = useState<string | number>(0);
   const calculateSummary = () => {
     const itemDiscount = rows.reduce((s, r) => s + (parseFloat(String(r.disc1)) || 0) + (parseFloat(String(r.disc2)) || 0), 0);
     const itemTax = rows.reduce((s, r) => s + (parseFloat(String(r.taxAmount)) || 0), 0);
@@ -67,8 +69,8 @@ const SupplierBillForm = () => {
     const taxableAmount = itemTaxable + additionalChargeAmount;
     const taxAmount = itemTax + additionalChargeTax;
     const billTotal = taxableAmount + taxAmount - (parseFloat(String(flatDiscount)) || 0);
-    const netAmount = Math.round(billTotal);
-    const roundOff = netAmount - billTotal;
+    const roundOff = parseFloat(String(roundOffAmount)) || 0;
+    const netAmount = billTotal + roundOff;
     return { flatDiscount: parseFloat(String(flatDiscount)) || 0, grossAmount, itemDiscount, itemTax, additionalChargeAmount, additionalChargeTax, taxableAmount, taxAmount, roundOff, netAmount };
   };
   const summary = calculateSummary();
@@ -106,6 +108,12 @@ const SupplierBillForm = () => {
       }
       if (data.summary?.flatDiscount) {
         setFlatDiscount(data.summary.flatDiscount);
+      }
+      if (data.summary?.roundOff) {
+        setRoundOffAmount(data.summary.roundOff);
+      }
+      if (data.returnProductDetails?.summary?.roundOff) {
+        setReturnRoundOffAmount(data.returnProductDetails.summary.roundOff);
       }
     }
   }, [data, isEditing]);
@@ -331,10 +339,10 @@ const SupplierBillForm = () => {
                 </CommonCard>
               </Form>
               <CommonCard hideDivider>
-                <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} termsList={termsList} notes={notes} setNotes={setNotes} setOpenModal={setOpenModal} productOptions={productOptions} isProductLoading={ProductsDataLoading} />
+                <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} termsList={termsList} notes={notes} setNotes={setNotes} setOpenModal={setOpenModal} productOptions={productOptions} isProductLoading={ProductsDataLoading} returnRoundOffAmount={returnRoundOffAmount} onReturnRoundOffAmountChange={setReturnRoundOffAmount} />
               </CommonCard>
               <CommonCard grid={{ xs: 12 }}>
-                <AdditionalChargesSection showAdditionalCharge={showAdditionalCharge} setShowAdditionalCharge={setShowAdditionalCharge} additionalChargeRows={additionalChargeRows} handleAddAdditionalCharge={handleAddAdditionalCharge} handleCutAdditionalCharge={handleCutAdditionalCharge} handleAdditionalChargeRowChange={handleAdditionalChargeRowChange} taxOptions={taxOptions} isTaxLoading={TaxDataLoading} flatDiscount={flatDiscount} onFlatDiscountChange={setFlatDiscount} summary={summary} isAdditionalChargeLoading={additionalchargeLoading} additionalChargeOptions={additionalChargeOptions} />
+                <AdditionalChargesSection showAdditionalCharge={showAdditionalCharge} setShowAdditionalCharge={setShowAdditionalCharge} additionalChargeRows={additionalChargeRows} handleAddAdditionalCharge={handleAddAdditionalCharge} handleCutAdditionalCharge={handleCutAdditionalCharge} handleAdditionalChargeRowChange={handleAdditionalChargeRowChange} taxOptions={taxOptions} isTaxLoading={TaxDataLoading} flatDiscount={flatDiscount} onFlatDiscountChange={setFlatDiscount} summary={summary} isAdditionalChargeLoading={additionalchargeLoading} additionalChargeOptions={additionalChargeOptions} roundOffAmount={roundOffAmount} onRoundOffAmountChange={setRoundOffAmount} />
               </CommonCard>
               <CommonBottomActionBar save isLoading={isAddLoading || isEditLoading} onSave={() => formikRef.current?.submitForm()} />
             </>
