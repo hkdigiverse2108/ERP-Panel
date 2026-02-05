@@ -162,6 +162,7 @@ export const URL_KEYS = {
   },
   ADDITIONAL_CHARGES: {
     BASE: "/additional-charge",
+    DROPDOWN: "/additional-charge/dropdown",
     ALL: "/additional-charge/all",
     ADD: "/additional-charge/add",
     EDIT: "/additional-charge/edit",

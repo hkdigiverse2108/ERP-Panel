@@ -114,7 +114,9 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
                     </td>
                     {/* Tax */}
                     <td className="p-2 min-w-28">
-                      <CommonTextField type="number" value={rows[index].taxAmount} onChange={(v) => handleRowChange(index, "taxAmount", v)} />
+                      <span>
+                        {rows[index].taxName} {rows[index].taxRate}% (₹{rows[index].taxAmount})
+                      </span>
                     </td>
                     {/* Landing */}
                     <td className="p-2 min-w-28">
@@ -130,7 +132,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
                     </td>
                   </tr>
                 ))}
-                <tr className="bg-gray-100 font-semibold">
+                <tr className="bg-gray-50 dark:bg-gray-900 font-medium text-gray-700 dark:text-gray-200">
                   <td colSpan={3} className="p-2 text-right">
                     Total
                   </td>
@@ -173,7 +175,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
                 New Term
               </CommonButton>
             </Box>
-
+            
             <table className="w-full text-sm border">
               <thead className="bg-gray-100">
                 <tr>
@@ -191,7 +193,6 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
               </tbody>
             </table>
           </Box>
-
           <Box>
             <Box fontWeight={600} mb={1}>
               Note
@@ -256,7 +257,9 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
                       <CommonTextField type="number" value={returnRows[index].taxableAmount} disabled />
                     </td>
                     <td className="p-2">
-                      <CommonTextField type="number" value={returnRows[index].taxAmount} onChange={(v) => handleReturnRowChange(index, "taxAmount", v)} />
+                      <span>
+                        {returnRows[index].taxName} {returnRows[index].taxRate}% (₹{returnRows[index].taxAmount})
+                      </span>
                     </td>
                     <td className="p-2">
                       <CommonTextField type="number" value={returnRows[index].landingCost} onChange={(v) => handleReturnRowChange(index, "landingCost", v)} />

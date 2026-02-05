@@ -35,7 +35,7 @@ const SupplierBillForm = () => {
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
-  const emptyRow: ProductRow = { productId: "", itemCode: "", qty: "", freeQty: "", unit: "", unitCost: "", mrp: "", sellingPrice: "", disc1: "", disc2: "", taxableAmount: "", taxAmount: "", landingCost: "", margin: "", totalAmount: "", mfgDate: "", expiryDate: "" };
+  const emptyRow: ProductRow = { productId: "", itemCode: "", qty: "", freeQty: "", unit: "", unitCost: "", mrp: "", sellingPrice: "", disc1: "", disc2: "", taxableAmount: "", taxAmount: "", landingCost: "", margin: "", totalAmount: "", mfgDate: "", expiryDate: "", taxRate: "", taxName: "" };
   const additionalChargeEmptyRow: AdditionalChargeRow = { chargeId: "", taxableAmount: "", tax: "", taxAmount: "", totalAmount: "" };
   const [rows, setRows] = useState<ProductRow[]>([emptyRow]);
   const [returnRows, setReturnRows] = useState<ProductRow[]>([emptyRow]);
@@ -54,7 +54,8 @@ const SupplierBillForm = () => {
   const { data: ProductsData, isLoading: ProductsDataLoading } = Queries.useGetProductDropdown();
   const productOptions = GenerateOptions(ProductsData?.data);
   const [flatDiscount, setFlatDiscount] = useState<string | number>(0);
-
+  const { data: additionalchargedata, isLoading: additionalchargeLoading } = Queries.useGetAdditionalChargeDropdown();
+  const additionalChargeOptions = GenerateOptions(additionalchargedata?.data);
   const calculateSummary = () => {
     const itemDiscount = rows.reduce((s, r) => s + (parseFloat(String(r.disc1)) || 0) + (parseFloat(String(r.disc2)) || 0), 0);
     const itemTax = rows.reduce((s, r) => s + (parseFloat(String(r.taxAmount)) || 0), 0);
@@ -94,6 +95,8 @@ const SupplierBillForm = () => {
               margin: item.margin || "",
               mfgDate: item.mfgDate ? DateConfig.utc(item.mfgDate).toISOString() : "",
               expiryDate: item.expiryDate ? DateConfig.utc(item.expiryDate).toISOString() : "",
+              taxRate: product?.purchaseTaxId?.percentage || 0,
+              taxName: product?.purchaseTaxId?.name || "",
             };
           }),
         );
@@ -139,16 +142,17 @@ const SupplierBillForm = () => {
     const sellingPrice = parseFloat(String(row.sellingPrice)) || 0;
     const disc1 = parseFloat(String(row.disc1)) || 0;
     const disc2 = parseFloat(String(row.disc2)) || 0;
-    const taxAmount = parseFloat(String(row.taxAmount)) || 0;
+    const taxRate = parseFloat(String(row.taxRate)) || 0;
     const freeQty = parseFloat(String(row.freeQty)) || 0;
     const mrp = parseFloat(String(row.mrp)) || 0;
     const baseAmount = qty * sellingPrice;
     const taxableAmount = Math.max(0, baseAmount - disc1 - disc2);
+    const taxAmount = (taxableAmount * taxRate) / 100;
     const totalAmount = taxableAmount + taxAmount;
     const totalQty = qty + freeQty;
     const landingCost = totalQty > 0 ? totalAmount / totalQty : 0;
     const margin = mrp - landingCost;
-    return { ...row, taxableAmount: taxableAmount.toFixed(2), totalAmount: totalAmount.toFixed(2), landingCost: landingCost.toFixed(2), margin: margin.toFixed(2) };
+    return { ...row, taxAmount: taxAmount.toFixed(2), taxableAmount: taxableAmount.toFixed(2), totalAmount: totalAmount.toFixed(2), landingCost: landingCost.toFixed(2), margin: margin.toFixed(2) };
   };
   const calculateReturnRow = (row: ProductRow): ProductRow => {
     const qty = parseFloat(String(row.qty)) || 0;
@@ -166,13 +170,21 @@ const SupplierBillForm = () => {
       const newRows = [...prev];
       const finalValue = Array.isArray(value) ? value[0] : value;
       let updatedRow = { ...newRows[index], [field]: finalValue };
-      if (field === "productId" && finalValue) {
+      if (field === "productId") {
+        if (!finalValue) {
+          updatedRow = { ...emptyRow };
+          newRows[index] = updatedRow;
+          return newRows;
+        }
         const product = (ProductsData?.data || []).find((p) => String(p._id) === String(finalValue));
         if (product) {
-          updatedRow = { ...updatedRow, itemCode: product.itemCode || "", unit: product.unit || "", mrp: product.mrp || 0, sellingPrice: product.purchasePrice || product.sellingPrice || 0, landingCost: product.landingCost || 0 };
+          updatedRow = { ...updatedRow, itemCode: product.itemCode || "", qty: 1, unit: product.unit || "", mrp: product.mrp || 0, sellingPrice: product.purchasePrice || product.sellingPrice || 0, landingCost: product.landingCost || 0, taxRate: product.purchaseTaxId?.percentage || 0, taxName: product.purchaseTaxId?.name || "" };
         }
       }
       newRows[index] = calculateRow(updatedRow);
+      if (field === "productId" && finalValue && index === prev.length - 1) {
+        newRows.push({ ...emptyRow });
+      }
       return newRows;
     });
   };
@@ -181,14 +193,21 @@ const SupplierBillForm = () => {
       const newRows = [...prev];
       const finalValue = Array.isArray(value) ? value[0] : value;
       let updatedRow = { ...newRows[index], [field]: finalValue };
-
-      if (field === "productId" && finalValue) {
+      if (field === "productId") {
+        if (!finalValue) {
+          updatedRow = { ...emptyRow };
+          newRows[index] = updatedRow;
+          return newRows;
+        }
         const product = (ProductsData?.data || []).find((p) => String(p._id) === String(finalValue));
         if (product) {
-          updatedRow = { ...updatedRow, itemCode: product.itemCode || "", unit: product.unit || "", mrp: product.mrp || 0, sellingPrice: product.purchasePrice || product.sellingPrice || 0, landingCost: product.landingCost || 0 };
+          updatedRow = { ...updatedRow, itemCode: product.itemCode || "", qty: 1, unit: product.unit || "", mrp: product.mrp || 0, sellingPrice: product.purchasePrice || product.sellingPrice || 0, landingCost: product.landingCost || 0 };
         }
       }
       newRows[index] = calculateReturnRow(updatedRow);
+      if (field === "productId" && finalValue && index === prev.length - 1) {
+        newRows.push({ ...emptyRow });
+      }
       return newRows;
     });
   };
@@ -219,6 +238,10 @@ const SupplierBillForm = () => {
         newRows[index].taxAmount = taxAmt.toFixed(2);
         newRows[index].totalAmount = total.toFixed(2);
       }
+      if (field === "chargeId" && finalValue && index === prev.length - 1) {
+        newRows.push({ ...additionalChargeEmptyRow });
+      }
+
       return newRows;
     });
   };
@@ -311,7 +334,7 @@ const SupplierBillForm = () => {
                 <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} termsList={termsList} notes={notes} setNotes={setNotes} setOpenModal={setOpenModal} productOptions={productOptions} isProductLoading={ProductsDataLoading} />
               </CommonCard>
               <CommonCard grid={{ xs: 12 }}>
-                <AdditionalChargesSection showAdditionalCharge={showAdditionalCharge} setShowAdditionalCharge={setShowAdditionalCharge} additionalChargeRows={additionalChargeRows} handleAddAdditionalCharge={handleAddAdditionalCharge} handleCutAdditionalCharge={handleCutAdditionalCharge} handleAdditionalChargeRowChange={handleAdditionalChargeRowChange} taxOptions={taxOptions} isTaxLoading={TaxDataLoading} flatDiscount={flatDiscount} onFlatDiscountChange={setFlatDiscount} summary={summary} />
+                <AdditionalChargesSection showAdditionalCharge={showAdditionalCharge} setShowAdditionalCharge={setShowAdditionalCharge} additionalChargeRows={additionalChargeRows} handleAddAdditionalCharge={handleAddAdditionalCharge} handleCutAdditionalCharge={handleCutAdditionalCharge} handleAdditionalChargeRowChange={handleAdditionalChargeRowChange} taxOptions={taxOptions} isTaxLoading={TaxDataLoading} flatDiscount={flatDiscount} onFlatDiscountChange={setFlatDiscount} summary={summary} isAdditionalChargeLoading={additionalchargeLoading} additionalChargeOptions={additionalChargeOptions} />
               </CommonCard>
               <CommonBottomActionBar save isLoading={isAddLoading || isEditLoading} onSave={() => formikRef.current?.submitForm()} />
             </>

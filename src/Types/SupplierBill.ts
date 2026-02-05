@@ -153,6 +153,8 @@ export interface ProductRow {
   totalAmount: string | number;
   mfgDate: string;
   expiryDate: string;
+  taxRate?: number | string;
+  taxName?: string;
 }
 
 export interface AdditionalChargeRow {

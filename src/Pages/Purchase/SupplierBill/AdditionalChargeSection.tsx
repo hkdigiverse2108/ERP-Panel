@@ -24,9 +24,11 @@ interface AdditionalChargesSectionProps {
     roundOff: number;
     netAmount: number;
   };
+  isAdditionalChargeLoading: boolean;
+  additionalChargeOptions: { label: string; value: string }[];
 }
 
-const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAdditionalCharge, setShowAdditionalCharge, additionalChargeRows, handleAddAdditionalCharge, handleCutAdditionalCharge, handleAdditionalChargeRowChange, taxOptions, isTaxLoading, flatDiscount, onFlatDiscountChange, summary }) => {
+const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAdditionalCharge, setShowAdditionalCharge, additionalChargeRows, handleAddAdditionalCharge, handleCutAdditionalCharge, handleAdditionalChargeRowChange, taxOptions, isTaxLoading, flatDiscount, onFlatDiscountChange, summary, isAdditionalChargeLoading, additionalChargeOptions }) => {
   return (
     <>
       {!showAdditionalCharge && (
@@ -36,7 +38,7 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
       )}
 
       {showAdditionalCharge && (
-        <Box sx={{ mt: 2, border: "1px solid", borderColor: "divider", borderRadius: 1, p: 2, bgcolor: "background.paper" }}>
+        <Box sx={{ mt: 2, p: 2 }}>
           {/* ===== HEADER ===== */}
           <Box display="flex" justifyContent="flex-end" mb={1}>
             <CommonButton size="small" color="error" variant="outlined" onClick={() => setShowAdditionalCharge(false)}>
@@ -78,7 +80,7 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
                     <td className="p-2">{index + 1}</td>
 
                     <td className="p-2 min-w-80 w-80">
-                      <CommonSelect label="Search Additional" value={additionalChargeRows[index].chargeId ? [additionalChargeRows[index].chargeId] : []} options={[]} onChange={(v) => handleAdditionalChargeRowChange(index, "chargeId", v)} />
+                      <CommonSelect label="Search Additional" value={additionalChargeRows[index].chargeId ? [additionalChargeRows[index].chargeId] : []} options={additionalChargeOptions} isLoading={isAdditionalChargeLoading} onChange={(v) => handleAdditionalChargeRowChange(index, "chargeId", v)} />
                     </td>
 
                     <td className="p-2 min-w-80 w-80">
