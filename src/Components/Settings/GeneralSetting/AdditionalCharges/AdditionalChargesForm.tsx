@@ -24,11 +24,11 @@ const AdditionalChargesForm: FC<Props> = ({ openModal, setOpenModal, isEdit }) =
   const isEditing = Boolean(isEdit?._id);
 
   const initialValues: AdditionalChargesFormValues = {
-    type: isEdit?.type || "",
+    type: isEdit?.type || "purchase",
     name: isEdit?.name || "",
     hsnSac: isEdit?.hsnSac || "",
-    taxId: isEdit?.taxId || "",
-    accountGroupId: isEdit?.accountGroupId || "",
+    taxId: (isEdit?.taxId as any)?._id || (isEdit?.taxId as string) || "",
+    accountGroupId: (isEdit?.accountGroupId as any)?._id || (isEdit?.accountGroupId as string) || "",
     isActive: isEdit?.isActive ?? true,
     defaultValue: isEdit?.defaultValue || { value: 0, type: "flat" },
   };
@@ -56,7 +56,7 @@ const AdditionalChargesForm: FC<Props> = ({ openModal, setOpenModal, isEdit }) =
   };
   const topContent = (
     <CommonValidationRadio
-      name="additionalChargetype"
+      name="type"
       options={[
         { label: "Purchase", value: "purchase" },
         { label: "Sales", value: "sales" },
@@ -75,7 +75,7 @@ const AdditionalChargesForm: FC<Props> = ({ openModal, setOpenModal, isEdit }) =
                 <Grid container spacing={2} sx={{ p: 2 }}>
                   <CommonValidationTextField name="name" label="Additional Charge" required grid={{ xs: 12 }} />
 
-                  <CommonValidationTextField name="type" label="Default value" required grid={{ xs: 12 }} isCurrency currencyDisabled />
+                  <CommonValidationTextField name="defaultValue.type" label="Default value" required grid={{ xs: 12 }} isCurrency currencyDisabled />
 
                   <CommonValidationSelect name="taxId" label="Select Tax" isLoading={TaxDataLoading} options={GenerateOptions(TaxData?.data)} required grid={{ xs: 12 }} />
 
