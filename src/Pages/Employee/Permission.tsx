@@ -105,7 +105,8 @@ const Permission = () => {
   const permissionColumn = (key: PermissionKey, label: string): AppGridColDef<PermissionDetailsApiPayload> => ({
     field: key,
     headerName: label,
-    width: 150,
+    flex: 1,
+    minWidth: 150,
     align: "center",
     headerAlign: "center",
     sortable: false,

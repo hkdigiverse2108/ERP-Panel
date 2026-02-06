@@ -9,7 +9,7 @@ import { Grid } from "@mui/material";
 import { CommonButton, CommonTextField } from "../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setAdditionalChargeModal, setApplyCouponModal, setCardModal, setCashModal, setPayLaterModal, setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
-import { setMultiplePay, setRemarks, setTotalFlatDiscount, setTotalRoundOFF } from "../../../../../Store/Slices/PosSlice";
+import { setMultiplePay, setRemarks, setFlatDiscountAmount, setRoundOff } from "../../../../../Store/Slices/PosSlice";
 import AdditionalCharge from "./AdditionalCharge";
 import ApplyCoupon from "./ApplyCoupon";
 import CardDetails from "./CardDetails";
@@ -25,9 +25,9 @@ const PosFooter = () => {
     { label: "Quantity", value: PosProduct.totalQty }, //totalQty
     { label: "MRP", value: PosProduct.totalMep }, //totalMrp
     { label: "Tax Amount", value: PosProduct.totalTaxAmount }, //totalTaxAmount
-    { label: "Add Charges+", value: PosProduct.totalCharges }, //totalCharges
+    { label: "Add Charges+", value: PosProduct.totalAdditionalCharge }, //totalAdditionalCharge
     { label: "Discount", value: PosProduct.totalDiscount }, //totalDiscount
-    { label: "Flat Discount" }, //totalFlatDiscount
+    { label: "Flat Discount" }, //flatDiscountAmount
     { label: "Round OFF" },
     { label: "Amount", value: PosProduct.totalAmount, highlight: true },
   ];
@@ -37,15 +37,15 @@ const PosFooter = () => {
       <div className="w-full bg-white dark:bg-gray-dark">
         {/* Remarks */}
         <div className="p-2">
-          <CommonTextField label="Remarks" placeholder="Remarks" value={PosProduct.remarks} onChange={(e) => dispatch(setRemarks(e))} />
+          <CommonTextField label="Remarks" placeholder="Remarks" value={PosProduct.remark} onChange={(e) => dispatch(setRemarks(e))} />
         </div>
 
         {/* Summary Row */}
         <Grid container spacing={{ xs: 1, xl: 0 }} className="flex items-center py-2">
           {summaryRowData.map((item, index) => (
             <Grid size={{ xs: 6, md: 3, xl: 1.5 }} key={index} className={`flex flex-col items-center justify-center px-4 ${!item.highlight ? "border-r border-gray-300 dark:border-gray-700" : ""} `}>
-              {item.label === "Flat Discount" && <CommonTextField label="Flat Discount" value={PosProduct.totalFlatDiscount} onChange={(e) => dispatch(setTotalFlatDiscount(e))} isCurrency />}
-              {item.label === "Round OFF" && <CommonTextField label="Round OFF" value={PosProduct.totalRoundOFF} onChange={(e) => dispatch(setTotalRoundOFF(e))} />}
+              {item.label === "Flat Discount" && <CommonTextField label="Flat Discount" value={PosProduct.flatDiscountAmount} onChange={(e) => dispatch(setFlatDiscountAmount(e))} isCurrency currencyDisabled />}
+              {item.label === "Round OFF" && <CommonTextField label="Round OFF" value={PosProduct.roundOff} onChange={(e) => dispatch(setRoundOff(e))} />}
               {item.value !== undefined && (
                 <>
                   <span className={`font-semibold ${item.highlight ? "text-brand-600 text-2xl" : "text-lg text-gray-900 dark:text-gray-100"}`}>{item.value.toString()}</span>
