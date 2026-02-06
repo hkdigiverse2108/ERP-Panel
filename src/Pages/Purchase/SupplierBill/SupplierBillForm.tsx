@@ -1,17 +1,17 @@
 import { Box } from "@mui/material";
 import { Form, Formik, useFormikContext, type FormikHelpers, type FormikProps } from "formik";
 import { useLocation } from "react-router-dom";
-import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { DateConfig, GenerateOptions } from "../../../Utils";
 import type { Supplier, SupplierBillFormValues, TermsAndCondition, ProductRow, AdditionalChargeRow, SupplierBillProductDetails, AdditionalChargeDetails, SupplierBillProductItem, AdditionalChargeItem, ProductBase } from "../../../Types/SupplierBill";
-import { BREADCRUMBS, PAYMENT_TERMS, REVERSE_CHARGE, TAX_TYPE } from "../../../Data";
+import { BREADCRUMBS } from "../../../Data";
 import { Mutations, Queries } from "../../../Api";
 import { useEffect, useRef, useState } from "react";
 import TermsAndConditionModal from "./TermsAndConditionModal";
 import SupplierBillTabs from "./SupplierBillTab";
 import AdditionalChargesSection from "./AdditionalChargeSection";
+import SupplierBillDetails from "./SupplierBillDetails";
 
 const SupplierWatcher = ({ suppliers, onChange }: { suppliers: Supplier[]; onChange: (supplier: Supplier | null) => void }) => {
   const { values } = useFormikContext<SupplierBillFormValues>();
@@ -246,6 +246,21 @@ const SupplierBillForm = () => {
         newRows[index].taxAmount = taxAmt.toFixed(2);
         newRows[index].totalAmount = total.toFixed(2);
       }
+      if (field === "chargeId") {
+        const selectedCharge = additionalchargedata?.data?.find((c: any) => c._id === finalValue);
+        if (selectedCharge) {
+          const chargeValue = (selectedCharge as any).defaultValue?.value || 0;
+          newRows[index].taxableAmount = String(chargeValue);
+
+          const val = parseFloat(String(chargeValue)) || 0;
+          const taxRate = parseFloat(String(newRows[index].tax)) || 0;
+          const taxAmt = (val * taxRate) / 100;
+          const total = val + taxAmt;
+          newRows[index].taxAmount = taxAmt.toFixed(2);
+          newRows[index].totalAmount = total.toFixed(2);
+        }
+      }
+
       if (field === "chargeId" && finalValue && index === prev.length - 1) {
         newRows.push({ ...additionalChargeEmptyRow });
       }
@@ -298,57 +313,14 @@ const SupplierBillForm = () => {
             <>
               <Form noValidate>
                 <SupplierWatcher suppliers={suppliers} onChange={setSelectedSupplier} />
-                <CommonCard title="Supplier Bill Details" grid={{ xs: 12 }}>
-                  <Box sx={{ p: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "340px 1fr" }, gap: 2 }}>
-                    {/* ================= LEFT SIDE ================= */}
-                    <Box display="flex" flexDirection="column" gap={2}>
-                      <CommonValidationSelect name="supplierId" label="Select Supplier" required options={supplierOptions} grid={{ xs: 12 }} />
-                      {/* PLACE OF SUPPLY */}
-                      <Box display="flex" gap={1} flexWrap="wrap">
-                        <Box fontWeight={600}>Place of Supply:</Box>
-                        <Box color="text.secondary">{selectedSupplier?.address?.[0]?.state?.name || "-"}</Box>
-                      </Box>
-                      {/* GSTIN */}
-                      <Box display="flex" gap={1} flexWrap="wrap">
-                        <Box fontWeight={600}>GSTIN:</Box>
-                        <Box color="text.secondary">{selectedSupplier?.address?.[0]?.gstIn || "-"}</Box>
-                      </Box>
-                      {/* BILLING ADDRESS */}
-                      <Box display="flex" gap={1} flexWrap="wrap">
-                        <Box fontWeight={600}>Billing Address:</Box>
-                        {selectedSupplier?.address?.length ? (
-                          <Box color="text.secondary">
-                            <Box>{selectedSupplier.address[0]?.addressLine1}</Box>
-                            <Box>
-                              {selectedSupplier.address[0]?.city?.name}, {selectedSupplier.address[0]?.state?.name}
-                            </Box>
-                            <Box>{selectedSupplier.address[0]?.pinCode}</Box>
-                          </Box>
-                        ) : (
-                          <Box color="text.secondary">Billing Address is not provided</Box>
-                        )}
-                      </Box>
-                    </Box>
-                    {/* ================= RIGHT SIDE ================= */}
-                    <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 2 }}>
-                      <CommonValidationDatePicker name="supplierBillDate" label="Supplier Bill Date" grid={{ xs: 12 }} />
-                      {isEditing && <CommonValidationTextField name="referenceBillNo" label="Reference Bill No." grid={{ xs: 12 }} />}
-                      <CommonValidationTextField name="supplierBillNo" label="Supplier Bill No." grid={{ xs: 12 }} />
-                      <CommonValidationSelect name="paymentTerm" label="Payment Term" grid={{ xs: 12 }} options={PAYMENT_TERMS} />
-                      <CommonValidationDatePicker name="dueDate" label="Due Date" grid={{ xs: 12 }} />
-                      <CommonValidationSelect name="reverseCharge" label="Reverse Charge" grid={{ xs: 12 }} options={REVERSE_CHARGE} />
-                      <CommonValidationDatePicker name="shippingDate" label="Shipping Date" grid={{ xs: 12 }} />
-                      <CommonValidationSelect name="taxType" label="Tax Type" grid={{ xs: 12 }} options={TAX_TYPE} />
-                      <CommonValidationTextField name="invoiceAmount" label="Invoice Amount" grid={{ xs: 12 }} />
-                      <CommonValidationSwitch name="exportSez" label="Export / SEZ" />
-                    </Box>
-                  </Box>
+                <CommonCard title="Supplier Bill Details">
+                  <SupplierBillDetails supplierOptions={supplierOptions} selectedSupplier={selectedSupplier} isEditing={isEditing} />
                 </CommonCard>
               </Form>
               <CommonCard hideDivider>
                 <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} termsList={termsList} handleDeleteTerm={handleDeleteTerm} notes={notes} setNotes={setNotes} setOpenModal={setOpenModal} productOptions={productOptions} isProductLoading={ProductsDataLoading} returnRoundOffAmount={returnRoundOffAmount} onReturnRoundOffAmountChange={setReturnRoundOffAmount} />
               </CommonCard>
-              <CommonCard grid={{ xs: 12 }}>
+              <CommonCard grid={{ xs: 12 }} hideDivider>
                 <AdditionalChargesSection showAdditionalCharge={showAdditionalCharge} setShowAdditionalCharge={setShowAdditionalCharge} additionalChargeRows={additionalChargeRows} handleAddAdditionalCharge={handleAddAdditionalCharge} handleCutAdditionalCharge={handleCutAdditionalCharge} handleAdditionalChargeRowChange={handleAdditionalChargeRowChange} taxOptions={taxOptions} isTaxLoading={TaxDataLoading} flatDiscount={flatDiscount} onFlatDiscountChange={setFlatDiscount} summary={summary} isAdditionalChargeLoading={additionalchargeLoading} additionalChargeOptions={additionalChargeOptions} roundOffAmount={roundOffAmount} onRoundOffAmountChange={setRoundOffAmount} />
               </CommonCard>
               <CommonBottomActionBar save isLoading={isAddLoading || isEditLoading} onSave={() => formikRef.current?.submitForm()} />
