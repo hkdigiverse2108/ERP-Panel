@@ -92,6 +92,7 @@ export interface SupplierBillSummary {
   billDiscount?: number;
   roundOff?: number;
   netAmount?: number;
+  taxSummary?: { name: string; rate: number; amount: number }[];
 }
 
 /* ===================== FORM ===================== */

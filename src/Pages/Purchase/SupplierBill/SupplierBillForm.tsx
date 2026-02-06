@@ -59,19 +59,45 @@ const SupplierBillForm = () => {
   const [roundOffAmount, setRoundOffAmount] = useState<string | number>(0);
   const [returnRoundOffAmount, setReturnRoundOffAmount] = useState<string | number>(0);
   const calculateSummary = () => {
-    const itemDiscount = rows.reduce((s, r) => s + (parseFloat(String(r.disc1)) || 0) + (parseFloat(String(r.disc2)) || 0), 0);
-    const itemTax = rows.reduce((s, r) => s + (parseFloat(String(r.taxAmount)) || 0), 0);
-    const itemGross = rows.reduce((s, r) => s + (parseFloat(String(r.qty)) || 0) * (parseFloat(String(r.sellingPrice)) || 0), 0);
-    const itemTaxable = rows.reduce((s, r) => s + (parseFloat(String(r.taxableAmount)) || 0), 0);
-    const additionalChargeAmount = additionalChargeRows.reduce((s, r) => s + (parseFloat(String(r.taxableAmount)) || 0), 0);
-    const additionalChargeTax = additionalChargeRows.reduce((s, r) => s + (parseFloat(String(r.taxAmount)) || 0), 0);
-    const grossAmount = itemGross + additionalChargeAmount;
-    const taxableAmount = itemTaxable + additionalChargeAmount;
-    const taxAmount = itemTax + additionalChargeTax;
-    const billTotal = taxableAmount + taxAmount - (parseFloat(String(flatDiscount)) || 0);
-    const roundOff = parseFloat(String(roundOffAmount)) || 0;
-    const netAmount = billTotal + roundOff;
-    return { flatDiscount: parseFloat(String(flatDiscount)) || 0, grossAmount, itemDiscount, itemTax, additionalChargeAmount, additionalChargeTax, taxableAmount, taxAmount, roundOff, netAmount };
+    const itemDiscount = rows.reduce((s, r) => s + (Number(r.disc1) || 0) + (Number(r.disc2) || 0), 0);
+    const itemTaxable = rows.reduce((s, r) => s + (Number(r.taxableAmount) || 0), 0);
+    const itemTax = rows.reduce((s, r) => s + (Number(r.taxAmount) || 0), 0);
+    const itemGross = rows.reduce((s, r) => s + (Number(r.qty) || 0) * (Number(r.sellingPrice) || 0), 0);
+    const additionalTaxable = additionalChargeRows.reduce((s, r) => s + (Number(r.taxableAmount) || 0), 0);
+    const additionalTax = additionalChargeRows.reduce((s, r) => s + (Number(r.taxAmount) || 0), 0);
+    const grossAmount = itemGross + additionalTaxable;
+    const taxableAmount = itemTaxable + additionalTaxable;
+    const taxAmount = itemTax + additionalTax;
+    const discount = Number(flatDiscount) || 0;
+    const roundOff = Number(roundOffAmount) || 0;
+    const netAmount = taxableAmount + taxAmount - discount + roundOff;
+    const taxBreakdown: Record<string, { rate: number; amount: number }> = {};
+    rows.forEach((r) => {
+      if (r.taxName && r.taxAmount) {
+        const name = r.taxName;
+        const rate = Number(r.taxRate) || 0;
+        const amount = Number(r.taxAmount) || 0;
+        if (!taxBreakdown[name]) {
+          taxBreakdown[name] = { rate, amount: 0 };
+        }
+        taxBreakdown[name].amount += amount;
+      }
+    });
+    additionalChargeRows.forEach((r) => {
+      if (r.tax && r.taxAmount) {
+        const rateStr = r.tax;
+        const amount = Number(r.taxAmount) || 0;
+        const taxOption = taxOptions.find((o) => o.value === String(rateStr));
+        const name = taxOption ? taxOption.label : `Tax ${rateStr}%`;
+        const rate = parseFloat(String(rateStr)) || 0;
+        if (!taxBreakdown[name]) {
+          taxBreakdown[name] = { rate, amount: 0 };
+        }
+        taxBreakdown[name].amount += amount;
+      }
+    });
+    const taxSummary = Object.entries(taxBreakdown).map(([name, data]) => ({ name, rate: data.rate, amount: Number(data.amount.toFixed(2)) }));
+    return { itemDiscount, grossAmount, taxableAmount, taxAmount, roundOff, netAmount, taxSummary };
   };
   const summary = calculateSummary();
   useEffect(() => {
@@ -146,33 +172,34 @@ const SupplierBillForm = () => {
   };
 
   const calculateRow = (row: ProductRow): ProductRow => {
-    const qty = parseFloat(String(row.qty)) || 0;
-    const sellingPrice = parseFloat(String(row.sellingPrice)) || 0;
-    const disc1 = parseFloat(String(row.disc1)) || 0;
-    const disc2 = parseFloat(String(row.disc2)) || 0;
-    const taxRate = parseFloat(String(row.taxRate)) || 0;
-    const freeQty = parseFloat(String(row.freeQty)) || 0;
-    const mrp = parseFloat(String(row.mrp)) || 0;
+    const qty = Number(row.qty) || 0;
+    const freeQty = Number(row.freeQty) || 0;
+    const sellingPrice = Number(row.sellingPrice) || 0;
+    const disc1 = Number(row.disc1) || 0;
+    const disc2 = Number(row.disc2) || 0;
+    const taxRate = Number(row.taxRate) || 0;
+    const mrp = Number(row.mrp) || 0;
+    const totalQty = qty + freeQty;
     const baseAmount = qty * sellingPrice;
     const taxableAmount = Math.max(0, baseAmount - disc1 - disc2);
     const taxAmount = (taxableAmount * taxRate) / 100;
     const totalAmount = taxableAmount + taxAmount;
-    const totalQty = qty + freeQty;
-    const landingCost = totalQty > 0 ? totalAmount / totalQty : 0;
+    const landingCost = totalQty > 0 ? taxableAmount / totalQty : 0;
     const margin = mrp - landingCost;
-    return { ...row, taxAmount: taxAmount.toFixed(2), taxableAmount: taxableAmount.toFixed(2), totalAmount: totalAmount.toFixed(2), landingCost: landingCost.toFixed(2), margin: margin.toFixed(2) };
+    return { ...row, taxableAmount: taxableAmount.toFixed(2), taxAmount: taxAmount.toFixed(2), totalAmount: totalAmount.toFixed(2), landingCost: landingCost.toFixed(2), margin: margin.toFixed(2) };
   };
   const calculateReturnRow = (row: ProductRow): ProductRow => {
-    const qty = parseFloat(String(row.qty)) || 0;
-    const landingCost = parseFloat(String(row.landingCost)) || 0;
-    const disc1 = parseFloat(String(row.disc1)) || 0;
-    const disc2 = parseFloat(String(row.disc2)) || 0;
-    const taxAmount = parseFloat(String(row.taxAmount)) || 0;
+    const qty = Number(row.qty) || 0;
+    const landingCost = Number(row.landingCost) || 0;
+    const disc1 = Number(row.disc1) || 0;
+    const disc2 = Number(row.disc2) || 0;
+    const taxAmount = Number(row.taxAmount) || 0;
     const baseAmount = qty * landingCost;
     const taxableAmount = Math.max(0, baseAmount - disc1 - disc2);
     const totalAmount = taxableAmount + taxAmount;
     return { ...row, taxableAmount: taxableAmount.toFixed(2), totalAmount: totalAmount.toFixed(2) };
   };
+
   const handleRowChange = (index: number, field: keyof ProductRow, value: string | number | string[]) => {
     setRows((prev) => {
       const newRows = [...prev];
@@ -251,7 +278,6 @@ const SupplierBillForm = () => {
         if (selectedCharge) {
           const chargeValue = (selectedCharge as any).defaultValue?.value || 0;
           newRows[index].taxableAmount = String(chargeValue);
-
           const val = parseFloat(String(chargeValue)) || 0;
           const taxRate = parseFloat(String(newRows[index].tax)) || 0;
           const taxAmt = (val * taxRate) / 100;
@@ -260,11 +286,9 @@ const SupplierBillForm = () => {
           newRows[index].totalAmount = total.toFixed(2);
         }
       }
-
       if (field === "chargeId" && finalValue && index === prev.length - 1) {
         newRows.push({ ...additionalChargeEmptyRow });
       }
-
       return newRows;
     });
   };
