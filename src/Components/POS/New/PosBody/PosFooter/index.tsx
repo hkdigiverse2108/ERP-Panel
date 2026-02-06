@@ -16,10 +16,13 @@ import CardDetails from "./CardDetails";
 import Cash from "./Cash";
 import PayLater from "./PayLater";
 import RedeemCredit from "./RedeemCredit";
+import { Mutations } from "../../../../../Api";
 
 const PosFooter = () => {
   const { PosProduct } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
+
+  const { mutate: addPosOrder } = Mutations.useAddPosOrder();
 
   const summaryRowData = [
     { label: "Quantity", value: PosProduct.totalQty }, //totalQty
@@ -31,6 +34,24 @@ const PosFooter = () => {
     { label: "Round OFF" },
     { label: "Amount", value: PosProduct.totalAmount, highlight: true },
   ];
+
+  const handleHoldBill = () => {
+    const payload = {
+      ...PosProduct,
+      items: PosProduct.items.map((item) => ({
+        productId: item?._id,
+        qty: item?.sellingQty,
+        mrp: item?.mrp,
+        discountAmount: item?.sellingDiscount,
+        additionalDiscountAmount: item?.sellingDiscount,
+        // unitCost: item?.,
+        // netAmount: item?.netAmount,
+      })),
+    };
+    console.log("PosProduct", payload);
+
+    // dispatch(setHoldBillDrawer(true));
+  };
 
   return (
     <>
@@ -66,7 +87,7 @@ const PosFooter = () => {
         <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2 p-2">
           <CommonButton title="Multiple Pay (F12)" variant="contained" startIcon={<VerticalSplitIcon />} onClick={() => dispatch(setMultiplePay())} />
           <CommonButton title="Redeem Credit" variant="contained" startIcon={<RedeemIcon />} onClick={() => dispatch(setRedeemCreditModal())} />
-          <CommonButton title="Hold (F6)" variant="contained" startIcon={<PauseIcon />} />
+          <CommonButton title="Hold (F6)" variant="contained" startIcon={<PauseIcon />} onClick={handleHoldBill} />
           <CommonButton title="UPI (F5)" variant="contained" startIcon={<FastForwardIcon />} />
           <CommonButton title="Card (F3)" variant="contained" startIcon={<CreditCardIcon />} onClick={() => dispatch(setCardModal())} />
           <CommonButton title="Cash (F4)" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => dispatch(setCashModal())} />
