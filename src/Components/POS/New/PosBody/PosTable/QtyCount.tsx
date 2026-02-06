@@ -17,7 +17,7 @@ const QtyCount = () => {
   const maxQty = isQtyCountModal.data?.qty ?? Infinity;
   if (isQtyCountModal.data !== prevData) {
     setPrevData(isQtyCountModal.data);
-    if (isQtyCountModal.data) setTendered(isQtyCountModal.data.sellingQty?.toString() ?? "0.00");
+    if (isQtyCountModal.data) setTendered(isQtyCountModal.data.posQty?.toString() ?? "0.00");
   }
 
   // 🔒 Clamp qty between 0 and stock qty
@@ -79,7 +79,7 @@ const QtyCount = () => {
 
   const handleConfirm = () => {
     if (!isQtyCountModal.data) return;
-    dispatch(updateProduct({ _id: isQtyCountModal.data._id, data: { sellingQty: clampQty(Number(tendered)) } }));
+    dispatch(updateProduct({ _id: isQtyCountModal.data._id, data: { posQty: clampQty(Number(tendered)) } }));
     handleClose();
   };
 
