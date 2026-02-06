@@ -56,7 +56,7 @@ export interface PosSliceState {
   PosProduct: PosProductType;
 }
 
-export interface PosHoldOrderFormValues {
+export interface PosProductOrderFormValues {
   companyId?: string;
   orderNo?: string;
   customerId?: ContactBase;
@@ -89,16 +89,14 @@ export interface PosHoldOrderFormValues {
   isActive?: boolean;
 }
 
-export type AddPosHoldOrderPayload = PosHoldOrderFormValues & {
-  companyId?: string;
+export type AddPosProductOrderPayload = PosProductOrderFormValues;
+
+export type EditPosProductOrderPayload = AddPosProductOrderPayload & {
+  PosProductOrderId: string;
 };
 
-export type EditPosHoldOrderPayload = AddPosHoldOrderPayload & {
-  PosHoldOrderId: string;
-};
+export type PosProductOrderBase = PosProductOrderFormValues & CommonDataType;
 
-export type PosHoldOrderBase = PosHoldOrderFormValues & CommonDataType;
-
-export interface PosHoldOrderApiResponse extends MessageStatus {
-  data: PosHoldOrderBase[];
+export interface PosProductOrderApiResponse extends MessageStatus {
+  data: PosProductOrderBase[];
 }
