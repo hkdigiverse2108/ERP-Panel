@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { DateConfig, GenerateOptions } from "../../../Utils";
-import type { Supplier, SupplierBillFormValues, TermsAndCondition, ProductRow, AdditionalChargeRow, SupplierBillProductDetails, AdditionalChargeDetails, SupplierBillProductItem, AdditionalChargeItem, ProductBase } from "../../../Types/SupplierBill";
+import type { Supplier, SupplierBillFormValues, ProductRow, AdditionalChargeRow, SupplierBillProductDetails, AdditionalChargeDetails, SupplierBillProductItem, AdditionalChargeItem } from "../../../Types/SupplierBill";
 import { BREADCRUMBS } from "../../../Data";
 import { Mutations, Queries } from "../../../Api";
 import { useEffect, useRef, useState } from "react";
@@ -12,6 +12,8 @@ import TermsAndConditionModal from "./TermsAndConditionModal";
 import SupplierBillTabs from "./SupplierBillTab";
 import AdditionalChargesSection from "./AdditionalChargeSection";
 import SupplierBillDetails from "./SupplierBillDetails";
+import type { TermsConditionBase } from "../../../Types/TermsAndCondition";
+import type { ProductBase } from "../../../Types";
 
 const SupplierWatcher = ({ suppliers, onChange }: { suppliers: Supplier[]; onChange: (supplier: Supplier | null) => void }) => {
   const { values } = useFormikContext<SupplierBillFormValues>();
@@ -45,7 +47,7 @@ const SupplierBillForm = () => {
   const formikRef = useRef<FormikProps<SupplierBillFormValues> | null>(null);
   const [tabValue, setTabValue] = useState(0);
   const [openModal, setOpenModal] = useState(false);
-  const [termsList, setTermsList] = useState<TermsAndCondition[]>([]);
+  const [termsList, setTermsList] = useState<TermsConditionBase[]>([]);
   const [selectedTermIds, setSelectedTermIds] = useState<string[]>([]);
   const [notes, setNotes] = useState<string>("");
   const [showAdditionalCharge, setShowAdditionalCharge] = useState(false);
@@ -355,7 +357,7 @@ const SupplierBillForm = () => {
       <TermsAndConditionModal
         openModal={openModal}
         setOpenModal={setOpenModal}
-        onSave={(term: TermsAndCondition) => {
+        onSave={(term: TermsConditionBase) => {
           setTermsList((prev) => [...prev, term]);
           setSelectedTermIds((prev) => [...prev, term._id]);
         }}

@@ -3,12 +3,13 @@ import AddIcon from "@mui/icons-material/Add";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
 
 import { CommonButton, CommonSelect, CommonTextField } from "../../../Attribute";
-import type { TermsAndCondition, ProductRow } from "../../../Types/SupplierBill";
+import type {  ProductRow } from "../../../Types/SupplierBill";
 import type { FC } from "react";
 import { CommonTabPanel, CommonCard } from "../../../Components/Common";
 import { GridDeleteIcon } from "@mui/x-data-grid";
 import { CommonTable } from "../../../Components/Common";
 import type { CommonTableColumn } from "../../../Types";
+import type { TermsConditionBase } from "../../../Types/TermsAndCondition";
 
 interface SupplierBillTabsProps {
   tabValue: number;
@@ -17,7 +18,7 @@ interface SupplierBillTabsProps {
   handleAdd: () => void;
   handleCut: (index: number) => void;
   handleRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
-  termsList: TermsAndCondition[];
+  termsList: TermsConditionBase[];
   notes: string;
   setNotes: (value: string) => void;
   setOpenModal: (value: boolean) => void;
@@ -86,11 +87,10 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
     },
   ];
 
-  const TermsColumns: CommonTableColumn<TermsAndCondition>[] = [
+  const TermsColumns: CommonTableColumn<TermsConditionBase>[] = [
     { key: "sr", header: "#", render: (_, i) => i + 1, bodyClass: "w-10" },
-    { key: "termsCondition", header: "Condition", headerClass: "text-left", bodyClass: "text-left" },
-    {
-      key: "action",
+    { key: "termsCondition", header: "Condition", headerClass: "text-left", bodyClass: "text-left w-80",  },
+    {key: "action",
       header: "Action",
       bodyClass: "w-10 flex justify-center",
       render: (_, index) => (
