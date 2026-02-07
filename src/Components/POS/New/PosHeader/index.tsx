@@ -5,7 +5,7 @@ import { Queries } from "../../../../Api";
 import { CommonRadio, CommonSelect } from "../../../../Attribute";
 import { ORDER_TYPE } from "../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
-import { setOrderType, setSalesmanId } from "../../../../Store/Slices/PosSlice";
+import { setOrderType, setSalesManId } from "../../../../Store/Slices/PosSlice";
 import { GenerateOptions } from "../../../../Utils";
 import CurrentRegister from "./CurrentRegister";
 import Discard from "./Discard";
@@ -25,13 +25,13 @@ const PosHeader = () => {
 
   const handleChange = (id: string[]) => {
     setValue(id);
-    dispatch(setSalesmanId(id[0]));
+    dispatch(setSalesManId(id[0]));
   };
 
   useEffect(() => {
     if (selectedUserId) {
       setValue([selectedUserId]);
-      dispatch(setSalesmanId(selectedUserId));
+      dispatch(setSalesManId(selectedUserId));
     }
   }, [dispatch, selectedUserId]);
   return (

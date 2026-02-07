@@ -2,13 +2,13 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useMemo, useState } from "react";
 import { Queries } from "../../../../../Api";
 import { CommonButton, CommonSelect, CommonTextField } from "../../../../../Attribute";
-import { BAUD_RATE, GROUP_OPTIONS } from "../../../../../Data";
+import { GROUP_OPTIONS } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setAdditionalChargeModal } from "../../../../../Store/Slices/ModalSlice";
+import { setAdditionalCharges, setTotalAdditionalCharge } from "../../../../../Store/Slices/PosSlice";
 import type { AdditionalChargeRowType, CommonTableColumn } from "../../../../../Types";
 import { GenerateOptions } from "../../../../../Utils";
 import { CommonModal, CommonTable } from "../../../../Common";
-import { setAdditionalCharges, setTotalAdditionalCharge } from "../../../../../Store/Slices/PosSlice";
 
 const AdditionalCharge = () => {
   const { isAdditionalChargeModal } = useAppSelector((s) => s.modal);
@@ -17,6 +17,7 @@ const AdditionalCharge = () => {
   const [rows, setRows] = useState<AdditionalChargeRowType[]>([]);
 
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
+  const { data: AdditionalChargeData, isLoading: AdditionalChargeDataLoading } = Queries.useGetAdditionalChargeDropdown();
 
   const calculateTotal = (value: number, tax: string[]) => {
     const rate = TaxData?.data?.find((item) => item._id === tax[0])?.percentage ?? 0;
@@ -66,7 +67,7 @@ const AdditionalCharge = () => {
       key: "additionalCharge",
       header: "Additional Charge",
       bodyClass: "min-w-32 w-60",
-      render: (row, index) => <CommonSelect label="Select Additional Charge" value={row.chargeId} options={BAUD_RATE} onChange={(val) => updateRow(index, "chargeId", val)} />,
+      render: (row, index) => <CommonSelect label="Select Additional Charge" value={row.chargeId} options={GenerateOptions(AdditionalChargeData?.data)} isLoading={AdditionalChargeDataLoading} onChange={(val) => updateRow(index, "chargeId", val)} />,
       footer: () => <CommonButton variant="outlined" size="small" onClick={addRow} title="+ Additional Charge" />,
     },
     {

@@ -5,7 +5,7 @@ import { useEffect, useMemo } from "react";
 import { CommonButton, CommonTextField } from "../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setProductDetailsModal, setQtyCountModal } from "../../../../../Store/Slices/ModalSlice";
-import { removeProduct, setTotalAmount, setTotalDiscount, setTotalMep, setTotalQty, setRoundOff, setTotalTaxAmount, updateProduct } from "../../../../../Store/Slices/PosSlice";
+import { removeProduct, setTotalAmount, setTotalDiscount, setTotalMrp, setTotalQty, setRoundOff, setTotalTaxAmount, updateProduct } from "../../../../../Store/Slices/PosSlice";
 import type { CommonTableColumn, PosProductDataModal } from "../../../../../Types";
 import ProductDetails from "./ProductDetails";
 import QtyCount from "./QtyCount";
@@ -20,26 +20,23 @@ const PosTable = () => {
 
   const removeRow = (_id: string) => dispatch(removeProduct(_id));
 
-  const calcNetAmount = (row: PosProductDataModal) => ((row.mrp - row.discount) * row.posQty)?.toFixed(2);
+  const calcNetAmount = (row: PosProductDataModal) => ((row.mrp - row.discount - row.additionalDiscount) * row.posQty)?.toFixed(2);
 
   const roundQty = (val: number) => Number(val?.toFixed(2));
 
-  const calcTotalTaxAmount = (row: PosProductDataModal, isTex: boolean, unit?: boolean) => {
-    const net = !unit ? Number(calcNetAmount(row)) || 0 : Number(calcNetAmount(row)) / row.posQty || 0;
+  const calcTotalTaxAmount = (row: PosProductDataModal) => {
+    const net = Number(calcNetAmount(row)) || 0;
     const taxRate = row.salesTaxId?.percentage || 0;
-
-    if (row.isSalesTaxIncluding) {
-      return isTex ? (net - net / (1 + taxRate / 100))?.toFixed(2) : net?.toFixed(2);
-    }
-
-    return isTex ? ((net * taxRate) / 100)?.toFixed(2) : ((net * taxRate) / 100 + net)?.toFixed(2);
+    // if (row.isSalesTaxIncluding) return (net - net / (1 + taxRate / 100))?.toFixed(2);
+    if (row.isSalesTaxIncluding) return 0;
+    else return ((net * taxRate) / 100)?.toFixed(2);
   };
 
   const totalQty = useMemo(() => productData?.reduce((acc, row) => acc + row.posQty, 0), [productData]);
-  const totalMep = useMemo(() => productData?.reduce((acc, row) => acc + row.mrp * row.posQty, 0), [productData]);
-  const totalTaxAmount = useMemo(() => productData?.reduce((acc, row) => acc + Number(calcTotalTaxAmount(row, true)), 0) ?? 0, [productData]);
+  const totalMrp = useMemo(() => productData?.reduce((acc, row) => acc + row.mrp * row.posQty, 0), [productData]);
+  const totalTaxAmount = useMemo(() => productData?.reduce((acc, row) => acc + Number(calcTotalTaxAmount(row)), 0) ?? 0, [productData]);
   const totalDiscount = useMemo(() => productData?.reduce((acc, row) => acc + row.discount * row.posQty, 0), [productData]);
-  const totalAmount = useMemo(() => productData?.reduce((acc, row) => acc + Number(calcTotalTaxAmount(row, false)), 0) ?? 0, [productData]);
+  const totalAmount = useMemo(() => productData?.reduce((acc, row) => acc + row.netAmount, 0) ?? 0, [productData]);
   const finalAmount = useMemo(() => (totalAmount - PosProduct.flatDiscountAmount + Number(PosProduct.totalAdditionalCharge)).toFixed(2), [totalAmount, PosProduct.flatDiscountAmount, PosProduct.totalAdditionalCharge]);
   const roundedAmount = useMemo(() => {
     const amt = Number(finalAmount);
@@ -52,12 +49,12 @@ const PosTable = () => {
 
   useEffect(() => {
     dispatch(setTotalQty(totalQty?.toFixed(2)));
-    dispatch(setTotalMep(totalMep?.toFixed(0)));
+    dispatch(setTotalMrp(totalMrp?.toFixed(0)));
     dispatch(setTotalDiscount(totalDiscount?.toFixed(2)));
     dispatch(setTotalTaxAmount(totalTaxAmount?.toFixed(2)));
     dispatch(setTotalAmount(roundedAmount?.toFixed(0)));
     dispatch(setRoundOff(Number(roundOffAmount)?.toFixed(2)));
-  }, [totalMep, totalDiscount, dispatch, totalQty, totalTaxAmount, roundOffAmount, roundedAmount]);
+  }, [totalMrp, totalDiscount, dispatch, totalQty, totalTaxAmount, roundOffAmount, roundedAmount]);
 
   const columns: CommonTableColumn<PosProductDataModal>[] = [
     { key: "sr", header: "Sr No.", render: (_, i) => i + 1 },
@@ -110,13 +107,11 @@ const PosTable = () => {
       key: "unitCost",
       header: "Unit Cost",
       bodyClass: "min-w-32 w-35",
-      render: (row) => Number(calcTotalTaxAmount(row, false, true)).toFixed(2),
     },
     {
-      key: "net",
+      key: "netAmount",
       header: "Net Amount",
       bodyClass: "min-w-32 w-35",
-      render: (row) => Number(calcTotalTaxAmount(row, false)).toFixed(2),
     },
     {
       key: "action",
