@@ -6,6 +6,7 @@ import type { FocusEvent, ReactNode } from "react";
 import * as Yup from "yup";
 import type { ContactBase } from "./Contacts";
 import type { LocationBase } from "./Location";
+import type { AdditionalChargesBase } from "./AdditionalCharges";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -452,7 +453,7 @@ export interface ModalStateSlice {
   isApplyCouponModal: boolean;
   isPayLaterModal: boolean;
   isCashModal: boolean;
-  isAdditionalChargeModal: boolean;
+  isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
   isProductDetailsModal: { open: boolean; data: any | null };
   isQtyCountModal: { open: boolean; data: any | null };
 }
