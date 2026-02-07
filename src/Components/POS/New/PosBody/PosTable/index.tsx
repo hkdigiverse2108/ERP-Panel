@@ -20,12 +20,12 @@ const PosTable = () => {
 
   const removeRow = (_id: string) => dispatch(removeProduct(_id));
 
-  const calcNetAmount = (row: PosProductDataModal) => ((row.mrp - row.discount - row.sellingDiscount) * row.sellingQty)?.toFixed(2);
+  const calcNetAmount = (row: PosProductDataModal) => ((row.mrp - row.discount) * row.posQty)?.toFixed(2);
 
   const roundQty = (val: number) => Number(val?.toFixed(2));
 
   const calcTotalTaxAmount = (row: PosProductDataModal, isTex: boolean, unit?: boolean) => {
-    const net = !unit ? Number(calcNetAmount(row)) || 0 : Number(calcNetAmount(row)) / row.sellingQty || 0;
+    const net = !unit ? Number(calcNetAmount(row)) || 0 : Number(calcNetAmount(row)) / row.posQty || 0;
     const taxRate = row.salesTaxId?.percentage || 0;
 
     if (row.isSalesTaxIncluding) {
@@ -35,10 +35,10 @@ const PosTable = () => {
     return isTex ? ((net * taxRate) / 100)?.toFixed(2) : ((net * taxRate) / 100 + net)?.toFixed(2);
   };
 
-  const totalQty = useMemo(() => productData?.reduce((acc, row) => acc + row.sellingQty, 0), [productData]);
-  const totalMep = useMemo(() => productData?.reduce((acc, row) => acc + row.mrp * row.sellingQty, 0), [productData]);
+  const totalQty = useMemo(() => productData?.reduce((acc, row) => acc + row.posQty, 0), [productData]);
+  const totalMep = useMemo(() => productData?.reduce((acc, row) => acc + row.mrp * row.posQty, 0), [productData]);
   const totalTaxAmount = useMemo(() => productData?.reduce((acc, row) => acc + Number(calcTotalTaxAmount(row, true)), 0) ?? 0, [productData]);
-  const totalDiscount = useMemo(() => productData?.reduce((acc, row) => acc + row.discount * row.sellingQty, 0), [productData]);
+  const totalDiscount = useMemo(() => productData?.reduce((acc, row) => acc + row.discount * row.posQty, 0), [productData]);
   const totalAmount = useMemo(() => productData?.reduce((acc, row) => acc + Number(calcTotalTaxAmount(row, false)), 0) ?? 0, [productData]);
   const finalAmount = useMemo(() => (totalAmount - PosProduct.flatDiscountAmount + Number(PosProduct.totalAdditionalCharge)).toFixed(2), [totalAmount, PosProduct.flatDiscountAmount, PosProduct.totalAdditionalCharge]);
   const roundedAmount = useMemo(() => {
@@ -74,20 +74,20 @@ const PosTable = () => {
     },
     { key: "qty", header: "Available Qty", bodyClass: "min-w-30 w-30" },
     {
-      key: "sellingQty",
+      key: "posQty",
       header: "Qty",
       bodyClass: "min-w-30 w-30",
       render: (row) => (
         <div className="flex gap-1 justify-center items-center cursor-pointer">
-          <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, { sellingQty: roundQty(Math.max(0.1, row.sellingQty - 0.1)) })}>
+          <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, { posQty: roundQty(Math.max(0.1, row.posQty - 0.1)) })}>
             <RemoveIcon />
           </CommonButton>
 
           <span className="w-16 text-center cursor-pointer" onClick={() => dispatch(setQtyCountModal({ open: true, data: row }))}>
-            {row.sellingQty}
+            {row.posQty}
           </span>
 
-          <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, { sellingQty: roundQty(row.sellingQty + 0.1) })} disabled={row.sellingQty >= (row.qty ?? Infinity)}>
+          <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, { posQty: roundQty(row.posQty + 0.1) })} disabled={row.posQty >= (row.qty ?? Infinity)}>
             <AddIcon />
           </CommonButton>
         </div>
@@ -104,7 +104,7 @@ const PosTable = () => {
       key: "additionalDisc",
       header: "Additional Disc",
       bodyClass: "min-w-32 w-35",
-      render: (row) => <CommonTextField type="number" value={row.sellingDiscount || 0} onChange={(e) => updateRow(row._id, { sellingDiscount: Number(e) })} isCurrency disabled />,
+      render: (row) => <CommonTextField type="number" value={row.additionalDiscount || 0} onChange={(e) => updateRow(row._id, { additionalDiscount: Number(e) })} isCurrency disabled />,
     },
     {
       key: "unitCost",
@@ -133,7 +133,7 @@ const PosTable = () => {
     data: productData,
     rowKey: (row: PosProductDataModal) => row._id,
     columns: columns,
-    getRowClass: (row: PosProductDataModal) => (Number(calcNetAmount(row)) >= (row.purchasePrice ?? 0) ? "bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark" : "bg-red-50 dark:bg-red-900"),
+    getRowClass: (row: PosProductDataModal) => (Number(calcNetAmount(row)) >= (row.landingCost ?? 0) ? "bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark" : "bg-red-50 dark:bg-red-900"),
   };
 
   return (

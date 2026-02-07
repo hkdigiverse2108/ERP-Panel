@@ -36,12 +36,13 @@ const PosSlice = createSlice({
       const existingProduct = state.PosProduct.items.find((item) => item._id === action.payload._id);
 
       if (existingProduct) {
-        existingProduct.sellingQty += 1;
+        existingProduct.posQty += 1;
       } else {
         state.PosProduct.items.push({
           ...action.payload,
-          sellingQty: 1,
-          discount: 0,
+          posQty: 1,
+          discount: action.payload.sellingDiscount || 0,
+          additionalDiscount: 0,
         });
       }
     },

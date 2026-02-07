@@ -12,11 +12,12 @@ export interface WeightScaleFormValues {
 }
 
 export interface PosProductDataModal extends Omit<ProductBase, "sellingPrice" | "mrp" | "sellingDiscount"> {
-  sellingQty: number;
+  posQty: number;
   discount: number;
   sellingPrice: number;
   mrp: number;
   sellingDiscount: number;
+  additionalDiscount: number;
 }
 
 export interface AdditionalChargeType {
@@ -89,7 +90,7 @@ export interface PosProductOrderFormValues {
   isActive?: boolean;
 }
 
-export type AddPosProductOrderPayload = PosProductOrderFormValues;
+export type AddPosProductOrderPayload = PosProductOrderFormValues ;
 
 export type EditPosProductOrderPayload = AddPosProductOrderPayload & {
   PosProductOrderId: string;

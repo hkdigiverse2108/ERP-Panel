@@ -16,13 +16,13 @@ import CardDetails from "./CardDetails";
 import Cash from "./Cash";
 import PayLater from "./PayLater";
 import RedeemCredit from "./RedeemCredit";
-import { Mutations } from "../../../../../Api";
+// import { Mutations } from "../../../../../Api";
 
 const PosFooter = () => {
   const { PosProduct } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
 
-  const { mutate: addPosOrder } = Mutations.useAddPosOrder();
+  // const { mutate: addPosOrder } = Mutations.useAddPosOrder();
 
   const summaryRowData = [
     { label: "Quantity", value: PosProduct.totalQty }, //totalQty
@@ -40,10 +40,10 @@ const PosFooter = () => {
       ...PosProduct,
       items: PosProduct.items.map((item) => ({
         productId: item?._id,
-        qty: item?.sellingQty,
+        qty: item?.posQty,
         mrp: item?.mrp,
-        discountAmount: item?.sellingDiscount,
-        additionalDiscountAmount: item?.sellingDiscount,
+        discountAmount: item?.discount,
+        additionalDiscountAmount: item?.additionalDiscount,
         // unitCost: item?.,
         // netAmount: item?.netAmount,
       })),
