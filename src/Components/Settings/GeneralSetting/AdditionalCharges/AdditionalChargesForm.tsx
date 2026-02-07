@@ -75,8 +75,6 @@ const AdditionalChargesForm: FC<Props> = ({ openModal, setOpenModal, isEdit }) =
           const { data: AccountGroupData, isLoading } = Queries.useGetAccountGroupDropdown({
             natureFilter: values.type,
           });
-          console.log("TYPE ", values.type);
-          console.log("ACCOUNT GROUP API DATA", AccountGroupData);
           return (
             <Form noValidate>
               <Grid container spacing={2}>
