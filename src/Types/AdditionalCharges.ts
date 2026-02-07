@@ -1,7 +1,8 @@
+import type { AccountGroupBase } from "./AccountGroup";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { TaxBase } from "./Tax";
 
 /* ===================== COMMON SUB TYPES ===================== */
-
 export interface AdditionalChargeDefaultValue {
   value?: number;
   type?: string;
@@ -22,17 +23,15 @@ export interface AdditionalChargesFormValues {
 
 /* ===================== PAYLOADS ===================== */
 
-export type AddAdditionalChargersPayload = AdditionalChargesFormValues;
+export type AddAdditionalChargesPayload = AdditionalChargesFormValues;
 
-export type EditAdditionalChargersPayload = AdditionalChargesFormValues & {
-  additionalChargeId: string;
-};
+export type EditAdditionalChargesPayload = AddAdditionalChargesPayload & { additionalChargeId?: string };
 
 /* ===================== BASE MODEL ===================== */
 
 export interface AdditionalChargesBase extends Omit<AdditionalChargesFormValues, "taxId" | "accountGroupId">, CommonDataType {
-  taxId?: string | { _id: string; name?: string } | null;
-  accountGroupId?: string | { _id: string; name?: string } | null;
+  taxId?: TaxBase;
+  accountGroupId?: AccountGroupBase;
 }
 
 /* ===================== API RESPONSES ===================== */

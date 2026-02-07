@@ -4,18 +4,19 @@ import { Mutations, Queries } from "../../../../Api";
 import type { AdditionalChargesBase } from "../../../../Types/AdditionalCharges";
 import type { AppGridColDef } from "../../../../Types";
 import { CommonActionColumn, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Common";
-import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setAdditionalChargeModal } from "../../../../Store/Slices/ModalSlice";
 import AdditionalChargesForm from "./AdditionalChargesForm";
 
 const AdditionalCharges = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const { data: additional_charge_data, isLoading: additionalChargesDataLoading, isFetching: additionalChargesDataFetching } = Queries.useGetAdditionalCharges(params);
+
+  const dispatch = useDispatch();
   const { mutate: deleteAdditionalChargesMutate } = Mutations.useDeleteAdditionalCharges();
   const { mutate: editAdditionalCharges, isPending: isEditLoading } = Mutations.useEditAdditionalCharges();
   const allRows = additional_charge_data?.data?.additional_charge_data?.map((additionalCharges: AdditionalChargesBase) => ({ ...additionalCharges, id: additionalCharges._id })) || [];
   const totalRows = additional_charge_data?.data?.totalData || 0;
-  const [openModal, setOpenModal] = useState(false);
-  const [isEdit, setEdit] = useState<AdditionalChargesBase>({} as AdditionalChargesBase);
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
@@ -25,12 +26,10 @@ const AdditionalCharges = () => {
   };
 
   const handleAdd = () => {
-    setEdit({} as AdditionalChargesBase);
-    setOpenModal(true);
+    dispatch(setAdditionalChargeModal({ open: true, data: null }));
   };
   const handleEdit = (row: AdditionalChargesBase) => {
-    setEdit(row);
-    setOpenModal(true);
+    dispatch(setAdditionalChargeModal({ open: true, data: row }));
   };
 
   const columns: AppGridColDef<AdditionalChargesBase>[] = [
@@ -72,7 +71,7 @@ const AdditionalCharges = () => {
         <CommonDataGrid {...CommonDataGridOption} />
       </CommonCard>
       <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
-      <AdditionalChargesForm openModal={openModal} setOpenModal={setOpenModal} isEdit={isEdit} />
+      <AdditionalChargesForm />
     </>
   );
 };

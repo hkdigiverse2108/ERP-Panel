@@ -1,29 +1,28 @@
 import { Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
-import type { FC } from "react";
 import { Mutations, Queries } from "../../../../Api";
 import { CommonButton, CommonValidationTextField, CommonValidationSwitch, CommonValidationSelect, CommonValidationRadio } from "../../../../Attribute";
 import { PAGE_TITLE } from "../../../../Constants";
-import type { AdditionalChargesBase, AdditionalChargesFormValues } from "../../../../Types/AdditionalCharges";
+import type { AdditionalChargesFormValues } from "../../../../Types/AdditionalCharges";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../../Utils";
 import { AdditionalChargesFormSchema } from "../../../../Utils/ValidationSchemas";
-import { CommonCard, CommonModal } from "../../../Common";
+import { CommonCard, CommonModal, DependentSelect } from "../../../Common";
+import { useAppSelector } from "../../../../Store/hooks";
+import { useDispatch } from "react-redux";
+import { setAdditionalChargeModal } from "../../../../Store/Slices/ModalSlice";
 
-interface Props {
-  openModal: boolean;
-  setOpenModal: (v: boolean) => void;
-  isEdit: AdditionalChargesBase;
-}
-
-const AdditionalChargesForm: FC<Props> = ({ openModal, setOpenModal, isEdit }) => {
+const AdditionalChargesForm = () => {
   const { mutate: addAdditionalCharge, isPending: isAddLoading } = Mutations.useAddAdditionalCharges();
   const { mutate: editAdditionalCharge, isPending: isEditLoading } = Mutations.useEditAdditionalCharges();
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
-
+  const { isAdditionalChargeModal } = useAppSelector((state) => state.modal);
+  const dispatch = useDispatch();
+  const isEdit = isAdditionalChargeModal.data;
+  const openModal = isAdditionalChargeModal.open;
   const isEditing = Boolean(isEdit?._id);
 
   const initialValues: AdditionalChargesFormValues = {
-    type: (isEdit?.type?.toLowerCase() as AdditionalChargesFormValues["type"]) || "purchase",
+    type: (isEdit?.type?.toLocaleLowerCase() as AdditionalChargesFormValues["type"]) || "purchase",
     name: isEdit?.name || "",
     hsnSac: isEdit?.hsnSac || "",
     taxId: (typeof isEdit?.taxId === "object" ? isEdit?.taxId?._id : isEdit?.taxId) || "",
@@ -32,26 +31,18 @@ const AdditionalChargesForm: FC<Props> = ({ openModal, setOpenModal, isEdit }) =
     defaultValue: isEdit?.defaultValue || { value: 0, type: "flat" },
     taxIncluded: isEdit?.taxIncluded || false,
   };
-
+  const closeModal = () => dispatch(setAdditionalChargeModal({ open: false, data: null }));
   const handleSubmit = (values: AdditionalChargesFormValues, { resetForm }: FormikHelpers<AdditionalChargesFormValues>) => {
+    const onSuccessHandler = () => {
+      resetForm();
+      closeModal();
+    };
+
     if (isEditing) {
-      const changed = GetChangedFields(values, isEdit);
-      editAdditionalCharge(
-        { ...changed, additionalChargeId: isEdit._id },
-        {
-          onSuccess: () => {
-            resetForm();
-            setOpenModal(false);
-          },
-        },
-      );
+      const changedFields = GetChangedFields(values, isEdit as Partial<AdditionalChargesFormValues>);
+      editAdditionalCharge({ ...changedFields, additionalChargeId: isEdit?._id }, { onSuccess: onSuccessHandler });
     } else {
-      addAdditionalCharge(RemoveEmptyFields(values), {
-        onSuccess: () => {
-          resetForm();
-          setOpenModal(false);
-        },
-      });
+      addAdditionalCharge(RemoveEmptyFields(values), { onSuccess: onSuccessHandler });
     }
   };
   const topContent = (
@@ -60,23 +51,15 @@ const AdditionalChargesForm: FC<Props> = ({ openModal, setOpenModal, isEdit }) =
       options={[
         { label: "Purchase", value: "purchase", default: true },
         { label: "Sales", value: "sales" },
-      ].map((opt) => ({
-        ...opt,
-        disabled: isEditing && opt.value !== (isEdit?.type?.toLowerCase() || "purchase"),
-      }))}
+      ].map((opt) => ({ ...opt, disabled: isEditing && opt.value !== (isEdit?.type?.toLowerCase() || "purchase") }))}
       grid={{ xs: "auto" }}
     />
   );
 
   return (
-    <CommonModal title={isEditing ? PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.EDIT : PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.ADD} isOpen={openModal} onClose={() => setOpenModal(false)} className="max-w-125 m-2 sm:m-5">
+    <CommonModal title={isEditing ? PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.EDIT : PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.ADD} isOpen={openModal} onClose={() => dispatch(setAdditionalChargeModal({ open: false, data: null }))} className="max-w-125 m-2 sm:m-5">
       <Formik enableReinitialize initialValues={initialValues} validationSchema={AdditionalChargesFormSchema} onSubmit={handleSubmit}>
         {({ dirty, values }) => {
-          const { data: AccountGroupData, isLoading } = Queries.useGetAccountGroupDropdown({
-            natureFilter: values.type,
-          });
-          console.log("TYPE ", values.type);
-          console.log("ACCOUNT GROUP API DATA", AccountGroupData);
           return (
             <Form noValidate>
               <Grid container spacing={2}>
@@ -86,11 +69,11 @@ const AdditionalChargesForm: FC<Props> = ({ openModal, setOpenModal, isEdit }) =
                     <CommonValidationTextField name="defaultValue.value" label="Default value" required grid={{ xs: 12 }} isCurrency currencyDisabled />
                     <CommonValidationSelect name="taxId" label="Select Tax" isLoading={TaxDataLoading} options={GenerateOptions(TaxData?.data)} required grid={{ xs: 12 }} />
                     <CommonValidationSwitch name="taxIncluded" label={`${values.type === "purchase" ? "Purchase" : "Sales"} Tax Included`} grid={{ xs: 12 }} />
-                    <CommonValidationSelect name="accountGroupId" label="Select Group" isLoading={isLoading} options={GenerateOptions(AccountGroupData?.data ?? [])} required grid={{ xs: 12 }} />
+                    <DependentSelect name="accountGroupId" label="Select Group" query={Queries.useGetAccountGroupDropdown} params={{ natureFilter: values.type }} required grid={{ xs: 12 }} />
                     <CommonValidationTextField name="hsnSac" label="HSN / SAC" grid={{ xs: 12 }} />
                     {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                     <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
-                      <CommonButton variant="outlined" title="Cancel" onClick={() => setOpenModal(false)} />
+                      <CommonButton variant="outlined" title="Cancel" onClick={() => dispatch(setAdditionalChargeModal({ open: false, data: null }))} />
                       <CommonButton type="submit" variant="contained" title="Save" loading={isAddLoading || isEditLoading} disabled={!dirty} />
                     </Grid>
                   </Grid>

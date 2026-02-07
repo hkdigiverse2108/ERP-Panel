@@ -19,7 +19,7 @@ const initialState: ModalStateSlice = {
   isApplyCouponModal: false,
   isPayLaterModal: false,
   isCashModal: false,
-  isAdditionalChargeModal: false,
+  isAdditionalChargeModal: { open: false, data: null },
   isProductDetailsModal: { open: false, data: null },
   isQtyCountModal: { open: false, data: null },
 };
@@ -84,8 +84,8 @@ const ModalSlice = createSlice({
     setCashModal: (state) => {
       state.isCashModal = !state.isCashModal;
     },
-    setAdditionalChargeModal: (state) => {
-      state.isAdditionalChargeModal = !state.isAdditionalChargeModal;
+    setAdditionalChargeModal: (state, action) => {
+      state.isAdditionalChargeModal = action.payload;
     },
     setProductDetailsModal: (state, action) => {
       state.isProductDetailsModal = action.payload;
