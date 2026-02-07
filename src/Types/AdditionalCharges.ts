@@ -17,6 +17,7 @@ export interface AdditionalChargesFormValues {
   accountGroupId?: string | null;
   hsnSac?: string;
   isActive?: boolean;
+  taxIncluded?: boolean;
 }
 
 /* ===================== PAYLOADS ===================== */
@@ -29,7 +30,10 @@ export type EditAdditionalChargersPayload = AdditionalChargesFormValues & {
 
 /* ===================== BASE MODEL ===================== */
 
-export interface AdditionalChargesBase extends AdditionalChargesFormValues, CommonDataType {}
+export interface AdditionalChargesBase extends Omit<AdditionalChargesFormValues, "taxId" | "accountGroupId">, CommonDataType {
+  taxId?: string | { _id: string; name?: string } | null;
+  accountGroupId?: string | { _id: string; name?: string } | null;
+}
 
 /* ===================== API RESPONSES ===================== */
 

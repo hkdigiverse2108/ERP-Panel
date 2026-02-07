@@ -37,8 +37,8 @@ const AdditionalCharges = () => {
     { field: "name", headerName: "Additional Charge", width: 170 },
     { field: "defaultValue", headerName: "Default Value", width: 150, valueGetter: (_v, row) => (row.defaultValue ? `${row.defaultValue.value} (${row.defaultValue.type})` : "") },
     { field: "hsnSac", headerName: "HSN Code", width: 150 },
-    { field: "accountGroupId", headerName: "Account Group", width: 140, valueGetter: (_v, row) => (typeof row.accountGroupId === "object" ? (row.accountGroupId as any)?.name : row.accountGroupId) },
-    { field: "taxId", headerName: "Tax", flex: 1, valueGetter: (_v, row) => (typeof row.taxId === "object" ? (row.taxId as any)?.name : row.taxId) },
+    { field: "accountGroupId", headerName: "Account Group", width: 140, valueGetter: (_v, row) => (typeof row.accountGroupId === "object" ? row.accountGroupId?.name : row.accountGroupId) },
+    { field: "taxId", headerName: "Tax", flex: 1, valueGetter: (_v, row) => (typeof row.taxId === "object" ? row.taxId?.name : row.taxId) },
     CommonActionColumn<AdditionalChargesBase>({
       active: (row) =>
         editAdditionalCharges({
