@@ -1,5 +1,6 @@
 import type { CommonDataType, MessageStatus } from "./Common";
 import type { ContactBase } from "./Contacts";
+import type { EmployeeBase } from "./Employee";
 import type { ProductBase } from "./Product";
 
 export interface WeightScaleFormValues {
@@ -18,6 +19,8 @@ export interface PosProductDataModal extends Omit<ProductBase, "sellingPrice" | 
   mrp: number;
   sellingDiscount: number;
   additionalDiscount: number;
+  unitCost: number;
+  netAmount: number;
 }
 
 export interface AdditionalChargeType {
@@ -38,9 +41,9 @@ interface PosProductType {
   items: PosProductDataModal[];
   customerId: string;
   orderType: string;
-  salesmanId: string;
+  salesManId: string;
   totalQty: number;
-  totalMep: number;
+  totalMrp: number;
   totalTaxAmount: number;
   totalDiscount: number;
   totalAdditionalCharge: number;
@@ -53,36 +56,22 @@ interface PosProductType {
 
 export interface PosSliceState {
   isMultiplePay: boolean;
-  productDataModal: PosProductDataModal[];
+  isSelectProduct: string;
   PosProduct: PosProductType;
 }
 
-export interface PosProductOrderFormValues {
+export interface PosProductOrderFormValues extends Omit<Partial<PosProductType>, "items"> {
   companyId?: string;
   orderNo?: string;
-  customerId?: ContactBase;
-  orderType?: string;
-  items?: [
-    {
-      productId: string;
-      qty: number;
-      mrp: number;
-      discountAmount: number;
-      additionalDiscountAmount: number;
-      unitCost: number;
-      netAmount: number;
-    },
-  ];
-  remark?: string;
-  totalQty?: number;
-  totalMrp?: number;
-  totalTaxAmount?: number;
-  totalAdditionalCharge?: number;
-  totalDiscount?: number;
-  flatDiscountAmount?: number;
-  roundOff?: number;
-  totalAmount?: number;
-  additionalCharges?: AdditionalChargeType[];
+  items?: {
+    productId?: string;
+    qty?: number;
+    mrp?: number;
+    discountAmount?: number;
+    additionalDiscountAmount?: number;
+    unitCost?: number;
+    netAmount?: number;
+  }[];
   paymentMethod?: null;
   paymentStatus?: string;
   status?: string;
@@ -90,13 +79,16 @@ export interface PosProductOrderFormValues {
   isActive?: boolean;
 }
 
-export type AddPosProductOrderPayload = PosProductOrderFormValues ;
+export type AddPosProductOrderPayload = PosProductOrderFormValues;
 
 export type EditPosProductOrderPayload = AddPosProductOrderPayload & {
   PosProductOrderId: string;
 };
 
-export type PosProductOrderBase = PosProductOrderFormValues & CommonDataType;
+export interface PosProductOrderBase extends Omit<PosProductOrderFormValues, "customerId" | "salesManId">, CommonDataType {
+  customerId: ContactBase;
+  salesManId: EmployeeBase;
+}
 
 export interface PosProductOrderApiResponse extends MessageStatus {
   data: PosProductOrderBase[];

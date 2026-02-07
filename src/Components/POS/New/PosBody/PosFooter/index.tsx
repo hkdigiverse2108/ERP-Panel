@@ -9,24 +9,25 @@ import { Grid } from "@mui/material";
 import { CommonButton, CommonTextField } from "../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setAdditionalChargeModal, setApplyCouponModal, setCardModal, setCashModal, setPayLaterModal, setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
-import { setMultiplePay, setRemarks, setFlatDiscountAmount, setRoundOff } from "../../../../../Store/Slices/PosSlice";
+import { setMultiplePay, setRemarks, setFlatDiscountAmount, setRoundOff, clearPosProduct } from "../../../../../Store/Slices/PosSlice";
 import AdditionalCharge from "./AdditionalCharge";
 import ApplyCoupon from "./ApplyCoupon";
 import CardDetails from "./CardDetails";
 import Cash from "./Cash";
 import PayLater from "./PayLater";
 import RedeemCredit from "./RedeemCredit";
-// import { Mutations } from "../../../../../Api";
+import { Mutations } from "../../../../../Api";
+import { RemoveEmptyFields } from "../../../../../Utils";
 
 const PosFooter = () => {
   const { PosProduct } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
 
-  // const { mutate: addPosOrder } = Mutations.useAddPosOrder();
+  const { mutate: addPosOrder } = Mutations.useAddPosOrder();
 
   const summaryRowData = [
     { label: "Quantity", value: PosProduct.totalQty }, //totalQty
-    { label: "MRP", value: PosProduct.totalMep }, //totalMrp
+    { label: "MRP", value: PosProduct.totalMrp }, //totalMrp
     { label: "Tax Amount", value: PosProduct.totalTaxAmount }, //totalTaxAmount
     { label: "Add Charges+", value: PosProduct.totalAdditionalCharge }, //totalAdditionalCharge
     { label: "Discount", value: PosProduct.totalDiscount }, //totalDiscount
@@ -44,13 +45,16 @@ const PosFooter = () => {
         mrp: item?.mrp,
         discountAmount: item?.discount,
         additionalDiscountAmount: item?.additionalDiscount,
-        // unitCost: item?.,
-        // netAmount: item?.netAmount,
+        unitCost: item?.unitCost,
+        netAmount: item?.netAmount,
       })),
+      status: "hold",
     };
-    console.log("PosProduct", payload);
-
-    // dispatch(setHoldBillDrawer(true));
+    addPosOrder(RemoveEmptyFields(payload), {
+      onSuccess: () => {
+        dispatch(clearPosProduct());
+      },
+    });
   };
 
   return (

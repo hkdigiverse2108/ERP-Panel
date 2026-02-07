@@ -3,20 +3,54 @@ import PrintIcon from "@mui/icons-material/Print";
 import SearchIcon from "@mui/icons-material/Search";
 import { IconButton } from "@mui/material";
 import { useState } from "react";
+import { Queries } from "../../../../../../Api";
 import { CommonTextField } from "../../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setHoldBillDrawer } from "../../../../../../Store/Slices/DrawerSlice";
-import { CommonDrawer } from "../../../../../Common";
-import { Queries } from "../../../../../../Api";
+import { setPosProduct } from "../../../../../../Store/Slices/PosSlice";
+import type { PosProductOrderBase } from "../../../../../../Types";
 import { FormatDateTime } from "../../../../../../Utils";
+import { CommonDrawer } from "../../../../../Common";
 
 const HoldBill = () => {
   const { isHoldBillDrawer } = useAppSelector((stale) => stale.drawer);
   const [value, setValue] = useState<string>("");
 
-  const { data: holdBills } = Queries.useGetPosHoldOrder({ search: value }, isHoldBillDrawer);
+  const { data: holdBills } = Queries.useGetPosHoldOrder({ ...(value && { search: value }) }, isHoldBillDrawer);
 
   const dispatch = useAppDispatch();
+
+  const handleBillClick = (bill: PosProductOrderBase) => {
+    console.log(bill);
+    dispatch(
+      setPosProduct({
+        items: {
+          _id: bill._id,
+          // name: bill.name,
+          // mrp: bill.mrp,
+          // discount: bill.discount,
+          // tax: bill.tax,
+          // additionalCharge: bill.additionalCharge,
+          // quantity: bill.quantity,
+          // total: bill.total,
+        },
+        customerId: bill.customerId?._id,
+        orderType: bill.orderType,
+        salesManId: bill.salesManId?._id,
+        totalQty: bill.totalQty,
+        totalMrp: bill.totalMrp,
+        totalTaxAmount: bill.totalTaxAmount,
+        totalDiscount: bill.totalDiscount,
+        totalAdditionalCharge: bill.totalAdditionalCharge,
+        flatDiscountAmount: bill.flatDiscountAmount,
+        additionalCharges: bill.additionalCharges,
+        roundOff: bill.roundOff,
+        remark: bill.remark,
+        totalAmount: bill.totalAmount,
+      }),
+    );
+    // dispatch(setHoldBillDrawer());
+  };
 
   return (
     <CommonDrawer open={isHoldBillDrawer} onClose={() => dispatch(setHoldBillDrawer())} anchor="right" title="On Hold" paperProps={{ className: "bg-white dark:bg-gray-800!" }}>
@@ -27,7 +61,7 @@ const HoldBill = () => {
         {/* 📄 List */}
         <div className="flex flex-col gap-3 overflow-y-auto">
           {holdBills?.data?.map((bill) => (
-            <div key={bill._id} className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-md p-3 text-sm">
+            <div key={bill._id} className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-md p-3 text-sm" onClick={() => handleBillClick(bill)}>
               {/* Header */}
               <div className="flex justify-between items-start">
                 <div className="font-semibold">
