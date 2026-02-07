@@ -23,7 +23,7 @@ const AdditionalChargesForm: FC<Props> = ({ openModal, setOpenModal, isEdit }) =
   const isEditing = Boolean(isEdit?._id);
 
   const initialValues: AdditionalChargesFormValues = {
-    type: isEdit?.type || "purchase",
+    type: (isEdit?.type?.toLowerCase() as AdditionalChargesFormValues["type"]) || "purchase",
     name: isEdit?.name || "",
     hsnSac: isEdit?.hsnSac || "",
     taxId: (typeof isEdit?.taxId === "object" ? isEdit?.taxId?._id : isEdit?.taxId) || "",
@@ -58,9 +58,12 @@ const AdditionalChargesForm: FC<Props> = ({ openModal, setOpenModal, isEdit }) =
     <CommonValidationRadio
       name="type"
       options={[
-        { label: "Purchase", value: "purchase" },
+        { label: "Purchase", value: "purchase", default: true },
         { label: "Sales", value: "sales" },
-      ]}
+      ].map((opt) => ({
+        ...opt,
+        disabled: isEditing && opt.value !== (isEdit?.type?.toLowerCase() || "purchase"),
+      }))}
       grid={{ xs: "auto" }}
     />
   );
@@ -82,7 +85,7 @@ const AdditionalChargesForm: FC<Props> = ({ openModal, setOpenModal, isEdit }) =
                     <CommonValidationTextField name="name" label="Additional Charge" required grid={{ xs: 12 }} />
                     <CommonValidationTextField name="defaultValue.value" label="Default value" required grid={{ xs: 12 }} isCurrency currencyDisabled />
                     <CommonValidationSelect name="taxId" label="Select Tax" isLoading={TaxDataLoading} options={GenerateOptions(TaxData?.data)} required grid={{ xs: 12 }} />
-                    <CommonValidationSwitch name="taxIncluded" label="tax included" grid={{ xs: 12 }} />
+                    <CommonValidationSwitch name="taxIncluded" label={`${values.type === "purchase" ? "Purchase" : "Sales"} Tax Included`} grid={{ xs: 12 }} />
                     <CommonValidationSelect name="accountGroupId" label="Select Group" isLoading={isLoading} options={GenerateOptions(AccountGroupData?.data ?? [])} required grid={{ xs: 12 }} />
                     <CommonValidationTextField name="hsnSac" label="HSN / SAC" grid={{ xs: 12 }} />
                     {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
