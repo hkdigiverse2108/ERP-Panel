@@ -6,7 +6,7 @@ export interface PayLaterFormValues {
   totalAmount?: number;
   paidAmount?: number;
   dueAmount?: number;
-  status?: number;
+  status?: string;
   dueDate?: string;
   note?: string;
   sendReminder?: boolean;
@@ -21,7 +21,7 @@ export interface PayLaterBase extends Omit<PayLaterFormValues, "parentId">, Comm
 }
 
 export interface PayLaterDataResponse extends PageStatus {
-  PayLater_data: PayLaterBase[];
+  payLater_data: PayLaterBase[];
 }
 
 export interface PayLaterApiResponse extends MessageStatus {

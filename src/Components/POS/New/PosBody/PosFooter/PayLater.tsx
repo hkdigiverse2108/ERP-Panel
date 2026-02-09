@@ -4,6 +4,7 @@ import { PAYMENT_TERMS, SEND_REMINDER } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setPayLaterModal } from "../../../../../Store/Slices/ModalSlice";
 import { CommonModal } from "../../../../Common";
+import { Mutations } from "../../../../../Api";
 
 const DEFAULT_DAYS = 7;
 
@@ -15,6 +16,8 @@ const calculateDueDate = (days: number): Date => {
 
 const PayLater = () => {
   const dispatch = useAppDispatch();
+
+  const { mutate: addPayLater, isPending: isAddPayLaterPending } = Mutations.useAddPayLater();
 
   const { isPayLaterModal } = useAppSelector((state) => state.modal);
   const { PosProduct } = useAppSelector((state) => state.pos);
@@ -38,13 +41,15 @@ const PayLater = () => {
       customerId: PosProduct?.customerId,
       totalAmount: PosProduct?.totalAmount,
       paidAmount: 0,
-      dueAmount: PosProduct?.totalAmount,
-      status: "open",
       dueDate: dueDate.toISOString(),
       sendReminder: sendReminder === "yes",
     };
 
-    console.log(payload);
+    addPayLater(payload, {
+      onSuccess: () => {
+        // dispatch(setPayLaterModal());
+      },
+    });
   };
 
   return (
@@ -67,7 +72,7 @@ const PayLater = () => {
         <div>
           <CommonRadio label="Send Reminder" value={sendReminder} onChange={setSendReminder} options={SEND_REMINDER} />{" "}
         </div>
-        <CommonButton fullWidth title="Proceed to Print" variant="contained" size="small" onClick={handleProceedToPrint} />
+        <CommonButton fullWidth title="Proceed to Print" variant="contained" size="small" loading={isAddPayLaterPending} onClick={handleProceedToPrint} />
       </div>
     </CommonModal>
   );

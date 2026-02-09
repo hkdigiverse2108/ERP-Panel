@@ -1,6 +1,6 @@
 import { KEYS, URL_KEYS } from "../Constants";
 import type { AddAdditionalChargersPayload, EditAdditionalChargersPayload } from "../Types/AdditionalCharges";
-import type { AddBankPayload, AddContactPayload, AddEmployeePayload, AddMaterialConsumptionPayload, AddPosProductOrderPayload, AddProductPayload, AddRecipePayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddStockVerificationPayload, CallRequestFormValues, CompanyApiResponse, EditBankPayload, EditCompanyPayload, EditContactPayload, EditEmployeePayload, EditMaterialConsumptionPayload, EditPermissionPayload, EditProductPayload, EditRecipePayload, EditRolesPayload, EditStockVerificationPayload, EmployeeApiResponse, LoginPayload, LoginResponse, UploadResponse } from "../Types";
+import type { AddBankPayload, AddContactPayload, AddEmployeePayload, AddMaterialConsumptionPayload, AddPayLaterPayload, AddPosProductOrderPayload, AddProductPayload, AddRecipePayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddStockVerificationPayload, CallRequestFormValues, CompanyApiResponse, EditBankPayload, EditCompanyPayload, EditContactPayload, EditEmployeePayload, EditMaterialConsumptionPayload, EditPayLaterPayload, EditPermissionPayload, EditProductPayload, EditRecipePayload, EditRolesPayload, EditStockVerificationPayload, EmployeeApiResponse, LoginPayload, LoginResponse, UploadResponse } from "../Types";
 import type { AddBillOfLiveProductPayload, EditBillOfLiveProductPayload } from "../Types/BillOfMaterials";
 import type { AddSupplierBillPayload, EditSupplierBillPayload } from "../Types/SupplierBill";
 import { Delete, Post, Put } from "./Methods";
@@ -87,9 +87,15 @@ export const Mutations = {
 
   //*************** POS **************** */
   useAddPosOrder: () => useMutations<AddPosProductOrderPayload, void>([KEYS.POS.ADD, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER], (input) => Post(URL_KEYS.POS.ADD, input)),
+  useDeletePosOrder: () => useMutations<string, void>([KEYS.POS.DELETE, KEYS.POS.BASE], (id) => Delete(`${URL_KEYS.POS.BASE}/${id}`)),
 
   //*************** additional charges **************** */
   useAddAdditionalCharges: () => useMutations<AddAdditionalChargersPayload, void>([KEYS.ADDITIONAL_CHARGES.ADD, KEYS.ADDITIONAL_CHARGES.BASE], (input) => Post(URL_KEYS.ADDITIONAL_CHARGES.ADD, input)),
   useEditAdditionalCharges: () => useMutations<EditAdditionalChargersPayload, void>([KEYS.ADDITIONAL_CHARGES.EDIT, KEYS.ADDITIONAL_CHARGES.BASE], (input) => Put(URL_KEYS.ADDITIONAL_CHARGES.EDIT, input)),
   useDeleteAdditionalCharges: () => useMutations<string, void>([KEYS.ADDITIONAL_CHARGES.DELETE, KEYS.ADDITIONAL_CHARGES.BASE], (id) => Delete(`${URL_KEYS.ADDITIONAL_CHARGES.BASE}/${id}`)),
+
+  //*************** Pay Later **************** */
+  useAddPayLater: () => useMutations<AddPayLaterPayload, void>([KEYS.PAY_LATER.ADD, KEYS.PAY_LATER.BASE], (input) => Post(URL_KEYS.PAY_LATER.ADD, input)),
+  useEditPayLater: () => useMutations<EditPayLaterPayload, void>([KEYS.PAY_LATER.EDIT, KEYS.PAY_LATER.BASE], (input) => Put(URL_KEYS.PAY_LATER.EDIT, input)),
+  useDeletePayLater: () => useMutations<string, void>([KEYS.PAY_LATER.DELETE, KEYS.PAY_LATER.BASE], (id) => Delete(`${URL_KEYS.PAY_LATER.BASE}/${id}`)),
 };

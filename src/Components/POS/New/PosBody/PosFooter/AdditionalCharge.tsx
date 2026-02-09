@@ -35,12 +35,9 @@ const AdditionalCharge = () => {
           [key]: key === "value" ? Number(val) || 0 : val,
         } as AdditionalChargeRowType;
         const data = AdditionalChargeData?.data?.find((item) => item._id === updatedRow.chargeId[0]);
-        console.log("data", data);
-        console.log("updatedRow", updatedRow);
-
         updatedRow.value = data?.defaultValue?.value ?? 0;
-        // updatedRow.taxId = [data?.taxId?._id] ?? [];
-        // updatedRow.accountGroupId = [data?.accountGroupId?._id] ?? [];
+        updatedRow.taxId = data?.taxId?._id ? [data?.taxId?._id] : [];
+        updatedRow.accountGroupId = data?.accountGroupId?._id ? [data?.accountGroupId?._id] : [];
         updatedRow.totalAmount = calculateTotal(updatedRow.value, updatedRow.taxId);
 
         return updatedRow;

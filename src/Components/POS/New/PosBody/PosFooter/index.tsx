@@ -37,6 +37,7 @@ const PosFooter = () => {
   ];
 
   const handleHoldBill = () => {
+    if (!PosProduct.items?.length) return ShowNotification("Please select at least one product", "error");
     const payload = {
       ...PosProduct,
       items: PosProduct.items.map((item) => ({
