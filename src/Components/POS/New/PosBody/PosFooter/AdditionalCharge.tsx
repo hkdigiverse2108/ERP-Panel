@@ -2,7 +2,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useMemo, useState } from "react";
 import { Queries } from "../../../../../Api";
 import { CommonButton, CommonSelect, CommonTextField } from "../../../../../Attribute";
-import { GROUP_OPTIONS } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setAdditionalChargeModal } from "../../../../../Store/Slices/ModalSlice";
 import { setAdditionalCharges, setTotalAdditionalCharge } from "../../../../../Store/Slices/PosSlice";
@@ -16,8 +15,9 @@ const AdditionalCharge = () => {
 
   const [rows, setRows] = useState<AdditionalChargeRowType[]>([]);
 
-  const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
-  const { data: AdditionalChargeData, isLoading: AdditionalChargeDataLoading } = Queries.useGetAdditionalChargeDropdown();
+  const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown({}, isAdditionalChargeModal);
+  const { data: AdditionalChargeData, isLoading: AdditionalChargeDataLoading } = Queries.useGetAdditionalChargeDropdown({}, isAdditionalChargeModal);
+  const { data: AccountGroupData, isLoading: AccountGroupDataLoading } = Queries.useGetAccountGroupDropdown({ natureFilter: "sales" }, isAdditionalChargeModal);
 
   const calculateTotal = (value: number, tax: string[]) => {
     const rate = TaxData?.data?.find((item) => item._id === tax[0])?.percentage ?? 0;
@@ -33,7 +33,13 @@ const AdditionalCharge = () => {
           ...row,
           [key]: key === "value" ? Number(val) || 0 : val,
         } as AdditionalChargeRowType;
+        const data = AdditionalChargeData?.data?.find((item) => item._id === updatedRow.chargeId[0]);
+        console.log("data", data);
+        console.log("updatedRow", updatedRow);
 
+        updatedRow.value = data?.defaultValue?.value ?? 0;
+        // updatedRow.taxId = [data?.taxId?._id] ?? [];
+        // updatedRow.accountGroupId = [data?.accountGroupId?._id] ?? [];
         updatedRow.totalAmount = calculateTotal(updatedRow.value, updatedRow.taxId);
 
         return updatedRow;
@@ -86,7 +92,7 @@ const AdditionalCharge = () => {
       key: "group",
       header: "Group",
       bodyClass: "min-w-32 w-55",
-      render: (row, index) => <CommonSelect label="Select Group" value={row.accountGroupId} options={GROUP_OPTIONS} onChange={(val) => updateRow(index, "accountGroupId", val)} />,
+      render: (row, index) => <CommonSelect label="Select Group" value={row.accountGroupId} options={GenerateOptions(AccountGroupData?.data)} isLoading={AccountGroupDataLoading} onChange={(val) => updateRow(index, "accountGroupId", val)} disabled />,
     },
     {
       key: "total",
