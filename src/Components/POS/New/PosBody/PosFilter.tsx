@@ -18,7 +18,7 @@ const PosFilter = () => {
   const { data: productDropdown, isLoading: productDropdownLoading } = Queries.useGetProductDropdown();
   const id = isSelectProduct || "";
   const { data: productById } = Queries.useGetProductById(id);
-  const { data: customerDropdown, isLoading: customerDropdownLoading } = Queries.useGetContactDropdown({ contactType: "customer" });
+  const { data: customerDropdown, isLoading: customerDropdownLoading } = Queries.useGetContactDropdown({ typeFilter: "customer" });
 
   const handleCustomerChange = (value: string[]) => {
     dispatch(setCustomerId(value[0]));

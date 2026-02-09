@@ -12,12 +12,13 @@ import { CommonModal, CommonTable } from "../../../../Common";
 const AdditionalCharge = () => {
   const { isAdditionalChargeModal } = useAppSelector((s) => s.modal);
   const dispatch = useAppDispatch();
+  const isModalOpen = isAdditionalChargeModal.open;
 
   const [rows, setRows] = useState<AdditionalChargeRowType[]>([]);
 
-  const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown({}, isAdditionalChargeModal);
-  const { data: AdditionalChargeData, isLoading: AdditionalChargeDataLoading } = Queries.useGetAdditionalChargeDropdown({}, isAdditionalChargeModal);
-  const { data: AccountGroupData, isLoading: AccountGroupDataLoading } = Queries.useGetAccountGroupDropdown({ natureFilter: "sales" }, isAdditionalChargeModal);
+  const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown({}, isModalOpen);
+  const { data: AdditionalChargeData, isLoading: AdditionalChargeDataLoading } = Queries.useGetAdditionalChargeDropdown({}, isModalOpen);
+  const { data: AccountGroupData, isLoading: AccountGroupDataLoading } = Queries.useGetAccountGroupDropdown({ natureFilter: "sales" }, isModalOpen);
 
   const calculateTotal = (value: number, tax: string[]) => {
     const rate = TaxData?.data?.find((item) => item._id === tax[0])?.percentage ?? 0;
@@ -65,7 +66,7 @@ const AdditionalCharge = () => {
     };
     dispatch(setAdditionalCharges(payload.additionalCharges));
     dispatch(setTotalAdditionalCharge(grandTotal.toFixed(2)));
-    dispatch(setAdditionalChargeModal());
+    dispatch(setAdditionalChargeModal({ open: false, data: null }));
   };
 
   const columns: CommonTableColumn<AdditionalChargeRowType>[] = [
@@ -118,7 +119,7 @@ const AdditionalCharge = () => {
     showFooter: true,
   };
   return (
-    <CommonModal title="Add Additional Charge" isOpen={isAdditionalChargeModal} onClose={() => dispatch(setAdditionalChargeModal())} className="max-w-[1000px]">
+    <CommonModal title="Add Additional Charge" isOpen={isModalOpen} onClose={() => dispatch(setAdditionalChargeModal({ open: false, data: null }))} className="max-w-[1000px]">
       <div className="flex flex-col justify-center items-center gap-3">
         <div className="border border-gray-200 dark:border-gray-600 rounded-md overflow-y-auto custom-scrollbar text-sm w-full">
           <CommonTable {...CommonTableOption} />
