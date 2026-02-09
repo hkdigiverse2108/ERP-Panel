@@ -129,12 +129,12 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
     },
     { key: "sr", header: "#", render: (_, i) => i + 1, bodyClass: "w-10", footer: "" },
     { key: "productId", header: "Product Name", headerClass: "text-start", bodyClass: "min-w-60 w-60 text-start", render: (row, index) => <CommonSelect label="Search Product" value={row.productId ? [row.productId] : []} options={productOptions} isLoading={isProductLoading} onChange={(v) => handleReturnRowChange(index, "productId", v)} required />, footer: "" },
-    { key: "qty", header: "Qty",bodyClass: "min-w-28",  render: (row, index) => <CommonTextField type="number" value={row.qty} onChange={(v) => handleReturnRowChange(index, "qty", v)} />, footer: (data) => data.reduce((a, b) => a + (parseFloat(String(b.qty)) || 0), 0) },
+    { key: "qty", header: "Qty", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.qty} onChange={(v) => handleReturnRowChange(index, "qty", v)} />, footer: (data) => data.reduce((a, b) => a + (parseFloat(String(b.qty)) || 0), 0) },
     { key: "freeQty", header: "Free Qty", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.freeQty} onChange={(v) => handleReturnRowChange(index, "freeQty", v)} />, footer: (data) => data.reduce((a, b) => a + (+b.freeQty || 0), 0) },
     { key: "unitCost", header: "Unit Cost", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.unitCost} onChange={(v) => handleReturnRowChange(index, "unitCost", v)} /> },
-    { key: "disc1", header: "Disc1",bodyClass: "min-w-28",  render: (row, index) => <CommonTextField type="number" value={row.disc1} onChange={(v) => handleReturnRowChange(index, "disc1", v)} isCurrency currencyDisabled /> },
-    { key: "disc2", header: "Disc2",bodyClass: "min-w-28",  render: (row, index) => <CommonTextField type="number" value={row.disc2} onChange={(v) => handleReturnRowChange(index, "disc2", v)} isCurrency currencyDisabled /> },
-    { key: "taxableAmount", header: "Taxable",bodyClass: "min-w-28",  render: (row) => <CommonTextField type="number" value={row.taxableAmount} disabled /> },
+    { key: "disc1", header: "Disc1", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.disc1} onChange={(v) => handleReturnRowChange(index, "disc1", v)} isCurrency currencyDisabled /> },
+    { key: "disc2", header: "Disc2", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.disc2} onChange={(v) => handleReturnRowChange(index, "disc2", v)} isCurrency currencyDisabled /> },
+    { key: "taxableAmount", header: "Taxable", bodyClass: "min-w-28", render: (row) => <CommonTextField type="number" value={row.taxableAmount} disabled /> },
     {
       key: "tax",
       header: "Tax",
@@ -144,7 +144,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
         </span>
       ),
     },
-    { key: "landingCost", header: "Landing Cost",bodyClass: "min-w-28",  render: (row, index) => <CommonTextField type="number" value={row.landingCost} onChange={(v) => handleReturnRowChange(index, "landingCost", v)} /> },
+    { key: "landingCost", header: "Landing Cost", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.landingCost} onChange={(v) => handleReturnRowChange(index, "landingCost", v)} /> },
     { key: "totalAmount", header: "Total", bodyClass: "min-w-28", render: (row) => <CommonTextField type="number" value={row.totalAmount} disabled /> },
   ];
   return (
