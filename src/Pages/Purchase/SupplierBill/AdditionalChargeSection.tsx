@@ -66,10 +66,14 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
     { key: "totalAmount", header: "Total", headerClass: "text-right", bodyClass: "p-2 text-right", render: (row) => row.totalAmount || 0, footer: (data) => data.reduce((a, b) => a + (parseFloat(b.totalAmount) || 0), 0).toFixed(2), footerClass: "text-right" },
   ];
 
-  const taxBreakdownColumns: CommonTableColumn<{ name: string; rate: number; amount: number }>[] = [
-    { key: "name", header: "Tax", headerClass: "text-start p-3", bodyClass: "text-start p-3 min-w-[200px]" },
-    { key: "rate", header: "Tax Rate", headerClass: "text-center p-3", bodyClass: "text-center p-3 w-32", render: (row) => `${row.rate}%` },
-    { key: "amount", header: "Tax Amount", headerClass: "text-right p-3", bodyClass: "text-right p-3 w-40", render: (row) => row.amount.toFixed(2) },
+  const taxBreakdownColumns: CommonTableColumn<{
+    name: string;
+    rate: number;
+    amount: number;
+  }>[] = [
+    { key: "name", header: "Tax", headerClass: "text-left px-4 w-52", bodyClass: "text-left px-4 w-52" },
+    { key: "rate", header: "Tax Rate", headerClass: "text-center px-4 w-32", bodyClass: "text-center px-4 w-32 whitespace-nowrap", render: (row) => `${row.rate}%` },
+    { key: "amount", header: "Tax Amount", headerClass: "text-right px-4 w-36", bodyClass: "text-right px-4 w-36 whitespace-nowrap font-medium", render: (row) => row.amount.toFixed(2) },
   ];
 
   return (
@@ -101,9 +105,9 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
 
         {/* ===== SUMMARY ===== */}
         <Box sx={{ mt: 3, display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 300px" }, gap: 2 }}>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-start" }}>
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
             {showTaxBreakdown && (
-              <Box sx={{ width: "100%", maxWidth: 700, border: "1px solid", borderColor: "divider" }}>
+              <Box sx={{ width: "100%", maxWidth: 600, border: "1px solid", borderColor: "divider", borderRadius: 1, backgroundColor: "background.paper" }}>
                 <CommonTable data={summary.taxSummary} columns={taxBreakdownColumns} rowKey={(r) => r.name} />
               </Box>
             )}

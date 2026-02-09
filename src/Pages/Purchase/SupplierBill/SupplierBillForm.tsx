@@ -175,31 +175,41 @@ const SupplierBillForm = () => {
 
   const calculateRow = (row: ProductRow): ProductRow => {
     const qty = Number(row.qty) || 0;
-    const freeQty = Number(row.freeQty) || 0;
-    const sellingPrice = Number(row.sellingPrice) || 0;
+    const unitCost = Number(row.unitCost) || 0;
+    const taxRate = Number(row.taxRate) || 0;
+    let mrp = Number(row.mrp) || 0;
+    let sellingPrice = Number(row.sellingPrice) || 0;
     const disc1 = Number(row.disc1) || 0;
     const disc2 = Number(row.disc2) || 0;
-    const taxRate = Number(row.taxRate) || 0;
-    const mrp = Number(row.mrp) || 0;
-    const totalQty = qty + freeQty;
-    const baseAmount = qty * sellingPrice;
-    const taxableAmount = Math.max(0, baseAmount - disc1 - disc2);
-    const taxAmount = (taxableAmount * taxRate) / 100;
-    const totalAmount = taxableAmount + taxAmount;
-    const landingCost = totalQty > 0 ? taxableAmount / totalQty : 0;
-    const margin = mrp - landingCost;
-    return { ...row, taxableAmount: taxableAmount.toFixed(2), taxAmount: taxAmount.toFixed(2), totalAmount: totalAmount.toFixed(2), landingCost: landingCost.toFixed(2), margin: margin.toFixed(2) };
+    const discount = disc1 + disc2;
+    const taxablePerUnit = unitCost;
+    const taxPerUnit = (unitCost * taxRate) / 100;
+    const landingCost = unitCost + taxablePerUnit + taxPerUnit;
+    if (mrp > 0 && mrp < landingCost) {
+      mrp = landingCost;
+    }
+    if (!sellingPrice || sellingPrice < landingCost) {
+      sellingPrice = mrp || landingCost;
+    }
+    sellingPrice = Math.max(0, sellingPrice - discount);
+    const margin = sellingPrice - landingCost;
+    const totalAmount = landingCost * qty;
+    return { ...row, taxableAmount: (taxablePerUnit * qty).toFixed(2), taxAmount: (taxPerUnit * qty).toFixed(2), landingCost: landingCost.toFixed(2), sellingPrice: sellingPrice.toFixed(2), mrp: mrp ? mrp.toFixed(2) : "", margin: margin.toFixed(2), totalAmount: totalAmount.toFixed(2) };
   };
+
   const calculateReturnRow = (row: ProductRow): ProductRow => {
     const qty = Number(row.qty) || 0;
-    const landingCost = Number(row.landingCost) || 0;
+    const unitCost = Number(row.unitCost) || 0;
+    const taxRate = Number(row.taxRate) || 0;
     const disc1 = Number(row.disc1) || 0;
     const disc2 = Number(row.disc2) || 0;
-    const taxAmount = Number(row.taxAmount) || 0;
-    const baseAmount = qty * landingCost;
-    const taxableAmount = Math.max(0, baseAmount - disc1 - disc2);
-    const totalAmount = taxableAmount + taxAmount;
-    return { ...row, taxableAmount: taxableAmount.toFixed(2), totalAmount: totalAmount.toFixed(2) };
+    const discountPerUnit = disc1 + disc2;
+    const taxablePerUnit = unitCost;
+    const taxPerUnit = (unitCost * taxRate) / 100;
+    const landingCost = unitCost + taxablePerUnit + taxPerUnit - discountPerUnit;
+    const finalLandingCost = Math.max(0, landingCost);
+    const totalAmount = finalLandingCost * qty;
+    return { ...row, taxableAmount: (taxablePerUnit * qty).toFixed(2), taxAmount: (taxPerUnit * qty).toFixed(2), landingCost: finalLandingCost.toFixed(2), totalAmount: totalAmount.toFixed(2) };
   };
 
   const handleRowChange = (index: number, field: keyof ProductRow, value: string | number | string[]) => {
@@ -215,7 +225,7 @@ const SupplierBillForm = () => {
         }
         const product = (ProductsData?.data || []).find((p) => String(p._id) === String(finalValue));
         if (product) {
-          updatedRow = { ...updatedRow, itemCode: product.itemCode || "", qty: 1, unit: product.unit || "", mrp: product.mrp || 0, sellingPrice: product.purchasePrice || product.sellingPrice || 0, landingCost: product.landingCost || 0, taxRate: product.purchaseTaxId?.percentage || 0, taxName: product.purchaseTaxId?.name || "" };
+          updatedRow = { ...updatedRow, itemCode: product.itemCode || "", qty: 1, unit: product.unit || "", unitCost: product.purchasePrice || 0, mrp: product.mrp || 0, sellingPrice: product.purchasePrice || product.sellingPrice || 0, landingCost: product.landingCost || 0, taxRate: product.purchaseTaxId?.percentage || 0, taxName: product.purchaseTaxId?.name || "" };
         }
       }
       newRows[index] = calculateRow(updatedRow);
@@ -238,7 +248,7 @@ const SupplierBillForm = () => {
         }
         const product = (ProductsData?.data || []).find((p) => String(p._id) === String(finalValue));
         if (product) {
-          updatedRow = { ...updatedRow, itemCode: product.itemCode || "", qty: 1, unit: product.unit || "", mrp: product.mrp || 0, sellingPrice: product.purchasePrice || product.sellingPrice || 0, landingCost: product.landingCost || 0 };
+          updatedRow = { ...updatedRow, itemCode: product.itemCode || "", qty: 1, unit: product.unit || "", unitCost: product.purchasePrice || 0, sellingPrice: product.purchasePrice || product.sellingPrice || 0, landingCost: product.landingCost || 0, taxRate: product.purchaseTaxId?.percentage || 0, taxName: product.purchaseTaxId?.name || "" };
         }
       }
       newRows[index] = calculateReturnRow(updatedRow);
