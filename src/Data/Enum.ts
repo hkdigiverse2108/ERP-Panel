@@ -255,3 +255,7 @@ export const TAX_TYPE = [
   { label: "Tax Exclusive", value: "taxExclusive" },
   { label: "Out Of Scope", value: "outOfScope" },
 ];
+export const OPTION_TYPE = [
+  { label: "Purchase", value: "purchase" },
+  { label: "Sales", value: "sales" },
+];

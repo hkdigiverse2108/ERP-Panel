@@ -181,20 +181,20 @@ const SupplierBillForm = () => {
     let sellingPrice = Number(row.sellingPrice) || 0;
     const disc1 = Number(row.disc1) || 0;
     const disc2 = Number(row.disc2) || 0;
-    const discount = disc1 + disc2;
+    const discountPerUnit = disc1 + disc2;
     const taxablePerUnit = unitCost;
     const taxPerUnit = (unitCost * taxRate) / 100;
-    const landingCost = unitCost + taxablePerUnit + taxPerUnit;
-    if (mrp > 0 && mrp < landingCost) {
-      mrp = landingCost;
+    const baseLandingCost = unitCost + taxablePerUnit + taxPerUnit;
+    if (mrp > 0 && mrp < baseLandingCost) {
+      mrp = baseLandingCost;
     }
-    if (!sellingPrice || sellingPrice < landingCost) {
-      sellingPrice = mrp || landingCost;
+    if (!sellingPrice || sellingPrice < baseLandingCost) {
+      sellingPrice = mrp || baseLandingCost;
     }
-    sellingPrice = Math.max(0, sellingPrice - discount);
-    const margin = sellingPrice - landingCost;
-    const totalAmount = landingCost * qty;
-    return { ...row, taxableAmount: (taxablePerUnit * qty).toFixed(2), taxAmount: (taxPerUnit * qty).toFixed(2), landingCost: landingCost.toFixed(2), sellingPrice: sellingPrice.toFixed(2), mrp: mrp ? mrp.toFixed(2) : "", margin: margin.toFixed(2), totalAmount: totalAmount.toFixed(2) };
+    const finalLandingCost = Math.max(0, baseLandingCost - discountPerUnit);
+    const margin = sellingPrice - finalLandingCost;
+    const totalAmount = finalLandingCost * qty;
+    return { ...row, taxableAmount: (taxablePerUnit * qty).toFixed(2), taxAmount: (taxPerUnit * qty).toFixed(2), landingCost: finalLandingCost.toFixed(2), sellingPrice: sellingPrice.toFixed(2), mrp: mrp ? mrp.toFixed(2) : "", margin: margin.toFixed(2), totalAmount: totalAmount.toFixed(2) };
   };
 
   const calculateReturnRow = (row: ProductRow): ProductRow => {

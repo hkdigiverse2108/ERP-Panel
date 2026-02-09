@@ -84,10 +84,7 @@ export const AdditionalChargesFormSchema = Yup.object({
   type: Validation("string", "Type"),
   taxId: Validation("string", "Tax", { required: false }).nullable(),
   hsnSac: Validation("string", "HSN/SAC", { required: false }),
-  defaultValue: Yup.object({
-    value: Validation("number", "Value", { required: false }),
-    type: Validation("string", "Value Type", { required: false }),
-  }).nullable(),
+  defaultValue: Validation("number", "Default value", { required: false }).nullable(),
   isActive: Yup.boolean(),
 });
 

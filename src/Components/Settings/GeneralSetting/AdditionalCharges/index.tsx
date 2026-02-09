@@ -34,7 +34,7 @@ const AdditionalCharges = () => {
 
   const columns: AppGridColDef<AdditionalChargesBase>[] = [
     { field: "name", headerName: "Additional Charge", width: 170 },
-    { field: "defaultValue", headerName: "Default Value", width: 150, valueGetter: (_v, row) => (row.defaultValue ? `${row.defaultValue.value} (${row.defaultValue.type})` : "") },
+    { field: "defaultValue", headerName: "Default Value", width: 150},
     { field: "hsnSac", headerName: "HSN Code", width: 150 },
     { field: "accountGroupId", headerName: "Account Group", width: 140, valueGetter: (_v, row) => (typeof row.accountGroupId === "object" ? row.accountGroupId?.name : row.accountGroupId) },
     { field: "taxId", headerName: "Tax", flex: 1, valueGetter: (_v, row) => (typeof row.taxId === "object" ? row.taxId?.name : row.taxId) },

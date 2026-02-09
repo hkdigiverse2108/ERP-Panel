@@ -10,29 +10,19 @@ export interface AccountGroupFormValues {
   isActive?: boolean;
 }
 
-/* ================= PAYLOAD ================= */
+/* ================= PAYLOADS ================= */
 
 export type AddAccountGroupPayload = AccountGroupFormValues;
 
-export type EditAccountGroupPayload = AccountGroupFormValues & {
-  accountGroupId: string;
+export type EditAccountGroupPayload = AddAccountGroupPayload & {
+  accountGroupId?: string;
 };
 
 /* ================= BASE MODEL ================= */
 
 export interface AccountGroupBase extends Omit<AccountGroupFormValues, "parentGroupId">, CommonDataType {
   groupLevel?: number;
-
-  parentGroupId?:
-    | string
-    | {
-        _id: string;
-        name?: string;
-        parentGroupId?: string | null;
-        nature?: string | null;
-        groupLevel?: number;
-      }
-    | null;
+  parentGroupId?: AccountGroupBase | null;
 }
 
 /* ================= PAGINATION RESPONSE ================= */

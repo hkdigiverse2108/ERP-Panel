@@ -2,23 +2,16 @@ import type { AccountGroupBase } from "./AccountGroup";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { TaxBase } from "./Tax";
 
-/* ===================== COMMON SUB TYPES ===================== */
-export interface AdditionalChargeDefaultValue {
-  value?: number;
-  type?: string;
-}
-
 /* ===================== FORM VALUES ===================== */
-
 export interface AdditionalChargesFormValues {
   type?: string;
   name?: string;
-  defaultValue?: AdditionalChargeDefaultValue;
+  defaultValue?: number;
   taxId?: string | null;
   accountGroupId?: string | null;
   hsnSac?: string;
   isActive?: boolean;
-  taxIncluded?: boolean;
+  isTaxIncluding?: boolean;
 }
 
 /* ===================== PAYLOADS ===================== */
