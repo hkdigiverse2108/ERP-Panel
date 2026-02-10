@@ -1,5 +1,6 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { CommonButton, CommonSelect, CommonTextField } from "../../../Attribute";
 import type { ProductRow } from "../../../Types/SupplierBill";
@@ -9,6 +10,8 @@ import { GridDeleteIcon } from "@mui/x-data-grid";
 import { CommonTable } from "../../../Components/Common";
 import type { CommonTableColumn } from "../../../Types";
 import type { TermsConditionBase } from "../../../Types/TermsAndCondition";
+import { useDispatch } from "react-redux";
+import { setTermsAndConditionModal } from "../../../Store/Slices/ModalSlice";
 
 interface SupplierBillTabsProps {
   tabValue: number;
@@ -20,7 +23,6 @@ interface SupplierBillTabsProps {
   termsList: TermsConditionBase[];
   notes: string;
   setNotes: (value: string) => void;
-  setOpenModal: (value: boolean) => void;
   returnRows: ProductRow[];
   handleAddReturn: () => void;
   handleCutReturn: (index: number) => void;
@@ -32,7 +34,8 @@ interface SupplierBillTabsProps {
   handleDeleteTerm: (index: number) => void;
 }
 
-const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, notes, setNotes, setOpenModal, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, handleDeleteTerm }) => {
+const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, notes, setNotes, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, handleDeleteTerm }) => {
+  const dispatch = useDispatch();
   const ProductRowColumns: CommonTableColumn<ProductRow>[] = [
     {
       key: "actions",
@@ -95,8 +98,11 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
       header: "Action",
       headerClass: "text-center w-20",
       bodyClass: "w-20 text-center",
-      render: (_, index) => (
-        <Box display="flex" justifyContent="center">
+      render: (row, index) => (
+        <Box display="flex" justifyContent="center" gap={1}>
+          <CommonButton size="small" variant="outlined" onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: row }))}>
+            <EditIcon fontSize="small" />
+          </CommonButton>
           <CommonButton size="small" color="error" variant="outlined" onClick={() => handleDeleteTerm(index)}>
             <GridDeleteIcon fontSize="small" />
           </CommonButton>
@@ -178,7 +184,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
             hideDivider
             title="Terms & Conditions"
             topContent={
-              <CommonButton startIcon={<AddIcon />} onClick={() => setOpenModal(true)}>
+              <CommonButton startIcon={<AddIcon />} onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: null }))}>
                 New Term
               </CommonButton>
             }

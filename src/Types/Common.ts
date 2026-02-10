@@ -456,6 +456,7 @@ export interface ModalStateSlice {
   isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
   isProductDetailsModal: { open: boolean; data: any | null };
   isQtyCountModal: { open: boolean; data: any | null };
+  isTermsAndConditionModal: { open: boolean; data: any | null };
 }
 
 // ************ Modal End ***********
