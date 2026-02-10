@@ -14,7 +14,6 @@ import { CommonTable } from "../../../../Common";
 const PosTable = () => {
   const { PosProduct } = useAppSelector((state) => state.pos);
   const productData = PosProduct.items;
-  console.log("productData", PosProduct);
 
   const dispatch = useAppDispatch();
   const updateRow = (_id: string, data: Partial<PosProductDataModal>) => dispatch(updateProduct({ _id, data }));
@@ -114,15 +113,19 @@ const PosTable = () => {
       header: "Net Amount",
       bodyClass: "min-w-32 w-35",
     },
-    {
-      key: "action",
-      header: "",
-      render: (row) => (
-        <CommonButton variant="outlined" size="small" color="error" sx={{ minWidth: 40 }} onClick={() => removeRow(row._id)}>
-          <CloseIcon />
-        </CommonButton>
-      ),
-    },
+    ...(!PosProduct.posOrderId
+      ? [
+          {
+            key: "action",
+            header: "",
+            render: (row: PosProductDataModal) => (
+              <CommonButton variant="outlined" size="small" color="error" sx={{ minWidth: 40 }} onClick={() => removeRow(row._id)}>
+                <CloseIcon />
+              </CommonButton>
+            ),
+          },
+        ]
+      : []),
   ];
 
   const CommonTableOption = {

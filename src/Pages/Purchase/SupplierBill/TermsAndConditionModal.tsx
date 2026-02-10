@@ -8,7 +8,6 @@ import { useAppSelector } from "../../../Store/hooks";
 import { useDispatch } from "react-redux";
 import { setTermsAndConditionModal } from "../../../Store/Slices/ModalSlice";
 
-
 const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ onSave }) => {
   const { isTermsAndConditionModal } = useAppSelector((state) => state.modal);
   const dispatch = useDispatch();

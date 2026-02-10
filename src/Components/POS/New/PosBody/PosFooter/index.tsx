@@ -53,17 +53,19 @@ const PosFooter = () => {
       })),
       status: "hold",
     };
-    if (posOrderId) {
-      editPosOrder({ ...payload, posOrderId }, { onSuccess: () => dispatch(clearPosProduct()) });
-    } else {
-      addPosOrder(RemoveEmptyFields(payload), { onSuccess: () => dispatch(clearPosProduct()) });
-    }
+    if (posOrderId) editPosOrder({ ...payload, posOrderId }, { onSuccess: () => dispatch(clearPosProduct()) });
+    else addPosOrder(RemoveEmptyFields(payload), { onSuccess: () => dispatch(clearPosProduct()) });
   };
 
   const handlePayLater = () => {
     if (!PosProduct.items?.length) return ShowNotification("Please select at least one product", "error");
     if (!PosProduct.customerId) return ShowNotification("Please select customer", "error");
     dispatch(setPayLaterModal());
+  };
+
+  const handleUpi = () => {
+    if (!PosProduct.items?.length) return ShowNotification("Please select at least one product", "error");
+    if (!PosProduct.customerId) return ShowNotification("Please select customer", "error");
   };
 
   return (
@@ -101,7 +103,7 @@ const PosFooter = () => {
           <CommonButton title="Multiple Pay (F12)" variant="contained" startIcon={<VerticalSplitIcon />} onClick={() => dispatch(setMultiplePay())} />
           <CommonButton title="Redeem Credit" variant="contained" startIcon={<RedeemIcon />} onClick={() => dispatch(setRedeemCreditModal())} />
           <CommonButton title="Hold (F6)" variant="contained" startIcon={<PauseIcon />} onClick={handleHoldBill} loading={addPosOrderLoading || editPosOrderLoading} />
-          <CommonButton title="UPI (F5)" variant="contained" startIcon={<FastForwardIcon />} />
+          <CommonButton title="UPI (F5)" variant="contained" startIcon={<FastForwardIcon />} onClick={handleUpi} />
           <CommonButton title="Card (F3)" variant="contained" startIcon={<CreditCardIcon />} onClick={() => dispatch(setCardModal())} />
           <CommonButton title="Cash (F4)" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => dispatch(setCashModal())} />
           <CommonButton title="Apply Coupon" variant="contained" startIcon={<RedeemIcon />} onClick={() => dispatch(setApplyCouponModal())} />
