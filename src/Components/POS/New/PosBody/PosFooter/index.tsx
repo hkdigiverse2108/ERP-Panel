@@ -6,7 +6,7 @@ import PauseIcon from "@mui/icons-material/Pause";
 import RedeemIcon from "@mui/icons-material/Redeem";
 import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
 import { Grid } from "@mui/material";
-import { CommonButton, CommonTextField } from "../../../../../Attribute";
+import { CommonButton, CommonTextField, ShowNotification } from "../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setAdditionalChargeModal, setApplyCouponModal, setCardModal, setCashModal, setPayLaterModal, setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
 import { setMultiplePay, setRemarks, setFlatDiscountAmount, setRoundOff, clearPosProduct } from "../../../../../Store/Slices/PosSlice";
@@ -37,6 +37,7 @@ const PosFooter = () => {
   ];
 
   const handleHoldBill = () => {
+    if (!PosProduct.items?.length) return ShowNotification("Please select at least one product", "error");
     const payload = {
       ...PosProduct,
       items: PosProduct.items.map((item) => ({
@@ -57,6 +58,12 @@ const PosFooter = () => {
     });
   };
 
+  const handlePayLater = () => {
+    if (!PosProduct.items?.length) return ShowNotification("Please select at least one product", "error");
+    if (!PosProduct.customerId) return ShowNotification("Please select customer", "error");
+    dispatch(setPayLaterModal());
+  };
+
   return (
     <>
       <div className="w-full bg-white dark:bg-gray-dark">
@@ -75,7 +82,7 @@ const PosFooter = () => {
                 <>
                   <span className={`font-semibold ${item.highlight ? "text-brand-600 text-2xl" : "text-lg text-gray-900 dark:text-gray-100"}`}>{item.value.toString()}</span>
                   {item.label === "Add Charges+" ? (
-                    <span onClick={() => dispatch(setAdditionalChargeModal())} className={`text-sm font-medium cursor-pointer text-brand-600 mt-1`}>
+                    <span onClick={() => dispatch(setAdditionalChargeModal({ open: true, data: null }))} className={`text-sm font-medium cursor-pointer text-brand-600 mt-1`}>
                       {item.label}
                     </span>
                   ) : (
@@ -96,7 +103,7 @@ const PosFooter = () => {
           <CommonButton title="Card (F3)" variant="contained" startIcon={<CreditCardIcon />} onClick={() => dispatch(setCardModal())} />
           <CommonButton title="Cash (F4)" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => dispatch(setCashModal())} />
           <CommonButton title="Apply Coupon" variant="contained" startIcon={<RedeemIcon />} onClick={() => dispatch(setApplyCouponModal())} />
-          <CommonButton title="Pay Later (F11)" variant="contained" startIcon={<CalendarMonthIcon />} onClick={() => dispatch(setPayLaterModal())} />
+          <CommonButton title="Pay Later (F11)" variant="contained" startIcon={<CalendarMonthIcon />} onClick={handlePayLater} />
           <CommonButton title="Hold & Print (F7)" variant="contained" startIcon={<PauseIcon />} />
           <CommonButton title="UPI & Print (F10)" variant="contained" startIcon={<FastForwardIcon />} />
           <CommonButton title="Card & Print (F9)" variant="contained" startIcon={<CreditCardIcon />} />

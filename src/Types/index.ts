@@ -25,3 +25,4 @@ export * from "./Location";
 export * from "./Module";
 export * from "./StockVerification";
 export * from "./MaterialConsumption";
+export * from "./PayLater";

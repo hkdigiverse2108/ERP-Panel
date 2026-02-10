@@ -85,9 +85,18 @@ export type EditPosProductOrderPayload = AddPosProductOrderPayload & {
   PosProductOrderId: string;
 };
 
-export interface PosProductOrderBase extends Omit<PosProductOrderFormValues, "customerId" | "salesManId">, CommonDataType {
+export interface PosProductOrderBase extends Omit<PosProductOrderFormValues, "customerId" | "salesManId" | "items">, CommonDataType {
   customerId: ContactBase;
   salesManId: EmployeeBase;
+  items: {
+    productId?: PosProductDataModal;
+    qty: number;
+    mrp: number;
+    discountAmount: number;
+    additionalDiscountAmount: number;
+    unitCost: number;
+    netAmount: number;
+  }[];
 }
 
 export interface PosProductOrderApiResponse extends MessageStatus {
