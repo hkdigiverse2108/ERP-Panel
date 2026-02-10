@@ -23,7 +23,8 @@ const PosFooter = () => {
   const { PosProduct } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
 
-  const { mutate: addPosOrder } = Mutations.useAddPosOrder();
+  const { mutate: addPosOrder, isPending: addPosOrderLoading } = Mutations.useAddPosOrder();
+  const { mutate: editPosOrder, isPending: editPosOrderLoading } = Mutations.useEditPosOrder();
 
   const summaryRowData = [
     { label: "Quantity", value: PosProduct.totalQty }, //totalQty
@@ -38,9 +39,10 @@ const PosFooter = () => {
 
   const handleHoldBill = () => {
     if (!PosProduct.items?.length) return ShowNotification("Please select at least one product", "error");
+    const { posOrderId, ...rest } = PosProduct;
     const payload = {
-      ...PosProduct,
-      items: PosProduct.items.map((item) => ({
+      ...rest,
+      items: rest.items.map((item) => ({
         productId: item?._id,
         qty: item?.posQty,
         mrp: item?.mrp,
@@ -51,11 +53,11 @@ const PosFooter = () => {
       })),
       status: "hold",
     };
-    addPosOrder(RemoveEmptyFields(payload), {
-      onSuccess: () => {
-        dispatch(clearPosProduct());
-      },
-    });
+    if (posOrderId) {
+      editPosOrder({ ...payload, posOrderId }, { onSuccess: () => dispatch(clearPosProduct()) });
+    } else {
+      addPosOrder(RemoveEmptyFields(payload), { onSuccess: () => dispatch(clearPosProduct()) });
+    }
   };
 
   const handlePayLater = () => {
@@ -98,7 +100,7 @@ const PosFooter = () => {
         <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2 p-2">
           <CommonButton title="Multiple Pay (F12)" variant="contained" startIcon={<VerticalSplitIcon />} onClick={() => dispatch(setMultiplePay())} />
           <CommonButton title="Redeem Credit" variant="contained" startIcon={<RedeemIcon />} onClick={() => dispatch(setRedeemCreditModal())} />
-          <CommonButton title="Hold (F6)" variant="contained" startIcon={<PauseIcon />} onClick={handleHoldBill} />
+          <CommonButton title="Hold (F6)" variant="contained" startIcon={<PauseIcon />} onClick={handleHoldBill} loading={addPosOrderLoading || editPosOrderLoading} />
           <CommonButton title="UPI (F5)" variant="contained" startIcon={<FastForwardIcon />} />
           <CommonButton title="Card (F3)" variant="contained" startIcon={<CreditCardIcon />} onClick={() => dispatch(setCardModal())} />
           <CommonButton title="Cash (F4)" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => dispatch(setCashModal())} />

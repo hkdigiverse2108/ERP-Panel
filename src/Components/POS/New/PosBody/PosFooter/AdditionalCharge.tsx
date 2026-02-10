@@ -11,17 +11,18 @@ import { CommonModal, CommonTable } from "../../../../Common";
 
 const AdditionalCharge = () => {
   const { isAdditionalChargeModal } = useAppSelector((s) => s.modal);
+  const { PosProduct } = useAppSelector((s) => s.pos);
   const dispatch = useAppDispatch();
   const isModalOpen = isAdditionalChargeModal.open;
 
-  const [rows, setRows] = useState<AdditionalChargeRowType[]>([]);
+  const [rows, setRows] = useState<AdditionalChargeRowType[]>(useMemo(() => PosProduct?.additionalCharges ?? [], [PosProduct?.additionalCharges]));
 
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown({}, isModalOpen);
-  const { data: AdditionalChargeData, isLoading: AdditionalChargeDataLoading } = Queries.useGetAdditionalChargeDropdown({}, isModalOpen);
+  const { data: AdditionalChargeData, isLoading: AdditionalChargeDataLoading } = Queries.useGetAdditionalChargeDropdown({ typeFilter: "sales" }, isModalOpen);
   const { data: AccountGroupData, isLoading: AccountGroupDataLoading } = Queries.useGetAccountGroupDropdown({ natureFilter: "sales" }, isModalOpen);
 
-  const calculateTotal = (value: number, tax: string[]) => {
-    const rate = TaxData?.data?.find((item) => item._id === tax[0])?.percentage ?? 0;
+  const calculateTotal = (value: number, tax: string) => {
+    const rate = TaxData?.data?.find((item) => item._id === tax)?.percentage ?? 0;
     return value + (value * Number(rate)) / 100;
   };
 
@@ -33,11 +34,15 @@ const AdditionalCharge = () => {
         const updatedRow: AdditionalChargeRowType = {
           ...row,
           [key]: key === "value" ? Number(val) || 0 : val,
-        } as AdditionalChargeRowType;
-        const data = AdditionalChargeData?.data?.find((item) => item._id === updatedRow.chargeId[0]);
-        updatedRow.value = data?.defaultValue?.value ?? 0;
-        updatedRow.taxId = data?.taxId?._id ? [data?.taxId?._id] : [];
-        updatedRow.accountGroupId = data?.accountGroupId?._id ? [data?.accountGroupId?._id] : [];
+        };
+
+        if (key === "chargeId") {
+          const data = AdditionalChargeData?.data?.find((item) => item._id === updatedRow.chargeId[0]);
+          updatedRow.value = data?.defaultValue ?? 0;
+          updatedRow.taxId = data?.taxId?._id ? data.taxId._id : "";
+          updatedRow.accountGroupId = data?.accountGroupId?._id ? data.accountGroupId._id : "";
+        }
+
         updatedRow.totalAmount = calculateTotal(updatedRow.value, updatedRow.taxId);
 
         return updatedRow;
@@ -45,19 +50,23 @@ const AdditionalCharge = () => {
     );
   };
 
-  const addRow = () => setRows((p) => [...p, { chargeId: [], value: 0, taxId: [], accountGroupId: [], totalAmount: 0 }]);
+  const addRow = () => setRows((p) => [...p, { chargeId: "", value: 0, taxId: "", accountGroupId: "", totalAmount: 0 }]);
 
   const removeRow = (i: number) => setRows((p) => p.filter((_, idx) => idx !== i));
 
   const grandTotal = useMemo(() => rows.reduce((sum, r) => sum + r.totalAmount, 0), [rows]);
+  const getSingleValue = (val?: string | string[]) => {
+    if (Array.isArray(val)) return val[0] ?? "";
+    return val ?? "";
+  };
 
   const handleUpdateCharge = () => {
     const payload = {
       additionalCharges: rows.map((row) => ({
-        chargeId: row.chargeId[0],
+        chargeId: getSingleValue(row.chargeId),
         value: row.value,
-        taxId: row.taxId[0],
-        accountGroupId: row.accountGroupId[0],
+        taxId: getSingleValue(row.taxId),
+        accountGroupId: getSingleValue(row.accountGroupId),
         totalAmount: row.totalAmount,
       })),
     };
@@ -71,7 +80,7 @@ const AdditionalCharge = () => {
       key: "additionalCharge",
       header: "Additional Charge",
       bodyClass: "min-w-32 w-60",
-      render: (row, index) => <CommonSelect label="Select Additional Charge" value={row.chargeId} options={GenerateOptions(AdditionalChargeData?.data)} isLoading={AdditionalChargeDataLoading} onChange={(val) => updateRow(index, "chargeId", val)} />,
+      render: (row, index) => <CommonSelect label="Select Additional Charge" value={[row.chargeId]} options={GenerateOptions(AdditionalChargeData?.data)} isLoading={AdditionalChargeDataLoading} onChange={(val) => updateRow(index, "chargeId", val)} />,
       footer: () => <CommonButton variant="outlined" size="small" onClick={addRow} title="+ Additional Charge" />,
     },
     {
@@ -84,13 +93,13 @@ const AdditionalCharge = () => {
       key: "tax",
       header: "Tax",
       bodyClass: "min-w-32 w-45",
-      render: (row, index) => <CommonSelect label="Select Tax" value={row.taxId} options={GenerateOptions(TaxData?.data)} isLoading={TaxDataLoading} onChange={(val) => updateRow(index, "taxId", val)} />,
+      render: (row, index) => <CommonSelect label="Select Tax" value={[row.taxId]} options={GenerateOptions(TaxData?.data)} isLoading={TaxDataLoading} onChange={(val) => updateRow(index, "taxId", val)} />,
     },
     {
       key: "group",
       header: "Group",
       bodyClass: "min-w-32 w-55",
-      render: (row, index) => <CommonSelect label="Select Group" value={row.accountGroupId} options={GenerateOptions(AccountGroupData?.data)} isLoading={AccountGroupDataLoading} onChange={(val) => updateRow(index, "accountGroupId", val)} disabled />,
+      render: (row, index) => <CommonSelect label="Select Group" value={[row.accountGroupId]} options={GenerateOptions(AccountGroupData?.data)} isLoading={AccountGroupDataLoading} onChange={(val) => updateRow(index, "accountGroupId", val)} disabled />,
     },
     {
       key: "total",

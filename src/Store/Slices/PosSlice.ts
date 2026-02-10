@@ -19,6 +19,7 @@ const initialState: PosSliceState = {
     roundOff: 0,
     remark: "",
     totalAmount: 0,
+    posOrderId: "",
   },
 };
 
@@ -99,6 +100,7 @@ const PosSlice = createSlice({
         roundOff: 0,
         remark: "",
         totalAmount: 0,
+        posOrderId: "",
       };
       state.isSelectProduct = "";
     },
