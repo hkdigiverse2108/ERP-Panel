@@ -7,15 +7,19 @@ const ProductDetails = () => {
   const dispatch = useAppDispatch();
 
   const ProductData = [
-    { title: "landing Cost", value: isProductDetailsModal.data?.landingCost },
-    { title: "product Type", value: isProductDetailsModal.data?.productType },
-    { title: "purchase Price", value: isProductDetailsModal.data?.purchasePrice },
-    { title: "selling Margin", value: isProductDetailsModal.data?.sellingMargin },
-    { title: "mrp", value: isProductDetailsModal.data?.mrp },
+    // { title: "purchase Price", value: isProductDetailsModal.data?.purchasePrice },
+    // { title: "landing Cost", value: isProductDetailsModal.data?.landingCost },
+    // { title: "mrp", value: isProductDetailsModal.data?.mrp },
+    // { title: "selling Discount", value: isProductDetailsModal.data?.sellingDiscount },
+    // { title: "selling Price", value: isProductDetailsModal.data?.sellingPrice },
+    // { title: "selling Margin", value: isProductDetailsModal.data?.sellingMargin },
     { title: "name", value: isProductDetailsModal.data?.name },
+    { title: "print Name", value: isProductDetailsModal.data?.printName },
+    { title: "category", value: isProductDetailsModal.data?.categoryId?.name },
+    { title: "brand", value: isProductDetailsModal.data?.brandId?.name },
+    { title: "product Type", value: isProductDetailsModal.data?.productType },
     { title: "qty", value: isProductDetailsModal.data?.qty },
-    { title: "selling Discount", value: isProductDetailsModal.data?.sellingDiscount },
-    { title: "selling Price", value: isProductDetailsModal.data?.sellingPrice },
+    { title: "sales Tax", value: isProductDetailsModal.data?.salesTaxId?.name },
   ];
 
   return (

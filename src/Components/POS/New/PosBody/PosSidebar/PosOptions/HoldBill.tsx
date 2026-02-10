@@ -90,7 +90,7 @@ const HoldBill = () => {
 
               <div className="mt-2 space-y-1">
                 <div>
-                  <span className="font-medium">Contact Name :</span> {bill.customerId?.firstName + " " + bill.customerId?.lastName}
+                  <span className="font-medium">Contact Name :</span> {bill.customerId?.firstName ? bill.customerId?.firstName + " " + bill.customerId?.lastName : "Walk in Customer"}
                 </div>
                 <div>
                   <span className="font-medium">Contact No :</span> {bill.customerId?.phoneNo?.phoneNo ?? "-"}
