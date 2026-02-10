@@ -1,6 +1,6 @@
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import SearchIcon from "@mui/icons-material/Search";
-import { IconButton } from "@mui/material";
+import { Box, IconButton, Skeleton, Typography } from "@mui/material";
 import { useState } from "react";
 import { Mutations, Queries } from "../../../../../../Api";
 import { CommonTextField } from "../../../../../../Attribute";
@@ -10,12 +10,14 @@ import { setPosProduct } from "../../../../../../Store/Slices/PosSlice";
 import type { PosProductOrderBase } from "../../../../../../Types";
 import { FormatDateTime } from "../../../../../../Utils";
 import { CommonDrawer } from "../../../../../Common";
+import { useDebounce } from "../../../../../../Utils/Hooks";
 
 const HoldBill = () => {
   const { isHoldBillDrawer } = useAppSelector((stale) => stale.drawer);
   const [value, setValue] = useState<string>("");
+  const debouncedSearch = useDebounce(value, 500);
 
-  const { data: holdBills } = Queries.useGetPosHoldOrder({ ...(value && { search: value }) }, isHoldBillDrawer);
+  const { data: holdBills, isPending: holdBillsPending, isFetched: holdBillsFetched } = Queries.useGetPosHoldOrder({ ...(debouncedSearch && { search: debouncedSearch }) });
 
   const { mutate: deleteHoldBill } = Mutations.useDeletePosOrder();
 
@@ -46,18 +48,13 @@ const HoldBill = () => {
       roundOff: bill.roundOff,
       remark: bill.remark,
       totalAmount: bill.totalAmount,
+      posOrderId: bill._id,
     };
-    console.log(payload);
     dispatch(setPosProduct(payload));
-    // dispatch(setHoldBillDrawer());
+    dispatch(setHoldBillDrawer());
   };
 
-  const handleDelete = (id: string) => {
-    deleteHoldBill(id, {
-      onSuccess: () => dispatch(setHoldBillDrawer()),
-    });
-    // dispatch(setHoldBillDrawer());
-  };
+  const handleDelete = (id: string) => deleteHoldBill(id, { onSuccess: () => dispatch(setHoldBillDrawer()) });
 
   return (
     <CommonDrawer open={isHoldBillDrawer} onClose={() => dispatch(setHoldBillDrawer())} anchor="right" title="On Hold" paperProps={{ className: "bg-white dark:bg-gray-800!" }}>
@@ -67,41 +64,52 @@ const HoldBill = () => {
 
         {/* 📄 List */}
         <div className="flex flex-col gap-3 overflow-y-auto">
-          {holdBills?.data?.map((bill) => (
-            <div key={bill._id} className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-md p-3 text-sm cursor-pointer" onClick={() => handleBillClick(bill)}>
-              {/* Header */}
-              <div className="flex justify-between items-start">
-                <div className="font-semibold">
-                  Order ID : <span className="font-bold">{bill.orderNo}</span>
-                </div>
+          {holdBillsPending || !holdBillsFetched ? (
+            <Box sx={{ display: "grid", gap: 1.5 }}>
+              {Array.from({ length: 3 }).map((_, index) => (
+                <Skeleton key={index} variant="rectangular" width="100%" height={100} className="rounded-lg!" />
+              ))}
+            </Box>
+          ) : holdBills?.data?.length === 0 ? (
+            <Typography align="center" width="100%">
+              No Data Found
+            </Typography>
+          ) : (
+            holdBills?.data?.map((bill) => (
+              <div key={bill._id} className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-md p-3 text-sm cursor-pointer" onClick={() => handleBillClick(bill)}>
+                {/* Header */}
+                <div className="flex justify-between items-start">
+                  <div className="font-semibold">
+                    Order ID : <span className="font-bold">{bill.orderNo}</span>
+                  </div>
 
-                <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
-                  {/* <IconButton size="small">
+                  <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
+                    {/* <IconButton size="small">
                     <PrintIcon fontSize="small" />
                   </IconButton> */}
-                  <IconButton size="small" color="error" onClick={() => handleDelete(bill._id)}>
-                    <DeleteForeverIcon fontSize="small" />
-                  </IconButton>
+                    <IconButton size="small" color="error" onClick={() => handleDelete(bill._id)}>
+                      <DeleteForeverIcon fontSize="small" />
+                    </IconButton>
+                  </div>
+                </div>
+
+                {/* Body */}
+                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{FormatDateTime(bill.holdDate)}</div>
+
+                <div className="mt-2 space-y-1">
+                  <div>
+                    <span className="font-medium">Contact Name :</span> {bill.customerId?.firstName ? bill.customerId?.firstName + " " + bill.customerId?.lastName : "Walk in Customer"}
+                  </div>
+                  <div>
+                    <span className="font-medium">Contact No :</span> {bill.customerId?.phoneNo?.phoneNo ?? "-"}
+                  </div>
+                  <div>
+                    <span className="font-medium">Amount :</span> ₹ {bill.totalAmount}
+                  </div>
                 </div>
               </div>
-
-              {/* Body */}
-              <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{FormatDateTime(bill.holdDate)}</div>
-
-              <div className="mt-2 space-y-1">
-                <div>
-                  <span className="font-medium">Contact Name :</span> {bill.customerId?.firstName ? bill.customerId?.firstName + " " + bill.customerId?.lastName : "Walk in Customer"}
-                </div>
-                <div>
-                  <span className="font-medium">Contact No :</span> {bill.customerId?.phoneNo?.phoneNo ?? "-"}
-                </div>
-                <div>
-                  <span className="font-medium">Amount :</span> ₹ {bill.totalAmount}
-                </div>
-              </div>
-            </div>
-          ))}
-          {holdBills?.data?.length === 0 && <div className="text-center text-gray-600 dark:text-gray-400">No Data Found</div>}
+            ))
+          )}
         </div>
       </div>
     </CommonDrawer>

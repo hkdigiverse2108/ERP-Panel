@@ -36,8 +36,8 @@ const ProductList = () => {
           <CommonSelect label="Select Category" options={GenerateOptions(category?.data)} isLoading={categoryLoading} value={value} onChange={(v) => setValue(v)} limitTags={1} />
           {productDropdownLoading ? (
             <Box sx={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: 1.5 }}>
-              {Array.from({ length: 8 }).map((_, index) => (
-                <Skeleton key={index} variant="rectangular" width={200} height={100} className="rounded-lg!" />
+              {Array.from({ length: 9 }).map((_, index) => (
+                <Skeleton key={index} variant="rectangular" width="100%" height={80} className="rounded-lg!" />
               ))}
             </Box>
           ) : productDropdown?.data?.length === 0 ? (

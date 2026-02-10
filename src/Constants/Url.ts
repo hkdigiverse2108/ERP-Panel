@@ -159,6 +159,8 @@ export const URL_KEYS = {
     BASE: "/pos-order",
     HOLD_ORDER: "/pos-order/hold",
     ADD: "/pos-order/add",
+    EDIT: "/pos-order/edit",
+    DELETE: "/pos-order/delete",
   },
   PAY_LATER: {
     BASE: "/pay-later",
