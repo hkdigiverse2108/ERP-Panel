@@ -16,6 +16,12 @@ export interface EditTermsConditionPayload extends AddTermsConditionPayload {
   termsConditionId: string;
   isActive?: boolean;
 }
+export interface TermsAndConditionModalProps {
+  onSave: (payload: TermsConditionBase) => void;
+}
+export interface FormValues {
+  termsCondition: string;
+}
 
 export interface TermsConditionApiResponse extends MessageStatus {
   data: TermsConditionBase[];
