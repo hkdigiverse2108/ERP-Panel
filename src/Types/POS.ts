@@ -1,3 +1,6 @@
+import type { CommonDataType, MessageStatus } from "./Common";
+import type { ContactBase } from "./Contacts";
+import type { EmployeeBase } from "./Employee";
 import type { ProductBase } from "./Product";
 
 export interface WeightScaleFormValues {
@@ -10,30 +13,83 @@ export interface WeightScaleFormValues {
 }
 
 export interface PosProductDataModal extends Omit<ProductBase, "sellingPrice" | "mrp" | "sellingDiscount"> {
-  sellingQty: number;
+  posQty: number;
   discount: number;
   sellingPrice: number;
   mrp: number;
   sellingDiscount: number;
+  additionalDiscount: number;
+  unitCost: number;
+  netAmount: number;
+}
+
+export interface AdditionalChargeType {
+  chargeId: string;
+  value: number;
+  taxId: string;
+  accountGroupId: string;
+  totalAmount: number;
+}
+
+export interface AdditionalChargeRowType extends Omit<AdditionalChargeType, "chargeId" | "taxId" | "accountGroupId"> {
+  chargeId: string;
+  taxId: string;
+  accountGroupId: string;
 }
 
 interface PosProductType {
-  product: PosProductDataModal[];
+  items: PosProductDataModal[];
   customerId: string;
-  salesmanId: string;
+  orderType: string;
+  salesManId: string;
   totalQty: number;
-  totalMep: number;
+  totalMrp: number;
   totalTaxAmount: number;
-  totalCharges: number;
   totalDiscount: number;
-  totalFlatDiscount: number;
-  totalRoundOFF: number;
-  remarks: string;
+  totalAdditionalCharge: number;
+  flatDiscountAmount: number;
+  additionalCharges: AdditionalChargeType[];
+  roundOff: number;
+  remark: string;
   totalAmount: number;
+  posOrderId: string;
 }
 
 export interface PosSliceState {
   isMultiplePay: boolean;
-  productDataModal: PosProductDataModal[];
+  isSelectProduct: string;
   PosProduct: PosProductType;
+}
+export interface PosProductOrderItem {
+  qty: number;
+  mrp: number;
+  discountAmount: number;
+  additionalDiscountAmount: number;
+  unitCost: number;
+  netAmount: number;
+}
+
+export interface PosProductOrderFormValues extends Omit<Partial<PosProductType>, "items"> {
+  companyId?: string;
+  orderNo?: string;
+  items?: Partial<PosProductOrderItem> & { productId?: string }[];
+  paymentMethod?: null;
+  paymentStatus?: string;
+  status?: string;
+  holdDate?: string;
+  isActive?: boolean;
+}
+
+export type AddPosProductOrderPayload = PosProductOrderFormValues;
+
+export type EditPosProductOrderPayload = AddPosProductOrderPayload & { posOrderId: string };
+
+export interface PosProductOrderBase extends Omit<PosProductOrderFormValues, "customerId" | "salesManId" | "items">, CommonDataType {
+  customerId: ContactBase;
+  salesManId: EmployeeBase;
+  items: (Partial<PosProductOrderItem> & { productId?: PosProductDataModal })[];
+}
+
+export interface PosProductOrderApiResponse extends MessageStatus {
+  data: PosProductOrderBase[];
 }

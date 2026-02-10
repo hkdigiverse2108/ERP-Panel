@@ -147,8 +147,23 @@ export const KEYS = {
   POS: {
     BASE: "pos",
     HOLD_ORDER: "pos-order-hold",
-    ADD:"pos-add",
-    EDIT:"pos-edit",
-    DELETE:"pos-delete",
+    ADD: "pos-add",
+    EDIT: "pos-edit",
+    DELETE: "pos-delete",
+  },
+  PAY_LATER: {
+    BASE: "pay-later",
+    ADD: "pay-later-add",
+    EDIT: "pay-later-edit",
+    DELETE: "pay-later-delete",
+  },
+  ADDITIONAL_CHARGES: {
+    BASE: "additional-charge",
+    ADD: "additional-charge-add",
+    EDIT: "additional-charge-edit",
+    DELETE: "additional-charge-delete",
+  },
+  ACCOUNT_GROUP: {
+    BASE: "account-group",
   },
 };

@@ -63,8 +63,8 @@ export const GROUP_OPTIONS = [
 ];
 
 export const ORDER_TYPE = [
-  { label: "Walk In", value: "Walk In" },
-  { label: "Delivery", value: "Delivery" },
+  { label: "Walk In", value: "walk_in" },
+  { label: "Delivery", value: "delivery" },
 ];
 
 export const CONTACT_TYPE = [
@@ -254,4 +254,8 @@ export const TAX_TYPE = [
   { label: "Tax Inclusive", value: "taxInclusive" },
   { label: "Tax Exclusive", value: "taxExclusive" },
   { label: "Out Of Scope", value: "outOfScope" },
+];
+export const OPTION_TYPE = [
+  { label: "Purchase", value: "purchase" },
+  { label: "Sales", value: "sales" },
 ];

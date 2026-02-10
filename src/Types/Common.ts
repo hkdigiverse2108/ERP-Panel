@@ -6,6 +6,7 @@ import type { FocusEvent, ReactNode } from "react";
 import * as Yup from "yup";
 import type { ContactBase } from "./Contacts";
 import type { LocationBase } from "./Location";
+import type { AdditionalChargesBase } from "./AdditionalCharges";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -40,6 +41,11 @@ export type SelectOptionType = {
   label: string;
   value: string;
 };
+export interface CommonStatsItem {
+  label: string;
+  value: number | string;
+  color?: string;
+}
 
 export interface CommonSelectProps {
   label?: string;
@@ -213,7 +219,7 @@ export interface CommonTableColumn<T> {
 export interface CommonTableProps<T> {
   data: T[];
   columns: CommonTableColumn<T>[];
-  rowKey: (row: T) => string;
+  rowKey: (row: T, index: number) => number | string;
   getRowClass?: (row: T, index: number) => string;
   showFooter?: boolean;
 }
@@ -447,9 +453,10 @@ export interface ModalStateSlice {
   isApplyCouponModal: boolean;
   isPayLaterModal: boolean;
   isCashModal: boolean;
-  isAdditionalChargeModal: boolean;
+  isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
   isProductDetailsModal: { open: boolean; data: any | null };
   isQtyCountModal: { open: boolean; data: any | null };
+  isTermsAndConditionModal: { open: boolean; data: any | null };
 }
 
 // ************ Modal End ***********

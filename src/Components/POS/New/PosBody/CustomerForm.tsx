@@ -31,11 +31,11 @@ const CustomerForm = () => {
     dob: customerData?.dob || "",
     email: customerData?.email || "",
     address: {
-      addressLine1: customerData?.address?.[0]?.addressLine1 || "",
-      country: customerData?.address?.[0]?.country?._id || "",
-      state: customerData?.address?.[0]?.state?._id || "",
-      city: customerData?.address?.[0]?.city?._id || "",
-      pinCode: customerData?.address?.[0]?.pinCode || "",
+      addressLine1: customerData?.address?.[0]?.addressLine1,
+      country: customerData?.address?.[0]?.country?._id,
+      state: customerData?.address?.[0]?.state?._id,
+      city: customerData?.address?.[0]?.city?._id,
+      pinCode: customerData?.address?.[0]?.pinCode,
     },
     contactType: "customer",
     customerType: "retailer",
@@ -54,7 +54,7 @@ const CustomerForm = () => {
   const handleSubmit = (values: ContactFormFormikValues, { resetForm }: FormikHelpers<ContactFormFormikValues>) => {
     const payload = {
       ...values,
-      address: values.address ? [values.address] : [],
+      address: values.address ? [RemoveEmptyFields(values.address)] : [],
     };
     const handleSuccess = () => {
       resetForm();

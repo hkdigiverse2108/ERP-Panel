@@ -156,8 +156,28 @@ export const URL_KEYS = {
     EDIT: "/supplier-bill/edit",
   },
   POS: {
-    BASE: "/pos",
+    BASE: "/pos-order",
     HOLD_ORDER: "/pos-order/hold",
     ADD: "/pos-order/add",
+    EDIT: "/pos-order/edit",
+    DELETE: "/pos-order/delete",
+  },
+  PAY_LATER: {
+    BASE: "/pay-later",
+    ADD: "/pay-later/add",
+    EDIT: "/pay-later/edit",
+    DELETE: "/pay-later/delete",
+  },
+  ADDITIONAL_CHARGES: {
+    BASE: "/additional-charge",
+    DROPDOWN: "/additional-charge/dropdown",
+    ALL: "/additional-charge/all",
+    ADD: "/additional-charge/add",
+    EDIT: "/additional-charge/edit",
+  },
+  ACCOUNT_GROUP: {
+    BASE: "/account-group",
+    DROPDOWN: "/account-group/dropdown",
+    ALL: "/account-group/all",
   },
 } as const;

@@ -19,9 +19,10 @@ const initialState: ModalStateSlice = {
   isApplyCouponModal: false,
   isPayLaterModal: false,
   isCashModal: false,
-  isAdditionalChargeModal: false,
+  isAdditionalChargeModal: { open: false, data: null },
   isProductDetailsModal: { open: false, data: null },
   isQtyCountModal: { open: false, data: null },
+  isTermsAndConditionModal: { open: false, data: null },
 };
 
 const ModalSlice = createSlice({
@@ -84,8 +85,8 @@ const ModalSlice = createSlice({
     setCashModal: (state) => {
       state.isCashModal = !state.isCashModal;
     },
-    setAdditionalChargeModal: (state) => {
-      state.isAdditionalChargeModal = !state.isAdditionalChargeModal;
+    setAdditionalChargeModal: (state, action) => {
+      state.isAdditionalChargeModal = action.payload;
     },
     setProductDetailsModal: (state, action) => {
       state.isProductDetailsModal = action.payload;
@@ -93,10 +94,13 @@ const ModalSlice = createSlice({
     setQtyCountModal: (state, action) => {
       state.isQtyCountModal = action.payload;
     },
+    setTermsAndConditionModal: (state, action) => {
+      state.isTermsAndConditionModal = action.payload;
+    },
   },
 });
 
 
-export const { setQtyCountModal, setProductDetailsModal, setAdditionalChargeModal, setCashModal, setPayLaterModal, setApplyCouponModal, setUploadModal, setSelectedFiles, clearSelectedFiles, setModalVideoPlay, setCustomerModal, setPaymentListModal, setAddPaymentModal, setRedeemLoyaltyModal, setCreditNoteModal, setOrderModal, setCashControlModal, setCouponModal, setRedeemCreditModal, setCardModal, setContactModal} = ModalSlice.actions;
+export const { setTermsAndConditionModal, setQtyCountModal, setProductDetailsModal, setAdditionalChargeModal, setCashModal, setPayLaterModal, setApplyCouponModal, setUploadModal, setSelectedFiles, clearSelectedFiles, setModalVideoPlay, setCustomerModal, setPaymentListModal, setAddPaymentModal, setRedeemLoyaltyModal, setCreditNoteModal, setOrderModal, setCashControlModal, setCouponModal, setRedeemCreditModal, setCardModal, setContactModal} = ModalSlice.actions;
 
 export default ModalSlice.reducer;

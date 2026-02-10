@@ -79,6 +79,15 @@ export const RolesFormSchema = Yup.object({
   isActive: Yup.boolean(),
 });
 
+export const AdditionalChargesFormSchema = Yup.object({
+  name: Validation("string", "Additional charge name"),
+  type: Validation("string", "Type"),
+  taxId: Validation("string", "Tax", { required: false }).nullable(),
+  hsnSac: Validation("string", "HSN/SAC", { required: false }),
+  defaultValue: Validation("number", "Default value", { required: false }).nullable(),
+  isActive: Yup.boolean(),
+});
+
 export const CallRequestFormSchema = Yup.object({
   businessName: Validation("string", "Business Name"),
   contactName: Validation("string", "Contact Name"),
@@ -288,10 +297,6 @@ export const ProductFormSchema = Yup.object({
   subCategoryId: Validation("string", "Sub Category", { required: false }),
   brandId: Validation("string", "Brand"),
   subBrandId: Validation("string", "Sub Brand", { required: false }),
-  purchaseTaxId: Validation("string", "Purchase Tax"),
-  isPurchaseTaxIncluding: Yup.boolean(),
-  salesTaxId: Validation("string", "Sales Tax"),
-  isSalesTaxIncluding: Yup.boolean(),
   cessPercentage: Validation("number", "Cess Percentage", { required: false }),
   manageMultipleBatch: Validation("boolean", "Multiple Batch", { required: false }),
   hasExpiry: RequiredWhenTrue("manageMultipleBatch", "Has Expiry", Yup.boolean()),
@@ -311,20 +316,6 @@ export const ProductFormSchema = Yup.object({
   ),
   netWeight: Validation("number", "Net Weight", { required: false }),
   masterQty: Validation("number", "Master Quantity", { required: false }),
-  purchasePrice: Validation("number", "Purchase Price"),
-  landingCost: Validation("number", "Landing Cost"),
-  mrp: Validation("number", "MRP"),
-  sellingDiscount: Validation("number", "Selling Discount"),
-  sellingPrice: Validation("number", "Selling Price"),
-  sellingMargin: Validation("number", "Selling Margin"),
-  retailerDiscount: Validation("number", "Retailer Discount"),
-  retailerPrice: Validation("number", "Retailer Price"),
-  retailerMargin: Validation("number", "Retailer Margin"),
-  wholesalerDiscount: Validation("number", "Wholesaler Discount"),
-  wholesalerMargin: Validation("number", "Wholesaler Margin"),
-  wholesalerPrice: Validation("number", "Wholesaler Price"),
-  minimumQty: Validation("number", "Minimum Quantity"),
-  openingQty: Validation("number", "Opening Quantity", { required: false }),
   images: Yup.array().of(Yup.mixed().required("Image is required")).min(2, "At least two image is required"),
   isActive: Yup.boolean(),
 });
@@ -334,10 +325,14 @@ export const ProductItemFormSchema = Yup.object({
   uomId: Validation("string", "UOM"),
   purchasePrice: Validation("number", "Purchase Price"),
   landingCost: Validation("number", "Landing Cost"),
-  mrp: Validation("number", "MRP"),
-  sellingDiscount: Validation("number", "Selling Discount"),
+  mrp: Validation("number", "MRP").test("mrp-greater-than-landing", "MRP must be greater than or equal to Landing Cost", function (value) {
+    const { landingCost } = this.parent;
+    if (value == null || landingCost == null) return true;
+    return value >= landingCost;
+  }),
+  sellingDiscount: Validation("number", "Selling Discount", { required: false }),
   sellingPrice: Validation("number", "Selling Price"),
-  sellingMargin: Validation("number", "Selling Margin"),
+  sellingMargin: Validation("number", "Selling Margin").test("non-negative-margin", "Selling Margin cannot be negative", (value) => value == null || value >= 0),
   qty: Validation("number", "Quantity"),
 });
 
