@@ -5,6 +5,7 @@ import type { AddBillOfLiveProductPayload, EditBillOfLiveProductPayload } from "
 import type { AddSupplierBillPayload, EditSupplierBillPayload } from "../Types/SupplierBill";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
+import type { AddTermsConditionPayload, EditTermsConditionPayload } from "../Types/TermsAndCondition";
 
 export const Mutations = {
   // ************ Auth ***********
@@ -99,4 +100,9 @@ export const Mutations = {
   useAddPayLater: () => useMutations<AddPayLaterPayload, void>([KEYS.PAY_LATER.ADD, KEYS.PAY_LATER.BASE], (input) => Post(URL_KEYS.PAY_LATER.ADD, input)),
   useEditPayLater: () => useMutations<EditPayLaterPayload, void>([KEYS.PAY_LATER.EDIT, KEYS.PAY_LATER.BASE], (input) => Put(URL_KEYS.PAY_LATER.EDIT, input)),
   useDeletePayLater: () => useMutations<string, void>([KEYS.PAY_LATER.DELETE, KEYS.PAY_LATER.BASE], (id) => Delete(`${URL_KEYS.PAY_LATER.BASE}/${id}`)),
+
+  //*************** Terms and Condition **************** */
+  useAddTermsCondition: () => useMutations<AddTermsConditionPayload, void>([KEYS.TERMS_CONDITION.ADD, KEYS.TERMS_CONDITION.BASE], (input) => Post(URL_KEYS.TERMS_CONDITION.ADD, input)),
+  useEditTermsCondition: () => useMutations<EditTermsConditionPayload, void>([KEYS.TERMS_CONDITION.EDIT, KEYS.TERMS_CONDITION.BASE], (input) => Put(URL_KEYS.TERMS_CONDITION.EDIT, input)),
+  useDeleteTermsCondition: () => useMutations<string, void>([KEYS.TERMS_CONDITION.DELETE, KEYS.TERMS_CONDITION.BASE], (id) => Delete(`${URL_KEYS.TERMS_CONDITION.BASE}/${id}`)),
 };

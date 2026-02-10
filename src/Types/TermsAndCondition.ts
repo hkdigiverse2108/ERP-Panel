@@ -1,30 +1,44 @@
 import type { MessageStatus } from "./Common";
 
+/* ===================== BASE MODEL ===================== */
+
 export interface TermsConditionBase {
   _id: string;
-  termsCondition: string;
+  termsCondition?: string;
   isDefault?: boolean;
   isActive?: boolean;
 }
+
+/* ===================== FORM / ADD PAYLOAD ===================== */
 
 export interface AddTermsConditionPayload {
-  termsCondition: string;
+  termsCondition?: string;
   isDefault?: boolean;
 }
 
+export type TermsConditionFormValues = AddTermsConditionPayload;
+
+/* ===================== EDIT PAYLOAD ===================== */
+
 export interface EditTermsConditionPayload extends AddTermsConditionPayload {
-  termsConditionId: string;
+  termsConditionId?: string;
   isActive?: boolean;
 }
+
+/* ===================== MODAL PROPS ===================== */
+
 export interface TermsAndConditionModalProps {
-  onSave: (payload: TermsConditionBase) => void;
+  onSave: (term: TermsConditionBase) => void;
 }
-export interface FormValues {
-  termsCondition: string;
+
+/* ===================== API RESPONSES ===================== */
+
+export interface TermsConditionDataResponse {
+  terms_condition_data: TermsConditionBase[];
 }
 
 export interface TermsConditionApiResponse extends MessageStatus {
-  data: TermsConditionBase[];
+  data: TermsConditionDataResponse;
 }
 
 export interface TermsConditionDropdownApiResponse extends MessageStatus {

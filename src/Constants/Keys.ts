@@ -166,4 +166,10 @@ export const KEYS = {
   ACCOUNT_GROUP: {
     BASE: "account-group",
   },
+  TERMS_CONDITION: {
+    BASE: "terms-condition",
+    ADD: "terms-condition-add",
+    EDIT: "terms-condition-edit",
+    DELETE: "terms-condition-delete",
+  },
 };

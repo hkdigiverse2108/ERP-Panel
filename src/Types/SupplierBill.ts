@@ -7,10 +7,10 @@ import type { TermsConditionBase } from "./TermsAndCondition";
 
 export type Supplier = ContactBase;
 
-/* ===================== PRODUCT ===================== */
+/* ===================== PRODUCT (FORM) ===================== */
 
 export interface SupplierBillProductItem {
-  productId?: string | ProductBase;
+  productId?: string;
   qty?: number;
   freeQty?: number;
   mrp?: number;
@@ -35,7 +35,7 @@ export interface SupplierBillProductDetails {
 /* ===================== RETURN PRODUCT ===================== */
 
 export interface SupplierBillReturnProductItem {
-  productId?: string | ProductBase;
+  productId?: string;
   qty?: number;
   discount1?: number;
   discount2?: number;
@@ -61,11 +61,7 @@ export interface SupplierBillReturnProductDetails {
 /* ===================== ADDITIONAL CHARGES ===================== */
 
 export interface AdditionalChargeItem {
-  chargeId?: {
-    _id: string;
-    name?: string;
-    type?: string;
-  };
+  chargeId?: string;
   value?: number;
   taxRate?: number;
   total?: number;
@@ -99,39 +95,27 @@ export interface SupplierBillSummary {
 
 export interface SupplierBillFormValues {
   supplierId: string;
-
   supplierBillNo?: string;
   referenceBillNo?: string;
   supplierBillDate: string | Date;
-
   paymentTerm?: string;
   dueDate?: string | Date;
-
   reverseCharge?: boolean;
   shippingDate?: string | Date;
-
   taxType?: string;
   invoiceAmount?: string;
-
   productDetails?: SupplierBillProductDetails;
   returnProductDetails?: SupplierBillReturnProductDetails;
   additionalCharges?: AdditionalChargeDetails;
-
   termsAndConditionIds?: string[];
-
   notes?: string;
-
   summary?: SupplierBillSummary;
-
   paidAmount?: number;
   balanceAmount?: number;
-
   paymentStatus?: "paid" | "unpaid" | "partial";
   status?: "active" | "cancelled";
-
   companyId?: string;
   isActive?: boolean;
-
   _submitAction?: string;
 }
 
@@ -171,30 +155,58 @@ export interface AdditionalChargeRow {
 
 export interface SupplierBillBase extends CommonDataType {
   supplierId?: Supplier;
+
   supplierBillNo?: string;
   referenceBillNo?: string;
   supplierBillDate?: string;
+
   purchaseOrderId?: string | null;
   paymentTerm?: string;
   dueDate?: string;
+
   reverseCharge?: boolean;
   shippingDate?: string;
   taxType?: string;
   invoiceAmount?: string;
-  productDetails?: SupplierBillProductDetails;
+  productDetails?: {
+    item?: (Omit<SupplierBillProductItem, "productId"> & {
+      productId?: ProductBase;
+    })[];
+    totalQty?: number;
+    totalTax?: number;
+    total?: number;
+  };
+
   returnProductDetails?: SupplierBillReturnProductDetails;
-  additionalCharges?: AdditionalChargeDetails;
+
+  additionalCharges?: {
+    item?: (Omit<AdditionalChargeItem, "chargeId"> & {
+      chargeId?: {
+        _id: string;
+        name?: string;
+        type?: string;
+      };
+    })[];
+    total?: number;
+  };
+
   termsAndConditionIds?: TermsConditionBase[];
+
   notes?: string;
+
   summary?: SupplierBillSummary;
+
   paidAmount?: number;
   balanceAmount?: number;
+
   paymentStatus?: "paid" | "unpaid" | "partial";
   status?: "active" | "cancelled";
+
   companyId?: {
     _id: string;
     name?: string;
   };
+
   isActive?: boolean;
 }
 

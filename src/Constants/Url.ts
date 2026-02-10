@@ -180,4 +180,11 @@ export const URL_KEYS = {
     DROPDOWN: "/account-group/dropdown",
     ALL: "/account-group/all",
   },
+  TERMS_CONDITION: {
+    BASE: "/terms-condition",
+    DROPDOWN: "/terms-condition/dropdown",
+    ALL: "/terms-condition/all",
+    ADD: "/terms-condition/add",
+    EDIT: "/terms-condition/edit",
+  },
 } as const;

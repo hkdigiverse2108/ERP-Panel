@@ -3,11 +3,11 @@ import { Form, Formik, type FormikHelpers } from "formik";
 import type { FC } from "react";
 import { CommonCard, CommonModal } from "../../../Components/Common";
 import { CommonButton, CommonValidationTextField } from "../../../Attribute";
-import type { FormValues, TermsAndConditionModalProps, TermsConditionBase } from "../../../Types/TermsAndCondition";
+import type { TermsConditionFormValues, TermsAndConditionModalProps, TermsConditionBase } from "../../../Types/TermsAndCondition";
 import { useAppSelector } from "../../../Store/hooks";
 import { useDispatch } from "react-redux";
 import { setTermsAndConditionModal } from "../../../Store/Slices/ModalSlice";
-
+import { Mutations } from "../../../Api";
 
 const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ onSave }) => {
   const { isTermsAndConditionModal } = useAppSelector((state) => state.modal);
@@ -15,34 +15,26 @@ const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ onSave }) => 
   const openModal = isTermsAndConditionModal.open;
   const data = isTermsAndConditionModal.data as TermsConditionBase | null;
   const isEditing = Boolean(data?._id);
-  const initialValues: FormValues = {
+  const initialValues: TermsConditionFormValues = {
     termsCondition: data?.termsCondition || "",
   };
 
   const closeModal = () => {
     dispatch(setTermsAndConditionModal({ open: false, data: null }));
   };
-
-  const handleSubmit = (values: FormValues, { resetForm }: FormikHelpers<FormValues>) => {
-    if (isEditing) {
-      const payload: TermsConditionBase = {
-        ...data!,
-        termsCondition: values.termsCondition,
-      };
-
-      onSave(payload);
+  const { mutate: addTerm } = Mutations.useAddTermsCondition();
+  const { mutate: editTerm } = Mutations.useEditTermsCondition();
+  const handleSubmit = (values: TermsConditionFormValues, { resetForm }: FormikHelpers<TermsConditionFormValues>) => {
+    const onSuccessHandler = (savedTerm: TermsConditionBase) => {
+      onSave(savedTerm);
+      resetForm();
+      closeModal();
+    };
+    if (isEditing && data?._id) {
+      editTerm({ termsConditionId: data._id, termsCondition: values.termsCondition }, { onSuccess: (res: any) => onSuccessHandler(res.data) });
     } else {
-      const payload: TermsConditionBase = {
-        _id: Date.now().toString(), 
-        termsCondition: values.termsCondition,
-        isActive: true,
-      };
-
-      onSave(payload);
+      addTerm({ termsCondition: values.termsCondition }, { onSuccess: (res: any) => onSuccessHandler(res.data) });
     }
-
-    resetForm();
-    closeModal();
   };
 
   return (
