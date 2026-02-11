@@ -170,7 +170,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
       <CommonTabPanel value={tabValue} index={0}>
         <Box sx={{ mt: 2 }}>
           <CommonCard hideDivider>
-            <Box sx={{ overflowX: "auto" }}>
+            <Box className="custom-scrollbar" sx={{ overflowX: "auto" }}>
               <Box sx={{ minWidth: 1400 }}>
                 <CommonTable data={rows} columns={ProductRowColumns} rowKey={(_, i) => i} showFooter />
               </Box>
@@ -218,7 +218,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
       <CommonTabPanel value={tabValue} index={2}>
         <Box sx={{ mt: 2 }}>
           <CommonCard>
-            <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box className="custom-scrollbar" sx={{ width: "100%", overflowX: "auto" }}>
               <Box sx={{ border: "1px solid", borderColor: "divider" }}>
                 <CommonTable data={returnRows} columns={ReturnRowColumns} rowKey={(_, i) => i} showFooter />
               </Box>

@@ -95,7 +95,7 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
               </CommonButton>
             }
           >
-            <Box sx={{ p: 2, overflowX: "auto" }}>
+            <Box className="custom-scrollbar" sx={{ p: 2, overflowX: "auto" }}>
               <Box sx={{ border: "1px solid", borderColor: "divider" }}>
                 <CommonTable data={additionalChargeRows} columns={AdditionalChargeColumns} rowKey={(_, i) => i} showFooter />
               </Box>
