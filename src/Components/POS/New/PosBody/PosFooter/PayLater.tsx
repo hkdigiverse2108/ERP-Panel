@@ -5,6 +5,9 @@ import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setPayLaterModal } from "../../../../../Store/Slices/ModalSlice";
 import { CommonModal } from "../../../../Common";
 import { Mutations } from "../../../../../Api";
+import { RemoveEmptyFields } from "../../../../../Utils";
+import { clearPosProduct } from "../../../../../Store/Slices/PosSlice";
+import type { PosProductType } from "../../../../../Types";
 
 const DEFAULT_DAYS = 7;
 
@@ -17,7 +20,7 @@ const calculateDueDate = (days: number): Date => {
 const PayLater = () => {
   const dispatch = useAppDispatch();
 
-  const { mutate: addPayLater, isPending: isAddPayLaterPending } = Mutations.useAddPayLater();
+  const { mutate: addPayLater, isPending: isAddPayLaterPending } = Mutations.useAddPosOrder();
 
   const { isPayLaterModal } = useAppSelector((state) => state.modal);
   const { PosProduct } = useAppSelector((state) => state.pos);
@@ -26,7 +29,6 @@ const PayLater = () => {
   const [sendReminder, setSendReminder] = useState<string>("yes");
   const [dueDate, setDueDate] = useState<Date>(() => calculateDueDate(DEFAULT_DAYS));
 
-  if (!PosProduct) return null;
   const handlePaymentTermsChange = (v: string[]) => {
     setPaymentTerms(v);
 
@@ -37,17 +39,31 @@ const PayLater = () => {
   };
 
   const handleProceedToPrint = () => {
-    const payload = {
-      customerId: PosProduct?.customerId,
-      totalAmount: PosProduct?.totalAmount,
-      paidAmount: 0,
-      dueDate: dueDate.toISOString(),
-      sendReminder: sendReminder === "yes",
-    };
+    if (!PosProduct) return;
+    const { ...rest } = PosProduct;
+    (["posOrderId"] as const).forEach((field) => delete (rest as Partial<PosProductType>)[field]);
 
-    addPayLater(payload, {
+    const payload = {
+      ...rest,
+      items: rest.items.map((item) => ({
+        productId: item?._id,
+        qty: item?.posQty,
+        mrp: item?.mrp,
+        discountAmount: item?.discount,
+        additionalDiscountAmount: item?.additionalDiscount,
+        unitCost: item?.unitCost,
+        netAmount: item?.netAmount,
+      })),
+      payLater: {
+        dueDate: dueDate.toISOString(),
+        sendReminder: sendReminder === "yes",
+        paymentTerm: paymentTerms[0],
+      },
+    };
+    addPayLater(RemoveEmptyFields(payload), {
       onSuccess: () => {
-        // dispatch(setPayLaterModal());
+        dispatch(setPayLaterModal());
+        dispatch(clearPosProduct());
       },
     });
   };

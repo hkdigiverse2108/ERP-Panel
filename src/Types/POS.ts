@@ -37,7 +37,7 @@ export interface AdditionalChargeRowType extends Omit<AdditionalChargeType, "cha
   accountGroupId: string;
 }
 
-interface PosProductType {
+export interface PosProductType {
   items: PosProductDataModal[];
   customerId: string;
   orderType: string;
@@ -58,6 +58,7 @@ interface PosProductType {
 export interface PosSliceState {
   isMultiplePay: boolean;
   isSelectProduct: string;
+  isPosLoading: boolean;
   PosProduct: PosProductType;
 }
 export interface PosProductOrderItem {
@@ -69,10 +70,29 @@ export interface PosProductOrderItem {
   netAmount: number;
 }
 
+export interface MultiplePaymentType {
+  amount: number;
+  method: string;
+  paymentAccountId: string;
+  cardHolderName: string;
+  cardTransactionNo: string;
+  upiId: string;
+  bankAccountNo: string;
+  chequeNo: string;
+}
+
+export interface PayLaterType {
+  dueDate: string;
+  sendReminder: boolean;
+  paymentTerm: string;
+}
+
 export interface PosProductOrderFormValues extends Omit<Partial<PosProductType>, "items"> {
   companyId?: string;
   orderNo?: string;
   items?: Partial<PosProductOrderItem> & { productId?: string }[];
+  multiplePayments?: Partial<MultiplePaymentType>[];
+  payLater?: Partial<PayLaterType>;
   paymentMethod?: null;
   paymentStatus?: string;
   status?: string;

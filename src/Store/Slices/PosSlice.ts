@@ -4,6 +4,7 @@ import type { PosProductDataModal, PosSliceState } from "../../Types";
 const initialState: PosSliceState = {
   isMultiplePay: false,
   isSelectProduct: "",
+  isPosLoading: false,
   PosProduct: {
     items: [],
     customerId: "",
@@ -40,6 +41,9 @@ const PosSlice = createSlice({
     setMultiplePay: (state) => {
       state.isMultiplePay = !state.isMultiplePay;
     },
+    setPosLoading: (state, action) => {
+      state.isPosLoading = action.payload;
+    },
 
     setIsSelectProduct: (state, action) => {
       state.isSelectProduct = action.payload;
@@ -55,6 +59,7 @@ const PosSlice = createSlice({
       const existingProduct = state.PosProduct.items.find((item) => item._id === action.payload._id);
 
       if (existingProduct) {
+        if (existingProduct.posQty >= action.payload.qty) return;
         existingProduct.posQty += 1;
         calculateAmounts(existingProduct);
       } else {
@@ -150,5 +155,5 @@ const PosSlice = createSlice({
   },
 });
 
-export const { setPosProduct, setIsSelectProduct, setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesManId, setTotalMrp, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType, clearPosProduct } = PosSlice.actions;
+export const { setPosLoading, setPosProduct, setIsSelectProduct, setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesManId, setTotalMrp, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType, clearPosProduct } = PosSlice.actions;
 export default PosSlice.reducer;
