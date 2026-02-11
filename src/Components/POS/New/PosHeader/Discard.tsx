@@ -6,7 +6,7 @@ import { Tooltip } from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { CommonButton } from "../../../../Attribute";
-import { clearProductDataModal } from "../../../../Store/Slices/PosSlice";
+import { clearPosProduct } from "../../../../Store/Slices/PosSlice";
 import { CommonModal } from "../../../Common";
 
 const Discard = () => {
@@ -14,7 +14,7 @@ const Discard = () => {
   const dispatch = useDispatch();
 
   const handleDiscard = () => {
-    dispatch(clearProductDataModal());
+    dispatch(clearPosProduct());
     setOpen(false);
   };
 
