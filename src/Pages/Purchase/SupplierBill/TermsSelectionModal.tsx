@@ -27,9 +27,7 @@ const TermsSelectionModal: FC<Props> = ({ open, onClose, selectedTermIds, onSave
     }
   }, [data]);
 
-  const initialValues = {
-    selected: selectedTermIds,
-  };
+  const initialValues = { selected: selectedTermIds };
 
   return (
     <CommonModal title="Edit Terms" isOpen={open} onClose={onClose} className="max-w-150 m-2 sm:m-5">

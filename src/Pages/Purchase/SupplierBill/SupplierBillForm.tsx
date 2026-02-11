@@ -121,22 +121,17 @@ const SupplierBillForm = () => {
     return { itemDiscount: summaryItemDiscount, grossAmount: summaryGrossAmount, taxableAmount: taxableAfterDiscount, itemTax: Number(itemTax.toFixed(2)), roundOff, netAmount: Number(netAmount.toFixed(2)), taxSummary };
   };
   const summary = calculateSummary();
-
   const displayTerms = allTerms.filter((term) => selectedTermIds.includes(term._id)).sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
-
   useEffect(() => {
-    if (termsConditionData?.data) {
-      const data: any = termsConditionData.data;
-      console.log("data", data);
-      const all = (Array.isArray(data) ? data : data.termsCondition_data || []) as TermsConditionBase[];
-      setAllTerms(all);
-      if (!isEditing) {
-        const defaultTerms = all.filter((t) => t.isDefault);
-        setSelectedTermIds(defaultTerms.map((t) => t._id));
-      }
+    if (!termsConditionData?.data) return;
+    const response = termsConditionData.data;
+    const all: TermsConditionBase[] = Array.isArray(response) ? response : (response.termsCondition_data ?? []);
+    setAllTerms(all);
+    if (!isEditing) {
+      const defaultTerms = all.filter((t) => t.isDefault);
+      setSelectedTermIds(defaultTerms.map((t) => t._id));
     }
   }, [termsConditionData, isEditing]);
-
   useEffect(() => {
     if (isEditing && data) {
       if (data.productDetails?.item) {
