@@ -39,7 +39,7 @@ export interface TermsAndConditionModalProps {
 /* ===================== API RESPONSES ===================== */
 
 export interface TermsConditionDataResponse {
-  terms_condition_data: TermsConditionBase[];
+  termsCondition_data: TermsConditionBase[];
 }
 
 export interface TermsConditionApiResponse extends MessageStatus {

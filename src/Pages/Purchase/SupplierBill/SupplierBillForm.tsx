@@ -125,8 +125,10 @@ const SupplierBillForm = () => {
   const displayTerms = allTerms.filter((term) => selectedTermIds.includes(term._id)).sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
 
   useEffect(() => {
-    if (termsConditionData?.data?.terms_condition_data) {
-      const all = termsConditionData.data.terms_condition_data;
+    if (termsConditionData?.data) {
+      const data: any = termsConditionData.data;
+      console.log("data", data);
+      const all = (Array.isArray(data) ? data : data.termsCondition_data || []) as TermsConditionBase[];
       setAllTerms(all);
       if (!isEditing) {
         const defaultTerms = all.filter((t) => t.isDefault);
@@ -398,7 +400,6 @@ const SupplierBillForm = () => {
       <TermsSelectionModal
         open={openEditTermsModal}
         onClose={() => setOpenEditTermsModal(false)}
-        allTerms={allTerms}
         selectedTermIds={selectedTermIds}
         onSave={(ids) => {
           setSelectedTermIds(ids);
