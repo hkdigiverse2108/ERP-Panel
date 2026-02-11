@@ -14,6 +14,7 @@ import AdditionalChargesSection from "./AdditionalChargeSection";
 import SupplierBillDetails from "./SupplierBillDetails";
 import type { TermsConditionBase } from "../../../Types/TermsAndCondition";
 import type { ProductBase } from "../../../Types";
+import TermsSelectionModal from "./TermsSelectionModal";
 
 const TaxTypeWatcher = ({ onChange }: { onChange: (taxType: string) => void }) => {
   const { values } = useFormikContext<SupplierBillFormValues>();
@@ -44,7 +45,7 @@ const SupplierBillForm = () => {
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
-  const emptyRow: ProductRow = { productId: "", itemCode: "", qty: "", freeQty: "", unit: "", unitCost: "", mrp: "", sellingPrice: "", disc1: "", disc2: "", taxableAmount: "", taxAmount: "", landingCost: "", margin: "", totalAmount: "", mfgDate: "", expiryDate: "", taxRate: "", taxName: "" };
+  const emptyRow: ProductRow = { productId: "", itemCode: "", qty: "", freeQty: "", unit: "", unitCost: "", mrp: "", sellingPrice: "", disc1: "", disc2: "", taxableAmount: "", itemTax: "", landingCost: "", margin: "", totalAmount: "", mfgDate: "", expiryDate: "", taxRate: "", taxName: "" };
   const additionalChargeEmptyRow: AdditionalChargeRow = { chargeId: "", taxableAmount: "", tax: "", taxAmount: "", totalAmount: "" };
   const [rows, setRows] = useState<ProductRow[]>([emptyRow]);
   const [returnRows, setReturnRows] = useState<ProductRow[]>([emptyRow]);
@@ -53,8 +54,9 @@ const SupplierBillForm = () => {
   const { mutate: editSupplierBill, isPending: isEditLoading } = Mutations.useEditSupplierBill();
   const formikRef = useRef<FormikProps<SupplierBillFormValues> | null>(null);
   const [tabValue, setTabValue] = useState(0);
-  const [termsList, setTermsList] = useState<TermsConditionBase[]>([]);
+  const [allTerms, setAllTerms] = useState<TermsConditionBase[]>([]);
   const [selectedTermIds, setSelectedTermIds] = useState<string[]>([]);
+  const [openEditTermsModal, setOpenEditTermsModal] = useState(false);
   const [notes, setNotes] = useState<string>("");
   const [showAdditionalCharge, setShowAdditionalCharge] = useState(false);
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
@@ -70,7 +72,7 @@ const SupplierBillForm = () => {
   const calculateSummary = () => {
     const itemDiscount = rows.reduce((s, r) => s + (Number(r.disc1) || 0) + (Number(r.disc2) || 0), 0);
     const itemTaxable = rows.reduce((s, r) => s + (Number(r.taxableAmount) || 0), 0);
-    const itemTax = rows.reduce((s, r) => s + (Number(r.taxAmount) || 0), 0);
+    const itemTax = rows.reduce((s, r) => s + (Number(r.itemTax) || 0), 0);
     const itemGross = rows.reduce((s, r) => s + (Number(r.qty) || 0) * (Number(r.sellingPrice) || 0), 0);
     const additionalTaxable = additionalChargeRows.reduce((s, r) => s + (Number(r.taxableAmount) || 0), 0);
     const additionalTax = additionalChargeRows.reduce((s, r) => s + (Number(r.taxAmount) || 0), 0);
@@ -84,7 +86,7 @@ const SupplierBillForm = () => {
     const netAmount = taxableAfterDiscount + taxAmount + roundOff;
     const taxBreakdown: Record<string, { rate: number; amount: number }> = {};
     rows.forEach((r) => {
-      const amount = Number(r.taxAmount) || 0;
+      const amount = Number(r.itemTax) || 0;
       if (r.taxName && amount > 0) {
         if (!taxBreakdown[r.taxName]) {
           taxBreakdown[r.taxName] = { rate: Number(r.taxRate) || 0, amount: 0 };
@@ -107,18 +109,22 @@ const SupplierBillForm = () => {
     const taxSummary = Object.entries(taxBreakdown).map(([name, data]) => ({ name, rate: data.rate, amount: Number(data.amount.toFixed(2)) }));
     const summaryItemDiscount = itemDiscount + flatDisc;
     const summaryGrossAmount = grossAmount - flatDisc;
-    return { itemDiscount: summaryItemDiscount, grossAmount: summaryGrossAmount, taxableAmount: taxableAfterDiscount, taxAmount: Number(taxAmount.toFixed(2)), roundOff, netAmount: Number(netAmount.toFixed(2)), taxSummary };
+    return { itemDiscount: summaryItemDiscount, grossAmount: summaryGrossAmount, taxableAmount: taxableAfterDiscount, itemTax: Number(itemTax.toFixed(2)), roundOff, netAmount: Number(netAmount.toFixed(2)), taxSummary };
   };
   const summary = calculateSummary();
+
+  const displayTerms = allTerms.filter((term) => selectedTermIds.includes(term._id)).sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
+
   useEffect(() => {
-    if (!isEditing && termsConditionData?.data?.terms_condition_data) {
-      const defaultTerms = termsConditionData.data.terms_condition_data.filter((t: any) => t.isDefault);
-      if (defaultTerms.length > 0 && termsList.length === 0) {
-        setTermsList(defaultTerms);
-        setSelectedTermIds(defaultTerms?.map((t: any) => t._id));
+    if (termsConditionData?.data?.terms_condition_data) {
+      const all = termsConditionData.data.terms_condition_data;
+      setAllTerms(all);
+      if (!isEditing) {
+        const defaultTerms = all.filter((t) => t.isDefault);
+        setSelectedTermIds(defaultTerms.map((t) => t._id));
       }
     }
-  }, [termsConditionData, isEditing, termsList.length]);
+  }, [termsConditionData, isEditing]);
 
   useEffect(() => {
     if (isEditing && data) {
@@ -131,7 +137,7 @@ const SupplierBillForm = () => {
         );
       }
       if (data.additionalCharges?.item) {
-        setAdditionalChargeRows(data.additionalCharges.item.map((item: AdditionalChargeItem) => ({ chargeId: item.chargeId || "", taxableAmount: item.value?.toString() || "", tax: item.taxRate?.toString() || "", taxAmount: ((item.total || 0) - (item.value || 0))?.toFixed(2) || "", totalAmount: item.total?.toString() || "" })));
+        setAdditionalChargeRows(data.additionalCharges.item.map((item: AdditionalChargeItem) => ({ chargeId: item.chargeId || "", itemTax: item.value?.toString() || "", tax: item.taxRate?.toString() || "", taxAmount: ((item.total || 0) - (item.value || 0))?.toFixed(2) || "", totalAmount: item.total?.toString() || "" })));
       }
       if (data.summary?.flatDiscount) {
         setFlatDiscount(data.summary.flatDiscount);
@@ -143,14 +149,13 @@ const SupplierBillForm = () => {
         setReturnRoundOffAmount(data.returnProductDetails.summary.roundOff);
       }
       if (data.termsAndConditionIds) {
-        setTermsList(data.termsAndConditionIds);
         setSelectedTermIds(data.termsAndConditionIds.map((t: any) => t._id));
       }
     }
   }, [data, isEditing]);
 
   const mapProductRows = (): SupplierBillProductDetails => {
-    const item = rows.map((r) => ({ productId: r.productId, qty: +r.qty || 0, freeQty: +r.freeQty || 0, mrp: +r.mrp || 0, sellingPrice: +r.sellingPrice || 0, landingCost: +r.landingCost || 0, margin: +r.margin || 0, discount1: +r.disc1 || 0, discount2: +r.disc2 || 0, taxAmount: +r.taxAmount || 0, total: +r.totalAmount || 0 }));
+    const item = rows.map((r) => ({ productId: r.productId, qty: +r.qty || 0, freeQty: +r.freeQty || 0, mrp: +r.mrp || 0, sellingPrice: +r.sellingPrice || 0, landingCost: +r.landingCost || 0, margin: +r.margin || 0, discount1: +r.disc1 || 0, discount2: +r.disc2 || 0, taxAmount: +r.itemTax || 0, total: +r.totalAmount || 0 }));
     return { item, totalQty: item.reduce((s, r) => s + r.qty!, 0), totalTax: item.reduce((s, r) => s + r.taxAmount!, 0), total: item.reduce((s, r) => s + r.total!, 0) };
   };
   const mapAdditionalCharges = (): AdditionalChargeDetails => {
@@ -186,7 +191,7 @@ const SupplierBillForm = () => {
     const taxableAmount = totalAmount - taxAmount;
     const sellingPrice = mrp;
     const margin = sellingPrice - landingCost;
-    return { ...row, taxableAmount: taxableAmount.toFixed(2), taxAmount: taxAmount.toFixed(2), landingCost: landingCost.toFixed(2), sellingPrice: sellingPrice.toFixed(2), margin: margin.toFixed(2), totalAmount: totalAmount.toFixed(2) };
+    return { ...row, taxableAmount: taxableAmount.toFixed(2), itemTax: taxAmount.toFixed(2), landingCost: landingCost.toFixed(2), sellingPrice: sellingPrice.toFixed(2), margin: margin.toFixed(2), totalAmount: totalAmount.toFixed(2) };
   };
 
   const calculateReturnRow = (row: ProductRow, taxType: string): ProductRow => {
@@ -196,11 +201,9 @@ const SupplierBillForm = () => {
     const disc1 = Number(row.disc1) || 0;
     const disc2 = Number(row.disc2) || 0;
     const discountPerUnit = disc1 + disc2;
-
     const discountedCost = Math.max(0, unitCost - discountPerUnit);
     let landingCost = 0;
     let taxAmount = 0;
-
     if (taxType === "taxInclusive") {
       landingCost = discountedCost;
       const totalCtx = qty * discountedCost;
@@ -209,11 +212,9 @@ const SupplierBillForm = () => {
       landingCost = discountedCost + (discountedCost * taxRate) / 100;
       taxAmount = qty * discountedCost * (taxRate / 100);
     }
-
     const totalAmount = landingCost * qty;
     const taxableAmount = totalAmount - taxAmount;
-
-    return { ...row, taxableAmount: taxableAmount.toFixed(2), taxAmount: taxAmount.toFixed(2), landingCost: landingCost.toFixed(2), totalAmount: totalAmount.toFixed(2) };
+    return { ...row, taxableAmount: taxableAmount.toFixed(2), itemTax: taxAmount.toFixed(2), landingCost: landingCost.toFixed(2), totalAmount: totalAmount.toFixed(2) };
   };
 
   const handleRowChange = (index: number, field: keyof ProductRow, value: string | number | string[]) => {
@@ -303,17 +304,15 @@ const SupplierBillForm = () => {
       return newRows;
     });
   };
-
   const handleDeleteTerm = (index: number) => {
-    const termToRemove = termsList[index];
-    setTermsList((prev) => prev.filter((_, i) => i !== index));
-    if (termToRemove?._id) {
-      setSelectedTermIds((prev) => prev.filter((id) => id !== termToRemove._id));
-    }
+    const termToRemove = displayTerms[index];
+    if (!termToRemove?._id) return;
+    const id = termToRemove._id;
+    setSelectedTermIds((prev) => prev.filter((termId) => termId !== id));
+    setAllTerms((prev) => prev.filter((term) => term._id !== id));
   };
   const defaultValues: SupplierBillFormValues = { supplierId: "", supplierBillNo: "", supplierBillDate: DateConfig.utc().toISOString(), taxType: "exclusive", paymentTerm: "", dueDate: "", reverseCharge: false, shippingDate: "", invoiceAmount: "", termsAndConditionIds: [], notes: "", paidAmount: 0, balanceAmount: 0, paymentStatus: "unpaid", status: "active", isActive: true };
   const initialValues: SupplierBillFormValues = { ...defaultValues, ...data, supplierId: data?.supplierId?._id || defaultValues.supplierId, termsAndConditionIds: data?.termsAndConditionIds?.map((t: { _id: string }) => t._id) || [] };
-
   /* ========================= SUBMIT ========================= */
   const handleSubmit = async (values: SupplierBillFormValues, { resetForm }: FormikHelpers<SupplierBillFormValues>) => {
     const payload: SupplierBillFormValues = { ...values, productDetails: mapProductRows(), additionalCharges: mapAdditionalCharges(), termsAndConditionIds: selectedTermIds, notes, summary };
@@ -343,7 +342,7 @@ const SupplierBillForm = () => {
                 </CommonCard>
               </Form>
               <CommonCard hideDivider>
-                <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} termsList={termsList} handleDeleteTerm={handleDeleteTerm} notes={notes} setNotes={setNotes} productOptions={productOptions} isProductLoading={ProductsDataLoading} returnRoundOffAmount={returnRoundOffAmount} onReturnRoundOffAmountChange={setReturnRoundOffAmount} />
+                <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} termsList={displayTerms} handleDeleteTerm={handleDeleteTerm} notes={notes} setNotes={setNotes} productOptions={productOptions} isProductLoading={ProductsDataLoading} returnRoundOffAmount={returnRoundOffAmount} onReturnRoundOffAmountChange={setReturnRoundOffAmount} openEditTermsModal={openEditTermsModal} setOpenEditTermsModal={setOpenEditTermsModal} />
               </CommonCard>
               <CommonCard grid={{ xs: 12 }} hideDivider>
                 <AdditionalChargesSection showAdditionalCharge={showAdditionalCharge} setShowAdditionalCharge={setShowAdditionalCharge} additionalChargeRows={additionalChargeRows} handleAddAdditionalCharge={handleAddAdditionalCharge} handleCutAdditionalCharge={handleCutAdditionalCharge} handleAdditionalChargeRowChange={handleAdditionalChargeRowChange} taxOptions={taxOptions} isTaxLoading={TaxDataLoading} flatDiscount={flatDiscount} onFlatDiscountChange={setFlatDiscount} summary={summary} isAdditionalChargeLoading={additionalchargeLoading} additionalChargeOptions={additionalChargeOptions} roundOffAmount={roundOffAmount} onRoundOffAmountChange={setRoundOffAmount} />
@@ -355,16 +354,32 @@ const SupplierBillForm = () => {
       </Box>
       <TermsAndConditionModal
         onSave={(term: TermsConditionBase) => {
-          setTermsList((prev) => {
+          setAllTerms((prev) => {
             const index = prev.findIndex((t) => t._id === term._id);
             if (index > -1) {
-              const newList = [...prev];
-              newList[index] = term;
-              return newList;
+              const updated = [...prev];
+              updated[index] = term;
+              return updated;
             }
             return [...prev, term];
           });
-          setSelectedTermIds((prev) => (prev.includes(term._id) ? prev : [...prev, term._id]));
+          setSelectedTermIds((prev) => {
+            if (term.isDefault) {
+              return prev.includes(term._id) ? prev : [...prev, term._id];
+            } else {
+              return prev.filter((id) => id !== term._id);
+            }
+          });
+        }}
+      />
+      <TermsSelectionModal
+        open={openEditTermsModal}
+        onClose={() => setOpenEditTermsModal(false)}
+        allTerms={allTerms}
+        selectedTermIds={selectedTermIds}
+        onSave={(ids) => {
+          setSelectedTermIds(ids);
+          setOpenEditTermsModal(false);
         }}
       />
     </>

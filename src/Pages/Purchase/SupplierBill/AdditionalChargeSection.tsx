@@ -23,7 +23,7 @@ interface AdditionalChargesSectionProps {
     itemDiscount: number;
     grossAmount: number;
     taxableAmount: number;
-    taxAmount: number;
+    itemTax: number;
     roundOff: number;
     netAmount: number;
     taxSummary: { name: string; rate: number; amount: number }[];
@@ -132,7 +132,7 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
               </Box>
               <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700 text-blue-600 cursor-pointer" onClick={() => setShowTaxBreakdown(!showTaxBreakdown)}>
                 <span>Tax</span>
-                <span>{summary.taxAmount.toFixed(2)}</span>
+                <span>{summary.itemTax.toFixed(2)}</span>
               </Box>
               <Box className="flex justify-between items-center p-2 border-b border-gray-200 dark:border-gray-700 text-blue-600">
                 <span>Roundoff</span>

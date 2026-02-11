@@ -32,9 +32,11 @@ interface SupplierBillTabsProps {
   returnRoundOffAmount: string | number;
   onReturnRoundOffAmountChange: (value: string | number) => void;
   handleDeleteTerm: (index: number) => void;
+  openEditTermsModal: boolean;
+  setOpenEditTermsModal: (value: boolean) => void;
 }
 
-const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, notes, setNotes, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, handleDeleteTerm }) => {
+const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, notes, setNotes, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, handleDeleteTerm, setOpenEditTermsModal }) => {
   const dispatch = useDispatch();
   const ProductRowColumns: CommonTableColumn<ProductRow>[] = [
     {
@@ -74,10 +76,10 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
       bodyClass: "min-w-28 text-center",
       render: (row) => (
         <span>
-          {row.taxName} {row.taxRate}% (₹{row.taxAmount})
+          {row.taxName} {row.taxRate}% (₹{row.itemTax})
         </span>
       ),
-      footer: (data) => data.reduce((a, b) => a + (+b.taxAmount || 0), 0).toFixed(2),
+      footer: (data) => data.reduce((a, b) => a + (+b.itemTax || 0), 0).toFixed(2),
     },
     { key: "landingCost", header: "Landing", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.landingCost} onChange={(v) => handleRowChange(index, "landingCost", v)} /> },
     { key: "margin", header: "Margin", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.margin} onChange={(v) => handleRowChange(index, "margin", v)} /> },
@@ -146,7 +148,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
       header: "Tax",
       render: (row) => (
         <span>
-          {row.taxName} {row.taxRate}% (₹{row.taxAmount})
+          {row.taxName} {row.taxRate}% (₹{row.itemTax})
         </span>
       ),
     },
@@ -184,9 +186,15 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
             hideDivider
             title="Terms & Conditions"
             topContent={
-              <CommonButton startIcon={<AddIcon />} onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: null }))}>
-                New Term
-              </CommonButton>
+              <Box display="flex" gap={1}>
+                <CommonButton startIcon={<AddIcon />} onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: null }))}>
+                  New Term
+                </CommonButton>
+
+                <CommonButton startIcon={<EditIcon />} onClick={() => setOpenEditTermsModal(true)}>
+                  Edit Terms
+                </CommonButton>
+              </Box>
             }
           >
             <Box p={2}>
@@ -228,7 +236,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
 
                 <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700">
                   <span>Tax Amount</span>
-                  <span>{returnRows.reduce((a, b) => a + (parseFloat(String(b.taxAmount)) || 0), 0).toFixed(2)}</span>
+                  <span>{returnRows.reduce((a, b) => a + (parseFloat(String(b.itemTax)) || 0), 0).toFixed(2)}</span>
                 </Box>
 
                 <Box className="flex justify-between items-center p-2 border-b border-gray-200 dark:border-gray-700 text-blue-600">

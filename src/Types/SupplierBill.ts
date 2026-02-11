@@ -133,7 +133,7 @@ export interface ProductRow {
   disc1: string | number;
   disc2: string | number;
   taxableAmount: string | number;
-  taxAmount: string | number;
+  itemTax: string | number;
   landingCost: string | number;
   margin: string | number;
   totalAmount: string | number;
@@ -155,15 +155,12 @@ export interface AdditionalChargeRow {
 
 export interface SupplierBillBase extends CommonDataType {
   supplierId?: Supplier;
-
   supplierBillNo?: string;
   referenceBillNo?: string;
   supplierBillDate?: string;
-
   purchaseOrderId?: string | null;
   paymentTerm?: string;
   dueDate?: string;
-
   reverseCharge?: boolean;
   shippingDate?: string;
   taxType?: string;

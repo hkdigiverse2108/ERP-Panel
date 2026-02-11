@@ -15,7 +15,6 @@ export interface AddTermsConditionPayload {
   termsCondition?: string;
   isDefault?: boolean;
 }
-
 export type TermsConditionFormValues = AddTermsConditionPayload;
 
 /* ===================== EDIT PAYLOAD ===================== */

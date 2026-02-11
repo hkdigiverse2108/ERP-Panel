@@ -2,7 +2,7 @@ import { Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import type { FC } from "react";
 import { CommonCard, CommonModal } from "../../../Components/Common";
-import { CommonButton, CommonValidationTextField } from "../../../Attribute";
+import { CommonButton, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import type { TermsConditionFormValues, TermsAndConditionModalProps, TermsConditionBase } from "../../../Types/TermsAndCondition";
 import { useAppSelector } from "../../../Store/hooks";
 import { useDispatch } from "react-redux";
@@ -17,6 +17,7 @@ const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ onSave }) => 
   const isEditing = Boolean(data?._id);
   const initialValues: TermsConditionFormValues = {
     termsCondition: data?.termsCondition || "",
+    isDefault: data?.isDefault || false,
   };
 
   const closeModal = () => {
@@ -31,9 +32,9 @@ const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ onSave }) => 
       closeModal();
     };
     if (isEditing && data?._id) {
-      editTerm({ termsConditionId: data._id, termsCondition: values.termsCondition }, { onSuccess: (res: any) => onSuccessHandler(res.data) });
+      editTerm({ termsConditionId: data._id, termsCondition: values.termsCondition, isDefault: values.isDefault }, { onSuccess: (res: any) => onSuccessHandler(res.data) });
     } else {
-      addTerm({ termsCondition: values.termsCondition }, { onSuccess: (res: any) => onSuccessHandler(res.data) });
+      addTerm({ termsCondition: values.termsCondition, isDefault: values.isDefault }, { onSuccess: (res: any) => onSuccessHandler(res.data) });
     }
   };
 
@@ -46,6 +47,7 @@ const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ onSave }) => 
               <CommonCard hideDivider grid={{ xs: 12 }}>
                 <Grid container spacing={2} sx={{ p: 2 }}>
                   <CommonValidationTextField name="termsCondition" label="Terms & Conditions" multiline rows={4} required grid={{ xs: 12 }} />
+                  <CommonValidationSwitch name="isDefault" label="Default" grid={{ xs: 12 }} />
 
                   <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
                     <CommonButton variant="outlined" title="Cancel" onClick={closeModal} />
