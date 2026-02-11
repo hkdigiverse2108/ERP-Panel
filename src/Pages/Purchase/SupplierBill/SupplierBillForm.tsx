@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { Form, Formik, useFormikContext, type FormikHelpers, type FormikProps } from "formik";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { DateConfig, GenerateOptions } from "../../../Utils";
@@ -15,6 +15,7 @@ import SupplierBillDetails from "./SupplierBillDetails";
 import type { TermsConditionBase } from "../../../Types/TermsAndCondition";
 import type { ProductBase } from "../../../Types";
 import TermsSelectionModal from "./TermsSelectionModal";
+import { usePagePermission } from "../../../Utils/Hooks";
 
 const TaxTypeWatcher = ({ onChange }: { onChange: (taxType: string) => void }) => {
   const { values } = useFormikContext<SupplierBillFormValues>();
@@ -38,12 +39,20 @@ const SupplierWatcher = ({ suppliers, onChange }: { suppliers: Supplier[]; onCha
 };
 const SupplierBillForm = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const permission = usePagePermission(PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE);
   const { data } = location.state || {};
   const { data: supplierData } = Queries.useGetContactDropdown({ activeFilter: true, typeFilter: "supplier" });
   const suppliers = (supplierData?.data || []) as Supplier[];
   const supplierOptions = GenerateOptions(suppliers);
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
+  useEffect(() => {
+    const hasAccess = isEditing ? permission.edit : permission.add;
+    if (!hasAccess) {
+      navigate(-1);
+    }
+  }, [isEditing, permission, navigate]);
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
   const emptyRow: ProductRow = { productId: "", itemCode: "", qty: "", freeQty: "", unit: "", unitCost: "", mrp: "", sellingPrice: "", disc1: "", disc2: "", taxableAmount: "", itemTax: "", landingCost: "", margin: "", totalAmount: "", mfgDate: "", expiryDate: "", taxRate: "", taxName: "" };
   const additionalChargeEmptyRow: AdditionalChargeRow = { chargeId: "", taxableAmount: "", tax: "", taxAmount: "", totalAmount: "" };
@@ -159,7 +168,8 @@ const SupplierBillForm = () => {
     return { item, totalQty: item.reduce((s, r) => s + r.qty!, 0), totalTax: item.reduce((s, r) => s + r.taxAmount!, 0), total: item.reduce((s, r) => s + r.total!, 0) };
   };
   const mapAdditionalCharges = (): AdditionalChargeDetails => {
-    const item = additionalChargeRows.map(({ chargeId, taxableAmount, tax, totalAmount }) => ({ chargeId: chargeId, value: +taxableAmount || 0, taxRate: +tax || 0, total: +totalAmount || 0 }));
+    const validRows = additionalChargeRows.filter((row) => row.chargeId);
+    const item = validRows.map(({ chargeId, taxableAmount, tax, totalAmount }) => ({ chargeId: chargeId, value: +taxableAmount || 0, taxRate: +tax || 0, total: +totalAmount || 0 }));
     return { item, total: item.reduce((a, b) => a + b.total!, 0) };
   };
   const handleAdd = () => {
@@ -313,13 +323,26 @@ const SupplierBillForm = () => {
   };
   const defaultValues: SupplierBillFormValues = { supplierId: "", supplierBillNo: "", supplierBillDate: DateConfig.utc().toISOString(), taxType: "exclusive", paymentTerm: "", dueDate: "", reverseCharge: false, shippingDate: "", invoiceAmount: "", termsAndConditionIds: [], notes: "", paidAmount: 0, balanceAmount: 0, paymentStatus: "unpaid", status: "active", isActive: true };
   const initialValues: SupplierBillFormValues = { ...defaultValues, ...data, supplierId: data?.supplierId?._id || defaultValues.supplierId, termsAndConditionIds: data?.termsAndConditionIds?.map((t: { _id: string }) => t._id) || [] };
-  /* ========================= SUBMIT ========================= */
   const handleSubmit = async (values: SupplierBillFormValues, { resetForm }: FormikHelpers<SupplierBillFormValues>) => {
-    const payload: SupplierBillFormValues = { ...values, productDetails: mapProductRows(), additionalCharges: mapAdditionalCharges(), termsAndConditionIds: selectedTermIds, notes, summary };
+    const { taxSummary, ...restSummary } = summary;
+    const payload: SupplierBillFormValues = { ...values, productDetails: mapProductRows(), additionalCharges: mapAdditionalCharges(), termsAndConditionIds: selectedTermIds, notes, summary: restSummary };
     if (isEditing) {
-      editSupplierBill({ supplierBillId: data._id, ...payload }, { onSuccess: () => resetForm() });
+      editSupplierBill(
+        { supplierBillId: data._id, ...payload },
+        {
+          onSuccess: () => {
+            resetForm();
+            navigate(-1);
+          },
+        },
+      );
     } else {
-      addSupplierBill(payload, { onSuccess: () => resetForm() });
+      addSupplierBill(payload, {
+        onSuccess: () => {
+          resetForm();
+          navigate(-1);
+        },
+      });
     }
   };
   return (
