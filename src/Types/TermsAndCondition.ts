@@ -35,6 +35,11 @@ export interface FormValues {
 export interface TermsAndConditionModalProps {
   onSave: (term: TermsConditionBase) => void;
 }
+/* ===================== SELECTION FORM ===================== */
+
+export interface TermsSelectionFormValues {
+  selected: string[];
+}
 
 /* ===================== API RESPONSES ===================== */
 

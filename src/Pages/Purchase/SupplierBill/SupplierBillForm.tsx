@@ -16,6 +16,7 @@ import type { TermsConditionBase } from "../../../Types/TermsAndCondition";
 import type { ProductBase } from "../../../Types";
 import TermsSelectionModal from "./TermsSelectionModal";
 import { usePagePermission } from "../../../Utils/Hooks";
+import { useAppSelector } from "../../../Store/hooks";
 
 const TaxTypeWatcher = ({ onChange }: { onChange: (taxType: string) => void }) => {
   const { values } = useFormikContext<SupplierBillFormValues>();
@@ -65,7 +66,6 @@ const SupplierBillForm = () => {
   const [tabValue, setTabValue] = useState(0);
   const [allTerms, setAllTerms] = useState<TermsConditionBase[]>([]);
   const [selectedTermIds, setSelectedTermIds] = useState<string[]>([]);
-  const [openEditTermsModal, setOpenEditTermsModal] = useState(false);
   const [notes, setNotes] = useState<string>("");
   const [showAdditionalCharge, setShowAdditionalCharge] = useState(false);
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
@@ -78,6 +78,12 @@ const SupplierBillForm = () => {
   const additionalChargeOptions = GenerateOptions(additionalchargedata?.data);
   const [roundOffAmount, setRoundOffAmount] = useState<string | number>(0);
   const [returnRoundOffAmount, setReturnRoundOffAmount] = useState<string | number>(0);
+  const { isTermsSelectionModal } = useAppSelector((state) => state.modal);
+  useEffect(() => {
+    if (!isTermsSelectionModal.open && isTermsSelectionModal.data) {
+      setSelectedTermIds(isTermsSelectionModal.data);
+    }
+  }, [isTermsSelectionModal]);
   const calculateSummary = () => {
     const itemDiscount = rows.reduce((s, r) => s + (Number(r.disc1) || 0) + (Number(r.disc2) || 0), 0);
     const itemTaxable = rows.reduce((s, r) => s + (Number(r.taxableAmount) || 0), 0);
@@ -362,7 +368,7 @@ const SupplierBillForm = () => {
                 </CommonCard>
               </Form>
               <CommonCard hideDivider>
-                <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} termsList={displayTerms} handleDeleteTerm={handleDeleteTerm} notes={notes} setNotes={setNotes} productOptions={productOptions} isProductLoading={ProductsDataLoading} returnRoundOffAmount={returnRoundOffAmount} onReturnRoundOffAmountChange={setReturnRoundOffAmount} openEditTermsModal={openEditTermsModal} setOpenEditTermsModal={setOpenEditTermsModal} />
+                <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} termsList={displayTerms} handleDeleteTerm={handleDeleteTerm} notes={notes} setNotes={setNotes} productOptions={productOptions} isProductLoading={ProductsDataLoading} returnRoundOffAmount={returnRoundOffAmount} onReturnRoundOffAmountChange={setReturnRoundOffAmount} />
               </CommonCard>
               <CommonCard grid={{ xs: 12 }} hideDivider>
                 <AdditionalChargesSection showAdditionalCharge={showAdditionalCharge} setShowAdditionalCharge={setShowAdditionalCharge} additionalChargeRows={additionalChargeRows} handleAddAdditionalCharge={handleAddAdditionalCharge} handleCutAdditionalCharge={handleCutAdditionalCharge} handleAdditionalChargeRowChange={handleAdditionalChargeRowChange} taxOptions={taxOptions} isTaxLoading={TaxDataLoading} flatDiscount={flatDiscount} onFlatDiscountChange={setFlatDiscount} summary={summary} isAdditionalChargeLoading={additionalchargeLoading} additionalChargeOptions={additionalChargeOptions} roundOffAmount={roundOffAmount} onRoundOffAmountChange={setRoundOffAmount} />
@@ -392,15 +398,7 @@ const SupplierBillForm = () => {
           });
         }}
       />
-      <TermsSelectionModal
-        open={openEditTermsModal}
-        onClose={() => setOpenEditTermsModal(false)}
-        selectedTermIds={selectedTermIds}
-        onSave={(ids) => {
-          setSelectedTermIds(ids);
-          setOpenEditTermsModal(false);
-        }}
-      />
+      <TermsSelectionModal />
     </>
   );
 };

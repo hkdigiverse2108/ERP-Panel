@@ -458,6 +458,7 @@ export interface ModalStateSlice {
   isProductDetailsModal: { open: boolean; data: any | null };
   isQtyCountModal: { open: boolean; data: any | null };
   isTermsAndConditionModal: { open: boolean; data: any | null };
+  isTermsSelectionModal: { open: boolean; data: any | null };
 }
 
 // ************ Modal End ***********

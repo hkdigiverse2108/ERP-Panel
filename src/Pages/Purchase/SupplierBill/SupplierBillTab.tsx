@@ -11,7 +11,7 @@ import { CommonTable } from "../../../Components/Common";
 import type { CommonTableColumn } from "../../../Types";
 import type { TermsConditionBase } from "../../../Types/TermsAndCondition";
 import { useDispatch } from "react-redux";
-import { setTermsAndConditionModal } from "../../../Store/Slices/ModalSlice";
+import { setTermsAndConditionModal, setTermsSelectionModal } from "../../../Store/Slices/ModalSlice";
 
 interface SupplierBillTabsProps {
   tabValue: number;
@@ -32,11 +32,9 @@ interface SupplierBillTabsProps {
   returnRoundOffAmount: string | number;
   onReturnRoundOffAmountChange: (value: string | number) => void;
   handleDeleteTerm: (index: number) => void;
-  openEditTermsModal: boolean;
-  setOpenEditTermsModal: (value: boolean) => void;
 }
 
-const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, notes, setNotes, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, handleDeleteTerm, setOpenEditTermsModal }) => {
+const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, notes, setNotes, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, handleDeleteTerm }) => {
   const dispatch = useDispatch();
   const ProductRowColumns: CommonTableColumn<ProductRow>[] = [
     {
@@ -191,7 +189,17 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
                   New Term
                 </CommonButton>
 
-                <CommonButton startIcon={<EditIcon />} onClick={() => setOpenEditTermsModal(true)}>
+                <CommonButton
+                  startIcon={<EditIcon />}
+                  onClick={() =>
+                    dispatch(
+                      setTermsSelectionModal({
+                        open: true,
+                        data: termsList.map((t) => t._id),
+                      }),
+                    )
+                  }
+                >
                   Edit Terms
                 </CommonButton>
               </Box>

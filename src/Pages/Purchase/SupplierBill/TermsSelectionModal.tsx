@@ -1,70 +1,92 @@
-import { Grid, Box } from "@mui/material";
-import { Formik, Form } from "formik";
+import { Grid } from "@mui/material";
+import { Formik, Form, type FormikHelpers } from "formik";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { CommonModal, CommonCard } from "../../../Components/Common";
 import { CommonCheckbox, CommonButton } from "../../../Attribute";
-import type { TermsConditionBase } from "../../../Types/TermsAndCondition";
-import type { FC } from "react";
+import type { TermsConditionBase, TermsSelectionFormValues, TermsConditionApiResponse } from "../../../Types/TermsAndCondition";
+import { useAppSelector } from "../../../Store/hooks";
 import { Queries } from "../../../Api";
-import { useEffect, useState } from "react";
+import { setTermsSelectionModal } from "../../../Store/Slices/ModalSlice";
 
-interface Props {
-  open: boolean;
-  onClose: () => void;
-  selectedTermIds: string[];
-  onSave: (ids: string[]) => void;
-}
+const TermsSelectionModal = () => {
+  const dispatch = useDispatch();
 
-const TermsSelectionModal: FC<Props> = ({ open, onClose, selectedTermIds, onSave }) => {
-  const { data, isLoading } = Queries.useGetTermsCondition({ enabled: open });
+  const { isTermsSelectionModal } = useAppSelector((state) => state.modal);
+
+  const openModal = isTermsSelectionModal.open;
+  const selectedIds: string[] = isTermsSelectionModal.data || [];
+
+  const { data, isLoading } = Queries.useGetTermsCondition({
+    enabled: openModal,
+  });
 
   const [terms, setTerms] = useState<TermsConditionBase[]>([]);
 
   useEffect(() => {
-    if (data?.data) {
-      const response: any = data.data;
-      const list = Array.isArray(response) ? response : response.termsCondition_data || [];
-      setTerms(list);
+    const response = data as TermsConditionApiResponse | undefined;
+    if (response?.data?.termsCondition_data) {
+      setTerms(response.data.termsCondition_data);
     }
   }, [data]);
 
-  const initialValues = { selected: selectedTermIds };
+  const closeModal = () => {
+    dispatch(setTermsSelectionModal({ open: false, data: null }));
+  };
+
+  const initialValues: TermsSelectionFormValues = {
+    selected: selectedIds,
+  };
+
+  const handleSubmit = (values: TermsSelectionFormValues, { resetForm }: FormikHelpers<TermsSelectionFormValues>) => {
+    dispatch(
+      setTermsSelectionModal({
+        open: false,
+        data: values.selected,
+      }),
+    );
+    resetForm();
+  };
 
   return (
-    <CommonModal title="Edit Terms" isOpen={open} onClose={onClose} className="max-w-150 m-2 sm:m-5">
-      <Formik enableReinitialize initialValues={initialValues} onSubmit={(values) => onSave(values.selected)}>
+    <CommonModal title="Edit Terms" isOpen={openModal} onClose={closeModal} className="max-w-125 m-2 sm:m-5">
+      <Formik<TermsSelectionFormValues> enableReinitialize initialValues={initialValues} onSubmit={handleSubmit}>
         {({ values, setFieldValue }) => (
-          <Form>
-            <CommonCard hideDivider>
-              <Grid container spacing={2} sx={{ p: 2 }}>
-                {isLoading ? (
-                  <Grid size={12}>Loading...</Grid>
-                ) : (
-                  terms.map((term) => (
-                    <Grid size={12} key={term._id}>
-                      <CommonCheckbox
-                        name={`term_${term._id}`}
-                        label={term.termsCondition}
-                        value={values.selected.includes(term._id!)}
-                        onChange={(checked: boolean) => {
-                          if (checked) {
-                            setFieldValue("selected", [...values.selected, term._id]);
-                          } else {
-                            setFieldValue(
-                              "selected",
-                              values.selected.filter((id: string) => id !== term._id),
-                            );
-                          }
-                        }}
-                      />
-                    </Grid>
-                  ))
-                )}
-              </Grid>
-              <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end", p: 2 }}>
-                <CommonButton variant="outlined" title="Cancel" onClick={onClose} />
-                <CommonButton type="submit" variant="contained" title="Save" />
-              </Box>
-            </CommonCard>
+          <Form noValidate>
+            <Grid container spacing={2}>
+              <CommonCard hideDivider grid={{ xs: 12 }}>
+                <Grid container spacing={2} sx={{ p: 2 }}>
+                  {isLoading ? (
+                    <Grid size={12}>Loading...</Grid>
+                  ) : (
+                    terms.map((term) => (
+                      <Grid size={12} key={term._id}>
+                        <CommonCheckbox
+                          name={`term_${term._id}`}
+                          label={term.termsCondition || ""}
+                          value={values.selected.includes(term._id)}
+                          onChange={(checked: boolean) => {
+                            if (checked) {
+                              setFieldValue("selected", [...values.selected, term._id]);
+                            } else {
+                              setFieldValue(
+                                "selected",
+                                values.selected.filter((id) => id !== term._id),
+                              );
+                            }
+                          }}
+                        />
+                      </Grid>
+                    ))
+                  )}
+
+                  <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
+                    <CommonButton variant="outlined" title="Cancel" onClick={closeModal} />
+                    <CommonButton type="submit" variant="contained" title="Save" />
+                  </Grid>
+                </Grid>
+              </CommonCard>
+            </Grid>
           </Form>
         )}
       </Formik>
