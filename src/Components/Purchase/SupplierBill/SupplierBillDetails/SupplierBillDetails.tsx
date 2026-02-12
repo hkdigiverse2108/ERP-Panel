@@ -1,8 +1,7 @@
 import { Box } from "@mui/material";
 import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../../Attribute";
 import { PAYMENT_TERMS, REVERSE_CHARGE, TAX_TYPE } from "../../../../Data";
-import type { SupplierBillDetailsProps } from "../../../../Types/SupplierBill";
-
+import type { SupplierBillDetailsProps } from "../../../../Types";
 const SupplierBillDetails = ({ supplierOptions, selectedSupplier, isEditing }: SupplierBillDetailsProps) => {
   return (
     <Box sx={{ p: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "340px 1fr" }, gap: 2 }}>

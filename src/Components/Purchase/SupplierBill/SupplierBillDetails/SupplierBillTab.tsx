@@ -3,13 +3,11 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { CommonButton, CommonSelect, CommonTextField } from "../../../../Attribute";
-import type { ProductRow } from "../../../../Types/SupplierBill";
 import type { FC } from "react";
 import { CommonTabPanel, CommonCard } from "../../../Common";
 import { GridDeleteIcon } from "@mui/x-data-grid";
 import { CommonTable } from "../../../Common";
-import type { CommonTableColumn } from "../../../../Types";
-import type { TermsConditionBase } from "../../../../Types/TermsAndCondition";
+import type { CommonTableColumn, ProductRow, TermsConditionBase } from "../../../../Types";
 import { useDispatch } from "react-redux";
 import { setTermsAndConditionModal, setTermsSelectionModal } from "../../../../Store/Slices/ModalSlice";
 

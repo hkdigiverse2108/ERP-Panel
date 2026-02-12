@@ -4,9 +4,8 @@ import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { CommonButton, CommonSelect, CommonTextField } from "../../../Attribute";
 import CommonCard from "../../Common/CommonCard";
 import { useState, type FC } from "react";
-import type { AdditionalChargeRow, AdditionalChargesSectionProps } from "../../../Types/SupplierBill";
 import { CommonTable } from "../../Common";
-import type { CommonTableColumn } from "../../../Types";
+import type { AdditionalChargeRow, AdditionalChargesSectionProps, CommonTableColumn } from "../../../Types";
 
 const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ show, onToggle, rows, onAdd, onRemove, onChange, taxOptions, isTaxLoading, flatDiscount, onFlatDiscountChange, summary, isAdditionalChargeLoading, additionalChargeOptions, roundOffAmount, onRoundOffAmountChange }) => {
   const [showTaxBreakdown, setShowTaxBreakdown] = useState(false);

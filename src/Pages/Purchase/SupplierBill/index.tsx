@@ -5,8 +5,7 @@ import { CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonActionColumn, Comm
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { Queries, Mutations } from "../../../Api";
-import type { SupplierBillBase } from "../../../Types/SupplierBill";
-import type { AppGridColDef } from "../../../Types";
+import type { AppGridColDef, SupplierBillBase } from "../../../Types";
 import { CreateFilter, FormatDate } from "../../../Utils";
 import { BREADCRUMBS } from "../../../Data";
 

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Queries } from "../../../Api";
-import type { ProductRow, AdditionalChargeRow } from "../../../Types/SupplierBill";
+import type { AdditionalChargeRow, ProductRow } from "../../../Types";
+
 
 interface UseTaxDetailsProps {
   rows: ProductRow[];
