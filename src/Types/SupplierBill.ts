@@ -150,6 +150,16 @@ export interface AdditionalChargeRow {
   taxAmount: string;
   totalAmount: string;
 }
+/* ===================== COMPONENT PROPS ===================== */
+
+export interface SupplierBillDetailsProps {
+  supplierOptions: {
+    label: string;
+    value: string;
+  }[];
+  selectedSupplier: Supplier | null;
+  isEditing: boolean;
+}
 
 /* ===================== API BASE ===================== */
 

@@ -179,7 +179,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
 
       {/* ================= TAB 2 : TERMS ================= */}
       <CommonTabPanel value={tabValue} index={1}>
-        <Box sx={{ mt: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "2fr 1fr" }, gap: 3 }}>
+        <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 3 }}>
           <CommonCard
             hideDivider
             title="Terms & Conditions"

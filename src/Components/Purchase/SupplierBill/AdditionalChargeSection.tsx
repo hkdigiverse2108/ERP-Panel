@@ -114,9 +114,11 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
           </Box>
           <CommonCard hideDivider>
             <Box className="bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-200">
-              <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700">
+              <Box className="flex justify-between items-center p-2 border-b border-gray-200 dark:border-gray-700">
                 <span>Flat Discount</span>
-                <CommonTextField type="number" value={flatDiscount} onChange={onFlatDiscountChange} isCurrency currencyDisabled />
+                <Box width={100}>
+                  <CommonTextField type="number" value={flatDiscount} onChange={onFlatDiscountChange} isCurrency currencyDisabled />
+                </Box>
               </Box>
               <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700">
                 <span>Item Discount</span>
