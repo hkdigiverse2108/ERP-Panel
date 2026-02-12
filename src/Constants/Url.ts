@@ -162,6 +162,13 @@ export const URL_KEYS = {
     EDIT: "/pos-order/edit",
     DELETE: "/pos-order/delete",
   },
+  POS_PAYMENT: {
+    BASE: "/pos-payment",
+    ALL: "/pos-payment/all",
+    ADD: "/pos-payment/add",
+    EDIT: "/pos-payment/edit",
+    DELETE: "/pos-payment/delete",
+  },
   ADDITIONAL_CHARGES: {
     BASE: "/additional-charge",
     DROPDOWN: "/additional-charge/dropdown",

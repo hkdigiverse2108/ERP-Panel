@@ -112,6 +112,11 @@ const PosFooter = () => {
     dispatch(setCashModal());
   };
 
+  const handleMultiplePay = () => {
+    if (!validate(true)) return;
+    dispatch(setMultiplePay());
+  };
+
   return (
     <>
       <div className="w-full bg-white dark:bg-gray-dark">
@@ -144,7 +149,7 @@ const PosFooter = () => {
 
         {/* Action Buttons */}
         <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2 p-2">
-          <CommonButton title="Multiple Pay (F12)" variant="contained" startIcon={<VerticalSplitIcon />} onClick={() => dispatch(setMultiplePay())} />
+          <CommonButton title="Multiple Pay (F12)" variant="contained" startIcon={<VerticalSplitIcon />} onClick={handleMultiplePay} />
           <CommonButton title="Redeem Credit" variant="contained" startIcon={<RedeemIcon />} onClick={() => dispatch(setRedeemCreditModal())} />
           <CommonButton title="Hold (F6)" variant="contained" startIcon={<PauseIcon />} onClick={handleHoldBill} loading={addPosOrderLoading || editPosOrderLoading} />
           <CommonButton title="UPI (F5)" variant="contained" startIcon={<FastForwardIcon />} onClick={handleUpi} />
