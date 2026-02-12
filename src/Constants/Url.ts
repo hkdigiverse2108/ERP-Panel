@@ -162,12 +162,6 @@ export const URL_KEYS = {
     EDIT: "/pos-order/edit",
     DELETE: "/pos-order/delete",
   },
-  PAY_LATER: {
-    BASE: "/pay-later",
-    ADD: "/pay-later/add",
-    EDIT: "/pay-later/edit",
-    DELETE: "/pay-later/delete",
-  },
   ADDITIONAL_CHARGES: {
     BASE: "/additional-charge",
     DROPDOWN: "/additional-charge/dropdown",
@@ -179,5 +173,12 @@ export const URL_KEYS = {
     BASE: "/account-group",
     DROPDOWN: "/account-group/dropdown",
     ALL: "/account-group/all",
+  },
+  TERMS_CONDITION: {
+    BASE: "/terms-condition",
+    DROPDOWN: "/terms-condition/dropdown",
+    ALL: "/terms-condition/all",
+    ADD: "/terms-condition/add",
+    EDIT: "/terms-condition/edit",
   },
 } as const;

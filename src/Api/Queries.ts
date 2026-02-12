@@ -4,6 +4,7 @@ import type { AccountGroupDropdownApiResponse } from "../Types/AccountGroup";
 import type { AdditionalChargesApiResponse, AdditionalChargesDropdownApiResponse } from "../Types/AdditionalCharges";
 import type { BillOfLiveProductApiResponse } from "../Types/BillOfMaterials";
 import type { SupplierBillApiResponse } from "../Types/SupplierBill";
+import type { TermsConditionApiResponse } from "../Types/TermsAndCondition";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 
@@ -98,4 +99,7 @@ export const Queries = {
 
   // ************ Account Group ***********
   useGetAccountGroupDropdown: (params?: Params, enabled?: boolean) => useQueries<AccountGroupDropdownApiResponse>([KEYS.ACCOUNT_GROUP.BASE, params], () => Get(URL_KEYS.ACCOUNT_GROUP.DROPDOWN, params), { enabled: enabled }),
+
+  //*************** Terms and Conditions **************** */
+  useGetTermsCondition: (params?: Params, enabled?: boolean) => useQueries<TermsConditionApiResponse>([KEYS.TERMS_CONDITION.BASE, params], () => Get(URL_KEYS.TERMS_CONDITION.ALL, params), { enabled: enabled }),
 };

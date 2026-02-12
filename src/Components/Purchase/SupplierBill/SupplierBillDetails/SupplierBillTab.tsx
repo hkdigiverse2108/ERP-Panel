@@ -2,16 +2,16 @@ import { Box, Tab, Tabs } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
-import { CommonButton, CommonSelect, CommonTextField } from "../../../Attribute";
-import type { ProductRow } from "../../../Types/SupplierBill";
+import { CommonButton, CommonSelect, CommonTextField } from "../../../../Attribute";
+import type { ProductRow } from "../../../../Types/SupplierBill";
 import type { FC } from "react";
-import { CommonTabPanel, CommonCard } from "../../../Components/Common";
+import { CommonTabPanel, CommonCard } from "../../../Common";
 import { GridDeleteIcon } from "@mui/x-data-grid";
-import { CommonTable } from "../../../Components/Common";
-import type { CommonTableColumn } from "../../../Types";
-import type { TermsConditionBase } from "../../../Types/TermsAndCondition";
+import { CommonTable } from "../../../Common";
+import type { CommonTableColumn } from "../../../../Types";
+import type { TermsConditionBase } from "../../../../Types/TermsAndCondition";
 import { useDispatch } from "react-redux";
-import { setTermsAndConditionModal } from "../../../Store/Slices/ModalSlice";
+import { setTermsAndConditionModal, setTermsSelectionModal } from "../../../../Store/Slices/ModalSlice";
 
 interface SupplierBillTabsProps {
   tabValue: number;
@@ -74,10 +74,10 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
       bodyClass: "min-w-28 text-center",
       render: (row) => (
         <span>
-          {row.taxName} {row.taxRate}% (₹{row.taxAmount})
+          {row.taxName} {row.taxRate}% (₹{row.itemTax})
         </span>
       ),
-      footer: (data) => data.reduce((a, b) => a + (+b.taxAmount || 0), 0).toFixed(2),
+      footer: (data) => data.reduce((a, b) => a + (+b.itemTax || 0), 0).toFixed(2),
     },
     { key: "landingCost", header: "Landing", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.landingCost} onChange={(v) => handleRowChange(index, "landingCost", v)} /> },
     { key: "margin", header: "Margin", bodyClass: "min-w-28", render: (row, index) => <CommonTextField type="number" value={row.margin} onChange={(v) => handleRowChange(index, "margin", v)} /> },
@@ -146,7 +146,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
       header: "Tax",
       render: (row) => (
         <span>
-          {row.taxName} {row.taxRate}% (₹{row.taxAmount})
+          {row.taxName} {row.taxRate}% (₹{row.itemTax})
         </span>
       ),
     },
@@ -168,7 +168,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
       <CommonTabPanel value={tabValue} index={0}>
         <Box sx={{ mt: 2 }}>
           <CommonCard hideDivider>
-            <Box sx={{ overflowX: "auto" }}>
+            <Box className="custom-scrollbar" sx={{ overflowX: "auto" }}>
               <Box sx={{ minWidth: 1400 }}>
                 <CommonTable data={rows} columns={ProductRowColumns} rowKey={(_, i) => i} showFooter />
               </Box>
@@ -179,14 +179,30 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
 
       {/* ================= TAB 2 : TERMS ================= */}
       <CommonTabPanel value={tabValue} index={1}>
-        <Box sx={{ mt: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "2fr 1fr" }, gap: 3 }}>
+        <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 3 }}>
           <CommonCard
             hideDivider
             title="Terms & Conditions"
             topContent={
-              <CommonButton startIcon={<AddIcon />} onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: null }))}>
-                New Term
-              </CommonButton>
+              <Box display="flex" gap={1}>
+                <CommonButton startIcon={<AddIcon />} onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: null }))}>
+                  New Term
+                </CommonButton>
+
+                <CommonButton
+                  startIcon={<EditIcon />}
+                  onClick={() =>
+                    dispatch(
+                      setTermsSelectionModal({
+                        open: true,
+                        data: termsList.map((t) => t._id),
+                      }),
+                    )
+                  }
+                >
+                  Edit Terms
+                </CommonButton>
+              </Box>
             }
           >
             <Box p={2}>
@@ -210,7 +226,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
       <CommonTabPanel value={tabValue} index={2}>
         <Box sx={{ mt: 2 }}>
           <CommonCard>
-            <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box className="custom-scrollbar" sx={{ width: "100%", overflowX: "auto" }}>
               <Box sx={{ border: "1px solid", borderColor: "divider" }}>
                 <CommonTable data={returnRows} columns={ReturnRowColumns} rowKey={(_, i) => i} showFooter />
               </Box>
@@ -228,7 +244,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
 
                 <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700">
                   <span>Tax Amount</span>
-                  <span>{returnRows.reduce((a, b) => a + (parseFloat(String(b.taxAmount)) || 0), 0).toFixed(2)}</span>
+                  <span>{returnRows.reduce((a, b) => a + (parseFloat(String(b.itemTax)) || 0), 0).toFixed(2)}</span>
                 </Box>
 
                 <Box className="flex justify-between items-center p-2 border-b border-gray-200 dark:border-gray-700 text-blue-600">

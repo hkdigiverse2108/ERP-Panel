@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import type { ContactBase } from "./Contacts";
 import type { LocationBase } from "./Location";
 import type { AdditionalChargesBase } from "./AdditionalCharges";
+import type { MultiplePaymentType } from "./POS";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -222,6 +223,7 @@ export interface CommonTableProps<T> {
   rowKey: (row: T, index: number) => number | string;
   getRowClass?: (row: T, index: number) => string;
   showFooter?: boolean;
+  isLoading?: boolean;
 }
 
 // ************ Table End ***********
@@ -451,12 +453,13 @@ export interface ModalStateSlice {
   isRedeemCreditModal: boolean;
   isCardModal: boolean;
   isApplyCouponModal: boolean;
-  isPayLaterModal: boolean;
+  isPayLaterModal: { open: boolean; data: MultiplePaymentType[] };
   isCashModal: boolean;
   isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
   isProductDetailsModal: { open: boolean; data: any | null };
   isQtyCountModal: { open: boolean; data: any | null };
   isTermsAndConditionModal: { open: boolean; data: any | null };
+  isTermsSelectionModal: { open: boolean; data: any | null };
 }
 
 // ************ Modal End ***********

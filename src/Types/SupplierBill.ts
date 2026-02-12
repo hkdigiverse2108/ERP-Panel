@@ -7,10 +7,10 @@ import type { TermsConditionBase } from "./TermsAndCondition";
 
 export type Supplier = ContactBase;
 
-/* ===================== PRODUCT ===================== */
+/* ===================== PRODUCT (FORM) ===================== */
 
 export interface SupplierBillProductItem {
-  productId?: string | ProductBase;
+  productId?: string;
   qty?: number;
   freeQty?: number;
   mrp?: number;
@@ -35,7 +35,7 @@ export interface SupplierBillProductDetails {
 /* ===================== RETURN PRODUCT ===================== */
 
 export interface SupplierBillReturnProductItem {
-  productId?: string | ProductBase;
+  productId?: string;
   qty?: number;
   discount1?: number;
   discount2?: number;
@@ -61,11 +61,7 @@ export interface SupplierBillReturnProductDetails {
 /* ===================== ADDITIONAL CHARGES ===================== */
 
 export interface AdditionalChargeItem {
-  chargeId?: {
-    _id: string;
-    name?: string;
-    type?: string;
-  };
+  chargeId?: string;
   value?: number;
   taxRate?: number;
   total?: number;
@@ -82,6 +78,7 @@ export interface SupplierBillSummary {
   flatDiscount?: number;
   grossAmount?: number;
   itemDiscount?: number;
+  taxableAmount?: number;
   itemTax?: number;
   additionalChargeAmount?: number;
   additionalChargeTax?: number;
@@ -99,39 +96,27 @@ export interface SupplierBillSummary {
 
 export interface SupplierBillFormValues {
   supplierId: string;
-
   supplierBillNo?: string;
   referenceBillNo?: string;
   supplierBillDate: string | Date;
-
   paymentTerm?: string;
   dueDate?: string | Date;
-
   reverseCharge?: boolean;
   shippingDate?: string | Date;
-
   taxType?: string;
   invoiceAmount?: string;
-
   productDetails?: SupplierBillProductDetails;
   returnProductDetails?: SupplierBillReturnProductDetails;
   additionalCharges?: AdditionalChargeDetails;
-
   termsAndConditionIds?: string[];
-
   notes?: string;
-
   summary?: SupplierBillSummary;
-
   paidAmount?: number;
   balanceAmount?: number;
-
   paymentStatus?: "paid" | "unpaid" | "partial";
   status?: "active" | "cancelled";
-
   companyId?: string;
   isActive?: boolean;
-
   _submitAction?: string;
 }
 
@@ -149,7 +134,7 @@ export interface ProductRow {
   disc1: string | number;
   disc2: string | number;
   taxableAmount: string | number;
-  taxAmount: string | number;
+  itemTax: string | number;
   landingCost: string | number;
   margin: string | number;
   totalAmount: string | number;
@@ -167,6 +152,36 @@ export interface AdditionalChargeRow {
   totalAmount: string;
 }
 
+export interface AdditionalChargesSectionProps {
+  show: boolean;
+  onToggle: (value: boolean) => void;
+  rows: AdditionalChargeRow[];
+  onAdd: () => void;
+  onRemove: (index: number) => void;
+  onChange: (index: number, field: keyof AdditionalChargeRow, value: string | number | string[]) => void;
+  taxOptions: { label: string; value: string }[];
+  isTaxLoading: boolean;
+  flatDiscount: string | number;
+  onFlatDiscountChange: (value: string | number) => void;
+  summary: SupplierBillSummary;
+  isAdditionalChargeLoading: boolean;
+  additionalChargeOptions: { label: string; value: string }[];
+  roundOffAmount: string | number;
+  onRoundOffAmountChange: (value: string | number) => void;
+}
+
+/* ===================== COMPONENT PROPS ===================== */
+
+export interface SupplierBillDetailsProps {
+  supplierOptions: {
+    label: string;
+    value: string;
+  }[];
+  selectedSupplier: Supplier | null;
+  isEditing: boolean;
+}
+
+
 /* ===================== API BASE ===================== */
 
 export interface SupplierBillBase extends CommonDataType {
@@ -181,20 +196,45 @@ export interface SupplierBillBase extends CommonDataType {
   shippingDate?: string;
   taxType?: string;
   invoiceAmount?: string;
-  productDetails?: SupplierBillProductDetails;
+  productDetails?: {
+    item?: (Omit<SupplierBillProductItem, "productId"> & {
+      productId?: ProductBase;
+    })[];
+    totalQty?: number;
+    totalTax?: number;
+    total?: number;
+  };
+
   returnProductDetails?: SupplierBillReturnProductDetails;
-  additionalCharges?: AdditionalChargeDetails;
+
+  additionalCharges?: {
+    item?: (Omit<AdditionalChargeItem, "chargeId"> & {
+      chargeId?: {
+        _id: string;
+        name?: string;
+        type?: string;
+      };
+    })[];
+    total?: number;
+  };
+
   termsAndConditionIds?: TermsConditionBase[];
+
   notes?: string;
+
   summary?: SupplierBillSummary;
+
   paidAmount?: number;
   balanceAmount?: number;
+
   paymentStatus?: "paid" | "unpaid" | "partial";
   status?: "active" | "cancelled";
+
   companyId?: {
     _id: string;
     name?: string;
   };
+
   isActive?: boolean;
 }
 

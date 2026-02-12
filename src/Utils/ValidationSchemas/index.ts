@@ -346,3 +346,11 @@ export const MaterialConsumptionFormSchema = Yup.object({
   type: Validation("string", "Type", { required: false }),
   remark: Validation("string", "Remark", { required: false, extraRules: (s) => s?.trim().max(200, "Maximum 200 characters allowed") }),
 });
+
+
+export const CardDetailsSchema = Yup.object({
+  paymentAccountId: Validation("string", "Payment Account"),
+  amount: Validation("number", "Card Payment Amount"),
+  cardHolderName: Validation("string", "Card Holder Name"),
+  cardTransactionNo: Validation("string", "Card Transaction No."),
+});

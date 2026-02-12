@@ -151,12 +151,6 @@ export const KEYS = {
     EDIT: "pos-edit",
     DELETE: "pos-delete",
   },
-  PAY_LATER: {
-    BASE: "pay-later",
-    ADD: "pay-later-add",
-    EDIT: "pay-later-edit",
-    DELETE: "pay-later-delete",
-  },
   ADDITIONAL_CHARGES: {
     BASE: "additional-charge",
     ADD: "additional-charge-add",
@@ -165,5 +159,11 @@ export const KEYS = {
   },
   ACCOUNT_GROUP: {
     BASE: "account-group",
+  },
+  TERMS_CONDITION: {
+    BASE: "terms-condition",
+    ADD: "terms-condition-add",
+    EDIT: "terms-condition-edit",
+    DELETE: "terms-condition-delete",
   },
 };

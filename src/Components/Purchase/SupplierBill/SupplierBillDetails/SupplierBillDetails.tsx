@@ -1,15 +1,9 @@
 import { Box } from "@mui/material";
-import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
-import { PAYMENT_TERMS, REVERSE_CHARGE, TAX_TYPE } from "../../../Data";
-import type { Supplier } from "../../../Types/SupplierBill";
+import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../../Attribute";
+import { PAYMENT_TERMS, REVERSE_CHARGE, TAX_TYPE } from "../../../../Data";
+import type { SupplierBillDetailsProps } from "../../../../Types/SupplierBill";
 
-interface Props {
-  supplierOptions: { label: string; value: string }[];
-  selectedSupplier: Supplier | null;
-  isEditing: boolean;
-}
-
-const SupplierBillDetails = ({ supplierOptions, selectedSupplier, isEditing }: Props) => {
+const SupplierBillDetails = ({ supplierOptions, selectedSupplier, isEditing }: SupplierBillDetailsProps) => {
   return (
     <Box sx={{ p: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "340px 1fr" }, gap: 2 }}>
       {/* ================= LEFT SIDE ================= */}

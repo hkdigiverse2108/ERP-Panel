@@ -1,6 +1,7 @@
+import { Skeleton } from "@mui/material";
 import type { CommonTableProps } from "../../../Types";
 
-const CommonTable = <T,>({ data, columns, rowKey, getRowClass, showFooter }: CommonTableProps<T>) => {
+const CommonTable = <T,>({ data, columns, rowKey, getRowClass, showFooter, isLoading }: CommonTableProps<T>) => {
   const hasFooter = showFooter && columns.some((c) => c.footer);
 
   return (
@@ -17,6 +18,7 @@ const CommonTable = <T,>({ data, columns, rowKey, getRowClass, showFooter }: Com
       </thead>
 
       {/* ---------- BODY ---------- */}
+
       <tbody>
         {data?.map((row, i) => (
           <tr key={rowKey(row, i)} className={`text-gray-600 dark:text-gray-300 ${getRowClass?.(row, i)}`}>
@@ -27,6 +29,16 @@ const CommonTable = <T,>({ data, columns, rowKey, getRowClass, showFooter }: Com
             ))}
           </tr>
         ))}
+        {isLoading &&
+          Array.from({ length: 1 }).map((_, rowIndex) => (
+            <tr key={`skeleton-${rowIndex}`}>
+              {columns.map((col) => (
+                <td key={col.key} className="p-2">
+                  <Skeleton width="100%" height={50} />
+                </td>
+              ))}
+            </tr>
+          ))}
       </tbody>
 
       {/* ---------- FOOTER ---------- */}

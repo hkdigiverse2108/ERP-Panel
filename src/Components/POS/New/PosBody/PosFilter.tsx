@@ -6,7 +6,7 @@ import { Queries } from "../../../../Api";
 import { CommonButton, CommonSelect, CommonTextField } from "../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
 import { setCustomerModal } from "../../../../Store/Slices/ModalSlice";
-import { addOrUpdateProduct, setCustomerId, setIsSelectProduct } from "../../../../Store/Slices/PosSlice";
+import { addOrUpdateProduct, setCustomerId, setIsSelectProduct, setPosLoading } from "../../../../Store/Slices/PosSlice";
 import { GenerateOptions } from "../../../../Utils";
 import CustomerForm from "./CustomerForm";
 
@@ -17,7 +17,8 @@ const PosFilter = () => {
 
   const { data: productDropdown, isLoading: productDropdownLoading } = Queries.useGetProductDropdown();
   const id = isSelectProduct || "";
-  const { data: productById } = Queries.useGetProductById(id);
+  const { data: productById, isLoading: productByIdLoading, isFetching: productByIdFetching } = Queries.useGetProductById(id);
+
   const { data: customerDropdown, isLoading: customerDropdownLoading } = Queries.useGetContactDropdown({ typeFilter: "customer" });
 
   const handleCustomerChange = (value: string[]) => {
@@ -29,8 +30,13 @@ const PosFilter = () => {
   };
 
   useEffect(() => {
+    dispatch(setPosLoading(productByIdLoading || productByIdFetching));
+  }, [productByIdLoading, productByIdFetching, dispatch]);
+  console.log("productById",productById?.data);
+  useEffect(() => {
     if (!productById?.data) return;
     dispatch(addOrUpdateProduct(productById.data));
+    dispatch(setIsSelectProduct(""));
   }, [productById?.data, dispatch]);
 
   return (
