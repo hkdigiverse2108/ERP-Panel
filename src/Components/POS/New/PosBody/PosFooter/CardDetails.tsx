@@ -9,6 +9,7 @@ import { CommonModal } from "../../../../Common";
 import { clearPosProduct } from "../../../../../Store/Slices/PosSlice";
 import type { PosProductType } from "../../../../../Types";
 import { CardDetailsSchema } from "../../../../../Utils/ValidationSchemas";
+import { POS_PAYMENT_METHOD } from "../../../../../Data";
 
 const CardDetails = () => {
   const { isCardModal } = useAppSelector((state) => state.modal);
@@ -43,6 +44,7 @@ const CardDetails = () => {
         unitCost: item?.unitCost,
         netAmount: item?.netAmount,
       })),
+      paymentMethod: POS_PAYMENT_METHOD.CARD,
       multiplePayments: [
         {
           method: "card",

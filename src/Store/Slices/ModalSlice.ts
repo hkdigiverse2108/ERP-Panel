@@ -17,7 +17,7 @@ const initialState: ModalStateSlice = {
   isRedeemCreditModal: false,
   isCardModal: false,
   isApplyCouponModal: false,
-  isPayLaterModal: false,
+  isPayLaterModal: { open: false, data: [] },
   isCashModal: false,
   isAdditionalChargeModal: { open: false, data: null },
   isProductDetailsModal: { open: false, data: null },
@@ -79,8 +79,8 @@ const ModalSlice = createSlice({
     setApplyCouponModal: (state) => {
       state.isApplyCouponModal = !state.isApplyCouponModal;
     },
-    setPayLaterModal: (state) => {
-      state.isPayLaterModal = !state.isPayLaterModal;
+    setPayLaterModal: (state, action) => {
+      state.isPayLaterModal = action.payload;
     },
     setCashModal: (state) => {
       state.isCashModal = !state.isCashModal;

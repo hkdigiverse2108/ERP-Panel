@@ -93,7 +93,7 @@ export interface PosProductOrderFormValues extends Omit<Partial<PosProductType>,
   items?: Partial<PosProductOrderItem> & { productId?: string }[];
   multiplePayments?: Partial<MultiplePaymentType>[];
   payLater?: Partial<PayLaterType>;
-  paymentMethod?: null;
+  paymentMethod?: string;
   paymentStatus?: string;
   status?: string;
   holdDate?: string;
