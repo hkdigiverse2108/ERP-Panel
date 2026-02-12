@@ -188,18 +188,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
                 <CommonButton startIcon={<AddIcon />} onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: null }))}>
                   New Term
                 </CommonButton>
-
-                <CommonButton
-                  startIcon={<EditIcon />}
-                  onClick={() =>
-                    dispatch(
-                      setTermsSelectionModal({
-                        open: true,
-                        data: termsList.map((t) => t._id),
-                      }),
-                    )
-                  }
-                >
+                <CommonButton startIcon={<EditIcon />} onClick={() => dispatch(setTermsSelectionModal({ open: true, data: termsList.map((t) => t._id) }))}>
                   Edit Terms
                 </CommonButton>
               </Box>
