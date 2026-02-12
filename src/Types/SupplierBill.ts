@@ -78,6 +78,7 @@ export interface SupplierBillSummary {
   flatDiscount?: number;
   grossAmount?: number;
   itemDiscount?: number;
+  taxableAmount?: number;
   itemTax?: number;
   additionalChargeAmount?: number;
   additionalChargeTax?: number;
@@ -150,6 +151,25 @@ export interface AdditionalChargeRow {
   taxAmount: string;
   totalAmount: string;
 }
+
+export interface AdditionalChargesSectionProps {
+  show: boolean;
+  onToggle: (value: boolean) => void;
+  rows: AdditionalChargeRow[];
+  onAdd: () => void;
+  onRemove: (index: number) => void;
+  onChange: (index: number, field: keyof AdditionalChargeRow, value: string | number | string[]) => void;
+  taxOptions: { label: string; value: string }[];
+  isTaxLoading: boolean;
+  flatDiscount: string | number;
+  onFlatDiscountChange: (value: string | number) => void;
+  summary: SupplierBillSummary;
+  isAdditionalChargeLoading: boolean;
+  additionalChargeOptions: { label: string; value: string }[];
+  roundOffAmount: string | number;
+  onRoundOffAmountChange: (value: string | number) => void;
+}
+
 /* ===================== COMPONENT PROPS ===================== */
 
 export interface SupplierBillDetailsProps {
@@ -160,6 +180,7 @@ export interface SupplierBillDetailsProps {
   selectedSupplier: Supplier | null;
   isEditing: boolean;
 }
+
 
 /* ===================== API BASE ===================== */
 

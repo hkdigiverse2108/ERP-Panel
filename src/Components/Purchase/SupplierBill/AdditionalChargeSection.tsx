@@ -4,37 +4,11 @@ import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { CommonButton, CommonSelect, CommonTextField } from "../../../Attribute";
 import CommonCard from "../../Common/CommonCard";
 import { useState, type FC } from "react";
-import type { AdditionalChargeRow } from "../../../Types/SupplierBill";
+import type { AdditionalChargeRow, AdditionalChargesSectionProps } from "../../../Types/SupplierBill";
 import { CommonTable } from "../../Common";
 import type { CommonTableColumn } from "../../../Types";
 
-interface AdditionalChargesSectionProps {
-  showAdditionalCharge: boolean;
-  setShowAdditionalCharge: (value: boolean) => void;
-  additionalChargeRows: AdditionalChargeRow[];
-  handleAddAdditionalCharge: () => void;
-  handleCutAdditionalCharge: (index: number) => void;
-  handleAdditionalChargeRowChange: (index: number, field: keyof AdditionalChargeRow, value: string | number | string[]) => void;
-  taxOptions: { label: string; value: string }[];
-  isTaxLoading: boolean;
-  flatDiscount: string | number;
-  onFlatDiscountChange: (value: string | number) => void;
-  summary: {
-    itemDiscount: number;
-    grossAmount: number;
-    taxableAmount: number;
-    itemTax: number;
-    roundOff: number;
-    netAmount: number;
-    taxSummary: { name: string; rate: number; amount: number }[];
-  };
-  isAdditionalChargeLoading: boolean;
-  additionalChargeOptions: { label: string; value: string }[];
-  roundOffAmount: string | number;
-  onRoundOffAmountChange: (value: string | number) => void;
-}
-
-const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAdditionalCharge, setShowAdditionalCharge, additionalChargeRows, handleAddAdditionalCharge, handleCutAdditionalCharge, handleAdditionalChargeRowChange, taxOptions, isTaxLoading, flatDiscount, onFlatDiscountChange, summary, isAdditionalChargeLoading, additionalChargeOptions, roundOffAmount, onRoundOffAmountChange }) => {
+const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ show, onToggle, rows, onAdd, onRemove, onChange, taxOptions, isTaxLoading, flatDiscount, onFlatDiscountChange, summary, isAdditionalChargeLoading, additionalChargeOptions, roundOffAmount, onRoundOffAmountChange }) => {
   const [showTaxBreakdown, setShowTaxBreakdown] = useState(false);
 
   const AdditionalChargeColumns: CommonTableColumn<AdditionalChargeRow>[] = [
@@ -44,13 +18,13 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
       bodyClass: "p-2 flex justify-center gap-1",
       render: (_, index) => (
         <>
-          {index === additionalChargeRows.length - 1 && (
-            <CommonButton size="small" variant="outlined" onClick={handleAddAdditionalCharge}>
+          {index === rows.length - 1 && (
+            <CommonButton size="small" variant="outlined" onClick={onAdd}>
               <AddIcon />
             </CommonButton>
           )}
-          {additionalChargeRows.length > 1 && (
-            <CommonButton size="small" color="error" variant="outlined" onClick={() => handleCutAdditionalCharge(index)}>
+          {rows.length > 1 && (
+            <CommonButton size="small" color="error" variant="outlined" onClick={() => onRemove(index)}>
               <ClearIcon />
             </CommonButton>
           )}
@@ -60,9 +34,9 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
       footerClass: "text-right",
     },
     { key: "sr", header: "#", render: (_, i) => i + 1, bodyClass: "w-10", footer: "" },
-    { key: "chargeId", header: "Additional Charge", headerClass: "text-start", bodyClass: "min-w-80 w-80 text-start", render: (row, index) => <CommonSelect label="Search Additional" value={row.chargeId ? [row.chargeId] : []} options={additionalChargeOptions} isLoading={isAdditionalChargeLoading} onChange={(v) => handleAdditionalChargeRowChange(index, "chargeId", v)} />, footer: "" },
-    { key: "taxableAmount", header: "Value", bodyClass: "min-w-80 w-80", render: (row, index) => <CommonTextField type="number" value={row.taxableAmount} onChange={(v) => handleAdditionalChargeRowChange(index, "taxableAmount", v)} />, footer: "" },
-    { key: "tax", header: "Tax", bodyClass: "min-w-80 w-80", render: (row, index) => <CommonSelect value={row.tax ? [row.tax] : []} options={taxOptions} isLoading={isTaxLoading} onChange={(v) => handleAdditionalChargeRowChange(index, "tax", v)} />, footer: "" },
+    { key: "chargeId", header: "Additional Charge", headerClass: "text-start", bodyClass: "min-w-80 w-80 text-start", render: (row, index) => <CommonSelect label="Search Additional" value={row.chargeId ? [row.chargeId] : []} options={additionalChargeOptions} isLoading={isAdditionalChargeLoading} onChange={(v) => onChange(index, "chargeId", v)} />, footer: "" },
+    { key: "taxableAmount", header: "Value", bodyClass: "min-w-80 w-80", render: (row, index) => <CommonTextField type="number" value={row.taxableAmount} onChange={(v) => onChange(index, "taxableAmount", v)} />, footer: "" },
+    { key: "tax", header: "Tax", bodyClass: "min-w-80 w-80", render: (row, index) => <CommonSelect value={row.tax ? [row.tax] : []} options={taxOptions} isLoading={isTaxLoading} onChange={(v) => onChange(index, "tax", v)} />, footer: "" },
     { key: "totalAmount", header: "Total", headerClass: "text-right", bodyClass: "p-2 text-right", render: (row) => row.totalAmount || 0, footer: (data) => data.reduce((a, b) => a + (parseFloat(b.totalAmount) || 0), 0).toFixed(2), footerClass: "text-right" },
   ];
 
@@ -79,25 +53,25 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
   return (
     <CommonCard hideDivider>
       <Box p={2}>
-        {!showAdditionalCharge && (
-          <CommonButton size="small" startIcon={<AddIcon fontSize="small" />} onClick={() => setShowAdditionalCharge(true)}>
+        {!show && (
+          <CommonButton size="small" startIcon={<AddIcon fontSize="small" />} onClick={() => onToggle(true)}>
             Add Additional Charges
           </CommonButton>
         )}
 
-        {showAdditionalCharge && (
+        {show && (
           <CommonCard
             hideDivider
             title="Additional Charge"
             topContent={
-              <CommonButton size="small" color="error" variant="outlined" onClick={() => setShowAdditionalCharge(false)}>
+              <CommonButton size="small" color="error" variant="outlined" onClick={() => onToggle(false)}>
                 <ClearIcon fontSize="small" />
               </CommonButton>
             }
           >
             <Box className="custom-scrollbar" sx={{ p: 2, overflowX: "auto" }}>
               <Box sx={{ border: "1px solid", borderColor: "divider" }}>
-                <CommonTable data={additionalChargeRows} columns={AdditionalChargeColumns} rowKey={(_, i) => i} showFooter />
+                <CommonTable data={rows} columns={AdditionalChargeColumns} rowKey={(_, i) => i} showFooter />
               </Box>
             </Box>
           </CommonCard>
@@ -108,45 +82,48 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
             {showTaxBreakdown && (
               <Box sx={{ width: "100%", maxWidth: 600, border: "1px solid", borderColor: "divider", borderRadius: 1, backgroundColor: "background.paper" }}>
-                <CommonTable data={summary.taxSummary} columns={taxBreakdownColumns} rowKey={(r) => r.name} />
+                <CommonTable data={summary.taxSummary || []} columns={taxBreakdownColumns} rowKey={(r) => r.name} />
               </Box>
             )}
           </Box>
-          <CommonCard hideDivider>
-            <Box className="bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-200">
-              <Box className="flex justify-between items-center p-2 border-b border-gray-200 dark:border-gray-700">
-                <span>Flat Discount</span>
+          <CommonCard hideDivider paperProps={{ sx: { border: "1px solid", borderColor: "divider", borderRadius: 2, overflow: "hidden" } }}>
+            <Box className="bg-slate-50 dark:bg-slate-900/50 text-slate-700 dark:text-slate-200">
+              <Box className="flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-800">
+                <span className="font-medium text-sm">Flat Discount</span>
                 <Box width={100}>
                   <CommonTextField type="number" value={flatDiscount} onChange={onFlatDiscountChange} isCurrency currencyDisabled />
                 </Box>
               </Box>
-              <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700">
-                <span>Item Discount</span>
-                <span>{summary.itemDiscount.toFixed(2)}</span>
+              <Box className="flex justify-between p-3 border-b border-slate-200 dark:border-slate-800 text-sm">
+                <span className="text-slate-500">Item Discount</span>
+                <span className="font-medium">{(summary.itemDiscount || 0).toFixed(2)}</span>
               </Box>
-              <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700">
-                <span>Gross Amount</span>
-                <span>{summary.grossAmount.toFixed(2)}</span>
+              <Box className="flex justify-between p-3 border-b border-slate-200 dark:border-slate-800 text-sm">
+                <span className="text-slate-500">Gross Amount</span>
+                <span className="font-medium">{(summary.grossAmount || 0).toFixed(2)}</span>
               </Box>
-              <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700">
-                <span>Taxable Amount</span>
-                <span>{summary.taxableAmount.toFixed(2)}</span>
+              <Box className="flex justify-between p-3 border-b border-slate-200 dark:border-slate-800 text-sm">
+                <span className="text-slate-500">Taxable Amount</span>
+                <span className="font-medium">{(summary.taxableAmount || 0).toFixed(2)}</span>
               </Box>
-              <Box className="flex justify-between p-2 border-b border-gray-200 dark:border-gray-700 text-blue-600 cursor-pointer" onClick={() => setShowTaxBreakdown(!showTaxBreakdown)}>
-                <span>Tax</span>
-                <span>{summary.itemTax.toFixed(2)}</span>
+              <Box className="flex justify-between p-3 border-b border-slate-200 dark:border-slate-800 text-sm group cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors" onClick={() => setShowTaxBreakdown(!showTaxBreakdown)}>
+                <span className="text-blue-600 dark:text-blue-400 flex items-center gap-1 font-medium">
+                  Tax{" "}
+                  <Box component="span" sx={{ fontSize: "10px", opacity: 0.7 }}>
+                    {showTaxBreakdown ? "▲" : "▼"}
+                  </Box>
+                </span>
+                <span className="text-blue-600 dark:text-blue-400 font-bold">{(summary.itemTax || 0).toFixed(2)}</span>
               </Box>
-              <Box className="flex justify-between items-center p-2 border-b border-gray-200 dark:border-gray-700 text-blue-600">
-                <span>Roundoff</span>
+              <Box className="flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-800">
+                <span className="text-slate-500 text-sm">Roundoff</span>
                 <Box width={100}>
                   <CommonTextField type="number" value={roundOffAmount} onChange={onRoundOffAmountChange} />
                 </Box>
               </Box>
-              <Box className="flex justify-between p-3 text-lg font-semibold">
-                <span>Net Amount</span>
-                <span>
-                  <span>{summary.netAmount.toFixed(2)}</span>
-                </span>
+              <Box className="flex justify-between p-4 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300">
+                <span className="text-lg font-bold">Net Amount</span>
+                <span className="text-xl font-black">₹{(summary.netAmount || 0).toFixed(2)}</span>
               </Box>
             </Box>
           </CommonCard>
@@ -155,4 +132,5 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ showAddit
     </CommonCard>
   );
 };
+
 export default AdditionalChargesSection;
