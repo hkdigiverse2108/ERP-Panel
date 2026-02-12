@@ -225,7 +225,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
       {/* ================= TAB 3 : RETURN PRODUCT ================= */}
       <CommonTabPanel value={tabValue} index={2}>
         <Box sx={{ mt: 2 }}>
-          <CommonCard>
+          <CommonCard hideDivider>
             <Box className="custom-scrollbar" sx={{ width: "100%", overflowX: "auto" }}>
               <Box sx={{ border: "1px solid", borderColor: "divider" }}>
                 <CommonTable data={returnRows} columns={ReturnRowColumns} rowKey={(_, i) => i} showFooter />
