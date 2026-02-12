@@ -7,6 +7,7 @@ import { Mutations } from "../../../../../Api";
 import { RemoveEmptyFields } from "../../../../../Utils";
 import { clearPosProduct } from "../../../../../Store/Slices/PosSlice";
 import type { PosProductType } from "../../../../../Types";
+import { POS_PAYMENT_METHOD } from "../../../../../Data";
 
 const keypad = ["1", "2", "3", "+5", "+100", "4", "5", "6", "+10", "+500", "7", "8", "9", "+20", "+2000", "C", "0", ".", "+50", "⌫"];
 
@@ -77,6 +78,7 @@ const Cash = () => {
         unitCost: item?.unitCost,
         netAmount: item?.netAmount,
       })),
+      paymentMethod: POS_PAYMENT_METHOD.CASH,
       multiplePayments: [
         {
           method: "cash",

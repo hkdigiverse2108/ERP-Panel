@@ -20,6 +20,7 @@ import { Mutations } from "../../../../../Api";
 import { RemoveEmptyFields } from "../../../../../Utils";
 import type { PosProductType } from "../../../../../Types";
 import { useMemo } from "react";
+import { POS_PAYMENT_METHOD } from "../../../../../Data";
 
 const PosFooter = () => {
   const { PosProduct } = useAppSelector((state) => state.pos);
@@ -85,6 +86,7 @@ const PosFooter = () => {
     const payload = {
       ...rest,
       items: mappedItems,
+      paymentMethod: POS_PAYMENT_METHOD.UPI,
       multiplePayments: [
         {
           method: "upi",
@@ -97,7 +99,7 @@ const PosFooter = () => {
 
   const handlePayLater = () => {
     if (!validate(true)) return;
-    dispatch(setPayLaterModal());
+    dispatch(setPayLaterModal({ open: true, data: [] }));
   };
 
   const handleCard = () => {

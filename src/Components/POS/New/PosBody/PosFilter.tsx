@@ -32,7 +32,7 @@ const PosFilter = () => {
   useEffect(() => {
     dispatch(setPosLoading(productByIdLoading || productByIdFetching));
   }, [productByIdLoading, productByIdFetching, dispatch]);
-
+  console.log("productById",productById?.data);
   useEffect(() => {
     if (!productById?.data) return;
     dispatch(addOrUpdateProduct(productById.data));
