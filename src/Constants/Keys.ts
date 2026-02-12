@@ -151,12 +151,6 @@ export const KEYS = {
     EDIT: "pos-edit",
     DELETE: "pos-delete",
   },
-  PAY_LATER: {
-    BASE: "pay-later",
-    ADD: "pay-later-add",
-    EDIT: "pay-later-edit",
-    DELETE: "pay-later-delete",
-  },
   ADDITIONAL_CHARGES: {
     BASE: "additional-charge",
     ADD: "additional-charge-add",

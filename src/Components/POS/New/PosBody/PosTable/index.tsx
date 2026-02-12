@@ -12,7 +12,7 @@ import QtyCount from "./QtyCount";
 import { CommonTable } from "../../../../Common";
 
 const PosTable = () => {
-  const { PosProduct } = useAppSelector((state) => state.pos);
+  const { PosProduct, isPosLoading } = useAppSelector((state) => state.pos);
   const productData = PosProduct.items;
 
   const dispatch = useAppDispatch();
@@ -129,6 +129,7 @@ const PosTable = () => {
   ];
 
   const CommonTableOption = {
+    isLoading: isPosLoading,
     data: productData,
     rowKey: (row: PosProductDataModal) => row._id,
     columns: columns,

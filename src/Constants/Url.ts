@@ -162,12 +162,6 @@ export const URL_KEYS = {
     EDIT: "/pos-order/edit",
     DELETE: "/pos-order/delete",
   },
-  PAY_LATER: {
-    BASE: "/pay-later",
-    ADD: "/pay-later/add",
-    EDIT: "/pay-later/edit",
-    DELETE: "/pay-later/delete",
-  },
   ADDITIONAL_CHARGES: {
     BASE: "/additional-charge",
     DROPDOWN: "/additional-charge/dropdown",
