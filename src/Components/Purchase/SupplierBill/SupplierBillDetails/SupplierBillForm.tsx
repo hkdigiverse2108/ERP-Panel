@@ -1,22 +1,22 @@
 import { Box } from "@mui/material";
 import { Form, Formik, useFormikContext, type FormikHelpers, type FormikProps } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
-import { PAGE_TITLE } from "../../../Constants";
-import { DateConfig, GenerateOptions } from "../../../Utils";
-import type { Supplier, SupplierBillFormValues, ProductRow, AdditionalChargeRow, SupplierBillProductDetails, AdditionalChargeDetails, SupplierBillProductItem, AdditionalChargeItem } from "../../../Types/SupplierBill";
-import { BREADCRUMBS } from "../../../Data";
-import { Mutations, Queries } from "../../../Api";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Common";
+import { PAGE_TITLE } from "../../../../Constants";
+import { DateConfig, GenerateOptions } from "../../../../Utils";
+import type { Supplier, SupplierBillFormValues, ProductRow, AdditionalChargeRow, SupplierBillProductDetails, AdditionalChargeDetails, SupplierBillProductItem, AdditionalChargeItem } from "../../../../Types/SupplierBill";
+import { BREADCRUMBS } from "../../../../Data";
+import { Mutations, Queries } from "../../../../Api";
 import { useEffect, useRef, useState } from "react";
-import TermsAndConditionModal from "./TermsAndConditionModal";
+import TermsAndConditionModal from "../TermsAndCondition/TermsAndConditionModal";
 import SupplierBillTabs from "./SupplierBillTab";
-import AdditionalChargesSection from "./AdditionalChargeSection";
+import AdditionalChargesSection from "../AdditionalChargeSection";
 import SupplierBillDetails from "./SupplierBillDetails";
-import type { TermsConditionBase } from "../../../Types/TermsAndCondition";
-import type { ProductBase } from "../../../Types";
-import TermsSelectionModal from "./TermsSelectionModal";
-import { usePagePermission } from "../../../Utils/Hooks";
-import { useAppSelector } from "../../../Store/hooks";
+import type { TermsConditionBase } from "../../../../Types/TermsAndCondition";
+import type { ProductBase } from "../../../../Types";
+import TermsSelectionModal from "../TermsAndCondition/TermsSelectionModal";
+import { usePagePermission } from "../../../../Utils/Hooks";
+import { useAppSelector } from "../../../../Store/hooks";
 
 const TaxTypeWatcher = ({ onChange }: { onChange: (taxType: string) => void }) => {
   const { values } = useFormikContext<SupplierBillFormValues>();

@@ -1,13 +1,13 @@
 import { Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import type { FC } from "react";
-import { CommonCard, CommonModal } from "../../../Components/Common";
-import { CommonButton, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
-import type { TermsConditionFormValues, TermsAndConditionModalProps, TermsConditionBase } from "../../../Types/TermsAndCondition";
-import { useAppSelector } from "../../../Store/hooks";
+import { CommonCard, CommonModal } from "../../../Common";
+import { CommonButton, CommonValidationSwitch, CommonValidationTextField } from "../../../../Attribute";
+import type { TermsConditionFormValues, TermsAndConditionModalProps, TermsConditionBase } from "../../../../Types/TermsAndCondition";
+import { useAppSelector } from "../../../../Store/hooks";
 import { useDispatch } from "react-redux";
-import { setTermsAndConditionModal } from "../../../Store/Slices/ModalSlice";
-import { Mutations } from "../../../Api";
+import { setTermsAndConditionModal } from "../../../../Store/Slices/ModalSlice";
+import { Mutations } from "../../../../Api";
 
 const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ onSave }) => {
   const { isTermsAndConditionModal } = useAppSelector((state) => state.modal);

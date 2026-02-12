@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
-import { PAYMENT_TERMS, REVERSE_CHARGE, TAX_TYPE } from "../../../Data";
-import type { Supplier } from "../../../Types/SupplierBill";
+import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../../Attribute";
+import { PAYMENT_TERMS, REVERSE_CHARGE, TAX_TYPE } from "../../../../Data";
+import type { Supplier } from "../../../../Types/SupplierBill";
 
 interface Props {
   supplierOptions: { label: string; value: string }[];

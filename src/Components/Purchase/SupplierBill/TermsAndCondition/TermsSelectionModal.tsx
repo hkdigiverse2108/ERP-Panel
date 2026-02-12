@@ -2,12 +2,12 @@ import { Grid } from "@mui/material";
 import { Formik, Form, type FormikHelpers } from "formik";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { CommonModal, CommonCard } from "../../../Components/Common";
-import { CommonCheckbox, CommonButton } from "../../../Attribute";
-import type { TermsConditionBase, TermsSelectionFormValues, TermsConditionApiResponse } from "../../../Types/TermsAndCondition";
-import { useAppSelector } from "../../../Store/hooks";
-import { Queries } from "../../../Api";
-import { setTermsSelectionModal } from "../../../Store/Slices/ModalSlice";
+import { CommonModal, CommonCard } from "../../../Common";
+import { CommonCheckbox, CommonButton } from "../../../../Attribute";
+import type { TermsConditionBase, TermsSelectionFormValues, TermsConditionApiResponse } from "../../../../Types/TermsAndCondition";
+import { useAppSelector } from "../../../../Store/hooks";
+import { Queries } from "../../../../Api";
+import { setTermsSelectionModal } from "../../../../Store/Slices/ModalSlice";
 
 const TermsSelectionModal = () => {
   const dispatch = useDispatch();

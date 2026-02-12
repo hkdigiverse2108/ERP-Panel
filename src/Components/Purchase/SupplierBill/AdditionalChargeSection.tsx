@@ -2,10 +2,10 @@ import { Box } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { CommonButton, CommonSelect, CommonTextField } from "../../../Attribute";
-import CommonCard from "../../../Components/Common/CommonCard";
+import CommonCard from "../../Common/CommonCard";
 import { useState, type FC } from "react";
 import type { AdditionalChargeRow } from "../../../Types/SupplierBill";
-import { CommonTable } from "../../../Components/Common";
+import { CommonTable } from "../../Common";
 import type { CommonTableColumn } from "../../../Types";
 
 interface AdditionalChargesSectionProps {
