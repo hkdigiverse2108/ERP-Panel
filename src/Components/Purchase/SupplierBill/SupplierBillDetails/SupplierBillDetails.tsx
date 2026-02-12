@@ -42,7 +42,7 @@ const SupplierBillDetails = ({ supplierOptions, selectedSupplier, isEditing }: S
         <CommonValidationSelect name="reverseCharge" label="Reverse Charge" options={REVERSE_CHARGE} />
         <CommonValidationDatePicker name="shippingDate" label="Shipping Date" required />
         <CommonValidationSelect name="taxType" label="Tax Type" options={TAX_TYPE} />
-        <CommonValidationTextField name="invoiceAmount" label="Invoice Amount" />
+        <CommonValidationTextField name="invoiceAmount" label="Invoice Amount" required />
         <CommonValidationSwitch name="exportSez" label="Export / SEZ" />
       </Box>
     </Box>
