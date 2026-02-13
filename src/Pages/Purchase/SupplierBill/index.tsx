@@ -7,7 +7,7 @@ import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { Queries, Mutations } from "../../../Api";
 import type { AppGridColDef, SupplierBillBase } from "../../../Types";
 import { CreateFilter, FormatDate } from "../../../Utils";
-import { BREADCRUMBS } from "../../../Data";
+import { BREADCRUMBS, PAYMENT_STATUS_OPTIONS } from "../../../Data";
 
 const SupplierBill = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
@@ -34,11 +34,6 @@ const SupplierBill = () => {
       { label: "Unpaid", value: unpaid },
     ];
   }, [rows]);
-  const PAYMENT_STATUS_OPTIONS = [
-    { label: "All", value: "" },
-    { label: "Paid", value: "paid" },
-    { label: "Unpaid", value: "unpaid" },
-  ];
   const filter = [CreateFilter("Payment Status", "paymentStatus", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
 
   const columns: AppGridColDef<SupplierBillBase>[] = [
