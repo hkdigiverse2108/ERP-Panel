@@ -10,7 +10,7 @@ interface UseTaxDetailsProps {
   roundOffAmount: string | number;
 }
 
-export const useTaxDetails = ({ rows, additionalChargeRows, flatDiscount, roundOffAmount }: UseTaxDetailsProps) => {
+export const TaxDetails = ({ rows, additionalChargeRows, flatDiscount, roundOffAmount }: UseTaxDetailsProps) => {
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
 
   const summary = useMemo(() => {

@@ -26,7 +26,7 @@ import BillOfMaterials from "../Pages/Inventory/BillOfLiveProduct";
 import BillOfMaterialsForm from "../Pages/Inventory/BillOfLiveProduct/BillOfLiveProductForm";
 import Permission from "../Pages/Employee/Permission";
 import SupplierBill from "../Pages/Purchase/SupplierBill";
-import SupplierBillForm from "../Components/Purchase/SupplierBill/SupplierBillDetails/SupplierBillForm";
+import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
 import MaterialConsumption from "../Pages/Inventory/MaterialConsumption";
 import MaterialConsumptionForm from "../Pages/Inventory/MaterialConsumption/MaterialConsumptionForm";
 

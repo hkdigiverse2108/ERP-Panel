@@ -1,20 +1,20 @@
 import { Box } from "@mui/material";
 import { Form, Formik, useFormikContext, type FormikHelpers, type FormikProps } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Common";
-import { PAGE_TITLE } from "../../../../Constants";
-import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../../Utils";
-import { BREADCRUMBS } from "../../../../Data";
-import { Mutations, Queries } from "../../../../Api";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
+import { PAGE_TITLE } from "../../../Constants";
+import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
+import { BREADCRUMBS } from "../../../Data";
+import { Mutations, Queries } from "../../../Api";
 import { useEffect, useRef, useState } from "react";
-import TermsAndConditionModal from "../TermsAndCondition/TermsAndConditionModal";
-import SupplierBillTabs from "./SupplierBillTab";
-import AdditionalChargesSection from "../AdditionalChargeSection";
-import SupplierBillDetails from "./SupplierBillDetails";
-import type { AdditionalChargeDetails, AdditionalChargeItem, AdditionalChargeRow, ProductBase, ProductRow, Supplier, SupplierBillFormValues, SupplierBillProductDetails, SupplierBillProductItem, TermsConditionBase } from "../../../../Types";
-import TermsSelectionModal from "../TermsAndCondition/TermsSelectionModal";
-import { usePagePermission } from "../../../../Utils/Hooks";
-import { useAppSelector } from "../../../../Store/hooks";
+import TermsAndConditionModal from "../../../Components/Purchase/SupplierBill/TermsAndCondition/TermsAndConditionModal";
+import SupplierBillTabs from "../../../Components/Purchase/SupplierBill/SupplierBillDetails/SupplierBillTab";
+import AdditionalChargesSection from "../../../Components/Purchase/SupplierBill/AdditionalChargeSection";
+import SupplierBillDetails from "../../../Components/Purchase/SupplierBill/SupplierBillDetails/SupplierBillDetails";
+import type { AdditionalChargeDetails, AdditionalChargeItem, AdditionalChargeRow, ProductBase, ProductRow, Supplier, SupplierBillFormValues, SupplierBillProductDetails, SupplierBillProductItem, TermsConditionBase } from "../../../Types";
+import TermsSelectionModal from "../../../Components/Purchase/SupplierBill/TermsAndCondition/TermsSelectionModal";
+import { usePagePermission } from "../../../Utils/Hooks";
+import { useAppSelector } from "../../../Store/hooks";
 
 const TaxTypeWatcher = ({ onChange }: { onChange: (taxType: string) => void }) => {
   const { values } = useFormikContext<SupplierBillFormValues>();
@@ -40,7 +40,7 @@ const SupplierBillForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE);
-  const { data } = location.state || {};
+  const data = location.state?.data;
   const { data: supplierData } = Queries.useGetContactDropdown({ activeFilter: true, typeFilter: "supplier" });
   const suppliers = (supplierData?.data || []) as Supplier[];
   const supplierOptions = GenerateOptions(suppliers);
@@ -130,11 +130,13 @@ const SupplierBillForm = () => {
     const response = termsConditionData.data;
     const all: TermsConditionBase[] = Array.isArray(response) ? response : (response.termsCondition_data ?? []);
     setAllTerms(all);
-    if (!isEditing) {
+    if (isEditing && data?.termsAndConditionIds) {
+      setSelectedTermIds(data.termsAndConditionIds.map((t: TermsConditionBase) => t._id));
+    } else {
       const defaultTerms = all.filter((t) => t.isDefault);
       setSelectedTermIds(defaultTerms.map((t) => t._id));
     }
-  }, [termsConditionData, isEditing]);
+  }, [termsConditionData, isEditing, data]);
   useEffect(() => {
     if (isEditing && data) {
       if (data.productDetails?.item) {
@@ -160,9 +162,7 @@ const SupplierBillForm = () => {
       if (data.returnProductDetails?.summary?.roundOff) {
         setReturnRoundOffAmount(data.returnProductDetails.summary.roundOff);
       }
-      if (data.termsAndConditionIds) {
-        setSelectedTermIds(data.termsAndConditionIds.map((t: any) => t._id));
-      }
+      setSelectedTermIds(data.termsAndConditionIds.map((t: TermsConditionBase) => t._id));
     }
   }, [data, isEditing]);
 
@@ -330,8 +330,11 @@ const SupplierBillForm = () => {
     setAllTerms((prev) => prev.filter((term) => term._id !== id));
   };
   const defaultValues: SupplierBillFormValues = { supplierId: "", supplierBillNo: "", supplierBillDate: DateConfig.utc().toISOString(), taxType: "exclusive", paymentTerm: "", dueDate: "", reverseCharge: false, shippingDate: "", invoiceAmount: "", termsAndConditionIds: [], notes: "", paidAmount: 0, balanceAmount: 0, paymentStatus: "unpaid", status: "active", isActive: true };
-  const { _id, createdAt, updatedAt, isDeleted, createdBy, updatedBy, __v, ...cleanData } = (data || {}) as any;
-  const initialValues: SupplierBillFormValues = { ...defaultValues, ...cleanData, supplierId: cleanData?.supplierId?._id || cleanData?.supplierId || defaultValues.supplierId, companyId: cleanData?.companyId?._id || cleanData?.companyId || "", branchId: cleanData?.branchId?._id || cleanData?.branchId || "", termsAndConditionIds: data?.termsAndConditionIds?.map((t: { _id: string }) => t._id) || [] };
+
+  const { _id, createdAt, updatedAt, isDeleted, createdBy, updatedBy, __v, ...cleanData } = data || {};
+
+  const initialValues: SupplierBillFormValues = { ...defaultValues, ...cleanData, supplierId: cleanData?.supplierId?._id || cleanData?.supplierId || defaultValues.supplierId, companyId: cleanData?.companyId?._id || cleanData?.companyId || "", branchId: cleanData?.branchId?._id || cleanData?.branchId || "", reverseCharge: Boolean(cleanData?.reverseCharge), termsAndConditionIds: data?.termsAndConditionIds?.map((t: { _id: string }) => t._id) || [] };
+
   const handleSubmit = async (values: SupplierBillFormValues, { resetForm }: FormikHelpers<SupplierBillFormValues>) => {
     const { taxSummary, ...restSummary } = summary;
     const payload: SupplierBillFormValues = { ...values, productDetails: mapProductRows(), additionalCharges: mapAdditionalCharges(), termsAndConditionIds: selectedTermIds, summary: restSummary };
@@ -352,7 +355,7 @@ const SupplierBillForm = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.SUPPLIER_BILL[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.SUPPLIER_BILL[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8, display: "grid", gap: 2 }}>
-        <Formik innerRef={formikRef} initialValues={initialValues} onSubmit={handleSubmit}>
+        <Formik innerRef={formikRef} initialValues={initialValues} onSubmit={handleSubmit} enableReinitialize>
           {() => (
             <>
               <Form noValidate>

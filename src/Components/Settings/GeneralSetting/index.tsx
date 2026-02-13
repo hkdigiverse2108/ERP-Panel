@@ -4,5 +4,7 @@ import UserForm from "./Profile/UserForm";
 import UserRoles from "./UserRoles";
 import CompanyProfile from "./CompanyProfile";
 import CompanyForm from "./CompanyProfile/CompanyForm";
+import AdditionalCharges from "./AdditionalCharges";
+import AdditionalChargesForm from "./AdditionalCharges/AdditionalChargesForm";
 
-export { ReportFormats, Profile, UserForm, UserRoles, CompanyProfile, CompanyForm };
+export { ReportFormats, Profile, UserForm, UserRoles, CompanyProfile, CompanyForm , AdditionalCharges, AdditionalChargesForm };
