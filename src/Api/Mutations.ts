@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AddAdditionalChargesPayload, AddBankPayload, AddBillOfLiveProductPayload, AddContactPayload, AddEmployeePayload, AddMaterialConsumptionPayload, AddPosProductOrderPayload, AddProductPayload, AddRecipePayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddStockVerificationPayload, AddSupplierBillPayload, AddTermsConditionPayload, CallRequestFormValues, CompanyApiResponse, EditAdditionalChargesPayload, EditBankPayload, EditBillOfLiveProductPayload, EditCompanyPayload, EditContactPayload, EditEmployeePayload, EditMaterialConsumptionPayload, EditPermissionPayload, EditPosProductOrderPayload, EditProductPayload, EditRecipePayload, EditRolesPayload, EditStockVerificationPayload, EditSupplierBillPayload, EditTermsConditionPayload, EmployeeApiResponse, LoginPayload, LoginResponse, UploadResponse } from "../Types";
+import type { AddAdditionalChargesPayload, AddBankPayload, AddBillOfLiveProductPayload, AddContactPayload, AddEmployeePayload, AddMaterialConsumptionPayload, AddPosPaymentPayload, AddPosProductOrderPayload, AddProductPayload, AddRecipePayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddStockVerificationPayload, AddSupplierBillPayload, AddTermsConditionPayload, CallRequestFormValues, CompanyApiResponse, EditAdditionalChargesPayload, EditBankPayload, EditBillOfLiveProductPayload, EditCompanyPayload, EditContactPayload, EditEmployeePayload, EditMaterialConsumptionPayload, EditPermissionPayload, EditPosPaymentPayload, EditPosProductOrderPayload, EditProductPayload, EditRecipePayload, EditRolesPayload, EditStockVerificationPayload, EditSupplierBillPayload, EditTermsConditionPayload, EmployeeApiResponse, LoginPayload, LoginResponse, UploadResponse } from "../Types";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
 
@@ -86,6 +86,11 @@ export const Mutations = {
   useAddPosOrder: () => useMutations<AddPosProductOrderPayload, void>([KEYS.POS.ADD, KEYS.POS.BASE,KEYS.POS.HOLD_ORDER], (input) => Post(URL_KEYS.POS.ADD, input)),
   useEditPosOrder: () => useMutations<EditPosProductOrderPayload, void>([KEYS.POS.EDIT, KEYS.POS.BASE,KEYS.POS.HOLD_ORDER], (input) => Put(URL_KEYS.POS.EDIT, input)),
   useDeletePosOrder: () => useMutations<string, void>([KEYS.POS.DELETE, KEYS.POS.BASE,KEYS.POS.HOLD_ORDER], (id) => Delete(`${URL_KEYS.POS.BASE}/${id}`)),
+
+  // ************ POS Payment ************
+  useAddPosPayment: () => useMutations<AddPosPaymentPayload, void>([KEYS.PAYMENT.ADD, KEYS.PAYMENT.BASE], (input) => Post(URL_KEYS.PAYMENT.ADD, input)),
+  useEditPosPayment: () => useMutations<EditPosPaymentPayload, void>([KEYS.PAYMENT.EDIT, KEYS.PAYMENT.BASE], (input) => Put(URL_KEYS.PAYMENT.EDIT, input)),
+  useDeletePosPayment: () => useMutations<string, void>([KEYS.PAYMENT.DELETE, KEYS.PAYMENT.BASE], (id) => Delete(`${URL_KEYS.PAYMENT.BASE}/${id}`)),
 
   //*************** additional charges **************** */
   useAddAdditionalCharges: () => useMutations<AddAdditionalChargesPayload, void>([KEYS.ADDITIONAL_CHARGES.ADD, KEYS.ADDITIONAL_CHARGES.BASE], (input) => Post(URL_KEYS.ADDITIONAL_CHARGES.ADD, input)),
