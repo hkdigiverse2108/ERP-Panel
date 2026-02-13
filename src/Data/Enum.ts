@@ -134,9 +134,9 @@ export const GST_TYPE = [
 ];
 
 export const PAYMENTS = [
-  { label: "Receipt", value: "Receipt" },
-  { label: "Payment", value: "Payment" },
-  { label: "Expense", value: "Expense" },
+  { label: "Receipt", value: "receipt" },
+  { label: "Payment", value: "payment" },
+  { label: "Expense", value: "expense" },
 ];
 
 export const VOUCHER_TYPE = [
