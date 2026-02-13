@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { CommonModal, CommonCard } from "../../../Common";
 import { CommonCheckbox, CommonButton } from "../../../../Attribute";
-import type { TermsConditionBase, TermsSelectionFormValues, TermsConditionApiResponse } from "../../../../Types/TermsAndCondition";
 import { useAppSelector } from "../../../../Store/hooks";
 import { Queries } from "../../../../Api";
 import { setTermsSelectionModal } from "../../../../Store/Slices/ModalSlice";
+import type { TermsConditionApiResponse, TermsConditionBase, TermsSelectionFormValues } from "../../../../Types";
 
 const TermsSelectionModal = () => {
   const dispatch = useDispatch();

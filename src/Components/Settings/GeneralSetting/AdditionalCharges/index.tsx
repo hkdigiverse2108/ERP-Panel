@@ -1,8 +1,7 @@
 import { useDataGrid } from "../../../../Utils/Hooks";
 import { PAGE_TITLE } from "../../../../Constants";
 import { Mutations, Queries } from "../../../../Api";
-import type { AdditionalChargesBase } from "../../../../Types/AdditionalCharges";
-import type { AppGridColDef } from "../../../../Types";
+import type { AdditionalChargesBase, AppGridColDef } from "../../../../Types";
 import { CommonActionColumn, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Common";
 import { useDispatch } from "react-redux";
 import { setAdditionalChargeModal } from "../../../../Store/Slices/ModalSlice";

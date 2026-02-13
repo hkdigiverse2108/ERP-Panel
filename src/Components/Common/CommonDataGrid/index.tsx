@@ -70,7 +70,7 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({ slots, slotProps, isExport, p
         filterModel={filterModel}
         onFilterModelChange={onFilterModelChange}
         disableRowSelectionOnClick
-        sx={{ "--DataGrid-overlayHeight": "300px" }}
+        sx={{ "--DataGrid-overlayHeight": "200px" }}
       />
     </div>
   );

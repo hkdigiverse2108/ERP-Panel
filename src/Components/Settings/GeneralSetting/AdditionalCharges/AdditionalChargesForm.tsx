@@ -3,7 +3,6 @@ import { Form, Formik, type FormikHelpers } from "formik";
 import { Mutations, Queries } from "../../../../Api";
 import { CommonButton, CommonValidationTextField, CommonValidationSwitch, CommonValidationSelect, CommonValidationRadio } from "../../../../Attribute";
 import { PAGE_TITLE } from "../../../../Constants";
-import type { AdditionalChargesFormValues } from "../../../../Types/AdditionalCharges";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../../Utils";
 import { AdditionalChargesFormSchema } from "../../../../Utils/ValidationSchemas";
 import { CommonCard, CommonModal, DependentSelect } from "../../../Common";
@@ -11,6 +10,7 @@ import { useAppSelector } from "../../../../Store/hooks";
 import { useDispatch } from "react-redux";
 import { setAdditionalChargeModal } from "../../../../Store/Slices/ModalSlice";
 import { OPTION_TYPE } from "../../../../Data";
+import type { AdditionalChargesFormValues } from "../../../../Types";
 
 const AdditionalChargesForm = () => {
   const { mutate: addAdditionalCharge, isPending: isAddLoading } = Mutations.useAddAdditionalCharges();

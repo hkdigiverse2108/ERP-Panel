@@ -3,13 +3,11 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { CommonButton, CommonSelect, CommonTextField } from "../../../../Attribute";
-import type { ProductRow } from "../../../../Types/SupplierBill";
 import type { FC } from "react";
 import { CommonTabPanel, CommonCard } from "../../../Common";
 import { GridDeleteIcon } from "@mui/x-data-grid";
 import { CommonTable } from "../../../Common";
-import type { CommonTableColumn } from "../../../../Types";
-import type { TermsConditionBase } from "../../../../Types/TermsAndCondition";
+import type { CommonTableColumn, ProductRow, TermsConditionBase } from "../../../../Types";
 import { useDispatch } from "react-redux";
 import { setTermsAndConditionModal, setTermsSelectionModal } from "../../../../Store/Slices/ModalSlice";
 
@@ -188,18 +186,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
                 <CommonButton startIcon={<AddIcon />} onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: null }))}>
                   New Term
                 </CommonButton>
-
-                <CommonButton
-                  startIcon={<EditIcon />}
-                  onClick={() =>
-                    dispatch(
-                      setTermsSelectionModal({
-                        open: true,
-                        data: termsList.map((t) => t._id),
-                      }),
-                    )
-                  }
-                >
+                <CommonButton startIcon={<EditIcon />} onClick={() => dispatch(setTermsSelectionModal({ open: true, data: termsList.map((t) => t._id) }))}>
                   Edit Terms
                 </CommonButton>
               </Box>
@@ -225,7 +212,7 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
       {/* ================= TAB 3 : RETURN PRODUCT ================= */}
       <CommonTabPanel value={tabValue} index={2}>
         <Box sx={{ mt: 2 }}>
-          <CommonCard>
+          <CommonCard hideDivider>
             <Box className="custom-scrollbar" sx={{ width: "100%", overflowX: "auto" }}>
               <Box sx={{ border: "1px solid", borderColor: "divider" }}>
                 <CommonTable data={returnRows} columns={ReturnRowColumns} rowKey={(_, i) => i} showFooter />

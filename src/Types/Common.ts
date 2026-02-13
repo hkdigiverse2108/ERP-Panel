@@ -128,6 +128,7 @@ export interface UseDataGridOptions {
   active?: boolean;
   debounceDelay?: number;
   pagination?: boolean;
+  defaultFilterKey?: { [key: string]: string[] };
 }
 
 export interface CommonDataGridProps {

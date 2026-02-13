@@ -1,45 +1,57 @@
 import { Grid } from "@mui/material";
-import type { GridColDef } from "@mui/x-data-grid";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Queries } from "../../../../../../Api";
 import { CommonRadio } from "../../../../../../Attribute";
-import { PAYMENTS } from "../../../../../../Data";
+import { VOUCHER_TYPE } from "../../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setPaymentListModal } from "../../../../../../Store/Slices/ModalSlice";
-import type { BranchBase } from "../../../../../../Types";
+import type { AppGridColDef, PosPaymentBase } from "../../../../../../Types";
+import { FormatDate } from "../../../../../../Utils";
 import { useDataGrid } from "../../../../../../Utils/Hooks";
 import { CommonCard, CommonDataGrid, CommonModal } from "../../../../../Common";
 
 const PaymentList = () => {
   const { isPaymentListModal } = useAppSelector((state) => state.modal);
   const dispatch = useAppDispatch();
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params } = useDataGrid({ active: true });
-  const [contactType, setContactType] = useState("customer");
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, advancedFilter, updateAdvancedFilter, params } = useDataGrid({ pageSize: 5, active: true, defaultFilterKey: { voucherTypeFilter: [VOUCHER_TYPE[0].value] } });
 
-  const { data: branchData, isLoading: branchDataLoading, isFetching: branchDataFetching } = Queries.useGetBranch(params, isPaymentListModal);
-  const allBranches = useMemo(() => branchData?.data?.branch_data.map((branch) => ({ ...branch, id: branch?._id })) || [], [branchData]);
-  const totalRows = branchData?.data?.totalData || 0;
+  const { data: paymentData, isLoading: paymentDataLoading, isFetching: paymentDataFetching } = Queries.useGetPosPayment(params, isPaymentListModal);
 
-  const columns: GridColDef<BranchBase>[] = [
-    { field: "name", headerName: "Branch Name", flex: 1 },
-    { field: "address", headerName: "Address", flex: 2 },
+  const allPayments = useMemo(() => paymentData?.data?.posPayment_data.map((payment) => ({ ...payment, id: payment?._id })) || [], [paymentData]);
+  const totalRows = paymentData?.data?.totalData || 0;
+
+  const columns: AppGridColDef<PosPaymentBase>[] = [
+    { field: "paymentNo", headerName: "Payment No", width: 150 },
+    { field: "paymentMode", headerName: "Mode", width: 150 },
+    {
+      field: "paymentType",
+      headerName: "Type",
+      width: 150,
+      renderCell: (params) => (params.row.paymentType === "against_bill" ? "Against Bill" : "Advance"),
+      exportFormatter: (value) => (value === "against_bill" ? "Against Bill" : "Advance"),
+    },
+    { field: "amount", headerName: "Amount", type: "number", width: 150 },
+    { field: "createdAt", headerName: "Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.createdAt) },
   ];
+
   const CommonDataGridOption = {
     columns,
-    rows: allBranches,
+    rows: allPayments,
     rowCount: totalRows,
-    loading: branchDataLoading || branchDataFetching,
+    loading: paymentDataLoading || paymentDataFetching,
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    isExport: false,
   };
+
   const topContent = (
     <Grid container spacing={2} alignItems="center">
       <Grid size="auto">
-        <CommonRadio value={contactType} options={PAYMENTS} onChange={(e) => setContactType(e)} />
+        <CommonRadio value={advancedFilter?.voucherTypeFilter?.[0] || ""} options={VOUCHER_TYPE} onChange={(e) => updateAdvancedFilter("voucherTypeFilter", [e])} />
       </Grid>
     </Grid>
   );

@@ -32,7 +32,7 @@ const PosFilter = () => {
   useEffect(() => {
     dispatch(setPosLoading(productByIdLoading || productByIdFetching));
   }, [productByIdLoading, productByIdFetching, dispatch]);
-  console.log("productById",productById?.data);
+
   useEffect(() => {
     if (!productById?.data) return;
     dispatch(addOrUpdateProduct(productById.data));
@@ -42,7 +42,7 @@ const PosFilter = () => {
   return (
     <>
       <Grid container spacing={2} className="flex justify-between items-center w-full bg-white dark:bg-gray-dark p-2">
-        <CommonSelect label="Select Product" options={GenerateOptions(productDropdown?.data)} isLoading={productDropdownLoading} value={[isSelectProduct]} onChange={(e) => dispatch(setIsSelectProduct(e[0]))} limitTags={1} grid={{ xs: 12, xsm: 6, sm: 4 }} />
+        <CommonSelect label="Select Product" options={GenerateOptions(productDropdown?.data)} isLoading={productDropdownLoading} disabled={productByIdLoading || productByIdFetching} value={[isSelectProduct]} onChange={(e) => dispatch(setIsSelectProduct(e[0]))} limitTags={1} grid={{ xs: 12, xsm: 6, sm: 4 }} />
         <Grid size={{ xs: 12, xsm: 6, sm: 4 }} className="flex justify-end">
           <Grid container className="flex justify-center items-center w-full">
             <CommonSelect label="Select Customer" options={GenerateOptions(customerDropdown?.data)} isLoading={customerDropdownLoading} value={[PosProduct?.customerId]} onChange={handleCustomerChange} limitTags={1} grid={{ xs: 10 }} />

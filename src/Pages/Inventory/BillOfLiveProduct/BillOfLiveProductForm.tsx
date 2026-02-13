@@ -8,11 +8,9 @@ import { CommonButton, CommonTextField, CommonValidationDatePicker, CommonValida
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { ProductBase, RecipeBase } from "../../../Types";
+import type { BillOfLiveProductBase, BillOfLiveProductDetailUI, BillOfLiveProductFormValues, ProductBase, RecipeBase } from "../../../Types";
 import { GenerateOptions, DateConfig } from "../../../Utils";
 import { useLocation, useNavigate } from "react-router-dom";
-import type { BillOfLiveProductBase, BillOfLiveProductFormValues } from "../../../Types/BillOfMaterials";
-import type { BillOfLiveProductDetailUI } from "../../../Types/BillOfMaterials";
 import { usePagePermission } from "../../../Utils/Hooks";
 
 interface BomRow {
