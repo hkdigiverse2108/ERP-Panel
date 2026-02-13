@@ -2,7 +2,7 @@ import { Box, Tab, Tabs } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
-import { CommonButton, CommonSelect, CommonTextField } from "../../../../Attribute";
+import { CommonButton, CommonSelect, CommonTextField, CommonValidationTextField } from "../../../../Attribute";
 import type { FC } from "react";
 import { CommonTabPanel, CommonCard } from "../../../Common";
 import { GridDeleteIcon } from "@mui/x-data-grid";
@@ -19,8 +19,6 @@ interface SupplierBillTabsProps {
   handleCut: (index: number) => void;
   handleRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
   termsList: TermsConditionBase[];
-  notes: string;
-  setNotes: (value: string) => void;
   returnRows: ProductRow[];
   handleAddReturn: () => void;
   handleCutReturn: (index: number) => void;
@@ -32,7 +30,7 @@ interface SupplierBillTabsProps {
   handleDeleteTerm: (index: number) => void;
 }
 
-const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, notes, setNotes, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, handleDeleteTerm }) => {
+const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, handleDeleteTerm }) => {
   const dispatch = useDispatch();
   const ProductRowColumns: CommonTableColumn<ProductRow>[] = [
     {
@@ -193,19 +191,17 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
             }
           >
             <Box p={2}>
-              <Box sx={{ border: "1px solid", borderColor: "divider" }}>
+              <Box sx={{ borderRadius: 1, overflow: "hidden" }}>
                 <CommonTable data={termsList} columns={TermsColumns} rowKey={(row) => row._id || ""} />
               </Box>
             </Box>
           </CommonCard>
-          <CommonCard title="Note" hideDivider>
-            <Box p={2}>
-              <CommonTextField multiline rows={4} value={notes} onChange={(v: string) => setNotes(v)} />
-              <Box mt={1} fontSize={12}>
-                {notes.length}/200 characters
-              </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2, mb: 4 }}>
+            <Box sx={{ width: "100%", maxWidth: "1100px" }}>
+              <CommonValidationTextField name="notes" label="Note" multiline rows={6} placeholder="Minimum 200 characters" />
             </Box>
-          </CommonCard>
+          </Box>
         </Box>
       </CommonTabPanel>
 
@@ -213,8 +209,8 @@ const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, ro
       <CommonTabPanel value={tabValue} index={2}>
         <Box sx={{ mt: 2 }}>
           <CommonCard hideDivider>
-            <Box className="custom-scrollbar" sx={{ width: "100%", overflowX: "auto" }}>
-              <Box sx={{ border: "1px solid", borderColor: "divider" }}>
+            <Box className="custom-scrollbar" sx={{ overflowX: "auto" }}>
+              <Box sx={{ minWidth: 1300 }}>
                 <CommonTable data={returnRows} columns={ReturnRowColumns} rowKey={(_, i) => i} showFooter />
               </Box>
             </Box>
