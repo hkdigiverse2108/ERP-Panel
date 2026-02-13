@@ -1,4 +1,5 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { AdditionalChargeRow, ProductRow } from "./SupplierBill";
 
 export interface TaxFormValues {
   name?: string;
@@ -22,4 +23,10 @@ export interface TaxApiResponse extends MessageStatus {
 
 export interface TaxDropdownApiResponse extends MessageStatus {
   data: TaxBase[];
+}
+export interface TaxDetailsProps {
+  rows: ProductRow[];
+  additionalChargeRows: AdditionalChargeRow[];
+  flatDiscount: string | number;
+  roundOffAmount: string | number;
 }

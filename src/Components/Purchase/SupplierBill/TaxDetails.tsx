@@ -1,16 +1,7 @@
 import { useMemo } from "react";
 import { Queries } from "../../../Api";
-import type { AdditionalChargeRow, ProductRow } from "../../../Types";
-
-
-interface UseTaxDetailsProps {
-  rows: ProductRow[];
-  additionalChargeRows: AdditionalChargeRow[];
-  flatDiscount: string | number;
-  roundOffAmount: string | number;
-}
-
-export const TaxDetails = ({ rows, additionalChargeRows, flatDiscount, roundOffAmount }: UseTaxDetailsProps) => {
+import type { TaxDetailsProps } from "../../../Types";
+export const TaxDetails = ({ rows, additionalChargeRows, flatDiscount, roundOffAmount }: TaxDetailsProps) => {
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
 
   const summary = useMemo(() => {

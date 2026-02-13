@@ -3,34 +3,14 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { CommonButton, CommonSelect, CommonTextField, CommonValidationTextField } from "../../../../Attribute";
-import type { FC } from "react";
 import { CommonTabPanel, CommonCard } from "../../../Common";
 import { GridDeleteIcon } from "@mui/x-data-grid";
 import { CommonTable } from "../../../Common";
-import type { CommonTableColumn, ProductRow, TermsConditionBase } from "../../../../Types";
+import type { CommonTableColumn, ProductRow, SupplierBillTabsProps, TermsConditionBase } from "../../../../Types";
 import { useDispatch } from "react-redux";
 import { setTermsAndConditionModal, setTermsSelectionModal } from "../../../../Store/Slices/ModalSlice";
 
-interface SupplierBillTabsProps {
-  tabValue: number;
-  setTabValue: (value: number) => void;
-  rows: ProductRow[];
-  handleAdd: () => void;
-  handleCut: (index: number) => void;
-  handleRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
-  termsList: TermsConditionBase[];
-  returnRows: ProductRow[];
-  handleAddReturn: () => void;
-  handleCutReturn: (index: number) => void;
-  handleReturnRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
-  productOptions: { label: string; value: string }[];
-  isProductLoading: boolean;
-  returnRoundOffAmount: string | number;
-  onReturnRoundOffAmountChange: (value: string | number) => void;
-  handleDeleteTerm: (index: number) => void;
-}
-
-const SupplierBillTabs: FC<SupplierBillTabsProps> = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, handleDeleteTerm }) => {
+const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, handleDeleteTerm }: SupplierBillTabsProps) => {
   const dispatch = useDispatch();
   const ProductRowColumns: CommonTableColumn<ProductRow>[] = [
     {

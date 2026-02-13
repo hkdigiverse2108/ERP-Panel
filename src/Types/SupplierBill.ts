@@ -1,4 +1,4 @@
-import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { CommonDataType, MessageStatus, PageStatus, SelectOptionType } from "./Common";
 import type { ProductBase } from "./Product";
 import type { ContactBase } from "./Contacts";
 import type { TermsConditionBase } from "./TermsAndCondition";
@@ -159,13 +159,13 @@ export interface AdditionalChargesSectionProps {
   onAdd: () => void;
   onRemove: (index: number) => void;
   onChange: (index: number, field: keyof AdditionalChargeRow, value: string | number | string[]) => void;
-  taxOptions: { label: string; value: string }[];
+  taxOptions: SelectOptionType[];
   isTaxLoading: boolean;
   flatDiscount: string | number;
   onFlatDiscountChange: (value: string | number) => void;
   summary: SupplierBillSummary;
   isAdditionalChargeLoading: boolean;
-  additionalChargeOptions: { label: string; value: string }[];
+  additionalChargeOptions: SelectOptionType[];
   roundOffAmount: string | number;
   onRoundOffAmountChange: (value: string | number) => void;
 }
@@ -173,14 +173,10 @@ export interface AdditionalChargesSectionProps {
 /* ===================== COMPONENT PROPS ===================== */
 
 export interface SupplierBillDetailsProps {
-  supplierOptions: {
-    label: string;
-    value: string;
-  }[];
+  supplierOptions: SelectOptionType[];
   selectedSupplier: Supplier | null;
   isEditing: boolean;
 }
-
 
 /* ===================== API BASE ===================== */
 
@@ -255,4 +251,22 @@ export interface SupplierBillDataResponse extends PageStatus {
 
 export interface SupplierBillApiResponse extends MessageStatus {
   data: SupplierBillDataResponse;
+}
+export interface SupplierBillTabsProps {
+  tabValue: number;
+  setTabValue: (value: number) => void;
+  rows: ProductRow[];
+  handleAdd: () => void;
+  handleCut: (index: number) => void;
+  handleRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
+  productOptions: SelectOptionType[];
+  isProductLoading: boolean;
+  termsList: TermsConditionBase[];
+  handleDeleteTerm: (index: number) => void;
+  returnRows: ProductRow[];
+  handleAddReturn: () => void;
+  handleCutReturn: (index: number) => void;
+  handleReturnRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
+  returnRoundOffAmount: string | number;
+  onReturnRoundOffAmountChange: (value: string | number) => void;
 }

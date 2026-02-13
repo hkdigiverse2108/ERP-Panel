@@ -1,6 +1,5 @@
 import { Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
-import type { FC } from "react";
 import { CommonCard, CommonModal } from "../../../Common";
 import { CommonButton, CommonValidationSwitch, CommonValidationTextField } from "../../../../Attribute";
 import { useAppSelector } from "../../../../Store/hooks";
@@ -9,7 +8,7 @@ import { setTermsAndConditionModal } from "../../../../Store/Slices/ModalSlice";
 import { Mutations } from "../../../../Api";
 import type { TermsAndConditionModalProps, TermsConditionBase, TermsConditionFormValues } from "../../../../Types";
 
-const TermsAndConditionModal: FC<TermsAndConditionModalProps> = ({ onSave }) => {
+const TermsAndConditionModal = ({ onSave }: TermsAndConditionModalProps) => {
   const { isTermsAndConditionModal } = useAppSelector((state) => state.modal);
   const dispatch = useDispatch();
   const openModal = isTermsAndConditionModal.open;

@@ -3,11 +3,11 @@ import AddIcon from "@mui/icons-material/Add";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { CommonButton, CommonSelect, CommonTextField } from "../../../Attribute";
 import CommonCard from "../../Common/CommonCard";
-import { useState, type FC } from "react";
+import { useState } from "react";
 import { CommonTable } from "../../Common";
 import type { AdditionalChargeRow, AdditionalChargesSectionProps, CommonTableColumn } from "../../../Types";
 
-const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ show, onToggle, rows, onAdd, onRemove, onChange, taxOptions, isTaxLoading, flatDiscount, onFlatDiscountChange, summary, isAdditionalChargeLoading, additionalChargeOptions, roundOffAmount, onRoundOffAmountChange }) => {
+const AdditionalChargesSection = ({ show, onToggle, rows, onAdd, onRemove, onChange, taxOptions, isTaxLoading, flatDiscount, onFlatDiscountChange, summary, isAdditionalChargeLoading, additionalChargeOptions, roundOffAmount, onRoundOffAmountChange }: AdditionalChargesSectionProps) => {
   const [showTaxBreakdown, setShowTaxBreakdown] = useState(false);
 
   const AdditionalChargeColumns: CommonTableColumn<AdditionalChargeRow>[] = [
@@ -44,10 +44,10 @@ const AdditionalChargesSection: FC<AdditionalChargesSectionProps> = ({ show, onT
     rate: number;
     amount: number;
   }>[] = [
-      { key: "name", header: "Tax", headerClass: "text-left px-4 w-52", bodyClass: "text-left px-4 w-52" },
-      { key: "rate", header: "Tax Rate", headerClass: "text-center px-4 w-32", bodyClass: "text-center px-4 w-32 whitespace-nowrap", render: (row) => `${row.rate}%` },
-      { key: "amount", header: "Tax Amount", headerClass: "text-right px-4 w-36", bodyClass: "text-right px-4 w-36 whitespace-nowrap font-medium", render: (row) => row.amount.toFixed(2) },
-    ];
+    { key: "name", header: "Tax", headerClass: "text-left px-4 w-52", bodyClass: "text-left px-4 w-52" },
+    { key: "rate", header: "Tax Rate", headerClass: "text-center px-4 w-32", bodyClass: "text-center px-4 w-32 whitespace-nowrap", render: (row) => `${row.rate}%` },
+    { key: "amount", header: "Tax Amount", headerClass: "text-right px-4 w-36", bodyClass: "text-right px-4 w-36 whitespace-nowrap font-medium", render: (row) => row.amount.toFixed(2) },
+  ];
 
   return (
     <Box p={2}>
