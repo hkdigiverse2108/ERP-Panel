@@ -1,15 +1,8 @@
 import { Box } from "@mui/material";
-import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
-import { PAYMENT_TERMS, REVERSE_CHARGE, TAX_TYPE } from "../../../Data";
-import type { Supplier } from "../../../Types/SupplierBill";
-
-interface Props {
-  supplierOptions: { label: string; value: string }[];
-  selectedSupplier: Supplier | null;
-  isEditing: boolean;
-}
-
-const SupplierBillDetails = ({ supplierOptions, selectedSupplier, isEditing }: Props) => {
+import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../../Attribute";
+import { PAYMENT_TERMS, REVERSE_CHARGE, TAX_TYPE } from "../../../../Data";
+import type { SupplierBillDetailsProps } from "../../../../Types";
+const SupplierBillDetails = ({ supplierOptions, selectedSupplier, isEditing }: SupplierBillDetailsProps) => {
   return (
     <Box sx={{ p: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "340px 1fr" }, gap: 2 }}>
       {/* ================= LEFT SIDE ================= */}
@@ -49,7 +42,7 @@ const SupplierBillDetails = ({ supplierOptions, selectedSupplier, isEditing }: P
         <CommonValidationSelect name="reverseCharge" label="Reverse Charge" options={REVERSE_CHARGE} />
         <CommonValidationDatePicker name="shippingDate" label="Shipping Date" required />
         <CommonValidationSelect name="taxType" label="Tax Type" options={TAX_TYPE} />
-        <CommonValidationTextField name="invoiceAmount" label="Invoice Amount" />
+        <CommonValidationTextField name="invoiceAmount" label="Invoice Amount" required />
         <CommonValidationSwitch name="exportSez" label="Export / SEZ" />
       </Box>
     </Box>

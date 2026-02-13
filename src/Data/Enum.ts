@@ -134,9 +134,9 @@ export const GST_TYPE = [
 ];
 
 export const PAYMENTS = [
-  { label: "Receipt", value: "Receipt" },
-  { label: "Payment", value: "Payment" },
-  { label: "Expense", value: "Expense" },
+  { label: "Receipt", value: "receipt" },
+  { label: "Payment", value: "payment" },
+  { label: "Expense", value: "expense" },
 ];
 
 export const VOUCHER_TYPE = [
@@ -149,6 +149,15 @@ export const PAYMENT_TYPE = [
   { label: "Advance Payment", value: "advancePayment" },
   { label: "Against Bill", value: "againstBill" },
 ];
+
+export const POS_PAYMENT_METHOD = {
+  CASH: "cash",
+  CARD: "card",
+  UPI: "upi",
+  WALLET: "wallet",
+  MULTI_PAY: "multipay",
+  PAY_LATER: "pay_later",
+};
 
 export const PAYMENT_MODE = [
   { label: "Cash", value: "cash" },

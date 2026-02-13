@@ -18,6 +18,9 @@ import PayLater from "./PayLater";
 import RedeemCredit from "./RedeemCredit";
 import { Mutations } from "../../../../../Api";
 import { RemoveEmptyFields } from "../../../../../Utils";
+import type { PosProductType } from "../../../../../Types";
+import { useMemo } from "react";
+import { POS_PAYMENT_METHOD } from "../../../../../Data";
 
 const PosFooter = () => {
   const { PosProduct } = useAppSelector((state) => state.pos);
@@ -37,12 +40,9 @@ const PosFooter = () => {
     { label: "Amount", value: PosProduct.totalAmount, highlight: true },
   ];
 
-  const handleHoldBill = () => {
-    if (!PosProduct.items?.length) return ShowNotification("Please select at least one product", "error");
-    const { posOrderId, ...rest } = PosProduct;
-    const payload = {
-      ...rest,
-      items: rest.items.map((item) => ({
+  const mappedItems = useMemo(
+    () =>
+      PosProduct.items?.map((item) => ({
         productId: item?._id,
         qty: item?.posQty,
         mrp: item?.mrp,
@@ -51,21 +51,70 @@ const PosFooter = () => {
         unitCost: item?.unitCost,
         netAmount: item?.netAmount,
       })),
+    [PosProduct.items],
+  );
+
+  const validate = (requireCustomer = false) => {
+    if (!PosProduct.items?.length) {
+      ShowNotification("Please select at least one product", "error");
+      return false;
+    }
+    if (requireCustomer && !PosProduct.customerId) {
+      ShowNotification("Please select customer", "error");
+      return false;
+    }
+    return true;
+  };
+
+  const handleHoldBill = () => {
+    if (!validate()) return;
+    const { posOrderId, ...rest } = PosProduct;
+    const payload = {
+      ...rest,
+      items: mappedItems,
       status: "hold",
     };
     if (posOrderId) editPosOrder({ ...payload, posOrderId }, { onSuccess: () => dispatch(clearPosProduct()) });
     else addPosOrder(RemoveEmptyFields(payload), { onSuccess: () => dispatch(clearPosProduct()) });
   };
 
-  const handlePayLater = () => {
-    if (!PosProduct.items?.length) return ShowNotification("Please select at least one product", "error");
-    if (!PosProduct.customerId) return ShowNotification("Please select customer", "error");
-    dispatch(setPayLaterModal());
+  const handleUpi = () => {
+    if (!validate(true)) return;
+    const { ...rest } = PosProduct;
+    (["posOrderId"] as const).forEach((field) => delete (rest as Partial<PosProductType>)[field]);
+
+    const payload = {
+      ...rest,
+      items: mappedItems,
+      paymentMethod: POS_PAYMENT_METHOD.UPI,
+      multiplePayments: [
+        {
+          method: "upi",
+          amount: PosProduct.totalAmount,
+        },
+      ],
+    };
+    addPosOrder(RemoveEmptyFields(payload), { onSuccess: () => dispatch(clearPosProduct()) });
   };
 
-  const handleUpi = () => {
-    if (!PosProduct.items?.length) return ShowNotification("Please select at least one product", "error");
-    if (!PosProduct.customerId) return ShowNotification("Please select customer", "error");
+  const handlePayLater = () => {
+    if (!validate(true)) return;
+    dispatch(setPayLaterModal({ open: true, data: [] }));
+  };
+
+  const handleCard = () => {
+    if (!validate(true)) return;
+    dispatch(setCardModal());
+  };
+
+  const handleCash = () => {
+    if (!validate(true)) return;
+    dispatch(setCashModal());
+  };
+
+  const handleMultiplePay = () => {
+    if (!validate(true)) return;
+    dispatch(setMultiplePay());
   };
 
   return (
@@ -100,12 +149,12 @@ const PosFooter = () => {
 
         {/* Action Buttons */}
         <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2 p-2">
-          <CommonButton title="Multiple Pay (F12)" variant="contained" startIcon={<VerticalSplitIcon />} onClick={() => dispatch(setMultiplePay())} />
+          <CommonButton title="Multiple Pay (F12)" variant="contained" startIcon={<VerticalSplitIcon />} onClick={handleMultiplePay} />
           <CommonButton title="Redeem Credit" variant="contained" startIcon={<RedeemIcon />} onClick={() => dispatch(setRedeemCreditModal())} />
           <CommonButton title="Hold (F6)" variant="contained" startIcon={<PauseIcon />} onClick={handleHoldBill} loading={addPosOrderLoading || editPosOrderLoading} />
           <CommonButton title="UPI (F5)" variant="contained" startIcon={<FastForwardIcon />} onClick={handleUpi} />
-          <CommonButton title="Card (F3)" variant="contained" startIcon={<CreditCardIcon />} onClick={() => dispatch(setCardModal())} />
-          <CommonButton title="Cash (F4)" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => dispatch(setCashModal())} />
+          <CommonButton title="Card (F3)" variant="contained" startIcon={<CreditCardIcon />} onClick={handleCard} />
+          <CommonButton title="Cash (F4)" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={handleCash} />
           <CommonButton title="Apply Coupon" variant="contained" startIcon={<RedeemIcon />} onClick={() => dispatch(setApplyCouponModal())} />
           <CommonButton title="Pay Later (F11)" variant="contained" startIcon={<CalendarMonthIcon />} onClick={handlePayLater} />
           <CommonButton title="Hold & Print (F7)" variant="contained" startIcon={<PauseIcon />} />

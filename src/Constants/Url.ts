@@ -162,11 +162,12 @@ export const URL_KEYS = {
     EDIT: "/pos-order/edit",
     DELETE: "/pos-order/delete",
   },
-  PAY_LATER: {
-    BASE: "/pay-later",
-    ADD: "/pay-later/add",
-    EDIT: "/pay-later/edit",
-    DELETE: "/pay-later/delete",
+  POS_PAYMENT: {
+    BASE: "/pos-payment",
+    ALL: "/pos-payment/all",
+    ADD: "/pos-payment/add",
+    EDIT: "/pos-payment/edit",
+    DELETE: "/pos-payment/delete",
   },
   ADDITIONAL_CHARGES: {
     BASE: "/additional-charge",
@@ -179,5 +180,12 @@ export const URL_KEYS = {
     BASE: "/account-group",
     DROPDOWN: "/account-group/dropdown",
     ALL: "/account-group/all",
+  },
+  TERMS_CONDITION: {
+    BASE: "/terms-condition",
+    DROPDOWN: "/terms-condition/dropdown",
+    ALL: "/terms-condition/all",
+    ADD: "/terms-condition/add",
+    EDIT: "/terms-condition/edit",
   },
 } as const;
