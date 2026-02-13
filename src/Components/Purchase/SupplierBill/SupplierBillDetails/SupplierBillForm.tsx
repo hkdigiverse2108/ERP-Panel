@@ -3,7 +3,7 @@ import { Form, Formik, useFormikContext, type FormikHelpers, type FormikProps } 
 import { useLocation, useNavigate } from "react-router-dom";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Common";
 import { PAGE_TITLE } from "../../../../Constants";
-import { DateConfig, GenerateOptions } from "../../../../Utils";
+import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../../Utils";
 import { BREADCRUMBS } from "../../../../Data";
 import { Mutations, Queries } from "../../../../Api";
 import { useEffect, useRef, useState } from "react";
@@ -330,27 +330,22 @@ const SupplierBillForm = () => {
     setAllTerms((prev) => prev.filter((term) => term._id !== id));
   };
   const defaultValues: SupplierBillFormValues = { supplierId: "", supplierBillNo: "", supplierBillDate: DateConfig.utc().toISOString(), taxType: "exclusive", paymentTerm: "", dueDate: "", reverseCharge: false, shippingDate: "", invoiceAmount: "", termsAndConditionIds: [], notes: "", paidAmount: 0, balanceAmount: 0, paymentStatus: "unpaid", status: "active", isActive: true };
-  const initialValues: SupplierBillFormValues = { ...defaultValues, ...data, supplierId: data?.supplierId?._id || defaultValues.supplierId, termsAndConditionIds: data?.termsAndConditionIds?.map((t: { _id: string }) => t._id) || [] };
+  const { _id, createdAt, updatedAt, isDeleted, createdBy, updatedBy, __v, ...cleanData } = (data || {}) as any;
+  const initialValues: SupplierBillFormValues = { ...defaultValues, ...cleanData, supplierId: cleanData?.supplierId?._id || cleanData?.supplierId || defaultValues.supplierId, companyId: cleanData?.companyId?._id || cleanData?.companyId || "", branchId: cleanData?.branchId?._id || cleanData?.branchId || "", termsAndConditionIds: data?.termsAndConditionIds?.map((t: { _id: string }) => t._id) || [] };
   const handleSubmit = async (values: SupplierBillFormValues, { resetForm }: FormikHelpers<SupplierBillFormValues>) => {
     const { taxSummary, ...restSummary } = summary;
     const payload: SupplierBillFormValues = { ...values, productDetails: mapProductRows(), additionalCharges: mapAdditionalCharges(), termsAndConditionIds: selectedTermIds, summary: restSummary };
+
+    const handleSuccess = () => {
+      resetForm();
+      navigate(-1);
+    };
+
     if (isEditing) {
-      editSupplierBill(
-        { supplierBillId: data._id, ...payload },
-        {
-          onSuccess: () => {
-            resetForm();
-            navigate(-1);
-          },
-        },
-      );
+      const changedFields = GetChangedFields(payload, data);
+      editSupplierBill({ ...changedFields, supplierBillId: data._id }, { onSuccess: handleSuccess });
     } else {
-      addSupplierBill(payload, {
-        onSuccess: () => {
-          resetForm();
-          navigate(-1);
-        },
-      });
+      addSupplierBill(RemoveEmptyFields(payload) as SupplierBillFormValues, { onSuccess: handleSuccess });
     }
   };
   return (
