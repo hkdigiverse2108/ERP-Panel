@@ -5,10 +5,12 @@ import { PAYMENT_MODE, PAYMENT_TYPE, VOUCHER_TYPE } from "../../../../../../Data
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setAddPaymentModal } from "../../../../../../Store/Slices/ModalSlice";
 import { CommonModal } from "../../../../../Common";
+// import { Mutations } from "../../../../../../Api";
 
 const AddPayment = () => {
   const { isAddPaymentModal } = useAppSelector((state) => state.modal);
   const dispatch = useAppDispatch();
+  // const { mutate: addPosPayment , isPending: isAddPosPaymentPending} = Mutations.useAddPosPayment();
 
   const initialValues = {
     voucherType: "sales",
@@ -37,50 +39,22 @@ const AddPayment = () => {
             <Form noValidate>
               <Grid container spacing={2}>
                 <CommonValidationRadio name="voucherType" label="Select Voucher Type" options={VOUCHER_TYPE} grid={12} />
-                {values.voucherType === "sales" && (
+                {["sales", "purchase"].includes(values.voucherType) && (
                   <>
                     <CommonValidationRadio name="paymentType" label="Select Payment Type" options={PAYMENT_TYPE} grid={12} />
-                    {values.paymentType === "advancePayment" ? (
+                    <CommonValidationSelect name="partyType" label="Select Party Name" options={PAYMENT_TYPE} grid={{ xs: 12, sm: 6, md: values.paymentType === "advance" ? 6 : 4 }} required />
+                    {values.paymentType === "advance" ? (
                       <>
-                        <CommonValidationSelect name="partyType" label="Select Party Name" options={PAYMENT_TYPE} grid={{ xs: 12, sm: 6 }} required />
                         <CommonValidationSelect name="paymentMode" label="Payment Mode" options={PAYMENT_MODE} grid={{ xs: 12, sm: 6 }} required />
-                        <CommonValidationSelect name="bank" label="Select Bank" options={PAYMENT_MODE} grid={{ xs: 12, sm: 6 }} disabled={!showBank} required />
+                        {showBank && <CommonValidationSelect name="bank" label="Select Bank" options={PAYMENT_MODE} grid={{ xs: 12, sm: 6 }} required />}
                         <CommonValidationTextField name="amount" label="Amount" type="number" grid={{ xs: 12, sm: 6 }} required />
                         <CommonValidationTextField name="remark" label="Remark" grid={{ xs: 12 }} multiline />
                       </>
                     ) : (
                       <>
-                        <CommonValidationSelect name="partyType" label="Select Party Name" options={PAYMENT_TYPE} grid={{ xs: 12, sm: 6, md: 4 }} required />
-                        <CommonValidationSelect name="sales" label="Select Sales" options={PAYMENT_TYPE} grid={{ xs: 12, sm: 6, md: 4 }} required />
+                        <CommonValidationSelect name="sales" label={`${values.voucherType === "sales" ? "Select Sales" : "Select Bill"}`} options={PAYMENT_TYPE} grid={{ xs: 12, sm: 6, md: 4 }} required />
                         <CommonValidationSelect name="paymentMode" label="Payment Mode" options={PAYMENT_MODE} grid={{ xs: 12, sm: 6, md: 4 }} required />
-                        <CommonValidationSelect name="bank" label="Select Bank" options={PAYMENT_MODE} grid={{ xs: 12, sm: 6, md: 4 }} disabled={!showBank} required />
-                        <CommonValidationTextField name="totalPayment" label="Total Payment" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency />
-                        <CommonValidationTextField name="paidAmount" label="Paid Amount" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency />
-                        <CommonValidationTextField name="pendingAmount" label="Pending Amount" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency />
-                        <CommonValidationTextField name="kasar" label="Kasar" type="number" grid={{ xs: 12, sm: 6, md: 4 }} />
-                        <CommonValidationTextField name="amount" label="Amount" type="number" grid={{ xs: 12, sm: 6, md: 4 }} required />
-                        <CommonValidationTextField name="remark" label="Remark" grid={{ xs: 12 }} multiline />
-                      </>
-                    )}
-                  </>
-                )}
-                {values.voucherType === "purchase" && (
-                  <>
-                    <CommonValidationRadio name="paymentType" label="Select Payment Type" options={PAYMENT_TYPE} grid={12} />
-                    {values.paymentType === "advancePayment" ? (
-                      <>
-                        <CommonValidationSelect name="partyType" label="Select Party Name" options={PAYMENT_TYPE} grid={{ xs: 12, sm: 6 }} required />
-                        <CommonValidationSelect name="paymentMode" label="Payment Mode" options={PAYMENT_MODE} grid={{ xs: 12, sm: 6 }} required />
-                        <CommonValidationSelect name="bank" label="Select Bank" options={PAYMENT_MODE} grid={{ xs: 12, sm: 6 }} disabled={!showBank} required />
-                        <CommonValidationTextField name="amount" label="Amount" type="number" grid={{ xs: 12, sm: 6 }} required />
-                        <CommonValidationTextField name="remark" label="Remark" grid={{ xs: 12 }} multiline />
-                      </>
-                    ) : (
-                      <>
-                        <CommonValidationSelect name="partyType" label="Select Party Name" options={PAYMENT_TYPE} grid={{ xs: 12, sm: 6, md: 4 }} required />
-                        <CommonValidationSelect name="sales" label="Select Bill" options={PAYMENT_TYPE} grid={{ xs: 12, sm: 6, md: 4 }} required />
-                        <CommonValidationSelect name="paymentMode" label="Payment Mode" options={PAYMENT_MODE} grid={{ xs: 12, sm: 6, md: 4 }} required />
-                        <CommonValidationSelect name="bank" label="Select Bank" options={PAYMENT_MODE} grid={{ xs: 12, sm: 6, md: 4 }} disabled={!showBank} required />
+                        {showBank && <CommonValidationSelect name="bank" label="Select Bank" options={PAYMENT_MODE} grid={{ xs: 12, sm: 6, md: 4 }} required />}
                         <CommonValidationTextField name="totalPayment" label="Total Payment" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency />
                         <CommonValidationTextField name="paidAmount" label="Paid Amount" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency />
                         <CommonValidationTextField name="pendingAmount" label="Pending Amount" type="number" grid={{ xs: 12, sm: 6, md: 4 }} disabled isCurrency />
@@ -102,7 +76,7 @@ const AddPayment = () => {
                 )}
                 <Grid sx={{ display: "flex", justifyContent: "center", gap: 2 }} size={12}>
                   <CommonButton type="submit" variant="contained" title="Save" />
-                  {values.voucherType === "sales" && values.paymentType === "advancePayment" && <CommonButton type="submit" variant="contained" title="Save & Print" />}
+                  {values.voucherType === "sales" && values.paymentType === "advance" && <CommonButton type="submit" variant="contained" title="Save & Print" />}
                 </Grid>
               </Grid>
             </Form>

@@ -146,8 +146,8 @@ export const VOUCHER_TYPE = [
 ];
 
 export const PAYMENT_TYPE = [
-  { label: "Advance Payment", value: "advancePayment" },
-  { label: "Against Bill", value: "againstBill" },
+  { label: "Advance Payment", value: "advance" },
+  { label: "Against Bill", value: "against_bill" },
 ];
 
 export const POS_PAYMENT_METHOD = {
