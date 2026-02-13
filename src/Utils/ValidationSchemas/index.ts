@@ -1,6 +1,7 @@
 import * as Yup from "yup";
-import { Validation } from "./Validation";
+import { PAYMENT_TYPE, VOUCHER_TYPE } from "../../Data";
 import type { DepValue, Primitive } from "../../Types";
+import { Validation } from "./Validation";
 
 const RequiredWhenTrue = (dependentField: string, message: string, baseSchema: Yup.AnySchema) => {
   return baseSchema.when(dependentField, {
@@ -347,10 +348,26 @@ export const MaterialConsumptionFormSchema = Yup.object({
   remark: Validation("string", "Remark", { required: false, extraRules: (s) => s?.trim().max(200, "Maximum 200 characters allowed") }),
 });
 
-
 export const CardDetailsSchema = Yup.object({
   paymentAccountId: Validation("string", "Payment Account"),
   amount: Validation("number", "Card Payment Amount"),
   cardHolderName: Validation("string", "Card Holder Name"),
   cardTransactionNo: Validation("string", "Card Transaction No."),
+});
+
+export const PosPaymentFormSchema = Yup.object({
+  voucherType: Validation("string", "Voucher Type"),
+  paymentType: Validation("string", "Payment Type"),
+  partyId: Validation("string", "Party Name"),
+  posOrderId: RequiredWhen("paymentType", [PAYMENT_TYPE[1].value], "Sales", "string"),
+  paymentMode: RequiredWhen("voucherType", [VOUCHER_TYPE[0].value], "Payment Mode", "string"),
+  bankId: Validation("string", "Bank", { required: false }),
+  totalAmount: Validation("number", "Total Payment", { required: false }),
+  paidAmount: Validation("number", "Paid Amount", { required: false }),
+  pendingAmount: Validation("number", "Pending Amount", { required: false }),
+  roundOff: Validation("number", "Round Off", { required: false }),
+  amount: Validation("number", "Amount"),
+  remark: Validation("string", "Remark", { required: false }),
+  isNonGST: Validation("boolean", "Is Non GST", { required: false }),
+  accountId: RequiredWhen("voucherType", [VOUCHER_TYPE[1].value], "Account", "string"),
 });

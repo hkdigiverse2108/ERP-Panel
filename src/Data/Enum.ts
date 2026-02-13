@@ -141,7 +141,6 @@ export const PAYMENTS = [
 
 export const VOUCHER_TYPE = [
   { label: "Sales", value: "sales" },
-  { label: "Purchase", value: "purchase" },
   { label: "Expense", value: "expense" },
 ];
 

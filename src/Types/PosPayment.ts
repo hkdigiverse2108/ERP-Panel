@@ -1,23 +1,23 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 
 export interface PosPaymentFormValues {
-  paymentNo: string;
-  voucherType: string;
-  paymentType: string;
-  posOrderId: {
-    _id: string;
-    orderNo: string;
-    totalAmount: number;
-  };
-  paymentMode: string;
-  totalAmount: number;
-  paidAmount: number;
-  pendingAmount: number;
-  roundOff: number;
-  amount: number;
-  isNonGST: boolean;
-  isActive: boolean;
-  companyId: string;
+  paymentNo?: string;
+  voucherType?: string;
+  paymentType?: string;
+  partyId?: string;
+  bankId?: string;
+  posOrderId?: string;
+  paymentMode?: string;
+  totalAmount?: number;
+  paidAmount?: number;
+  pendingAmount?: number;
+  roundOff?: number;
+  amount?: number;
+  isNonGST?: boolean;
+  isActive?: boolean;
+  companyId?: string;
+  accountId?: string;
+  remark?: string;
 }
 
 export type AddPosPaymentPayload = PosPaymentFormValues & {
