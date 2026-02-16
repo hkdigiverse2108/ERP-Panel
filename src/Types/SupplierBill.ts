@@ -23,6 +23,7 @@ export interface SupplierBillProductItem {
   total?: number;
   mfgDate?: string;
   expiryDate?: string;
+  unitCost?: number;
 }
 
 export interface SupplierBillProductDetails {
