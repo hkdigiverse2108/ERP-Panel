@@ -10,11 +10,11 @@ import { BREADCRUMBS, ORDER_STATUS, TAX_TYPE } from "../../../Data";
 import type { AddPurchaseOrderPayload, PurchaseOrderFormContentProps, PurchaseOrderFormValues, PurchaseOrderItem, Supplier, TermsConditionBase } from "../../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { PurchaseOrderFormSchema } from "../../../Utils/ValidationSchemas";
-import ProductAndTerm from "../../../Components/Purchase/PurchaseOrder/ProductAndTerm";
 import { useEffect, useRef, useState } from "react";
 import TermsSelectionModal from "../../../Components/Purchase/SupplierBill/TermsAndCondition/TermsSelectionModal";
 import TermsAndConditionModal from "../../../Components/Purchase/SupplierBill/TermsAndCondition/TermsAndConditionModal";
 import { useAppSelector } from "../../../Store/hooks";
+import { ProductAndTerm } from "../../../Components/Purchase/PurchaseOrder";
 
 const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate, resetForm, setFieldValue, dirty, supplierQueryEnabled, termsList, handleDeleteTerm }: PurchaseOrderFormContentProps & { termsList: TermsConditionBase[]; handleDeleteTerm: (index: number) => void }) => {
   const { values } = useFormikContext<PurchaseOrderFormValues>();
@@ -160,23 +160,7 @@ const PurchaseOrderForm = () => {
             taxAmount: Number(item.taxAmount ?? 0),
           } as PurchaseOrderItem;
         })
-      : [
-          {
-            productId: "",
-            qty: 1,
-            freeQty: 0,
-            mrp: 0,
-            sellingPrice: 0,
-            discount1: 0,
-            discount2: 0,
-            taxableAmount: 0,
-            unitCost: 0,
-            tax: "0",
-            landingCost: "0",
-            margin: "0",
-            total: 0,
-          },
-        ],
+      : [{ productId: "", qty: 1, freeQty: 0, mrp: 0, sellingPrice: 0, discount1: 0, discount2: 0, taxableAmount: 0, unitCost: 0, tax: "0", landingCost: "0", margin: "0", total: 0 }],
 
     flatDiscount: data?.flatDiscount || 0,
     grossAmount: data?.grossAmount || 0,

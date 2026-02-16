@@ -1,12 +1,11 @@
 import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonActionColumn, CommonDeleteModal, AdvancedSearch, CommonStatsCard, CommonObjectNameColumn } from "../../../Components/Common";
+import { CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonActionColumn, CommonDeleteModal, AdvancedSearch, CommonStatsCard } from "../../../Components/Common";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { Queries, Mutations } from "../../../Api";
-import type { AppGridColDef } from "../../../Types";
-import type { PurchaseOrderBase } from "../../../Types/PurchaseOrder";
+import type { AppGridColDef, ContactBase, PurchaseOrderBase } from "../../../Types";
 import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 import { BREADCRUMBS, ORDER_STATUS } from "../../../Data";
 
@@ -63,7 +62,19 @@ const PurchaseOrder = () => {
   const columns: AppGridColDef<PurchaseOrderBase>[] = [
     { field: "orderNo", headerName: "Order No", width: 150 },
 
-    CommonObjectNameColumn<PurchaseOrderBase>("supplierId", { headerName: "Supplier", width: 250 }),
+    {
+      field: "supplierId",
+      headerName: "Supplier",
+      width: 250,
+      renderCell: (params) => {
+        const supplier = params.row.supplierId as ContactBase;
+        if (!supplier || typeof supplier !== "object") return "-";
+        const firstName = supplier.firstName || "";
+        const lastName = supplier.lastName || "";
+        const fullName = `${firstName} ${lastName}`.trim();
+        return fullName || supplier.companyName || "-";
+      },
+    },
 
     { field: "date", headerName: "Order Date", width: 150, renderCell: (params) => FormatDate(params.row.date || params.row.orderDate) },
 
@@ -75,14 +86,14 @@ const PurchaseOrder = () => {
 
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<PurchaseOrderBase>({
-          ...(permission?.edit && {
-            active: (row) => editPurchaseOrder({ purchaseOrderId: row?._id, isActive: !row.isActive }),
-            editRoute: ROUTES.PURCHASE_ORDER.ADD_EDIT,
+          CommonActionColumn<PurchaseOrderBase>({
+            ...(permission?.edit && {
+              active: (row) => editPurchaseOrder({ purchaseOrderId: row?._id, isActive: !row.isActive }),
+              editRoute: ROUTES.PURCHASE_ORDER.ADD_EDIT,
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id }) }),
           }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id }) }),
-        }),
-      ]
+        ]
       : []),
   ];
 
@@ -95,17 +106,13 @@ const PurchaseOrder = () => {
     loading: isLoading || isFetching || isEditLoading,
     isActive,
     setActive,
-
     ...(permission?.add && {
       handleAdd: () => navigate(ROUTES.PURCHASE_ORDER.ADD_EDIT),
     }),
-
     paginationModel,
     onPaginationModelChange: setPaginationModel,
-
     sortModel,
     onSortModelChange: setSortModel,
-
     filterModel,
     onFilterModelChange: setFilterModel,
   };
