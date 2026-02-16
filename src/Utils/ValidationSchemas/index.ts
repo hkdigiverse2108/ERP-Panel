@@ -371,3 +371,16 @@ export const PosPaymentFormSchema = Yup.object({
   isNonGST: Validation("boolean", "Is Non GST", { required: false }),
   accountId: RequiredWhen("voucherType", [VOUCHER_TYPE[1].value], "Account", "string"),
 });
+
+export const PurchaseOrderFormSchema = Yup.object({
+  supplierId: Validation("string", "Supplier"),
+  orderDate: Validation("string", "Order Date"),
+  shippingDate: Validation("string", "Shipping Date"),
+  taxType: Validation("string", "Tax Type", { required: false }),
+  termsCondition: Validation("string", "Terms & Condition", { required: false }),
+  notes: Validation("string", "Notes", { required: false, extraRules: (s) => s?.trim().max(200, "Maximum 200 characters allowed") }),
+
+  items: Yup.array()
+    .of(Yup.object({ productId: Validation("string", "Product"), qty: Validation("number", "Quantity", { extraRules: (s) => s.min(1, "Quantity must be at least 1") }) }))
+    .min(1, "At least one item is required"),
+});

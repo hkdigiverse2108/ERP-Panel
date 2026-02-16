@@ -40,7 +40,10 @@ export const NavItems: NavItem[] = [
   {
     name: PAGE_TITLE.PURCHASE.BASE,
     icon: <SettingsIcon />,
-    children: [{ name: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE, path: ROUTES.SUPPLIER_BILL.BASE }],
+    children: [
+      { name: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE, path: ROUTES.SUPPLIER_BILL.BASE },
+      { name: PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE, path: ROUTES.PURCHASE_ORDER.BASE },
+    ],
   },
   {
     name: PAGE_TITLE.SETTINGS.BASE,

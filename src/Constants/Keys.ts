@@ -179,4 +179,10 @@ export const KEYS = {
     EDIT: "terms-condition-edit",
     DELETE: "terms-condition-delete",
   },
+  PURCHASE_ORDER: {
+    BASE: "purchase-order",
+    ADD: "purchase-order-add",
+    EDIT: "purchase-order-edit",
+    DELETE: "purchase-order-delete",
+  },
 };

@@ -1,3 +1,5 @@
+
+
 export const ROUTES = {
   HOME: "/",
   DASHBOARD: "/dashboard",
@@ -82,4 +84,9 @@ export const ROUTES = {
     BASE: "/additional-charge",
     ADD_EDIT: "/additional-charge/add-edit",
   },
+  PURCHASE_ORDER: {
+    BASE: "/purchase-order",
+    ADD_EDIT: "/purchase-order/add-edit",
+  },
+
 } as const;

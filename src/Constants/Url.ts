@@ -196,4 +196,11 @@ export const URL_KEYS = {
     ADD: "/terms-condition/add",
     EDIT: "/terms-condition/edit",
   },
+  PURCHASE_ORDER: {
+    BASE: "/purchase-order",
+    DROPDOWN: "/purchase-order/dropdown",
+    ALL: "/purchase-order/all",
+    ADD: "/purchase-order/add",
+    EDIT: "/purchase-order/edit",
+  },
 } as const;

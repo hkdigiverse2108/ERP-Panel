@@ -272,3 +272,11 @@ export const PAYMENT_STATUS_OPTIONS = [
   { label: "Paid", value: "paid" },
   { label: "Unpaid", value: "unpaid" },
 ];
+export const ORDER_STATUS = [
+  { label: "Exceed", value: "exceed" },
+  { label: "In Progress", value: "in_progress" },
+  { label: "Delivered", value: "delivered" },
+  { label: "Partially Delivered", value: "partially_delivered" },
+  { label: "Completed", value: "completed" },
+  { label: "Cancelled", value: "cancelled" },
+];
