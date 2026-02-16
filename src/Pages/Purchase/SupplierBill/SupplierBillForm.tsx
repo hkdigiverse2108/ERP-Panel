@@ -121,7 +121,7 @@ const SupplierBillForm = () => {
     const taxSummary = Object.entries(taxBreakdown).map(([name, data]) => ({ name, rate: data.rate, amount: Number(data.amount.toFixed(2)) }));
     const summaryItemDiscount = itemDiscount + flatDisc;
     const summaryGrossAmount = grossAmount - flatDisc;
-    return { itemDiscount: summaryItemDiscount, grossAmount: summaryGrossAmount, taxableAmount: taxableAfterDiscount, itemTax: Number(itemTax.toFixed(2)), roundOff, netAmount: Number(netAmount.toFixed(2)), taxSummary };
+    return { itemDiscount: summaryItemDiscount, grossAmount: summaryGrossAmount, taxableAmount: taxableAfterDiscount, itemTax: Number((itemTax + additionalTax).toFixed(2)), roundOff, netAmount: Number(netAmount.toFixed(2)), taxSummary };
   };
   const summary = calculateSummary();
   const displayTerms = allTerms.filter((term) => selectedTermIds.includes(term._id)).sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
@@ -204,7 +204,7 @@ const SupplierBillForm = () => {
     const taxableAmount = totalAmount - taxAmount;
     const sellingPrice = mrp;
     const margin = sellingPrice - landingCost;
-    return { ...row, taxableAmount: taxableAmount.toFixed(2), itemTax: taxAmount.toFixed(2), landingCost: landingCost.toFixed(2), sellingPrice: sellingPrice.toFixed(2), margin: margin.toFixed(2), totalAmount: totalAmount.toFixed(2) };
+    return { ...row, taxableAmount: taxableAmount.toFixed(2), itemTax: Number(taxAmount.toFixed(2)), landingCost: landingCost.toFixed(2), sellingPrice: sellingPrice.toFixed(2), margin: margin.toFixed(2), totalAmount: totalAmount.toFixed(2) };
   };
 
   const calculateReturnRow = (row: ProductRow, taxType: string): ProductRow => {
