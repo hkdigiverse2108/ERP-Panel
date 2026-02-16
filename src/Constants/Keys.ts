@@ -152,6 +152,13 @@ export const KEYS = {
     EDIT: "pos-edit",
     DELETE: "pos-delete",
   },
+  POS_ORDER: {
+    BASE: "pos-order",
+    DROPDOWN: "pos-order-dropdown",
+    ADD: "pos-order-add",
+    EDIT: "pos-order-edit",
+    DELETE: "pos-order-delete",
+  },
   POS_PAYMENT: {
     BASE: "pos-payment",
     ADD: "pos-payment-add",

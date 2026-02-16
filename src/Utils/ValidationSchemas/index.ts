@@ -365,7 +365,7 @@ export const PosPaymentFormSchema = Yup.object({
   totalAmount: Validation("number", "Total Payment", { required: false }),
   paidAmount: Validation("number", "Paid Amount", { required: false }),
   pendingAmount: Validation("number", "Pending Amount", { required: false }),
-  roundOff: Validation("number", "Round Off", { required: false }),
+  kasar: Validation("number", "Kasar", { required: false }),
   amount: Validation("number", "Amount"),
   remark: Validation("string", "Remark", { required: false }),
   isNonGST: Validation("boolean", "Is Non GST", { required: false }),

@@ -32,3 +32,4 @@ export * from "./BillOfMaterials";
 export * from "./AccountGroup";
 export * from "./PosPayment";
 export * from "./Account";
+export * from "./PosOrder";

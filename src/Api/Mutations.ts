@@ -88,9 +88,9 @@ export const Mutations = {
   useDeletePosOrder: () => useMutations<string, void>([KEYS.POS.DELETE, KEYS.POS.BASE,KEYS.POS.HOLD_ORDER], (id) => Delete(`${URL_KEYS.POS.BASE}/${id}`)),
 
   // ************ POS Payment ************
-  useAddPosPayment: () => useMutations<AddPosPaymentPayload, void>([KEYS.PAYMENT.ADD, KEYS.PAYMENT.BASE], (input) => Post(URL_KEYS.PAYMENT.ADD, input)),
-  useEditPosPayment: () => useMutations<EditPosPaymentPayload, void>([KEYS.PAYMENT.EDIT, KEYS.PAYMENT.BASE], (input) => Put(URL_KEYS.PAYMENT.EDIT, input)),
-  useDeletePosPayment: () => useMutations<string, void>([KEYS.PAYMENT.DELETE, KEYS.PAYMENT.BASE], (id) => Delete(`${URL_KEYS.PAYMENT.BASE}/${id}`)),
+  useAddPosPayment: () => useMutations<AddPosPaymentPayload, void>([KEYS.POS_PAYMENT.ADD, KEYS.POS_PAYMENT.BASE], (input) => Post(URL_KEYS.POS_PAYMENT.ADD, input)),
+  useEditPosPayment: () => useMutations<EditPosPaymentPayload, void>([KEYS.POS_PAYMENT.EDIT, KEYS.POS_PAYMENT.BASE], (input) => Put(URL_KEYS.POS_PAYMENT.EDIT, input)),
+  useDeletePosPayment: () => useMutations<string, void>([KEYS.POS_PAYMENT.DELETE, KEYS.POS_PAYMENT.BASE], (id) => Delete(`${URL_KEYS.POS_PAYMENT.BASE}/${id}`)),
 
   //*************** additional charges **************** */
   useAddAdditionalCharges: () => useMutations<AddAdditionalChargesPayload, void>([KEYS.ADDITIONAL_CHARGES.ADD, KEYS.ADDITIONAL_CHARGES.BASE], (input) => Post(URL_KEYS.ADDITIONAL_CHARGES.ADD, input)),

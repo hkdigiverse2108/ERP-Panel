@@ -1,6 +1,7 @@
 import type { CommonDataType, MessageStatus } from "./Common";
 import type { ContactBase } from "./Contacts";
 import type { EmployeeBase } from "./Employee";
+import type { PosOrderBase } from "./PosOrder";
 import type { ProductBase } from "./Product";
 
 export interface WeightScaleFormValues {
@@ -115,9 +116,9 @@ export interface PosProductOrderApiResponse extends MessageStatus {
 }
 
 export interface PosCustomerDetailData {
-  customer: number;
-  lastBill: string;
-  mostPurchasedProduct: string;
+  customer: ContactBase;
+  lastBill: PosOrderBase;
+  mostPurchasedProduct: ProductBase;
   totalDueAmount: number;
   totalPaidAmount: number;
   totalPurchaseAmount: number;
