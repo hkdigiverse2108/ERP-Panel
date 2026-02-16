@@ -355,7 +355,7 @@ const SupplierBillForm = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.SUPPLIER_BILL[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.SUPPLIER_BILL[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8, display: "grid", gap: 2 }}>
-        <Formik innerRef={formikRef} initialValues={initialValues} onSubmit={handleSubmit} enableReinitialize>
+        <Formik innerRef={formikRef} initialValues={initialValues} onSubmit={handleSubmit} enableReinitialize={isEditing}>
           {() => (
             <>
               <Form noValidate>
