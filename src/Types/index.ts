@@ -31,3 +31,4 @@ export * from "./TermsAndCondition";
 export * from "./BillOfMaterials";
 export * from "./AccountGroup";
 export * from "./PosPayment";
+export * from "./Account";
