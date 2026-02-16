@@ -170,8 +170,8 @@ const ProductAndTerm = ({ termsList, handleDeleteTerm }: { termsList: TermsCondi
 
           {/* TAB 0: PRODUCT DETAILS */}
           <CommonTabPanel value={tabValue} index={0}>
-            <Box sx={{ overflowX: "hidden" }}>
-              <Box sx={{ minWidth: 1400 }}>
+            <Box sx={{ overflowX: "auto" }}>
+              <Box sx={{ minWidth: 1200 }}>
                 <FieldArray name="items">
                   {({ push, remove }) => {
                     const columns: CommonTableColumn<PurchaseOrderItem>[] = [
@@ -198,14 +198,14 @@ const ProductAndTerm = ({ termsList, handleDeleteTerm }: { termsList: TermsCondi
                         footer: "Total",
                       },
                       { key: "sr", header: "#", bodyClass: "align-middle text-center w-[50px]", render: (_row, index) => index + 1 },
-                      { key: "productId", header: "Product*", bodyClass: "min-w-[250px]", render: (_row, index) => <ProductSelectCell index={index} productData={productData} taxData={taxData} isLoading={productDataLoading} /> },
-                      { key: "mrp", header: "MRP", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.mrp`} type="number" /> },
-                      { key: "qty", header: "Qty", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.qty`} type="number" /> },
-                      { key: "unitCost", header: "Unit Cost", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.unitCost`} type="number" /> },
+                      { key: "productId", header: "Product*", bodyClass: "min-w-[200px]", render: (_row, index) => <ProductSelectCell index={index} productData={productData} taxData={taxData} isLoading={productDataLoading} /> },
+                      { key: "mrp", header: "MRP", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.mrp`} type="number" /> },
+                      { key: "qty", header: "Qty", bodyClass: "min-w-[80px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.qty`} type="number" /> },
+                      { key: "unitCost", header: "Unit Cost", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.unitCost`} type="number" /> },
                       {
                         key: "tax",
                         header: "Tax",
-                        bodyClass: "min-w-[140px] text-center",
+                        bodyClass: "min-w-[120px] text-center",
                         render: (row) => (
                           <Box className="flex flex-col items-center">
                             <span className="text-sm font-medium">
@@ -215,9 +215,9 @@ const ProductAndTerm = ({ termsList, handleDeleteTerm }: { termsList: TermsCondi
                           </Box>
                         ),
                       },
-                      { key: "landingCost", header: "Landing Cost", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.landingCost`} type="number" disabled /> },
-                      { key: "margin", header: "Margin", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.margin`} type="number" disabled /> },
-                      { key: "total", header: "Total", bodyClass: "min-w-[140px]", render: (_row, index) => <TotalInputCell index={index} />, footer: (data) => data.reduce((sum, item) => sum + (Number(item.total) || 0), 0).toFixed(2) },
+                      { key: "landingCost", header: "Landing Cost", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.landingCost`} type="number" disabled /> },
+                      { key: "margin", header: "Margin", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.margin`} type="number" disabled /> },
+                      { key: "total", header: "Total", bodyClass: "min-w-[120px]", render: (_row, index) => <TotalInputCell index={index} />, footer: (data) => data.reduce((sum, item) => sum + (Number(item.total) || 0), 0).toFixed(2) },
                     ];
 
                     return <CommonTable showFooter data={values.items || []} columns={columns} rowKey={(_row, index) => index.toString()} getRowClass={() => "align-top"} />;

@@ -7,14 +7,14 @@ import type { SupplierBillBase } from "./SupplierBill";
 import type { TermsConditionBase } from "./TermsAndCondition";
 // import { TAX_TYPE, ORDER_STATUS } from "../../Data";
 
-export interface PurchaseOrderBase extends Omit<PurchaseOrderFormValues, "supplierId">, CommonDataType {
+export interface PurchaseOrderBase extends Omit<PurchaseOrderFormValues, "supplierId" | "isDeleted" | "createdAt" | "updatedAt">, CommonDataType {
   _id: string;
   supplierId?: SupplierBillBase;
 }
 export type PurchaseOrderSupplier = SupplierBillBase;
 
 export interface PurchaseOrderItem {
-  productId: string;
+  productId: string | { _id: string };
   qty: number;
   freeQty?: number;
   mrp?: number | string;
@@ -32,6 +32,16 @@ export interface PurchaseOrderItem {
   total?: number | string;
   taxAmount?: number | string;
   taxName?: string;
+  taxRate?: number | string;
+  quantity?: number;
+  price?: number;
+  rate?: number;
+  tax_inclusive?: boolean;
+  taxable_amount?: number;
+  selling_price?: number;
+  disc1?: number;
+  disc2?: number;
+  totalAmount?: number;
 }
 export interface PurchaseOrderFormValues {
   supplierId?: string;
@@ -69,6 +79,7 @@ export interface PurchaseOrderFormValues {
   taxType?: string;
 
   isActive?: boolean;
+  note?: string | null;
   _submitAction?: string;
 }
 export interface AddPurchaseOrderPayload extends Omit<PurchaseOrderFormValues, "supplierId" | "contact"> {

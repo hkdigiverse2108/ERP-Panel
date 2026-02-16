@@ -184,7 +184,7 @@ const SupplierBillForm = () => {
   const calculateRow = (row: ProductRow, taxType: string): ProductRow => {
     const qty = Number(row.qty) || 0;
     const unitCost = Number(row.unitCost) || 0;
-    const taxRate = taxType === "outOfScope" ? 0 : Number(row.taxRate) || 0;
+    const taxRate = taxType === "out_of_scope" ? 0 : Number(row.taxRate) || 0;
     const disc1 = Number(row.disc1) || 0;
     const disc2 = Number(row.disc2) || 0;
     const discountPerUnit = disc1 + disc2;
@@ -192,7 +192,7 @@ const SupplierBillForm = () => {
     const discountedCost = Math.max(0, unitCost - discountPerUnit);
     let landingCost = 0;
     let taxAmount = 0;
-    if (taxType === "taxInclusive") {
+    if (taxType === "tax_inclusive") {
       landingCost = discountedCost;
       const totalCtx = qty * discountedCost;
       taxAmount = totalCtx - totalCtx / (1 + taxRate / 100);
@@ -210,14 +210,14 @@ const SupplierBillForm = () => {
   const calculateReturnRow = (row: ProductRow, taxType: string): ProductRow => {
     const qty = Number(row.qty) || 0;
     const unitCost = Number(row.unitCost) || 0;
-    const taxRate = taxType === "outOfScope" ? 0 : Number(row.taxRate) || 0;
+    const taxRate = taxType === "out_of_scope" ? 0 : Number(row.taxRate) || 0;
     const disc1 = Number(row.disc1) || 0;
     const disc2 = Number(row.disc2) || 0;
     const discountPerUnit = disc1 + disc2;
     const discountedCost = Math.max(0, unitCost - discountPerUnit);
     let landingCost = 0;
     let taxAmount = 0;
-    if (taxType === "taxInclusive") {
+    if (taxType === "tax_inclusive") {
       landingCost = discountedCost;
       const totalCtx = qty * discountedCost;
       taxAmount = totalCtx - totalCtx / (1 + taxRate / 100);
@@ -329,7 +329,7 @@ const SupplierBillForm = () => {
     setSelectedTermIds((prev) => prev.filter((termId) => termId !== id));
     setAllTerms((prev) => prev.filter((term) => term._id !== id));
   };
-  const defaultValues: SupplierBillFormValues = { supplierId: "", supplierBillNo: "", supplierBillDate: DateConfig.utc().toISOString(), taxType: "exclusive", paymentTerm: "", dueDate: "", reverseCharge: false, shippingDate: "", invoiceAmount: "", termsAndConditionIds: [], notes: "", paidAmount: 0, balanceAmount: 0, paymentStatus: "unpaid", status: "active", isActive: true };
+  const defaultValues: SupplierBillFormValues = { supplierId: "", supplierBillNo: "", supplierBillDate: DateConfig.utc().toISOString(), taxType: "tax_exclusive", paymentTerm: "", dueDate: "", reverseCharge: false, shippingDate: "", invoiceAmount: "", termsAndConditionIds: [], notes: "", paidAmount: 0, balanceAmount: 0, paymentStatus: "unpaid", status: "active", isActive: true };
 
   const { _id, createdAt, updatedAt, isDeleted, createdBy, updatedBy, __v, ...cleanData } = data || {};
 

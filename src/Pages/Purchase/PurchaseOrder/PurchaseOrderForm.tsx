@@ -6,8 +6,8 @@ import { Mutations, Queries } from "../../../Api";
 import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import {  ORDER_STATUS, TAX_TYPE } from "../../../Data";
-import type { AddPurchaseOrderPayload, PurchaseOrderFormContentProps, PurchaseOrderFormValues, Supplier, TermsConditionBase } from "../../../Types";
+import { BREADCRUMBS, ORDER_STATUS, TAX_TYPE } from "../../../Data";
+import type { AddPurchaseOrderPayload, PurchaseOrderFormContentProps, PurchaseOrderFormValues, PurchaseOrderItem, Supplier, TermsConditionBase } from "../../../Types";
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { PurchaseOrderFormSchema } from "../../../Utils/ValidationSchemas";
 import ProductAndTerm from "../../../Components/Purchase/PurchaseOrder/ProductAndTerm";
@@ -16,10 +16,9 @@ import TermsSelectionModal from "../../../Components/Purchase/SupplierBill/Terms
 import TermsAndConditionModal from "../../../Components/Purchase/SupplierBill/TermsAndCondition/TermsAndConditionModal";
 import { useAppSelector } from "../../../Store/hooks";
 
-const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate, resetForm, setFieldValue, dirty, supplierQueryEnabled, termsList, handleDeleteTerm }: PurchaseOrderFormContentProps & { termsList: TermsConditionBase[], handleDeleteTerm: (index: number) => void }) => {
+const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate, resetForm, setFieldValue, dirty, supplierQueryEnabled, termsList, handleDeleteTerm }: PurchaseOrderFormContentProps & { termsList: TermsConditionBase[]; handleDeleteTerm: (index: number) => void }) => {
   const { values } = useFormikContext<PurchaseOrderFormValues>();
   const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier" }, supplierQueryEnabled);
-
 
   const selectedSupplier = (supplierData?.data as Supplier[])?.find((s) => s._id === values.supplierId);
 
@@ -28,49 +27,55 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
       <Grid container spacing={2}>
         {/* BASIC DETAILS */}
         <CommonCard title="Purchase Order Details" grid={{ xs: 12 }}>
-          <Box sx={{ p: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "340px 1fr" }, gap: 2 }}>
-            {/* ================= LEFT SIDE ================= */}
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <CommonValidationSelect name="supplierId" label="Select Supplier" required isLoading={supplierDataLoading} options={GenerateOptions(supplierData?.data)} grid={{ xs: 12 }} />
+          <Box sx={{ p: 2 }}>
+            <Grid container spacing={3}>
+              {/* ================= LEFT SIDE ================= */}
+              <Grid size={{ xs: 12, md: 4 }}>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <CommonValidationSelect name="supplierId" label="Select Supplier" required isLoading={supplierDataLoading} options={GenerateOptions(supplierData?.data)} />
 
-              {/* PLACE OF SUPPLY */}
-              <Box display="flex" gap={1} flexWrap="wrap">
-                <Box fontWeight={600}>Place of Supply:</Box>
-                <Box color="text.secondary">{selectedSupplier?.address?.[0]?.state?.name || "-"}</Box>
-              </Box>
-
-              {/* GSTIN */}
-              <Box display="flex" gap={1} flexWrap="wrap">
-                <Box fontWeight={600}>GSTIN:</Box>
-                <Box color="text.secondary">{selectedSupplier?.address?.[0]?.gstIn || "-"}</Box>
-              </Box>
-
-              {/* BILLING ADDRESS */}
-              <Box display="flex" gap={1} >
-                <Box fontWeight={600}>Billing Address:</Box>
-                {selectedSupplier?.address?.length ? (
-                  <Box color="text.secondary">
-                    <Box>{selectedSupplier.address[0]?.addressLine1}</Box>
-                    <Box>
-                      {selectedSupplier.address[0]?.city?.name}, {selectedSupplier.address[0]?.state?.name}
-                    </Box>
-                    <Box>{selectedSupplier.address[0]?.pinCode}</Box>
+                  {/* PLACE OF SUPPLY */}
+                  <Box display="flex" gap={1} flexWrap="wrap">
+                    <Box fontWeight={600}>Place of Supply:</Box>
+                    <Box color="text.secondary">{selectedSupplier?.address?.[0]?.state?.name || "-"}</Box>
                   </Box>
-                ) : (
-                  <Box color="text.secondary">-</Box>
-                )}
-              </Box>
-            </Box>
 
-            {/* ================= RIGHT SIDE ================= */}
-            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 2 }}>
-              <CommonValidationDatePicker name="orderDate" label="Purchase Order Date" required grid={{ xs: 12 }} />
-              <CommonValidationDatePicker name="shippingDate" label="Shipping Date" required grid={{ xs: 12 }} />
-              <CommonValidationTextField name="shippingNote" label="Shipping Note" grid={{ xs: 12 }} />
-              {isEditing && <CommonValidationTextField name="orderNo" label="Purchase Order No." grid={{ xs: 12 }} />}
-              <CommonValidationSelect name="taxType" label="Tax Type" required options={TAX_TYPE} grid={{ xs: 12 }} />
-              <CommonValidationSelect name="status" label="Order Status" required options={ORDER_STATUS} grid={{ xs: 12 }} />
-            </Box>
+                  {/* GSTIN */}
+                  <Box display="flex" gap={1} flexWrap="wrap">
+                    <Box fontWeight={600}>GSTIN:</Box>
+                    <Box color="text.secondary">{selectedSupplier?.address?.[0]?.gstIn || "-"}</Box>
+                  </Box>
+
+                  {/* BILLING ADDRESS */}
+                  <Box display="flex" gap={1}>
+                    <Box fontWeight={600}>Billing Address:</Box>
+                    {selectedSupplier?.address?.length ? (
+                      <Box color="text.secondary">
+                        <Box>{selectedSupplier.address[0]?.addressLine1}</Box>
+                        <Box>
+                          {selectedSupplier.address[0]?.city?.name}, {selectedSupplier.address[0]?.state?.name}
+                        </Box>
+                        <Box>{selectedSupplier.address[0]?.pinCode}</Box>
+                      </Box>
+                    ) : (
+                      <Box color="text.secondary">-</Box>
+                    )}
+                  </Box>
+                </Box>
+              </Grid>
+
+              {/* ================= RIGHT SIDE ================= */}
+              <Grid size={{ xs: 12, md: 8 }}>
+                <Grid container spacing={2}>
+                  <CommonValidationDatePicker name="orderDate" label="Purchase Order Date" required grid={{ xs: 12, sm: 6, md: 4 }} />
+                  <CommonValidationDatePicker name="shippingDate" label="Shipping Date" required grid={{ xs: 12, sm: 6, md: 4 }} />
+                  <CommonValidationTextField name="shippingNote" label="Shipping Note" grid={{ xs: 12, sm: 6, md: 4 }} />
+                  {isEditing && <CommonValidationTextField name="orderNo" label="Purchase Order No." grid={{ xs: 12, sm: 6, md: 4 }} />}
+                  <CommonValidationSelect name="taxType" label="Tax Type" required options={TAX_TYPE} grid={{ xs: 12, sm: 6, md: 4 }} />
+                  <CommonValidationSelect name="status" label="Order Status" required options={ORDER_STATUS} grid={{ xs: 12, sm: 6, md: 4 }} />
+                </Grid>
+              </Grid>
+            </Grid>
           </Box>
         </CommonCard>
 
@@ -110,7 +115,7 @@ const PurchaseOrderForm = () => {
     const all: TermsConditionBase[] = Array.isArray(response) ? response : (response.termsCondition_data ?? []);
     setAllTerms(all);
     if (isEditing && data?.termsAndConditionIds) {
-      setSelectedTermIds(data.termsAndConditionIds.map((t: string | TermsConditionBase) => typeof t === "string" ? t : t._id));
+      setSelectedTermIds(data.termsAndConditionIds.map((t: string | TermsConditionBase) => (typeof t === "string" ? t : t._id)));
     } else {
       const defaultTerms = all.filter((t) => t.isDefault);
       setSelectedTermIds(defaultTerms.map((t) => t._id));
@@ -125,33 +130,53 @@ const PurchaseOrderForm = () => {
 
   const displayTerms = allTerms.filter((term) => selectedTermIds.includes(term._id)).sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
 
-  const pageMode = isEditing ? "EDIT" : "ADD";
+  const pageMode: "ADD" | "EDIT" = isEditing ? "EDIT" : "ADD";
   const initialValues: PurchaseOrderFormValues = {
-    supplierId: data?.supplierId?._id || "",
+    supplierId: data?.supplierId?._id || data?.supplierId || "",
     contactId: data?.contactId?._id || "",
     orderDate: data?.orderDate || data?.date || "",
     orderNo: data?.orderNo || "",
     shippingDate: data?.shippingDate || data?.date || data?.orderDate || "",
     shippingNote: data?.shippingNote || "",
-    items: data?.items?.length
-      ? data.items
+    items: (data?.items || data?.item || data?.productDetails?.item || []).length
+      ? (data?.items || data?.item || data?.productDetails?.item || []).map((item: PurchaseOrderItem) => {
+          const product = (item.productId || {}) as { _id?: string; mrp?: number; purchasePrice?: number };
+          return {
+            ...item,
+            productId: product?._id || (typeof item.productId === "string" ? item.productId : ""),
+            qty: Number(item.qty ?? item.quantity ?? 1),
+            freeQty: Number(item.freeQty ?? 0),
+            mrp: Number(item.mrp ?? product?.mrp ?? 0),
+            sellingPrice: Number(item.sellingPrice ?? item.selling_price ?? 0),
+            discount1: Number(item.discount1 ?? item.disc1 ?? 0),
+            discount2: Number(item.discount2 ?? item.disc2 ?? 0),
+            taxableAmount: Number(item.taxableAmount ?? item.taxable_amount ?? 0),
+            unitCost: Number(item.unitCost ?? item.price ?? item.rate ?? product.purchasePrice ?? 0),
+            tax: item.tax && typeof item.tax === "object" ? String((item.tax as { percentage?: number }).percentage ?? 0) : String(item.taxRate ?? item.tax ?? 0),
+            taxName: (item.tax && typeof item.tax === "object" ? (item.tax as { name?: string }).name : item.taxName) || "",
+            landingCost: String(item.landingCost ?? 0),
+            margin: String(item.margin ?? 0),
+            total: Number(item.total ?? item.totalAmount ?? 0),
+            taxAmount: Number(item.taxAmount ?? 0),
+          } as PurchaseOrderItem;
+        })
       : [
-        {
-          productId: "",
-          qty: 1,
-          freeQty: 0,
-          mrp: 0,
-          sellingPrice: 0,
-          discount1: 0,
-          discount2: 0,
-          taxableAmount: 0,
-          unitCost: 0,
-          tax: "0",
-          landingCost: "0",
-          margin: "0",
-          total: 0,
-        },
-      ],
+          {
+            productId: "",
+            qty: 1,
+            freeQty: 0,
+            mrp: 0,
+            sellingPrice: 0,
+            discount1: 0,
+            discount2: 0,
+            taxableAmount: 0,
+            unitCost: 0,
+            tax: "0",
+            landingCost: "0",
+            margin: "0",
+            total: 0,
+          },
+        ],
 
     flatDiscount: data?.flatDiscount || 0,
     grossAmount: data?.grossAmount || 0,
@@ -163,7 +188,7 @@ const PurchaseOrderForm = () => {
 
     notes: data?.notes || "",
     status: ["in_progress", "delivered", "partially_delivered", "exceed", "completed", "cancelled"].includes(data?.status) ? data.status : "in_progress",
-    taxType: data?.taxType || "exclusive",
+    taxType: data?.taxType || "tax_exclusive",
     termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
   };
 
@@ -171,8 +196,9 @@ const PurchaseOrderForm = () => {
     const { _submitAction, ...rest } = values;
 
     const payload = {
+      ...rest,
       termsAndConditionIds: selectedTermIds,
-      items: rest.items?.map(({ taxAmount, taxName, freeQty, mrp, sellingPrice, discount1, discount2, taxableAmount, unitCost, ...item }) => ({
+      items: rest.items?.map(({ taxAmount, taxName, taxRate, freeQty, mrp, sellingPrice, discount1, discount2, taxableAmount, unitCost, ...item }) => ({
         ...item,
         tax: String(item.tax || 0),
         landingCost: String(item.landingCost || 0),
@@ -194,7 +220,7 @@ const PurchaseOrderForm = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.PURCHASE_ORDER[pageMode]} />
+      <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.PURCHASE_ORDER[pageMode]} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER[pageMode]} />
       <Box sx={{ p: 3, pb: 14 }}>
         <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={PurchaseOrderFormSchema} onSubmit={handleSubmit} enableReinitialize>
           {(formikProps) => <PurchaseOrderFormContent {...formikProps} isEditing={isEditing} addLoading={addLoading} editLoading={editLoading} navigate={navigate} termsList={displayTerms} handleDeleteTerm={handleDeleteTerm} />}
@@ -213,7 +239,7 @@ const PurchaseOrderForm = () => {
             return [...prev, term];
           });
           if (term.isDefault) {
-            setSelectedTermIds((prev) => prev.includes(term._id) ? prev : [...prev, term._id]);
+            setSelectedTermIds((prev) => (prev.includes(term._id) ? prev : [...prev, term._id]));
           }
         }}
       />

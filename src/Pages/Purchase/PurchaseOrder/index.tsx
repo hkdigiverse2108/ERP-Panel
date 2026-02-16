@@ -71,18 +71,18 @@ const PurchaseOrder = () => {
 
     { field: "status", headerName: "Status", width: 150 },
 
-    { field: "notes", headerName: "Notes", flex: 1, minWidth: 150 },
+    { field: "notes", headerName: "Notes", flex: 1, minWidth: 150, renderCell: (params) => params.row.notes || params.row.note || "-" },
 
     ...(permission?.edit || permission?.delete
       ? [
-          CommonActionColumn<PurchaseOrderBase>({
-            ...(permission?.edit && {
-              active: (row) => editPurchaseOrder({ purchaseOrderId: row?._id, isActive: !row.isActive }),
-              editRoute: ROUTES.PURCHASE_ORDER.ADD_EDIT,
-            }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id }) }),
+        CommonActionColumn<PurchaseOrderBase>({
+          ...(permission?.edit && {
+            active: (row) => editPurchaseOrder({ purchaseOrderId: row?._id, isActive: !row.isActive }),
+            editRoute: ROUTES.PURCHASE_ORDER.ADD_EDIT,
           }),
-        ]
+          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id }) }),
+        }),
+      ]
       : []),
   ];
 

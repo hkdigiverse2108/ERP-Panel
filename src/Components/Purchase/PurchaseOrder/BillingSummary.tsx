@@ -83,10 +83,10 @@ const BillingSummary = () => {
         <Box sx={{ width: { xs: "100%", md: "60%" } }}>{showTaxDetails && <TaxDetailsTable items={values.items || []} productData={productData?.data || []} taxType={values.taxType} />}</Box>
         <Box className="border text-sm w-full md:w-fit" sx={{ borderRadius: "8px", overflow: "hidden" }}>
           {/* Row 1: Flat Discount */}
-          <Box className="grid grid-cols-[130px_1fr] border-b border-gray-200 dark:border-gray-700">
-            <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex items-center justify-end font-medium">Flat Discount</Box>
+          <Box className="grid grid-cols-[160px_1fr] border-b border-gray-200 dark:border-gray-700 items-center">
+            <Box className="bg-gray-50 dark:bg-gray-800 p-2 py-1.5 flex items-center justify-end font-medium">Flat Discount</Box>
             <Box className="p-1 px-2 flex justify-end">
-              <Box sx={{ width: "100px" }}>
+              <Box sx={{ width: "120px" }}>
                 <CommonValidationTextField
                   name="flatDiscount"
                   label=""
@@ -102,38 +102,39 @@ const BillingSummary = () => {
           </Box>
 
           {/* Gross Amount */}
-          <Box className="grid grid-cols-[130px_1fr] border-b">
-            <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium">Gross Amount</Box>
-            <Box className="p-2 text-right font-medium">{summary.grossAmount.toFixed(2)}</Box>
+          <Box className="grid grid-cols-[160px_1fr] border-b items-center">
+            <Box className="bg-gray-50 dark:bg-gray-800 p-2 py-1.5 flex justify-end font-medium h-full">Gross Amount</Box>
+            <Box className="p-2 py-1.5 text-right font-medium">{summary.grossAmount.toFixed(2)}</Box>
           </Box>
 
           {/* Discount */}
-          <Box className="grid grid-cols-[130px_1fr] border-b">
-            <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium">Discount</Box>
-            <Box className="p-2 text-right">{summary.discountAmount.toFixed(2)}</Box>
+          <Box className="grid grid-cols-[160px_1fr] border-b items-center">
+            <Box className="bg-gray-50 dark:bg-gray-800 p-2 py-1.5 flex justify-end font-medium h-full">Discount</Box>
+            <Box className="p-2 py-1.5 text-right font-medium text-red-500">-{summary.discountAmount.toFixed(2)}</Box>
           </Box>
 
           {/* Taxable Amount */}
-          <Box className="grid grid-cols-[130px_1fr] border-b">
-            <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium">Taxable Amount</Box>
-            <Box className="p-2 text-right">{summary.taxableAmount.toFixed(2)}</Box>
+          <Box className="grid grid-cols-[160px_1fr] border-b items-center">
+            <Box className="bg-gray-50 dark:bg-gray-800 p-2 py-1.5 flex justify-end font-medium h-full">Taxable Amount</Box>
+            <Box className="p-2 py-1.5 text-right">{summary.taxableAmount.toFixed(2)}</Box>
           </Box>
 
           {/* Tax */}
-          <Box className="grid grid-cols-[130px_1fr] border-b cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => setShowTaxDetails(!showTaxDetails)}>
-            <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium text-blue-500 gap-1 items-center">
+          <Box className="grid grid-cols-[160px_1fr] border-b cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 items-center" onClick={() => setShowTaxDetails(!showTaxDetails)}>
+            <Box className="bg-gray-50 dark:bg-gray-800 p-2 py-1.5 flex justify-end font-medium text-blue-500 gap-1 items-center h-full">
               Tax (%)
               <span className="text-gray-900 dark:text-gray-100 font-bold ml-1">{values.tax || ""}</span>
             </Box>
-            <Box className="p-2 flex justify-end items-center">
+            <Box className="p-2 py-1.5 flex justify-end items-center">
               <span className="font-medium align-middle">{summary.taxAmount.toFixed(2)}</span>
             </Box>
           </Box>
+
           {/* Roundoff */}
-          <Box className="grid grid-cols-[130px_1fr] border-b">
-            <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium text-blue-500">Roundoff</Box>
+          <Box className="grid grid-cols-[160px_1fr] border-b items-center">
+            <Box className="bg-gray-50 dark:bg-gray-800 p-2 py-1.5 flex justify-end font-medium text-blue-500 h-full">Roundoff</Box>
             <Box className="p-1 px-2 flex justify-end">
-              <Box sx={{ width: "100px" }}>
+              <Box sx={{ width: "120px" }}>
                 <CommonValidationTextField
                   name="roundOff"
                   label=""
@@ -151,7 +152,7 @@ const BillingSummary = () => {
           </Box>
 
           {/* Net Amount */}
-          <Box className="grid grid-cols-[130px_1fr]">
+          <Box className="grid grid-cols-[160px_1fr]">
             <Box className="bg-gray-50 dark:bg-gray-800 p-3 flex justify-end font-bold text-lg">Net Amount</Box>
             <Box className="p-3 text-right font-bold text-lg">{summary.netAmount.toFixed(2)}</Box>
           </Box>

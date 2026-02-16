@@ -259,9 +259,9 @@ export const REVERSE_CHARGE = [
 
 export const TAX_TYPE = [
   { label: "Default", value: "default" },
-  { label: "Tax Inclusive", value: "taxInclusive" },
-  { label: "Tax Exclusive", value: "taxExclusive" },
-  { label: "Out Of Scope", value: "outOfScope" },
+  { label: "Tax Inclusive", value: "tax_inclusive" },
+  { label: "Tax Exclusive", value: "tax_exclusive" },
+  { label: "Out Of Scope", value: "out_of_scope" },
 ];
 export const OPTION_TYPE = [
   { label: "Purchase", value: "purchase" },
