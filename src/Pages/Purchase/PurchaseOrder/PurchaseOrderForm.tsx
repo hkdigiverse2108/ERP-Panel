@@ -172,7 +172,7 @@ const PurchaseOrderForm = () => {
 
     notes: data?.notes || "",
     status: ["in_progress", "delivered", "partially_delivered", "exceed", "completed", "cancelled"].includes(data?.status) ? data.status : "in_progress",
-    taxType: data?.taxType || "tax_exclusive",
+    taxType: data?.taxType || "",
     termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
   };
 
