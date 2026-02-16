@@ -113,3 +113,16 @@ export interface PosProductOrderBase extends Omit<PosProductOrderFormValues, "cu
 export interface PosProductOrderApiResponse extends MessageStatus {
   data: PosProductOrderBase[];
 }
+
+export interface PosCustomerDetailData {
+  customer: number;
+  lastBill: string;
+  mostPurchasedProduct: string;
+  totalDueAmount: number;
+  totalPaidAmount: number;
+  totalPurchaseAmount: number;
+}
+
+export interface PosCustomerDetailApiResponse extends MessageStatus {
+  data: PosCustomerDetailData;
+}

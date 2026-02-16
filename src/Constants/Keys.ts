@@ -147,6 +147,7 @@ export const KEYS = {
   POS: {
     BASE: "pos",
     HOLD_ORDER: "pos-order-hold",
+    CUSTOMER_DETAIL: "pos-order-customer-detail",
     ADD: "pos-add",
     EDIT: "pos-edit",
     DELETE: "pos-delete",

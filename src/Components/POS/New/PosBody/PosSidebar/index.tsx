@@ -2,14 +2,18 @@ import { Print } from "@mui/icons-material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { Box, IconButton } from "@mui/material";
 import { type FC } from "react";
+import { Queries } from "../../../../../Api";
 import { CommonButton } from "../../../../../Attribute";
-import { useAppDispatch } from "../../../../../Store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setCouponModal } from "../../../../../Store/Slices/ModalSlice";
-import PosOption from "./PosOptions";
 import Coupon from "./Coupon";
+import PosOption from "./PosOptions";
 
 const InfoRow: FC<{ label: string; value: string }> = ({ label, value }) => {
   const dispatch = useAppDispatch();
+  const { PosProduct } = useAppSelector((state) => state.pos);
+  const { data } = Queries.useGetPosCustomerDetail(PosProduct?.customerId,Boolean(PosProduct?.customerId));
+console.log("data",data);
 
   return (
     <div className="flex justify-between text-sm">
@@ -25,7 +29,7 @@ const InfoRow: FC<{ label: string; value: string }> = ({ label, value }) => {
   );
 };
 
-const PosSidebar = () => {
+const PosSidebar = () => {  
   return (
     <>
       <div className="p-2 space-y-3">

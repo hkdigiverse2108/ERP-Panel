@@ -38,7 +38,7 @@ const AddPayment = () => {
     isNonGST: false,
   };
 
-  const handleSubmit = (values: typeof initialValues) => {
+  const handleSubmit = (values: PosPaymentFormValues) => {
     console.log(values);
   };
 
