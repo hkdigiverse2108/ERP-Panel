@@ -10,8 +10,8 @@ const todayUtc = () => DateConfig.utc().startOf("day");
 
 export const CommonValidationDatePicker: FC<CommonValidationDatePickerProps> = ({ name, label, required, disabled, grid, minDate, maxDate, ...props }) => {
   const [field, meta, helpers] = useField(name);
-  const value = field.value ? DateConfig.utc(field.value) : todayUtc();
-  const {company} = useAppSelector((state) => state.company);
+  const value = field.value ? DateConfig.utc(field.value) : null;
+  const { company } = useAppSelector((state) => state.company);
 
   const Input = (
     <FormControl fullWidth error={meta.touched && Boolean(meta.error)}>
@@ -44,8 +44,8 @@ export const CommonValidationDatePicker: FC<CommonValidationDatePickerProps> = (
 
 export const CommonDatePicker: FC<CommonDatePickerProps> = ({ label, value, onChange, disabled, grid, minDate, maxDate, ...props }) => {
   const dateValue = value ? DateConfig.utc(value) : todayUtc();
-  const {company} = useAppSelector((state) => state.company);
-  
+  const { company } = useAppSelector((state) => state.company);
+
   const Input = (
     <FormControl fullWidth>
       <DatePicker

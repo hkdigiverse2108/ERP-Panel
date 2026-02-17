@@ -211,6 +211,15 @@ export const URL_KEYS = {
     ADD: "/coupon/add",
     EDIT: "/coupon/edit",
   },
+  LOYALTY: {
+    BASE: "/loyalty",
+    DROPDOWN: "/loyalty/dropdown",
+    POINTS: "/loyalty-points",
+    POINTS_ADD: "/loyalty-points",
+    ALL: "/loyalty/all",
+    ADD: "/loyalty/add",
+    EDIT: "/loyalty/edit",
+  },
   PURCHASE_ORDER: {
     BASE: "/purchase-order",
     DROPDOWN: "/purchase-order/dropdown",

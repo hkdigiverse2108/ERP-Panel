@@ -104,6 +104,11 @@ export const PAGE_TITLE = {
       ADD: "Add Coupon",
       EDIT: "Edit Coupon",
     },
+    LOYALTY: {
+      BASE: "Loyalty",
+      ADD: "Add Loyalty",
+      EDIT: "Edit Loyalty",
+    },
   },
   PURCHASE: {
     BASE: "Purchase",

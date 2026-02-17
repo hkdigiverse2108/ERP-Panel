@@ -14,7 +14,7 @@ const BillOfLiveProduct = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.BILL_OF_Live_Product.BASE);
   const { data, isLoading, isFetching } = Queries.useGetBillOfLiveProduct(params);
-  const { mutate: deleteBOM } = Mutations.useDeleteBillOfLiveProduct();
+  const { mutate: deleteBOM, isPending: isDeleteLoading } = Mutations.useDeleteBillOfLiveProduct();
   const { mutate: editBOM, isPending: isEditLoading } = Mutations.useEditBillOfLiveProduct();
   const rows = useMemo(() => {
     return data?.data?.billOfLiveProduct_data.map((item) => ({ ...item, id: item._id, createdByName: item.createdBy || "" })) || [];
@@ -68,7 +68,7 @@ const BillOfLiveProduct = () => {
         <CommonCard hideDivider>
           <CommonDataGrid {...gridOptions} />
         </CommonCard>
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDelete} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={handleDelete} />
       </Box>
     </>
   );

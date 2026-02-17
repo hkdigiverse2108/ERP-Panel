@@ -31,6 +31,10 @@ import MaterialConsumption from "../Pages/Inventory/MaterialConsumption";
 import MaterialConsumptionForm from "../Pages/Inventory/MaterialConsumption/MaterialConsumptionForm";
 import PurchaseOrder from "../Pages/Purchase/PurchaseOrder";
 import PurchaseOrderForm from "../Pages/Purchase/PurchaseOrder/PurchaseOrderForm";
+import Coupon from "../Pages/CRM/Coupon";
+import CouponForm from "../Pages/CRM/Coupon/CouponForm";
+import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
+import Loyalty from "../Pages/CRM/Loyalty";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -80,6 +84,12 @@ export const PageRoutes = [
 
   { path: ROUTES.PURCHASE_ORDER.BASE, name: PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE, element: <PurchaseOrder /> },
   { path: ROUTES.PURCHASE_ORDER.ADD_EDIT, name: PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE, element: <PurchaseOrderForm /> },
+
+  { path: ROUTES.COUPON.BASE, name: PAGE_TITLE.CRM.COUPON.BASE, element: <Coupon /> },
+  { path: ROUTES.COUPON.ADD_EDIT, name: PAGE_TITLE.CRM.COUPON.BASE, element: <CouponForm /> },
+
+  { path: ROUTES.LOYALTY.BASE, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <Loyalty /> },
+  { path: ROUTES.LOYALTY.ADD_EDIT, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <LoyaltyForm /> },
 ];
 
 export const AuthRoutes = [

@@ -34,3 +34,5 @@ export * from "./PosPayment";
 export * from "./Account";
 export * from "./PurchaseOrder";
 export * from "./PosOrder";
+export * from "./Coupon";
+export * from "./Loyalty";

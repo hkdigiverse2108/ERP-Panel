@@ -10,14 +10,11 @@ export const ACCOUNT_NATURE = ["assets", "liabilities", "income", "expenses"] as
 export const CUSTOMER_TYPE = ["retailer", "wholesaler", "merchant", "other"] as const;
 export const SUPPLIER_TYPE = ["manufacturer", "stockiest", "trader", "other"] as const;
 export const CONTACT_STATUS = ["active", "inactive"] as const;
-export const COUPON_DISCOUNT_TYPE = ["percentage", "flat"] as const;
-export const COUPON_STATUS = ["active", "inactive"] as const;
 export const DISCOUNT_TYPE = ["percentage", "flat"] as const;
 export const DISCOUNT_STATUS = ["active", "inactive"] as const;
 export const EMPLOYEE_STATUS = ["active", "inactive"] as const;
 export const INVOICE_PAYMENT_STATUS = ["paid", "unpaid", "partial"] as const;
 export const LOYALTY_STATUS = ["active", "inactive"] as const;
-export const LOYALTY_TYPE = ["points", "cashback"] as const;
 export const SUPPLIER_PAYMENT_STATUS = ["paid", "unpaid", "partial"] as const;
 export const VOUCHAR_TYPE = ["journal", "payment", "receipt", "expense", "contra"] as const;
 
@@ -279,4 +276,25 @@ export const ORDER_STATUS = [
   { label: "Partially Delivered", value: "partially_delivered" },
   { label: "Completed", value: "completed" },
   { label: "Cancelled", value: "cancelled" },
+];
+
+export const COUPON_DISCOUNT_TYPE = [
+  { label: "Percentage", value: "percentage" },
+  { label: "Flat", value: "flat" },
+];
+
+export const COUPON_STATUS = [
+  { label: "Active", value: "active" },
+  { label: "Inactive", value: "inactive" },
+  { label: "Expired", value: "expired" },
+];
+
+export const LOYALTY_TYPE = [
+  { label: "Discount", value: "discount" },
+  { label: "Free Product", value: "free_product" },
+];
+
+export const LOYALTY_REDEMPTION_TYPE = [
+  { label: "Single", value: "single" },
+  { label: "Multiple", value: "multiple" },
 ];

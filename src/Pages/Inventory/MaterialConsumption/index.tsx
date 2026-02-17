@@ -17,7 +17,7 @@ const MaterialConsumption = () => {
 
   const { data: materialConsumptionData, isLoading: materialConsumptionDataLoading, isFetching: materialConsumptionDataFetching } = Queries.useGetMaterialConsumption(params);
   const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown();
-  const { mutate: deleteMaterialConsumptionMutate } = Mutations.useDeleteMaterialConsumption();
+  const { mutate: deleteMaterialConsumptionMutate, isPending: isDeleteLoading } = Mutations.useDeleteMaterialConsumption();
   const { mutate: editMaterialConsumption, isPending: isEditLoading } = Mutations.useEditMaterialConsumption();
 
   const allMaterialConsumptions = useMemo(() => materialConsumptionData?.data?.material_consumption_data.map((item) => ({ ...item, id: item?._id })) || [], [materialConsumptionData]);
@@ -86,7 +86,7 @@ const MaterialConsumption = () => {
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       </Box>
     </>
   );

@@ -14,8 +14,8 @@ const SupplierBill = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE);
   const { data, isLoading, isFetching } = Queries.useGetSupplierBillDetails(params);
-  const { mutate: deleteSupplierBill } = Mutations.useDeleteSupplierBill();
-  const { mutate: editSupplierBill } = Mutations.useEditSupplierBill();
+  const { mutate: deleteSupplierBill, isPending: isDeleteLoading } = Mutations.useDeleteSupplierBill();
+  const { mutate: editSupplierBill, isPending: isEditLoading } = Mutations.useEditSupplierBill();
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
     deleteSupplierBill(rowToDelete?._id as string, {
@@ -79,7 +79,7 @@ const SupplierBill = () => {
     columns,
     rows,
     rowCount: data?.data?.totalData || 0,
-    loading: isLoading || isFetching,
+    loading: isLoading || isFetching || isEditLoading,
     isActive,
     setActive,
     ...(permission?.add && { handleAdd: () => navigate(ROUTES.SUPPLIER_BILL.ADD_EDIT) }),
@@ -99,7 +99,7 @@ const SupplierBill = () => {
         <CommonCard hideDivider>
           <CommonDataGrid {...gridOptions} />
         </CommonCard>
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
       </Box>
     </>
   );

@@ -198,4 +198,12 @@ export const KEYS = {
     EDIT: "coupon-edit",
     DELETE: "coupon-delete",
   },
+  LOYALTY: {
+    BASE: "loyalty",
+    ADD: "loyalty-add",
+    EDIT: "loyalty-edit",
+    DELETE: "loyalty-delete",
+    POINTS: "loyalty-points",
+    POINTS_ADD: "loyalty-points-add",
+  },
 };
