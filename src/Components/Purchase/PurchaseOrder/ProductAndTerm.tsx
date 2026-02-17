@@ -247,24 +247,19 @@ const ProductAndTerm = ({ termsList, handleDeleteTerm }: { termsList: TermsCondi
               {(() => {
                 const columns: CommonTableColumn<TermsConditionBase>[] = [
                   { key: "sr", header: "#", bodyClass: "align-middle text-center w-[60px]", render: (_row, index) => index + 1 },
-                  {
-                    key: "termsCondition",
-                    header: "Condition",
-                    headerClass: "text-left pl-6",
-                    bodyClass: "min-w-[400px] text-left pl-6",
-                  },
+                  { key: "termsCondition", header: "Condition", headerClass: "text-left pl-6", bodyClass: "min-w-[400px] text-left pl-6" },
                   {
                     key: "action",
                     header: "Action",
                     headerClass: "text-center",
                     bodyClass: "text-center w-[120px]",
                     render: (row, index) => (
-                      <Box display="flex" justifyContent="center" gap={1}>
+                      <Box display="flex" justifyContent="center" alignItems="center" gap={1} px={2}>
                         <CommonButton size="small" color="primary" variant="outlined" onClick={() => handleEditTerm(row)}>
-                        <Edit fontSize="small" />
+                          <Edit fontSize="small" />
                         </CommonButton>
                         <CommonButton size="small" color="error" variant="outlined" onClick={() => handleDeleteTerm(index)}>
-                           <GridDeleteIcon fontSize="small" />
+                          <GridDeleteIcon fontSize="small" />
                         </CommonButton>
                       </Box>
                     ),
