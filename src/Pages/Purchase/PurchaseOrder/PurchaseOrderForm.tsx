@@ -11,12 +11,9 @@ import type { AddPurchaseOrderPayload, PurchaseOrderFormContentProps, PurchaseOr
 import { GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { PurchaseOrderFormSchema } from "../../../Utils/ValidationSchemas";
 import { useEffect, useRef, useState } from "react";
-import TermsSelectionModal from "../../../Components/Purchase/SupplierBill/TermsAndCondition/TermsSelectionModal";
-import TermsAndConditionModal from "../../../Components/Purchase/SupplierBill/TermsAndCondition/TermsAndConditionModal";
-import { useAppSelector } from "../../../Store/hooks";
 import { ProductAndTerm } from "../../../Components/Purchase/PurchaseOrder";
 
-const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate, resetForm, dirty, supplierQueryEnabled, termsList, handleDeleteTerm,   productData }: PurchaseOrderFormContentProps & { termsList: TermsConditionBase[]; handleDeleteTerm: (index: number) => void }) => {
+const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate, resetForm, dirty, supplierQueryEnabled, selectedTermIds, onTermsChange, productData }: PurchaseOrderFormContentProps & { selectedTermIds: string[]; onTermsChange: (ids: string[]) => void }) => {
   const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
   const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier" }, supplierQueryEnabled);
 
@@ -100,8 +97,7 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
           </Box>
         </CommonCard>
 
-        <ProductAndTerm termsList={termsList} handleDeleteTerm={handleDeleteTerm} />
-
+        <ProductAndTerm selectedTermIds={selectedTermIds} onTermsChange={onTermsChange} />
         <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={addLoading || editLoading} onClear={() => (isEditing ? navigate(-1) : resetForm())} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
       </Grid>
     </Form>
@@ -119,38 +115,23 @@ const PurchaseOrderForm = () => {
   const { mutate: addPurchaseOrder, isPending: addLoading } = Mutations.useAddPurchaseOrder();
   const { mutate: editPurchaseOrder, isPending: editLoading } = Mutations.useEditPurchaseOrder();
   const { data: productData } = Queries.useGetProductDropdown();
-
-  const [allTerms, setAllTerms] = useState<TermsConditionBase[]>([]);
   const [selectedTermIds, setSelectedTermIds] = useState<string[]>([]);
   const { data: termsConditionData } = Queries.useGetTermsCondition();
-  const { isTermsSelectionModal } = useAppSelector((state) => state.modal);
-
-  useEffect(() => {
-    if (!isTermsSelectionModal.open && isTermsSelectionModal.data) {
-      setSelectedTermIds(isTermsSelectionModal.data);
-    }
-  }, [isTermsSelectionModal]);
 
   useEffect(() => {
     if (!termsConditionData?.data) return;
     const response = termsConditionData.data;
     const all: TermsConditionBase[] = Array.isArray(response) ? response : (response.termsCondition_data ?? []);
-    setAllTerms(all);
+
     if (isEditing && data?.termsAndConditionIds) {
       setSelectedTermIds(data.termsAndConditionIds.map((t: string | TermsConditionBase) => (typeof t === "string" ? t : t._id)));
-    } else {
-      const defaultTerms = all.filter((t) => t.isDefault);
-      setSelectedTermIds(defaultTerms.map((t) => t._id));
+    } else if (!isEditing) {
+      if (selectedTermIds.length === 0) {
+        const defaultTerms = all.filter((t) => t.isDefault);
+        setSelectedTermIds(defaultTerms.map((t) => t._id));
+      }
     }
   }, [termsConditionData, isEditing, data]);
-
-  const handleDeleteTerm = (index: number) => {
-    const termToRemove = displayTerms[index];
-    if (!termToRemove?._id) return;
-    setSelectedTermIds((prev) => prev.filter((id) => id !== termToRemove._id));
-  };
-
-  const displayTerms = allTerms.filter((term) => selectedTermIds.includes(term._id)).sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
 
   const pageMode: "ADD" | "EDIT" = isEditing ? "EDIT" : "ADD";
   const initialValues: PurchaseOrderFormValues = {
@@ -230,27 +211,9 @@ const PurchaseOrderForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.PURCHASE_ORDER[pageMode]} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER[pageMode]} />
       <Box sx={{ p: 3, pb: 14 }}>
         <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={PurchaseOrderFormSchema} onSubmit={handleSubmit} enableReinitialize>
-          {(formikProps) => <PurchaseOrderFormContent {...formikProps} isEditing={isEditing} addLoading={addLoading} editLoading={editLoading} navigate={navigate} termsList={displayTerms} handleDeleteTerm={handleDeleteTerm}  productData={productData}    />}
+          {(formikProps) => <PurchaseOrderFormContent {...formikProps} isEditing={isEditing} addLoading={addLoading} editLoading={editLoading} navigate={navigate} selectedTermIds={selectedTermIds} onTermsChange={setSelectedTermIds} productData={productData} />}
         </Formik>
       </Box>
-
-      <TermsAndConditionModal
-        onSave={(term: TermsConditionBase) => {
-          setAllTerms((prev) => {
-            const index = prev.findIndex((t) => t._id === term._id);
-            if (index > -1) {
-              const updated = [...prev];
-              updated[index] = term;
-              return updated;
-            }
-            return [...prev, term];
-          });
-          if (term.isDefault) {
-            setSelectedTermIds((prev) => (prev.includes(term._id) ? prev : [...prev, term._id]));
-          }
-        }}
-      />
-      <TermsSelectionModal />
     </>
   );
 };

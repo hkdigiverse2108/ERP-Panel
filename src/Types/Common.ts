@@ -459,8 +459,6 @@ export interface ModalStateSlice {
   isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
   isProductDetailsModal: { open: boolean; data: any | null };
   isQtyCountModal: { open: boolean; data: any | null };
-  isTermsAndConditionModal: { open: boolean; data: any | null };
-  isTermsSelectionModal: { open: boolean; data: any | null };
 }
 
 // ************ Modal End ***********
@@ -577,6 +575,16 @@ export interface CommonCheckboxProps extends CommonValidationCheckboxProps {
   value?: boolean;
   onChange?: (value: boolean) => void;
 }
+// ************ Common Terms And Condition Start ***********
+
+export interface CommonTermsAndConditionProps {
+  selectedTermIds: string[];
+  onChange: (ids: string[]) => void;
+  isView?: boolean;
+}
+
+// ************ Common Terms And Condition End ***********
+
 export interface TabPanelProps {
   children?: ReactNode;
   index: number;

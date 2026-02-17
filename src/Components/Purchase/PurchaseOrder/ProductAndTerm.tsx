@@ -1,17 +1,15 @@
-import { Add, Clear, Edit } from "@mui/icons-material";
+import { Add, Clear } from "@mui/icons-material";
 import { Box, Tab, Tabs } from "@mui/material";
 import { FieldArray, useFormikContext } from "formik";
 import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
 import { Queries } from "../../../Api";
 import { CommonButton, CommonTextField, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
 import { CommonCard, CommonTabPanel } from "../../../Components/Common";
 import CommonTable from "../../../Components/Common/CommonTable";
 import { GenerateOptions } from "../../../Utils";
-import type { CommonTableColumn, ProductBase, ProductSelectCellProps, PurchaseOrderFormValues, PurchaseOrderItem, TaxBase, TermsConditionBase } from "../../../Types";
-import { setTermsAndConditionModal, setTermsSelectionModal } from "../../../Store/Slices/ModalSlice";
+import type { CommonTableColumn, ProductBase, ProductSelectCellProps, PurchaseOrderFormValues, PurchaseOrderItem, TaxBase } from "../../../Types";
+import CommonTermsAndCondition from "../../Common/TermsAndConditions/CommonTermsAndCondition";
 import BillingSummary from "./BillingSummary";
-import { GridDeleteIcon } from "@mui/x-data-grid";
 
 const ProductSelectCell = ({ index, productData, taxData, isLoading }: ProductSelectCellProps) => {
   const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
@@ -73,25 +71,17 @@ const TotalInputCell = ({ index }: { index: number }) => {
   return <CommonTextField type="number" onChange={handleTotalChange} value={item.total || 0} />;
 };
 
-const ProductAndTerm = ({ termsList, handleDeleteTerm }: { termsList: TermsConditionBase[]; handleDeleteTerm: (index: number) => void }) => {
+interface ProductAndTermProps {
+  selectedTermIds: string[];
+  onTermsChange: (ids: string[]) => void;
+}
+
+const ProductAndTerm = ({ selectedTermIds, onTermsChange }: ProductAndTermProps) => {
   const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
-  const dispatch = useDispatch();
   const [tabValue, setTabValue] = useState(0);
 
   const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown();
   const { data: taxData } = Queries.useGetTaxDropdown();
-
-  const handleOpenAddTerm = () => {
-    dispatch(setTermsAndConditionModal({ open: true, data: null }));
-  };
-
-  const handleEditTerm = (term: TermsConditionBase) => {
-    dispatch(setTermsAndConditionModal({ open: true, data: term }));
-  };
-
-  const handleOpenSelectTerms = () => {
-    dispatch(setTermsSelectionModal({ open: true, data: values.termsAndConditionIds }));
-  };
 
   useEffect(() => {
     let hasChanges = false;
@@ -229,53 +219,7 @@ const ProductAndTerm = ({ termsList, handleDeleteTerm }: { termsList: TermsCondi
           </CommonTabPanel>
 
           <CommonTabPanel value={tabValue} index={1}>
-            <Box sx={{ p: 3 }}>
-              {/* HEADER */}
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Box fontWeight={600}>Terms & Conditions</Box>
-
-                <Box display="flex" gap={1}>
-                  <CommonButton size="small" startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined">
-                    New Term
-                  </CommonButton>
-                  <CommonButton size="small" onClick={handleOpenSelectTerms} variant="outlined">
-                    <Edit fontSize="small" /> Edit Terms
-                  </CommonButton>
-                </Box>
-              </Box>
-              {/* TABLE */}
-              {(() => {
-                const columns: CommonTableColumn<TermsConditionBase>[] = [
-                  { key: "sr", header: "#", bodyClass: "align-middle text-center w-[60px]", render: (_row, index) => index + 1 },
-                  { key: "termsCondition", header: "Condition", headerClass: "text-left pl-6", bodyClass: "min-w-[400px] text-left pl-6" },
-                  {
-                    key: "action",
-                    header: "Action",
-                    headerClass: "text-center",
-                    bodyClass: "text-center w-[120px]",
-                    render: (row, index) => (
-                      <Box display="flex" justifyContent="center" alignItems="center" gap={1} px={2}>
-                        <CommonButton size="small" color="primary" variant="outlined" onClick={() => handleEditTerm(row)}>
-                          <Edit fontSize="small" />
-                        </CommonButton>
-                        <CommonButton size="small" color="error" variant="outlined" onClick={() => handleDeleteTerm(index)}>
-                          <GridDeleteIcon fontSize="small" />
-                        </CommonButton>
-                      </Box>
-                    ),
-                  },
-                ];
-                return (
-                  <Box sx={{ border: "1px solid", borderColor: "divider", borderRadius: 2, overflow: "hidden" }}>
-                    <CommonTable data={termsList || []} columns={columns} rowKey={(row) => row._id || ""} getRowClass={() => "align-top"} />{" "}
-                  </Box>
-                );
-              })()}
-              {/* NOTE */}
-              <Box mt={3}>
-                <CommonValidationTextField name="notes" label="Note" multiline rows={4} placeholder="Enter a note (max 200 characters)" />
-              </Box>
-            </Box>
+            <CommonTermsAndCondition selectedTermIds={selectedTermIds} onChange={onTermsChange} />
           </CommonTabPanel>
         </Box>
       </CommonCard>

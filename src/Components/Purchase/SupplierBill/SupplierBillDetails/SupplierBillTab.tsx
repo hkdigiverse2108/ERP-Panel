@@ -1,17 +1,18 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
-import { CommonButton, CommonSelect, CommonTextField, CommonValidationTextField } from "../../../../Attribute";
+import { CommonButton, CommonSelect, CommonTextField } from "../../../../Attribute";
 import { CommonTabPanel, CommonCard } from "../../../Common";
-import { GridDeleteIcon } from "@mui/x-data-grid";
 import { CommonTable } from "../../../Common";
-import type { CommonTableColumn, ProductRow, SupplierBillTabsProps, TermsConditionBase } from "../../../../Types";
-import { useDispatch } from "react-redux";
-import { setTermsAndConditionModal, setTermsSelectionModal } from "../../../../Store/Slices/ModalSlice";
-import { Edit } from "@mui/icons-material";
+import type { CommonTableColumn, ProductRow, SupplierBillTabsProps } from "../../../../Types";
+import CommonTermsAndCondition from "../../../Common/TermsAndConditions/CommonTermsAndCondition";
 
-const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, handleDeleteTerm }: SupplierBillTabsProps) => {
-  const dispatch = useDispatch();
+interface ExtendedSupplierBillTabsProps extends Omit<SupplierBillTabsProps, "termsList" | "handleDeleteTerm"> {
+  selectedTermIds: string[];
+  onTermsChange: (ids: string[]) => void;
+}
+
+const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, selectedTermIds, onTermsChange }: ExtendedSupplierBillTabsProps) => {
   const ProductRowColumns: CommonTableColumn<ProductRow>[] = [
     {
       key: "actions",
@@ -63,27 +64,6 @@ const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, h
       bodyClass: "min-w-28",
       render: (row, index) => <CommonTextField type="number" value={row.totalAmount} onChange={(v) => handleRowChange(index, "totalAmount", v)} />,
       footer: (data) => data.reduce((a, b) => a + (+b.totalAmount || 0), 0).toFixed(2),
-    },
-  ];
-
-  const TermsColumns: CommonTableColumn<TermsConditionBase>[] = [
-    { key: "sr", header: "#", render: (_, i) => i + 1, bodyClass: "w-10" },
-    { key: "termsCondition", header: "Condition", headerClass: "text-left", bodyClass: "text-left w-80" },
-    {
-      key: "action",
-      header: "Action",
-      headerClass: "text-center w-20",
-      bodyClass: "w-20 text-center",
-      render: (row, index) => (
-        <Box display="flex" justifyContent="center" gap={1}>
-          <CommonButton size="small" variant="outlined" onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: row }))}>
-            <Edit fontSize="small" />
-          </CommonButton>
-          <CommonButton size="small" color="error" variant="outlined" onClick={() => handleDeleteTerm(index)}>
-            <GridDeleteIcon fontSize="small" />
-          </CommonButton>
-        </Box>
-      ),
     },
   ];
 
@@ -154,27 +134,7 @@ const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, h
       </CommonTabPanel>
       {/* ================= TAB 2 : TERMS ================= */}
       <CommonTabPanel value={tabValue} index={1}>
-        <Box sx={{ p: 3 }}>
-          {/* ⭐ SIMPLE HEADER — SAME AS ProductAndTerm */}
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-            <Box fontWeight={600}>Terms & Conditions</Box>
-
-            <Box display="flex" gap={1}>
-              <CommonButton size="small" startIcon={<AddIcon />} onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: null }))} variant="outlined">
-                New Term
-              </CommonButton>
-              <CommonButton size="small" startIcon={<Edit fontSize="small" />} onClick={() => dispatch(setTermsSelectionModal({ open: true, data: termsList.map((t) => t._id) }))} variant="outlined">
-                Edit Terms
-              </CommonButton>
-            </Box>
-          </Box>
-          <Box sx={{ border: "1px solid", borderColor: "divider", borderRadius: 2, overflow: "hidden" }}>
-            <CommonTable data={termsList} columns={TermsColumns} rowKey={(row) => row._id || ""} />
-          </Box>
-          <Box mt={3}>
-            <CommonValidationTextField name="notes" label="Note" multiline rows={6} placeholder="Minimum 200 characters" />
-          </Box>
-        </Box>
+        <CommonTermsAndCondition selectedTermIds={selectedTermIds} onChange={onTermsChange} />
       </CommonTabPanel>
 
       {/* ================= TAB 3 : RETURN PRODUCT ================= */}
