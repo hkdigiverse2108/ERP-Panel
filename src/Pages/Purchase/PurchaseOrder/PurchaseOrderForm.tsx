@@ -16,11 +16,32 @@ import TermsAndConditionModal from "../../../Components/Purchase/SupplierBill/Te
 import { useAppSelector } from "../../../Store/hooks";
 import { ProductAndTerm } from "../../../Components/Purchase/PurchaseOrder";
 
-const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate, resetForm, setFieldValue, dirty, supplierQueryEnabled, termsList, handleDeleteTerm }: PurchaseOrderFormContentProps & { termsList: TermsConditionBase[]; handleDeleteTerm: (index: number) => void }) => {
-  const { values } = useFormikContext<PurchaseOrderFormValues>();
+const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate, resetForm, dirty, supplierQueryEnabled, termsList, handleDeleteTerm,   productData }: PurchaseOrderFormContentProps & { termsList: TermsConditionBase[]; handleDeleteTerm: (index: number) => void }) => {
+  const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
   const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier" }, supplierQueryEnabled);
 
   const selectedSupplier = (supplierData?.data as Supplier[])?.find((s) => s._id === values.supplierId);
+  useEffect(() => {
+    if (!values.items?.length) return;
+    if (!productData?.data) return;
+
+    const updated = values.items.map((item) => {
+      if (item.unitCost && item.unitCost !== 0) return item;
+
+      const product = productData.data.find((p: any) => p._id === item.productId);
+
+      if (!product) return item;
+
+      return {
+        ...item,
+        unitCost: product.purchasePrice || 0,
+        mrp: product.mrp || 0,
+        sellingPrice: product.sellingPrice || 0,
+      };
+    });
+
+    setFieldValue("items", updated);
+  }, [productData]);
 
   return (
     <Form noValidate>
@@ -97,6 +118,7 @@ const PurchaseOrderForm = () => {
 
   const { mutate: addPurchaseOrder, isPending: addLoading } = Mutations.useAddPurchaseOrder();
   const { mutate: editPurchaseOrder, isPending: editLoading } = Mutations.useEditPurchaseOrder();
+  const { data: productData } = Queries.useGetProductDropdown();
 
   const [allTerms, setAllTerms] = useState<TermsConditionBase[]>([]);
   const [selectedTermIds, setSelectedTermIds] = useState<string[]>([]);
@@ -175,6 +197,7 @@ const PurchaseOrderForm = () => {
     taxType: data?.taxType || "",
     termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
   };
+  console.log("ITEM OBJECT =>", initialValues?.items?.[0]);
 
   const handleSubmit = async (values: PurchaseOrderFormValues, { resetForm }: FormikHelpers<PurchaseOrderFormValues>) => {
     const { _submitAction, ...rest } = values;
@@ -207,7 +230,7 @@ const PurchaseOrderForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.PURCHASE_ORDER[pageMode]} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER[pageMode]} />
       <Box sx={{ p: 3, pb: 14 }}>
         <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={PurchaseOrderFormSchema} onSubmit={handleSubmit} enableReinitialize>
-          {(formikProps) => <PurchaseOrderFormContent {...formikProps} isEditing={isEditing} addLoading={addLoading} editLoading={editLoading} navigate={navigate} termsList={displayTerms} handleDeleteTerm={handleDeleteTerm} />}
+          {(formikProps) => <PurchaseOrderFormContent {...formikProps} isEditing={isEditing} addLoading={addLoading} editLoading={editLoading} navigate={navigate} termsList={displayTerms} handleDeleteTerm={handleDeleteTerm}  productData={productData}    />}
         </Formik>
       </Box>
 

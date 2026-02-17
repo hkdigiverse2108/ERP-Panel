@@ -122,6 +122,7 @@ export interface PurchaseOrderFormContentProps extends FormikProps<PurchaseOrder
   editLoading: boolean;
   navigate: NavigateFunction;
   supplierQueryEnabled?: boolean;
+   productData?: ProductDropDownApiResponse;
 }
 
 export interface SelectTermsModalProps {
