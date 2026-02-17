@@ -97,6 +97,14 @@ export const PAGE_TITLE = {
     BASE: "POS",
     NEW: "New POS",
   },
+  CRM: {
+    BASE: "CRM",
+    COUPON: {
+      BASE: "Coupon",
+      ADD: "Add Coupon",
+      EDIT: "Edit Coupon",
+    },
+  },
   PURCHASE: {
     BASE: "Purchase",
     SUPPLIER_BILL: {

@@ -359,7 +359,11 @@ export const PosPaymentFormSchema = Yup.object({
   voucherType: Validation("string", "Voucher Type"),
   paymentType: Validation("string", "Payment Type"),
   partyId: Validation("string", "Party Name"),
-  posOrderId: RequiredWhen("paymentType", [PAYMENT_TYPE[1].value], "Sales", "string"),
+  posOrderId: Yup.string().when(["voucherType", "paymentType"], {
+    is: (voucherType: string, paymentType: string) => voucherType === VOUCHER_TYPE[0].value && paymentType === PAYMENT_TYPE[1].value,
+    then: (schema) => schema.required("Sales is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
   paymentMode: RequiredWhen("voucherType", [VOUCHER_TYPE[0].value], "Payment Mode", "string"),
   bankId: Validation("string", "Bank", { required: false }),
   totalAmount: Validation("number", "Total Payment", { required: false }),

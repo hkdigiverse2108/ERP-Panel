@@ -82,4 +82,8 @@ export const ROUTES = {
     BASE: "/additional-charge",
     ADD_EDIT: "/additional-charge/add-edit",
   },
+  COUPON: {
+    BASE: "/coupon",
+    ADD_EDIT: "/coupon/add-edit",
+  },
 } as const;

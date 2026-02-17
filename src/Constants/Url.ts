@@ -204,4 +204,11 @@ export const URL_KEYS = {
     ADD: "/terms-condition/add",
     EDIT: "/terms-condition/edit",
   },
+  COUPON: {
+    BASE: "/coupon",
+    DROPDOWN: "/coupon/dropdown",
+    ALL: "/coupon/all",
+    ADD: "/coupon/add",
+    EDIT: "/coupon/edit",
+  },
 } as const;

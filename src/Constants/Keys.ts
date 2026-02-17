@@ -186,4 +186,10 @@ export const KEYS = {
     EDIT: "terms-condition-edit",
     DELETE: "terms-condition-delete",
   },
+  COUPON: {
+    BASE: "coupon",
+    ADD: "coupon-add",
+    EDIT: "coupon-edit",
+    DELETE: "coupon-delete",
+  },
 };
