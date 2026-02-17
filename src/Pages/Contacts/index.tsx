@@ -18,7 +18,7 @@ const Contact = () => {
   const permission = usePagePermission(PAGE_TITLE.CONTACT.BASE);
 
   const { data: contactData, isLoading: contactDataLoading, isFetching: contactDataFetching } = Queries.useGetContact(params);
-  const { mutate: deleteContactMutate } = Mutations.useDeleteContact();
+  const { mutate: deleteContactMutate, isPending: isDeleteLoading } = Mutations.useDeleteContact();
   const { mutate: editContact, isPending: isEditLoading } = Mutations.useEditContact();
 
   const allContact = contactData?.data?.contact_data.map((contact: ContactBase) => ({ ...contact, id: contact?._id })) || [];
@@ -146,7 +146,7 @@ const Contact = () => {
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
 
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
       </Box>
     </>
   );

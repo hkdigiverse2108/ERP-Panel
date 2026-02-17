@@ -450,7 +450,6 @@ export interface ModalStateSlice {
   isCreditNoteModal: boolean;
   isOrderModal: boolean;
   isCashControlModal: boolean;
-  isCouponModal: boolean;
   isRedeemCreditModal: boolean;
   isCardModal: boolean;
   isApplyCouponModal: boolean;

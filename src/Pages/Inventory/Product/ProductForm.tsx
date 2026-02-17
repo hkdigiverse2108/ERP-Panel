@@ -35,6 +35,7 @@ const ProductForm = () => {
 
   const initialValues = useMemo<ProductFormValues>(
     () => ({
+      sku: data?.sku || "",
       productType: data?.productType || "",
       name: data?.name || "",
       printName: data?.printName || "",
@@ -144,7 +145,8 @@ const ProductForm = () => {
                           <CommonValidationSwitch name="isExpiryProductSaleable" label="Expiry Product Saleable" grid={{ xs: 12, sm: 6, xl: 3 }} />
                         </>
                       )}
-                      <CommonValidationTextField name="shortDescription" label="short Description" multiline grid={{ xs: 12 }} />
+                      <CommonValidationTextField name="sku" label="sku" grid={{ xs: 12, sm: 6 }} />
+                      <CommonValidationTextField name="shortDescription" label="short Description" multiline grid={{ xs: 12, sm: 6 }} />
                       <CommonValidationQuillInput name="description" label="Description" grid={{ xs: 12 }} />
                       <Grid size={12}>
                         <FieldArray name="nutrition">

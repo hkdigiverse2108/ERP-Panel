@@ -290,6 +290,7 @@ export const getContactFormSchema = Yup.object({
 });
 
 export const ProductFormSchema = Yup.object({
+  sku: Validation("string", "Sku", { required: false }),
   productType: Validation("string", "Product Type"),
   name: Validation("string", "Product Name"),
   printName: Validation("string", "Print Name"),
@@ -387,4 +388,44 @@ export const PurchaseOrderFormSchema = Yup.object({
   items: Yup.array()
     .of(Yup.object({ productId: Validation("string", "Product"), qty: Validation("number", "Quantity", { extraRules: (s) => s.min(1, "Quantity must be at least 1") }) }))
     .min(1, "At least one item is required"),
+});
+
+export const CouponFormSchema = Yup.object({
+  name: Validation("string", "Name"),
+  couponPrice: Validation("number", "Coupon Price"),
+  redeemValue: Validation("number", "Redeem Value"),
+  usageLimit: Validation("number", "Usage Limit"),
+  expiryDays: Validation("number", "Expiry Days"),
+  startDate: Validation("string", "Start Date"),
+  endDate: Validation("string", "End Date"),
+  redemptionType: Validation("string", "Redemption Type"),
+  singleTimeUse: Validation("boolean", "Single Time Use"),
+  status: Validation("string", "Status"),
+  isActive: Validation("boolean", "Is Active"),
+});
+
+export const LoyaltyFormSchema = Yup.object({
+  name: Validation("string", "Name"),
+  discountValue: Validation("number", "Discount Value"),
+  type: Validation("string", "Type"),
+  minimumPurchaseAmount: Validation("number", "Minimum Purchase Amount"),
+  redemptionPerCustomer: Validation("string", "Redemption Per Customer"),
+  redemptionPoints: Validation("number", "Redemption Points"),
+  usageLimit: Validation("number", "Usage Limit"),
+  campaignExpiryDate: Validation("string", "Campaign Expiry Date"),
+  campaignLaunchDate: Validation("string", "Campaign Launch Date"),
+  description: Validation("string", "Description", { required: false }),
+  isActive: Validation("boolean", "Is Active"),
+});
+
+export const PointSetupSchema = Yup.object({
+  amount: Validation("string", "Amount", {
+    required: true,
+    extraRules: (s) => s.min(1, "Amount must be at least 1").max(5, "Amount must not be greater than 5"),
+  }),
+
+  points: Validation("string", "Points", {
+    required: true,
+    extraRules: (s) => s.min(1, "Points must be at least 1").max(5, "Points must not be greater than 5"),
+  }),
 });

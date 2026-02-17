@@ -18,7 +18,7 @@ const PurchaseOrder = () => {
 
   const { data: purchaseOrderData, isLoading, isFetching } = Queries.useGetPurchaseOrder(params);
 
-  const { mutate: deletePurchaseOrder } = Mutations.useDeletePurchaseOrder();
+  const { mutate: deletePurchaseOrder, isPending: isDeleteLoading } = Mutations.useDeletePurchaseOrder();
 
   const { mutate: editPurchaseOrder, isPending: isEditLoading } = Mutations.useEditPurchaseOrder();
 
@@ -134,7 +134,7 @@ const PurchaseOrder = () => {
           <CommonDataGrid {...gridOptions} />
         </CommonCard>
 
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
       </Box>
     </>
   );

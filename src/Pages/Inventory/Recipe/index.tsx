@@ -17,7 +17,7 @@ const Recipe = () => {
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.RECIPE.BASE);
 
   const { data, isLoading, isFetching } = Queries.useGetRecipe(params);
-  const { mutate: deleteRecipe } = Mutations.useDeleteRecipe();
+  const { mutate: deleteRecipe, isPending: isDeleteLoading } = Mutations.useDeleteRecipe();
   const { mutate: editRecipe, isPending: isEditLoading } = Mutations.useEditRecipe();
   const rows = useMemo(() => {
     return (
@@ -88,7 +88,7 @@ const Recipe = () => {
           <CommonDataGrid {...gridOptions} />
         </CommonCard>
 
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDelete} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={handleDelete} />
       </Box>
     </>
   );

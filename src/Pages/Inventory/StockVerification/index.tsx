@@ -17,7 +17,7 @@ const StockVerification = () => {
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE);
 
   const { data: stockVerificationData, isLoading: stockVerificationDataLoading, isFetching: stockVerificationDataFetching } = Queries.useGetStockVerification(params);
-  const { mutate: deleteStockVerificationMutate } = Mutations.useDeleteStockVerification();
+  const { mutate: deleteStockVerificationMutate, isPending: isDeleteLoading } = Mutations.useDeleteStockVerification();
 
   const allStock = useMemo(() => stockVerificationData?.data?.stockVerification_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [stockVerificationData]);
   const totalRows = stockVerificationData?.data?.totalData || 0;
@@ -84,7 +84,7 @@ const StockVerification = () => {
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       </Box>
     </>
   );

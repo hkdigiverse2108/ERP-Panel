@@ -13,7 +13,6 @@ const initialState: ModalStateSlice = {
   isCreditNoteModal: false,
   isOrderModal: false,
   isCashControlModal: false,
-  isCouponModal: false,
   isRedeemCreditModal: false,
   isCardModal: false,
   isApplyCouponModal: false,
@@ -65,9 +64,6 @@ const ModalSlice = createSlice({
     },
     setCashControlModal: (state) => {
       state.isCashControlModal = !state.isCashControlModal;
-    },
-    setCouponModal: (state) => {
-      state.isCouponModal = !state.isCouponModal;
     },
     setRedeemCreditModal: (state) => {
       state.isRedeemCreditModal = !state.isRedeemCreditModal;

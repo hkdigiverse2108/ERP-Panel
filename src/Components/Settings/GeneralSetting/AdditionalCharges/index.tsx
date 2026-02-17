@@ -12,7 +12,7 @@ const AdditionalCharges = () => {
   const { data: additional_charge_data, isLoading: additionalChargesDataLoading, isFetching: additionalChargesDataFetching } = Queries.useGetAdditionalCharges(params);
 
   const dispatch = useDispatch();
-  const { mutate: deleteAdditionalChargesMutate } = Mutations.useDeleteAdditionalCharges();
+  const { mutate: deleteAdditionalChargesMutate, isPending: isDeleteLoading } = Mutations.useDeleteAdditionalCharges();
   const { mutate: editAdditionalCharges, isPending: isEditLoading } = Mutations.useEditAdditionalCharges();
   const allRows = additional_charge_data?.data?.additional_charge_data?.map((additionalCharges: AdditionalChargesBase) => ({ ...additionalCharges, id: additionalCharges._id })) || [];
   const totalRows = additional_charge_data?.data?.totalData || 0;
@@ -69,7 +69,7 @@ const AdditionalCharges = () => {
       <CommonCard title={PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE}>
         <CommonDataGrid {...CommonDataGridOption} />
       </CommonCard>
-      <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+      <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       <AdditionalChargesForm />
     </>
   );
