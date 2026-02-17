@@ -33,3 +33,4 @@ export * from "./AccountGroup";
 export * from "./PosPayment";
 export * from "./Account";
 export * from "./PurchaseOrder";
+export * from "./PosOrder";

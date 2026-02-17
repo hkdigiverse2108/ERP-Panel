@@ -1,7 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AccountApiResponse, AccountDropdownApiResponse, AccountGroupDropdownApiResponse, AdditionalChargesApiResponse, AdditionalChargesDropdownApiResponse, AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BankDropdownApiResponse, BillOfLiveProductApiResponse, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, ContactApiResponse, ContactDropdownApiResponse, CountryApiResponse, EmployeeApiResponse, MaterialConsumptionApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, PosCustomerDetailApiResponse, PosPaymentApiResponse, PosProductOrderApiResponse, ProductApiResponse, ProductDropDownApiResponse, ProductSingleApiResponse, RecipeApiResponse, RecipeDropdownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SingleEmployeeApiResponse, StockApiResponse, StockVerificationApiResponse, SupplierBillApiResponse, TaxApiResponse, TaxDropdownApiResponse, TermsConditionApiResponse, UomDropdownApiResponse, UploadResponse } from "../Types";
-import type { PosOrderApiResponse, PosOrderDropdownApiResponse } from "../Types/PosOrder";
-import type { PurchaseOrderApiResponse, PurchaseOrderDropdownApiResponse } from "../Types/PurchaseOrder";
+import type { AccountApiResponse, AccountDropdownApiResponse, AccountGroupDropdownApiResponse, AdditionalChargesApiResponse, AdditionalChargesDropdownApiResponse, AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BankDropdownApiResponse, BillOfLiveProductApiResponse, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, ContactApiResponse, ContactDropdownApiResponse, CountryApiResponse, EmployeeApiResponse, MaterialConsumptionApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, PosCustomerDetailApiResponse, PosOrderApiResponse, PosOrderDropdownApiResponse, PosPaymentApiResponse, PosProductOrderApiResponse, ProductApiResponse, ProductDropDownApiResponse, ProductSingleApiResponse, PurchaseOrderApiResponse, PurchaseOrderDropdownApiResponse, RecipeApiResponse, RecipeDropdownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SingleEmployeeApiResponse, StockApiResponse, StockVerificationApiResponse, SupplierBillApiResponse, TaxApiResponse, TaxDropdownApiResponse, TermsConditionApiResponse, UomDropdownApiResponse, UploadResponse } from "../Types";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 
@@ -93,13 +91,13 @@ export const Queries = {
   //*************** POS Order **************** */
   useGetPosOrder: (params?: Params, enabled?: boolean) => useQueries<PosOrderApiResponse>([KEYS.POS_ORDER.BASE, params], () => Get(URL_KEYS.POS_ORDER.ALL, params), { enabled: enabled }),
   useGetPosOrderDropdown: (params?: Params, enabled?: boolean) => useQueries<PosOrderDropdownApiResponse>([KEYS.POS_ORDER.DROPDOWN, params], () => Get(URL_KEYS.POS_ORDER.DROPDOWN, params), { enabled: enabled }),
-  
+
   //*************** POS Customer Detail **************** */
   useGetPosCustomerDetail: (id?: string, enabled?: boolean) => useQueries<PosCustomerDetailApiResponse>([KEYS.POS.CUSTOMER_DETAIL, id], () => Get(`${URL_KEYS.POS.CUSTOMER_DETAIL}/${id}`), { enabled: enabled }),
 
   //*************** POS Payment **************** */
   useGetPosPayment: (params?: Params, enabled?: boolean) => useQueries<PosPaymentApiResponse>([KEYS.POS_PAYMENT.BASE, params], () => Get(URL_KEYS.POS_PAYMENT.ALL, params), { enabled: enabled }),
- 
+
   //*************** Additional Chargers **************** */
   useGetAdditionalCharges: (params?: Params) => useQueries<AdditionalChargesApiResponse>([KEYS.ADDITIONAL_CHARGES.BASE, params], () => Get(URL_KEYS.ADDITIONAL_CHARGES.ALL, params)),
   useGetAdditionalChargeDropdown: (params?: Params, enabled?: boolean) => useQueries<AdditionalChargesDropdownApiResponse>([KEYS.ADDITIONAL_CHARGES.BASE, params], () => Get(URL_KEYS.ADDITIONAL_CHARGES.DROPDOWN, params), { enabled: enabled }),
