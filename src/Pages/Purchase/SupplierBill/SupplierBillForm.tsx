@@ -325,13 +325,21 @@ const SupplierBillForm = () => {
 
   const initialValues: SupplierBillFormValues = { ...defaultValues, ...cleanData, supplierId: cleanData?.supplierId?._id || cleanData?.supplierId || defaultValues.supplierId, companyId: cleanData?.companyId?._id || cleanData?.companyId || "", branchId: cleanData?.branchId?._id || cleanData?.branchId || "", reverseCharge: String(cleanData?.reverseCharge ?? false), termsAndConditionIds: data?.termsAndConditionIds?.map((t: { _id: string }) => t._id) || [] };
 
-  const handleSubmit = async (values: SupplierBillFormValues, { resetForm }: FormikHelpers<SupplierBillFormValues>) => {
+  const handleSubmit = async (values: SupplierBillFormValues & { _submitAction?: string }, { resetForm }: FormikHelpers<SupplierBillFormValues>) => {
     const { taxSummary, ...restSummary } = summary;
-    const payload: SupplierBillFormValues = { ...values, productDetails: mapProductRows(), additionalCharges: mapAdditionalCharges(), termsAndConditionIds: selectedTermIds, summary: restSummary };
+    const { _submitAction, ...restValues } = values;
+    const payload: SupplierBillFormValues = { ...restValues, productDetails: mapProductRows(), additionalCharges: mapAdditionalCharges(), termsAndConditionIds: selectedTermIds, summary: restSummary };
 
     const handleSuccess = () => {
-      resetForm();
-      navigate(-1);
+      if (_submitAction === "saveAndNew") {
+        resetForm();
+        setRows([emptyRow]);
+        setReturnRows([emptyRow]);
+        setAdditionalChargeRows([additionalChargeEmptyRow]);
+        setSelectedTermIds([]);
+      } else {
+        navigate(-1);
+      }
     };
 
     if (isEditing) {
@@ -346,7 +354,7 @@ const SupplierBillForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.SUPPLIER_BILL[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.SUPPLIER_BILL[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8, display: "grid", gap: 2 }}>
         <Formik innerRef={formikRef} initialValues={initialValues} onSubmit={handleSubmit} enableReinitialize={isEditing}>
-          {() => (
+          {({ setFieldValue, dirty, resetForm }) => (
             <>
               <Form noValidate>
                 <SupplierWatcher suppliers={suppliers} onChange={setSelectedSupplier} />
@@ -366,7 +374,21 @@ const SupplierBillForm = () => {
               <CommonCard grid={{ xs: 12 }} hideDivider>
                 <AdditionalChargesSection show={showAdditionalCharge} onToggle={setShowAdditionalCharge} rows={additionalChargeRows} onAdd={handleAddAdditionalCharge} onRemove={handleCutAdditionalCharge} onChange={handleAdditionalChargeRowChange} taxOptions={taxOptions} isTaxLoading={TaxDataLoading} flatDiscount={flatDiscount} onFlatDiscountChange={setFlatDiscount} summary={summary} isAdditionalChargeLoading={additionalchargeLoading} additionalChargeOptions={additionalChargeOptions} roundOffAmount={roundOffAmount} onRoundOffAmountChange={setRoundOffAmount} />
               </CommonCard>
-              <CommonBottomActionBar save isLoading={isAddLoading || isEditLoading} onSave={() => formikRef.current?.submitForm()} />
+              <CommonBottomActionBar
+                save={isEditing}
+                clear={!isEditing}
+                disabled={!dirty && !isEditing}
+                isLoading={isAddLoading || isEditLoading}
+                onClear={() => (isEditing ? navigate(-1) : resetForm())}
+                onSave={() => {
+                  setFieldValue("_submitAction", "save");
+                  formikRef.current?.submitForm();
+                }}
+                onSaveAndNew={() => {
+                  setFieldValue("_submitAction", "saveAndNew");
+                  formikRef.current?.submitForm();
+                }}
+              />
             </>
           )}
         </Formik>
