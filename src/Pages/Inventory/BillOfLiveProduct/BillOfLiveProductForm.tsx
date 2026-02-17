@@ -65,7 +65,7 @@ const BillOfLiveProductForm = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const permission = usePagePermission(PAGE_TITLE.INVENTORY.BILL_OF_Live_Product.BASE);
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE);
   const { data, no } = location.state as {
     data?: BillOfLiveProductBase;
     no?: number;
@@ -222,9 +222,9 @@ const BillOfLiveProductForm = () => {
     }));
 
     if (isEditing) {
-      editBOM({ billOfLiveProductId: data!._id, recipeId: values.recipeId, productDetails, number: formatBimNumber(values.number) }, { onSuccess: () => navigate(ROUTES.BILL_OF_Live_Product.BASE) });
+      editBOM({ billOfLiveProductId: data!._id, recipeId: values.recipeId, productDetails, number: formatBimNumber(values.number) }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
     } else {
-      addBOM({ number: formatBimNumber(values.number), date: values.date, allowReverseCalculation: values.allowReverseCalculation, recipeId: values.recipeId, productDetails }, { onSuccess: () => navigate(ROUTES.BILL_OF_Live_Product.BASE) });
+      addBOM({ number: formatBimNumber(values.number), date: values.date, allowReverseCalculation: values.allowReverseCalculation, recipeId: values.recipeId, productDetails }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
     }
   };
   useEffect(() => {
@@ -233,7 +233,7 @@ const BillOfLiveProductForm = () => {
   }, [isEditing, permission, navigate]);
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.BILL_OF_Live_Product[pageMode]} breadcrumbs={BREADCRUMBS.BILL_OF_Live_Product[pageMode]} />
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT[pageMode]} breadcrumbs={BREADCRUMBS.BILL_OF_LIVE_PRODUCT[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2, mb: 10 }}>
         <CommonCard hideDivider>
           <Grid container spacing={2} sx={{ p: 2 }}>

@@ -61,7 +61,7 @@ export const PAGE_TITLE = {
       ADD: "Add recipe",
       EDIT: "Edit recipe",
     },
-    BILL_OF_Live_Product: {
+    BILL_OF_LIVE_PRODUCT: {
       BASE: "Bill Of Live Product",
       ADD: "Add Bill Of Live Product",
       EDIT: "Edit Bill Of Live Product",

@@ -29,7 +29,7 @@ export const ROUTES = {
   CATEGORY_BRAND: "/category-brand",
   DEPARTMENT: "/department",
 
-  BILL_OF_Live_Product: {
+  BILL_OF_LIVE_PRODUCT: {
     BASE: "/bill-of-live-product",
     ADD_EDIT: "/bill-of-live-product/add-edit",
   },

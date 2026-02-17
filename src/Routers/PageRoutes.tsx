@@ -69,8 +69,8 @@ export const PageRoutes = [
   { path: ROUTES.RECIPE.BASE, name: PAGE_TITLE.INVENTORY.RECIPE.BASE, element: <Recipe /> },
   { path: ROUTES.RECIPE.ADD_EDIT, name: PAGE_TITLE.INVENTORY.RECIPE.BASE, element: <RecipeForm /> },
 
-  { path: ROUTES.BILL_OF_Live_Product.BASE, name: PAGE_TITLE.INVENTORY.BILL_OF_Live_Product.BASE, element: <BillOfMaterials /> },
-  { path: ROUTES.BILL_OF_Live_Product.ADD_EDIT, name: PAGE_TITLE.INVENTORY.BILL_OF_Live_Product.BASE, element: <BillOfMaterialsForm /> },
+  { path: ROUTES.BILL_OF_LIVE_PRODUCT.BASE, name: PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE, element: <BillOfMaterials /> },
+  { path: ROUTES.BILL_OF_LIVE_PRODUCT.ADD_EDIT, name: PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE, element: <BillOfMaterialsForm /> },
 
   { path: ROUTES.SUPPLIER_BILL.BASE, name: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE, element: <SupplierBill /> },
   { path: ROUTES.SUPPLIER_BILL.ADD_EDIT, name: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE, element: <SupplierBillForm /> },

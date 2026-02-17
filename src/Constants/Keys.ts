@@ -126,11 +126,11 @@ export const KEYS = {
     DELETE: "location-delete",
   },
 
-  BILL_OF_Live_Product: {
-    BASE: "billofliveproduct",
-    ADD: "billofliveproduct-add",
-    EDIT: "billofliveproduct-edit",
-    DELETE: "billofliveproduct-delete",
+  BILL_OF_LIVE_PRODUCT: {
+    BASE: "bill-of-live-product",
+    ADD: "bill-of-live-product-add",
+    EDIT: "bill-of-live-product-edit",
+    DELETE: "bill-of-live-product-delete",
   },
 
   PERMISSION: {

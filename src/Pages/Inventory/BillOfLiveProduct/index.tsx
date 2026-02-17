@@ -12,7 +12,7 @@ import { FormatDate } from "../../../Utils";
 const BillOfLiveProduct = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
-  const permission = usePagePermission(PAGE_TITLE.INVENTORY.BILL_OF_Live_Product.BASE);
+  const permission = usePagePermission(PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE);
   const { data, isLoading, isFetching } = Queries.useGetBillOfLiveProduct(params);
   const { mutate: deleteBOM } = Mutations.useDeleteBillOfLiveProduct();
   const { mutate: editBOM, isPending: isEditLoading } = Mutations.useEditBillOfLiveProduct();
@@ -22,7 +22,7 @@ const BillOfLiveProduct = () => {
 
   const totalRows = data?.data?.totalData || 0;
 
-  const handleAdd = () => navigate(ROUTES.BILL_OF_Live_Product.ADD_EDIT, { state: { no: data?.data?.totalData } });
+  const handleAdd = () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.ADD_EDIT, { state: { no: data?.data?.totalData } });
 
   const handleDelete = () => {
     if (!rowToDelete) return;
@@ -37,7 +37,7 @@ const BillOfLiveProduct = () => {
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<BillOfLiveProductBase>({
-            ...(permission?.edit && { active: (row) => editBOM({ billOfLiveProductId: row?._id, isActive: !row.isActive }), editRoute: ROUTES.BILL_OF_Live_Product.ADD_EDIT }),
+            ...(permission?.edit && { active: (row) => editBOM({ billOfLiveProductId: row?._id, isActive: !row.isActive }), editRoute: ROUTES.BILL_OF_LIVE_PRODUCT.ADD_EDIT }),
             ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row.number }) }),
           }),
         ]
@@ -62,7 +62,7 @@ const BillOfLiveProduct = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.BILL_OF_Live_Product.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.BILL_OF_Live_Product.BASE} />
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.BILL_OF_LIVE_PRODUCT.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonCard hideDivider>
