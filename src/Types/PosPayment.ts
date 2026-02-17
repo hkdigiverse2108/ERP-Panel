@@ -11,7 +11,7 @@ export interface PosPaymentFormValues {
   totalAmount?: number;
   paidAmount?: number;
   pendingAmount?: number;
-  roundOff?: number;
+  kasar?: number;
   amount?: number;
   isNonGST?: boolean;
   isActive?: boolean;

@@ -8,13 +8,13 @@ import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setCouponModal } from "../../../../../Store/Slices/ModalSlice";
 import Coupon from "./Coupon";
 import PosOption from "./PosOptions";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
-const InfoRow: FC<{ label: string; value: string }> = ({ label, value }) => {
+dayjs.extend(relativeTime);
+
+const InfoRow: FC<{ label: string; value?: string | number }> = ({ label, value }) => {
   const dispatch = useAppDispatch();
-  const { PosProduct } = useAppSelector((state) => state.pos);
-  const { data } = Queries.useGetPosCustomerDetail(PosProduct?.customerId,Boolean(PosProduct?.customerId));
-console.log("data",data);
-
   return (
     <div className="flex justify-between text-sm">
       <span className="font-semibold text-gray-700 dark:text-gray-400">{label} :-</span>
@@ -29,7 +29,10 @@ console.log("data",data);
   );
 };
 
-const PosSidebar = () => {  
+const PosSidebar = () => {
+  const { PosProduct } = useAppSelector((state) => state.pos);
+  const { data } = Queries.useGetPosCustomerDetail(PosProduct?.customerId, Boolean(PosProduct?.customerId));
+  const customerData = PosProduct?.customerId ? data?.data : undefined;
   return (
     <>
       <div className="p-2 space-y-3">
@@ -40,22 +43,22 @@ const PosSidebar = () => {
         <Box className="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-dark rounded-md p-3">
           <p className="font-semibold text-base mb-2 dark:text-gray-300">Customer Details</p>
           <div className="space-y-1">
-            <InfoRow label="Last Visited" value="-" />
-            <InfoRow label="Last Bill Amount" value="₹0" />
-            <InfoRow label="Most Purchased Item" value="0" />
-            <InfoRow label="Payment Mode" value="-" />
-            <InfoRow label="Due Payment" value="0" />
-            <InfoRow label="Total Purchase" value="0" />
-            <InfoRow label="Loyalty Points" value="0" />
-            <InfoRow label="Coupons" value="Coupons" />
+            <InfoRow label="Last Visited" value={customerData?.lastBill?.createdAt ? dayjs(customerData.lastBill.createdAt).fromNow() : "-"} />
+            <InfoRow label="Last Bill Amount" value={`₹${customerData?.lastBill?.totalAmount ?? 0}`} />
+            <InfoRow label="Most Purchased Item" value={customerData?.mostPurchasedProduct?.name ?? "-"} />
+            <InfoRow label="Payment Mode" value={customerData?.lastBill?.paymentMethod ?? "-"} />
+            <InfoRow label="Due Payment" value={`₹${customerData?.totalDueAmount ?? 0}`} />
+            <InfoRow label="Total Purchase" value={`₹${customerData?.totalPurchaseAmount ?? 0}`} />
+            <InfoRow label="Loyalty Points" value={customerData?.customer?.loyaltyPoints ?? 0} />
+            {PosProduct?.customerId && <InfoRow label="Coupons" value="Coupons" />}
           </div>
         </Box>
 
         {/* LAST BILL */}
         <Box className="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-dark rounded-md p-3">
           <div className="space-y-2">
-            <InfoRow label="Last Bill No." value="ORD16" />
-            <InfoRow label="Last Bill Amount" value="₹50.00" />
+            <InfoRow label="Last Bill No." value={customerData?.lastBill?.orderNo ?? "-"} />
+            <InfoRow label="Last Bill Amount" value={`₹${customerData?.lastBill?.totalAmount ?? 0}`} />
             <CommonButton variant="contained" size="small" title="Last Bill Print" startIcon={<Print />} fullWidth />
           </div>
         </Box>
