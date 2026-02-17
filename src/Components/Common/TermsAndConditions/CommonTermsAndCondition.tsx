@@ -38,7 +38,7 @@ const AddTermModal = ({ open, term, onClose, onSave }: { open: boolean; term: Te
   return (
     <CommonModal title={isEditing ? "Edit Terms & Conditions" : "Add Terms & Conditions"} isOpen={open} onClose={onClose} className="max-w-125 m-2 sm:m-5">
       <Formik enableReinitialize initialValues={initialValues} onSubmit={handleSubmit}>
-        {({ dirty }) => (
+        {({ dirty, submitForm }) => (
           <Form noValidate>
             <Grid container spacing={2}>
               <CommonCard hideDivider grid={{ xs: 12 }}>
@@ -46,8 +46,8 @@ const AddTermModal = ({ open, term, onClose, onSave }: { open: boolean; term: Te
                   <CommonValidationTextField name="termsCondition" label="Terms & Conditions" multiline rows={4} required grid={{ xs: 12 }} />
                   <CommonValidationSwitch name="isDefault" label="Default" grid={{ xs: 12 }} />
                   <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
-                    <CommonButton variant="outlined" title="Cancel" onClick={onClose} />
-                    <CommonButton type="submit" loading={isAddLoading || isEditLoading} variant="contained" title="Save" disabled={!dirty} />
+                    <CommonButton type="button" variant="outlined" title="Cancel" onClick={onClose} />
+                    <CommonButton type="button" loading={isAddLoading || isEditLoading} variant="contained" title="Save" disabled={!dirty} onClick={submitForm} />
                   </Grid>
                 </Grid>
               </CommonCard>
@@ -85,7 +85,7 @@ const SelectTermsModal = ({ open, selectedIds, onClose, onSave }: { open: boolea
   return (
     <CommonModal title="Edit Terms" isOpen={open} onClose={onClose} className="max-w-125 m-2 sm:m-5">
       <Formik<TermsSelectionFormValues> enableReinitialize initialValues={initialValues} onSubmit={handleSubmit}>
-        {({ values, setFieldValue }) => (
+        {({ values, setFieldValue, submitForm }) => (
           <Form noValidate>
             <Grid container spacing={2}>
               <CommonCard hideDivider grid={{ xs: 12 }}>
@@ -114,8 +114,8 @@ const SelectTermsModal = ({ open, selectedIds, onClose, onSave }: { open: boolea
                     ))
                   )}
                   <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
-                    <CommonButton variant="outlined" title="Cancel" onClick={onClose} />
-                    <CommonButton type="submit" variant="contained" title="Save" />
+                    <CommonButton type="button" variant="outlined" title="Cancel" onClick={onClose} />
+                    <CommonButton type="button" variant="contained" title="Save" onClick={submitForm} />
                   </Grid>
                 </Grid>
               </CommonCard>
@@ -185,10 +185,10 @@ const CommonTermsAndCondition = ({ selectedTermIds, onChange }: CommonTermsAndCo
       bodyClass: "text-center w-[120px]",
       render: (row: TermsConditionBase, index: number) => (
         <Box display="flex" justifyContent="center" alignItems="center" gap={1} px={2}>
-          <CommonButton size="small" color="primary" variant="outlined" onClick={() => handleEditSingleTerm(row)}>
+          <CommonButton type="button" size="small" color="primary" variant="outlined" onClick={() => handleEditSingleTerm(row)}>
             <Edit fontSize="small" />
           </CommonButton>
-          <CommonButton size="small" color="error" variant="outlined" onClick={() => handleDeleteTerm(index)}>
+          <CommonButton type="button" size="small" color="error" variant="outlined" onClick={() => handleDeleteTerm(index)}>
             <GridDeleteIcon fontSize="small" />
           </CommonButton>
         </Box>
@@ -203,10 +203,10 @@ const CommonTermsAndCondition = ({ selectedTermIds, onChange }: CommonTermsAndCo
         <Box fontWeight={600}>Terms & Conditions</Box>
 
         <Box display="flex" gap={1}>
-          <CommonButton size="small" startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined">
+          <CommonButton type="button" size="small" startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined">
             New Term
           </CommonButton>
-          <CommonButton size="small" onClick={() => setSelectModalOpen(true)} variant="outlined">
+          <CommonButton type="button" size="small" onClick={() => setSelectModalOpen(true)} variant="outlined">
             <Edit fontSize="small" /> Edit Terms
           </CommonButton>
         </Box>

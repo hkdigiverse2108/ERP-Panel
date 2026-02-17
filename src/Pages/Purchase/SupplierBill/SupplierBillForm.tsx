@@ -61,7 +61,21 @@ const SupplierBillForm = () => {
   const [tabValue, setTabValue] = useState(0);
   const [selectedTermIds, setSelectedTermIds] = useState<string[]>([]);
   const [showAdditionalCharge, setShowAdditionalCharge] = useState(false);
+  const { data: termsConditionData } = Queries.useGetTermsCondition();
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
+
+  useEffect(() => {
+    if (!termsConditionData?.data) return;
+    const response = termsConditionData.data;
+    const all: TermsConditionBase[] = Array.isArray(response) ? response : (response.termsCondition_data ?? []);
+
+    if (!isEditing && selectedTermIds.length === 0) {
+      const defaultTerms = all.filter((t) => t.isDefault);
+      if (defaultTerms.length > 0) {
+        setSelectedTermIds(defaultTerms.map((t) => t._id));
+      }
+    }
+  }, [termsConditionData, isEditing]);
   const taxOptions = GenerateOptions(TaxData?.data || []);
   const { data: ProductsData, isLoading: ProductsDataLoading } = Queries.useGetProductDropdown();
   const productOptions = GenerateOptions(ProductsData?.data);
