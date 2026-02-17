@@ -11,6 +11,7 @@ import { GenerateOptions } from "../../../Utils";
 import type { CommonTableColumn, ProductBase, ProductSelectCellProps, PurchaseOrderFormValues, PurchaseOrderItem, TaxBase, TermsConditionBase } from "../../../Types";
 import { setTermsAndConditionModal, setTermsSelectionModal } from "../../../Store/Slices/ModalSlice";
 import BillingSummary from "./BillingSummary";
+import { GridDeleteIcon } from "@mui/x-data-grid";
 
 const ProductSelectCell = ({ index, productData, taxData, isLoading }: ProductSelectCellProps) => {
   const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
@@ -227,60 +228,59 @@ const ProductAndTerm = ({ termsList, handleDeleteTerm }: { termsList: TermsCondi
             </Box>
           </CommonTabPanel>
 
-          {/* TAB 1: TERMS & CONDITIONS */}
           <CommonTabPanel value={tabValue} index={1}>
-            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr" }, gap: 3, p: 3 }}>
-              {/* Terms Section */}
-              <Box>
-                <Box display="flex" justifyContent="space-between" mb={2}>
-                  <Box fontWeight={600}>Terms & Conditions</Box>
-                  <Box display="flex" gap={1}>
-                    <CommonButton startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined" title="new term" />
-                    <CommonButton onClick={handleOpenSelectTerms} variant="outlined">
-                      <Edit />
-                    </CommonButton>
-                  </Box>
-                </Box>
+            <Box sx={{ p: 3 }}>
+              {/* HEADER */}
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                <Box fontWeight={600}>Terms & Conditions</Box>
 
-                <Box sx={{ overflowX: "hidden" }}>
-                  <Box sx={{ width: "max-content" }}>
-                    <table className="w-full text-sm border border-gray-200 dark:border-gray-700">
-                      <thead className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-200">
-                        <tr>
-                          <th className="p-2 w-10">#</th>
-                          <th className="p-2 text-left">Condition</th>
-                          <th className="p-2 w-20 text-center">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {termsList.map((term: TermsConditionBase, index: number) => (
-                          <tr key={term._id} className="text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700">
-                            <td className="p-2">{index + 1}</td>
-                            <td className="p-2">{term.termsCondition}</td>
-                            <td className="p-2 text-center">
-                              <Box display="flex" justifyContent="center" gap={1}>
-                                <CommonButton size="small" color="primary" variant="text" onClick={() => handleEditTerm(term)}>
-                                  <Edit fontSize="small" />
-                                </CommonButton>
-                                <CommonButton size="small" color="error" variant="text" onClick={() => handleDeleteTerm(index)}>
-                                  <Clear fontSize="small" />
-                                </CommonButton>
-                              </Box>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </Box>
+                <Box display="flex" gap={1}>
+                  <CommonButton size="small" startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined">
+                    New Term
+                  </CommonButton>
+                  <CommonButton size="small" onClick={handleOpenSelectTerms} variant="outlined">
+                    <Edit fontSize="small" /> Edit Terms
+                  </CommonButton>
                 </Box>
-              </Box>{" "}
-              {/* Closing Terms Box */}
-              {/* Note Section */}
-              <Box>
+              </Box>
+              {/* TABLE */}
+              {(() => {
+                const columns: CommonTableColumn<TermsConditionBase>[] = [
+                  { key: "sr", header: "#", bodyClass: "align-middle text-center w-[60px]", render: (_row, index) => index + 1 },
+                  {
+                    key: "termsCondition",
+                    header: "Condition",
+                    headerClass: "text-left pl-6",
+                    bodyClass: "min-w-[400px] text-left pl-6",
+                  },
+                  {
+                    key: "action",
+                    header: "Action",
+                    headerClass: "text-center",
+                    bodyClass: "text-center w-[120px]",
+                    render: (row, index) => (
+                      <Box display="flex" justifyContent="center" gap={1}>
+                        <CommonButton size="small" color="primary" variant="outlined" onClick={() => handleEditTerm(row)}>
+                        <Edit fontSize="small" />
+                        </CommonButton>
+                        <CommonButton size="small" color="error" variant="outlined" onClick={() => handleDeleteTerm(index)}>
+                           <GridDeleteIcon fontSize="small" />
+                        </CommonButton>
+                      </Box>
+                    ),
+                  },
+                ];
+                return (
+                  <Box sx={{ border: "1px solid", borderColor: "divider", borderRadius: 2, overflow: "hidden" }}>
+                    <CommonTable data={termsList || []} columns={columns} rowKey={(row) => row._id || ""} getRowClass={() => "align-top"} />{" "}
+                  </Box>
+                );
+              })()}
+              {/* NOTE */}
+              <Box mt={3}>
                 <CommonValidationTextField name="notes" label="Note" multiline rows={4} placeholder="Enter a note (max 200 characters)" />
               </Box>
-            </Box>{" "}
-            {/* Closing Grid Box */}
+            </Box>
           </CommonTabPanel>
         </Box>
       </CommonCard>

@@ -1,6 +1,5 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
 import { CommonButton, CommonSelect, CommonTextField, CommonValidationTextField } from "../../../../Attribute";
 import { CommonTabPanel, CommonCard } from "../../../Common";
@@ -9,6 +8,7 @@ import { CommonTable } from "../../../Common";
 import type { CommonTableColumn, ProductRow, SupplierBillTabsProps, TermsConditionBase } from "../../../../Types";
 import { useDispatch } from "react-redux";
 import { setTermsAndConditionModal, setTermsSelectionModal } from "../../../../Store/Slices/ModalSlice";
+import { Edit } from "@mui/icons-material";
 
 const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, handleRowChange, termsList, returnRows, handleAddReturn, handleCutReturn, handleReturnRowChange, productOptions, isProductLoading, returnRoundOffAmount, onReturnRoundOffAmountChange, handleDeleteTerm }: SupplierBillTabsProps) => {
   const dispatch = useDispatch();
@@ -77,7 +77,7 @@ const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, h
       render: (row, index) => (
         <Box display="flex" justifyContent="center" gap={1}>
           <CommonButton size="small" variant="outlined" onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: row }))}>
-            <EditIcon fontSize="small" />
+            <Edit fontSize="small" />
           </CommonButton>
           <CommonButton size="small" color="error" variant="outlined" onClick={() => handleDeleteTerm(index)}>
             <GridDeleteIcon fontSize="small" />
@@ -152,35 +152,27 @@ const SupplierBillTabs = ({ tabValue, setTabValue, rows, handleAdd, handleCut, h
           </CommonCard>
         </Box>
       </CommonTabPanel>
-
       {/* ================= TAB 2 : TERMS ================= */}
       <CommonTabPanel value={tabValue} index={1}>
-        <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 3 }}>
-          <CommonCard
-            hideDivider
-            title="Terms & Conditions"
-            topContent={
-              <Box display="flex" gap={1}>
-                <CommonButton startIcon={<AddIcon />} onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: null }))}>
-                  New Term
-                </CommonButton>
-                <CommonButton startIcon={<EditIcon />} onClick={() => dispatch(setTermsSelectionModal({ open: true, data: termsList.map((t) => t._id) }))}>
-                  Edit Terms
-                </CommonButton>
-              </Box>
-            }
-          >
-            <Box p={2}>
-              <Box sx={{ borderRadius: 1, overflow: "hidden" }}>
-                <CommonTable data={termsList} columns={TermsColumns} rowKey={(row) => row._id || ""} />
-              </Box>
-            </Box>
-          </CommonCard>
+        <Box sx={{ p: 3 }}>
+          {/* ⭐ SIMPLE HEADER — SAME AS ProductAndTerm */}
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Box fontWeight={600}>Terms & Conditions</Box>
 
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 2, mb: 4 }}>
-            <Box sx={{ width: "100%", maxWidth: "1100px" }}>
-              <CommonValidationTextField name="notes" label="Note" multiline rows={6} placeholder="Minimum 200 characters" />
+            <Box display="flex" gap={1}>
+              <CommonButton size="small" startIcon={<AddIcon />} onClick={() => dispatch(setTermsAndConditionModal({ open: true, data: null }))} variant="outlined">
+                New Term
+              </CommonButton>
+              <CommonButton size="small" startIcon={<Edit fontSize="small" />} onClick={() => dispatch(setTermsSelectionModal({ open: true, data: termsList.map((t) => t._id) }))} variant="outlined">
+                Edit Terms
+              </CommonButton>
             </Box>
+          </Box>
+          <Box sx={{ border: "1px solid", borderColor: "divider", borderRadius: 2, overflow: "hidden" }}>
+            <CommonTable data={termsList} columns={TermsColumns} rowKey={(row) => row._id || ""} />
+          </Box>
+          <Box mt={3}>
+            <CommonValidationTextField name="notes" label="Note" multiline rows={6} placeholder="Minimum 200 characters" />
           </Box>
         </Box>
       </CommonTabPanel>
