@@ -121,7 +121,7 @@ const SupplierBillForm = () => {
     const taxSummary = Object.entries(taxBreakdown).map(([name, data]) => ({ name, rate: data.rate, amount: Number(data.amount.toFixed(2)) }));
     const summaryItemDiscount = itemDiscount + flatDisc;
     const summaryGrossAmount = grossAmount - flatDisc;
-    return { itemDiscount: summaryItemDiscount, grossAmount: summaryGrossAmount, taxableAmount: taxableAfterDiscount, itemTax: Number(itemTax.toFixed(2)), roundOff, netAmount: Number(netAmount.toFixed(2)), taxSummary };
+    return { itemDiscount: summaryItemDiscount, grossAmount: summaryGrossAmount, taxableAmount: taxableAfterDiscount, itemTax: Number((itemTax + additionalTax).toFixed(2)), roundOff, netAmount: Number(netAmount.toFixed(2)), taxSummary };
   };
   const summary = calculateSummary();
   const displayTerms = allTerms.filter((term) => selectedTermIds.includes(term._id)).sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
@@ -143,7 +143,7 @@ const SupplierBillForm = () => {
         setRows(
           data.productDetails.item.map((item: SupplierBillProductItem) => {
             const product = item.productId as ProductBase | undefined;
-            return { productId: product?._id || (item.productId as string), qty: item.qty || "", freeQty: item.freeQty || "", mrp: item.mrp || "", sellingPrice: item.sellingPrice || "", disc1: item.discount1 || "", disc2: item.discount2 || "", taxAmount: item.taxAmount || "", totalAmount: item.total || "", itemCode: product?.itemCode || "", unit: product?.unit || "", taxableAmount: ((item.total || 0) - (item.taxAmount || 0)).toFixed(2), landingCost: item.landingCost || "", margin: item.margin || "", mfgDate: item.mfgDate ? DateConfig.utc(item.mfgDate).toISOString() : "", expiryDate: item.expiryDate ? DateConfig.utc(item.expiryDate).toISOString() : "", taxRate: product?.purchaseTaxId?.percentage || 0, taxName: product?.purchaseTaxId?.name || "" };
+            return { productId: product?._id || (item.productId as string), qty: item.qty || "", freeQty: item.freeQty || "", mrp: item.mrp || "", sellingPrice: item.sellingPrice || "", disc1: item.discount1 || "", disc2: item.discount2 || "", taxAmount: item.taxAmount || "", totalAmount: item.total || "", itemCode: product?.itemCode || "", unit: product?.unit || "", taxableAmount: ((item.total || 0) - (item.taxAmount || 0)).toFixed(2), landingCost: item.landingCost || "", margin: item.margin || "", mfgDate: item.mfgDate ? DateConfig.utc(item.mfgDate).toISOString() : "", expiryDate: item.expiryDate ? DateConfig.utc(item.expiryDate).toISOString() : "", taxRate: product?.purchaseTaxId?.percentage || 0, taxName: product?.purchaseTaxId?.name || "", unitCost: item.unitCost || product?.purchasePrice || 0 };
           }),
         );
       }
@@ -167,7 +167,7 @@ const SupplierBillForm = () => {
   }, [data, isEditing]);
 
   const mapProductRows = (): SupplierBillProductDetails => {
-    const item = rows.map((r) => ({ productId: r.productId, qty: +r.qty || 0, freeQty: +r.freeQty || 0, mrp: +r.mrp || 0, sellingPrice: +r.sellingPrice || 0, landingCost: +r.landingCost || 0, margin: +r.margin || 0, discount1: +r.disc1 || 0, discount2: +r.disc2 || 0, taxAmount: +r.itemTax || 0, total: +r.totalAmount || 0 }));
+    const item = rows.map((r) => ({ productId: r.productId, qty: +r.qty || 0, freeQty: +r.freeQty || 0, mrp: +r.mrp || 0, sellingPrice: +r.sellingPrice || 0, landingCost: +r.landingCost || 0, margin: +r.margin || 0, discount1: +r.disc1 || 0, discount2: +r.disc2 || 0, taxAmount: +r.itemTax || 0, total: +r.totalAmount || 0, unitCost: +r.unitCost || 0 }));
     return { item, totalQty: item.reduce((s, r) => s + r.qty!, 0), totalTax: item.reduce((s, r) => s + r.taxAmount!, 0), total: item.reduce((s, r) => s + r.total!, 0) };
   };
   const mapAdditionalCharges = (): AdditionalChargeDetails => {
@@ -184,7 +184,7 @@ const SupplierBillForm = () => {
   const calculateRow = (row: ProductRow, taxType: string): ProductRow => {
     const qty = Number(row.qty) || 0;
     const unitCost = Number(row.unitCost) || 0;
-    const taxRate = taxType === "outOfScope" ? 0 : Number(row.taxRate) || 0;
+    const taxRate = taxType === "out_of_scope" ? 0 : Number(row.taxRate) || 0;
     const disc1 = Number(row.disc1) || 0;
     const disc2 = Number(row.disc2) || 0;
     const discountPerUnit = disc1 + disc2;
@@ -192,7 +192,7 @@ const SupplierBillForm = () => {
     const discountedCost = Math.max(0, unitCost - discountPerUnit);
     let landingCost = 0;
     let taxAmount = 0;
-    if (taxType === "taxInclusive") {
+    if (taxType === "tax_inclusive") {
       landingCost = discountedCost;
       const totalCtx = qty * discountedCost;
       taxAmount = totalCtx - totalCtx / (1 + taxRate / 100);
@@ -204,20 +204,20 @@ const SupplierBillForm = () => {
     const taxableAmount = totalAmount - taxAmount;
     const sellingPrice = mrp;
     const margin = sellingPrice - landingCost;
-    return { ...row, taxableAmount: taxableAmount.toFixed(2), itemTax: taxAmount.toFixed(2), landingCost: landingCost.toFixed(2), sellingPrice: sellingPrice.toFixed(2), margin: margin.toFixed(2), totalAmount: totalAmount.toFixed(2) };
+    return { ...row, taxableAmount: taxableAmount.toFixed(2), itemTax: Number(taxAmount.toFixed(2)), landingCost: landingCost.toFixed(2), sellingPrice: sellingPrice.toFixed(2), margin: margin.toFixed(2), totalAmount: totalAmount.toFixed(2) };
   };
 
   const calculateReturnRow = (row: ProductRow, taxType: string): ProductRow => {
     const qty = Number(row.qty) || 0;
     const unitCost = Number(row.unitCost) || 0;
-    const taxRate = taxType === "outOfScope" ? 0 : Number(row.taxRate) || 0;
+    const taxRate = taxType === "out_of_scope" ? 0 : Number(row.taxRate) || 0;
     const disc1 = Number(row.disc1) || 0;
     const disc2 = Number(row.disc2) || 0;
     const discountPerUnit = disc1 + disc2;
     const discountedCost = Math.max(0, unitCost - discountPerUnit);
     let landingCost = 0;
     let taxAmount = 0;
-    if (taxType === "taxInclusive") {
+    if (taxType === "tax_inclusive") {
       landingCost = discountedCost;
       const totalCtx = qty * discountedCost;
       taxAmount = totalCtx - totalCtx / (1 + taxRate / 100);
@@ -329,11 +329,11 @@ const SupplierBillForm = () => {
     setSelectedTermIds((prev) => prev.filter((termId) => termId !== id));
     setAllTerms((prev) => prev.filter((term) => term._id !== id));
   };
-  const defaultValues: SupplierBillFormValues = { supplierId: "", supplierBillNo: "", supplierBillDate: DateConfig.utc().toISOString(), taxType: "exclusive", paymentTerm: "", dueDate: "", reverseCharge: false, shippingDate: "", invoiceAmount: "", termsAndConditionIds: [], notes: "", paidAmount: 0, balanceAmount: 0, paymentStatus: "unpaid", status: "active", isActive: true };
+  const defaultValues: SupplierBillFormValues = { supplierId: "", supplierBillNo: "", supplierBillDate: DateConfig.utc().toISOString(), taxType: "tax_exclusive", paymentTerm: "", dueDate: "", reverseCharge: false, shippingDate: "", invoiceAmount: "", termsAndConditionIds: [], notes: "", paidAmount: 0, balanceAmount: 0, paymentStatus: "unpaid", status: "active", isActive: true };
 
   const { _id, createdAt, updatedAt, isDeleted, createdBy, updatedBy, __v, ...cleanData } = data || {};
 
-  const initialValues: SupplierBillFormValues = { ...defaultValues, ...cleanData, supplierId: cleanData?.supplierId?._id || cleanData?.supplierId || defaultValues.supplierId, companyId: cleanData?.companyId?._id || cleanData?.companyId || "", branchId: cleanData?.branchId?._id || cleanData?.branchId || "", reverseCharge: Boolean(cleanData?.reverseCharge), termsAndConditionIds: data?.termsAndConditionIds?.map((t: { _id: string }) => t._id) || [] };
+  const initialValues: SupplierBillFormValues = { ...defaultValues, ...cleanData, supplierId: cleanData?.supplierId?._id || cleanData?.supplierId || defaultValues.supplierId, companyId: cleanData?.companyId?._id || cleanData?.companyId || "", branchId: cleanData?.branchId?._id || cleanData?.branchId || "", reverseCharge: String(cleanData?.reverseCharge ?? false), termsAndConditionIds: data?.termsAndConditionIds?.map((t: { _id: string }) => t._id) || [] };
 
   const handleSubmit = async (values: SupplierBillFormValues, { resetForm }: FormikHelpers<SupplierBillFormValues>) => {
     const { taxSummary, ...restSummary } = summary;

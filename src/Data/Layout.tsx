@@ -38,13 +38,16 @@ export const NavItems: NavItem[] = [
     children: [{ name: PAGE_TITLE.POS.NEW, path: ROUTES.POS.NEW }],
   },
   {
+    name: PAGE_TITLE.PURCHASE.BASE,
+    icon: <SettingsIcon />,
+    children: [
+      { name: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE, path: ROUTES.SUPPLIER_BILL.BASE },
+      { name: PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE, path: ROUTES.PURCHASE_ORDER.BASE },
+    ],
+  },
+  {
     name: PAGE_TITLE.SETTINGS.BASE,
     icon: <SettingsIcon />,
     children: [{ name: PAGE_TITLE.SETTINGS.GENERAL, path: ROUTES.SETTINGS.GENERAL, pro: false }],
-  },
-  {
-    name: PAGE_TITLE.PURCHASE.BASE,
-    icon: <SettingsIcon />,
-    children: [{ name: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE, path: ROUTES.SUPPLIER_BILL.BASE }],
   },
 ];
