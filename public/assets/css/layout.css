@@ -91,6 +91,9 @@
   }
 }
 
+.MuiPaper-root.MuiPaper-elevation .MuiBox-root{
+  @apply custom-scrollbar;
+}
 .dark .MuiDataGrid-scrollbar::-webkit-scrollbar-thumb,
 .dark .MuiTelInput-Menu .MuiPaper-root.MuiPopover-paper::-webkit-scrollbar-thumb,
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {

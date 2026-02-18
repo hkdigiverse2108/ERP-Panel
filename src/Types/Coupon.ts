@@ -35,3 +35,9 @@ export interface CouponApiResponse extends MessageStatus {
 export interface CouponDropdownApiResponse extends MessageStatus {
   data: CouponBase[];
 }
+
+export interface ApplyCouponPayload {
+  couponId: string;
+  totalAmount: number;
+  customerId: string;
+}

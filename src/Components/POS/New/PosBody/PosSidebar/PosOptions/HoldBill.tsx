@@ -57,7 +57,7 @@ const HoldBill = () => {
   const handleDelete = (id: string) => deleteHoldBill(id, { onSuccess: () => dispatch(setHoldBillDrawer()) });
 
   return (
-    <CommonDrawer open={isHoldBillDrawer} onClose={() => dispatch(setHoldBillDrawer())} anchor="right" title="On Hold" paperProps={{ className: "bg-white dark:bg-gray-800!" }}>
+    <CommonDrawer open={isHoldBillDrawer} onClose={() => dispatch(setHoldBillDrawer())} anchor="right" title="On Hold" paperProps={{ className: "bg-white dark:bg-gray-800! custom-scrollbar" }}>
       <div className="flex flex-col gap-3">
         {/* 🔍 Search */}
         <CommonTextField label="Search" placeholder="Search" endIcon={<SearchIcon />} value={value} onChange={(e) => setValue(e)} />

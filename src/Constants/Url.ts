@@ -207,6 +207,7 @@ export const URL_KEYS = {
   COUPON: {
     BASE: "/coupon",
     DROPDOWN: "/coupon/dropdown",
+    APPLY: "/coupon/apply",
     ALL: "/coupon/all",
     ADD: "/coupon/add",
     EDIT: "/coupon/edit",
