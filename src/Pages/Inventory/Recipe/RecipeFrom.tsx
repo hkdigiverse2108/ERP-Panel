@@ -88,22 +88,22 @@ const RecipeForm = () => {
                         {values.rawProducts?.map((_, index) => {
                           const rawProducts = values.rawProducts || [];
                           return (
-                            <Box key={index} display="flex" flexWrap="wrap" gap={2}>
+                            <Box key={index} display="flex" flexWrap="wrap" gap={2} sx={{ mb: 2 }}>
                               <CommonValidationSelect name={`rawProducts.${index}.productId`} label="Product" options={GenerateOptions(productData?.data.product_data)} required grid={{ xs: 12, md: 4 }} />
                               <CommonValidationTextField name={`rawProducts.${index}.useQty`} label="Use Qty" type="number" required grid={{ xs: 12, md: 3 }} />
                               <CommonValidationTextField name={`rawProducts.${index}.mrp`} label="MRP" type="number" grid={{ xs: 12, md: 3 }} />
                               <Grid size={{ xs: 12, md: 2 }}>
                                 <Stack direction="row" spacing={1}>
-                                {rawProducts.length > 1 && (
-                                  <CommonButton size="small" variant="outlined" color="error" onClick={() => remove(index)}>
-                                    <DeleteIcon />
-                                  </CommonButton>
-                                )}
-                                {index === rawProducts.length - 1 && (
-                                  <CommonButton size="small" variant="outlined" onClick={() => push({ productId: "", mrp: "", useQty: "" })}>
-                                    <AddIcon />
-                                  </CommonButton>
-                                )}
+                                  {rawProducts.length > 1 && (
+                                    <CommonButton size="small" variant="outlined" color="error" onClick={() => remove(index)}>
+                                      <DeleteIcon />
+                                    </CommonButton>
+                                  )}
+                                  {index === rawProducts.length - 1 && (
+                                    <CommonButton size="small" variant="outlined" onClick={() => push({ productId: "", mrp: "", useQty: "" })}>
+                                      <AddIcon />
+                                    </CommonButton>
+                                  )}
                                 </Stack>
                               </Grid>
                             </Box>
