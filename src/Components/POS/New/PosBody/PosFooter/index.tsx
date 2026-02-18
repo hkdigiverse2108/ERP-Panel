@@ -117,6 +117,11 @@ const PosFooter = () => {
     dispatch(setMultiplePay());
   };
 
+  const handleApplyCoupon = () => {
+    if (!validate(true)) return;
+    dispatch(setApplyCouponModal());
+  };
+
   return (
     <>
       <div className="w-full bg-white dark:bg-gray-dark">
@@ -155,7 +160,7 @@ const PosFooter = () => {
           <CommonButton title="UPI (F5)" variant="contained" startIcon={<FastForwardIcon />} onClick={handleUpi} />
           <CommonButton title="Card (F3)" variant="contained" startIcon={<CreditCardIcon />} onClick={handleCard} />
           <CommonButton title="Cash (F4)" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={handleCash} />
-          <CommonButton title="Apply Coupon" variant="contained" startIcon={<RedeemIcon />} onClick={() => dispatch(setApplyCouponModal())} />
+          <CommonButton title="Apply Coupon" variant="contained" startIcon={<RedeemIcon />} onClick={handleApplyCoupon} />
           <CommonButton title="Pay Later (F11)" variant="contained" startIcon={<CalendarMonthIcon />} onClick={handlePayLater} />
           <CommonButton title="Hold & Print (F7)" variant="contained" startIcon={<PauseIcon />} />
           <CommonButton title="UPI & Print (F10)" variant="contained" startIcon={<FastForwardIcon />} />

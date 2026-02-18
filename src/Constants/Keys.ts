@@ -195,6 +195,7 @@ export const KEYS = {
   COUPON: {
     BASE: "coupon",
     ADD: "coupon-add",
+    APPLY: "coupon-apply",
     EDIT: "coupon-edit",
     DELETE: "coupon-delete",
   },

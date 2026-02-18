@@ -1,4 +1,6 @@
+import { Box, Grid } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
+import { Form, Formik } from "formik";
 import { useMemo, useState } from "react";
 import { Queries } from "../../../../../../Api";
 import { CommonButton, CommonRadio, CommonValidationTextField } from "../../../../../../Attribute";
@@ -8,22 +10,18 @@ import { setCashControlModal } from "../../../../../../Store/Slices/ModalSlice";
 import type { BranchBase } from "../../../../../../Types";
 import { useDataGrid } from "../../../../../../Utils/Hooks";
 import { CommonCard, CommonDataGrid, CommonModal } from "../../../../../Common";
-import { Box, Grid } from "@mui/material";
-import { Form, Formik } from "formik";
 
 const CashControl = () => {
   const { isCashControlModal } = useAppSelector((state) => state.modal);
   const dispatch = useAppDispatch();
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params } = useDataGrid({ active: true });
-  const [isCashControlType, setCashControlType] = useState("openingBalance");
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params } = useDataGrid({ pageSize: 5, active: true });
+  const [isCashControlType, setCashControlType] = useState(CASH_CONTROL[0].value);
 
   const { data: branchData, isLoading: branchDataLoading, isFetching: branchDataFetching } = Queries.useGetBranch(params, isCashControlModal);
   const allBranches = useMemo(() => branchData?.data?.branch_data.map((branch) => ({ ...branch, id: branch?._id })) || [], [branchData]);
   const totalRows = branchData?.data?.totalData || 0;
 
-  const handleSubmit = (values: any) => {
-    console.log(values);
-  };
+  const handleSubmit = () => {};
 
   const columns: GridColDef<BranchBase>[] = [
     { field: "name", headerName: "Branch Name", flex: 1 },
@@ -40,22 +38,17 @@ const CashControl = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    isExport: false,
   };
 
   return (
-    <CommonModal title="Cash Control" isOpen={isCashControlModal} onClose={() => dispatch(setCashControlModal())} className={`max-w-[${isCashControlType === "openingBalance" ? "500px" : "1000px"}]`}>
+    <CommonModal title="Cash Control" isOpen={isCashControlModal} onClose={() => dispatch(setCashControlModal())} className={`max-w-[${isCashControlType === CASH_CONTROL[0].value ? "500px" : "1000px"}]`}>
       <CommonRadio value={isCashControlType} options={CASH_CONTROL} onChange={(e) => setCashControlType(e)} />
-      {isCashControlType === "openingBalance" ? (
+      {isCashControlType === CASH_CONTROL[0].value ? (
         <Box py={2}>
-          <Formik enableReinitialize initialValues={{ opening: "" }} onSubmit={handleSubmit}>
-            <Form noValidate className="p-3">
-              <Grid container spacing={2}>
-                <CommonValidationTextField name="opening" label="Today's opening Cash In Hand" grid={{ xs: 12, sm: 9 }} required />
-                <CommonButton type="submit" variant="contained" title="Save" />
-              </Grid>
-            </Form>
-          </Formik>
-          <div className="div p-3">
+          <div>
+            <span className="font-semibold text-gray-700 dark:text-gray-400">Today's opening Cash In Hand : 3456734</span>
+            <br />
             <span className="font-semibold text-gray-700 dark:text-gray-400">Last changes made by</span>
             <div className="flex text-sm ">
               <span className="font-semibold text-gray-700 dark:text-gray-400">User:- </span>
@@ -68,17 +61,17 @@ const CashControl = () => {
           </div>
         </Box>
       ) : (
-        <Box py={2} className="space-y-3">
+        <Box pr={2} className="space-y-1">
           <Formik enableReinitialize initialValues={{ opening: "" }} onSubmit={handleSubmit}>
             <Form noValidate className="py-3">
               <Grid container spacing={2}>
-                <CommonValidationTextField name="opening" label="Amount" grid={{ xs: 12, sm: 5.5 }} required />
-                <CommonValidationTextField name="opening" label="Remark" grid={{ xs: 12, sm: 5.5 }} multiline />
+                <CommonValidationTextField name="opening" label="Amount" grid={{ xs: 12, sm: 3 }} required />
+                <CommonValidationTextField name="opening" label="Remark" grid={{ xs: 12, sm: 6 }} multiline />
                 <CommonButton type="submit" variant="contained" title="Save" size="small" />
               </Grid>
             </Form>
           </Formik>
-          <CommonCard title="Cash In Hand" hideDivider>
+          <CommonCard hideDivider>
             <CommonDataGrid {...CommonDataGridOption} />
           </CommonCard>
         </Box>
