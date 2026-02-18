@@ -24,16 +24,17 @@ const SupplierBill = () => {
   };
 
   const rows: SupplierBillBase[] = data?.data?.supplierBill_data?.map((bill) => ({ ...bill, id: bill._id })) || [];
-  const getAmount = (v?: string | number) => Number(v ?? 0);
   const stats = useMemo(() => {
     const total = rows.length;
-    const unpaid = rows.filter((r) => getAmount(r.invoiceAmount) > getAmount(r.paidAmount)).length;
+    const paid = rows.filter((r) => r.paymentStatus === "paid").length;
+    const unpaid = rows.filter((r) => r.paymentStatus === "unpaid").length;
     return [
       { label: "Total Purchase", value: total },
-      { label: "Paid", value: total - unpaid },
+      { label: "Paid", value: paid },
       { label: "Unpaid", value: unpaid },
     ];
   }, [rows]);
+
   const filter = [CreateFilter("Payment Status", "paymentStatus", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
 
   const columns: AppGridColDef<SupplierBillBase>[] = [
