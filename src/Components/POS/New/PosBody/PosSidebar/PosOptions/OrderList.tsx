@@ -12,9 +12,9 @@ const OrderList = () => {
   const dispatch = useAppDispatch();
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params } = useDataGrid({ active: true });
 
-  const { data: branchData, isLoading: branchDataLoading, isFetching: branchDataFetching } = Queries.useGetPosOrder(params, isOrderModal);
-  const allBranches = useMemo(() => branchData?.data?.posOrder_data?.map((branch) => ({ ...branch, id: branch?._id })) || [], [branchData]);
-  const totalRows = branchData?.data?.totalData || 0;
+  const { data: orderData, isLoading: orderDataLoading, isFetching: orderDataFetching } = Queries.useGetPosOrder(params, isOrderModal);
+  const allOrders = useMemo(() => orderData?.data?.posOrder_data?.map((order) => ({ ...order, id: order?._id })) || [], [orderData]);
+  const totalRows = orderData?.data?.totalData || 0;
 
   const columns: GridColDef<PosOrderBase>[] = [
     { field: "orderNo", headerName: "Order No", flex: 1 },
@@ -22,9 +22,9 @@ const OrderList = () => {
   ];
   const CommonDataGridOption = {
     columns,
-    rows: allBranches,
+    rows: allOrders,
     rowCount: totalRows,
-    loading: branchDataLoading || branchDataFetching,
+    loading: orderDataLoading || orderDataFetching,
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,

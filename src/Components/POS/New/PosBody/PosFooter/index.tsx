@@ -6,27 +6,28 @@ import PauseIcon from "@mui/icons-material/Pause";
 import RedeemIcon from "@mui/icons-material/Redeem";
 import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
 import { Grid } from "@mui/material";
+import { useMemo } from "react";
+import { Mutations } from "../../../../../Api";
 import { CommonButton, CommonTextField, ShowNotification } from "../../../../../Attribute";
+import { POS_PAYMENT_METHOD } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setAdditionalChargeModal, setApplyCouponModal, setCardModal, setCashModal, setPayLaterModal, setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
-import { setMultiplePay, setRemarks, setFlatDiscountAmount, setRoundOff, clearPosProduct } from "../../../../../Store/Slices/PosSlice";
+import { clearPosProduct, setBtnStatus, setFlatDiscountAmount, setMultiplePay, setRemarks, setRoundOff } from "../../../../../Store/Slices/PosSlice";
+import type { PosProductType } from "../../../../../Types";
+import { RemoveEmptyFields } from "../../../../../Utils";
 import AdditionalCharge from "./AdditionalCharge";
 import ApplyCoupon from "./ApplyCoupon";
 import CardDetails from "./CardDetails";
 import Cash from "./Cash";
 import PayLater from "./PayLater";
 import RedeemCredit from "./RedeemCredit";
-import { Mutations } from "../../../../../Api";
-import { RemoveEmptyFields } from "../../../../../Utils";
-import type { PosProductType } from "../../../../../Types";
-import { useMemo } from "react";
-import { POS_PAYMENT_METHOD } from "../../../../../Data";
 
 const PosFooter = () => {
   const { PosProduct } = useAppSelector((state) => state.pos);
+  const { isBtnStatus } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
 
-  const { mutate: addPosOrder, isPending: addPosOrderLoading } = Mutations.useAddPosOrder();
+  const { mutate: addPosOrder } = Mutations.useAddPosOrder();
   const { mutate: editPosOrder, isPending: editPosOrderLoading } = Mutations.useEditPosOrder();
 
   const summaryRowData = [
@@ -74,8 +75,13 @@ const PosFooter = () => {
       items: mappedItems,
       status: "hold",
     };
-    if (posOrderId) editPosOrder({ ...payload, posOrderId }, { onSuccess: () => dispatch(clearPosProduct()) });
-    else addPosOrder(RemoveEmptyFields(payload), { onSuccess: () => dispatch(clearPosProduct()) });
+    dispatch(setBtnStatus("hold"));
+    const onSuccess = () => {
+      dispatch(clearPosProduct());
+      dispatch(setBtnStatus(""));
+    };
+    if (posOrderId) editPosOrder({ ...payload, posOrderId }, { onSuccess });
+    else addPosOrder(RemoveEmptyFields(payload), { onSuccess });
   };
 
   const handleUpi = () => {
@@ -94,7 +100,12 @@ const PosFooter = () => {
         },
       ],
     };
-    addPosOrder(RemoveEmptyFields(payload), { onSuccess: () => dispatch(clearPosProduct()) });
+    dispatch(setBtnStatus("upi"));
+    const onSuccess = () => {
+      dispatch(clearPosProduct());
+      dispatch(setBtnStatus(""));
+    };
+    addPosOrder(RemoveEmptyFields(payload), { onSuccess });
   };
 
   const handlePayLater = () => {
@@ -156,8 +167,8 @@ const PosFooter = () => {
         <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2 p-2">
           <CommonButton title="Multiple Pay (F12)" variant="contained" startIcon={<VerticalSplitIcon />} onClick={handleMultiplePay} />
           <CommonButton title="Redeem Credit" variant="contained" startIcon={<RedeemIcon />} onClick={() => dispatch(setRedeemCreditModal())} />
-          <CommonButton title="Hold (F6)" variant="contained" startIcon={<PauseIcon />} onClick={handleHoldBill} loading={addPosOrderLoading || editPosOrderLoading} />
-          <CommonButton title="UPI (F5)" variant="contained" startIcon={<FastForwardIcon />} onClick={handleUpi} />
+          <CommonButton title="Hold (F6)" variant="contained" startIcon={<PauseIcon />} onClick={handleHoldBill} loading={isBtnStatus === "hold" || editPosOrderLoading} />
+          <CommonButton title="UPI (F5)" variant="contained" startIcon={<FastForwardIcon />} onClick={handleUpi} loading={isBtnStatus === "upi"} />
           <CommonButton title="Card (F3)" variant="contained" startIcon={<CreditCardIcon />} onClick={handleCard} />
           <CommonButton title="Cash (F4)" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={handleCash} />
           <CommonButton title="Apply Coupon" variant="contained" startIcon={<RedeemIcon />} onClick={handleApplyCoupon} />

@@ -31,7 +31,8 @@ const UserForm = () => {
     },
     email: UserData?.email || "",
     panNumber: UserData?.panNumber || "",
-    branchId: UserData?.branchId || "",
+    branchId: UserData?.branchId?._id || "",
+    password: UserData?.showPassword || "",
 
     address: {
       address: UserData?.address?.address || "",
@@ -101,6 +102,7 @@ const UserForm = () => {
                     <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="branchId" label="branch" options={GenerateOptions(branchData?.data)} isLoading={branchDataLoading} grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="password" label="Password" type="password" showPasswordToggle required grid={{ xs: 10, md: 4 }} />
                   </Grid>
                 </CommonCard>
 

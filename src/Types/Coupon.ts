@@ -36,8 +36,20 @@ export interface CouponDropdownApiResponse extends MessageStatus {
   data: CouponBase[];
 }
 
-export interface ApplyCouponPayload {
+export interface VerifyCouponPayload {
   couponId: string;
   totalAmount: number;
   customerId: string;
+}
+export interface VerifyCouponDataResponse {
+  couponId: string;
+  discountAmount: number;
+  finalAmount: number;
+  name: string;
+  redeemValue: number;
+  redemptionType: string;
+}
+
+export interface VerifyCouponApiResponse extends MessageStatus {
+  data: VerifyCouponDataResponse;
 }

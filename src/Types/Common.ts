@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import type { ContactBase } from "./Contacts";
 import type { LocationBase } from "./Location";
 import type { AdditionalChargesBase } from "./AdditionalCharges";
-import type { MultiplePaymentType } from "./POS";
+import type { MultiplePaymentType, PosProductDataModal } from "./POS";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -465,8 +465,8 @@ export interface ModalStateSlice {
   isPayLaterModal: { open: boolean; data: MultiplePaymentType[] };
   isCashModal: boolean;
   isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
-  isProductDetailsModal: { open: boolean; data: any | null };
-  isQtyCountModal: { open: boolean; data: any | null };
+  isProductDetailsModal: { open: boolean; data: PosProductDataModal | null };
+  isQtyCountModal: { open: boolean; data: PosProductDataModal | null };
 }
 
 // ************ Modal End ***********

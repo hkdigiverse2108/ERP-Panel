@@ -61,6 +61,7 @@ export interface PosSliceState {
   isSelectProduct: string;
   isPosLoading: boolean;
   PosProduct: PosProductType;
+  isBtnStatus: string;
 }
 export interface PosProductOrderItem {
   qty: number;

@@ -5,6 +5,7 @@ const initialState: PosSliceState = {
   isMultiplePay: false,
   isSelectProduct: "",
   isPosLoading: false,
+  isBtnStatus:"",
   PosProduct: {
     items: [],
     customerId: "",
@@ -44,7 +45,9 @@ const PosSlice = createSlice({
     setPosLoading: (state, action) => {
       state.isPosLoading = action.payload;
     },
-
+    setBtnStatus: (state, action) => {
+      state.isBtnStatus = action.payload;
+    },
     setIsSelectProduct: (state, action) => {
       state.isSelectProduct = action.payload;
     },
@@ -155,5 +158,5 @@ const PosSlice = createSlice({
   },
 });
 
-export const { setPosLoading, setPosProduct, setIsSelectProduct, setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesManId, setTotalMrp, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType, clearPosProduct } = PosSlice.actions;
+export const {setBtnStatus, setPosLoading, setPosProduct, setIsSelectProduct, setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesManId, setTotalMrp, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType, clearPosProduct } = PosSlice.actions;
 export default PosSlice.reducer;
