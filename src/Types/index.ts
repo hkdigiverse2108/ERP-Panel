@@ -28,7 +28,7 @@ export * from "./MaterialConsumption";
 export * from "./SupplierBill";
 export * from "./AdditionalCharges";
 export * from "./TermsAndCondition";
-export * from "./BillOfMaterials";
+export * from "./BillOfLiveProduct";
 export * from "./AccountGroup";
 export * from "./PosPayment";
 export * from "./Account";
