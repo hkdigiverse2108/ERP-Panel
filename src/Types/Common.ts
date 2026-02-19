@@ -70,6 +70,15 @@ export interface CommonValidationSelectProps extends Omit<CommonSelectProps, "on
   name: string;
 }
 
+export interface CommonValidationCreatableSelectProps {
+  name: string;
+  label: string;
+  options: string[];
+  required?: boolean;
+  disabled?: boolean;
+  grid?: GridType;
+}
+
 // ************ Select End ***********
 
 // ************ Common Phone Number start ***********

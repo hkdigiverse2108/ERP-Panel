@@ -307,7 +307,7 @@ export const ProductFormSchema = Yup.object({
   expiryReferenceDate: RequiredWhenTrue("hasExpiry", "Expiry Reference Date", Yup.string()),
 
   isExpiryProductSaleable: Yup.boolean(),
-  ingredients: Validation("string", "Ingredients", { required: false }),
+  ingredients: Validation("array", "Ingredients", { required: false }),
   shortDescription: Validation("string", "Short Description", { required: false }),
   description: Validation("string", "Description", { required: false }),
   nutrition: Yup.array().of(
@@ -318,7 +318,7 @@ export const ProductFormSchema = Yup.object({
   ),
   netWeight: Validation("number", "Net Weight", { required: false }),
   masterQty: Validation("number", "Master Quantity", { required: false }),
-  images: Yup.array().of(Yup.mixed().required("Image is required")).min(2, "At least two image is required"),
+  // images: Yup.array().of(Yup.mixed().required("Image is required")).min(2, "At least two image is required"),
   isActive: Yup.boolean(),
 });
 
