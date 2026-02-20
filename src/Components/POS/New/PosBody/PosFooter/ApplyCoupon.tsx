@@ -7,7 +7,7 @@ import { CommonCard, CommonModal } from "../../../../Common";
 import type { CouponBase } from "../../../../../Types";
 import { useState } from "react";
 import { useDebounce } from "../../../../../Utils/Hooks";
-import { setTotalDiscount } from "../../../../../Store/Slices/PosSlice";
+import { setCoupon, setTotalDiscount } from "../../../../../Store/Slices/PosSlice";
 
 const ApplyCoupon = () => {
   const [couponCode, setCouponCode] = useState<string>("");
@@ -41,6 +41,7 @@ const ApplyCoupon = () => {
         onSuccess: (response) => {
           const discount = Number(PosProduct.totalDiscount || 0) + Number(response?.data?.discountAmount || 0);
           dispatch(setTotalDiscount(Number(discount).toFixed(2)));
+          dispatch(setCoupon({ couponId: coupon._id, couponDiscount: response?.data?.discountAmount }));
           setCouponCode(coupon._id);
           setApplyingId(null);
         },
@@ -53,6 +54,7 @@ const ApplyCoupon = () => {
 
   if (PosProduct?.totalAmount !== undefined && PosProduct?.totalAmount !== prevTotalAmount) {
     setPrevTotalAmount(PosProduct?.totalAmount);
+    dispatch(setCoupon({ couponId: "", couponDiscount: 0 }));
     setCouponCode("");
     setApplyingId(null);
   }
@@ -78,7 +80,7 @@ const ApplyCoupon = () => {
               <div key={i}>
                 <div className="flex items-center gap-3 p-3 m-0">
                   <span className="flex-1 text-sm font-medium text-gray-700 dark:text-gray-400 truncate">
-                    {item?.name} - {item?.couponPrice}
+                    {item?.name}
                   </span>
                   <CommonButton title={`${couponCode === item._id ? "Remove" : "Apply"}`} variant="outlined" color={couponCode === item._id ? "error" : "primary"} size="small" className="shrink-0" loading={applyingId === item._id} onClick={() => handleApplyCoupon(item)} />
                 </div>

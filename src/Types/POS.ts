@@ -54,6 +54,10 @@ export interface PosProductType {
   remark: string;
   totalAmount: number;
   posOrderId: string;
+  couponId: string;
+  couponDiscount: number;
+  loyaltyId: string;
+  loyaltyDiscount: number;
 }
 
 export interface PosSliceState {

@@ -57,7 +57,7 @@ const ItemForm = () => {
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK.BASE);
 
   const { data } = location.state || {};
-  const { data: ProductData, isLoading: ProductDataLoading } = Queries.useGetProductDropdown();
+  const { data: ProductData, isLoading: ProductDataLoading } = Queries.useGetProductDropdown({ isNewProduct: true });
   const { data: UOMData, isLoading: UOMDataLoading } = Queries.useGetUomDropdown();
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown();
 
