@@ -12,11 +12,13 @@ import { setTotalDiscount } from "../../../../../Store/Slices/PosSlice";
 const ApplyCoupon = () => {
   const [couponCode, setCouponCode] = useState<string>("");
   const [isSearch, setSearch] = useState<string>("");
+
   const searchCoupon = useDebounce(isSearch, 300);
 
   const [applyingId, setApplyingId] = useState<string | null>(null);
   const { isApplyCouponModal } = useAppSelector((state) => state.modal);
   const { PosProduct } = useAppSelector((state) => state.pos);
+  const [prevTotalAmount, setPrevTotalAmount] = useState(PosProduct?.totalAmount);
 
   const dispatch = useAppDispatch();
 
@@ -37,13 +39,23 @@ const ApplyCoupon = () => {
       { couponId: coupon._id, totalAmount: PosProduct?.totalAmount, customerId: PosProduct?.customerId },
       {
         onSuccess: (response) => {
-          dispatch(setTotalDiscount(response?.data?.discountAmount?.toFixed(2)));
+          const discount = Number(PosProduct.totalDiscount || 0) + Number(response?.data?.discountAmount || 0);
+          dispatch(setTotalDiscount(Number(discount).toFixed(2)));
           setCouponCode(coupon._id);
+          setApplyingId(null);
+        },
+        onError: () => {
           setApplyingId(null);
         },
       },
     );
-  }; 
+  };
+
+  if (PosProduct?.totalAmount !== undefined && PosProduct?.totalAmount !== prevTotalAmount) {
+    setPrevTotalAmount(PosProduct?.totalAmount);
+    setCouponCode("");
+    setApplyingId(null);
+  }
 
   return (
     <CommonModal title="Apply Coupon" isOpen={isApplyCouponModal} onClose={() => dispatch(setApplyCouponModal())} className="max-w-[500px]">

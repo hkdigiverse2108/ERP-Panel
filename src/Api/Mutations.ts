@@ -110,7 +110,7 @@ export const Mutations = {
   useAddCoupon: () => useMutations<AddCouponPayload, void>([KEYS.COUPON.ADD, KEYS.COUPON.BASE], (input) => Post(URL_KEYS.COUPON.ADD, input)),
   useEditCoupon: () => useMutations<EditCouponPayload, void>([KEYS.COUPON.EDIT, KEYS.COUPON.BASE], (input) => Put(URL_KEYS.COUPON.EDIT, input)),
   useDeleteCoupon: () => useMutations<string, void>([KEYS.COUPON.DELETE, KEYS.COUPON.BASE], (id) => Delete(`${URL_KEYS.COUPON.BASE}/${id}`)),
-  useVerifyCoupon: () => useMutations<VerifyCouponPayload, VerifyCouponApiResponse>([KEYS.COUPON.VERIFY, KEYS.COUPON.BASE], (input) => Post(URL_KEYS.COUPON.VERIFY, input)),
+  useVerifyCoupon: () => useMutations<VerifyCouponPayload, VerifyCouponApiResponse>([KEYS.COUPON.VERIFY], (input) => Post(URL_KEYS.COUPON.VERIFY, input)),
 
   //*************** Loyalty **************** */
   useAddLoyalty: () => useMutations<AddLoyaltyPayload, void>([KEYS.LOYALTY.ADD, KEYS.LOYALTY.BASE], (input) => Post(URL_KEYS.LOYALTY.ADD, input)),
