@@ -31,10 +31,10 @@ const QuickActionMenu = () => {
     <>
       {width >= 1024 ? (
         <Box className="relative group">
-          <p className="flex text-base font-bold items-center justify-center text-gray-700 bg-white cursor-pointer hover:text-dark dark:bg-gray-900 dark:text-gray-400 dark:hover:text-white">
+          {/* <p className="flex text-base font-bold items-center justify-center text-gray-700 bg-white cursor-pointer hover:text-dark dark:bg-gray-900 dark:text-gray-400 dark:hover:text-white">
             Quick Action
             <ExpandMoreIcon />
-          </p>
+          </p> */}
           <div className="absolute left-0 mt-3 z-50 w-[820px] rounded-lg border border-gray-50 bg-white shadow-tooltip dark:border-gray-800 dark:bg-gray-800 opacity-0 invisible scale-95 translate-y-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:visible group-hover:scale-100 group-hover:translate-y-0">
             <div className="grid grid-cols-5 p-2">
               {menuData.map((section, index) => (
