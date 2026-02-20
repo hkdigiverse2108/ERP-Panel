@@ -215,6 +215,7 @@ export const URL_KEYS = {
   LOYALTY: {
     BASE: "/loyalty",
     DROPDOWN: "/loyalty/dropdown",
+    REDEEM: "/loyalty/redeem",
     POINTS: "/loyalty-points",
     POINTS_ADD: "/loyalty-points",
     ALL: "/loyalty/all",
@@ -227,5 +228,11 @@ export const URL_KEYS = {
     ALL: "/purchase-order/all",
     ADD: "/purchase-order/add",
     EDIT: "/purchase-order/edit",
+  },
+  CASH_CONTROL: {
+    BASE: "/cash-control",
+    ALL: "/cash-control/all",
+    ADD: "/cash-control/add",
+    EDIT: "/cash-control/edit",
   },
 } as const;

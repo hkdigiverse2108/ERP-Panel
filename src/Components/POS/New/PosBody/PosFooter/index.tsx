@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setAdditionalChargeModal, setApplyCouponModal, setCardModal, setCashModal, setPayLaterModal, setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
 import { clearPosProduct, setBtnStatus, setFlatDiscountAmount, setMultiplePay, setRemarks, setRoundOff } from "../../../../../Store/Slices/PosSlice";
 import type { PosProductType } from "../../../../../Types";
-import { RemoveEmptyFields } from "../../../../../Utils";
+import { GetChangedFields, RemoveEmptyFields } from "../../../../../Utils";
 import AdditionalCharge from "./AdditionalCharge";
 import ApplyCoupon from "./ApplyCoupon";
 import CardDetails from "./CardDetails";
@@ -23,8 +23,7 @@ import PayLater from "./PayLater";
 import RedeemCredit from "./RedeemCredit";
 
 const PosFooter = () => {
-  const { PosProduct } = useAppSelector((state) => state.pos);
-  const { isBtnStatus } = useAppSelector((state) => state.pos);
+  const { PosProduct, isBtnStatus } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
 
   const { mutate: addPosOrder } = Mutations.useAddPosOrder();
@@ -80,8 +79,12 @@ const PosFooter = () => {
       dispatch(clearPosProduct());
       dispatch(setBtnStatus(""));
     };
-    if (posOrderId) editPosOrder({ ...payload, posOrderId }, { onSuccess });
-    else addPosOrder(RemoveEmptyFields(payload), { onSuccess });
+    const onError = () => {
+      dispatch(setBtnStatus(""));
+    };
+    const changedFields = GetChangedFields(payload, PosProduct);
+    if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess, onError });
+    else addPosOrder(RemoveEmptyFields(payload), { onSuccess, onError });
   };
 
   const handleUpi = () => {
@@ -105,7 +108,10 @@ const PosFooter = () => {
       dispatch(clearPosProduct());
       dispatch(setBtnStatus(""));
     };
-    addPosOrder(RemoveEmptyFields(payload), { onSuccess });
+    const onError = () => {
+      dispatch(setBtnStatus(""));
+    };
+    addPosOrder(RemoveEmptyFields(payload), { onSuccess, onError });
   };
 
   const handlePayLater = () => {
@@ -165,18 +171,18 @@ const PosFooter = () => {
 
         {/* Action Buttons */}
         <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2 p-2">
-          <CommonButton title="Multiple Pay (F12)" variant="contained" startIcon={<VerticalSplitIcon />} onClick={handleMultiplePay} />
+          <CommonButton title="Multiple Pay" variant="contained" startIcon={<VerticalSplitIcon />} onClick={handleMultiplePay} />
           <CommonButton title="Redeem Credit" variant="contained" startIcon={<RedeemIcon />} onClick={() => dispatch(setRedeemCreditModal())} />
-          <CommonButton title="Hold (F6)" variant="contained" startIcon={<PauseIcon />} onClick={handleHoldBill} loading={isBtnStatus === "hold" || editPosOrderLoading} />
-          <CommonButton title="UPI (F5)" variant="contained" startIcon={<FastForwardIcon />} onClick={handleUpi} loading={isBtnStatus === "upi"} />
-          <CommonButton title="Card (F3)" variant="contained" startIcon={<CreditCardIcon />} onClick={handleCard} />
-          <CommonButton title="Cash (F4)" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={handleCash} />
+          <CommonButton title="Hold" variant="contained" startIcon={<PauseIcon />} onClick={handleHoldBill} loading={isBtnStatus === "hold" || editPosOrderLoading} />
+          <CommonButton title="UPI" variant="contained" startIcon={<FastForwardIcon />} onClick={handleUpi} loading={isBtnStatus === "upi"} />
+          <CommonButton title="Card" variant="contained" startIcon={<CreditCardIcon />} onClick={handleCard} />
+          <CommonButton title="Cash" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={handleCash} />
           <CommonButton title="Apply Coupon" variant="contained" startIcon={<RedeemIcon />} onClick={handleApplyCoupon} />
-          <CommonButton title="Pay Later (F11)" variant="contained" startIcon={<CalendarMonthIcon />} onClick={handlePayLater} />
-          <CommonButton title="Hold & Print (F7)" variant="contained" startIcon={<PauseIcon />} />
-          <CommonButton title="UPI & Print (F10)" variant="contained" startIcon={<FastForwardIcon />} />
-          <CommonButton title="Card & Print (F9)" variant="contained" startIcon={<CreditCardIcon />} />
-          <CommonButton title="Cash & Print (F8)" variant="contained" startIcon={<CurrencyRupeeIcon />} />
+          <CommonButton title="Pay Later" variant="contained" startIcon={<CalendarMonthIcon />} onClick={handlePayLater} />
+          <CommonButton title="Hold & Print" variant="contained" startIcon={<PauseIcon />} />
+          <CommonButton title="UPI & Print" variant="contained" startIcon={<FastForwardIcon />} />
+          <CommonButton title="Card & Print" variant="contained" startIcon={<CreditCardIcon />} />
+          <CommonButton title="Cash & Print" variant="contained" startIcon={<CurrencyRupeeIcon />} />
         </div>
       </div>
       <RedeemCredit />

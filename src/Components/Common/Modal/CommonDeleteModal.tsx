@@ -12,7 +12,7 @@ const CommonDeleteModal: FC<CommonDeleteModalProps> = ({ open, title, descriptio
       </p>
 
       <div className="flex justify-end gap-2">
-        <CommonButton variant="outlined" onClick={onClose} disabled={loading}>
+        <CommonButton variant="outlined" onClick={onClose}>
           Cancel
         </CommonButton>
 

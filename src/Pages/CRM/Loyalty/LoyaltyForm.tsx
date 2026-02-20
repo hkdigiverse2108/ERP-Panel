@@ -6,7 +6,7 @@ import { Mutations } from "../../../Api";
 import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { BREADCRUMBS, LOYALTY_REDEMPTION_TYPE, LOYALTY_TYPE } from "../../../Data";
+import { BREADCRUMBS, LOYALTY_TYPE } from "../../../Data";
 import type { LoyaltyFormValues } from "../../../Types";
 import { GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
@@ -26,15 +26,15 @@ const LoyaltyForm = () => {
 
   const initialValues: LoyaltyFormValues = {
     name: data?.name || "",
-    discountValue: data?.discountValue || null,
-    type: data?.type || "",
-    minimumPurchaseAmount: data?.minimumPurchaseAmount || null,
-    redemptionPerCustomer: data?.redemptionPerCustomer || null,
-    redemptionPoints: data?.redemptionPoints || null,
-    usageLimit: data?.usageLimit || null,
-    campaignExpiryDate: data?.campaignExpiryDate || null,
-    campaignLaunchDate: data?.campaignLaunchDate || null,
     description: data?.description || "",
+    type: data?.type || "",
+    discountValue: data?.discountValue || null,
+    redemptionPoints: data?.redemptionPoints || null,
+    campaignLaunchDate: data?.campaignLaunchDate || null,
+    campaignExpiryDate: data?.campaignExpiryDate || null,
+    minimumPurchaseAmount: data?.minimumPurchaseAmount || null,
+    usageLimit: data?.usageLimit || null,
+    singleTimeUse: data?.singleTimeUse || false,
     isActive: data?.isActive || true,
   };
 
@@ -73,11 +73,11 @@ const LoyaltyForm = () => {
                     <CommonValidationSelect name="type" label="Type" options={LOYALTY_TYPE} grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="minimumPurchaseAmount" label="Minimum Purchase Amount" type="number" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="redemptionPoints" label="Redemption Points" type="number" grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationSelect name="redemptionPerCustomer" label="Redemption Per Customer" options={LOYALTY_REDEMPTION_TYPE} grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="usageLimit" label="Usage Limit" type="number" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationDatePicker name="campaignExpiryDate" label="Campaign Expiry Date" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationDatePicker name="campaignLaunchDate" label="Campaign Launch Date" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="description" label="Description" multiline grid={{ xs: 12 }} rows={3} />
+                    <CommonValidationSwitch name="singleTimeUse" label="Single Time Use" grid={"auto"} />
                     {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={"auto"} />}
                   </Grid>
                 </CommonCard>

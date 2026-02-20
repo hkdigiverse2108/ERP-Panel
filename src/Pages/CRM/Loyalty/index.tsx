@@ -34,7 +34,6 @@ const Loyalty = () => {
     { field: "name", headerName: "Campaign Name", width: 170 },
     { field: "discountValue", headerName: "Discount Value", width: 120 },
     { field: "minimumPurchaseAmount", headerName: "Minimum Purchase Amount", width: 150 },
-    { field: "redemptionPerCustomer", headerName: "Redemption Per Customer", width: 150 },
     { field: "redemptionPoints", headerName: "Redemption Points", width: 150 },
     { field: "type", headerName: "Type", width: 100, renderCell: (params) => LOYALTY_TYPE.find((item) => item.value === params.row.type)?.label },
     { field: "usageLimit", headerName: "Usage Limit", width: 100 },

@@ -1,4 +1,3 @@
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import SegmentIcon from "@mui/icons-material/Segment";
 import { Box } from "@mui/material";

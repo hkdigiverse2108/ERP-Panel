@@ -6,18 +6,22 @@ import { updateProduct } from "../../../../../Store/Slices/PosSlice";
 import { CommonModal } from "../../../../Common";
 
 const keypad = ["1", "2", "3", "+10", "4", "5", "6", "+20", "7", "8", "9", "+50", "C", "0", ".", "⌫"];
-const MIN_QTY = 0.1;
 
 const QtyCount = () => {
   const { isQtyCountModal } = useAppSelector((state) => state.modal);
   const dispatch = useAppDispatch();
   const [prevData, setPrevData] = useState(isQtyCountModal.data);
-  const [tendered, setTendered] = useState<string>("0.00");
+
+  const qtyCount = prevData?.uomId?.name === "PIECES" ? "0" : "0.00";
+
+  const [tendered, setTendered] = useState<string>(qtyCount);
+
+  const MIN_QTY = prevData?.uomId?.name === "PIECES" ? 1 : 0.1;
 
   const maxQty = isQtyCountModal.data?.qty ?? Infinity;
   if (isQtyCountModal.data !== prevData) {
     setPrevData(isQtyCountModal.data);
-    if (isQtyCountModal.data) setTendered(isQtyCountModal.data.posQty?.toString() ?? "0.00");
+    if (isQtyCountModal.data) setTendered(isQtyCountModal.data.posQty?.toString() ?? qtyCount);
   }
 
   // 🔒 Clamp qty between 0 and stock qty
@@ -38,7 +42,7 @@ const QtyCount = () => {
   const handleKeyPress = (key: string) => {
     // CLEAR
     if (key === "C") {
-      setTendered("0.00");
+      setTendered(qtyCount);
       return;
     }
 
@@ -46,7 +50,7 @@ const QtyCount = () => {
     if (key === "⌫") {
       setTendered((prev) => {
         const next = prev.slice(0, -1);
-        return next.length ? next : "0.00";
+        return next.length ? next : qtyCount;
       });
       return;
     }
@@ -67,14 +71,14 @@ const QtyCount = () => {
 
     // NUMBERS
     setTendered((prev) => {
-      const next = prev === "0.00" || prev === "0" ? key : prev + key;
+      const next = prev === qtyCount || prev === "0" ? key : prev + key;
       return clampQty(Number(next)).toString();
     });
   };
 
   const handleClose = () => {
     dispatch(setQtyCountModal({ open: false, data: null }));
-    setTendered("0.00");
+    setTendered(qtyCount);
   };
 
   const handleConfirm = () => {

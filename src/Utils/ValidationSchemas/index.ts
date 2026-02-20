@@ -408,12 +408,12 @@ export const LoyaltyFormSchema = Yup.object({
   discountValue: Validation("number", "Discount Value"),
   type: Validation("string", "Type"),
   minimumPurchaseAmount: Validation("number", "Minimum Purchase Amount"),
-  redemptionPerCustomer: Validation("string", "Redemption Per Customer"),
   redemptionPoints: Validation("number", "Redemption Points"),
   usageLimit: Validation("number", "Usage Limit"),
   campaignExpiryDate: Validation("string", "Campaign Expiry Date"),
   campaignLaunchDate: Validation("string", "Campaign Launch Date"),
   description: Validation("string", "Description", { required: false }),
+  singleTimeUse: Validation("boolean", "Single Time Use", { required: false }),
   isActive: Validation("boolean", "Is Active"),
 });
 

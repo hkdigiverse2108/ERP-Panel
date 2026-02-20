@@ -1,5 +1,6 @@
 import { KEYS, URL_KEYS } from "../Constants";
 import type { AccountApiResponse, AccountDropdownApiResponse, AccountGroupDropdownApiResponse, AdditionalChargesApiResponse, AdditionalChargesDropdownApiResponse, AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BankDropdownApiResponse, BillOfLiveProductApiResponse, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, ContactApiResponse, ContactDropdownApiResponse, CountryApiResponse, CouponApiResponse, CouponDropdownApiResponse, EmployeeApiResponse, LoyaltyApiResponse, LoyaltyDropdownApiResponse, LoyaltyPointsApiResponse, MaterialConsumptionApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, PosCustomerDetailApiResponse, PosOrderApiResponse, PosOrderDropdownApiResponse, PosPaymentApiResponse, PosProductOrderApiResponse, ProductApiResponse, ProductDropDownApiResponse, ProductSingleApiResponse, PurchaseOrderApiResponse, PurchaseOrderDropdownApiResponse, RecipeApiResponse, RecipeDropdownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SingleEmployeeApiResponse, StockApiResponse, StockVerificationApiResponse, SupplierBillApiResponse, TaxApiResponse, TaxDropdownApiResponse, TermsConditionApiResponse, UomDropdownApiResponse, UploadResponse } from "../Types";
+import type { CashControlApiResponse } from "../Types/CashControl";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 
@@ -124,4 +125,7 @@ export const Queries = {
   useGetLoyalty: (params?: Params) => useQueries<LoyaltyApiResponse>([KEYS.LOYALTY.BASE, params], () => Get(URL_KEYS.LOYALTY.ALL, params)),
   useGetLoyaltyDropdown: (params?: Params, enabled?: boolean) => useQueries<LoyaltyDropdownApiResponse>([KEYS.LOYALTY.BASE, params], () => Get(URL_KEYS.LOYALTY.DROPDOWN, params), { enabled: enabled }),
   useGetLoyaltyPoints: (params?: Params, enabled?: boolean) => useQueries<LoyaltyPointsApiResponse>([KEYS.LOYALTY.BASE, params], () => Get(URL_KEYS.LOYALTY.POINTS, params), { enabled: enabled }),
+
+  //*************** Cash Control *********
+  useGetCashControl: (params?: Params, enabled?: boolean) => useQueries<CashControlApiResponse>([KEYS.CASH_CONTROL.BASE, params], () => Get(URL_KEYS.CASH_CONTROL.ALL, params), { enabled: enabled }),
 };
