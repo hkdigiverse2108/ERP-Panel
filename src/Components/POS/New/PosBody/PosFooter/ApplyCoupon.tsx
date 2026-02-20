@@ -44,6 +44,7 @@ const ApplyCoupon = () => {
           dispatch(setCoupon({ couponId: coupon._id, couponDiscount: response?.data?.discountAmount }));
           setCouponCode(coupon._id);
           setApplyingId(null);
+          dispatch(setApplyCouponModal());
         },
         onError: () => {
           setApplyingId(null);
@@ -79,9 +80,7 @@ const ApplyCoupon = () => {
             couponData?.data?.map((item, i, arr) => (
               <div key={i}>
                 <div className="flex items-center gap-3 p-3 m-0">
-                  <span className="flex-1 text-sm font-medium text-gray-700 dark:text-gray-400 truncate">
-                    {item?.name}
-                  </span>
+                  <span className="flex-1 text-sm font-medium text-gray-700 dark:text-gray-400 truncate">{item?.name}</span>
                   <CommonButton title={`${couponCode === item._id ? "Remove" : "Apply"}`} variant="outlined" color={couponCode === item._id ? "error" : "primary"} size="small" className="shrink-0" loading={applyingId === item._id} onClick={() => handleApplyCoupon(item)} />
                 </div>
                 {i !== arr.length - 1 && <Divider variant="middle" className="border-gray-300! dark:border-gray-800!" />}

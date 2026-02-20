@@ -23,8 +23,7 @@ import PayLater from "./PayLater";
 import RedeemCredit from "./RedeemCredit";
 
 const PosFooter = () => {
-  const { PosProduct } = useAppSelector((state) => state.pos);
-  const { isBtnStatus } = useAppSelector((state) => state.pos);
+  const { PosProduct, isBtnStatus } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
 
   const { mutate: addPosOrder } = Mutations.useAddPosOrder();

@@ -203,6 +203,7 @@ export const KEYS = {
     BASE: "loyalty",
     ADD: "loyalty-add",
     EDIT: "loyalty-edit",
+    REDEEM: "loyalty-redeem",
     DELETE: "loyalty-delete",
     POINTS: "loyalty-points",
     POINTS_ADD: "loyalty-points-add",

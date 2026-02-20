@@ -215,6 +215,7 @@ export const URL_KEYS = {
   LOYALTY: {
     BASE: "/loyalty",
     DROPDOWN: "/loyalty/dropdown",
+    REDEEM: "/loyalty/redeem",
     POINTS: "/loyalty-points",
     POINTS_ADD: "/loyalty-points",
     ALL: "/loyalty/all",
