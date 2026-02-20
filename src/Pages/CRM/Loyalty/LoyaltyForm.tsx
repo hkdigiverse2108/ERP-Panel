@@ -34,7 +34,7 @@ const LoyaltyForm = () => {
     campaignExpiryDate: data?.campaignExpiryDate || null,
     minimumPurchaseAmount: data?.minimumPurchaseAmount || null,
     usageLimit: data?.usageLimit || null,
-    singleTimeUse: data?.singleTimeUse || null,
+    singleTimeUse: data?.singleTimeUse || false,
     isActive: data?.isActive || true,
   };
 

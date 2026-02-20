@@ -31,6 +31,9 @@ const ApplyCoupon = () => {
       return;
     }
     if (couponCode === coupon._id) {
+      const discount = Number(PosProduct.totalDiscount || 0) - Number(PosProduct.couponDiscount || 0);
+      dispatch(setTotalDiscount(Number(discount).toFixed(2)));
+      dispatch(setCoupon({ couponId: "", couponDiscount: 0 }));
       setCouponCode("");
       return;
     }
@@ -39,9 +42,11 @@ const ApplyCoupon = () => {
       { couponId: coupon._id, totalAmount: PosProduct?.totalAmount, customerId: PosProduct?.customerId },
       {
         onSuccess: (response) => {
-          const discount = Number(PosProduct.totalDiscount || 0) + Number(response?.data?.discountAmount || 0);
-          dispatch(setTotalDiscount(Number(discount).toFixed(2)));
-          dispatch(setCoupon({ couponId: coupon._id, couponDiscount: response?.data?.discountAmount }));
+          const newDiscount = Number(response?.data?.discountAmount || 0);
+          const removedPrevious = Number(PosProduct.totalDiscount || 0) - Number(PosProduct.couponDiscount || 0);
+          const finalDiscount = removedPrevious + newDiscount;
+          dispatch(setTotalDiscount(Number(finalDiscount).toFixed(2)));
+          dispatch(setCoupon({ couponId: coupon._id, couponDiscount: newDiscount }));
           setCouponCode(coupon._id);
           setApplyingId(null);
           dispatch(setApplyCouponModal());
