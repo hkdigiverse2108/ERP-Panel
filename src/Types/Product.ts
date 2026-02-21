@@ -2,6 +2,7 @@ import type { BrandBase } from "./Brand";
 import type { CategoryBase } from "./Category";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { TaxBase } from "./Tax";
+import type { UomBase } from "./Uom";
 
 export type ProductWithRemoveQty = ProductBase & { id: string; removeQty: number | null };
 
@@ -32,7 +33,7 @@ export interface ProductFormValues {
   calculateExpiryOn?: string;
   expiryReferenceDate?: string;
   isExpiryProductSaleable?: boolean;
-  ingredients?: string;
+  ingredients?: string[];
   shortDescription?: string;
   description?: string;
   nutrition?: NutritionInfo[];
@@ -71,6 +72,7 @@ export interface ProductBase extends Omit<ProductFormValues, "categoryId" | "sub
   subBrandId?: BrandBase;
   salesTaxId?: TaxBase;
   purchaseTaxId?: TaxBase;
+  uomId?: UomBase;
 }
 
 export interface ProductDataResponse extends PageStatus {

@@ -10,11 +10,11 @@ export interface LoyaltyFormValues {
   isActive?: boolean;
   minimumPurchaseAmount?: number;
   name?: string;
-  redemptionPerCustomer?: string;
   redemptionPoints?: number;
   type?: string;
   usageLimit?: number;
   usedCount?: number;
+  singleTimeUse?: boolean;
   _submitAction?: string;
 }
 
@@ -52,4 +52,20 @@ export type LoyaltyPointsBase = LoyaltyPointFormValues & CommonDataType;
 
 export interface LoyaltyPointsApiResponse extends MessageStatus {
   data: LoyaltyPointsBase;
+}
+
+export interface RedeemLoyaltyPayload {
+  loyaltyId: string;
+  totalAmount: number;
+  customerId: string;
+}
+export interface RedeemLoyaltyDataResponse {
+  discountValue: number;
+  loyaltyId: string;
+  name: string;
+  type: string;
+}
+
+export interface RedeemLoyaltyApiResponse extends MessageStatus {
+  data: RedeemLoyaltyDataResponse;
 }

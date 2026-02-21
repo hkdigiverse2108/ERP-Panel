@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AddAdditionalChargesPayload, AddBankPayload, AddBillOfLiveProductPayload, AddContactPayload, AddCouponPayload, AddEmployeePayload, AddLoyaltyPayload, AddMaterialConsumptionPayload, AddPosPaymentPayload, AddPosProductOrderPayload, AddProductPayload, AddPurchaseOrderPayload, AddRecipePayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddStockVerificationPayload, AddSupplierBillPayload, AddTermsConditionPayload, ApplyCouponPayload, CallRequestFormValues, CompanyApiResponse, EditAdditionalChargesPayload, EditBankPayload, EditBillOfLiveProductPayload, EditCompanyPayload, EditContactPayload, EditCouponPayload, EditEmployeePayload, EditLoyaltyPayload, EditLoyaltyPointPayload, EditMaterialConsumptionPayload, EditPermissionPayload, EditPosPaymentPayload, EditPosProductOrderPayload, EditProductPayload, EditPurchaseOrderPayload, EditRecipePayload, EditRolesPayload, EditStockVerificationPayload, EditSupplierBillPayload, EditTermsConditionPayload, EmployeeApiResponse, LoginPayload, LoginResponse, UploadResponse } from "../Types";
+import type { AddAdditionalChargesPayload, AddBankPayload, AddBillOfLiveProductPayload, AddCashControlPayload, AddContactPayload, AddCouponPayload, AddEmployeePayload, AddLoyaltyPayload, AddMaterialConsumptionPayload, AddPosPaymentPayload, AddPosProductOrderPayload, AddProductPayload, AddPurchaseOrderPayload, AddRecipePayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddStockVerificationPayload, AddSupplierBillPayload, AddTermsConditionPayload, CallRequestFormValues, CompanyApiResponse, EditAdditionalChargesPayload, EditBankPayload, EditBillOfLiveProductPayload, EditCompanyPayload, EditContactPayload, EditCouponPayload, EditEmployeePayload, EditLoyaltyPayload, EditLoyaltyPointPayload, EditMaterialConsumptionPayload, EditPermissionPayload, EditPosPaymentPayload, EditPosProductOrderPayload, EditProductPayload, EditPurchaseOrderPayload, EditRecipePayload, EditRolesPayload, EditStockVerificationPayload, EditSupplierBillPayload, EditTermsConditionPayload, EmployeeApiResponse, LoginPayload, LoginResponse, RedeemLoyaltyApiResponse, RedeemLoyaltyPayload, UploadResponse, VerifyCouponApiResponse, VerifyCouponPayload } from "../Types";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
 
@@ -83,7 +83,7 @@ export const Mutations = {
   useDeleteMaterialConsumption: () => useMutations<string, void>([KEYS.MATERIAL_CONSUMPTION.DELETE, KEYS.MATERIAL_CONSUMPTION.BASE], (id) => Delete(`${URL_KEYS.MATERIAL_CONSUMPTION.BASE}/${id}`)),
 
   //*************** POS **************** */
-  useAddPosOrder: () => useMutations<AddPosProductOrderPayload, void>([KEYS.POS.ADD, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER], (input) => Post(URL_KEYS.POS.ADD, input)),
+  useAddPosOrder: () => useMutations<AddPosProductOrderPayload, void>([KEYS.POS.ADD, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER, KEYS.POS_ORDER.BASE], (input) => Post(URL_KEYS.POS.ADD, input)),
   useEditPosOrder: () => useMutations<EditPosProductOrderPayload, void>([KEYS.POS.EDIT, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER], (input) => Put(URL_KEYS.POS.EDIT, input)),
   useDeletePosOrder: () => useMutations<string, void>([KEYS.POS.DELETE, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER], (id) => Delete(`${URL_KEYS.POS.BASE}/${id}`)),
 
@@ -110,11 +110,15 @@ export const Mutations = {
   useAddCoupon: () => useMutations<AddCouponPayload, void>([KEYS.COUPON.ADD, KEYS.COUPON.BASE], (input) => Post(URL_KEYS.COUPON.ADD, input)),
   useEditCoupon: () => useMutations<EditCouponPayload, void>([KEYS.COUPON.EDIT, KEYS.COUPON.BASE], (input) => Put(URL_KEYS.COUPON.EDIT, input)),
   useDeleteCoupon: () => useMutations<string, void>([KEYS.COUPON.DELETE, KEYS.COUPON.BASE], (id) => Delete(`${URL_KEYS.COUPON.BASE}/${id}`)),
-  useApplyCoupon: () => useMutations<ApplyCouponPayload, void>([KEYS.COUPON.APPLY, KEYS.COUPON.BASE], (input) => Post(URL_KEYS.COUPON.APPLY, input)),
+  useVerifyCoupon: () => useMutations<VerifyCouponPayload, VerifyCouponApiResponse>([KEYS.COUPON.VERIFY], (input) => Post(URL_KEYS.COUPON.VERIFY, input)),
 
   //*************** Loyalty **************** */
   useAddLoyalty: () => useMutations<AddLoyaltyPayload, void>([KEYS.LOYALTY.ADD, KEYS.LOYALTY.BASE], (input) => Post(URL_KEYS.LOYALTY.ADD, input)),
   useEditLoyalty: () => useMutations<EditLoyaltyPayload, void>([KEYS.LOYALTY.EDIT, KEYS.LOYALTY.BASE], (input) => Put(URL_KEYS.LOYALTY.EDIT, input)),
   useDeleteLoyalty: () => useMutations<string, void>([KEYS.LOYALTY.DELETE, KEYS.LOYALTY.BASE], (id) => Delete(`${URL_KEYS.LOYALTY.BASE}/${id}`)),
   useAddLoyaltyPoint: () => useMutations<EditLoyaltyPointPayload, void>([KEYS.LOYALTY.POINTS_ADD, KEYS.LOYALTY.BASE], (input) => Post(URL_KEYS.LOYALTY.POINTS_ADD, input)),
+  useRedeemLoyalty: () => useMutations<RedeemLoyaltyPayload, RedeemLoyaltyApiResponse>([KEYS.LOYALTY.REDEEM], (input) => Post(URL_KEYS.LOYALTY.REDEEM, input)),
+
+  //*************** Cash Control *********
+  useAddCashControl: () => useMutations<AddCashControlPayload, void>([KEYS.CASH_CONTROL.ADD, KEYS.CASH_CONTROL.BASE], (input) => Post(URL_KEYS.CASH_CONTROL.ADD, input)),
 };

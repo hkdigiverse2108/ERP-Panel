@@ -8,4 +8,5 @@ export * from "./FormFields/CommonRadio";
 export * from "./FormFields/CommonDateSelector";
 export * from "./FormFields/CommonQuillInput";
 export * from "./FormFields/CommonCheckbox";
+export * from "./FormFields/CommonSelectTab";
 export * from "./Notification/index";

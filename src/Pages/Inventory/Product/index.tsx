@@ -58,14 +58,6 @@ const Product = () => {
   };
 
   const columns: AppGridColDef<ProductBase>[] = [
-    {
-      field: "images",
-      headerName: "Image",
-      renderCell: ({ value }) => {
-        if (!value || !Array.isArray(value) || !value[0]) return "-";
-        return <img src={value[0]} alt="product" style={{ width: 50, height: 45, objectFit: "cover", borderRadius: 4 }} />;
-      },
-    },
     { field: "name", headerName: "Name", width: 200 },
     { field: "printName", headerName: "Print Name", width: 150 },
     CommonObjectNameColumn<ProductBase>("categoryId", { headerName: "Category", width: 150 }),

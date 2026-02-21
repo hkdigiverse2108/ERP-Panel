@@ -14,6 +14,7 @@ import { CommonTable } from "../../../../Common";
 const PosTable = () => {
   const { PosProduct, isPosLoading } = useAppSelector((state) => state.pos);
   const productData = PosProduct.items;
+  console.log("productData", productData);
 
   const dispatch = useAppDispatch();
   const updateRow = (_id: string, data: Partial<PosProductDataModal>) => dispatch(updateProduct({ _id, data }));
@@ -23,6 +24,8 @@ const PosTable = () => {
   const calcNetAmount = (row: PosProductDataModal) => ((row.mrp - row.discount - row.additionalDiscount) * row.posQty)?.toFixed(2);
 
   const roundQty = (val: number) => Number(val?.toFixed(2));
+
+  const qtyCount = (row: PosProductDataModal) => (row.uomId?.name === "PIECES" ? 1 : 0.1);
 
   const calcTotalTaxAmount = (row: PosProductDataModal) => {
     const net = Number(calcNetAmount(row)) || 0;
@@ -76,7 +79,7 @@ const PosTable = () => {
       bodyClass: "min-w-30 w-30",
       render: (row) => (
         <div className="flex gap-1 justify-center items-center cursor-pointer">
-          <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, { posQty: roundQty(Math.max(0.1, row.posQty - 0.1)) })}>
+          <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, { posQty: roundQty(Math.max(qtyCount(row), row.posQty - qtyCount(row))) })}>
             <RemoveIcon />
           </CommonButton>
 
@@ -84,7 +87,7 @@ const PosTable = () => {
             {row.posQty}
           </span>
 
-          <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, { posQty: roundQty(row.posQty + 0.1) })} disabled={row.posQty >= (row.qty ?? Infinity)}>
+          <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, { posQty: roundQty(row.posQty + qtyCount(row)) })} disabled={row.posQty >= (row.qty ?? Infinity)}>
             <AddIcon />
           </CommonButton>
         </div>

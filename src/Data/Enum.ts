@@ -298,3 +298,9 @@ export const LOYALTY_REDEMPTION_TYPE = [
   { label: "Single", value: "single" },
   { label: "Multiple", value: "multiple" },
 ];
+
+export const CASH_CONTROL_TYPE = [
+  {label: "Opening", value: "opening"},
+  {label: "Add", value: "add"},
+  {label: "Close", value: "close"},
+];

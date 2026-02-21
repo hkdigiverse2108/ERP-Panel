@@ -6,7 +6,7 @@ import { VOUCHER_TYPE } from "../../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setPaymentListModal } from "../../../../../../Store/Slices/ModalSlice";
 import type { AppGridColDef, PosPaymentBase } from "../../../../../../Types";
-import { FormatDate } from "../../../../../../Utils";
+import { FormatDateTime } from "../../../../../../Utils";
 import { useDataGrid } from "../../../../../../Utils/Hooks";
 import { CommonCard, CommonDataGrid, CommonModal } from "../../../../../Common";
 
@@ -31,7 +31,7 @@ const PaymentList = () => {
       exportFormatter: (value) => (value === "against_bill" ? "Against Bill" : "Advance"),
     },
     { field: "amount", headerName: "Amount", type: "number", width: 150 },
-    { field: "createdAt", headerName: "Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.createdAt) },
+    { field: "createdAt", headerName: "Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDateTime(params.row.createdAt) },
   ];
 
   const CommonDataGridOption = {

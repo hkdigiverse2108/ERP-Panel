@@ -48,14 +48,13 @@ export const EmployeeFormSchema = Yup.object({
   // ---------- BASIC DETAILS ----------
   fullName: Validation("string", "FullName"),
   username: Validation("string", "Username"),
-  // designation: Validation("string", "Designation", { required: false }),
-  // role: Validation("string", "Role", { required: false }),
+  designation: Validation("string", "Designation", { required: false }),
   phoneNo: PhoneValidation(),
   email: Validation("string", "Email", { required: true, extraRules: (s) => s.trim().email("Invalid email address") }),
   branchId: Validation("string", "Branch Name", { required: false }),
   panNumber: Validation("string", "PAN Number", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
   password: Validation("string", "Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
-  role: Validation("string", "Role"),
+  // role: Validation("string", "Role"),
   // ---------- ADDRESS ----------
   address: Yup.object({
     address: Validation("string", "Address"),
@@ -307,7 +306,7 @@ export const ProductFormSchema = Yup.object({
   expiryReferenceDate: RequiredWhenTrue("hasExpiry", "Expiry Reference Date", Yup.string()),
 
   isExpiryProductSaleable: Yup.boolean(),
-  ingredients: Validation("string", "Ingredients", { required: false }),
+  ingredients: Validation("array", "Ingredients", { required: false }),
   shortDescription: Validation("string", "Short Description", { required: false }),
   description: Validation("string", "Description", { required: false }),
   nutrition: Yup.array().of(
@@ -318,7 +317,7 @@ export const ProductFormSchema = Yup.object({
   ),
   netWeight: Validation("number", "Net Weight", { required: false }),
   masterQty: Validation("number", "Master Quantity", { required: false }),
-  images: Yup.array().of(Yup.mixed().required("Image is required")).min(2, "At least two image is required"),
+  // images: Yup.array().of(Yup.mixed().required("Image is required")).min(2, "At least two image is required"),
   isActive: Yup.boolean(),
 });
 
@@ -409,12 +408,12 @@ export const LoyaltyFormSchema = Yup.object({
   discountValue: Validation("number", "Discount Value"),
   type: Validation("string", "Type"),
   minimumPurchaseAmount: Validation("number", "Minimum Purchase Amount"),
-  redemptionPerCustomer: Validation("string", "Redemption Per Customer"),
   redemptionPoints: Validation("number", "Redemption Points"),
   usageLimit: Validation("number", "Usage Limit"),
   campaignExpiryDate: Validation("string", "Campaign Expiry Date"),
   campaignLaunchDate: Validation("string", "Campaign Launch Date"),
   description: Validation("string", "Description", { required: false }),
+  singleTimeUse: Validation("boolean", "Single Time Use", { required: false }),
   isActive: Validation("boolean", "Is Active"),
 });
 

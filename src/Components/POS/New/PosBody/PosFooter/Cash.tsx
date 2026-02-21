@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CommonButton, CommonTextField } from "../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setCashModal } from "../../../../../Store/Slices/ModalSlice";
@@ -17,6 +17,13 @@ const Cash = () => {
   const { PosProduct } = useAppSelector((state) => state.pos);
 
   const [tendered, setTendered] = useState<string>("");
+
+  useEffect(() => {
+    if (isCashModal) {
+      setTendered(PosProduct.totalAmount.toString());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCashModal]);
 
   const { mutate: addPosOrder, isPending: addPosOrderLoading } = Mutations.useAddPosOrder();
 

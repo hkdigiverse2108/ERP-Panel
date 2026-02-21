@@ -195,7 +195,7 @@ export const KEYS = {
   COUPON: {
     BASE: "coupon",
     ADD: "coupon-add",
-    APPLY: "coupon-apply",
+    VERIFY: "coupon-verify",
     EDIT: "coupon-edit",
     DELETE: "coupon-delete",
   },
@@ -203,8 +203,15 @@ export const KEYS = {
     BASE: "loyalty",
     ADD: "loyalty-add",
     EDIT: "loyalty-edit",
+    REDEEM: "loyalty-redeem",
     DELETE: "loyalty-delete",
     POINTS: "loyalty-points",
     POINTS_ADD: "loyalty-points-add",
+  },
+  CASH_CONTROL: {
+    BASE: "cash-control",
+    ADD: "cash-control-add",
+    EDIT: "cash-control-edit",
+    DELETE: "cash-control-delete",
   },
 };

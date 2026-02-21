@@ -4,7 +4,7 @@ import { FieldArray, Form, Formik, useFormikContext, type FormikHelpers, type Fo
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonButton, CommonValidationDatePicker, CommonValidationQuillInput, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
+import { CommonButton, CommonValidationCreatableSelect, CommonValidationDatePicker, CommonValidationQuillInput, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { CommonFormImageBox } from "../../../Components/Common/CommonUploadImage/CommonImageBox";
 import { PAGE_TITLE } from "../../../Constants";
@@ -96,15 +96,22 @@ const ProductForm = () => {
   const handleSubmit = async (values: ProductFormValues, { resetForm }: FormikHelpers<ProductFormValues>) => {
     const { _submitAction, ...rest } = values;
 
+    const cleanedNutrition = rest.nutrition?.filter((n) => n.name !== "" && n.value !== "");
+
+    const payload = {
+      ...rest,
+      ...(cleanedNutrition && { nutrition: cleanedNutrition }),
+    };
+
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
       else navigate(-1);
     };
     if (isEditing) {
-      const changedFields = GetChangedFields(rest, data);
+      const changedFields = GetChangedFields(payload, data);
       await editProduct({ ...changedFields, productId: data._id }, { onSuccess: handleSuccess });
     } else {
-      await addProduct(RemoveEmptyFields(rest), { onSuccess: handleSuccess });
+      await addProduct(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
   };
   useEffect(() => {
@@ -134,7 +141,7 @@ const ProductForm = () => {
                       <CommonValidationSelect name="brandId" label="Brand" isLoading={BrandsDataLoading} options={GenerateOptions(BrandsData?.data)} grid={{ xs: 12, sm: 6, xl: 3 }} required />
                       <SubBrandSelect id={values.brandId || ""} />
                       <CommonValidationTextField name="cessPercentage" label="cess Percentage" type="number" grid={{ xs: 12, sm: 6, xl: 3 }} />
-                      <CommonValidationTextField name="ingredients" label="ingredients" grid={{ xs: 12, sm: 6, xl: 3 }} />
+                      <CommonValidationTextField name="sku" label="SKU" grid={{ xs: 12, sm: 6, xl: 3 }} />
                       <CommonValidationSwitch name="manageMultipleBatch" label="Manage Multiple Batch" syncFieldName="hasExpiry" grid={{ xs: 12, sm: 6, xl: 3 }} />
                       {values.manageMultipleBatch && <CommonValidationSwitch name="hasExpiry" label="hasExpiry" grid={{ xs: 12, sm: 6, xl: 3 }} />}
                       {values.manageMultipleBatch && values.hasExpiry && (
@@ -145,7 +152,7 @@ const ProductForm = () => {
                           <CommonValidationSwitch name="isExpiryProductSaleable" label="Expiry Product Saleable" grid={{ xs: 12, sm: 6, xl: 3 }} />
                         </>
                       )}
-                      <CommonValidationTextField name="sku" label="sku" grid={{ xs: 12, sm: 6 }} />
+                      <CommonValidationCreatableSelect name="ingredients" label="Ingredients" options={[]} grid={{ xs: 12, sm: 6 }} required />
                       <CommonValidationTextField name="shortDescription" label="short Description" multiline grid={{ xs: 12, sm: 6 }} />
                       <CommonValidationQuillInput name="description" label="Description" grid={{ xs: 12 }} />
                       <Grid size={12}>
@@ -176,7 +183,7 @@ const ProductForm = () => {
                       </Grid>
                       <CommonValidationTextField name="netWeight" label="Net Weight" type="number" grid={{ xs: 12, md: 6 }} />
                       <CommonValidationTextField name="masterQty" label="master Qty" type="number" grid={{ xs: 12, md: 6 }} />
-                      <CommonFormImageBox name="images" label="Product Images" type="image" grid={{ xs: 12 }} required multiple onUpload={handleUpload} />
+                      <CommonFormImageBox name="images" label="Product Images" type="image" grid={{ xs: 12 }} multiple onUpload={handleUpload} />
                       {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                     </Grid>
                   </CommonCard>
