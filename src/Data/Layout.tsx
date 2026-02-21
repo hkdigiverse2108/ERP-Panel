@@ -30,7 +30,10 @@ export const NavItems: NavItem[] = [
   {
     name: PAGE_TITLE.POS.BASE,
     icon: <PointOfSale />,
-    children: [{ name: PAGE_TITLE.POS.NEW, path: ROUTES.POS.NEW }],
+    children: [
+      { name: PAGE_TITLE.POS.NEW, path: ROUTES.POS.NEW },
+      { name: PAGE_TITLE.POS.ORDER_LIST, path: ROUTES.POS.ORDER_LIST },
+    ],
   },
   {
     name: PAGE_TITLE.CRM.BASE,

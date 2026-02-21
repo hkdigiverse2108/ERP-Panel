@@ -75,6 +75,7 @@ export const ROUTES = {
   POS: {
     BASE: "/pos",
     NEW: "/pos/new",
+    ORDER_LIST: "/pos/order-list",
   },
   SUPPLIER_BILL: {
     BASE: "/supplier-bill",

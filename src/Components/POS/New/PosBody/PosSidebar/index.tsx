@@ -25,7 +25,7 @@ const PosSidebar = () => {
   const { PosProduct } = useAppSelector((state) => state.pos);
 
   const { data, isPending, isFetching } = Queries.useGetPosCustomerDetail(PosProduct?.customerId, Boolean(PosProduct?.customerId));
-  const { data: orderData ,isPending: orderPending} = Queries.useGetPosOrder({ lastBillFilter: true });
+  const { data: orderData, isPending: orderPending } = Queries.useGetPosOrder({ lastBillFilter: true });
   const lastBill = orderData?.data?.posOrder_data?.[0];
   const isPosCustomerDetailLoading = isPending || isFetching;
   const customerData = PosProduct?.customerId ? data?.data : undefined;

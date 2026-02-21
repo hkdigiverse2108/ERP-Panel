@@ -96,6 +96,7 @@ export const PAGE_TITLE = {
   POS: {
     BASE: "POS",
     NEW: "New POS",
+    ORDER_LIST: "Order List",
   },
   CRM: {
     BASE: "CRM",

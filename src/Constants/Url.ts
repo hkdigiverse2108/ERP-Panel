@@ -235,4 +235,12 @@ export const URL_KEYS = {
     ADD: "/cash-control/add",
     EDIT: "/cash-control/edit",
   },
+  ORDER_LIST: {
+    BASE: "/order-list",
+    ALL: "/order-list/all",
+    DROPDOWN: "/order-list/dropdown",
+    ADD: "/order-list/add",
+    EDIT: "/order-list/edit",
+    DELETE: "/order-list/delete",
+  },
 } as const;
