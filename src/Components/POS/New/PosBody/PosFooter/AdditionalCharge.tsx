@@ -125,7 +125,7 @@ const AdditionalCharge = () => {
     showFooter: true,
   };
   return (
-    <CommonModal title="Add Additional Charge" isOpen={isModalOpen} onClose={() => dispatch(setAdditionalChargeModal({ open: false, data: null }))} className="max-w-[1000px]">
+    <CommonModal title="Add Additional Charge" isOpen={isModalOpen} onClose={() => {}} className="max-w-[1000px]" showCloseButton={false}>
       <div className="flex flex-col justify-center items-center gap-3">
         <div className="border border-gray-200 dark:border-gray-600 rounded-md overflow-y-auto custom-scrollbar text-sm w-full">
           <CommonTable {...CommonTableOption} />

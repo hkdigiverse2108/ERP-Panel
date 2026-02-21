@@ -19,7 +19,7 @@ const HoldBill = () => {
 
   const [rowToDelete, setRowToDelete] = useState<PosProductOrderBase | null>(null);
 
-  const { data: holdBills, isPending: holdBillsPending, isFetched: holdBillsFetched } = Queries.useGetPosHoldOrder({ ...(debouncedSearch && { search: debouncedSearch }) });
+  const { data: holdBills, isLoading: holdBillsPending, isFetching: holdBillsFetched } = Queries.useGetPosHoldOrder({ ...(debouncedSearch && { search: debouncedSearch }) });
 
   const { mutate: deleteHoldBill, isPending: isDeleteLoading } = Mutations.useDeletePosOrder();
 
@@ -79,7 +79,7 @@ const HoldBill = () => {
 
           {/* 📄 List */}
           <div className="flex flex-col gap-3 overflow-y-auto">
-            {holdBillsPending || !holdBillsFetched ? (
+            {holdBillsPending || holdBillsFetched ? (
               <Box sx={{ display: "grid", gap: 1.5 }}>
                 {Array.from({ length: 3 }).map((_, index) => (
                   <Skeleton key={index} variant="rectangular" width="100%" height={100} className="rounded-lg!" />

@@ -1,5 +1,6 @@
 import { KEYS, URL_KEYS } from "../Constants";
 import type { AccountApiResponse, AccountDropdownApiResponse, AccountGroupDropdownApiResponse, AdditionalChargesApiResponse, AdditionalChargesDropdownApiResponse, AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BankDropdownApiResponse, BillOfLiveProductApiResponse, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CashControlApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, ContactApiResponse, ContactDropdownApiResponse, CountryApiResponse, CouponApiResponse, CouponDropdownApiResponse, EmployeeApiResponse, LoyaltyApiResponse, LoyaltyDropdownApiResponse, LoyaltyPointsApiResponse, MaterialConsumptionApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, PosCustomerDetailApiResponse, PosOrderApiResponse, PosOrderDropdownApiResponse, PosPaymentApiResponse, PosProductOrderApiResponse, ProductApiResponse, ProductDropDownApiResponse, ProductSingleApiResponse, PurchaseOrderApiResponse, PurchaseOrderDropdownApiResponse, RecipeApiResponse, RecipeDropdownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SingleEmployeeApiResponse, StockApiResponse, StockVerificationApiResponse, SupplierBillApiResponse, TaxApiResponse, TaxDropdownApiResponse, TermsConditionApiResponse, UomDropdownApiResponse, UploadResponse } from "../Types";
+import type { PosCashRegisterApiResponse, PosCashRegisterDetailsApiResponse, PosCashRegisterDropdownApiResponse } from "../Types/PosCashRegister";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 
@@ -97,6 +98,11 @@ export const Queries = {
 
   //*************** POS Payment **************** */
   useGetPosPayment: (params?: Params, enabled?: boolean) => useQueries<PosPaymentApiResponse>([KEYS.POS_PAYMENT.BASE, params], () => Get(URL_KEYS.POS_PAYMENT.ALL, params), { enabled: enabled }),
+
+  //*************** POS Cash Register **************** */
+  useGetPosCashRegister: (params?: Params, enabled?: boolean) => useQueries<PosCashRegisterApiResponse>([KEYS.POS_CASH_REGISTER.BASE, params], () => Get(URL_KEYS.POS_CASH_REGISTER.ALL, params), { enabled: enabled }),
+  useGetPosCashRegisterDropdown: (params?: Params, enabled?: boolean) => useQueries<PosCashRegisterDropdownApiResponse>([KEYS.POS_CASH_REGISTER.BASE, params], () => Get(URL_KEYS.POS_CASH_REGISTER.DROPDOWN, params), { enabled: enabled }),
+  useGetPosCashRegisterDetails: (params?: Params, enabled?: boolean) => useQueries<PosCashRegisterDetailsApiResponse>([KEYS.POS_CASH_REGISTER.DETAILS, params], () => Get(URL_KEYS.POS_CASH_REGISTER.DETAILS, params), { enabled: enabled }),
 
   //*************** Additional Chargers **************** */
   useGetAdditionalCharges: (params?: Params) => useQueries<AdditionalChargesApiResponse>([KEYS.ADDITIONAL_CHARGES.BASE, params], () => Get(URL_KEYS.ADDITIONAL_CHARGES.ALL, params)),
