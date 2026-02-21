@@ -11,6 +11,7 @@ import type { EmployeeFormValues } from "../../../../Types";
 import { GenerateOptions, GetChangedFields } from "../../../../Utils";
 import { EmployeeFormSchema } from "../../../../Utils/ValidationSchemas";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../../Common";
+import { useDependentReset } from "../../../../Utils/Hooks";
 
 const UserForm = () => {
   const navigate = useNavigate();
@@ -30,7 +31,8 @@ const UserForm = () => {
     },
     email: UserData?.email || "",
     panNumber: UserData?.panNumber || "",
-    branchId: UserData?.branchId || "",
+    branchId: UserData?.branchId?._id || "",
+    password: UserData?.showPassword || "",
 
     address: {
       address: UserData?.address?.address || "",
@@ -73,6 +75,14 @@ const UserForm = () => {
     );
   };
 
+  const AddressDependencyHandler = () => {
+    useDependentReset([
+      { when: "address.country", reset: ["address.state", "address.city"] },
+      { when: "address.state", reset: ["address.city"] },
+    ]);
+    return null;
+  };
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.USER.EDIT} maxItems={3} breadcrumbs={BREADCRUMBS.GENERAL_SETTING.USER} />
@@ -80,6 +90,7 @@ const UserForm = () => {
         <Formik<EmployeeFormValues> enableReinitialize initialValues={initialValues} validationSchema={EmployeeFormSchema} onSubmit={handleSubmit}>
           {({ dirty, values }) => (
             <Form noValidate>
+              <AddressDependencyHandler />
               <Grid container spacing={2}>
                 {/* BASIC DETAILS */}
                 <CommonCard title="Basic Details" grid={{ xs: 12 }}>
@@ -91,6 +102,7 @@ const UserForm = () => {
                     <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="panNumber" label="PAN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationSelect name="branchId" label="branch" options={GenerateOptions(branchData?.data)} isLoading={branchDataLoading} grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationTextField name="password" label="Password" type="password" showPasswordToggle required grid={{ xs: 10, md: 4 }} />
                   </Grid>
                 </CommonCard>
 

@@ -11,6 +11,11 @@ export const PAGE_TITLE = {
       BASE: "User Profile",
       EDIT: "Edit User",
     },
+    ADDITIONAL_CHARGES: {
+      BASE: "Additional Charge",
+      ADD: "Add Additional Charge",
+      EDIT: "Edit Additional Charge",
+    },
   },
   USER: {
     BASE: "User",
@@ -56,10 +61,15 @@ export const PAGE_TITLE = {
       ADD: "Add recipe",
       EDIT: "Edit recipe",
     },
-    BILLOFMATERIALS: {
-      BASE: "Bill Of Materials",
-      ADD: "Add Bill Of Materials",
-      EDIT: "Edit Bill Of Materials",
+    BILL_OF_LIVE_PRODUCT: {
+      BASE: "Bill Of Live Product",
+      ADD: "Add Bill Of Live Product",
+      EDIT: "Edit Bill Of Live Product",
+    },
+    MATERIAL_CONSUMPTION: {
+      BASE: "Material Consumption",
+      ADD: "Add Material Consumption",
+      EDIT: "Edit Material Consumption",
     },
   },
   CUSTOMER: {
@@ -67,7 +77,7 @@ export const PAGE_TITLE = {
     ADD: "Add Customer",
     EDIT: "Edit Customer",
   },
-  BANK_CASH:{
+  BANK_CASH: {
     BASE: "Bank / Cash",
   },
   BANK: {
@@ -86,5 +96,31 @@ export const PAGE_TITLE = {
   POS: {
     BASE: "POS",
     NEW: "New POS",
+  },
+  CRM: {
+    BASE: "CRM",
+    COUPON: {
+      BASE: "Coupon",
+      ADD: "Add Coupon",
+      EDIT: "Edit Coupon",
+    },
+    LOYALTY: {
+      BASE: "Loyalty",
+      ADD: "Add Loyalty",
+      EDIT: "Edit Loyalty",
+    },
+  },
+  PURCHASE: {
+    BASE: "Purchase",
+    SUPPLIER_BILL: {
+      BASE: "Supplier Bill",
+      ADD: "Add Supplier Bill",
+      EDIT: "Edit Supplier Bill",
+    },
+    PURCHASE_ORDER: {
+      BASE: "Purchase Order",
+      ADD: "Add Purchase Order",
+      EDIT: "Edit Purchase Order",
+    },
   },
 } as const;

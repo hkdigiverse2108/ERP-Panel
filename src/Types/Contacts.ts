@@ -13,7 +13,7 @@ export interface Address {
   state?: string;
   city?: string;
   pinCode?: string;
-  contactCompanyName: string;
+  contactCompanyName?: string;
 }
 
 export interface ContactAddressApi extends Omit<Address, "country" | "state" | "city"> {
@@ -63,9 +63,11 @@ export interface ContactFormValues {
 
 export type AddContactPayload = ContactFormValues & { companyId?: string };
 
+export type EditContactPayload = AddContactPayload & { contactId?: string };
 
-export type EditContactPayload = AddContactPayload & { contactId: string };
-
+export interface ContactFormFormikValues extends Omit<ContactFormValues, "address"> {
+  address?: Address;
+}
 export interface ContactBase extends Omit<ContactFormValues, "address">, CommonDataType {
   address?: ContactAddressApi[];
 }
@@ -76,4 +78,8 @@ export interface ContactDataResponse extends PageStatus {
 
 export interface ContactApiResponse extends MessageStatus {
   data: ContactDataResponse;
+}
+
+export interface ContactDropdownApiResponse extends PageStatus {
+  data: ContactBase[];
 }

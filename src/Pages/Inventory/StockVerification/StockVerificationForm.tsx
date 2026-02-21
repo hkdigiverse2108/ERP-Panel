@@ -2,46 +2,61 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { Box, Grid } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useEffect, useState } from "react";
-import { Queries } from "../../../Api";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonSelect, CommonTextField, CommonValidationSelect } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { BREADCRUMBS } from "../../../Data";
-import type { ProductBase } from "../../../Types";
-import { GenerateOptions } from "../../../Utils";
+import { BREADCRUMBS, DATA_STATUS } from "../../../Data";
+import type { ProductBase, StockVerificationBase, StockVerificationFormValues, StockVerificationRow } from "../../../Types";
+import { GenerateOptions, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
-import { useLocation, useNavigate } from "react-router-dom";
 
 const StockVerificationForm = () => {
   const [searchValue, setSearchValue] = useState<string[]>([""]);
-  const [enterRemark, setEnterRemark] = useState("");
+  const location = useLocation();
+  const updateData = location.state?.data as StockVerificationBase | undefined;
+  const [filter, setFilter] = useState({});
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE);
   const navigate = useNavigate();
-  const location = useLocation();
+  const [enterRemark, setEnterRemark] = useState(updateData?.remark || "");
+  const [status, setStatus] = useState([updateData?.status || "pending"]);
 
-  const { data } = location.state || {};
-  const isEditing = Boolean(data?._id);
-  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown();
-  const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown();
-  const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown();
+  const isEditing = Boolean(updateData?._id);
+  const pageMode = isEditing ? "EDIT" : "ADD";
 
-  interface StockFormProps {
-    id: string;
-    name: string;
-    landingCost: number;
-    price: number;
-    mrp: number;
-    sellingPrice: number;
-    systemQty: number;
-    physicalQty: number;
-    differenceQty: number;
-    differenceAmount: number;
-  }
+  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
+  const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true });
+  const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown(filter);
 
-  const [rows, setRows] = useState<StockFormProps[]>([]);
+  const { mutate: addStock, isPending: isAddLoading } = Mutations.useAddStockVerification();
+  const { mutate: editStock, isPending: isEditLoading } = Mutations.useEditStockVerification();
 
-  const createRowFromProduct = (product: ProductBase): StockFormProps => ({
-    id: product._id,
+  const [rows, setRows] = useState<StockVerificationRow[]>([]);
+
+  useEffect(() => {
+    if (isEditing && updateData?.items?.length) {
+      setRows(
+        updateData?.items?.map((item) => ({
+          productId: item.productId._id ?? item.productId,
+          name: item.productId.name ?? "",
+          landingCost: item.landingCost,
+          price: item.price,
+          mrp: item.mrp,
+          sellingPrice: item.sellingPrice,
+          systemQty: item.systemQty,
+          physicalQty: item.physicalQty,
+          differenceQty: item.differenceQty,
+          differenceAmount: item.differenceAmount,
+          approvedQty: item.approvedQty ?? item.physicalQty,
+        })),
+      );
+      setEnterRemark(updateData.remark ?? "");
+    }
+  }, [isEditing, updateData]);
+
+  const createRowFromProduct = (product: ProductBase): StockVerificationRow => ({
+    productId: product._id,
     name: product.name ?? "",
     landingCost: product.landingCost ?? 0,
     price: product.purchasePrice ?? 0,
@@ -49,33 +64,64 @@ const StockVerificationForm = () => {
     sellingPrice: product.sellingPrice ?? 0,
     systemQty: product.qty ?? 0,
     physicalQty: 0,
-    differenceQty: 0,
-    differenceAmount: (product.landingCost ?? 0) * 0,
+    differenceQty: 0 - (product.qty ?? 0),
+    differenceAmount: (product.landingCost ?? 0) * (0 - (product.qty ?? 0)),
+    approvedQty: 0,
   });
 
-  const updateRow = (id: string, data: Partial<StockFormProps>) => {
+  const updateRow = (id: string, data: Partial<StockVerificationRow>) => {
     setRows((prev) =>
       prev.map((r) => {
-        if (r.id !== id) return r;
+        if (r.productId !== id) return r;
 
         const updated = { ...r, ...data };
-        const differenceQty = updated.physicalQty - updated.systemQty;
+        const differenceQty = isEditing ? updated?.approvedQty - updated?.systemQty : updated?.physicalQty - updated?.systemQty;
+        const differenceAmount = updated?.landingCost * differenceQty;
 
-        return { ...updated, differenceQty, differenceAmount: updated.landingCost * differenceQty };
+        return { ...updated, differenceQty, differenceAmount };
       }),
     );
   };
 
-  const removeRow = (id: string) => setRows((prev) => prev.filter((r) => r.id !== id));
-  const totalDifferenceQty = rows.reduce((sum, r) => sum + r.physicalQty, 0);
+  const removeRow = (id: string) => setRows((prev) => prev.filter((r) => r.productId !== id));
+  const totalDifferenceQty = rows.reduce((sum, r) => sum + r?.physicalQty, 0);
 
-  const totalDifferenceAmount = rows.reduce((sum, r) => sum + r.differenceAmount, 0);
+  const totalApprovedQty = rows.reduce((sum, r) => sum + r?.approvedQty, 0);
 
-  const initialValues = {
-    categoryId: null,
-    brandId: null,
+  const totalDifferenceAmount = rows.reduce((sum, r) => sum + r?.differenceAmount, 0);
+
+  const handleSubmit = (values: { categoryId: string; brandId: string }) => setFilter({ categoryFilter: values.categoryId, brandFilter: values.brandId });
+
+  const handleStockSubmit = async () => {
+    const items = rows.map((r) => ({
+      productId: r.productId,
+      landingCost: r.landingCost,
+      price: r.price,
+      mrp: r.mrp,
+      sellingPrice: r.sellingPrice,
+      systemQty: r.systemQty,
+      physicalQty: r.physicalQty,
+      differenceQty: r.differenceQty,
+      differenceAmount: r.differenceAmount,
+      approvedQty: r.approvedQty,
+    }));
+    const payload: StockVerificationFormValues = {
+      items,
+      totalProducts: rows.length,
+      totalPhysicalQty: totalDifferenceQty,
+      totalDifferenceAmount: totalDifferenceAmount,
+      totalApprovedQty: totalApprovedQty,
+      status: status[0],
+      ...(enterRemark && { remark: enterRemark }),
+    };
+    const handleSuccess = () => navigate(-1);
+
+    if (isEditing) {
+      await editStock({ ...payload, stockVerificationId: updateData?._id }, { onSuccess: handleSuccess });
+    } else {
+      await addStock(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
+    }
   };
-  const handleSubmit = () => {};
 
   useEffect(() => {
     const hasAccess = isEditing ? permission.edit : permission.add;
@@ -83,31 +129,34 @@ const StockVerificationForm = () => {
   }, [isEditing, permission, navigate]);
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.ADD} maxItems={3} breadcrumbs={BREADCRUMBS.STOCK_VERIFICATION.ADD} />
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.STOCK_VERIFICATION[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.STOCK_VERIFICATION[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonCard hideDivider>
           <Grid container spacing={2} sx={{ p: 2 }}>
-            <Grid size={12}>
-              <Formik enableReinitialize initialValues={initialValues} onSubmit={handleSubmit}>
-                {({ dirty }) => (
-                  <Form noValidate>
-                    <Grid container spacing={2}>
-                      <CommonValidationSelect name="categoryId" label="Category" placeholder="Category & Subcategory Selection" options={GenerateOptions(CategoryData?.data)} isLoading={CategoryDataLoading} grid={{ xs: 12, sm: 6, md: 4 }} />
-                      <CommonValidationSelect name="brandId" label="Brand" placeholder="Brand & Subbrand Selection" options={GenerateOptions(BrandsData?.data)} isLoading={BrandsDataLoading} grid={{ xs: 12, md: 4 }} />
-                      <CommonButton type="submit" variant="contained" title="Apply" disabled={!dirty} />
-                    </Grid>
-                  </Form>
-                )}
-              </Formik>
-            </Grid>
+            {!isEditing && (
+              <Grid size={12}>
+                <Formik enableReinitialize initialValues={{ categoryId: "", brandId: "" }} onSubmit={handleSubmit}>
+                  {({ dirty }) => (
+                    <Form noValidate>
+                      <Grid container spacing={2}>
+                        <CommonValidationSelect name="categoryId" label="Category" placeholder="Category Selection" options={GenerateOptions(CategoryData?.data)} isLoading={CategoryDataLoading} grid={{ xs: 12, sm: 6, md: 4 }} />
+                        <CommonValidationSelect name="brandId" label="Brand" placeholder="Brand Selection" options={GenerateOptions(BrandsData?.data)} isLoading={BrandsDataLoading} grid={{ xs: 12, md: 4 }} />
+                        <CommonButton type="submit" variant="contained" title="Apply" disabled={!dirty} />
+                      </Grid>
+                    </Form>
+                  )}
+                </Formik>
+              </Grid>
+            )}
             <Grid size={12}>
               <Grid container spacing={2}>
+                {isEditing && <CommonSelect label="Status" options={DATA_STATUS} value={status} onChange={(e) => setStatus(e)} grid={{ xs: 12, sm: 2 }} />}
                 <CommonSelect
                   value={searchValue}
                   label="Search Product"
                   placeholder="Search Product"
                   options={GenerateOptions(productData?.data)}
-                  grid={{ xs: 12, sm: 6 }}
+                  grid={{ xs: 12, sm: isEditing ? 4 : 6 }}
                   isLoading={productDataLoading}
                   onChange={(selected: string[]) => {
                     setSearchValue(selected);
@@ -117,18 +166,24 @@ const StockVerificationForm = () => {
                     if (!product) return;
 
                     setRows((prev) => {
-                      const existing = prev.find((r) => r.id === product._id);
+                      const existing = prev.find((r) => r.productId === product._id);
 
                       if (existing) {
-                        return prev.map((r) => (r.id === product._id ? { ...r, physicalQty: r.physicalQty + 1, differenceQty: r.physicalQty + 1 - r.systemQty, differenceAmount: (r.landingCost ?? 0) * (r.physicalQty + 1) } : r));
+                        return prev.map((r) => {
+                          const physicalQty = r.physicalQty + 1;
+                          const approvedQty = isEditing ? r.approvedQty + 1 : 0;
+                          const differenceQty = (isEditing ? approvedQty : physicalQty) - r.systemQty;
+                          const differenceAmount = (r.landingCost ?? 0) * (isEditing ? approvedQty : physicalQty);
+
+                          return r.productId === product._id ? { ...r, physicalQty, differenceQty, differenceAmount, approvedQty } : r;
+                        });
                       }
 
                       return [createRowFromProduct(product), ...prev];
                     });
-                    // setSearchValue([]);
                   }}
                 />
-                <CommonTextField label="Enter Remark" placeholder="Enter Remark" grid={{ xs: 12, sm: 6 }} value={enterRemark} onChange={(e) => setEnterRemark(e)} />
+                <CommonTextField label="Enter Remark" placeholder="Enter Remark" grid={{ xs: 12, sm: 6 }} value={enterRemark} onChange={(e) => setEnterRemark(e)} multiline />
               </Grid>
             </Grid>
 
@@ -148,27 +203,33 @@ const StockVerificationForm = () => {
                         <th className="p-2">Physical Qty</th>
                         <th className="p-2">Difference Qty</th>
                         <th className="p-2">Difference Amount</th>
+                        {isEditing && <th className="p-2">Approve Qty</th>}
                         <th className="p-2">Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       {rows.map((row, i) => {
                         return (
-                          <tr key={row.id} className="text-center bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark text-gray-600 dark:text-gray-300">
+                          <tr key={row.productId} className="text-center bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark text-gray-600 dark:text-gray-300">
                             <td className="p-2 text-center">{i + 1}</td>
                             <td className="p-2 min-w-60 w-60 text-start">{row.name}</td>
-                            <td className="p-2 ">{row.landingCost}</td>
-                            <td className="p-2 ">{row.price}</td>
-                            <td className="p-2 ">{row.mrp}</td>
-                            <td className="p-2 ">{row.sellingPrice}</td>
-                            <td className="p-2 ">{row.systemQty}</td>
+                            <td className="p-2">{row.landingCost}</td>
+                            <td className="p-2">{row.price}</td>
+                            <td className="p-2">{row.mrp}</td>
+                            <td className="p-2">{row.sellingPrice}</td>
+                            <td className="p-2">{row.systemQty}</td>
                             <td className="p-2 min-w-35 w-35">
-                              <CommonTextField type="number" value={row.physicalQty} onChange={(e) => updateRow(row.id, { physicalQty: Number(e) })} />
+                              <CommonTextField type="number" value={row.physicalQty} onChange={(e) => updateRow(row.productId, { physicalQty: Number(e) })} />
                             </td>
                             <td className="p-2 ">{row.differenceQty}</td>
                             <td className="p-2">{row.differenceAmount.toFixed(2)}</td>
+                            {isEditing && (
+                              <td className="p-2 min-w-35 w-35">
+                                <CommonTextField type="number" value={row.approvedQty} onChange={(e) => updateRow(row.productId, { approvedQty: Number(e) })} />
+                              </td>
+                            )}
                             <td className="p-2">
-                              <CommonButton color="error" variant="outlined" size="small" onClick={() => removeRow(row.id)}>
+                              <CommonButton color="error" variant="outlined" size="small" onClick={() => removeRow(row.productId)}>
                                 <ClearIcon />
                               </CommonButton>
                             </td>
@@ -182,6 +243,8 @@ const StockVerificationForm = () => {
                         <td className="p-3 text-center font-semibold">{totalDifferenceQty}</td>
                         <td />
                         <td className="p-3 text-center font-semibold">{totalDifferenceAmount.toFixed(2)}</td>
+
+                        {isEditing && <td className="p-3 text-center font-semibold">{totalApprovedQty}</td>}
                         <td />
                       </tr>
                     </tfoot>
@@ -189,7 +252,7 @@ const StockVerificationForm = () => {
                 </div>
               </div>
             </Grid>
-            <CommonBottomActionBar save isLoading={false} onSave={() => {}} />
+            <CommonBottomActionBar save isLoading={isAddLoading || isEditLoading} disabled={rows.length === 0} onSave={() => handleStockSubmit()} />
           </Grid>
         </CommonCard>
       </Box>

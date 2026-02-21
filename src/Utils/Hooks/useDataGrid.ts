@@ -4,7 +4,7 @@ import type { UseDataGridOptions } from "../../Types";
 import { CleanParams } from "..";
 import { useDebounce } from "./useDebounce";
 
-export const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initialFilter = { items: [] }, active = true, debounceDelay = 0, pagination = true }: UseDataGridOptions = {}) => {
+export const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initialFilter = { items: [] }, active = true, debounceDelay = 0, pagination = true, defaultFilterKey = {} }: UseDataGridOptions = {}) => {
   /* ---------------- Pagination ---------------- */
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page, pageSize });
 
@@ -20,7 +20,7 @@ export const useDataGrid = ({ page = 0, pageSize = 10, initialSort = [], initial
   const debouncedSearchTerm = useDebounce(filterModel.quickFilterValues?.[0], debounceDelay);
 
   /* ---------------- Advanced Filtering ---------------- */
-  const [advancedFilter, setAdvancedFilter] = useState<Record<string, string[]>>({});
+  const [advancedFilter, setAdvancedFilter] = useState<Record<string, string[]>>(defaultFilterKey || {});
 
   const normalizeFilterValue = (value?: string[]) => {
     if (!value || value.length === 0) return undefined;

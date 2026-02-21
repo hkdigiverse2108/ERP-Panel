@@ -22,9 +22,19 @@ import StockVerification from "../Pages/Inventory/StockVerification";
 import NewPos from "../Pages/POS/New";
 import GeneralSetting from "../Pages/Settings/GeneralSetting";
 import StockVerificationForm from "../Pages/Inventory/StockVerification/StockVerificationForm";
-import BillOfMaterials from "../Pages/Inventory/BillOfMaterials";
-import BillOfMaterialsForm from "../Pages/Inventory/BillOfMaterials/BillOfMaterialForm";
+import BillOfMaterials from "../Pages/Inventory/BillOfLiveProduct";
+import BillOfMaterialsForm from "../Pages/Inventory/BillOfLiveProduct/BillOfLiveProductForm";
 import Permission from "../Pages/Employee/Permission";
+import SupplierBill from "../Pages/Purchase/SupplierBill";
+import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
+import MaterialConsumption from "../Pages/Inventory/MaterialConsumption";
+import MaterialConsumptionForm from "../Pages/Inventory/MaterialConsumption/MaterialConsumptionForm";
+import PurchaseOrder from "../Pages/Purchase/PurchaseOrder";
+import PurchaseOrderForm from "../Pages/Purchase/PurchaseOrder/PurchaseOrderForm";
+import Coupon from "../Pages/CRM/Coupon";
+import CouponForm from "../Pages/CRM/Coupon/CouponForm";
+import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
+import Loyalty from "../Pages/CRM/Loyalty";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -41,7 +51,7 @@ export const PageRoutes = [
 
   { path: ROUTES.PRODUCT.BASE, name: PAGE_TITLE.INVENTORY.PRODUCT.BASE, element: <Product /> },
   { path: ROUTES.PRODUCT.ADD_EDIT, name: PAGE_TITLE.INVENTORY.PRODUCT.BASE, element: <ProductForm /> },
-  { path: ROUTES.PRODUCT.ITEM_ADD_EDIT, name: PAGE_TITLE.INVENTORY.PRODUCT.ITEM.BASE, element: <ItemForm /> },
+  { path: ROUTES.PRODUCT.ITEM_ADD_EDIT, name: PAGE_TITLE.INVENTORY.STOCK.BASE, element: <ItemForm /> },
 
   { path: ROUTES.STOCK.BASE, name: PAGE_TITLE.INVENTORY.STOCK.BASE, element: <Stocks /> },
   { path: ROUTES.STOCK_VERIFICATION.BASE, name: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE, element: <StockVerification /> },
@@ -63,8 +73,23 @@ export const PageRoutes = [
   { path: ROUTES.RECIPE.BASE, name: PAGE_TITLE.INVENTORY.RECIPE.BASE, element: <Recipe /> },
   { path: ROUTES.RECIPE.ADD_EDIT, name: PAGE_TITLE.INVENTORY.RECIPE.BASE, element: <RecipeForm /> },
 
-  { path: ROUTES.BILLOFMATERIALS.BASE, name: PAGE_TITLE.INVENTORY.BILLOFMATERIALS.BASE, element: <BillOfMaterials /> },
-  { path: ROUTES.BILLOFMATERIALS.ADD_EDIT, name: PAGE_TITLE.INVENTORY.BILLOFMATERIALS.BASE, element: <BillOfMaterialsForm /> },
+  { path: ROUTES.BILL_OF_LIVE_PRODUCT.BASE, name: PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE, element: <BillOfMaterials /> },
+  { path: ROUTES.BILL_OF_LIVE_PRODUCT.ADD_EDIT, name: PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE, element: <BillOfMaterialsForm /> },
+
+  { path: ROUTES.SUPPLIER_BILL.BASE, name: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE, element: <SupplierBill /> },
+  { path: ROUTES.SUPPLIER_BILL.ADD_EDIT, name: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE, element: <SupplierBillForm /> },
+
+  { path: ROUTES.MATERIAL_CONSUMPTION.BASE, name: PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE, element: <MaterialConsumption /> },
+  { path: ROUTES.MATERIAL_CONSUMPTION.ADD_EDIT, name: PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE, element: <MaterialConsumptionForm /> },
+
+  { path: ROUTES.PURCHASE_ORDER.BASE, name: PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE, element: <PurchaseOrder /> },
+  { path: ROUTES.PURCHASE_ORDER.ADD_EDIT, name: PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE, element: <PurchaseOrderForm /> },
+
+  { path: ROUTES.COUPON.BASE, name: PAGE_TITLE.CRM.COUPON.BASE, element: <Coupon /> },
+  { path: ROUTES.COUPON.ADD_EDIT, name: PAGE_TITLE.CRM.COUPON.BASE, element: <CouponForm /> },
+
+  { path: ROUTES.LOYALTY.BASE, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <Loyalty /> },
+  { path: ROUTES.LOYALTY.ADD_EDIT, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <LoyaltyForm /> },
 ];
 
 export const AuthRoutes = [

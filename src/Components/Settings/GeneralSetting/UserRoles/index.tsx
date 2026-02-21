@@ -13,7 +13,7 @@ const UserRoles = () => {
   const [isEdit, setEdit] = useState<RolesBase>({} as RolesBase);
 
   const { data: rolesData, isLoading: rolesDataLoading, isFetching: rolesDataFetching } = Queries.useGetRoles(params);
-  const { mutate: deleteRolesMutate } = Mutations.useDeleteRoles();
+  const { mutate: deleteRolesMutate, isPending: isDeleteLoading } = Mutations.useDeleteRoles();
   const { mutate: editRoles, isPending: isEditLoading } = Mutations.useEditRoles();
 
   const allRoles = useMemo(() => rolesData?.data?.role_data.map((roles) => ({ ...roles, id: roles?._id })) || [], [rolesData]);
@@ -64,7 +64,7 @@ const UserRoles = () => {
       <CommonCard title={PAGE_TITLE.ROLES.BASE}>
         <CommonDataGrid {...CommonDataGridOption} />
       </CommonCard>
-      <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+      <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       <RolesFormModal openModal={openModal} setOpenModal={setOpenModal} isEdit={isEdit} />
     </>
   );

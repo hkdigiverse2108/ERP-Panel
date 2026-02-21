@@ -8,8 +8,8 @@ const Profile = () => {
   const { user } = useAppSelector((state) => state.auth);
 
   const nameWords = user?.fullName?.trim().split(/\s+/);
-  const firstInitial = nameWords[0].split("")[0];
-  const lastInitial = nameWords?.length > 1 ? nameWords[nameWords?.length - 1].split("")[0] : "";
+  const firstInitial = nameWords?.[0]?.split("")[0];
+  const lastInitial = nameWords?.length > 1 ? nameWords[nameWords?.length - 1]?.split("")[0] : "";
   const profileInitials = (firstInitial + lastInitial).toLocaleUpperCase();
 
   const CompanyDetails = [

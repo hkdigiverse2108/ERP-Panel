@@ -10,14 +10,11 @@ export const ACCOUNT_NATURE = ["assets", "liabilities", "income", "expenses"] as
 export const CUSTOMER_TYPE = ["retailer", "wholesaler", "merchant", "other"] as const;
 export const SUPPLIER_TYPE = ["manufacturer", "stockiest", "trader", "other"] as const;
 export const CONTACT_STATUS = ["active", "inactive"] as const;
-export const COUPON_DISCOUNT_TYPE = ["percentage", "flat"] as const;
-export const COUPON_STATUS = ["active", "inactive"] as const;
 export const DISCOUNT_TYPE = ["percentage", "flat"] as const;
 export const DISCOUNT_STATUS = ["active", "inactive"] as const;
 export const EMPLOYEE_STATUS = ["active", "inactive"] as const;
 export const INVOICE_PAYMENT_STATUS = ["paid", "unpaid", "partial"] as const;
 export const LOYALTY_STATUS = ["active", "inactive"] as const;
-export const LOYALTY_TYPE = ["points", "cashback"] as const;
 export const SUPPLIER_PAYMENT_STATUS = ["paid", "unpaid", "partial"] as const;
 export const VOUCHAR_TYPE = ["journal", "payment", "receipt", "expense", "contra"] as const;
 
@@ -63,8 +60,8 @@ export const GROUP_OPTIONS = [
 ];
 
 export const ORDER_TYPE = [
-  { label: "Walk In", value: "Walk In" },
-  { label: "Delivery", value: "Delivery" },
+  { label: "Walk In", value: "walk_in" },
+  { label: "Delivery", value: "delivery" },
 ];
 
 export const CONTACT_TYPE = [
@@ -134,21 +131,29 @@ export const GST_TYPE = [
 ];
 
 export const PAYMENTS = [
-  { label: "Receipt", value: "Receipt" },
-  { label: "Payment", value: "Payment" },
-  { label: "Expense", value: "Expense" },
+  { label: "Receipt", value: "receipt" },
+  { label: "Payment", value: "payment" },
+  { label: "Expense", value: "expense" },
 ];
 
 export const VOUCHER_TYPE = [
   { label: "Sales", value: "sales" },
-  { label: "Purchase", value: "purchase" },
   { label: "Expense", value: "expense" },
 ];
 
 export const PAYMENT_TYPE = [
-  { label: "Advance Payment", value: "advancePayment" },
-  { label: "Against Bill", value: "againstBill" },
+  { label: "Advance Payment", value: "advance" },
+  { label: "Against Bill", value: "against_bill" },
 ];
+
+export const POS_PAYMENT_METHOD = {
+  CASH: "cash",
+  CARD: "card",
+  UPI: "upi",
+  WALLET: "wallet",
+  MULTI_PAY: "multipay",
+  PAY_LATER: "pay_later",
+};
 
 export const PAYMENT_MODE = [
   { label: "Cash", value: "cash" },
@@ -233,7 +238,69 @@ export const CONSUMPTION_TYPE = [
   { label: "Expired", value: "expired" },
   { label: "Sample", value: "sample" },
   { label: "Production", value: "production" },
-  { label: "Scrap/Wastage", value: "scrap/wastage" },
+  { label: "Scrap / Wastage", value: "scrap_wastage" },
 ];
 
 export const BANK_UI_FIELDS: (keyof CompanyFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber", "upiId"];
+
+export const DATA_STATUS = [
+  { label: "Pending", value: "pending" },
+  { label: "Approved", value: "approved" },
+  { label: "Rejected", value: "rejected" },
+];
+
+export const REVERSE_CHARGE = [
+  { label: "Yes", value: "true" },
+  { label: "No", value: "false" },
+];
+
+export const TAX_TYPE = [
+  { label: "Default", value: "default" },
+  { label: "Tax Inclusive", value: "tax_inclusive" },
+  { label: "Tax Exclusive", value: "tax_exclusive" },
+  { label: "Out Of Scope", value: "out_of_scope" },
+];
+export const OPTION_TYPE = [
+  { label: "Purchase", value: "purchase" },
+  { label: "Sales", value: "sales" },
+];
+export const PAYMENT_STATUS_OPTIONS = [
+  { label: "All", value: "" },
+  { label: "Paid", value: "paid" },
+  { label: "Unpaid", value: "unpaid" },
+];
+export const ORDER_STATUS = [
+  { label: "Exceed", value: "exceed" },
+  { label: "In Progress", value: "in_progress" },
+  { label: "Delivered", value: "delivered" },
+  { label: "Partially Delivered", value: "partially_delivered" },
+  { label: "Completed", value: "completed" },
+  { label: "Cancelled", value: "cancelled" },
+];
+
+export const COUPON_DISCOUNT_TYPE = [
+  { label: "Percentage", value: "percentage" },
+  { label: "Flat", value: "flat" },
+];
+
+export const COUPON_STATUS = [
+  { label: "Active", value: "active" },
+  { label: "Inactive", value: "inactive" },
+  { label: "Expired", value: "expired" },
+];
+
+export const LOYALTY_TYPE = [
+  { label: "Discount", value: "discount" },
+  { label: "Free Product", value: "free_product" },
+];
+
+export const LOYALTY_REDEMPTION_TYPE = [
+  { label: "Single", value: "single" },
+  { label: "Multiple", value: "multiple" },
+];
+
+export const CASH_CONTROL_TYPE = [
+  {label: "Opening", value: "opening"},
+  {label: "Add", value: "add"},
+  {label: "Close", value: "close"},
+];

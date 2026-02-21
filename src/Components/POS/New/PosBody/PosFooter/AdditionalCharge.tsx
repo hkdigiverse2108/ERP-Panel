@@ -1,118 +1,138 @@
+import CloseIcon from "@mui/icons-material/Close";
 import { useMemo, useState } from "react";
+import { Queries } from "../../../../../Api";
+import { CommonButton, CommonSelect, CommonTextField } from "../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setAdditionalChargeModal } from "../../../../../Store/Slices/ModalSlice";
-import { CommonModal } from "../../../../Common";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { IconButton } from "@mui/material";
-import { CommonSelect, CommonTextField } from "../../../../../Attribute";
-import { GROUP_OPTIONS, TAX_OPTIONS } from "../../../../../Data";
-
-type RowType = {
-  charge: string[];
-  value: number;
-  tax: string[];
-  group: string[];
-  total: number;
-};
-
-const TAX_MAP: Record<string, number> = {
-  NON_GST_0: 0,
-  EXEMPT_0: 0,
-  GST_0: 0,
-  GST_5: 5,
-  GST_12: 12,
-  GST_18: 18,
-  GST_28: 28,
-};
+import { setAdditionalCharges, setTotalAdditionalCharge } from "../../../../../Store/Slices/PosSlice";
+import type { AdditionalChargeRowType, CommonTableColumn } from "../../../../../Types";
+import { GenerateOptions } from "../../../../../Utils";
+import { CommonModal, CommonTable } from "../../../../Common";
 
 const AdditionalCharge = () => {
   const { isAdditionalChargeModal } = useAppSelector((s) => s.modal);
+  const { PosProduct } = useAppSelector((s) => s.pos);
   const dispatch = useAppDispatch();
+  const isModalOpen = isAdditionalChargeModal.open;
 
-  const [rows, setRows] = useState<RowType[]>([]);
+  const [rows, setRows] = useState<AdditionalChargeRowType[]>(useMemo(() => PosProduct?.additionalCharges ?? [], [PosProduct?.additionalCharges]));
 
-  const calculateTotal = (value: number, taxArr: string[]) => {
-    const taxKey = taxArr?.[0];
-    const rate = TAX_MAP[taxKey] ?? 0;
-    return value + (value * rate) / 100;
+  const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown({}, isModalOpen);
+  const { data: AdditionalChargeData, isLoading: AdditionalChargeDataLoading } = Queries.useGetAdditionalChargeDropdown({ typeFilter: "sales" }, isModalOpen);
+  const { data: AccountGroupData, isLoading: AccountGroupDataLoading } = Queries.useGetAccountGroupDropdown({ natureFilter: "sales" }, isModalOpen);
+
+  const calculateTotal = (value: number, tax: string) => {
+    const rate = TaxData?.data?.find((item) => item._id === tax)?.percentage ?? 0;
+    return value + (value * Number(rate)) / 100;
   };
 
-  const updateRow = (index: number, key: keyof RowType, val: any) => {
+  const updateRow = (index: number, key: keyof AdditionalChargeRowType, val: string[] | number) => {
     setRows((prev) =>
       prev.map((row, i) => {
         if (i !== index) return row;
 
-        const updatedRow: RowType = {
+        const updatedRow: AdditionalChargeRowType = {
           ...row,
           [key]: key === "value" ? Number(val) || 0 : val,
-        } as RowType;
+        };
 
-        updatedRow.total = calculateTotal(updatedRow.value, updatedRow.tax);
+        if (key === "chargeId") {
+          const data = AdditionalChargeData?.data?.find((item) => item._id === updatedRow.chargeId[0]);
+          updatedRow.value = data?.defaultValue ?? 0;
+          updatedRow.taxId = data?.taxId?._id ? data.taxId._id : "";
+          updatedRow.accountGroupId = data?.accountGroupId?._id ? data.accountGroupId._id : "";
+        }
+
+        updatedRow.totalAmount = calculateTotal(updatedRow.value, updatedRow.taxId);
 
         return updatedRow;
-      })
+      }),
     );
   };
 
-  const addRow = () => setRows((p) => [...p, { charge: [""], value: 0, tax: [""], group: [""], total: 0 }]);
+  const addRow = () => setRows((p) => [...p, { chargeId: "", value: 0, taxId: "", accountGroupId: "", totalAmount: 0 }]);
 
   const removeRow = (i: number) => setRows((p) => p.filter((_, idx) => idx !== i));
 
-  const grandTotal = useMemo(() => rows.reduce((sum, r) => sum + r.total, 0), [rows]);
+  const grandTotal = useMemo(() => rows.reduce((sum, r) => sum + r.totalAmount, 0), [rows]);
+  const getSingleValue = (val?: string | string[]) => {
+    if (Array.isArray(val)) return val[0] ?? "";
+    return val ?? "";
+  };
 
+  const handleUpdateCharge = () => {
+    const payload = {
+      additionalCharges: rows.map((row) => ({
+        chargeId: getSingleValue(row.chargeId),
+        value: row.value,
+        taxId: getSingleValue(row.taxId),
+        accountGroupId: getSingleValue(row.accountGroupId),
+        totalAmount: row.totalAmount,
+      })),
+    };
+    dispatch(setAdditionalCharges(payload.additionalCharges));
+    dispatch(setTotalAdditionalCharge(grandTotal.toFixed(2)));
+    dispatch(setAdditionalChargeModal({ open: false, data: null }));
+  };
+
+  const columns: CommonTableColumn<AdditionalChargeRowType>[] = [
+    {
+      key: "additionalCharge",
+      header: "Additional Charge",
+      bodyClass: "min-w-32 w-60",
+      render: (row, index) => <CommonSelect label="Select Additional Charge" value={[row.chargeId]} options={GenerateOptions(AdditionalChargeData?.data)} isLoading={AdditionalChargeDataLoading} onChange={(val) => updateRow(index, "chargeId", val)} />,
+      footer: () => <CommonButton variant="outlined" size="small" onClick={addRow} title="+ Additional Charge" />,
+    },
+    {
+      key: "value",
+      header: "Value",
+      bodyClass: "min-w-32 w-40",
+      render: (row, index) => <CommonTextField value={row.value} isCurrency type="number" onChange={(e) => updateRow(index, "value", Number(e))} currencyDisabled />,
+    },
+    {
+      key: "tax",
+      header: "Tax",
+      bodyClass: "min-w-32 w-45",
+      render: (row, index) => <CommonSelect label="Select Tax" value={[row.taxId]} options={GenerateOptions(TaxData?.data)} isLoading={TaxDataLoading} onChange={(val) => updateRow(index, "taxId", val)} />,
+    },
+    {
+      key: "group",
+      header: "Group",
+      bodyClass: "min-w-32 w-55",
+      render: (row, index) => <CommonSelect label="Select Group" value={[row.accountGroupId]} options={GenerateOptions(AccountGroupData?.data)} isLoading={AccountGroupDataLoading} onChange={(val) => updateRow(index, "accountGroupId", val)} disabled />,
+    },
+    {
+      key: "total",
+      header: "Total",
+      render: (row) => row.totalAmount.toFixed(2),
+      footer: () => grandTotal.toFixed(2),
+    },
+    {
+      key: "action",
+      header: "Action",
+      render: (_, index) => (
+        <CommonButton variant="outlined" size="small" color="error" sx={{ minWidth: 40 }} onClick={() => removeRow(index)}>
+          <CloseIcon />
+        </CommonButton>
+      ),
+    },
+  ];
+  const CommonTableOption = {
+    data: rows,
+    rowKey: (_: AdditionalChargeRowType, index: number) => index,
+    columns: columns,
+    getRowClass: () => "bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark",
+    showFooter: true,
+  };
   return (
-    <CommonModal title="Add Additional Charge" isOpen={isAdditionalChargeModal} onClose={() => dispatch(setAdditionalChargeModal())} className="max-w-[1000px]">
-      <div className="border border-gray-200 dark:border-gray-600 rounded-md overflow-y-auto custom-scrollbar text-sm">
-        <table className="w-full ">
-          <thead className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-100">
-            <tr>
-              <th className="px-3 py-2 text-left">Additional Charge</th>
-              <th className="px-3 py-2">Value</th>
-              <th className="px-3 py-2">Tax</th>
-              <th className="px-3 py-2">Account Group</th>
-              <th className="px-3 py-2">Total</th>
-              <th className="px-3 py-2">Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {rows.map((row, i) => (
-              <tr key={i} className="bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark text-gray-600 dark:text-gray-300">
-                <td className="px-2 py-2 min-w-60 w-60">
-                  <CommonSelect label="Select Additional Charge" value={row.tax} options={TAX_OPTIONS} onChange={(val) => updateRow(i, "charge", val)} />
-                </td>
-                <td className="px-2 py-2 min-w-40 w-40">
-                  <CommonTextField value={row.value} isCurrency onChange={(e) => updateRow(i, "value", e)} />
-                </td>
-                <td className="px-2 py-2 min-w-40 w-44">
-                  <CommonSelect label="Select Text" value={row.tax} options={TAX_OPTIONS} onChange={(val) => updateRow(i, "tax", val)} />
-                </td>
-                <td className="px-2 py-2 min-w-56 w-56">
-                  <CommonSelect label="Select Group" value={row.group} options={GROUP_OPTIONS} onChange={(val) => updateRow(i, "group", val)} />
-                </td>
-                <td className="px-3 py-2 text-right font-medium">{row.total.toFixed(2)}</td>
-                <td className="px-2 py-2 text-center">
-                  <IconButton size="small" onClick={() => removeRow(i)}>
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-
-          <tfoot>
-            <tr className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-100">
-              <td className="px-2 py-3">
-                <button onClick={addRow} className="text-primary font-medium">
-                  + Add More Additional Charge
-                </button>
-              </td>
-              <td colSpan={3} />
-              <td className="px-3 text-right font-semibold">{grandTotal.toFixed(2)}</td>
-              <td />
-            </tr>
-          </tfoot>
-        </table>
+    <CommonModal title="Add Additional Charge" isOpen={isModalOpen} onClose={() => dispatch(setAdditionalChargeModal({ open: false, data: null }))} className="max-w-[1000px]">
+      <div className="flex flex-col justify-center items-center gap-3">
+        <div className="border border-gray-200 dark:border-gray-600 rounded-md overflow-y-auto custom-scrollbar text-sm w-full">
+          <CommonTable {...CommonTableOption} />
+        </div>
+        <div className="flex justify-end items-center">
+          <CommonButton variant="contained" size="small" sx={{ minWidth: 40 }} onClick={handleUpdateCharge} title="Update Charge" />
+        </div>
       </div>
     </CommonModal>
   );

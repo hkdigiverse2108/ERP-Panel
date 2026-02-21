@@ -14,7 +14,7 @@ const Bank = () => {
   const permission = usePagePermission(PAGE_TITLE.BANK.BASE);
 
   const { data: bankData, isLoading, isFetching } = Queries.useGetBank(params);
-  const { mutate: deleteBankMutate } = Mutations.useDeleteBank();
+  const { mutate: deleteBankMutate, isPending: isDeleteLoading } = Mutations.useDeleteBank();
   const { mutate: editBank, isPending: isEditLoading } = Mutations.useEditBank();
 
   const allBanks = useMemo(
@@ -91,7 +91,7 @@ const Bank = () => {
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
 
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
       </Box>
     </>
   );

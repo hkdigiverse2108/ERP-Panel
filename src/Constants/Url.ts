@@ -11,6 +11,7 @@ export const URL_KEYS = {
   USER: {
     BASE: "/user",
     EDIT: "/user/edit",
+    DROPDOWN: "/user/dropdown",
   },
   COMPANY: {
     BASE: "/company",
@@ -26,6 +27,7 @@ export const URL_KEYS = {
   },
   CONTACT: {
     BASE: "/contacts",
+    DROPDOWN: "/contacts/dropdown",
     ALL: "/contacts/all",
     ADD: "/contacts/add",
     EDIT: "/contacts/edit",
@@ -96,6 +98,13 @@ export const URL_KEYS = {
     EDIT: "/stock-verification/edit",
   },
 
+  MATERIAL_CONSUMPTION: {
+    BASE: "/material-consumption",
+    ALL: "/material-consumption/all",
+    ADD: "/material-consumption/add",
+    EDIT: "/material-consumption/edit",
+  },
+
   CALL_REQUEST: {
     BASE: "/call-request",
     ADD: "/call-request/add",
@@ -127,7 +136,7 @@ export const URL_KEYS = {
     STATE: "/location/state",
     CITY: "/location/city",
   },
-  BILLOFLIVEPRODUCT: {
+  BILL_OF_LIVE_PRODUCT: {
     BASE: "/bill-of-live-product",
     ALL: "/bill-of-live-product/all",
     ADD: "/bill-of-live-product/add",
@@ -139,5 +148,91 @@ export const URL_KEYS = {
     CHILD: "/permission/child/details",
     ALL: "/permission/all",
     EDIT: "/permission/edit",
+  },
+  SUPPLIER_BILL: {
+    BASE: "/supplier-bill",
+    ALL: "/supplier-bill/all",
+    ADD: "/supplier-bill/add",
+    EDIT: "/supplier-bill/edit",
+  },
+  POS: {
+    BASE: "/pos-order",
+    HOLD_ORDER: "/pos-order/hold",
+    CUSTOMER_DETAIL: "/pos-order/customer",
+    ADD: "/pos-order/add",
+    EDIT: "/pos-order/edit",
+    DELETE: "/pos-order/delete",
+  },
+  POS_ORDER: {
+    BASE: "/pos-order",
+    ALL: "/pos-order/all",
+    DROPDOWN: "/pos-order/dropdown",
+    ADD: "/pos-order/add",
+    EDIT: "/pos-order/edit",
+    DELETE: "/pos-order/delete",
+  },
+  POS_PAYMENT: {
+    BASE: "/pos-payment",
+    ALL: "/pos-payment/all",
+    ADD: "/pos-payment/add",
+    EDIT: "/pos-payment/edit",
+    DELETE: "/pos-payment/delete",
+  },
+  ADDITIONAL_CHARGES: {
+    BASE: "/additional-charge",
+    DROPDOWN: "/additional-charge/dropdown",
+    ALL: "/additional-charge/all",
+    ADD: "/additional-charge/add",
+    EDIT: "/additional-charge/edit",
+  },
+  ACCOUNT: {
+    BASE: "/account",
+    DROPDOWN: "/account/dropdown",
+    ALL: "/account/all",
+    ADD: "/account/add",
+    EDIT: "/account/edit",
+  },
+  ACCOUNT_GROUP: {
+    BASE: "/account-group",
+    DROPDOWN: "/account-group/dropdown",
+    ALL: "/account-group/all",
+  },
+  TERMS_CONDITION: {
+    BASE: "/terms-condition",
+    DROPDOWN: "/terms-condition/dropdown",
+    ALL: "/terms-condition/all",
+    ADD: "/terms-condition/add",
+    EDIT: "/terms-condition/edit",
+  },
+  COUPON: {
+    BASE: "/coupon",
+    DROPDOWN: "/coupon/dropdown",
+    VERIFY: "/coupon/verify",
+    ALL: "/coupon/all",
+    ADD: "/coupon/add",
+    EDIT: "/coupon/edit",
+  },
+  LOYALTY: {
+    BASE: "/loyalty",
+    DROPDOWN: "/loyalty/dropdown",
+    REDEEM: "/loyalty/redeem",
+    POINTS: "/loyalty-points",
+    POINTS_ADD: "/loyalty-points",
+    ALL: "/loyalty/all",
+    ADD: "/loyalty/add",
+    EDIT: "/loyalty/edit",
+  },
+  PURCHASE_ORDER: {
+    BASE: "/purchase-order",
+    DROPDOWN: "/purchase-order/dropdown",
+    ALL: "/purchase-order/all",
+    ADD: "/purchase-order/add",
+    EDIT: "/purchase-order/edit",
+  },
+  CASH_CONTROL: {
+    BASE: "/cash-control",
+    ALL: "/cash-control/all",
+    ADD: "/cash-control/add",
+    EDIT: "/cash-control/edit",
   },
 } as const;

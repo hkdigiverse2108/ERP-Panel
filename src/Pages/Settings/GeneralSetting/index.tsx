@@ -18,6 +18,7 @@ import { CommonBreadcrumbs } from "../../../Components/Common";
 import { CompanyProfile, Profile, ReportFormats, UserRoles } from "../../../Components/Settings/GeneralSetting";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
+import AdditionalCharges from "../../../Components/Settings/GeneralSetting/AdditionalCharges";
 
 const GeneralSetting = () => {
   const location = useLocation();
@@ -40,7 +41,7 @@ const GeneralSetting = () => {
   ];
 
   // Map tab index → component
-  const tabViews = [<Profile />, <CompanyProfile />, <ReportFormats />, <Profile />, <UserRoles />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />, <Profile />];
+  const tabViews = [<Profile />, <CompanyProfile />, <ReportFormats />, <Profile />, <UserRoles />, <Profile />, <Profile />, <AdditionalCharges />, <Profile />, <Profile />, <Profile />];
 
   return (
     <>

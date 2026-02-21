@@ -14,7 +14,7 @@ const Employee = () => {
   const permission = usePagePermission(PAGE_TITLE.USER.BASE);
 
   const { data: employeeData, isLoading: employeeDataLoading, isFetching: employeeDataFetching } = Queries.useGetEmployee({...params});
-  const { mutate: deleteEmployeeMutate } = Mutations.useDeleteEmployee();
+  const { mutate: deleteEmployeeMutate, isPending: isDeleteLoading } = Mutations.useDeleteEmployee();
   const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditEmployee();
 
   const allEmployee = useMemo(() => employeeData?.data?.user_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [employeeData]);
@@ -74,7 +74,7 @@ const Employee = () => {
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       </Box>
     </>
   );

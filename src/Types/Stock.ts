@@ -3,6 +3,10 @@ import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 export interface StockFormValues {
   productId?: string;
   uomId?: string;
+  purchaseTaxId?: string;
+  isPurchaseTaxIncluding?: boolean;
+  salesTaxId?: string;
+  isSalesTaxIncluding?: boolean;
   purchasePrice?: number | null;
   landingCost?: number | null;
   mrp?: number | null;
@@ -23,7 +27,7 @@ export type AddStockBulkAdjustmentPayload = {
     qty: number | null;
     productId: string;
   }[];
-  remark: string;
+  type: string;
 };
 
 export type StockBase = StockFormValues & CommonDataType;

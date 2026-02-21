@@ -1,3 +1,5 @@
+
+
 export const ROUTES = {
   HOME: "/",
   DASHBOARD: "/dashboard",
@@ -26,9 +28,12 @@ export const ROUTES = {
   },
   CATEGORY_BRAND: "/category-brand",
   DEPARTMENT: "/department",
-  BILL_OF_MATERIALS: {
-    BASE: "/bill-of-materials",
+
+  BILL_OF_LIVE_PRODUCT: {
+    BASE: "/bill-of-live-product",
+    ADD_EDIT: "/bill-of-live-product/add-edit",
   },
+
   PRODUCT_B2B_MAPPING: "/product-b2b-mapping",
   RECIPE: {
     BASE: "/recipe",
@@ -36,6 +41,7 @@ export const ROUTES = {
   },
   MATERIAL_CONSUMPTION: {
     BASE: "/material-consumption",
+    ADD_EDIT: "/material-consumption/add-edit",
   },
   STOCK_VERIFICATION: {
     BASE: "/stock-verification",
@@ -70,8 +76,25 @@ export const ROUTES = {
     BASE: "/pos",
     NEW: "/pos/new",
   },
-  BILLOFMATERIALS: {
-    BASE: "/bill-of-materials",
-    ADD_EDIT: "/bill-of-materials/add-edit",
+  SUPPLIER_BILL: {
+    BASE: "/supplier-bill",
+    ADD_EDIT: "/supplier-bill/add-edit",
   },
+  ADDITIONAL_CHARGES: {
+    BASE: "/additional-charge",
+    ADD_EDIT: "/additional-charge/add-edit",
+  },
+  COUPON: {
+    BASE: "/coupon",
+    ADD_EDIT: "/coupon/add-edit",
+  },
+  LOYALTY: {
+    BASE: "/loyalty",
+    ADD_EDIT: "/loyalty/add-edit",
+  },
+  PURCHASE_ORDER: {
+    BASE: "/purchase-order",
+    ADD_EDIT: "/purchase-order/add-edit",
+  },
+
 } as const;

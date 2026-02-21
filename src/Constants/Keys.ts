@@ -13,6 +13,7 @@ export const KEYS = {
   USER: {
     BASE: "user",
     EDIT: "user-edit",
+    DROPDOWN: "user-dropdown",
   },
 
   COMPANY: {
@@ -87,7 +88,16 @@ export const KEYS = {
   STOCK_VERIFICATION: {
     BASE: "stock-verification",
     ADD: "stock-verification-add",
+    EDIT: "stock-verification-edit",
+    DELETE: "stock-verification-delete",
   },
+  MATERIAL_CONSUMPTION: {
+    BASE: "material-consumption",
+    ADD: "material-consumption-add",
+    EDIT: "material-consumption-edit",
+    DELETE: "material-consumption-delete",
+  },
+
   CALL_REQUEST: {
     ADD: "call-request",
   },
@@ -116,16 +126,92 @@ export const KEYS = {
     DELETE: "location-delete",
   },
 
-  BILLOFLIVEPRODUCT: {
-    BASE: "billofliveproduct",
-    ADD: "billofliveproduct-add",
-    EDIT: "billofliveproduct-edit",
-    DELETE: "billofliveproduct-delete",
+  BILL_OF_LIVE_PRODUCT: {
+    BASE: "bill-of-live-product",
+    ADD: "bill-of-live-product-add",
+    EDIT: "bill-of-live-product-edit",
+    DELETE: "bill-of-live-product-delete",
   },
 
   PERMISSION: {
     BASE: "permission",
     EDIT: "permission-edit",
     DETAILS: "permission-details",
+  },
+  SUPPLIER_BILL: {
+    BASE: "supplier-bill",
+    ADD: "supplier-bill-add",
+    EDIT: "supplier-bill-edit",
+    DELETE: "supplier-bill-delete",
+  },
+  POS: {
+    BASE: "pos",
+    HOLD_ORDER: "pos-order-hold",
+    CUSTOMER_DETAIL: "pos-order-customer-detail",
+    ADD: "pos-add",
+    EDIT: "pos-edit",
+    DELETE: "pos-delete",
+  },
+  POS_ORDER: {
+    BASE: "pos-order",
+    DROPDOWN: "pos-order-dropdown",
+    ADD: "pos-order-add",
+    EDIT: "pos-order-edit",
+    DELETE: "pos-order-delete",
+  },
+  POS_PAYMENT: {
+    BASE: "pos-payment",
+    ADD: "pos-payment-add",
+    EDIT: "pos-payment-edit",
+    DELETE: "pos-payment-delete",
+  },
+  ADDITIONAL_CHARGES: {
+    BASE: "additional-charge",
+    ADD: "additional-charge-add",
+    EDIT: "additional-charge-edit",
+    DELETE: "additional-charge-delete",
+  },
+  ACCOUNT: {
+    BASE: "account",
+    ADD: "account-add",
+    EDIT: "account-edit",
+    DELETE: "account-delete",
+  },
+  ACCOUNT_GROUP: {
+    BASE: "account-group",
+  },
+  TERMS_CONDITION: {
+    BASE: "terms-condition",
+    ADD: "terms-condition-add",
+    EDIT: "terms-condition-edit",
+    DELETE: "terms-condition-delete",
+  },
+  PURCHASE_ORDER: {
+    BASE: "purchase-order",
+    ADD: "purchase-order-add",
+    EDIT: "purchase-order-edit",
+    DELETE: "purchase-order-delete",
+  },
+  COUPON: {
+    BASE: "coupon",
+    ADD: "coupon-add",
+    VERIFY: "coupon-verify",
+    EDIT: "coupon-edit",
+    DELETE: "coupon-delete",
+  },
+  LOYALTY: {
+    BASE: "loyalty",
+    ADD: "loyalty-add",
+    EDIT: "loyalty-edit",
+    REDEEM: "loyalty-redeem",
+    DELETE: "loyalty-delete",
+    POINTS: "loyalty-points",
+    POINTS_ADD: "loyalty-points-add",
+  },
+  CASH_CONTROL: {
+    BASE: "cash-control",
+    ADD: "cash-control-add",
+    EDIT: "cash-control-edit",
+    DELETE: "cash-control-delete",
   },
 };

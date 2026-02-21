@@ -1,44 +1,70 @@
 import { Box } from "@mui/material";
+import { type GridRenderCellParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
-import { Queries } from "../../../Api";
-import { CommonBreadcrumbs, CommonCard, CommonDataGrid } from "../../../Components/Common";
+import { useNavigate } from "react-router-dom";
+import { Mutations, Queries } from "../../../Api";
+import { CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { AppGridColDef } from "../../../Types";
-import type { StockBase } from "../../../Types/Stock";
+import type { AppGridColDef, StockVerificationBase } from "../../../Types";
+import { FormatDate } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { useNavigate } from "react-router-dom";
 
 const StockVerification = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, params } = useDataGrid({ active: false });
 
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE);
 
-  const { data: stockData, isLoading: stockDataLoading, isFetching: stockDataFetching } = Queries.useGetStock(params);
+  const { data: stockVerificationData, isLoading: stockVerificationDataLoading, isFetching: stockVerificationDataFetching } = Queries.useGetStockVerification(params);
+  const { mutate: deleteStockVerificationMutate, isPending: isDeleteLoading } = Mutations.useDeleteStockVerification();
 
-  const allStock = useMemo(() => stockData?.data?.stock_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [stockData]);
-  const totalRows = stockData?.data?.totalData || 0;
+  const allStock = useMemo(() => stockVerificationData?.data?.stockVerification_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [stockVerificationData]);
+  const totalRows = stockVerificationData?.data?.totalData || 0;
 
   const handleAdd = () => navigate(ROUTES.STOCK_VERIFICATION.ADD_EDIT);
 
-  const columns: AppGridColDef<StockBase>[] = [
-    { field: "name", headerName: "Stock Verification No.", width: 300 },
-    { field: "categoryId", headerName: "Stock verification Date", width: 150 },
-    { field: "subCategoryId", headerName: "Total Products", width: 150 },
-    { field: "subCategoryId", headerName: "Total Physical Qty", width: 150 },
-    { field: "brandId", headerName: "Difference Amount", width: 150 },
-    { field: "subBrandId", headerName: "Approved Qty", width: 150 },
-    { field: "qty", headerName: "Created By", flex: 1, minWidth: 150 },
+  const handleDeleteBtn = () => {
+    if (!rowToDelete) return;
+    deleteStockVerificationMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
+  };
+
+  const columns: AppGridColDef<StockVerificationBase>[] = [
+    { field: "stockVerificationNo", headerName: "Stock Verification No.", flex: 1, minWidth: 200 },
+    { field: "createdAt", headerName: "Stock Verification Date", flex: 1, minWidth: 200, renderCell: (params) => FormatDate(params.row.createdAt) },
+    { field: "totalProducts", headerName: "Total Products", width: 200 },
+    { field: "totalPhysicalQty", headerName: "Total Physical Qty", width: 200 },
+    { field: "totalDifferenceAmount", headerName: "Difference Amount", width: 200 },
+    { field: "totalApprovedQty", headerName: "Approved Qty", width: 200 },
+    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+    ...(permission?.edit || permission?.delete
+      ? [
+          {
+            ...CommonActionColumn<StockVerificationBase>({
+              ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
+              ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
+            }),
+            renderCell: (params: GridRenderCellParams<StockVerificationBase>) =>
+              params.row.status === "pending"
+                ? CommonActionColumn<StockVerificationBase>({
+                    ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
+                    ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
+                  }).renderCell?.(params)
+                : "-",
+          },
+        ]
+      : []),
   ];
+
+  const summary = useMemo(() => {
+    return CalculateGridSummary(allStock, ["totalProducts", "totalPhysicalQty", "totalDifferenceAmount", "totalApprovedQty"]);
+  }, [allStock]);
 
   const CommonDataGridOption = {
     columns,
     rows: allStock,
     rowCount: totalRows,
-    loading: stockDataLoading || stockDataFetching,
-    isActive,
-    setActive,
+    loading: stockVerificationDataLoading || stockVerificationDataFetching,
     ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
@@ -46,6 +72,9 @@ const StockVerification = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    slots: {
+      bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
+    },
   };
 
   return (
@@ -55,6 +84,7 @@ const StockVerification = () => {
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       </Box>
     </>
   );
