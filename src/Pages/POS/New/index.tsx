@@ -1,4 +1,4 @@
-import { MultiplePay, PosBody, PosHeader } from "../../../Components/POS/New";
+import { CashInHandDetails, MultiplePay, PosBody, PosHeader } from "../../../Components/POS/New";
 import { useAppSelector } from "../../../Store/hooks";
 
 const NewPos = () => {
@@ -13,6 +13,7 @@ const NewPos = () => {
           <PosBody />
         </>
       )}
+      <CashInHandDetails />
     </>
   );
 };

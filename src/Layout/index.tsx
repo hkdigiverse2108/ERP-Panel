@@ -8,9 +8,10 @@ import Sidebar from "./Sidebar";
 import { CommonUpload } from "../Components/Common";
 import { Queries } from "../Api";
 import { setUser } from "../Store/Slices/AuthSlice";
-import { setCompany } from "../Store/Slices/CompanySlice";
+import { setCompany, setFinancialYear } from "../Store/Slices/CompanySlice";
 import CommonVideoModal from "../Components/Common/Modal/CommonVideoModal";
 import Loader from "./Loader";
+import { useCompanyFinancialYears } from "../Utils/Hooks";
 
 const Layout = () => {
   const { isExpanded, isMobileOpen, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
@@ -34,13 +35,15 @@ const Layout = () => {
     }
   }, [dispatch, userData]);
 
+  const financialYear = useCompanyFinancialYears(companyData?.data?.createdAt || "");
   useEffect(() => {
     if (companyData) {
       dispatch(setCompany(companyData?.data));
+      dispatch(setFinancialYear(financialYear));
     }
-  }, [companyData, dispatch]);
+  }, [companyData, financialYear, dispatch]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (permissionData) {
       dispatch(setPermission(permissionData?.data));
     }
@@ -59,7 +62,7 @@ const Layout = () => {
 
   return (
     <>
-    <Loader loading={isAppLoading} />
+      <Loader loading={isAppLoading} />
       <div className="min-h-screen xl:flex overflow-hidden">
         <div>
           <Sidebar />

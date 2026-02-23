@@ -1,6 +1,7 @@
 import { KEYS, URL_KEYS } from "../Constants";
 import type { AccountApiResponse, AccountDropdownApiResponse, AccountGroupDropdownApiResponse, AdditionalChargesApiResponse, AdditionalChargesDropdownApiResponse, AnnouncementApiResponse, AppQueryOptions, BankApiResponse, BankDropdownApiResponse, BillOfLiveProductApiResponse, BranchApiResponse, BranchDropdownApiResponse, BrandApiResponse, BrandDropdownApiResponse, CashControlApiResponse, CategoryApiResponse, CategoryDropdownApiResponse, CompanyApiResponse, ContactApiResponse, ContactDropdownApiResponse, CountryApiResponse, CouponApiResponse, CouponDropdownApiResponse, EmployeeApiResponse, LoyaltyApiResponse, LoyaltyDropdownApiResponse, LoyaltyPointsApiResponse, MaterialConsumptionApiResponse, Params, PermissionChildApiResponse, PermissionDetailsApiResponse, PosCustomerDetailApiResponse, PosOrderApiResponse, PosOrderDropdownApiResponse, PosPaymentApiResponse, PosProductOrderApiResponse, ProductApiResponse, ProductDropDownApiResponse, ProductSingleApiResponse, PurchaseOrderApiResponse, PurchaseOrderDropdownApiResponse, RecipeApiResponse, RecipeDropdownApiResponse, RolesApiResponse, RolesDropdownApiResponse, SingleEmployeeApiResponse, StockApiResponse, StockVerificationApiResponse, SupplierBillApiResponse, TaxApiResponse, TaxDropdownApiResponse, TermsConditionApiResponse, UomDropdownApiResponse, UploadResponse } from "../Types";
 import type { PosCashRegisterApiResponse, PosCashRegisterDetailsApiResponse, PosCashRegisterDropdownApiResponse } from "../Types/PosCashRegister";
+import { useFinancialYearsFilter } from "../Utils/Hooks";
 import { Get } from "./Methods";
 import { useQueries } from "./ReactQuery";
 
@@ -17,8 +18,12 @@ export const Queries = {
   useGetSingleCompany: (id?: string) => useQueries<CompanyApiResponse>([KEYS.COMPANY.BASE, id], () => Get(`${URL_KEYS.COMPANY.BASE}/${id}`), { enabled: !!id }),
 
   // ************ Employee ***********
-  useGetEmployee: (params?: Params) => useQueries<EmployeeApiResponse>([KEYS.USERS.BASE, params], () => Get(URL_KEYS.USERS.ALL, params)),
+  // useGetEmployee: (params?: Params) => useQueries<EmployeeApiResponse>([KEYS.USERS.BASE, params], () => Get(URL_KEYS.USERS.ALL, useFinancialYearsFilter(params))),
+  useGetEmployee: (params?: Params) => {
+    const filteredParams = useFinancialYearsFilter(params);
 
+    return useQueries<EmployeeApiResponse>([KEYS.USERS.BASE, filteredParams], () => Get(URL_KEYS.USERS.ALL, filteredParams));
+  },
   // ************ Contact ***********
   useGetContact: (params?: Params) => useQueries<ContactApiResponse>([KEYS.CONTACT.BASE, params], () => Get(URL_KEYS.CONTACT.ALL, params)),
   useGetContactDropdown: (params?: Params, enabled?: boolean) => useQueries<ContactDropdownApiResponse>([KEYS.CONTACT.BASE, params], () => Get(URL_KEYS.CONTACT.DROPDOWN, params), { enabled: enabled }),

@@ -11,10 +11,10 @@ import { setSelectedFiles, setUploadModal } from "../../../../Store/Slices/Modal
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
 import type { BankBase, CompanyFormValues, Params } from "../../../../Types";
 import { GenerateOptions, GetChangedFields } from "../../../../Utils";
+import { useDependentReset } from "../../../../Utils/Hooks";
 import { CompanyFormSchemas } from "../../../../Utils/ValidationSchemas";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../../Common";
 import { CommonFormImageBox } from "../../../Common/CommonUploadImage/CommonImageBox";
-import { useDependentReset } from "../../../../Utils/Hooks";
 type CompanyImageKey = "logo" | "waterMark" | "reportFormatLogo" | "authorizedSignature";
 
 const COMPANY_IMAGES = [
@@ -25,7 +25,7 @@ const COMPANY_IMAGES = [
 ] as const;
 
 const CompanyForm = () => {
-  const { company: companyData = {} } = useAppSelector((state) => state.company);
+  const { company: companyData = {}, financialYear } = useAppSelector((state) => state.company);
   const { mutate: editCompanyMutate, isPending: isEditLoading } = Mutations.useEditCompany();
 
   const navigate = useNavigate();
@@ -221,7 +221,7 @@ const CompanyForm = () => {
                     <CommonValidationTextField name="PanNo" label="PAN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="taxDeductionAndCollectionAccountNumber" label="TAN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="webSite" label="Web Site" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationTextField name="financialYear" label="Default Financial Year" grid={{ xs: 12, md: 4 }} required />
+                    <CommonValidationSelect name="financialYear" label="Default Financial Year" options={financialYear} grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="corporateIdentificationNumber" label="CIN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="letterOfUndertaking" label="LUT No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="importerExporterCode" label="IEC No." grid={{ xs: 12, md: 4 }} />
