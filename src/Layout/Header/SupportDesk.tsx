@@ -60,7 +60,7 @@ const SupportDesk = () => {
         <div className="flex flex-col gap-5">
           <Formik<CallRequestFormValues> initialValues={initialValues} validationSchema={CallRequestFormSchema} enableReinitialize onSubmit={handleSubmit}>
             <Form noValidate>
-              <Grid sx={{ px: 1 }} container spacing={2}>
+              <Grid sx={{ p: 1 }} container spacing={2}>
                 <CommonValidationTextField name="businessName" label="Business Name" grid={{ xs: 12 }} required />
                 <CommonValidationTextField name="contactName" label="Contact Name" grid={{ xs: 12 }} required />
                 <CommonPhoneNumber label="Phone No." countryCodeName="contactNo.countryCode" numberName="contactNo.phoneNo" grid={{ xs: 12 }} required />
