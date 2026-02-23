@@ -36,20 +36,20 @@ const OrderList = () => {
       headerName: "Date",
       flex: 1,
       minWidth: 120,
-      renderCell: (params) => (params.row.createdAt ? dayjs(params.row.createdAt).format("DD/MM/YYYY hh:mm A") : "-"),
+      renderCell: (params) => (params.row.createdAt ? dayjs(params.row.createdAt).format("DD/MM/YYYY") : "-"),
     },
     {
       field: "dueDate",
       headerName: "Due Date",
       flex: 1,
       minWidth: 120,
-      renderCell: (params) => (params.row.payLater?.dueDate ? dayjs(params.row.payLater.dueDate).format("DD/MM/YYYY hh:mm A") : "-"),
+      renderCell: (params) => (params.row.payLater?.dueDate ? dayjs(params.row.payLater.dueDate).format("DD/MM/YYYY") : "-"),
     },
     {
       field: "customerName",
       headerName: "Customer Name",
       flex: 1,
-      minWidth: 150,
+      minWidth: 150,  
       renderCell: (params) => {
         const customer = params.row.customerId;
         return customer ? `${customer.firstName || ""} ${customer.lastName || ""}`.trim() : "Walk-in";
