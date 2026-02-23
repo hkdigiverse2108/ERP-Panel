@@ -60,10 +60,9 @@ const SignInForm = () => {
           <img src={`${ImagePath}logo/grid-01.svg`} alt="pattern" className="absolute bottom-0 left-0  w-full max-w-[300px] rotate-180 xl:max-w-[500px]" />
         </div>
 
-        <div className="absolute overflow-hidden  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center text-center">
-          <img src={`${ImagePath}logo/logo.png`} alt="Ai Setu Logo" className="w-60 h-20 dark:hidden" />
-          <img src={`${ImagePath}logo/logo-dark.png`} alt="Ai Setu Logo" className="w-60 h-20 hidden dark:block" />
-          <p className="text-gray-300 text-sm flex">{ThemeTitle}</p>
+        <div className="absolute overflow-hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center text-center">
+          <img src={`${ImagePath}logo/logo-dark.png`} alt="Ai Setu Logo" className="w-39 h-11" />
+          <p className="text-gray-300 text-sm flex pt-3">{ThemeTitle}</p>
         </div>
       </div>
 
