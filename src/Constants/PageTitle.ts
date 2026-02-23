@@ -3,6 +3,7 @@ export const PAGE_TITLE = {
   SETTINGS: {
     BASE: "Settings",
     GENERAL: "General Settings",
+    CHANGE_PASSWORD: "Change Password",
     COMPANY: {
       BASE: "Company Profile",
       EDIT: "Edit Company",

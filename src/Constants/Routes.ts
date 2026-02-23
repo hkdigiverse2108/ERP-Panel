@@ -53,6 +53,7 @@ export const ROUTES = {
 
   SETTINGS: {
     GENERAL: "/setting/general",
+    CHANGE_PASSWORD: "/setting/change-password",
   },
   COMPANY: {
     EDIT: "/company/edit",
