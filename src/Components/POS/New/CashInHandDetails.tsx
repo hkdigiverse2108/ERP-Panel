@@ -1,13 +1,11 @@
 import { Grid } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { CommonButton, CommonValidationTextField } from "../../../Attribute";
 import { CommonModal } from "../../Common";
 
 const CashInHandDetails = () => {
   const [open, setOpen] = useState(false);
-  const dispatch = useDispatch();
 
   const handleSubmit = () => {
     setOpen(false);
