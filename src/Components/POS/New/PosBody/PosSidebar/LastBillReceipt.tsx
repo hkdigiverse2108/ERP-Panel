@@ -55,7 +55,7 @@ const MetricRow = ({ label, value }: { label: string; value: React.ReactNode }) 
   </div>
 );
 
-const LastBillReceipt = forwardRef<HTMLDivElement, { bill?: any; data?: SalesRegisterData }>(({ bill, data }, ref) => {
+const LastBillReceipt = forwardRef<HTMLDivElement, { bill?: any; data?: SalesRegisterData }>(({ data }, ref) => {
   const getCompanyName = () => {
     try {
       const company = JSON.parse(Storage.getItem(STORAGE_KEYS.COMPANY) || "null");
