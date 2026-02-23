@@ -21,7 +21,7 @@ import Stocks from "../Pages/Inventory/Stock";
 import StockVerification from "../Pages/Inventory/StockVerification";
 import NewPos from "../Pages/POS/New";
 import GeneralSetting from "../Pages/Settings/GeneralSetting";
-import ChangePassword from "../Pages/Settings/ChangePassword";
+import ChangePassword from "../Pages/Auth/ChangePassword";
 import StockVerificationForm from "../Pages/Inventory/StockVerification/StockVerificationForm";
 import BillOfMaterials from "../Pages/Inventory/BillOfLiveProduct";
 import BillOfMaterialsForm from "../Pages/Inventory/BillOfLiveProduct/BillOfLiveProductForm";
