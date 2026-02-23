@@ -37,12 +37,11 @@ const ChangePasswordForm = () => {
                 <Formik<ChangePasswordPayload> enableReinitialize initialValues={initialValues} validationSchema={ChangePasswordSchema} onSubmit={handleSubmit}>
                     {({ dirty }) => (
                         <Form noValidate>
-                            <Grid container spacing={2} justifyContent="center">
-                                <CommonCard title="Change Password" grid={{ xs: 12, xl: 10 }}>
+                            <Grid container spacing={2}>
+                                <CommonCard title="Change Password" grid={{ xs: 12, md: 8, lg: 6 }}>
                                     <Grid container spacing={2} sx={{ p: 2 }}>
-                                        <CommonValidationTextField name="email" label="Email" required grid={{ xs: 12, md: 4 }} disabled={!!user?.email} />
-                                        <CommonValidationTextField name="oldPassword" label="Old Password" type="password" showPasswordToggle required grid={{ xs: 12, md: 4 }} />
-                                        <CommonValidationTextField name="newPassword" label="New Password" type="password" showPasswordToggle required grid={{ xs: 12, md: 4 }} />
+                                        <CommonValidationTextField name="oldPassword" label="Old Password" type="password" showPasswordToggle required grid={{ xs: 12 }} />
+                                        <CommonValidationTextField name="newPassword" label="New Password" type="password" showPasswordToggle required grid={{ xs: 12 }} />
                                     </Grid>
                                 </CommonCard>
 
