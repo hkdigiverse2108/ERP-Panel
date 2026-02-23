@@ -150,7 +150,6 @@ export const POS_PAYMENT_METHOD = {
   CASH: "cash",
   CARD: "card",
   UPI: "upi",
-  WALLET: "wallet",
   MULTI_PAY: "multipay",
   PAY_LATER: "pay_later",
 };
@@ -159,7 +158,6 @@ export const PAYMENT_MODE = [
   { label: "Cash", value: "cash" },
   { label: "Card", value: "card" },
   { label: "UPI", value: "upi" },
-  { label: "Wallet", value: "wallet" },
   { label: "Bank", value: "bank" },
   { label: "Cheque", value: "cheque" },
 ];

@@ -1,5 +1,6 @@
 import { KEYS, URL_KEYS } from "../Constants";
 import type { AddAdditionalChargesPayload, AddBankPayload, AddBillOfLiveProductPayload, AddCashControlPayload, AddContactPayload, AddCouponPayload, AddEmployeePayload, AddLoyaltyPayload, AddMaterialConsumptionPayload, AddPosPaymentPayload, AddPosProductOrderPayload, AddProductPayload, AddPurchaseOrderPayload, AddRecipePayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddStockVerificationPayload, AddSupplierBillPayload, AddTermsConditionPayload, CallRequestFormValues, CompanyApiResponse, EditAdditionalChargesPayload, EditBankPayload, EditBillOfLiveProductPayload, EditCompanyPayload, EditContactPayload, EditCouponPayload, EditEmployeePayload, EditLoyaltyPayload, EditLoyaltyPointPayload, EditMaterialConsumptionPayload, EditPermissionPayload, EditPosPaymentPayload, EditPosProductOrderPayload, EditProductPayload, EditPurchaseOrderPayload, EditRecipePayload, EditRolesPayload, EditStockVerificationPayload, EditSupplierBillPayload, EditTermsConditionPayload, EmployeeApiResponse, LoginPayload, LoginResponse, RedeemLoyaltyApiResponse, RedeemLoyaltyPayload, UploadResponse, VerifyCouponApiResponse, VerifyCouponPayload } from "../Types";
+import type { AddPosCashRegisterPayload, EditPosCashRegisterPayload } from "../Types/PosCashRegister";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
 
@@ -92,10 +93,16 @@ export const Mutations = {
   useEditPosPayment: () => useMutations<EditPosPaymentPayload, void>([KEYS.POS_PAYMENT.EDIT, KEYS.POS_PAYMENT.BASE], (input) => Put(URL_KEYS.POS_PAYMENT.EDIT, input)),
   useDeletePosPayment: () => useMutations<string, void>([KEYS.POS_PAYMENT.DELETE, KEYS.POS_PAYMENT.BASE], (id) => Delete(`${URL_KEYS.POS_PAYMENT.BASE}/${id}`)),
 
+  // ************ POS Cash Register ************
+  useAddPosCashRegister: () => useMutations<AddPosCashRegisterPayload, void>([KEYS.POS_CASH_REGISTER.ADD, KEYS.POS_CASH_REGISTER.BASE], (input) => Post(URL_KEYS.POS_CASH_REGISTER.ADD, input)),
+  useEditPosCashRegister: () => useMutations<EditPosCashRegisterPayload, void>([KEYS.POS_CASH_REGISTER.EDIT, KEYS.POS_CASH_REGISTER.BASE], (input) => Put(URL_KEYS.POS_CASH_REGISTER.EDIT, input)),
+  useDeletePosCashRegister: () => useMutations<string, void>([KEYS.POS_CASH_REGISTER.DELETE, KEYS.POS_CASH_REGISTER.BASE], (id) => Delete(`${URL_KEYS.POS_CASH_REGISTER.BASE}/${id}`)),
+
   //*************** additional charges **************** */
   useAddAdditionalCharges: () => useMutations<AddAdditionalChargesPayload, void>([KEYS.ADDITIONAL_CHARGES.ADD, KEYS.ADDITIONAL_CHARGES.BASE], (input) => Post(URL_KEYS.ADDITIONAL_CHARGES.ADD, input)),
   useEditAdditionalCharges: () => useMutations<EditAdditionalChargesPayload, void>([KEYS.ADDITIONAL_CHARGES.EDIT, KEYS.ADDITIONAL_CHARGES.BASE], (input) => Put(URL_KEYS.ADDITIONAL_CHARGES.EDIT, input)),
   useDeleteAdditionalCharges: () => useMutations<string, void>([KEYS.ADDITIONAL_CHARGES.DELETE, KEYS.ADDITIONAL_CHARGES.BASE], (id) => Delete(`${URL_KEYS.ADDITIONAL_CHARGES.BASE}/${id}`)),
+ 
   //*************** Terms and Condition **************** */
   useAddTermsCondition: () => useMutations<AddTermsConditionPayload, void>([KEYS.TERMS_CONDITION.ADD, KEYS.TERMS_CONDITION.BASE], (input) => Post(URL_KEYS.TERMS_CONDITION.ADD, input)),
   useEditTermsCondition: () => useMutations<EditTermsConditionPayload, void>([KEYS.TERMS_CONDITION.EDIT, KEYS.TERMS_CONDITION.BASE], (input) => Put(URL_KEYS.TERMS_CONDITION.EDIT, input)),

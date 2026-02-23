@@ -266,6 +266,7 @@ export interface CommonValidationTextFieldProps {
   readOnly?: boolean;
   rows?: number;
   onCurrencyLog?: (value: string) => void;
+  maxDigits?: number;
 }
 export interface CommonTextFieldProps extends Omit<CommonValidationTextFieldProps, "name"> {
   value: string | number;

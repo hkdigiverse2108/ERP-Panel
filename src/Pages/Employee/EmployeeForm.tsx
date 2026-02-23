@@ -14,8 +14,8 @@ import { useEffect } from "react";
 import { useDependentReset, usePagePermission } from "../../Utils/Hooks";
 
 const EmployeeForm = () => {
+   const navigate = useNavigate();
   const location = useLocation();
-  const navigate = useNavigate();
   const { data } = location.state || {};
   const { company } = useAppSelector((state) => state.company);
   const permission = usePagePermission(PAGE_TITLE.USER.BASE);

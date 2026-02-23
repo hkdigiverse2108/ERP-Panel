@@ -171,7 +171,7 @@ export const MultiplePaySchema = Yup.object({
       Yup.object({
         amount: Yup.number().typeError("Amount must be a number").positive("Amount must be greater than 0").required("Received Amount is required"),
         paymentMode: Validation("string", "Payment Method"),
-        paymentAccount: Yup.string().when("paymentMode", ([paymentMode], schema) => (["card", "upi", "wallet", "bank", "cheque"].includes(paymentMode) ? Validation("string", "Payment Account") : schema.nullable())),
+        paymentAccount: Yup.string().when("paymentMode", ([paymentMode], schema) => (["card", "upi", "bank", "cheque"].includes(paymentMode) ? Validation("string", "Payment Account") : schema.nullable())),
         cardHolderName: Yup.string().when("paymentMode", ([paymentMode], schema) => (paymentMode === "card" ? Validation("string", "Card Holder Name") : schema.nullable())),
         cardTxnNo: Yup.string().when("paymentMode", ([paymentMode], schema) => (paymentMode === "card" ? Validation("string", "Card Transaction No") : schema.nullable())),
         upiId: Yup.string().when("paymentMode", ([paymentMode], schema) => (paymentMode === "upi" ? Validation("string", "UPI ID") : schema.nullable())),
@@ -426,5 +426,30 @@ export const PointSetupSchema = Yup.object({
   points: Validation("string", "Points", {
     required: true,
     extraRules: (s) => s.min(1, "Points must be at least 1").max(5, "Points must not be greater than 5"),
+  }),
+});
+
+export const CurrentRegisterSchema = Yup.object({
+  bankAccountId: Validation("string", "Bank Account", { required: false }),
+  bankTransferAmount: Validation("string", "Bank Transfer").when("bankAccountId", {
+    is: (val: string | undefined) => !!val && val.trim() !== "",
+    then: (schema) => schema.required("Bank Transfer is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  cashFlow: Validation("string", "Cash Flow"),
+  totalCashLeftInDrawer: Validation("string", "Total Cash Left In Drawer"),
+  physicalDrawerCash: Validation("string", "Physical Drawer"),
+  closingNote: Validation("string", "Closing Note", { required: false }),
+
+  denominations: Yup.object().shape({
+    1: Validation("string", "1", { required: false }),
+    2: Validation("string", "2", { required: false }),
+    5: Validation("string", "5", { required: false }),
+    10: Validation("string", "10", { required: false }),
+    20: Validation("string", "20", { required: false }),
+    50: Validation("string", "50", { required: false }),
+    100: Validation("string", "100", { required: false }),
+    200: Validation("string", "200", { required: false }),
+    500: Validation("string", "500", { required: false }),
   }),
 });

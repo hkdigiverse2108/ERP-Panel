@@ -88,6 +88,9 @@ export const BREADCRUMBS = {
     ADD: [{ label: PAGE_TITLE.CRM.LOYALTY.BASE, href: ROUTES.LOYALTY.BASE }, { label: PAGE_TITLE.CRM.LOYALTY.ADD }],
     EDIT: [{ label: PAGE_TITLE.CRM.LOYALTY.BASE, href: ROUTES.LOYALTY.BASE }, { label: PAGE_TITLE.CRM.LOYALTY.EDIT }],
   },
+  POS_ORDER_LIST: {
+    BASE: [{ label: PAGE_TITLE.POS.BASE, href: ROUTES.POS.BASE }, { label: PAGE_TITLE.POS.ORDER_LIST }],
+  },
 };
 
 export const BankBreadCrumbs = [{ label: ROUTES.BANK.BASE }];
