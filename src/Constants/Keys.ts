@@ -165,6 +165,13 @@ export const KEYS = {
     EDIT: "pos-payment-edit",
     DELETE: "pos-payment-delete",
   },
+  POS_CASH_REGISTER:{
+    BASE: "pos-cash-register",
+    DETAILS: "pos-cash-register-details",
+    ADD: "pos-cash-register-add",
+    EDIT: "pos-cash-register-edit",
+    DELETE: "pos-cash-register-delete",
+  },
   ADDITIONAL_CHARGES: {
     BASE: "additional-charge",
     ADD: "additional-charge-add",

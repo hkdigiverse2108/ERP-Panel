@@ -24,10 +24,10 @@ const InfoRow: FC<{ label: string; value?: ReactNode }> = ({ label, value }) => 
 const PosSidebar = () => {
   const { PosProduct } = useAppSelector((state) => state.pos);
 
-  const { data, isPending, isFetching } = Queries.useGetPosCustomerDetail(PosProduct?.customerId, Boolean(PosProduct?.customerId));
-  const { data: orderData, isPending: orderPending } = Queries.useGetPosOrder({ lastBillFilter: true });
+  const { data, isLoading, isFetching } = Queries.useGetPosCustomerDetail(PosProduct?.customerId, Boolean(PosProduct?.customerId));
+  const { data: orderData, isLoading: orderPending } = Queries.useGetPosOrder({ lastBillFilter: true });
   const lastBill = orderData?.data?.posOrder_data?.[0];
-  const isPosCustomerDetailLoading = isPending || isFetching;
+  const isPosCustomerDetailLoading = isLoading || isFetching;
   const customerData = PosProduct?.customerId ? data?.data : undefined;
   const contentRef = useRef<HTMLDivElement>(null);
 

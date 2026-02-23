@@ -27,7 +27,6 @@ export interface CashControlBase extends CashControlFormValues, CommonDataType {
     cardPayment: number;
     bankPayment: number;
     upiPayment: number;
-    walletPayment: number;
     salesReturn: number;
     cashRefund: number;
     bankRefund: number;
