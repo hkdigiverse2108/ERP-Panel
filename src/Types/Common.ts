@@ -8,6 +8,7 @@ import type { ContactBase } from "./Contacts";
 import type { LocationBase } from "./Location";
 import type { AdditionalChargesBase } from "./AdditionalCharges";
 import type { MultiplePaymentType, PosProductDataModal } from "./POS";
+import type { PosCreditNoteBase } from "./PosCreditNote";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -215,6 +216,7 @@ export interface CommonActionColumnProps<T> {
   onEdit?: (row: T) => void;
   onDelete?: (row: T) => void;
   active?: (row: T) => void;
+  onRefund?: (row: T) => void;
 }
 
 export interface CommonTableColumn<T> {
@@ -468,6 +470,7 @@ export interface ModalStateSlice {
   isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
   isProductDetailsModal: { open: boolean; data: PosProductDataModal | null };
   isQtyCountModal: { open: boolean; data: PosProductDataModal | null };
+  isOrderRefundModal: { open: boolean; data: PosCreditNoteBase | null };
 }
 
 // ************ Modal End ***********

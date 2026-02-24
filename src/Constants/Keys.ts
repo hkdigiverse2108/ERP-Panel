@@ -226,4 +226,16 @@ export const KEYS = {
     ALL: "settings-all",
     UPDATE: "settings-update",
   },
+  POS_CREDIT_NOTE: {
+    BASE: "pos-credit-note",
+    ADD: "pos-credit-note-add",
+    EDIT: "pos-credit-note-edit",
+    DELETE: "pos-credit-note-delete",
+  },
+  RETURN_POS_ORDER: {
+    BASE: "return-pos-order",
+    ADD: "return-pos-order-add",
+    EDIT: "return-pos-order-edit",
+    DELETE: "return-pos-order-delete",
+  },
 };

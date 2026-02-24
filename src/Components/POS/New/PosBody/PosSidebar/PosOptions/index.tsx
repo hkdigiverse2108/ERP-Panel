@@ -12,6 +12,7 @@ import CreditNotes from "./CreditNotes";
 import OrderList from "./OrderList";
 import CashControl from "./CashControl";
 import { ShowNotification } from "../../../../../../Attribute";
+import OrderRefund from "./OrderRefund";
 
 const ActionItem: FC<{ icon: JSX.Element; label: string; onClick?: () => void }> = ({ icon, label, onClick }) => (
   <div onClick={onClick} className="flex flex-col items-center justify-center py-3 px-0.5 text-gray-700 dark:text-gray-400 odd:bg-gray-200 dark:odd:bg-gray-800 hover:bg-gray-100 hover:dark:bg-gray-700 cursor-pointer">
@@ -58,6 +59,7 @@ const PosOption = () => {
       <CreditNotes />
       <OrderList />
       <CashControl />
+      <OrderRefund />
     </>
   );
 };

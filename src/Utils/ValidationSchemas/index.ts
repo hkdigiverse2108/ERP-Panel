@@ -460,3 +460,14 @@ export const ChangePasswordSchema = Yup.object({
   newPassword: Validation("string", "New Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
   loginSource: Validation("string", "Login Source", { required: false }),
 });
+
+export const ReturnPosOrderFormSchema = Yup.object({
+  refundViaCash: Validation("number", "Refund Via Cash"),
+  bankAccountId: Validation("string", "Bank Account", { required: false }),
+  refundViaBank: Validation("number", "Refund Via Bank").when("bankAccountId", {
+    is: (val: string | undefined) => !!val && val.trim() !== "",
+    then: (schema) => schema.required("Refund Via Bank is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  refundDescription: Validation("string", "Refund Description", { required: false }),
+});

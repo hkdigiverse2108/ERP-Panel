@@ -21,6 +21,7 @@ const initialState: ModalStateSlice = {
   isAdditionalChargeModal: { open: false, data: null },
   isProductDetailsModal: { open: false, data: null },
   isQtyCountModal: { open: false, data: null },
+  isOrderRefundModal: { open: false, data: null },
 };
 
 const ModalSlice = createSlice({
@@ -89,9 +90,12 @@ const ModalSlice = createSlice({
     setQtyCountModal: (state, action) => {
       state.isQtyCountModal = action.payload;
     },
+    setOrderRefundModal: (state, action) => {
+      state.isOrderRefundModal = action.payload;
+    },
   },
 });
 
-export const { setQtyCountModal, setProductDetailsModal, setAdditionalChargeModal, setCashModal, setPayLaterModal, setApplyCouponModal, setUploadModal, setSelectedFiles, clearSelectedFiles, setModalVideoPlay, setCustomerModal, setPaymentListModal, setAddPaymentModal, setRedeemLoyaltyModal, setCreditNoteModal, setOrderModal, setCashControlModal, setRedeemCreditModal, setCardModal, setContactModal } = ModalSlice.actions;
+export const { setOrderRefundModal, setQtyCountModal, setProductDetailsModal, setAdditionalChargeModal, setCashModal, setPayLaterModal, setApplyCouponModal, setUploadModal, setSelectedFiles, clearSelectedFiles, setModalVideoPlay, setCustomerModal, setPaymentListModal, setAddPaymentModal, setRedeemLoyaltyModal, setCreditNoteModal, setOrderModal, setCashControlModal, setRedeemCreditModal, setCardModal, setContactModal } = ModalSlice.actions;
 
 export default ModalSlice.reducer;
