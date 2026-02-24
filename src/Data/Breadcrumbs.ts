@@ -91,6 +91,9 @@ export const BREADCRUMBS = {
   POS_ORDER_LIST: {
     BASE: [{ label: PAGE_TITLE.POS.BASE, href: ROUTES.POS.BASE }, { label: PAGE_TITLE.POS.ORDER_LIST }],
   },
+  CHANGE_PASSWORD: {
+    BASE: [{ label: PAGE_TITLE.SETTINGS.CHANGE_PASSWORD }],
+  },
 };
 
 export const BankBreadCrumbs = [{ label: ROUTES.BANK.BASE }];

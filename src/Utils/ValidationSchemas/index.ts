@@ -453,3 +453,10 @@ export const CurrentRegisterSchema = Yup.object({
     500: Validation("string", "500", { required: false }),
   }),
 });
+
+export const ChangePasswordSchema = Yup.object({
+  email: Validation("string", "Email", { required: true, extraRules: (s) => s.trim().email("Invalid email address") }),
+  oldPassword: Validation("string", "Old Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
+  newPassword: Validation("string", "New Password", { extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character") }),
+  loginSource: Validation("string", "Login Source", { required: false }),
+});

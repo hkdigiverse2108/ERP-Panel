@@ -14,7 +14,6 @@ import { CommonTable } from "../../../../Common";
 const PosTable = () => {
   const { PosProduct, isPosLoading } = useAppSelector((state) => state.pos);
   const productData = PosProduct.items;
-  console.log("productData", productData);
 
   const dispatch = useAppDispatch();
   const updateRow = (_id: string, data: Partial<PosProductDataModal>) => dispatch(updateProduct({ _id, data }));

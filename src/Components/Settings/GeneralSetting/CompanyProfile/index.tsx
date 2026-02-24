@@ -6,7 +6,7 @@ import { useAppSelector } from "../../../../Store/hooks";
 import { CommonCard, CommonImageBox } from "../../../Common";
 
 const CompanyProfile = () => {
-  const { company = {} } = useAppSelector((state) => state.company);
+  const { company = {}, financialYear } = useAppSelector((state) => state.company);
 
   const CompanyDetails = [
     {
@@ -53,7 +53,7 @@ const CompanyProfile = () => {
         { label: "GST Registration Type", value: company?.GSTRegistrationType },
         { label: "GSTIN", value: company?.GSTIdentificationNumber },
         { label: "Financial Month Interval", value: company?.financialMonthInterval },
-        { label: "Default Financial Year", value: company?.financialYear },
+        { label: "Default Financial Year", value: financialYear?.find((item) => item.value === company?.financialYear)?.label },
       ],
     },
     {
@@ -76,7 +76,7 @@ const CompanyProfile = () => {
     { label: "Report Formats Logo", src: company?.reportFormatLogo, alt: "reportFormatLogo" },
     { label: "Authorised Signature", src: company?.authorizedSignature, alt: "authorizedSignature" },
   ];
-  
+
   const topContent = (
     <Grid size="auto">
       <Link to={ROUTES.COMPANY.EDIT}>
@@ -92,7 +92,7 @@ const CompanyProfile = () => {
 
   return (
     <Grid container spacing={2}>
-      {CompanyDetails.map((section,index) => (
+      {CompanyDetails.map((section, index) => (
         <CommonCard key={section.title} title={section.title} topContent={index === 0 && topContent} grid={{ xs: 12 }}>
           <Grid sx={{ p: 2 }} container spacing={2}>
             {section.items.map((item, idx) => (

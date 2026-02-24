@@ -21,6 +21,7 @@ import Stocks from "../Pages/Inventory/Stock";
 import StockVerification from "../Pages/Inventory/StockVerification";
 import NewPos from "../Pages/POS/New";
 import GeneralSetting from "../Pages/Settings/GeneralSetting";
+import ChangePassword from "../Pages/Auth/ChangePassword";
 import StockVerificationForm from "../Pages/Inventory/StockVerification/StockVerificationForm";
 import BillOfMaterials from "../Pages/Inventory/BillOfLiveProduct";
 import BillOfMaterialsForm from "../Pages/Inventory/BillOfLiveProduct/BillOfLiveProductForm";
@@ -43,6 +44,7 @@ export const PageRoutes = [
   { path: ROUTES.DASHBOARD, name: PAGE_TITLE.DASHBOARD, element: <Dashboard /> },
 
   { path: ROUTES.SETTINGS.GENERAL, name: PAGE_TITLE.SETTINGS.GENERAL, element: <GeneralSetting /> },
+  { path: ROUTES.SETTINGS.CHANGE_PASSWORD, name: PAGE_TITLE.SETTINGS.CHANGE_PASSWORD, element: <ChangePassword /> },
   { path: ROUTES.COMPANY.EDIT, name: PAGE_TITLE.CONTACT.BASE, element: <CompanyForm /> },
   { path: ROUTES.USER.EDIT, name: PAGE_TITLE.USER.BASE, element: <UserForm /> },
 

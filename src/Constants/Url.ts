@@ -1,6 +1,7 @@
 export const URL_KEYS = {
   AUTH: {
     SIGNIN: "/auth/login",
+    CHANGE_PASSWORD: "/auth/reset-password",
   },
   UPLOAD: {
     ADD: "/upload",
@@ -251,5 +252,9 @@ export const URL_KEYS = {
     ADD: "/order-list/add",
     EDIT: "/order-list/edit",
     DELETE: "/order-list/delete",
+  },
+  ADMIN_SETTING: {
+    ALL: "/settings/all",
+    UPDATE: "/settings/update",
   },
 } as const;

@@ -1,7 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAppSelector } from "../Store/hooks";
 import { PageRoutes } from "./PageRoutes";
-import { ROUTES } from "../Constants";
+import { PAGE_TITLE, ROUTES } from "../Constants";
 
 const isAddEditRoute = (path: string) => path.includes("add") || path.includes("edit") || path.includes("add-edit");
 
@@ -23,6 +23,17 @@ const PrivateRoutes = () => {
 
   // route ma name nathi → allow
   if (!currentRoute?.name) {
+    return <Outlet />;
+  }
+
+  // Bypass permission check for Settings and Profile routes
+  const bypassRoutes: string[] = [
+    PAGE_TITLE.SETTINGS.GENERAL,
+    PAGE_TITLE.SETTINGS.CHANGE_PASSWORD,
+    PAGE_TITLE.CONTACT.BASE, // Company Profile (ROUTES.COMPANY.EDIT)
+    PAGE_TITLE.USER.BASE // User Profile (ROUTES.USER.EDIT)
+  ];
+  if (bypassRoutes.includes(currentRoute.name as string)) {
     return <Outlet />;
   }
 

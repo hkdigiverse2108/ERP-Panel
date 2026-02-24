@@ -1,6 +1,7 @@
 export const KEYS = {
   AUTH: {
     SIGNIN: "admin-signin",
+    CHANGE_PASSWORD: "change-password",
   },
 
   UPLOAD: {
@@ -165,7 +166,7 @@ export const KEYS = {
     EDIT: "pos-payment-edit",
     DELETE: "pos-payment-delete",
   },
-  POS_CASH_REGISTER:{
+  POS_CASH_REGISTER: {
     BASE: "pos-cash-register",
     DETAILS: "pos-cash-register-details",
     ADD: "pos-cash-register-add",
@@ -220,5 +221,9 @@ export const KEYS = {
     ADD: "cash-control-add",
     EDIT: "cash-control-edit",
     DELETE: "cash-control-delete",
+  },
+  ADMIN_SETTING: {
+    ALL: "settings-all",
+    UPDATE: "settings-update",
   },
 };

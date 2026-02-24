@@ -2,15 +2,16 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet, useLocation } from "react-router-dom";
 import { useAppSelector } from "../Store/hooks";
-import { setIsMobile, setPermission, setSidebarOpen } from "../Store/Slices/LayoutSlice";
+import { setAdminSetting, setIsMobile, setPermission, setSidebarOpen } from "../Store/Slices/LayoutSlice";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { CommonUpload } from "../Components/Common";
 import { Queries } from "../Api";
 import { setUser } from "../Store/Slices/AuthSlice";
-import { setCompany } from "../Store/Slices/CompanySlice";
+import { setCompany, setFinancialYear } from "../Store/Slices/CompanySlice";
 import CommonVideoModal from "../Components/Common/Modal/CommonVideoModal";
 import Loader from "./Loader";
+import { useCompanyFinancialYears } from "../Utils/Hooks";
 
 const Layout = () => {
   const { isExpanded, isMobileOpen, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
@@ -19,9 +20,10 @@ const Layout = () => {
 
   const { user } = useAppSelector((state) => state.auth);
   const { data: userData, isLoading: userLoading } = Queries.useGetSingleUser(user?._id);
-  const { data: companyData, isLoading: companyLoading } = Queries.useGetSingleCompany(user?.companyId?._id);
+  const { data: companyData, isLoading: companyLoading, isFetching: companyFetching } = Queries.useGetSingleCompany(user?.companyId?._id);
   const { data: permissionData, isLoading: permissionLoading } = Queries.useGetPermissionChildDetails({ userId: user?._id }, Boolean(user?._id));
-  const isAppLoading = userLoading || permissionLoading || companyLoading;
+  const { data: adminSettingData, isLoading: adminSettingLoading } = Queries.useGetAdminSetting();
+  const isAppLoading = userLoading || permissionLoading || companyLoading || companyFetching || adminSettingLoading;
 
   useEffect(() => {
     if (location.pathname.startsWith("/pos")) dispatch(setSidebarOpen(false));
@@ -35,12 +37,20 @@ const Layout = () => {
   }, [dispatch, userData]);
 
   useEffect(() => {
+    if (adminSettingData) {
+      dispatch(setAdminSetting(adminSettingData?.data));
+    }
+  }, [dispatch, adminSettingData]);
+
+  const financialYear = useCompanyFinancialYears(companyData?.data?.createdAt || "");
+  useEffect(() => {
     if (companyData) {
       dispatch(setCompany(companyData?.data));
+      dispatch(setFinancialYear(financialYear));
     }
-  }, [companyData, dispatch]);
+  }, [companyData, financialYear, dispatch]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (permissionData) {
       dispatch(setPermission(permissionData?.data));
     }
@@ -59,7 +69,7 @@ const Layout = () => {
 
   return (
     <>
-    <Loader loading={isAppLoading} />
+      <Loader loading={isAppLoading} />
       <div className="min-h-screen xl:flex overflow-hidden">
         <div>
           <Sidebar />

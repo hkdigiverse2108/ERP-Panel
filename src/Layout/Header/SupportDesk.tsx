@@ -10,9 +10,12 @@ import { CommonModal } from "../../Components/Common";
 import { Mutations } from "../../Api";
 import { CallRequestFormSchema } from "../../Utils/ValidationSchemas";
 import type { CallRequestFormValues } from "../../Types";
+import { useAppSelector } from "../../Store/hooks";
+import { FormatTime } from "../../Utils";
 
 const SupportDesk = () => {
   const [open, setOpen] = useState(false);
+  const { adminSetting } = useAppSelector((state) => state.layout);
 
   const { mutate: callRequestMutate, isPending: isCallRequestLoading } = Mutations.useAddCallRequest();
 
@@ -39,15 +42,15 @@ const SupportDesk = () => {
             <ul className="flex flex-col gap-3">
               <li className="flex items-center gap-3 border-b pb-3 border-gray-100 dark:border-gray-800">
                 <LocalPhoneIcon className="text-gray-700 dark:text-gray-300" />
-                <span className="text-gray-800 dark:text-gray-300">+91 80008 77644</span>
+                <span className="text-gray-800 dark:text-gray-300">{adminSetting?.phoneNo?.countryCode + " " + adminSetting?.phoneNo?.phoneNo}</span>
               </li>
               <li className="flex items-center gap-3 border-b pb-3 border-gray-100 dark:border-gray-800">
                 <MailOutlineIcon className="text-gray-700 dark:text-gray-300" />
-                <span className="text-gray-800 dark:text-gray-300">support@vasyerp.com</span>
+                <span className="text-gray-800 dark:text-gray-300">{adminSetting?.email}</span>
               </li>
               <li className="flex items-center gap-3 border-b pb-3 border-gray-100 dark:border-gray-800">
                 <AccessTimeIcon className="text-gray-700 dark:text-gray-300" />
-                <span className="text-gray-800 dark:text-gray-300">9:00 AM – 9:00 PM (IST)</span>
+                <span className="text-gray-800 dark:text-gray-300">{FormatTime(adminSetting?.workingHours?.startTime) + " - " + FormatTime(adminSetting?.workingHours?.endTime)}</span>
               </li>
             </ul>
             <button onClick={() => setOpen(!open)} className="mt-4 w-full py-2 text-center text-white font-medium bg-brand-500 rounded-lg hover:bg-brand-600">
@@ -60,7 +63,7 @@ const SupportDesk = () => {
         <div className="flex flex-col gap-5">
           <Formik<CallRequestFormValues> initialValues={initialValues} validationSchema={CallRequestFormSchema} enableReinitialize onSubmit={handleSubmit}>
             <Form noValidate>
-              <Grid sx={{ px: 1 }} container spacing={2}>
+              <Grid sx={{ p: 1 }} container spacing={2}>
                 <CommonValidationTextField name="businessName" label="Business Name" grid={{ xs: 12 }} required />
                 <CommonValidationTextField name="contactName" label="Contact Name" grid={{ xs: 12 }} required />
                 <CommonPhoneNumber label="Phone No." countryCodeName="contactNo.countryCode" numberName="contactNo.phoneNo" grid={{ xs: 12 }} required />
