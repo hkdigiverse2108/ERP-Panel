@@ -257,4 +257,18 @@ export const URL_KEYS = {
     ALL: "/settings/all",
     UPDATE: "/settings/update",
   },
+  POS_CREDIT_NOTE: {
+    BASE: "/pos-credit-note",
+    ALL: "/pos-credit-note/all",
+    ADD: "/pos-credit-note/add",
+    EDIT: "/pos-credit-note/edit",
+    DELETE: "/pos-credit-note/delete",
+  },
+  RETURN_POS_ORDER: {
+    BASE: "/return-pos-order",
+    ALL: "/return-pos-order/all",
+    ADD: "/return-pos-order/add",
+    EDIT: "/return-pos-order/edit",
+    DELETE: "/return-pos-order/delete",
+  },
 } as const;

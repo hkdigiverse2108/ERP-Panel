@@ -6,9 +6,10 @@ import { Grid, IconButton } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import type { CommonActionColumnProps } from "../../Types";
-import KeyIcon from '@mui/icons-material/Key';
+import KeyIcon from "@mui/icons-material/Key";
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 
-const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ active, editRoute, onDelete, onEdit, permissionRoute }: CommonActionColumnProps<T>): GridColDef<T> => ({
+const CommonActionColumn = <T extends { _id?: string; isActive?: boolean; creditsRemaining?: number }>({ active, editRoute, onDelete, onEdit, onRefund, permissionRoute }: CommonActionColumnProps<T>): GridColDef<T> => ({
   field: "actions",
   headerName: "Actions",
   headerAlign: "center",
@@ -51,6 +52,13 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean }>({ ac
           <Grid size="auto">
             <IconButton className="iconButtonStyle" size="small" onClick={() => onEdit(params.row)}>
               <DriveFileRenameOutlineIcon fontSize="small" />
+            </IconButton>
+          </Grid>
+        )}
+        {onRefund && params.row.creditsRemaining !== 0 && (
+          <Grid size="auto">
+            <IconButton className="iconButtonStyle" size="small" onClick={() => onRefund(params.row)}>
+              <CurrencyRupeeIcon fontSize="small" />
             </IconButton>
           </Grid>
         )}

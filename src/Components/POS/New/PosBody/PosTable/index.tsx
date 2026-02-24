@@ -71,7 +71,7 @@ const PosTable = () => {
         </span>
       ),
     },
-    { key: "qty", header: "Available Qty", bodyClass: "min-w-30 w-30" },
+    { key: "qty", header: "Available Qty", bodyClass: "min-w-30 w-30", render: (row) => row.qty?.toFixed(2) },
     {
       key: "posQty",
       header: "Qty",
