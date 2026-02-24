@@ -100,7 +100,6 @@ const CurrentRegister = () => {
 
     const totalDenomAmount = denominationsArray.reduce((sum, d) => sum + (d.amount || 0), 0);
 
-    // 1. Prepare API Payload (Strictly what the API needs)
     const apiPayload: EditPosCashRegisterPayload = {
       ...rest,
       posCashRegisterId: cashRegisterDetails?.data?.registerId || "",
@@ -115,7 +114,6 @@ const CurrentRegister = () => {
       apiPayload.bankTransferAmount = Number(bankTransferAmount) || 0;
     }
 
-    // 2. Prepare Print Data (Full report data for CloseBillRegister)
     const printPayload: PosCashRegisterValues = {
       ...rest,
       ...summary,

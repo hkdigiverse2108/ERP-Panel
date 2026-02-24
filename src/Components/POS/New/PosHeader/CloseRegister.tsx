@@ -18,7 +18,7 @@ const CloseBillRegister = forwardRef<HTMLDivElement, { bill?: PosOrderBase; data
     try {
       const company = JSON.parse(localStorage.getItem(STORAGE_KEYS.COMPANY) || "null");
       if (company && company.name) return company.name;
-    } catch { }
+    } catch {}
     return "Dhruvi Bakery";
   };
 
@@ -26,7 +26,6 @@ const CloseBillRegister = forwardRef<HTMLDivElement, { bill?: PosOrderBase; data
 
   return (
     <div ref={ref} id="sales-register-print" style={{ width: "120mm", margin: "0 auto", fontFamily: "'Courier New', Courier, monospace", fontSize: "15px", padding: "20px", color: "black", backgroundColor: "white", lineHeight: "1.4" }}>
-      {/* Header Dates and Title */}
       <div style={{ display: "flex", justifyItems: "center", justifyContent: "space-between", marginBottom: "15px", fontSize: "12px" }}>
         <span>{currentDate}</span>
         <span>Sales Register</span>
@@ -36,7 +35,6 @@ const CloseBillRegister = forwardRef<HTMLDivElement, { bill?: PosOrderBase; data
         <h2 style={{ margin: "0 0 20px 0", fontWeight: "bold", fontSize: "22px" }}>{getCompanyName()}</h2>
       </center>
 
-      {/* Info Section */}
       <div style={{ display: "flex", flexDirection: "column", gap: "4px", marginBottom: "15px", fontWeight: "bold" }}>
         <div style={{ display: "flex" }}>
           <span style={{ width: "120px" }}>User</span>
@@ -62,7 +60,6 @@ const CloseBillRegister = forwardRef<HTMLDivElement, { bill?: PosOrderBase; data
 
       <div style={{ borderTop: "1px dashed black", marginBottom: "15px" }}></div>
 
-      {/* Metrics Section */}
       <div style={{ display: "flex", flexDirection: "column", gap: "4px", marginBottom: "15px" }}>
         <MetricRow label="No of Bills" value={data?.noOfBills ?? 0} />
         <MetricRow label="No of Items" value={data?.noOfItems ?? 0} />
@@ -80,7 +77,6 @@ const CloseBillRegister = forwardRef<HTMLDivElement, { bill?: PosOrderBase; data
 
       <div style={{ borderTop: "1px dashed black", marginBottom: "15px" }}></div>
 
-      {/* Payment Types Section */}
       <div style={{ display: "flex", flexDirection: "column", gap: "4px", marginBottom: "15px" }}>
         <MetricRow label="Cash" value={data?.cashPayment ?? 0} />
         <MetricRow label="Card" value={data?.cardPayment ?? 0} />
@@ -100,7 +96,6 @@ const CloseBillRegister = forwardRef<HTMLDivElement, { bill?: PosOrderBase; data
       <div style={{ marginBottom: "4px" }}>Denomination</div>
       <div style={{ borderTop: "1px dashed black", marginBottom: "10px" }}></div>
 
-      {/* Denominations Table - Already handled dynamic mapping */}
       <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", marginBottom: "30px", tableLayout: "fixed" }}>
         <thead>
           <tr>
@@ -140,7 +135,6 @@ const CloseBillRegister = forwardRef<HTMLDivElement, { bill?: PosOrderBase; data
         </tbody>
       </table>
 
-      {/* Final Summary Section */}
       <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "20px" }}>
         <div style={{ borderTop: "1px dashed black", marginBottom: "2px" }}></div>
         <MetricRow label="Total Denom" value={data?.totalDenominationAmount ?? 0} />
