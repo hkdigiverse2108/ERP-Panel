@@ -83,9 +83,12 @@ const CurrentRegister = () => {
     const totalCash = totalCashLeftInDrawer - Number(values.bankTransferAmount || 0);
 
     useEffect(() => {
-      setFieldValue("physicalDrawerCash", totalAmount?.toFixed(2));
-      setFieldValue("totalCashLeftInDrawer", totalCash?.toFixed(2));
-      setFieldValue("cashFlow", totalCash?.toFixed(2));
+      const physicalCash = (totalAmount || 0).toFixed(2);
+      const calculatedCash = Math.max(0, totalCash || 0).toFixed(2);
+
+      setFieldValue("physicalDrawerCash", physicalCash);
+      setFieldValue("totalCashLeftInDrawer", calculatedCash);
+      setFieldValue("cashFlow", calculatedCash);
     }, [totalAmount, totalCash, setFieldValue]);
 
     return null;

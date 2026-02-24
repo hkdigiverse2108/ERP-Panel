@@ -436,9 +436,9 @@ export const CurrentRegisterSchema = Yup.object({
     then: (schema) => schema.required("Bank Transfer is required"),
     otherwise: (schema) => schema.notRequired(),
   }),
-  cashFlow: Validation("string", "Cash Flow"),
-  totalCashLeftInDrawer: Validation("string", "Total Cash Left In Drawer"),
-  physicalDrawerCash: Validation("string", "Physical Drawer"),
+  cashFlow: Validation("string", "Cash Flow").test("is-positive", "Cash Flow must be greater than or equal to 0", (value) => !value || Number(value) >= 0),
+  totalCashLeftInDrawer: Validation("string", "Total Cash Left In Drawer").test("is-positive", "Total Cash Left In Drawer must be greater than or equal to 0", (value) => !value || Number(value) >= 0),
+  physicalDrawerCash: Validation("string", "Physical Drawer").test("is-positive", "Physical Drawer must be greater than or equal to 0", (value) => !value || Number(value) >= 0),
   closingNote: Validation("string", "Closing Note", { required: false }),
 
   denominations: Yup.object().shape({
