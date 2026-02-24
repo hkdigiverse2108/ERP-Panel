@@ -5,13 +5,12 @@ import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { Box, Grid } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useState } from "react";
+import { Mutations } from "../../Api";
 import { CommonButton, CommonPhoneNumber, CommonValidationTextField } from "../../Attribute";
 import { CommonModal } from "../../Components/Common";
-import { Mutations } from "../../Api";
-import { CallRequestFormSchema } from "../../Utils/ValidationSchemas";
-import type { CallRequestFormValues } from "../../Types";
 import { useAppSelector } from "../../Store/hooks";
-import { FormatTime } from "../../Utils";
+import type { CallRequestFormValues } from "../../Types";
+import { CallRequestFormSchema } from "../../Utils/ValidationSchemas";
 
 const SupportDesk = () => {
   const [open, setOpen] = useState(false);
@@ -27,7 +26,18 @@ const SupportDesk = () => {
   };
 
   const handleSubmit = (values: CallRequestFormValues) => callRequestMutate(values, { onSuccess: () => setOpen(false) });
+  const formatTime = (time?: string) => {
+    if (!time) return "";
 
+    const [hourStr, minute] = time.split(":");
+    let hour = parseInt(hourStr, 10);
+
+    const ampm = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12;
+    hour = hour === 0 ? 12 : hour; // 0 ne 12 banavo
+
+    return `${hour}:${minute} ${ampm}`;
+  };
   return (
     <>
       <Box className="relative group">
@@ -50,7 +60,7 @@ const SupportDesk = () => {
               </li>
               <li className="flex items-center gap-3 border-b pb-3 border-gray-100 dark:border-gray-800">
                 <AccessTimeIcon className="text-gray-700 dark:text-gray-300" />
-                <span className="text-gray-800 dark:text-gray-300">{FormatTime(adminSetting?.workingHours?.startTime) + " - " + FormatTime(adminSetting?.workingHours?.endTime)}</span>
+                <span className="text-gray-800 dark:text-gray-300">{formatTime(adminSetting?.workingHours?.startTime) + " - " + formatTime(adminSetting?.workingHours?.endTime)}</span>
               </li>
             </ul>
             <button onClick={() => setOpen(!open)} className="mt-4 w-full py-2 text-center text-white font-medium bg-brand-500 rounded-lg hover:bg-brand-600">
