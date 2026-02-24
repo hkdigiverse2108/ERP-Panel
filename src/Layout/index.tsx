@@ -20,9 +20,9 @@ const Layout = () => {
 
   const { user } = useAppSelector((state) => state.auth);
   const { data: userData, isLoading: userLoading } = Queries.useGetSingleUser(user?._id);
-  const { data: companyData, isLoading: companyLoading } = Queries.useGetSingleCompany(user?.companyId?._id);
+  const { data: companyData, isLoading: companyLoading, isFetching: companyFetching } = Queries.useGetSingleCompany(user?.companyId?._id);
   const { data: permissionData, isLoading: permissionLoading } = Queries.useGetPermissionChildDetails({ userId: user?._id }, Boolean(user?._id));
-  const isAppLoading = userLoading || permissionLoading || companyLoading;
+  const isAppLoading = userLoading || permissionLoading || companyLoading || companyFetching;
 
   useEffect(() => {
     if (location.pathname.startsWith("/pos")) dispatch(setSidebarOpen(false));

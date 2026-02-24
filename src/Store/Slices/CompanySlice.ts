@@ -7,6 +7,7 @@ const StoredCompany = JSON.parse(Storage.getItem(STORAGE_KEYS.COMPANY) || "null"
 const initialState = {
   company: StoredCompany,
   financialYear: [{ label: "", value: "" }],
+  isCompanyLoading: false,
 };
 
 const companySlice = createSlice({
@@ -20,8 +21,11 @@ const companySlice = createSlice({
     setFinancialYear: (state, action) => {
       state.financialYear = action.payload;
     },
+    setIsCompanyLoading: (state, action) => {
+      state.isCompanyLoading = action.payload;
+    },
   },
 });
 
-export const { setCompany, setFinancialYear } = companySlice.actions;
+export const { setCompany, setFinancialYear, setIsCompanyLoading } = companySlice.actions;
 export default companySlice.reducer;
