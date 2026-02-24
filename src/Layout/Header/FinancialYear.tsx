@@ -35,7 +35,7 @@ const FinancialYear = () => {
         <div className="p-3">
           <ul className="flex flex-col gap-3">
             {financialYear?.map((item, index) => (
-              <li key={index} className="flex items-center gap-3 border-b pb-3 border-gray-100 dark:border-gray-800" onClick={() => handleOnSubmit(item.value)}>
+              <li key={index} className="flex items-center gap-3 border-b pb-3 border-gray-100 dark:border-gray-800 cursor-pointer" onClick={() => handleOnSubmit(item.value)}>
                 <CalendarMonthOutlinedIcon className="text-gray-700 dark:text-gray-300" />
                 <span className="text-gray-800 dark:text-gray-300">{item.label}</span>
               </li>

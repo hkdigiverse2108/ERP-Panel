@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet, useLocation } from "react-router-dom";
 import { useAppSelector } from "../Store/hooks";
-import { setIsMobile, setPermission, setSidebarOpen } from "../Store/Slices/LayoutSlice";
+import { setAdminSetting, setIsMobile, setPermission, setSidebarOpen } from "../Store/Slices/LayoutSlice";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { CommonUpload } from "../Components/Common";
@@ -22,7 +22,8 @@ const Layout = () => {
   const { data: userData, isLoading: userLoading } = Queries.useGetSingleUser(user?._id);
   const { data: companyData, isLoading: companyLoading, isFetching: companyFetching } = Queries.useGetSingleCompany(user?.companyId?._id);
   const { data: permissionData, isLoading: permissionLoading } = Queries.useGetPermissionChildDetails({ userId: user?._id }, Boolean(user?._id));
-  const isAppLoading = userLoading || permissionLoading || companyLoading || companyFetching;
+  const { data: adminSettingData, isLoading: adminSettingLoading } = Queries.useGetAdminSetting();
+  const isAppLoading = userLoading || permissionLoading || companyLoading || companyFetching || adminSettingLoading;
 
   useEffect(() => {
     if (location.pathname.startsWith("/pos")) dispatch(setSidebarOpen(false));
@@ -34,6 +35,12 @@ const Layout = () => {
       dispatch(setUser(userData?.data));
     }
   }, [dispatch, userData]);
+
+  useEffect(() => {
+    if (adminSettingData) {
+      dispatch(setAdminSetting(adminSettingData?.data));
+    }
+  }, [dispatch, adminSettingData]);
 
   const financialYear = useCompanyFinancialYears(companyData?.data?.createdAt || "");
   useEffect(() => {

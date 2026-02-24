@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { ChildDetailsApiResponse } from "../../Types";
 import { STORAGE_KEYS } from "../../Constants";
+import type { AdminSettingBase, ChildDetailsApiResponse } from "../../Types";
 import { Storage, Stringify } from "../../Utils";
 
 type LayoutState = {
@@ -12,6 +12,7 @@ type LayoutState = {
   openSubmenu: string | null;
   isToggleTheme: string;
   permission: ChildDetailsApiResponse[];
+  adminSetting: AdminSettingBase | null;
 };
 
 const StoredPermission = JSON.parse(Storage.getItem(STORAGE_KEYS.PERMISSION) || "null");
@@ -25,12 +26,16 @@ const initialState: LayoutState = {
   openSubmenu: null,
   isToggleTheme: "light",
   permission: StoredPermission,
+  adminSetting: null,
 };
 
 const layoutSlice = createSlice({
   name: "layout",
   initialState,
   reducers: {
+    setAdminSetting: (state, action) => {
+      state.adminSetting = action.payload;
+    },
     setPermission: (state, action) => {
       state.permission = action.payload;
       Storage.setItem(STORAGE_KEYS.PERMISSION, Stringify(action.payload));
@@ -70,6 +75,6 @@ const layoutSlice = createSlice({
   },
 });
 
-export const { setPermission,setIsMobile, setToggleSidebar, setToggleMobileSidebar, setIsHovered, setApplicationMenuOpen, setToggleSubmenu, setToggleTheme, setSidebarOpen } = layoutSlice.actions;
+export const { setAdminSetting, setPermission,setIsMobile, setToggleSidebar, setToggleMobileSidebar, setIsHovered, setApplicationMenuOpen, setToggleSubmenu, setToggleTheme, setSidebarOpen } = layoutSlice.actions;
 
 export default layoutSlice.reducer;

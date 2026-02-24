@@ -253,4 +253,8 @@ export const URL_KEYS = {
     EDIT: "/order-list/edit",
     DELETE: "/order-list/delete",
   },
+  ADMIN_SETTING: {
+    ALL: "/settings/all",
+    UPDATE: "/settings/update",
+  },
 } as const;
