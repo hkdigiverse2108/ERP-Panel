@@ -1,24 +1,33 @@
 import { Grid } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useState } from "react";
+import { Mutations } from "../../../Api";
 import { CommonButton, CommonValidationTextField } from "../../../Attribute";
 import { CommonModal } from "../../Common";
 
 const CashInHandDetails = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
+  const { mutate: addPosCashRegister, isPending: isAddPosCashRegisterPending } = Mutations.useAddPosCashRegister();
 
-  const handleSubmit = () => {
-    setOpen(false);
+  const handleSubmit = (values: { openingCash: number }) => {
+    addPosCashRegister(
+      { openingCash: values.openingCash },
+      {
+        onSuccess: () => {
+          setOpen(false);
+        },
+      },
+    );
   };
 
   return (
-    <CommonModal isOpen={!open} title="Cash In Hand Details" onClose={() => {}} className="max-w-[400px] m-2 sm:m-5" showCloseButton={false}>
-      <Formik initialValues={{ openingCash: "" }} enableReinitialize onSubmit={handleSubmit}>
+    <CommonModal isOpen={open} title="Cash In Hand Details" onClose={() => {}} className="max-w-[400px] m-2 sm:m-5" showCloseButton={false}>
+      <Formik initialValues={{ openingCash: 0 }} enableReinitialize onSubmit={handleSubmit}>
         {() => (
           <Form noValidate>
             <Grid sx={{ p: 1 }} container spacing={2}>
               <CommonValidationTextField name="openingCash" label="Cash In Hand" required grid={{ xs: 12 }} />
-              <CommonButton sx={{ width: "100%" }} type="submit" variant="contained" title="Start Selling" size="medium" loading={false} />
+              <CommonButton sx={{ width: "100%" }} type="submit" variant="contained" title="Start Selling" size="medium" loading={isAddPosCashRegisterPending} />
             </Grid>
           </Form>
         )}

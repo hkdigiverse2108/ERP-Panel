@@ -1,8 +1,10 @@
+import { Queries } from "../../../Api";
 import { CashInHandDetails, MultiplePay, PosBody, PosHeader } from "../../../Components/POS/New";
 import { useAppSelector } from "../../../Store/hooks";
 
 const NewPos = () => {
   const { isMultiplePay } = useAppSelector((state) => state.pos);
+  const { data: cashRegisterDetails } = Queries.useGetPosCashRegisterDetails();
   return (
     <>
       {isMultiplePay ? (
@@ -13,7 +15,7 @@ const NewPos = () => {
           <PosBody />
         </>
       )}
-      <CashInHandDetails />
+      {cashRegisterDetails?.data?.status === "closed" && <CashInHandDetails />}
     </>
   );
 };
