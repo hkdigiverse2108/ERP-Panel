@@ -95,8 +95,8 @@ export const Mutations = {
   useDeletePosPayment: () => useMutations<string, void>([KEYS.POS_PAYMENT.DELETE, KEYS.POS_PAYMENT.BASE], (id) => Delete(`${URL_KEYS.POS_PAYMENT.BASE}/${id}`)),
 
   // ************ POS Cash Register ************
-  useAddPosCashRegister: () => useMutations<AddPosCashRegisterPayload, void>([KEYS.POS_CASH_REGISTER.ADD, KEYS.POS_CASH_REGISTER.BASE], (input) => Post(URL_KEYS.POS_CASH_REGISTER.ADD, input)),
-  useEditPosCashRegister: () => useMutations<EditPosCashRegisterPayload, void>([KEYS.POS_CASH_REGISTER.EDIT, KEYS.POS_CASH_REGISTER.BASE], (input) => Put(URL_KEYS.POS_CASH_REGISTER.EDIT, input)),
+  useAddPosCashRegister: () => useMutations<AddPosCashRegisterPayload, void>([KEYS.POS_CASH_REGISTER.ADD, KEYS.POS_CASH_REGISTER.BASE, KEYS.POS_CASH_REGISTER.DETAILS], (input) => Post(URL_KEYS.POS_CASH_REGISTER.ADD, input)),
+  useEditPosCashRegister: () => useMutations<EditPosCashRegisterPayload, void>([KEYS.POS_CASH_REGISTER.EDIT, KEYS.POS_CASH_REGISTER.BASE, KEYS.POS_CASH_REGISTER.DETAILS], (input) => Put(URL_KEYS.POS_CASH_REGISTER.EDIT, input)),
   useDeletePosCashRegister: () => useMutations<string, void>([KEYS.POS_CASH_REGISTER.DELETE, KEYS.POS_CASH_REGISTER.BASE], (id) => Delete(`${URL_KEYS.POS_CASH_REGISTER.BASE}/${id}`)),
 
   //*************** additional charges **************** */

@@ -97,6 +97,7 @@ export const Queries = {
 
   //*************** POS Order **************** */
   useGetPosOrder: (params?: Params, enabled?: boolean) => useBaseQuery<PosOrderApiResponse>([KEYS.POS_ORDER.BASE, params], URL_KEYS.POS_ORDER.ALL, params, enabled),
+  useGetLastPosOrder: (params?: Params, enabled?: boolean) => useQueries<PosOrderApiResponse>([KEYS.POS_ORDER.BASE, params], () => Get(URL_KEYS.POS_ORDER.ALL, params), { enabled: enabled }),
   useGetPosOrderDropdown: (params?: Params, enabled?: boolean) => useQueries<PosOrderDropdownApiResponse>([KEYS.POS_ORDER.DROPDOWN, params], () => Get(URL_KEYS.POS_ORDER.DROPDOWN, params), { enabled: enabled }),
 
   //*************** POS Customer Detail **************** */
@@ -108,7 +109,7 @@ export const Queries = {
   //*************** POS Cash Register **************** */
   useGetPosCashRegister: (params?: Params, enabled?: boolean) => useBaseQuery<PosCashRegisterApiResponse>([KEYS.POS_CASH_REGISTER.BASE, params], URL_KEYS.POS_CASH_REGISTER.ALL, params, enabled),
   useGetPosCashRegisterDropdown: (params?: Params, enabled?: boolean) => useQueries<PosCashRegisterDropdownApiResponse>([KEYS.POS_CASH_REGISTER.BASE, params], () => Get(URL_KEYS.POS_CASH_REGISTER.DROPDOWN, params), { enabled: enabled }),
-  useGetPosCashRegisterDetails: (params?: Params, enabled?: boolean) => useQueries<PosCashRegisterDetailsApiResponse>([KEYS.POS_CASH_REGISTER.DETAILS, params], () => Get(URL_KEYS.POS_CASH_REGISTER.DETAILS, params), { enabled: enabled }),
+  useGetPosCashRegisterDetails: (params?: Params) => useQueries<PosCashRegisterDetailsApiResponse>([KEYS.POS_CASH_REGISTER.DETAILS, params], () => Get(URL_KEYS.POS_CASH_REGISTER.DETAILS, params)),
 
   //*************** Additional Chargers **************** */
   useGetAdditionalCharges: (params?: Params) => useBaseQuery<AdditionalChargesApiResponse>([KEYS.ADDITIONAL_CHARGES.BASE, params], URL_KEYS.ADDITIONAL_CHARGES.ALL, params),

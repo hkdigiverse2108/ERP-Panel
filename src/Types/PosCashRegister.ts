@@ -38,7 +38,7 @@ export interface PosCashRegisterValues extends Omit<PosCashRegisterFormInitialVa
   totalDenominationAmount?: number;
 }
 
-export type AddPosCashRegisterPayload = PosCashRegisterValues;
+export type AddPosCashRegisterPayload = Pick<PosCashRegisterValues, "openingCash">;
 
 export type EditPosCashRegisterPayload = AddPosCashRegisterPayload & { posCashRegisterId?: string };
 
