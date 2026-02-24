@@ -1,13 +1,17 @@
 import CloseIcon from "@mui/icons-material/Close";
+import dayjs from "dayjs";
 import { CircularProgress, Grid, Tooltip } from "@mui/material";
 import { Form, Formik, useFormikContext } from "formik";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useReactToPrint } from "react-to-print";
 import { Mutations, Queries } from "../../../../Api";
 import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../../Attribute";
-import type { PosCashRegisterFormInitialValues, PosCashRegisterValues } from "../../../../Types/PosCashRegister";
+import { STORAGE_KEYS } from "../../../../Constants";
+import type { EditPosCashRegisterPayload, PosCashRegisterFormInitialValues, PosCashRegisterValues } from "../../../../Types";
 import { FormatDateTime, GenerateOptions, RemoveEmptyFields } from "../../../../Utils";
 import { CurrentRegisterSchema } from "../../../../Utils/ValidationSchemas";
 import { CommonModal } from "../../../Common";
+import CloseBillRegister from "./CloseRegister";
 
 const CurrentRegister = () => {
   const [open, setOpen] = useState(false);
@@ -15,6 +19,22 @@ const CurrentRegister = () => {
   const { data: cashRegisterDetails, isLoading: cashRegisterDetailsLoading } = Queries.useGetPosCashRegisterDetails();
 
   const { mutate: editPosCashRegister, isPending: editPosCashRegisterLoading } = Mutations.useEditPosCashRegister();
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [printData, setPrintData] = useState<PosCashRegisterValues | null>(null);
+
+  const handlePrint = useReactToPrint({
+    contentRef,
+    onAfterPrint: () => {
+      setPrintData(null);
+      setOpen(false);
+    },
+  });
+
+  useEffect(() => {
+    if (printData && contentRef.current) {
+      handlePrint();
+    }
+  }, [printData, handlePrint]);
 
   const createdAt = FormatDateTime(cashRegisterDetails?.data?.createdAt);
   const updatedAt = FormatDateTime(new Date().toISOString());
@@ -72,28 +92,51 @@ const CurrentRegister = () => {
   };
 
   const handleSubmit = async (values: PosCashRegisterFormInitialValues) => {
-    const { bankAccountId, bankTransferAmount, ...rest } = values;
-    const denominations = Object.entries(values.denominations || {})
+    const { bankAccountId, bankTransferAmount, denominations: formDenominations, ...rest } = values;
+
+    const denominationsArray = Object.entries(formDenominations || {})
       .filter(([, v]) => Number(v) > 0)
       .map(([k, v]) => ({ currency: Number(k), count: Number(v), amount: Number(k) * Number(v) }));
-    const payload = {
+
+    const totalDenomAmount = denominationsArray.reduce((sum, d) => sum + (d.amount || 0), 0);
+
+    // 1. Prepare API Payload (Strictly what the API needs)
+    const apiPayload: EditPosCashRegisterPayload = {
+      ...rest,
+      posCashRegisterId: cashRegisterDetails?.data?.registerId || "",
+    };
+
+    if (denominationsArray.length > 0) {
+      apiPayload.denominations = denominationsArray;
+    }
+
+    if (bankAccountId) {
+      apiPayload.bankAccountId = bankAccountId;
+      apiPayload.bankTransferAmount = Number(bankTransferAmount) || 0;
+    }
+
+    // 2. Prepare Print Data (Full report data for CloseBillRegister)
+    const printPayload: PosCashRegisterValues = {
       ...rest,
       ...summary,
-      ...(denominations?.length && { denominations }),
-      ...(bankAccountId && {
-        bankAccountId,
-        bankTransferAmount: Number(bankTransferAmount) || 0,
-      }),
+      totalDenominationAmount: totalDenomAmount,
+      denominations: denominationsArray,
+      startDate: dayjs(cashRegisterDetails?.data?.createdAt).format("DD/MM/YYYY"),
+      startTime: dayjs(cashRegisterDetails?.data?.createdAt).format("hh:mm A"),
+      endDate: dayjs().format("DD/MM/YYYY"),
+      endTime: dayjs().format("hh:mm A"),
+      user: JSON.parse(localStorage.getItem(STORAGE_KEYS.USER) || "{}")?.name || "Admin",
+      bankAccountId,
+      bankTransferAmount: Number(bankTransferAmount) || 0,
     };
-    const posPayload = RemoveEmptyFields(payload) as PosCashRegisterValues;
-    await editPosCashRegister(
-      { ...posPayload, posCashRegisterId: cashRegisterDetails?.data?.registerId || "" },
-      {
-        onSuccess: () => {
-          setOpen(false);
-        },
+
+    const cleanedApiPayload = RemoveEmptyFields(apiPayload) as EditPosCashRegisterPayload;
+
+    await editPosCashRegister(cleanedApiPayload, {
+      onSuccess: () => {
+        setPrintData(printPayload);
       },
-    );
+    });
   };
 
   return (
@@ -179,6 +222,9 @@ const CurrentRegister = () => {
           </Formik>
         </div>
       </CommonModal>
+      <div className="hidden">
+        {printData && <CloseBillRegister ref={contentRef} data={printData} />}
+      </div>
     </>
   );
 };

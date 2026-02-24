@@ -53,7 +53,17 @@ export interface PosCashRegisterValues extends Omit<PosCashRegisterFormInitialVa
 
 export type AddPosCashRegisterPayload = Pick<PosCashRegisterValues, "openingCash">;
 
-export type EditPosCashRegisterPayload = AddPosCashRegisterPayload & { posCashRegisterId?: string };
+export interface EditPosCashRegisterPayload {
+  posCashRegisterId?: string;
+  bankAccountId?: string;
+  bankTransferAmount?: number;
+  cashFlow?: number;
+  totalCashLeftInDrawer?: number;
+  physicalDrawerCash?: number;
+  closingNote?: string;
+  denominations?: Denomination[];
+  status?: string;
+}
 
 export interface PosCashRegisterBase extends PosCashRegisterValues, CommonDataType {
   companyId: CompanyBase;
