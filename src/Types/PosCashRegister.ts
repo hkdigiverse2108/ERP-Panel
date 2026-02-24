@@ -26,6 +26,7 @@ export interface PosCashRegisterValues extends Omit<PosCashRegisterFormInitialVa
   cardPayment?: number;
   bankPayment?: number;
   upiPayment?: number;
+  walletPayment?: number;
   salesReturn?: number;
   cashRefund?: number;
   bankRefund?: number;
@@ -36,6 +37,18 @@ export interface PosCashRegisterValues extends Omit<PosCashRegisterFormInitialVa
   totalSales?: number;
   denominations?: Denomination[];
   totalDenominationAmount?: number;
+  user?: string;
+  startDate?: string;
+  startTime?: string;
+  endDate?: string;
+  endTime?: string;
+  noOfBills?: number;
+  noOfItems?: number;
+  discount?: number;
+  taxAmount?: number;
+  refund?: number;
+  paymentsReceived?: number;
+  profit?: number;
 }
 
 export type AddPosCashRegisterPayload = Pick<PosCashRegisterValues, "openingCash">;

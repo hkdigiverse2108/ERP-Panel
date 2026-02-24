@@ -38,3 +38,4 @@ export * from "./Coupon";
 export * from "./Loyalty";
 export * from "./CashControl";
 export * from "./AdminSetting";
+export * from "./PosCashRegister";
