@@ -22,6 +22,7 @@ export interface PosProductDataModal extends Omit<ProductBase, "sellingPrice" | 
   additionalDiscount: number;
   unitCost: number;
   netAmount: number;
+  variant?: string;
 }
 
 export interface AdditionalChargeType {
