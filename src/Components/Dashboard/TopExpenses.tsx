@@ -3,23 +3,23 @@ import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { Queries } from "../../Api/Queries";
 import { CommonDateRangeSelector } from "../../Attribute";
-import type { AppGridColDef, TopCustomersBase } from "../../Types";
+import type { AppGridColDef, TopExpensesBase } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
-import { CommonCard, CommonDataGrid, CommonObjectNameColumn } from "../Common";
+import { CommonCard, CommonDataGrid } from "../Common";
 
-const TopCustomers = () => {
+const TopExpenses = () => {
   const [range, setRange] = useState({ start: dayjs(), end: dayjs() });
-  const { data, isLoading, isFetching } = Queries.useGetDashboardTopCustomers({ startDate: range.start, endDate: range.end });
+  const { data, isLoading, isFetching } = Queries.useGetDashboardTopExpenses({ startDate: range.start, endDate: range.end });
 
-  const allRowData = useMemo(() => data?.data?.map((item, index) => ({ ...item, id: index + 1 })) || [], [data]);
+  const allRowData = useMemo(() => data?.data?.map((item) => ({ ...item, id: item?._id })) || [], [data]);
   const totalRows = data?.data?.length || 0;
 
   const { sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid();
 
-  const columns: AppGridColDef<TopCustomersBase>[] = [
-    CommonObjectNameColumn<TopCustomersBase>("customerId", { headerName: "Customer Name", width: 250 }), //
-    { field: "noOfBill", headerName: "No Of Bills", width: 200 },
-    { field: "salesValue", headerName: "Sales Value", flex: 1, minWidth: 100, renderCell: (params) => `₹${params.row.salesValue}` },
+  const columns: AppGridColDef<TopExpensesBase>[] = [
+    { field: "accountName", headerName: "Expense Name", width: 250 },
+    { field: "expenseCount", headerName: "Expense Count", width: 300 },
+    { field: "totalAmount", headerName: "Total Amount", flex: 1, minWidth: 110, renderCell: (params) => `₹${params.row.totalAmount}` },
   ];
 
   const CommonDataGridOption = {
@@ -43,10 +43,10 @@ const TopCustomers = () => {
     </Grid>
   );
   return (
-    <CommonCard title="Top 20 Customers" topContent={topContent} grid={{ xs: 12, md: 6 }}>
+    <CommonCard title="Top Expenses" topContent={topContent} grid={{ xs: 12, md: 6 }}>
       <CommonDataGrid {...CommonDataGridOption} />
     </CommonCard>
   );
 };
 
-export default TopCustomers;
+export default TopExpenses;

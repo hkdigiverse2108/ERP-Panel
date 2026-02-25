@@ -70,6 +70,10 @@
   @apply items-center! flex!;
 }
 
+.MuiDataGrid-main .css-980l56{
+  @apply hidden;
+}
+
 /* ************ Table End *********** */
 
 /* ************ Input Start *********** */

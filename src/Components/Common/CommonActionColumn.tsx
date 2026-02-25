@@ -8,8 +8,9 @@ import { Link } from "react-router-dom";
 import type { CommonActionColumnProps } from "../../Types";
 import KeyIcon from "@mui/icons-material/Key";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import PrintIcon from "@mui/icons-material/Print";
 
-const CommonActionColumn = <T extends { _id?: string; isActive?: boolean; creditsRemaining?: number }>({ active, editRoute, onDelete, onEdit, onRefund, permissionRoute }: CommonActionColumnProps<T>): GridColDef<T> => ({
+const CommonActionColumn = <T extends { _id?: string; isActive?: boolean; creditsRemaining?: number }>({ onPrint, active, editRoute, onDelete, onEdit, onRefund, permissionRoute }: CommonActionColumnProps<T>): GridColDef<T> => ({
   field: "actions",
   headerName: "Actions",
   headerAlign: "center",
@@ -46,6 +47,13 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean; credit
                 <KeyIcon fontSize="small" />
               </IconButton>
             </Link>
+          </Grid>
+        )}
+        {onPrint && (
+          <Grid size="auto">
+            <IconButton className="iconButtonStyle" size="small" onClick={() => onPrint(params.row)}>
+              <PrintIcon fontSize="small" />
+            </IconButton>
           </Grid>
         )}
         {onEdit && (

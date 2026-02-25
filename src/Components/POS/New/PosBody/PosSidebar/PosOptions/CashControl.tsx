@@ -7,7 +7,7 @@ import { CommonButton, CommonValidationTextField } from "../../../../../../Attri
 import { CASH_CONTROL_TYPE } from "../../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setCashControlModal } from "../../../../../../Store/Slices/ModalSlice";
-import type { CashControlBase, CashControlFormValues } from "../../../../../../Types/CashControl";
+import type { CashControlBase, CashControlFormValues } from "../../../../../../Types";
 import { FormatDateTime } from "../../../../../../Utils";
 import { useDataGrid } from "../../../../../../Utils/Hooks";
 import { CommonCard, CommonDataGrid, CommonModal } from "../../../../../Common";

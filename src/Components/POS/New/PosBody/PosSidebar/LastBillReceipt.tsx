@@ -1,10 +1,10 @@
 import dayjs from "dayjs";
 import React, { forwardRef } from "react";
-import type { CompanyBase, PosOrderBase } from "../../../../../Types";
-import { Storage } from "../../../../../Utils";
-import { STORAGE_KEYS } from "../../../../../Constants";
+import { useAppSelector } from "../../../../../Store/hooks";
+import type { PosOrderBase } from "../../../../../Types";
 
 const LastBillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }, ref) => {
+  const { company } = useAppSelector((state) => state.company);
   if (!bill) return null;
 
   const totalQty = bill?.items?.reduce((acc, item) => acc + (item?.qty || 0), 0) || 0;
@@ -14,11 +14,6 @@ const LastBillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bi
   };
 
   const getCompanyAddress = () => {
-    let company: CompanyBase | null = null;
-    try {
-      company = JSON.parse(Storage.getItem(STORAGE_KEYS.COMPANY) || "null") as CompanyBase | null;
-    } catch {}
-
     const addr = company?.address || bill?.companyId?.address;
     if (!addr) return null;
 
@@ -37,26 +32,15 @@ const LastBillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bi
       {/* Header Section */}
       <div style={{ position: "relative", marginBottom: "20px" }}>
         <center>
-          <h2 style={{ margin: "20px 0 5px 0", fontWeight: "bold", textTransform: "capitalize", fontSize: "25px" }}>
-            {(() => {
-              try {
-                const company = JSON.parse(Storage.getItem(STORAGE_KEYS.COMPANY) || "null");
-                if (company && company.name) return company.name;
-              } catch (e) {}
-              return bill?.companyId?.name || "Dhruvi Bakery";
-            })()}
-          </h2>
+          <h2 style={{ margin: "20px 0 5px 0", fontWeight: "bold", textTransform: "capitalize", fontSize: "25px" }}>{bill?.companyId?.name || "Dhruvi Bakery"}</h2>
           <div style={{ margin: "5px 0 20px 0", fontSize: "15px", lineHeight: "1.4" }}>
             {getCompanyAddress() && <div>{getCompanyAddress()}</div>}
             {/* Phone */}
             {(() => {
               let phone: string | undefined = undefined;
-              try {
-                const company = JSON.parse(Storage.getItem(STORAGE_KEYS.COMPANY) || "null") as CompanyBase | null;
-                if (company?.phoneNo?.phoneNo) {
-                  phone = company.phoneNo.phoneNo;
-                }
-              } catch {}
+              if (company?.phoneNo?.phoneNo) {
+                phone = company.phoneNo.phoneNo;
+              }
               if (!phone) {
                 phone = bill?.companyId?.phoneNo?.phoneNo;
               }

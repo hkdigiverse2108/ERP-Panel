@@ -155,4 +155,16 @@ export const Queries = {
 
   //*************** Return POS Order *********
   useGetReturnPosOrder: (params?: Params, enabled?: boolean) => useBaseQuery<ReturnPosOrderApiResponse>([KEYS.RETURN_POS_ORDER.BASE, params], URL_KEYS.RETURN_POS_ORDER.ALL, params, enabled),
+
+  //*************** Dashboard *********
+  useGetDashboardSalesAndPurchaseGraph: (params?: Params) => useQueries<SalesAndPurchaseApiResponse>([KEYS.DASHBOARD.SALES_AND_PURCHASE_GRAPH, params], () => Get(URL_KEYS.DASHBOARD.SALES_AND_PURCHASE_GRAPH, params)),
+  useGetDashboardTransactionGraph: (params?: Params) => useQueries<TransactionApiResponse>([KEYS.DASHBOARD.TRANSACTION_GRAPH, params], () => Get(URL_KEYS.DASHBOARD.TRANSACTION_GRAPH, params)),
+  useGetDashboardBestSellingProducts: (params?: Params) => useQueries<BestSellingProductsApiResponse>([KEYS.DASHBOARD.BEST_SELLING_PRODUCTS, params], () => Get(URL_KEYS.DASHBOARD.BEST_SELLING_PRODUCTS, params)),
+  useGetDashboardLeastSellingProducts: (params?: Params) => useQueries<LeastSellingProductsApiResponse>([KEYS.DASHBOARD.LEAST_SELLING_PRODUCTS, params], () => Get(URL_KEYS.DASHBOARD.LEAST_SELLING_PRODUCTS, params)),
+  useGetDashboardTopExpenses: (params?: Params) => useQueries<TopExpensesApiResponse>([KEYS.DASHBOARD.TOP_EXPENSES, params], () => Get(URL_KEYS.DASHBOARD.TOP_EXPENSES, params)),
+  useGetDashboardTopCoupons: (params?: Params) => useQueries<TopCouponsApiResponse>([KEYS.DASHBOARD.TOP_COUPONS, params], () => Get(URL_KEYS.DASHBOARD.TOP_COUPONS, params)),
+  useGetDashboardReceivable: (params?: Params) => useQueries<ReceivableApiResponse>([KEYS.DASHBOARD.RECEIVABLE, params], () => Get(URL_KEYS.DASHBOARD.RECEIVABLE, params)),
+  useGetDashboardPayable: (params?: Params) => useQueries<PayableApiResponse>([KEYS.DASHBOARD.PAYABLE, params], () => Get(URL_KEYS.DASHBOARD.PAYABLE, params)),
+  useGetDashboardTopCustomers: (params?: Params) => useQueries<TopCustomersApiResponse>([KEYS.DASHBOARD.TOP_CUSTOMERS, params], () => Get(URL_KEYS.DASHBOARD.TOP_CUSTOMERS, params)),
+  useGetDashboardCategoryWiseCustomersCount: (params?: Params) => useQueries<CategoryWiseCustomersCountApiResponse>([KEYS.DASHBOARD.CATEGORY_WISE_CUSTOMERS_COUNT, params], () => Get(URL_KEYS.DASHBOARD.CATEGORY_WISE_CUSTOMERS_COUNT, params)),
 };

@@ -161,7 +161,7 @@ const Sidebar = () => {
               <img className="hidden dark:block" src={`${ImagePath}logo/logo-dark.png`} alt="Logo" />
             </>
           ) : (
-            <img src={`${ImagePath}logo/logo-icon.svg`} alt="Logo" width={32} height={32} />
+            <img src={`${ImagePath}logo/logo-icon.png`} alt="Logo" />
           )}
         </Link>
         {width >= 1024 && (isMobileOpen || isExpanded) && (

@@ -5,10 +5,9 @@ import { Mutations, Queries } from "../../../Api";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { AppGridColDef } from "../../../Types";
-import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import type { RecipeBase } from "../../../Types/Recipe";
+import type { AppGridColDef, RecipeBase } from "../../../Types";
 import { FormatDate } from "../../../Utils";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 
 const Recipe = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();

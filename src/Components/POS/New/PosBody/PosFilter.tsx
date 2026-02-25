@@ -37,7 +37,7 @@ const PosFilter = () => {
     if (!productById?.data) return;
     dispatch(addOrUpdateProduct(productById.data));
     dispatch(setIsSelectProduct(""));
-  }, [productById?.data, dispatch]);
+  }, [productById?.data, isSelectProduct, dispatch]);
 
   return (
     <>

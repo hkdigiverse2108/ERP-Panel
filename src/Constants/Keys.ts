@@ -4,6 +4,20 @@ export const KEYS = {
     CHANGE_PASSWORD: "change-password",
   },
 
+  DASHBOARD: {
+    BASE: "dashboard",
+    SALES_AND_PURCHASE_GRAPH: "dashboard-sales-and-purchase-graph",
+    TRANSACTION_GRAPH: "dashboard-transaction-graph",
+    BEST_SELLING_PRODUCTS: "dashboard-best-selling-products",
+    LEAST_SELLING_PRODUCTS: "dashboard-least-selling-products",
+    TOP_EXPENSES: "dashboard-top-expenses",
+    TOP_COUPONS: "dashboard-top-coupons",
+    RECEIVABLE: "dashboard-receivable",
+    PAYABLE: "dashboard-payable",
+    TOP_CUSTOMERS: "dashboard-top-customers",
+    CATEGORY_WISE_CUSTOMERS_COUNT: "dashboard-category-wise-customers-count",
+  },
+
   UPLOAD: {
     ALL_IMAGE: "upload-image",
     ALL_PDF: "upload-pdf",

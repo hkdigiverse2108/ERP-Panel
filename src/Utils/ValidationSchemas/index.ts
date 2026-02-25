@@ -92,7 +92,7 @@ export const CallRequestFormSchema = Yup.object({
   businessName: Validation("string", "Business Name"),
   contactName: Validation("string", "Contact Name"),
   contactNo: PhoneValidation("Contact No"),
-  note: Validation("string", "note"),
+  note: Validation("string", "note", { required: false }),
 });
 
 export const CompanyFormSchemas = Yup.object({
