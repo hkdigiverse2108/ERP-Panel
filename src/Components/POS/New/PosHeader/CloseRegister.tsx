@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import React, { forwardRef } from "react";
-import { STORAGE_KEYS } from "../../../../Constants";
+import { useAppSelector } from "../../../../Store/hooks";
 import type { PosCashRegisterValues, PosOrderBase } from "../../../../Types";
 
 const MetricRow = ({ label, value }: { label: string; value: React.ReactNode }) => (
@@ -14,14 +14,7 @@ const MetricRow = ({ label, value }: { label: string; value: React.ReactNode }) 
 );
 
 const CloseBillRegister = forwardRef<HTMLDivElement, { bill?: PosOrderBase; data?: PosCashRegisterValues }>(({ data }, ref) => {
-  const getCompanyName = () => {
-    try {
-      const company = JSON.parse(localStorage.getItem(STORAGE_KEYS.COMPANY) || "null");
-      if (company && company.name) return company.name;
-    } catch { }
-    return "Dhruvi Bakery";
-  };
-
+  const { company } = useAppSelector((state) => state.company);
   const currentDate = dayjs().format("DD/MM/YYYY, HH:mm");
 
   return (
@@ -32,21 +25,25 @@ const CloseBillRegister = forwardRef<HTMLDivElement, { bill?: PosOrderBase; data
       </div>
 
       <center>
-        <h2 style={{ margin: "0 0 5px 0", fontWeight: "bold", fontSize: "22px" }}>{getCompanyName()}</h2>
+        <h2 style={{ margin: "0 0 5px 0", fontWeight: "bold", fontSize: "22px" }}>{company?.name}</h2>
       </center>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "0px", marginBottom: "5px", fontWeight: "bold" }}>
         <div style={{ display: "flex" }}>
           <span style={{ width: "120px" }}>User</span>
-          <span>: {data?.user || getCompanyName()}</span>
+          <span>: {data?.user || "-"}</span>
         </div>
         <div style={{ display: "flex" }}>
           <span style={{ width: "120px" }}>Start</span>
-          <span>: {data?.startDate || "-"} {data?.startTime || "-"}</span>
+          <span>
+            : {data?.startDate || "-"} {data?.startTime || "-"}
+          </span>
         </div>
         <div style={{ display: "flex" }}>
           <span style={{ width: "120px" }}>End</span>
-          <span>: {data?.endDate || "-"} {data?.endTime || "-"}</span>
+          <span>
+            : {data?.endDate || "-"} {data?.endTime || "-"}
+          </span>
         </div>
       </div>
 

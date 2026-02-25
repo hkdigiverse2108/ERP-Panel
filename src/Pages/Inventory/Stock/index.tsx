@@ -4,8 +4,7 @@ import { Queries } from "../../../Api";
 import { CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { AppGridColDef } from "../../../Types";
-import type { StockBase } from "../../../Types/Stock";
+import type { AppGridColDef, StockBase } from "../../../Types";
 import { useDataGrid } from "../../../Utils/Hooks";
 
 const Stock = () => {
@@ -16,9 +15,8 @@ const Stock = () => {
   const allStock = useMemo(() => stockData?.data?.stock_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [stockData]);
   const totalRows = stockData?.data?.totalData || 0;
 
-
   const columns: AppGridColDef<StockBase>[] = [
-    { field: "name", headerName: "Product Name", width: 320 },//
+    { field: "name", headerName: "Product Name", width: 320 }, //
     CommonObjectNameColumn("categoryId", { headerName: "Category Name", width: 230 }),
     CommonObjectNameColumn("subCategoryId", { headerName: "Sub Category Name", width: 230 }),
     CommonObjectNameColumn("brandId", { headerName: "Brand Name", width: 230 }),

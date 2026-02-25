@@ -1,4 +1,9 @@
+import type { AccountBase } from "./Account";
+import type { BankBase } from "./Bank";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { CompanyBase } from "./Company";
+import type { ContactBase } from "./Contacts";
+import type { PosOrderBase } from "./PosOrder";
 
 export interface PosPaymentFormValues {
   paymentNo?: string;
@@ -29,7 +34,13 @@ export type EditPosPaymentPayload = AddPosPaymentPayload & {
 };
 
 /* ================= BASE MODEL ================= */
-export type PosPaymentBase = PosPaymentFormValues & CommonDataType;
+export type PosPaymentBase = Omit<PosPaymentFormValues, "partyId" | "bankId" | "posOrderId" | "companyId" | "accountId"> & CommonDataType & {
+  partyId?: ContactBase;
+  bankId?: BankBase;
+  posOrderId?: PosOrderBase;
+  companyId?: CompanyBase;
+  accountId?: AccountBase;
+};
 
 /* ================= API RESPONSES ================= */
 export interface PosPaymentDataResponse extends PageStatus {

@@ -7,8 +7,7 @@ import { CommonValidationSelect, CommonValidationSwitch, CommonValidationTextFie
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { TaxBase } from "../../../Types";
-import type { StockFormValues } from "../../../Types/Stock";
+import type { StockFormValues, TaxBase } from "../../../Types";
 import { GenerateOptions, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 import { ProductItemFormSchema } from "../../../Utils/ValidationSchemas";
