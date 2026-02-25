@@ -34,6 +34,12 @@ export interface AccountGroupDataResponse extends PageStatus {
 
 /* ================= API RESPONSES ================= */
 
+export interface AccountGroupTreeDataResponse {
+  _id: string;
+  name: string;
+  children?: AccountGroupTreeDataResponse[];
+}
+
 export interface AccountGroupApiResponse extends MessageStatus {
   data: AccountGroupDataResponse;
 }

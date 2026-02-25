@@ -232,6 +232,12 @@ export const KEYS = {
     EDIT: "pos-credit-note-edit",
     DELETE: "pos-credit-note-delete",
   },
+  CREDIT_NOTE: {
+    BASE: "credit-note",
+    ADD: "credit-note-add",
+    EDIT: "credit-note-edit",
+    DELETE: "credit-note-delete",
+  },
   RETURN_POS_ORDER: {
     BASE: "return-pos-order",
     ADD: "return-pos-order-add",

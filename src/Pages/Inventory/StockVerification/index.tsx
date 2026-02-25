@@ -33,7 +33,7 @@ const StockVerification = () => {
     { field: "stockVerificationNo", headerName: "Stock Verification No.", flex: 1, minWidth: 200 },
     { field: "createdAt", headerName: "Stock Verification Date", flex: 1, minWidth: 200, renderCell: (params) => FormatDate(params.row.createdAt) },
     { field: "totalProducts", headerName: "Total Products", width: 200 },
-    { field: "totalPhysicalQty", headerName: "Total Physical Qty", width: 200 },
+    { field: "totalPhysicalQty", headerName: "Total Physical Qty", width: 200 }, 
     { field: "totalDifferenceAmount", headerName: "Difference Amount", width: 200 },
     { field: "totalApprovedQty", headerName: "Approved Qty", width: 200 },
     { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },

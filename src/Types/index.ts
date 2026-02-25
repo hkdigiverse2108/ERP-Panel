@@ -38,3 +38,4 @@ export * from "./CashControl";
 export * from "./AdminSetting";
 export * from "./PosCashRegister";
 export * from "./PosCreditNote";
+export * from "./CreditNote";

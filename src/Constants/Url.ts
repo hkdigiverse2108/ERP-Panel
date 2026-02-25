@@ -206,6 +206,7 @@ export const URL_KEYS = {
     BASE: "/account-group",
     DROPDOWN: "/account-group/dropdown",
     ALL: "/account-group/all",
+    TREE: "/account-group/tree",
   },
   TERMS_CONDITION: {
     BASE: "/terms-condition",
@@ -258,11 +259,18 @@ export const URL_KEYS = {
     UPDATE: "/settings/update",
   },
   POS_CREDIT_NOTE: {
-    BASE: "/pos-credit-note",
+    BASE: " ",
     ALL: "/pos-credit-note/all",
     ADD: "/pos-credit-note/add",
     EDIT: "/pos-credit-note/edit",
     DELETE: "/pos-credit-note/delete",
+  },
+  CREDIT_NOTE: {
+    BASE: "/credit-note",
+    ALL: "/credit-note/all",
+    ADD: "/credit-note/add",
+    EDIT: "/credit-note/edit",
+    DELETE: "/credit-note/delete",
   },
   RETURN_POS_ORDER: {
     BASE: "/return-pos-order",

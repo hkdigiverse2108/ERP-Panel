@@ -471,3 +471,13 @@ export const ReturnPosOrderFormSchema = Yup.object({
   }),
   refundDescription: Validation("string", "Refund Description", { required: false }),
 });
+
+export const CreditNoteFormSchema = Yup.object().shape({
+  voucherNumber: Validation("string", "Voucher Number", { required: false }),
+  date: Validation("string", "Date"),
+  fromAccountId: Validation("string", "From Account"),
+  toAccountId: Validation("string", "To Account"),
+  amount: Validation("number", "Amount"),
+  description: Validation("string", "Description", { required: false }),
+  isActive: Yup.boolean(),
+});

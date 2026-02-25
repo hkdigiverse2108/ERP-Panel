@@ -37,6 +37,12 @@ import CouponForm from "../Pages/CRM/Coupon/CouponForm";
 import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
 import Loyalty from "../Pages/CRM/Loyalty";
 import OrderList from "../Pages/POS/OrderList";
+import CreditNoteList from "../Pages/POS/CreditNote";
+import AccountGroup from "../Pages/Accounting/AccountGroup";
+import AccountGroupTree from "../Pages/Accounting/AccountGroup/AccountGroupTree";
+import Account from "../Pages/Accounting/Account";
+import CreditNote from "../Pages/Accounting/CreditNote";
+import CreditNoteForm from "../Pages/Accounting/CreditNote/CreditNoteForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -73,6 +79,7 @@ export const PageRoutes = [
 
   { path: ROUTES.POS.NEW, name: PAGE_TITLE.POS.BASE, element: <NewPos /> },
   { path: ROUTES.POS.ORDER_LIST, name: PAGE_TITLE.POS.ORDER_LIST, element: <OrderList /> },
+  { path: ROUTES.POS.CREDIT_NOTE, name: PAGE_TITLE.POS.CREDIT_NOTE, element: <CreditNoteList /> },
 
   { path: ROUTES.RECIPE.BASE, name: PAGE_TITLE.INVENTORY.RECIPE.BASE, element: <Recipe /> },
   { path: ROUTES.RECIPE.ADD_EDIT, name: PAGE_TITLE.INVENTORY.RECIPE.BASE, element: <RecipeForm /> },
@@ -94,6 +101,12 @@ export const PageRoutes = [
 
   { path: ROUTES.LOYALTY.BASE, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <Loyalty /> },
   { path: ROUTES.LOYALTY.ADD_EDIT, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <LoyaltyForm /> },
+
+  { path: ROUTES.ACCOUNTING.ACCOUNT_GROUP.BASE, name: PAGE_TITLE.ACCOUNTING.ACCOUNT_GROUP.BASE, element: <AccountGroup /> },
+  { path: ROUTES.ACCOUNTING.ACCOUNT_GROUP.TREE, name: PAGE_TITLE.ACCOUNTING.ACCOUNT_GROUP.TREE, element: <AccountGroupTree /> },
+  { path: ROUTES.ACCOUNTING.ACCOUNT.BASE, name: PAGE_TITLE.ACCOUNTING.ACCOUNT.BASE, element: <Account /> },
+  { path: ROUTES.ACCOUNTING.CREDIT_NOTE.BASE, name: PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.BASE, element: <CreditNote /> },
+  { path: ROUTES.ACCOUNTING.CREDIT_NOTE.ADD_EDIT, name: PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.ADD, element: <CreditNoteForm /> },
 ];
 
 export const AuthRoutes = [

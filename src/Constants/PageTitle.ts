@@ -98,6 +98,7 @@ export const PAGE_TITLE = {
     BASE: "POS",
     NEW: "New POS",
     ORDER_LIST: "Order List",
+    CREDIT_NOTE: "pos Credit Note",
   },
   CRM: {
     BASE: "CRM",
@@ -123,6 +124,21 @@ export const PAGE_TITLE = {
       BASE: "Purchase Order",
       ADD: "Add Purchase Order",
       EDIT: "Edit Purchase Order",
+    },
+  },
+  ACCOUNTING: {
+    BASE: "Accounting",
+    ACCOUNT_GROUP: {
+      BASE: "Account Group",
+      TREE: "Account Group Tree",
+    },
+    ACCOUNT: {
+      BASE: "Account",
+    },
+    CREDIT_NOTE: {
+      BASE: "Credit Note",
+      ADD: "Add Credit Note",
+      EDIT: "Edit Credit Note",
     },
   },
 } as const;

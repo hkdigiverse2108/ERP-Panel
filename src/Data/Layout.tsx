@@ -1,4 +1,4 @@
-import { AccountBalance, GridViewRounded, People, PersonRounded, PointOfSale, Redeem, Settings } from "@mui/icons-material";
+import { AccountBalance, Calculate, GridViewRounded, People, PersonRounded, PointOfSale, Redeem, Settings } from "@mui/icons-material";
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
 
@@ -33,6 +33,7 @@ export const NavItems: NavItem[] = [
     children: [
       { name: PAGE_TITLE.POS.NEW, path: ROUTES.POS.NEW },
       { name: PAGE_TITLE.POS.ORDER_LIST, path: ROUTES.POS.ORDER_LIST },
+      { name: PAGE_TITLE.POS.CREDIT_NOTE, path: ROUTES.POS.CREDIT_NOTE },
     ],
   },
   {
@@ -55,5 +56,14 @@ export const NavItems: NavItem[] = [
     name: PAGE_TITLE.SETTINGS.BASE,
     icon: <Settings />,
     children: [{ name: PAGE_TITLE.SETTINGS.GENERAL, path: ROUTES.SETTINGS.GENERAL, pro: false }],
+  },
+  {
+    name: PAGE_TITLE.ACCOUNTING.BASE,
+    icon: <Calculate />,
+    children: [
+      { name: PAGE_TITLE.ACCOUNTING.ACCOUNT_GROUP.BASE, path: ROUTES.ACCOUNTING.ACCOUNT_GROUP.BASE },
+      { name: PAGE_TITLE.ACCOUNTING.ACCOUNT.BASE, path: ROUTES.ACCOUNTING.ACCOUNT.BASE },
+      { name: PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.BASE, path: ROUTES.ACCOUNTING.CREDIT_NOTE.BASE },
+    ],
   },
 ];
