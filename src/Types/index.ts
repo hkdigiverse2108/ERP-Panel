@@ -40,3 +40,4 @@ export * from "./PosCashRegister";
 export * from "./PosCreditNote";
 export * from "./Dashboard";
 export * from "./ReturnPosOrder";
+export * from "./CreditNote";
