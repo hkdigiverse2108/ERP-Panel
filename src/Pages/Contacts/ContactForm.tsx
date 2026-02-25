@@ -1,18 +1,17 @@
 import { Box, Grid } from "@mui/material";
 import { FieldArray, Form, Formik, type FormikHelpers } from "formik";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
-import { CommonValidationTextField as CommonTextField, CommonSwitch, CommonPhoneNumber, CommonValidationSelect, CommonValidationRadio, CommonValidationDatePicker, CommonButton } from "../../Attribute";
+import { CommonButton, CommonPhoneNumber, CommonSwitch, CommonValidationTextField as CommonTextField, CommonValidationDatePicker, CommonValidationRadio, CommonValidationSelect } from "../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
 import { BREADCRUMBS, CONTACT_CATEGORY_CUSTOMER, CONTACT_CATEGORY_SUPPLIER, CONTACT_TYPE, CUSTOMER_CATEGORY, GST_TYPE, PAYMENT_MODE, PAYMENT_TERMS } from "../../Data";
 import { useAppSelector } from "../../Store/hooks";
-import type { ContactFormValues } from "../../Types";
+import type { AddContactPayload, Address, ContactAddressApi, ContactFormValues } from "../../Types";
 import { GetChangedFields, RemoveEmptyFields } from "../../Utils";
-import { getContactFormSchema } from "../../Utils/ValidationSchemas";
-import type { AddContactPayload, Address, ContactAddressApi } from "../../Types/Contacts";
 import { useDependentReset, usePagePermission } from "../../Utils/Hooks";
-import { useEffect } from "react";
+import { getContactFormSchema } from "../../Utils/ValidationSchemas";
 
 const ContactForm = () => {
   const location = useLocation();

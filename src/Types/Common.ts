@@ -170,6 +170,7 @@ export interface CommonDataGridProps {
   isExport?: boolean;
   fileName?: string;
   pagination?: boolean;
+  isToolbar?: boolean;
 
   slots?: any;
   slotProps?: GridSlotsComponentsProps;
@@ -217,6 +218,7 @@ export interface CommonActionColumnProps<T> {
   onDelete?: (row: T) => void;
   active?: (row: T) => void;
   onRefund?: (row: T) => void;
+  onPrint?: (row: T) => void;
 }
 
 export interface CommonTableColumn<T> {

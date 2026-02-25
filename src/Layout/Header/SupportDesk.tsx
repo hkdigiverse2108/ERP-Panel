@@ -77,7 +77,7 @@ const SupportDesk = () => {
                 <CommonValidationTextField name="businessName" label="Business Name" grid={{ xs: 12 }} required />
                 <CommonValidationTextField name="contactName" label="Contact Name" grid={{ xs: 12 }} required />
                 <CommonPhoneNumber label="Phone No." countryCodeName="contactNo.countryCode" numberName="contactNo.phoneNo" grid={{ xs: 12 }} required />
-                <CommonValidationTextField name="note" label="Notes" type="textarea" multiline rows={2} validating={false} grid={{ xs: 12 }} required />
+                <CommonValidationTextField name="note" label="Notes" type="textarea" multiline rows={2} validating={false} grid={{ xs: 12 }} />
                 <CommonButton type="submit" variant="contained" title="Send" size="medium" loading={isCallRequestLoading} fullWidth grid={{ xs: 12 }} />
               </Grid>
             </Form>

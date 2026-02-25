@@ -38,3 +38,5 @@ export * from "./CashControl";
 export * from "./AdminSetting";
 export * from "./PosCashRegister";
 export * from "./PosCreditNote";
+export * from "./Dashboard";
+export * from "./ReturnPosOrder";
