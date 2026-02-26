@@ -99,6 +99,7 @@ export const PAGE_TITLE = {
     NEW: "New POS",
     ORDER_LIST: "Order List",
     CREDIT_NOTE: "pos Credit Note",
+    SALES_REGISTER: "sales Register",
   },
   CRM: {
     BASE: "CRM",

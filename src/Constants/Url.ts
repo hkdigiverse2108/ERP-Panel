@@ -296,4 +296,11 @@ export const URL_KEYS = {
     EDIT: "/return-pos-order/edit",
     DELETE: "/return-pos-order/delete",
   },
+  
+  SALES_REGISTER: {
+    BASE: "/sales-register",
+    ADD: "/sales-register/add",
+    EDIT: "/sales-register/edit",
+    ALL: "/sales-register/all",
+  },
 } as const;

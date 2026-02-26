@@ -34,6 +34,7 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.POS.NEW, path: ROUTES.POS.NEW },
       { name: PAGE_TITLE.POS.ORDER_LIST, path: ROUTES.POS.ORDER_LIST },
       { name: PAGE_TITLE.POS.CREDIT_NOTE, path: ROUTES.POS.CREDIT_NOTE },
+      { name: PAGE_TITLE.POS.SALES_REGISTER, path: ROUTES.POS.SALES_REGISTER },
     ],
   },
   {

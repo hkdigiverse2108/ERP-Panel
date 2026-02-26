@@ -1,5 +1,3 @@
-
-
 export const ROUTES = {
   HOME: "/",
   DASHBOARD: "/dashboard",
@@ -78,6 +76,7 @@ export const ROUTES = {
     NEW: "/pos/new",
     ORDER_LIST: "/pos/order-list",
     CREDIT_NOTE: "/pos/credit-note",
+    SALES_REGISTER: "/pos/sales-register",
   },
   SUPPLIER_BILL: {
     BASE: "/supplier-bill",
@@ -112,5 +111,8 @@ export const ROUTES = {
       ADD_EDIT: "/accounting/credit-note/form",
     },
   },
-
+  SALES_REGISTER: {
+    BASE: "/sales-register",
+    EDIT: "/sales-register/edit",
+  },
 } as const;

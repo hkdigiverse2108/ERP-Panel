@@ -67,6 +67,7 @@ export interface EditPosCashRegisterPayload {
 
 export interface PosCashRegisterBase extends PosCashRegisterValues, CommonDataType {
   companyId: CompanyBase;
+  salesManId?: string | { _id: string; name?: string } | null;
 }
 
 export interface PosCashRegisterDataResponse extends PageStatus {

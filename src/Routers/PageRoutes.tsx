@@ -43,6 +43,7 @@ import AccountGroupTree from "../Pages/Accounting/AccountGroup/AccountGroupTree"
 import Account from "../Pages/Accounting/Account";
 import CreditNote from "../Pages/Accounting/CreditNote";
 import CreditNoteForm from "../Pages/Accounting/CreditNote/CreditNoteForm";
+import SalesRegister from "../Pages/POS/SalesRegister";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -107,6 +108,8 @@ export const PageRoutes = [
   { path: ROUTES.ACCOUNTING.ACCOUNT.BASE, name: PAGE_TITLE.ACCOUNTING.ACCOUNT.BASE, element: <Account /> },
   { path: ROUTES.ACCOUNTING.CREDIT_NOTE.BASE, name: PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.BASE, element: <CreditNote /> },
   { path: ROUTES.ACCOUNTING.CREDIT_NOTE.ADD_EDIT, name: PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.ADD, element: <CreditNoteForm /> },
+
+  { path: ROUTES.SALES_REGISTER.BASE, name: PAGE_TITLE.POS.SALES_REGISTER, element: <SalesRegister /> },
 ];
 
 export const AuthRoutes = [
