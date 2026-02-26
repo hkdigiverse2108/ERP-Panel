@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import { BestSellingProduct, CustomersReport, LeastSellingProduct, Notifications, SalesAndPurchase, TodayPayable, TodayReceivable, ToPay, TopCoupons, TopCustomers, TopExpenses, ToReceive, TotalSummary, Transaction } from "../../Components/Dashboard";
+import { BestSellingProduct, CategorySales, CustomersReport, LeastSellingProduct, LoginLog, Notifications, SalesAndPurchase, TodayPayable, TodayReceivable, ToPay, TopCoupons, TopCustomers, TopExpenses, ToReceive, TotalSummary, Transaction } from "../../Components/Dashboard";
 
 const Dashboard = () => {
   return (
@@ -11,6 +11,7 @@ const Dashboard = () => {
         <Transaction />
         <TopCustomers />
         <CustomersReport />
+        <CategorySales />
         <BestSellingProduct />
         <LeastSellingProduct />
         <TopExpenses />
@@ -19,6 +20,7 @@ const Dashboard = () => {
         <TodayPayable />
         <ToReceive />
         <ToPay />
+        <LoginLog />
       </Grid>
     </div>
   );

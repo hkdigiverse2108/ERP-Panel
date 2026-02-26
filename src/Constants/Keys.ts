@@ -16,6 +16,9 @@ export const KEYS = {
     PAYABLE: "dashboard-payable",
     TOP_CUSTOMERS: "dashboard-top-customers",
     CATEGORY_WISE_CUSTOMERS_COUNT: "dashboard-category-wise-customers-count",
+    CATEGORY_SALES: "dashboard-category-sales",
+    LOGIN_LOG: "dashboard-login-log",
+    TRANSACTION: "dashboard-transactions",
   },
 
   UPLOAD: {

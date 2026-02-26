@@ -12,5 +12,7 @@ import TodayReceivable from "./TodayReceivable";
 import TodayPayable from "./TodayPayable";
 import ToReceive from "./ToReceive";
 import ToPay from "./ToPay";
+import CategorySales from "./CategorySales";
+import LoginLog from "./LoginLog";
 
-export { Notifications, TotalSummary, CustomersReport, SalesAndPurchase, TopCustomers, Transaction, BestSellingProduct, LeastSellingProduct, TopExpenses, TopCoupons, TodayReceivable, TodayPayable, ToReceive, ToPay };
+export { Notifications, TotalSummary, CustomersReport, SalesAndPurchase, TopCustomers, Transaction, BestSellingProduct, LeastSellingProduct, TopExpenses, TopCoupons, TodayReceivable, TodayPayable, ToReceive, ToPay, CategorySales, LoginLog };
