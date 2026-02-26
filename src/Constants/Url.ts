@@ -280,6 +280,7 @@ export const URL_KEYS = {
     ADD: "/pos-credit-note/add",
     EDIT: "/pos-credit-note/edit",
     DELETE: "/pos-credit-note/delete",
+    REFUND: "/pos-credit-note/refund",
   },
   CREDIT_NOTE: {
     BASE: "/credit-note",
