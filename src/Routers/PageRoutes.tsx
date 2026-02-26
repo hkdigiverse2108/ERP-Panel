@@ -43,6 +43,10 @@ import AccountGroupTree from "../Pages/Accounting/AccountGroup/AccountGroupTree"
 import Account from "../Pages/Accounting/Account";
 import CreditNote from "../Pages/Accounting/CreditNote";
 import CreditNoteForm from "../Pages/Accounting/CreditNote/CreditNoteForm";
+import DebitNote from "../Pages/Accounting/DebitNote";
+import DebitNoteForm from "../Pages/Accounting/DebitNote/DebitNoteForm";
+import JournalVoucher from "../Pages/Accounting/JournalVoucher";
+import JournalVoucherForm from "../Pages/Accounting/JournalVoucher/JournalVoucherForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -103,10 +107,14 @@ export const PageRoutes = [
   { path: ROUTES.LOYALTY.ADD_EDIT, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <LoyaltyForm /> },
 
   { path: ROUTES.ACCOUNTING.ACCOUNT_GROUP.BASE, name: PAGE_TITLE.ACCOUNTING.ACCOUNT_GROUP.BASE, element: <AccountGroup /> },
-  { path: ROUTES.ACCOUNTING.ACCOUNT_GROUP.TREE, name: PAGE_TITLE.ACCOUNTING.ACCOUNT_GROUP.TREE, element: <AccountGroupTree /> },
+  { path: ROUTES.ACCOUNTING.ACCOUNT_GROUP.TREE, name: PAGE_TITLE.ACCOUNTING.ACCOUNT_GROUP.BASE, element: <AccountGroupTree /> },
   { path: ROUTES.ACCOUNTING.ACCOUNT.BASE, name: PAGE_TITLE.ACCOUNTING.ACCOUNT.BASE, element: <Account /> },
   { path: ROUTES.ACCOUNTING.CREDIT_NOTE.BASE, name: PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.BASE, element: <CreditNote /> },
-  { path: ROUTES.ACCOUNTING.CREDIT_NOTE.ADD_EDIT, name: PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.ADD, element: <CreditNoteForm /> },
+  { path: ROUTES.ACCOUNTING.CREDIT_NOTE.ADD_EDIT, name: PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.BASE, element: <CreditNoteForm /> },
+  { path: ROUTES.ACCOUNTING.DEBIT_NOTE.BASE, name: PAGE_TITLE.ACCOUNTING.DEBIT_NOTE.BASE, element: <DebitNote /> },
+  { path: ROUTES.ACCOUNTING.DEBIT_NOTE.ADD_EDIT, name: PAGE_TITLE.ACCOUNTING.DEBIT_NOTE.BASE, element: <DebitNoteForm /> },
+  { path: ROUTES.ACCOUNTING.JOURNAL_VOUCHER.BASE, name: PAGE_TITLE.ACCOUNTING.JOURNAL_VOUCHER.BASE, element: <JournalVoucher /> },
+  { path: ROUTES.ACCOUNTING.JOURNAL_VOUCHER.ADD_EDIT, name: PAGE_TITLE.ACCOUNTING.JOURNAL_VOUCHER.BASE, element: <JournalVoucherForm /> },
 ];
 
 export const AuthRoutes = [

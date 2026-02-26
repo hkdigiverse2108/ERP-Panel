@@ -140,5 +140,15 @@ export const PAGE_TITLE = {
       ADD: "Add Credit Note",
       EDIT: "Edit Credit Note",
     },
+    DEBIT_NOTE: {
+      BASE: "Debit Note",
+      ADD: "Add Debit Note",
+      EDIT: "Edit Debit Note",
+    },
+    JOURNAL_VOUCHER: {
+      BASE: "Journal Voucher",
+      ADD: "Add Journal Voucher",
+      EDIT: "Edit Journal Voucher",
+    },
   },
 } as const;

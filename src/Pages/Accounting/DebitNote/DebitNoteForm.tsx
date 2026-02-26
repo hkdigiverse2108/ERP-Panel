@@ -7,25 +7,26 @@ import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwi
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { CreditNoteFormValues } from "../../../Types";
-import { CreditNoteFormSchema, DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
+import type { DebitNoteFormValues } from "../../../Types";
+import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
+import { DebitNoteFormSchema } from "../../../Utils/ValidationSchemas";
 
-const CreditNoteForm = () => {
+const DebitNoteForm = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { data } = location.state || {};
-    const permission = usePagePermission(PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.BASE);
+    const permission = usePagePermission(PAGE_TITLE.ACCOUNTING.DEBIT_NOTE.BASE);
 
     const { data: accountData, isLoading: accountLoading } = Queries.useGetAccountDropdown();
 
-    const { mutate: addCreditNote, isPending: isAddLoading } = Mutations.useAddCreditNote();
-    const { mutate: editCreditNote, isPending: isEditLoading } = Mutations.useEditCreditNote();
+    const { mutate: addDebitNote, isPending: isAddLoading } = Mutations.useAddDebitNote();
+    const { mutate: editDebitNote, isPending: isEditLoading } = Mutations.useEditDebitNote();
 
     const isEditing = Boolean(data?._id);
     const pageMode = isEditing ? "EDIT" : "ADD";
 
-    const initialValues: CreditNoteFormValues = useMemo(() => ({
+    const initialValues: DebitNoteFormValues = useMemo(() => ({
         voucherNumber: data?.voucherNumber || "",
         date: data?.date || DateConfig.utc().toISOString(),
         fromAccountId: data?.fromAccountId?._id || "",
@@ -35,7 +36,7 @@ const CreditNoteForm = () => {
         isActive: data?.isActive ?? true,
     }), [data]);
 
-    const handleSubmit = async (values: CreditNoteFormValues, { resetForm }: FormikHelpers<CreditNoteFormValues>) => {
+    const handleSubmit = async (values: DebitNoteFormValues, { resetForm }: FormikHelpers<DebitNoteFormValues>) => {
         const { _submitAction, ...rest } = values;
         const payload = { ...rest };
 
@@ -46,9 +47,9 @@ const CreditNoteForm = () => {
 
         if (isEditing) {
             const changedFields = GetChangedFields(payload, data);
-            await editCreditNote({ ...changedFields, creditNoteId: data._id }, { onSuccess: handleSuccess });
+            await editDebitNote({ ...changedFields, debitNoteId: data._id }, { onSuccess: handleSuccess });
         } else {
-            await addCreditNote(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
+            await addDebitNote(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
         }
     };
 
@@ -59,10 +60,10 @@ const CreditNoteForm = () => {
 
     return (
         <>
-            <CommonBreadcrumbs title={PAGE_TITLE.ACCOUNTING.CREDIT_NOTE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.CREDIT_NOTE[pageMode]} />
+            <CommonBreadcrumbs title={PAGE_TITLE.ACCOUNTING.DEBIT_NOTE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.DEBIT_NOTE[pageMode]} />
 
             <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
-                <Formik<CreditNoteFormValues> enableReinitialize initialValues={initialValues} validationSchema={CreditNoteFormSchema} onSubmit={handleSubmit}>
+                <Formik<DebitNoteFormValues> enableReinitialize initialValues={initialValues} validationSchema={DebitNoteFormSchema} onSubmit={handleSubmit}>
                     {({ resetForm, setFieldValue, dirty }) => (
                         <Form noValidate>
                             <Grid container spacing={2}>
@@ -87,4 +88,4 @@ const CreditNoteForm = () => {
     );
 };
 
-export default CreditNoteForm;
+export default DebitNoteForm;

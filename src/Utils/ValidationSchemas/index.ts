@@ -481,3 +481,41 @@ export const CreditNoteFormSchema = Yup.object().shape({
   description: Validation("string", "Description", { required: false }),
   isActive: Yup.boolean(),
 });
+
+export const DebitNoteFormSchema = Yup.object().shape({
+  voucherNumber: Validation("string", "Voucher Number", { required: false }),
+  date: Validation("string", "Date"),
+  fromAccountId: Validation("string", "From Account"),
+  toAccountId: Validation("string", "To Account"),
+  amount: Validation("number", "Amount"),
+  description: Validation("string", "Description", { required: false }),
+  isActive: Yup.boolean(),
+});
+
+export const JournalVoucherFormSchema = Yup.object().shape({
+  paymentNo: Validation("string", "Payment No", { required: false }),
+  date: Validation("string", "Date"),
+  description: Validation("string", "Description", { required: false }),
+  status: Validation("string", "Status"),
+  isActive: Yup.boolean(),
+  entries: Yup.array()
+    .of(
+      Yup.object().shape({
+        accountId: Validation("string", "Account"),
+        debit: Validation("number", "Debit", { required: false, extraRules: (s) => s.transform((v, o) => (String(o).trim() === "" ? null : v)).nullable() }),
+        credit: Validation("number", "Credit", { required: false, extraRules: (s) => s.transform((v, o) => (String(o).trim() === "" ? null : v)).nullable() }),
+        description: Validation("string", "Description", { required: false }),
+      })
+    )
+    .min(2, "At least two entries are required")
+    .test("equal-totals", "Total Debit must equal Total Credit", function (entries) {
+      if (!entries) return true;
+      const totalDebit = entries.reduce((acc, curr) => acc + Number(curr.debit || 0), 0);
+      const totalCredit = entries.reduce((acc, curr) => acc + Number(curr.credit || 0), 0);
+      return Math.abs(totalDebit - totalCredit) < 0.01 && totalDebit > 0;
+    })
+    .test("debit-or-credit", "Either Debit or Credit must be provided for all rows", function (entries) {
+      if (!entries) return true;
+      return entries.every((row: any) => Number(row.debit || 0) > 0 || Number(row.credit || 0) > 0);
+    }),
+});

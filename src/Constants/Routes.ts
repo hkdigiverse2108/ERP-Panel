@@ -109,7 +109,15 @@ export const ROUTES = {
     },
     CREDIT_NOTE: {
       BASE: "/accounting/credit-note",
-      ADD_EDIT: "/accounting/credit-note/form",
+      ADD_EDIT: "/accounting/credit-note/add-edit",
+    },
+    DEBIT_NOTE: {
+      BASE: "/accounting/debit-note",
+      ADD_EDIT: "/accounting/debit-note/add-edit",
+    },
+    JOURNAL_VOUCHER: {
+      BASE: "/accounting/journal-voucher",
+      ADD_EDIT: "/accounting/journal-voucher/add-edit",
     },
   },
 

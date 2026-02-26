@@ -285,6 +285,20 @@ export const URL_KEYS = {
     EDIT: "/credit-note/edit",
     DELETE: "/credit-note/delete",
   },
+  DEBIT_NOTE: {
+    BASE: "/debit-note",
+    ALL: "/debit-note/all",
+    ADD: "/debit-note/add",
+    EDIT: "/debit-note/edit",
+    DELETE: "/debit-note/delete",
+  },
+  JOURNAL_VOUCHER: {
+    BASE: "/journal-voucher",
+    ALL: "/journal-voucher/all",
+    ADD: "/journal-voucher/add",
+    EDIT: "/journal-voucher/edit",
+    DELETE: "/journal-voucher/delete",
+  },
   RETURN_POS_ORDER: {
     BASE: "/return-pos-order",
     ALL: "/return-pos-order/all",
