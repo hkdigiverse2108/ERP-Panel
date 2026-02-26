@@ -48,7 +48,7 @@ export const useFinancialYearsFilter = (params?: Params) => {
   const endDate = company?.financialYear.split(" - ")[1];
   return {
     ...(params || {}),
-    startDate,
-    endDate,
+    startDate: params?.startDate || startDate,
+    endDate: params?.endDate || endDate,
   };
 };

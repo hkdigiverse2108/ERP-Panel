@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { Queries } from "../../../Api";
 import { CommonDateRangeSelector } from "../../../Attribute";
-import { AdvancedSearch, CalculateGridSummary, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonObjectNameColumn } from "../../../Components/Common";
+import { AdvancedSearch, CalculateGridSummary, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter} from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef } from "../../../Types";
@@ -38,7 +38,6 @@ const SalesRegister = () => {
   }, [userDropdown]);
 
   const columns: AppGridColDef<PosCashRegisterBase>[] = [
-    CommonObjectNameColumn<PosCashRegisterBase>("companyId", { headerName: "Company", width: 200 }),
     {
       field: "salesManId",
       headerName: "Salesman",
@@ -82,7 +81,7 @@ const SalesRegister = () => {
     },
   };
 
-  const filter = [ CreateFilter("Select Salesman", "salesmanFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(salesmanOptions), userDropdownLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [CreateFilter("Select Salesman", "salesManId", advancedFilter, updateAdvancedFilter, GenerateOptions(salesmanOptions), userDropdownLoading, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>
