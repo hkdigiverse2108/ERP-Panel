@@ -1,12 +1,12 @@
 import { Grid } from "@mui/material";
-import { BestSellingProduct, CategorySales, CustomersReport, LeastSellingProduct, LoginLog, Notifications, SalesAndPurchase, TodayPayable, TodayReceivable, ToPay, TopCoupons, TopCustomers, TopExpenses, ToReceive, TotalSummary, Transaction } from "../../Components/Dashboard";
+import { BestSellingProduct, CategorySales, CustomersReport, LeastSellingProduct, LoginLog, SalesAndPurchase, TodayPayable, TodayReceivable, ToPay, TopCoupons, TopCustomers, TopExpenses, ToReceive, TotalSummary, Transaction } from "../../Components/Dashboard";
 
 const Dashboard = () => {
   return (
     <div className="m-4 md:m-6">
       <Grid container spacing={2}>
         <TotalSummary />
-        <Notifications />
+        {/* <Notifications /> */}
         <SalesAndPurchase />
         <Transaction />
         <TopCustomers />

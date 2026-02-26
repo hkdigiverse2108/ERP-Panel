@@ -168,8 +168,8 @@ export const CASH_CONTROL = [
 ];
 
 export const REDEEM_CREDIT_TYPE = [
-  { label: "Credit Note", value: "creditNote" },
-  { label: "Advance Payment", value: "advancePayment" },
+  { label: "Credit Note", value: "credit_note" },
+  { label: "Advance Payment", value: "advance_payment" },
 ];
 
 export const PAYMENT_TERMS = [

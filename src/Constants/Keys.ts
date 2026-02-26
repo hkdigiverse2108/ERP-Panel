@@ -249,12 +249,25 @@ export const KEYS = {
     EDIT: "pos-credit-note-edit",
     DELETE: "pos-credit-note-delete",
     REFUND: "pos-credit-note-refund",
+    REDEEM: "pos-credit-note-redeem",
   },
   CREDIT_NOTE: {
     BASE: "credit-note",
     ADD: "credit-note-add",
     EDIT: "credit-note-edit",
     DELETE: "credit-note-delete",
+  },
+  DEBIT_NOTE: {
+    BASE: "debit-note",
+    ADD: "debit-note-add",
+    EDIT: "debit-note-edit",
+    DELETE: "debit-note-delete",
+  },
+  JOURNAL_VOUCHER: {
+    BASE: "journal-voucher",
+    ADD: "journal-voucher-add",
+    EDIT: "journal-voucher-edit",
+    DELETE: "journal-voucher-delete",
   },
   RETURN_POS_ORDER: {
     BASE: "return-pos-order",

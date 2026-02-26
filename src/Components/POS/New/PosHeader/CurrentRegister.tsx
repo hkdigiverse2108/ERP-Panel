@@ -12,9 +12,11 @@ import { FormatDateTime, GenerateOptions, RemoveEmptyFields } from "../../../../
 import { CurrentRegisterSchema } from "../../../../Utils/ValidationSchemas";
 import { CommonModal } from "../../../Common";
 import CloseBillRegister from "./CloseRegister";
+import { useAppSelector } from "../../../../Store/hooks";
 
 const CurrentRegister = () => {
   const [open, setOpen] = useState(false);
+  const { PosProduct } = useAppSelector((state) => state.pos);
   const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({}, open);
   const { data: cashRegisterDetails, isLoading: cashRegisterDetailsLoading } = Queries.useGetPosCashRegisterDetails();
 
@@ -129,6 +131,7 @@ const CurrentRegister = () => {
       user: JSON.parse(localStorage.getItem(STORAGE_KEYS.USER) || "{}")?.name || "Admin",
       bankAccountId,
       bankTransferAmount: Number(bankTransferAmount) || 0,
+      salesManId:PosProduct.salesManId,
     };
 
     const cleanedApiPayload = RemoveEmptyFields(apiPayload) as EditPosCashRegisterPayload;

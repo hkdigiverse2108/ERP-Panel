@@ -41,3 +41,5 @@ export * from "./PosCreditNote";
 export * from "./Dashboard";
 export * from "./ReturnPosOrder";
 export * from "./CreditNote";
+export * from "./DebitNote";
+export * from "./JournalVoucher";

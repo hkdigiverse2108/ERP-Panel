@@ -68,7 +68,7 @@ const TotalSummary = () => {
   );
 
   return (
-    <CommonCard grid={{ xs: 12, md: 8 }} topContent={topContent}>
+    <CommonCard grid={{ xs: 12}} topContent={topContent}>
       <Grid container spacing={1.5} p={1.5}>
         {stats.map((item, index) => (
           <Grid size={{ xs: 6, sm: 4, lg: 3, xl: 2 }} key={index}>
