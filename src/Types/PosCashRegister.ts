@@ -66,7 +66,7 @@ export interface EditPosCashRegisterPayload {
   status?: string;
 }
 
-export interface PosCashRegisterBase extends PosCashRegisterValues, CommonDataType {
+export interface PosCashRegisterBase extends Omit<PosCashRegisterValues,"salesManId">, CommonDataType {
   companyId: CompanyBase;
   salesManId?: string | { _id: string; name?: string } | null;
 }
