@@ -11,6 +11,28 @@ export interface PosCreditNoteFormValues {
   totalAmount: number;
 }
 
+export interface PosCreditNoteRefundFormValues {
+  posCreditNoteId?: string;
+  refundViaCash?: number;
+  refundViaBank?: number;
+  bankAccountId?: string;
+  refundDescription?: string;
+}
+export interface PosCreditNoteRedeemFormValues {
+  code?: string;
+  type?: string;
+  customerId?: string;
+}
+export interface PosCreditNoteRedeemResponse extends MessageStatus {
+  data: {
+    code: string;
+    date: string;
+    id: string;
+    redeemableAmount: number;
+    type: string;
+  };
+}
+
 export type AddPosCreditNotePayload = PosCreditNoteFormValues;
 
 export type EditPosCreditNotePayload = PosCreditNoteFormValues & { creditNoteId?: string };
@@ -29,6 +51,6 @@ export interface PosCreditNoteApiResponse extends MessageStatus {
   data: PosCreditNoteDataResponse;
 }
 
-export interface PosCreditNoteDropdownApiResponse extends MessageStatus {
-  data: PosCreditNoteBase[];
+export interface PosCreditNoteRedeemDropdownApiResponse extends MessageStatus {
+  data: { customerId: string; id: string; no: string }[];
 }

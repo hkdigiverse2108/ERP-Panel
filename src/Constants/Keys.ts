@@ -16,6 +16,9 @@ export const KEYS = {
     PAYABLE: "dashboard-payable",
     TOP_CUSTOMERS: "dashboard-top-customers",
     CATEGORY_WISE_CUSTOMERS_COUNT: "dashboard-category-wise-customers-count",
+    CATEGORY_SALES: "dashboard-category-sales",
+    LOGIN_LOG: "dashboard-login-log",
+    TRANSACTION: "dashboard-transactions",
   },
 
   UPLOAD: {
@@ -245,6 +248,8 @@ export const KEYS = {
     ADD: "pos-credit-note-add",
     EDIT: "pos-credit-note-edit",
     DELETE: "pos-credit-note-delete",
+    REFUND: "pos-credit-note-refund",
+    REDEEM: "pos-credit-note-redeem",
   },
   CREDIT_NOTE: {
     BASE: "credit-note",

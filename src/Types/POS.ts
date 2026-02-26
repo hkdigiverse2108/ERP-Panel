@@ -59,6 +59,9 @@ export interface PosProductType {
   couponDiscount: number;
   loyaltyId: string;
   loyaltyDiscount: number;
+  redeemCreditId: string;
+  redeemCreditAmount: number;
+  redeemCreditType: string;
 }
 
 export interface PosSliceState {

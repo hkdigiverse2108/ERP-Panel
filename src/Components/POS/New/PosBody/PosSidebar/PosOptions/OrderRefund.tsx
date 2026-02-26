@@ -1,38 +1,41 @@
 import { Grid } from "@mui/material";
-import { Form, Formik, useFormikContext } from "formik";
+import { Form, Formik, useFormikContext, type FormikHelpers } from "formik";
 import { useEffect, useRef } from "react";
 import { Mutations, Queries } from "../../../../../../Api";
 import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setOrderRefundModal } from "../../../../../../Store/Slices/ModalSlice";
-import type { ReturnPosOrderFormValues } from "../../../../../../Types";
+import type { PosCreditNoteRefundFormValues, ReturnPosOrderFormValues } from "../../../../../../Types";
 import { GenerateOptions, RemoveEmptyFields } from "../../../../../../Utils";
 import { ReturnPosOrderFormSchema } from "../../../../../../Utils/ValidationSchemas";
 import { CommonModal } from "../../../../../Common";
 
 const OrderRefund = () => {
   const { isOrderRefundModal } = useAppSelector((state) => state.modal);
-  const { PosProduct } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
 
   const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown();
-  const { mutate: addReturnPosOrder, isPending: isAddReturnPosOrderLoading } = Mutations.useAddReturnPosOrder();
+  const { mutate: refundCreditNote, isPending: isRefundCreditNoteLoading } = Mutations.useRefundCreditNote();
 
   const posOrderData = isOrderRefundModal.data;
 
-  const initialValues: ReturnPosOrderFormValues = {
-    posOrderId: posOrderData?._id || "",
-    salesManId: PosProduct?.salesManId || "",
+  const initialValues: PosCreditNoteRefundFormValues = {
+    posCreditNoteId: posOrderData?._id || "",
     refundViaCash: posOrderData?.creditsRemaining || 0,
-    bankAccountId: "",
     refundViaBank: 0,
+    bankAccountId: "",
     refundDescription: "",
   };
 
   const handleClose = () => dispatch(setOrderRefundModal({ open: false, data: null }));
 
-  const handleSubmit = async (values: ReturnPosOrderFormValues) => {
-    await addReturnPosOrder(RemoveEmptyFields(values));
+  const handleSubmit = async (values: PosCreditNoteRefundFormValues, { setSubmitting }: FormikHelpers<PosCreditNoteRefundFormValues>) => {
+    await refundCreditNote(RemoveEmptyFields(values), {
+      onSettled: () => {
+        handleClose();
+        setSubmitting(false);
+      },
+    });
   };
 
   const AutoAdjustLogic = ({ creditsRemaining }: { creditsRemaining: number }) => {
@@ -68,7 +71,7 @@ const OrderRefund = () => {
 
   return (
     <CommonModal title="Order Refund" isOpen={isOrderRefundModal.open} onClose={handleClose} className="max-w-[400px]">
-      <Formik<ReturnPosOrderFormValues> enableReinitialize initialValues={initialValues} validateOnChange validateOnBlur validationSchema={ReturnPosOrderFormSchema} onSubmit={handleSubmit}>
+      <Formik<PosCreditNoteRefundFormValues> enableReinitialize initialValues={initialValues} validateOnChange validateOnBlur validationSchema={ReturnPosOrderFormSchema} onSubmit={handleSubmit}>
         {({ values }) => {
           return (
             <Form noValidate>
@@ -79,7 +82,7 @@ const OrderRefund = () => {
                 <CommonValidationTextField name="refundViaBank" label="Bank Amount" grid={12} disabled={!values.bankAccountId} />
                 <CommonValidationTextField name="refundDescription" label="Description" grid={12} />
                 <Grid size={12} sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
-                  <CommonButton type="submit" variant="contained" title="Finalize Payment" loading={isAddReturnPosOrderLoading} />
+                  <CommonButton type="submit" variant="contained" title="Finalize Payment" loading={isRefundCreditNoteLoading} />
                 </Grid>
               </Grid>
             </Form>
