@@ -275,12 +275,14 @@ export const URL_KEYS = {
     UPDATE: "/settings/update",
   },
   POS_CREDIT_NOTE: {
-    BASE: " ",
+    BASE: "/pos-credit-note",
     ALL: "/pos-credit-note/all",
     ADD: "/pos-credit-note/add",
     EDIT: "/pos-credit-note/edit",
     DELETE: "/pos-credit-note/delete",
     REFUND: "/pos-credit-note/refund",
+    REDEEM: "/pos-credit-note/redeem",
+    REDEEM_DROPDOWN: "/pos-credit-note/redeem-dropdown",
   },
   CREDIT_NOTE: {
     BASE: "/credit-note",

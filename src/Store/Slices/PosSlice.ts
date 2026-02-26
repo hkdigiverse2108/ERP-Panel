@@ -26,6 +26,9 @@ const initialState: PosSliceState = {
     couponDiscount: 0,
     loyaltyId: "",
     loyaltyDiscount: 0,
+    redeemCreditId: "",
+    redeemCreditAmount: 0,
+    redeemCreditType: "",
   },
 };
 
@@ -117,6 +120,9 @@ const PosSlice = createSlice({
         couponDiscount: 0,
         loyaltyId: "",
         loyaltyDiscount: 0,
+        redeemCreditId: "",
+        redeemCreditAmount: 0,
+        redeemCreditType: "",
       };
       state.isSelectProduct = "";
     },
@@ -171,8 +177,13 @@ const PosSlice = createSlice({
       state.PosProduct.loyaltyId = action.payload.loyaltyId;
       state.PosProduct.loyaltyDiscount = action.payload.loyaltyDiscount;
     },
+    setRedeemCredit: (state, action) => {
+      state.PosProduct.redeemCreditId = action.payload.redeemCreditId;
+      state.PosProduct.redeemCreditAmount = action.payload.redeemCreditAmount;
+      state.PosProduct.redeemCreditType = action.payload.redeemCreditType;
+    },
   },
 });
 
-export const { setLoyalty, setCoupon, setBtnStatus, setPosLoading, setPosProduct, setIsSelectProduct, setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesManId, setTotalMrp, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType, clearPosProduct } = PosSlice.actions;
+export const { setRedeemCredit, setLoyalty, setCoupon, setBtnStatus, setPosLoading, setPosProduct, setIsSelectProduct, setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesManId, setTotalMrp, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType, clearPosProduct } = PosSlice.actions;
 export default PosSlice.reducer;

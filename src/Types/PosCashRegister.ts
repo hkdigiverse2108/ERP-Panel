@@ -49,6 +49,7 @@ export interface PosCashRegisterValues extends Omit<PosCashRegisterFormInitialVa
   refund?: number;
   paymentsReceived?: number;
   profit?: number;
+  salesManId?: string;
 }
 
 export type AddPosCashRegisterPayload = Pick<PosCashRegisterValues, "openingCash">;
