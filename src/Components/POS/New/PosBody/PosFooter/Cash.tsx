@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
+import { Mutations } from "../../../../../Api";
 import { CommonButton, CommonTextField } from "../../../../../Attribute";
+import { POS_PAYMENT_METHOD } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setCashModal } from "../../../../../Store/Slices/ModalSlice";
-import { CommonModal } from "../../../../Common";
-import { Mutations } from "../../../../../Api";
-import { RemoveEmptyFields } from "../../../../../Utils";
 import { clearPosProduct } from "../../../../../Store/Slices/PosSlice";
-import type { PosProductType } from "../../../../../Types";
-import { POS_PAYMENT_METHOD } from "../../../../../Data";
+import { RemoveEmptyFields } from "../../../../../Utils";
+import { CommonModal } from "../../../../Common";
 
 const keypad = ["1", "2", "3", "+5", "+100", "4", "5", "6", "+10", "+500", "7", "8", "9", "+20", "+2000", "C", "0", ".", "+50", "⌫"];
 
@@ -20,12 +19,13 @@ const Cash = () => {
 
   useEffect(() => {
     if (isCashModal) {
-      setTendered(PosProduct.totalAmount.toString());
+      setTendered(PosProduct.totalAmount?.toString());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCashModal]);
 
   const { mutate: addPosOrder, isPending: addPosOrderLoading } = Mutations.useAddPosOrder();
+  const { mutate: editPosOrder, isPending: editPosOrderLoading } = Mutations.useEditPosOrder();
 
   const change = useMemo(() => {
     const paid = parseFloat(tendered || "0");
@@ -71,8 +71,7 @@ const Cash = () => {
   };
 
   const handlePay = () => {
-    const { ...rest } = PosProduct;
-    (["posOrderId"] as const).forEach((field) => delete (rest as Partial<PosProductType>)[field]);
+    const { posOrderId, ...rest } = PosProduct;
 
     const payload = {
       ...rest,
@@ -93,12 +92,16 @@ const Cash = () => {
         },
       ],
     };
-    addPosOrder(RemoveEmptyFields(payload), {
-      onSuccess: () => {
-        dispatch(clearPosProduct());
-        dispatch(setCashModal());
-      },
-    });
+    const onSuccess = () => {
+      dispatch(clearPosProduct());
+      dispatch(setCashModal());
+    };
+    const onError = () => {
+      dispatch(setCashModal());
+    };
+    const changedFields = RemoveEmptyFields(payload);
+    if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess, onError });
+    else addPosOrder(RemoveEmptyFields(payload), { onSuccess, onError });
   };
 
   return (
@@ -119,7 +122,7 @@ const Cash = () => {
               <CommonTextField label="Change" value={change} color="success" focused readOnly />
             </div>
             <div className="flex flex-col justify-end gap-2">
-              <CommonButton title="Submit" variant="contained" fullWidth className="py-4" disabled={parseFloat(tendered || "0") < PosProduct.totalAmount} onClick={handlePay} loading={addPosOrderLoading} />
+              <CommonButton title="Submit" variant="contained" fullWidth className="py-4" disabled={parseFloat(tendered || "0") < PosProduct.totalAmount} onClick={handlePay} loading={addPosOrderLoading || editPosOrderLoading} />
               <CommonButton title="Cancel" variant="contained" color="error" fullWidth className="py-4" onClick={() => dispatch(setCashModal())} />
             </div>
           </div>

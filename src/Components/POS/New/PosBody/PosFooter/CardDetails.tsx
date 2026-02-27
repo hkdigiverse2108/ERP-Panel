@@ -2,14 +2,13 @@ import { Grid } from "@mui/material";
 import { Form, Formik } from "formik";
 import { Mutations, Queries } from "../../../../../Api";
 import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../../../Attribute";
+import { POS_PAYMENT_METHOD } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setCardModal } from "../../../../../Store/Slices/ModalSlice";
-import { GenerateOptions, RemoveEmptyFields } from "../../../../../Utils";
-import { CommonModal } from "../../../../Common";
 import { clearPosProduct } from "../../../../../Store/Slices/PosSlice";
-import type { PosProductType } from "../../../../../Types";
+import { GenerateOptions, RemoveEmptyFields } from "../../../../../Utils";
 import { CardDetailsSchema } from "../../../../../Utils/ValidationSchemas";
-import { POS_PAYMENT_METHOD } from "../../../../../Data";
+import { CommonModal } from "../../../../Common";
 
 const CardDetails = () => {
   const { isCardModal } = useAppSelector((state) => state.modal);
@@ -19,6 +18,7 @@ const CardDetails = () => {
   const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown();
 
   const { mutate: addPosOrder, isPending: addPosOrderLoading } = Mutations.useAddPosOrder();
+  const { mutate: editPosOrder, isPending: editPosOrderLoading } = Mutations.useEditPosOrder();
 
   const initialValues = {
     paymentAccountId: "",
@@ -30,8 +30,7 @@ const CardDetails = () => {
   const handleClose = () => dispatch(setCardModal());
 
   const handleSubmit = (values: typeof initialValues) => {
-    const { ...rest } = PosProduct;
-    (["posOrderId"] as const).forEach((field) => delete (rest as Partial<PosProductType>)[field]);
+    const { posOrderId, ...rest } = PosProduct;
 
     const payload = {
       ...rest,
@@ -55,13 +54,16 @@ const CardDetails = () => {
         },
       ],
     };
-
-    addPosOrder(RemoveEmptyFields(payload), {
-      onSuccess: () => {
-        dispatch(clearPosProduct());
-        handleClose();
-      },
-    });
+    const onSuccess = () => {
+      dispatch(clearPosProduct());
+      handleClose();
+    };
+    const onError = () => {
+      handleClose();
+    };
+    const changedFields = RemoveEmptyFields(payload);
+    if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess, onError });
+    else addPosOrder(RemoveEmptyFields(payload), { onSuccess, onError });
   };
 
   return (
@@ -74,7 +76,7 @@ const CardDetails = () => {
             <CommonValidationTextField name="cardHolderName" label="Card Holder Name" grid={12} required />
             <CommonValidationTextField name="cardTransactionNo" label="Card Transaction No." grid={12} required />
             <Grid size={12} sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
-              <CommonButton type="submit" variant="contained" title="Finalize Payment" loading={addPosOrderLoading} />
+              <CommonButton type="submit" variant="contained" title="Finalize Payment" loading={addPosOrderLoading || editPosOrderLoading} />
             </Grid>
           </Grid>
         </Form>

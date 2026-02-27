@@ -16,7 +16,7 @@ const QtyCount = () => {
 
   const [tendered, setTendered] = useState<string>(qtyCount);
 
-  const MIN_QTY = prevData?.uomId?.name === "PIECES" ? 1 : 0.1;
+  const MIN_QTY = prevData?.uomId?.name === "PIECES" ? 0 : 0.1;
 
   const maxQty = isQtyCountModal.data?.qty ?? Infinity;
   if (isQtyCountModal.data !== prevData) {
@@ -102,7 +102,7 @@ const QtyCount = () => {
 
           <div className="flex justify-end gap-2">
             <CommonButton title="Cancel" variant="outlined" color="error" className="py-4" onClick={handleClose} />
-            <CommonButton title="Submit" variant="contained" className="py-4" onClick={handleConfirm} />
+            <CommonButton title="Submit" variant="contained" className="py-4" disabled={Number(tendered) <= MIN_QTY} onClick={handleConfirm} />
           </div>
         </div>
       </div>

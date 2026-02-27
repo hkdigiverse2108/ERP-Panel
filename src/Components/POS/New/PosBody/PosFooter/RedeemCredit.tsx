@@ -17,9 +17,9 @@ const RedeemCredit = () => {
   const [isTotalAmount, setIsTotalAmount] = useState(PosProduct.totalAmount);
   const [type, setType] = useState<string>("credit_note");
   const [creditNoteId, setCreditNoteId] = useState<string>("");
-  const [isDetails, setDetails] = useState({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: PosProduct.totalAmount.toString() });
+  const [isDetails, setDetails] = useState({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: PosProduct.totalAmount?.toString() });
 
-  const { data: posCreditNoteDropdown, isLoading: isPosCreditNoteDropdownLoading ,isFetching:isPosCreditNoteDropdownFetching} = Queries.useGetPosCreditNoteRedeemDropdown({ typeFilter: type, customerFilter: PosProduct?.customerId }, Boolean(PosProduct?.customerId));
+  const { data: posCreditNoteDropdown, isLoading: isPosCreditNoteDropdownLoading, isFetching: isPosCreditNoteDropdownFetching } = Queries.useGetPosCreditNoteRedeemDropdown({ typeFilter: type, customerFilter: PosProduct?.customerId }, Boolean(PosProduct?.customerId));
 
   const { mutate: redeemCreditNote, isPending: isPosCustomerDetailPending } = Mutations.useRedeemCreditNote();
 
@@ -38,7 +38,7 @@ const RedeemCredit = () => {
   const handleTypeChange = (value: string) => {
     setType(value);
     setCreditNoteId("");
-    setDetails({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: PosProduct?.totalAmount.toString() });
+    setDetails({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: PosProduct?.totalAmount?.toString() });
   };
 
   const handleRedeemCredit = async (e: string[]) => {
@@ -52,14 +52,14 @@ const RedeemCredit = () => {
       };
       await redeemCreditNote(payload, {
         onSuccess: (data) => {
-          const redeemableAmount = data?.data?.redeemableAmount.toFixed(2);
+          const redeemableAmount = data?.data?.redeemableAmount?.toFixed(2);
           const payableAmount = Number(PosProduct?.totalAmount) - Number(redeemableAmount);
-          const payable = payableAmount >= 0 ? payableAmount.toFixed(2) : "0.00";
+          const payable = payableAmount >= 0 ? payableAmount?.toFixed(2) : "0.00";
           setDetails((prev) => ({ ...prev, id: data?.data?.id, date: data?.data?.date, amount: redeemableAmount, available: redeemableAmount, apply: redeemableAmount, payable: payable }));
         },
       });
     } else {
-      setDetails({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: PosProduct?.totalAmount.toString() });
+      setDetails({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: PosProduct?.totalAmount?.toString() });
     }
   };
 
@@ -70,7 +70,7 @@ const RedeemCredit = () => {
   const handleApplyCredit = () => {
     dispatch(setRedeemCredit({ redeemCreditId: isDetails.id, redeemCreditAmount: Number(isDetails.apply), redeemCreditType: type }));
     const payableAmount = Number(PosProduct?.totalAmount) - Number(isDetails.apply);
-    const payable = payableAmount >= 0 ? payableAmount.toFixed(2) : "0.00";
+    const payable = payableAmount >= 0 ? payableAmount?.toFixed(2) : "0.00";
     dispatch(setTotalAmount(Number(payable)));
     setIsTotalAmount(Number(payable));
   };
@@ -79,7 +79,7 @@ const RedeemCredit = () => {
     dispatch(setRedeemCredit({ redeemCreditId: "", redeemCreditAmount: 0, redeemCreditType: "" }));
     dispatch(setTotalAmount(Number(PosProduct?.totalAmount) + Number(isDetails.apply)));
     setCreditNoteId("");
-    setDetails({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: (Number(PosProduct?.totalAmount) + Number(isDetails.apply)).toFixed(2) });
+    setDetails({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: (Number(PosProduct?.totalAmount) + Number(isDetails.apply))?.toFixed(2) });
   };
 
   useEffect(() => {
@@ -130,8 +130,8 @@ const RedeemCredit = () => {
 
                       setDetails((prev) => ({
                         ...prev,
-                        apply: finalApply.toString(),
-                        payable: payableAmount >= 0 ? payableAmount.toFixed(2) : "0.00",
+                        apply: finalApply?.toString(),
+                        payable: payableAmount >= 0 ? payableAmount?.toFixed(2) : "0.00",
                       }));
                     }}
                   />

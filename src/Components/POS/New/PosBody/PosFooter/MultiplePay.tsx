@@ -3,17 +3,17 @@ import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrow
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import { Box, Grid } from "@mui/material";
 import { FieldArray, Form, Formik } from "formik";
+import { Mutations, Queries } from "../../../../../Api";
 import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../../../Attribute";
 import { PAYMENT_MODE, POS_PAYMENT_METHOD } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
+import { setPayLaterModal } from "../../../../../Store/Slices/ModalSlice";
 import { clearPosProduct, setMultiplePay } from "../../../../../Store/Slices/PosSlice";
-import type { CommonTableColumn, MultiplePaymentType, PosProductDataModal, PosProductType } from "../../../../../Types";
+import type { CommonTableColumn, MultiplePaymentType, PosProductDataModal } from "../../../../../Types";
+import { GenerateOptions, RemoveEmptyFields } from "../../../../../Utils";
 import { MultiplePaySchema } from "../../../../../Utils/ValidationSchemas";
 import { CommonTable } from "../../../../Common";
-import { Mutations, Queries } from "../../../../../Api";
-import { GenerateOptions, RemoveEmptyFields } from "../../../../../Utils";
 import PayLater from "./PayLater";
-import { setPayLaterModal } from "../../../../../Store/Slices/ModalSlice";
 
 const MultiplePay = () => {
   const dispatch = useAppDispatch();
@@ -22,6 +22,7 @@ const MultiplePay = () => {
   const productData = PosProduct.items;
 
   const { mutate: addPosOrder, isPending: addPosOrderLoading } = Mutations.useAddPosOrder();
+  const { mutate: editPosOrder, isPending: editPosOrderLoading } = Mutations.useEditPosOrder();
 
   const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown();
 
@@ -41,8 +42,7 @@ const MultiplePay = () => {
   };
 
   const handleSubmit = (values: { multiplePayments: MultiplePaymentType[] }) => {
-    const { ...rest } = PosProduct;
-    (["posOrderId"] as const).forEach((field) => delete (rest as Partial<PosProductType>)[field]);
+    const { posOrderId, ...rest } = PosProduct;
 
     const multiplePayments = values.multiplePayments.map((pay) => RemoveEmptyFields(pay));
     const totalAmount = values.multiplePayments.reduce((total, pay) => total + (pay.amount ? Number(pay.amount) : 0), 0);
@@ -62,12 +62,13 @@ const MultiplePay = () => {
       multiplePayments: multiplePayments,
     };
     if (Number(rest?.totalAmount) === Number(totalAmount)) {
-      addPosOrder(RemoveEmptyFields(payload), {
-        onSuccess: () => {
-          dispatch(clearPosProduct());
-          dispatch(setMultiplePay());
-        },
-      });
+      const onSuccess = () => {
+        dispatch(clearPosProduct());
+        dispatch(setMultiplePay());
+      };
+      const changedFields = RemoveEmptyFields(payload);
+      if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess });
+      else addPosOrder(RemoveEmptyFields(payload), { onSuccess });
     } else {
       dispatch(setPayLaterModal({ open: true, data: multiplePayments }));
     }
@@ -183,7 +184,7 @@ const MultiplePay = () => {
                                 {/* SUBMIT */}
                                 <div className="flex gap-3">
                                   <CommonButton variant="outlined" type="submit" title="Back To Sale" startIcon={<KeyboardDoubleArrowLeftIcon />} className="mt-4" onClick={() => dispatch(setMultiplePay())} />
-                                  <CommonButton variant="contained" type="submit" title="Proceed To Pay" endIcon={<KeyboardDoubleArrowRightIcon />} loading={addPosOrderLoading} className="mt-4" />
+                                  <CommonButton variant="contained" type="submit" title="Proceed To Pay" endIcon={<KeyboardDoubleArrowRightIcon />} loading={addPosOrderLoading || editPosOrderLoading} className="mt-4" />
                                 </div>
                               </div>
                             </div>

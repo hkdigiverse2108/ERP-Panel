@@ -13,8 +13,7 @@ import { POS_PAYMENT_METHOD } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setAdditionalChargeModal, setApplyCouponModal, setCardModal, setCashModal, setPayLaterModal, setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
 import { clearPosProduct, setBtnStatus, setFlatDiscountAmount, setMultiplePay, setRemarks, setRoundOff } from "../../../../../Store/Slices/PosSlice";
-import type { PosProductType } from "../../../../../Types";
-import { GetChangedFields, RemoveEmptyFields } from "../../../../../Utils";
+import { RemoveEmptyFields } from "../../../../../Utils";
 import AdditionalCharge from "./AdditionalCharge";
 import ApplyCoupon from "./ApplyCoupon";
 import CardDetails from "./CardDetails";
@@ -82,15 +81,14 @@ const PosFooter = () => {
     const onError = () => {
       dispatch(setBtnStatus(""));
     };
-    const changedFields = GetChangedFields(payload, PosProduct);
+    const changedFields = RemoveEmptyFields(payload);
     if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess, onError });
     else addPosOrder(RemoveEmptyFields(payload), { onSuccess, onError });
   };
 
   const handleUpi = () => {
     if (!validate(true)) return;
-    const { ...rest } = PosProduct;
-    (["posOrderId"] as const).forEach((field) => delete (rest as Partial<PosProductType>)[field]);
+    const { posOrderId, ...rest } = PosProduct;
 
     const payload = {
       ...rest,
@@ -111,7 +109,9 @@ const PosFooter = () => {
     const onError = () => {
       dispatch(setBtnStatus(""));
     };
-    addPosOrder(RemoveEmptyFields(payload), { onSuccess, onError });
+    const changedFields = RemoveEmptyFields(payload);
+    if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess, onError });
+    else addPosOrder(RemoveEmptyFields(payload), { onSuccess, onError });
   };
 
   const handlePayLater = () => {
@@ -179,7 +179,7 @@ const PosFooter = () => {
           <CommonButton title="Multiple Pay" variant="contained" startIcon={<VerticalSplitIcon />} onClick={handleMultiplePay} />
           <CommonButton title="Redeem Credit" variant="contained" startIcon={<RedeemIcon />} onClick={handleRedeemCredit} />
           <CommonButton title="Hold" variant="contained" startIcon={<PauseIcon />} onClick={handleHoldBill} loading={isBtnStatus === "hold" || editPosOrderLoading} />
-          <CommonButton title="UPI" variant="contained" startIcon={<FastForwardIcon />} onClick={handleUpi} loading={isBtnStatus === "upi"} />
+          <CommonButton title="UPI" variant="contained" startIcon={<FastForwardIcon />} onClick={handleUpi} loading={isBtnStatus === "upi" || editPosOrderLoading} />
           <CommonButton title="Card" variant="contained" startIcon={<CreditCardIcon />} onClick={handleCard} />
           <CommonButton title="Cash" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={handleCash} />
           <CommonButton title="Apply Coupon" variant="contained" startIcon={<RedeemIcon />} onClick={handleApplyCoupon} />

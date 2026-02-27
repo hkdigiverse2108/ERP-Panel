@@ -96,7 +96,7 @@ export const Queries = {
 
   //*************** POS Order **************** */
   useGetPosOrder: (params?: Params, enabled?: boolean) => useBaseQuery<PosOrderApiResponse>([KEYS.POS_ORDER.BASE, params], URL_KEYS.POS_ORDER.ALL, params, enabled),
-  useGetPosOrderById: (id?: Params, enabled?: boolean) => useQueries<PosOrderByIdResponse>([KEYS.POS_ORDER.BASE, id], () => Get(`${URL_KEYS.POS_ORDER.BASE}/${id}`), { enabled: enabled }),
+  useGetPosOrderById: (id?: string, enabled?: boolean) => useQueries<PosOrderByIdResponse>([KEYS.POS_ORDER.BASE, id], () => Get(`${URL_KEYS.POS_ORDER.BASE}/${id}`), { enabled: enabled }),
   useGetLastPosOrder: (params?: Params, enabled?: boolean) => useQueries<PosOrderApiResponse>([KEYS.POS_ORDER.BASE, params], () => Get(URL_KEYS.POS_ORDER.ALL, params), { enabled: enabled }),
   useGetPosOrderDropdown: (params?: Params, enabled?: boolean) => useQueries<PosOrderDropdownApiResponse>([KEYS.POS_ORDER.DROPDOWN, params], () => Get(URL_KEYS.POS_ORDER.DROPDOWN, params), { enabled: enabled }),
 
