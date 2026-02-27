@@ -18,7 +18,7 @@ const JournalVoucher = () => {
     const { data: journalVoucherData, isLoading: journalVoucherDataLoading, isFetching: journalVoucherDataFetching } = Queries.useGetJournalVoucher(params);
 
     const { mutate: deleteJournalVoucherMutate } = Mutations.useDeleteJournalVoucher();
-    const { mutate: editJournalVoucher, isPending: isEditLoading } = Mutations.useEditJournalVoucher();
+
 
     const allJournalVouchers = useMemo(() => journalVoucherData?.data?.journalVoucher_data?.map((journalVoucher) => ({ ...journalVoucher, id: journalVoucher?._id })) || [], [journalVoucherData]);
     const totalRows = journalVoucherData?.data?.totalData || 0;
@@ -41,7 +41,6 @@ const JournalVoucher = () => {
             ? [
                 CommonActionColumn<JournalVoucherBase>({
                     ...(permission?.edit && {
-                        active: (row) => editJournalVoucher({ journalVoucherId: row?._id as string, isActive: !row.isActive }),
                         editRoute: ROUTES.ACCOUNTING.JOURNAL_VOUCHER.ADD_EDIT,
                     }),
                     ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.paymentNo }) }),
@@ -54,7 +53,7 @@ const JournalVoucher = () => {
         columns,
         rows: allJournalVouchers,
         rowCount: totalRows,
-        loading: journalVoucherDataLoading || journalVoucherDataFetching || isEditLoading,
+        loading: journalVoucherDataLoading || journalVoucherDataFetching,
         isActive,
         setActive,
         ...(permission?.add && { handleAdd }),

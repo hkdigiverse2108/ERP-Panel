@@ -4,7 +4,7 @@ import { FieldArray, Form, Formik, type FormikHelpers } from "formik";
 import { useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
+import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonTable } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
@@ -31,7 +31,6 @@ const JournalVoucherFormContent = ({ values, errors, isEditing, accountData, acc
                         <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 4 }} required />
                         <CommonValidationSelect name="status" label="Status" options={STATUS_OPTIONS} grid={{ xs: 12, md: 4 }} required />
                         <CommonValidationTextField name="description" label="Description" grid={{ xs: 12 }} multiline rows={2} />
-                        {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                     </Grid>
                 </CommonCard>
 
@@ -114,6 +113,7 @@ const JournalVoucherFormContent = ({ values, errors, isEditing, accountData, acc
 
                 <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty || !values.entries.length} isLoading={isAddLoading || isEditLoading} onClear={() => resetForm()} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
             </Grid>
+
         </Form>
     );
 };
@@ -143,8 +143,7 @@ const JournalVoucherForm = () => {
             date: data?.date || DateConfig.utc().toISOString(),
             description: data?.description || "",
             status: data?.status || "draft",
-            isActive: data?.isActive ?? true,
-            entries: data?.entries?.length
+                    entries: data?.entries?.length
                 ? data.entries.map((e: any) => ({
                     accountId: e.accountId?._id || e.accountId || "",
                     debit: e.debit || "",

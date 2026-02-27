@@ -497,7 +497,6 @@ export const JournalVoucherFormSchema = Yup.object().shape({
   date: Validation("string", "Date"),
   description: Validation("string", "Description", { required: false }),
   status: Validation("string", "Status"),
-  isActive: Yup.boolean(),
   entries: Yup.array()
     .of(
       Yup.object().shape({

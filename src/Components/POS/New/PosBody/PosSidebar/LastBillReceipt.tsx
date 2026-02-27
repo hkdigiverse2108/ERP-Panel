@@ -128,13 +128,29 @@ const LastBillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bi
 
       {/* Totals Section */}
       <div style={{ borderTop: "1px dashed black", paddingTop: "5px", marginBottom: "10px" }}>
-        <div style={{ display: "flex", justifyContent: "flex-end", fontWeight: "bold", marginBottom: "2px" }}>
-          <span style={{ width: "100px", textAlign: "right", marginRight: "10px" }}>TOTAL</span>
+        {bill.additionalCharges && bill.additionalCharges.length > 0 &&
+          bill.additionalCharges.map((charge, idx) => (
+            <div key={idx} style={{ display: "flex", justifyContent: "flex-end" }}>
+              <span style={{ width: "150px", textAlign: "right", marginRight: "10px", textTransform: "uppercase" }}>{charge.chargeId?.name || "Additional Charge"}</span>
+              <span>:</span>
+              <span style={{ width: "80px", textAlign: "right" }}>{Number(charge.totalAmount?.toFixed(2) || 0)}</span>
+            </div>
+          ))
+        }
+        {(bill.flatDiscountAmount || 0) > 0 && (
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <span style={{ width: "150px", textAlign: "right", marginRight: "10px" }}>FLAT DISCOUNT</span>
+            <span>:</span>
+            <span style={{ width: "80px", textAlign: "right" }}>{Number(bill.flatDiscountAmount?.toFixed(2) || 0)}</span>
+          </div>
+        )}
+        <div style={{ display: "flex", justifyContent: "flex-end", fontWeight: "bold", marginBottom: "2px", marginTop: "5px" }}>
+          <span style={{ width: "150px", textAlign: "right", marginRight: "10px" }}>TOTAL</span>
           <span>:</span>
           <span style={{ width: "80px", textAlign: "right" }}>{Number(bill.totalAmount?.toFixed(2) || 0)}</span>
         </div>
-        <div style={{ display: "", justifyContent: "flex-end" }}>
-          <span style={{ width: "100px", textAlign: "right", marginRight: "10px" }}>ROUND OFF</span>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <span style={{ width: "150px", textAlign: "right", marginRight: "10px" }}>ROUND OFF</span>
           <span>:</span>
           <span style={{ width: "80px", textAlign: "right" }}>{Number(bill.roundOff?.toFixed(2) || 0)}</span>
         </div>
@@ -162,7 +178,7 @@ const LastBillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bi
 
       <div style={{ display: "flex", justifyContent: "space-between", fontSize: "15px", fontWeight: "bold" }}>
         <span>Printed On: {dayjs().format("DD/MM/YYYY HH:mm:ss A")}</span>
-        <span>E & O E</span>
+
       </div>
     </div>
   );

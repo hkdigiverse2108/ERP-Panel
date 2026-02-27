@@ -16,7 +16,6 @@ export interface JournalVoucherBase extends CommonDataType {
   totalDebit: number;
   totalCredit: number;
   status: "draft" | "posted";
-  isActive: boolean;
 }
 
 export interface JournalVoucherDataResponse extends PageStatus {
@@ -43,7 +42,6 @@ export interface AddJournalVoucherPayload {
   totalDebit: number;
   totalCredit: number;
   status: "draft" | "posted";
-  isActive: boolean;
 }
 
 export interface EditJournalVoucherPayload extends Partial<AddJournalVoucherPayload> {
@@ -62,6 +60,5 @@ export interface JournalVoucherFormValues {
   totalDebit?: number;
   totalCredit?: number;
   status: "draft" | "posted";
-  isActive: boolean;
   _submitAction?: "save" | "saveAndNew";
 }
