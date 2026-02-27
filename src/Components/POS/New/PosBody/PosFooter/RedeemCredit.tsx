@@ -19,7 +19,7 @@ const RedeemCredit = () => {
   const [creditNoteId, setCreditNoteId] = useState<string>("");
   const [isDetails, setDetails] = useState({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: PosProduct.totalAmount.toString() });
 
-  const { data: posCreditNoteDropdown, isLoading: isPosCreditNoteDropdownLoading } = Queries.useGetPosCreditNoteRedeemDropdown({ typeFilter: type, customerFilter: PosProduct?.customerId }, Boolean(PosProduct?.customerId));
+  const { data: posCreditNoteDropdown, isLoading: isPosCreditNoteDropdownLoading ,isFetching:isPosCreditNoteDropdownFetching} = Queries.useGetPosCreditNoteRedeemDropdown({ typeFilter: type, customerFilter: PosProduct?.customerId }, Boolean(PosProduct?.customerId));
 
   const { mutate: redeemCreditNote, isPending: isPosCustomerDetailPending } = Mutations.useRedeemCreditNote();
 
@@ -105,7 +105,7 @@ const RedeemCredit = () => {
 
         {/* Scan / Input */}
         <div>
-          <CommonSelect label={isCredit ? "Sales Return" : "Advance Payment"} value={[creditNoteId]} options={posCreditNoteDropdownOptions || []} disabled={!!PosProduct?.redeemCreditId} isLoading={isPosCreditNoteDropdownLoading} onChange={handleRedeemCredit} />
+          <CommonSelect label={isCredit ? "Sales Return" : "Advance Payment"} value={[creditNoteId]} options={posCreditNoteDropdownOptions || []} disabled={!!PosProduct?.redeemCreditId} isLoading={isPosCreditNoteDropdownLoading || isPosCreditNoteDropdownFetching} onChange={handleRedeemCredit} />
         </div>
 
         {/* Credit Details */}

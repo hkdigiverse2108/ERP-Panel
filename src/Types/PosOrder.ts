@@ -59,3 +59,7 @@ export interface PosOrderApiResponse extends MessageStatus {
 export interface PosOrderDropdownApiResponse extends MessageStatus {
   data: PosOrderBase[];
 }
+
+export interface PosOrderByIdResponse extends MessageStatus {
+  data: PosOrderBase;
+}

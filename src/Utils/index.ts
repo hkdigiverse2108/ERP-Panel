@@ -26,7 +26,7 @@ export const CleanParams = (params?: Params): Params | undefined => {
   return Object.fromEntries(Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== ""));
 };
 
-export const GenerateOptions = (data?: { _id: string; name?: string; firstName?: string; lastName?: string; title?: string,fullName?:string,orderNo?:string }[]) => {
+export const GenerateOptions = (data?: { _id: string; name?: string; firstName?: string; lastName?: string; title?: string; fullName?: string; orderNo?: string }[]) => {
   if (!data || !Array.isArray(data)) return [];
 
   return data.map((item) => {
@@ -49,3 +49,12 @@ export const CreateFilter = (label: string, filterKey: string, advancedFilter: R
   grid,
   isLoading,
 });
+
+export const FormatPayment = (text?: string) =>
+  text
+    ? text
+        .toLowerCase()
+        .split("_")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")
+    : "-";
