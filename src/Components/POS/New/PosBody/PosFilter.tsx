@@ -35,10 +35,11 @@ const PosFilter = () => {
 
   useEffect(() => {
     if (!productById?.data) return;
+    if (productById.data._id !== isSelectProduct) return;
+
     dispatch(addOrUpdateProduct(productById.data));
     dispatch(setIsSelectProduct(""));
-  }, [productById?.data, isSelectProduct, dispatch]);
-
+  }, [productById?.data, dispatch, isSelectProduct]);
   return (
     <>
       <Grid container spacing={2} className="flex justify-between items-center w-full bg-white dark:bg-gray-dark p-2">
