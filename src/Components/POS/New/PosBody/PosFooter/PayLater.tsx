@@ -5,7 +5,6 @@ import { PAYMENT_TERMS, POS_PAYMENT_METHOD, SEND_REMINDER } from "../../../../..
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setPayLaterModal } from "../../../../../Store/Slices/ModalSlice";
 import { clearPosProduct, setMultiplePay } from "../../../../../Store/Slices/PosSlice";
-import type { PosProductType } from "../../../../../Types";
 import { RemoveEmptyFields } from "../../../../../Utils";
 import { CommonModal } from "../../../../Common";
 
@@ -21,6 +20,7 @@ const PayLater = () => {
   const dispatch = useAppDispatch();
 
   const { mutate: addPayLater, isPending: isAddPayLaterPending } = Mutations.useAddPosOrder();
+  const { mutate: editPosOrder, isPending: editPosOrderLoading } = Mutations.useEditPosOrder();
 
   const { isPayLaterModal } = useAppSelector((state) => state.modal);
   const { PosProduct } = useAppSelector((state) => state.pos);
@@ -47,8 +47,7 @@ const PayLater = () => {
 
   const handleProceedToPrint = () => {
     if (!PosProduct) return;
-    const { ...rest } = PosProduct;
-    (["posOrderId"] as const).forEach((field) => delete (rest as Partial<PosProductType>)[field]);
+    const { posOrderId, ...rest } = PosProduct;
     const payload = {
       ...rest,
       items: rest.items.map((item) => ({
@@ -68,13 +67,17 @@ const PayLater = () => {
         paymentTerm: paymentTerms[0],
       },
     };
-    addPayLater(RemoveEmptyFields(payload), {
-      onSuccess: () => {
-        handleClose();
-        dispatch(clearPosProduct());
-        if (multiplePayments?.length) dispatch(setMultiplePay());
-      },
-    });
+    const onSuccess = () => {
+      dispatch(clearPosProduct());
+      handleClose();
+      if (multiplePayments?.length) dispatch(setMultiplePay());
+    };
+    const onError = () => {
+      handleClose();
+    };
+    const changedFields = RemoveEmptyFields(payload);
+    if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess, onError });
+    else addPayLater(RemoveEmptyFields(payload), { onSuccess, onError });
   };
 
   return (
@@ -97,7 +100,7 @@ const PayLater = () => {
         <div>
           <CommonRadio label="Send Reminder" value={sendReminder} onChange={setSendReminder} options={SEND_REMINDER} />{" "}
         </div>
-        <CommonButton fullWidth title="Proceed to Print" variant="contained" size="small" loading={isAddPayLaterPending} onClick={handleProceedToPrint} />
+        <CommonButton fullWidth title="Proceed to Print" variant="contained" size="small" loading={isAddPayLaterPending || editPosOrderLoading} onClick={handleProceedToPrint} />
       </div>
     </CommonModal>
   );

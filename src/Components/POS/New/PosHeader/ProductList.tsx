@@ -7,6 +7,7 @@ import { useAppDispatch } from "../../../../Store/hooks";
 import { addOrUpdateProduct } from "../../../../Store/Slices/PosSlice";
 import { GenerateOptions } from "../../../../Utils";
 import { CommonDrawer } from "../../../Common";
+import type { ProductBase } from "../../../../Types";
 
 const ProductList = () => {
   const [open, setOpen] = useState(false);
@@ -18,6 +19,11 @@ const ProductList = () => {
   const id = value[0] || "";
   const { data: productDropdown, isLoading: productDropdownLoading } = Queries.useGetProductDropdown(id ? { categoryFilter: id } : {}, open);
   const { data: productById } = Queries.useGetProductById(productValue);
+
+  const handleAddProduct = (product: ProductBase) => {
+    if (Number(product.qty) <= 0) return;
+    setProductValue(product._id);
+  };
 
   useEffect(() => {
     if (!productById?.data) return;
@@ -47,11 +53,14 @@ const ProductList = () => {
           ) : (
             <Box sx={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: 1.5 }}>
               {productDropdown?.data?.map((item, index) => (
-                <Paper key={index} elevation={0} onClick={() => setProductValue(item._id)} className="p-4 rounded-lg! cursor-pointer border border-gray-200! dark:border-gray-600! bg-gray-50! dark:bg-gray-800! hover:bg-gray-100! dark:hover:bg-gray-dark! hover:border-gray-300! dark:hover:border-gray-600!">
+                <Paper key={index} elevation={0} onClick={() => handleAddProduct(item)} className="p-4 rounded-lg! cursor-pointer border border-gray-200! dark:border-gray-600! bg-gray-50! dark:bg-gray-800! hover:bg-gray-100! dark:hover:bg-gray-dark! hover:border-gray-300! dark:hover:border-gray-600!">
                   <Typography fontWeight={600} noWrap title={item.name}>
                     {item.name}
                   </Typography>
 
+                  <Typography variant="body2" color={Number(item.qty) <= 0 ? "red" : "text.secondary"} sx={{ mt: 0.5 }}>
+                    Qty : {Number(item.qty).toFixed(2)}
+                  </Typography>
                   <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
                     Price : {Number(item.sellingPrice).toFixed(2)} ₹
                   </Typography>

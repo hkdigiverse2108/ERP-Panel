@@ -11,9 +11,11 @@ import type { PosProductOrderBase } from "../../../../../../Types";
 import { FormatDateTime } from "../../../../../../Utils";
 import { CommonDeleteModal, CommonDrawer } from "../../../../../Common";
 import { useDebounce } from "../../../../../../Utils/Hooks";
+import { setDiscardModal } from "../../../../../../Store/Slices/ModalSlice";
 
 const HoldBill = () => {
   const { isHoldBillDrawer } = useAppSelector((stale) => stale.drawer);
+  const { PosProduct } = useAppSelector((stale) => stale.pos);
   const [value, setValue] = useState<string>("");
   const debouncedSearch = useDebounce(value, 500);
 
@@ -52,8 +54,13 @@ const HoldBill = () => {
       totalAmount: bill.totalAmount,
       posOrderId: bill._id,
     };
-    dispatch(setPosProduct(payload));
-    dispatch(setHoldBillDrawer());
+    if (PosProduct?.items.length > 0) {
+      dispatch(setDiscardModal());
+      dispatch(setHoldBillDrawer());
+    } else {
+      dispatch(setPosProduct(payload));
+      dispatch(setHoldBillDrawer());
+    }
   };
 
   // const handleDelete = (id: string) => deleteHoldBill(id, { onSuccess: () => dispatch(setHoldBillDrawer()) });

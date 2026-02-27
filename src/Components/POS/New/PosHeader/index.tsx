@@ -29,11 +29,11 @@ const PosHeader = () => {
   };
 
   useEffect(() => {
-    if (selectedUserId) {
+    if (selectedUserId && !PosProduct.salesManId) {
       setValue([selectedUserId]);
       dispatch(setSalesManId(selectedUserId));
     }
-  }, [dispatch, selectedUserId]);
+  }, [PosProduct.salesManId, dispatch, selectedUserId]);
   return (
     <div className={`z-50 flex bg-white dark:bg-gray-900 lg:border-b border-gray-200 dark:border-gray-800 transition-all duration-300 w-full!`}>
       <Grid spacing={{ xs: 1, lg: 0 }} container className="flex justify-between items-center p-2 w-full">

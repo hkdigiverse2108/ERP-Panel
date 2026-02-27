@@ -39,7 +39,7 @@ const PosTable = () => {
   const totalTaxAmount = useMemo(() => productData?.reduce((acc, row) => acc + Number(calcTotalTaxAmount(row)), 0) ?? 0, [productData]);
   const totalDiscount = useMemo(() => productData?.reduce((acc, row) => acc + row.discount * row.posQty, 0), [productData]);
   const totalAmount = useMemo(() => productData?.reduce((acc, row) => acc + row.netAmount, 0) ?? 0, [productData]);
-  const finalAmount = useMemo(() => (totalAmount - PosProduct.flatDiscountAmount + Number(PosProduct.totalAdditionalCharge)).toFixed(2), [totalAmount, PosProduct.flatDiscountAmount, PosProduct.totalAdditionalCharge]);
+  const finalAmount = useMemo(() => (totalAmount - PosProduct.flatDiscountAmount + Number(PosProduct.totalAdditionalCharge))?.toFixed(2), [totalAmount, PosProduct.flatDiscountAmount, PosProduct.totalAdditionalCharge]);
   const roundedAmount = useMemo(() => {
     const amt = Number(finalAmount);
     const decimal = amt % 1;
@@ -47,7 +47,7 @@ const PosTable = () => {
     return decimal >= 0.5 ? Math.ceil(amt) : Math.floor(amt);
   }, [finalAmount]);
 
-  const roundOffAmount = useMemo(() => (roundedAmount - Number(finalAmount)).toFixed(2), [roundedAmount, finalAmount]);
+  const roundOffAmount = useMemo(() => (roundedAmount - Number(finalAmount))?.toFixed(2), [roundedAmount, finalAmount]);
 
   useEffect(() => {
     dispatch(setTotalQty(totalQty?.toFixed(2)));
@@ -92,7 +92,7 @@ const PosTable = () => {
         </div>
       ),
     },
-    { key: "mrp", header: "MRP", render: (row) => row.mrp.toFixed(2) },
+    { key: "mrp", header: "MRP", render: (row) => row.mrp?.toFixed(2) },
     {
       key: "discount",
       header: "Discount",
