@@ -74,8 +74,8 @@ const LoyaltyForm = () => {
                     <CommonValidationTextField name="minimumPurchaseAmount" label="Minimum Purchase Amount" type="number" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="redemptionPoints" label="Redemption Points" type="number" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="usageLimit" label="Usage Limit" type="number" grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationDatePicker name="campaignExpiryDate" label="Campaign Expiry Date" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationDatePicker name="campaignLaunchDate" label="Campaign Launch Date" grid={{ xs: 12, md: 4 }} required />
+                    <CommonValidationDatePicker name="campaignExpiryDate" label="Campaign Expiry Date" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="description" label="Description" multiline grid={{ xs: 12 }} rows={3} />
                     <CommonValidationSwitch name="singleTimeUse" label="Single Time Use" grid={"auto"} />
                     {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={"auto"} />}

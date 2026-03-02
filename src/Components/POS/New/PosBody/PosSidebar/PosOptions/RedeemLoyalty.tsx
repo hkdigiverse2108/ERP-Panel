@@ -6,16 +6,16 @@ import { CommonModal } from "../../../../../Common";
 import { Mutations, Queries } from "../../../../../../Api";
 import { useState } from "react";
 import type { LoyaltyBase, RedeemLoyaltyDataResponse } from "../../../../../../Types";
-import { setLoyalty, setTotalDiscount } from "../../../../../../Store/Slices/PosSlice";
+import { setLoyalty, setTotalAmount, setTotalDiscount } from "../../../../../../Store/Slices/PosSlice";
 
 const RedeemLoyalty = () => {
   const { isRedeemLoyaltyModal } = useAppSelector((state) => state.modal);
   const { PosProduct } = useAppSelector((state) => state.pos);
-  const [prevTotalAmount, setPrevTotalAmount] = useState(PosProduct?.totalAmount);
+  const [isTotalAmount, setIsTotalAmount] = useState(PosProduct?.totalAmount);
   const [isRedeemLoyalty, setIsRedeemLoyalty] = useState<RedeemLoyaltyDataResponse | null>(null);
   const dispatch = useAppDispatch();
   const { data: loyaltyData, isLoading: loyaltyDataLoading } = Queries.useGetLoyaltyDropdown({}, isRedeemLoyaltyModal);
-  const [applyingId, setApplyingId] = useState<string | null>(null);
+  const [applyingId, setApplyingId] = useState<string>("");
 
   const { mutate: redeemLoyalty } = Mutations.useRedeemLoyalty();
 
@@ -27,8 +27,10 @@ const RedeemLoyalty = () => {
     if (PosProduct.loyaltyId === loyalty._id) {
       const discount = Number(PosProduct.totalDiscount || 0) - Number(isRedeemLoyalty?.discountValue || 0);
       dispatch(setTotalDiscount(Number(discount).toFixed(2)));
+      dispatch(setTotalAmount(Number(PosProduct?.totalAmount) + Number(PosProduct.loyaltyDiscount || 0)));
+      setIsTotalAmount(Number(PosProduct?.totalAmount) + Number(PosProduct.loyaltyDiscount || 0));
       dispatch(setLoyalty({ loyaltyId: "", loyaltyDiscount: 0 }));
-      setApplyingId(null);
+      setApplyingId("");
       return;
     }
     setApplyingId(loyalty._id);
@@ -39,22 +41,25 @@ const RedeemLoyalty = () => {
           const newDiscount = Number(response?.data?.discountValue || 0);
           const removedPrevious = Number(PosProduct.totalDiscount || 0) - Number(PosProduct.loyaltyDiscount || 0);
           const finalDiscount = removedPrevious + newDiscount;
+          const payableAmount = Number(PosProduct?.totalAmount) - newDiscount;
           dispatch(setTotalDiscount(Number(finalDiscount).toFixed(2)));
           dispatch(setLoyalty({ loyaltyId: loyalty._id, loyaltyDiscount: newDiscount }));
+          dispatch(setTotalAmount(Number(payableAmount)));
+          setIsTotalAmount(Number(payableAmount));
           setIsRedeemLoyalty(response?.data);
-          setApplyingId(null);
+          setApplyingId("");
         },
         onError: () => {
-          setApplyingId(null);
+          setApplyingId("");
         },
       },
     );
   };
 
-  if (PosProduct?.totalAmount !== undefined && PosProduct?.totalAmount !== prevTotalAmount) {
-    setPrevTotalAmount(PosProduct?.totalAmount);
+  if (PosProduct?.totalAmount !== undefined && PosProduct?.totalAmount !== isTotalAmount) {
+    setIsTotalAmount(PosProduct?.totalAmount);
     dispatch(setLoyalty({ loyaltyId: "", loyaltyDiscount: 0 }));
-    setApplyingId(null);
+    setApplyingId("");
   }
 
   return (

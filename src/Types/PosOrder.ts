@@ -40,6 +40,8 @@ export interface PosOrderFormValues {
   payLater: PayLaterType;
   couponId: string;
   couponDiscount: number;
+  loyaltyId: string;
+  loyaltyDiscount: number;
 }
 
 export type AddPosOrderPayload = PosOrderFormValues;
