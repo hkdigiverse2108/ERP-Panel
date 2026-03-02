@@ -42,9 +42,9 @@ const ImportantAnnouncement = () => {
                     <span className="text-gray-500 text-theme-xs dark:text-gray-400">{FormatDate(item.version)}</span>
                   </span>
                   <ul className="mb-1.5 ml-4 list-disc text-theme-sm text-gray-500 dark:text-gray-400 space-y-1">
-                    {item.desc.map((descItem, index) => (
+                    {/* {item.desc.map((descItem, index) => (
                       <li key={index}>{descItem}</li>
-                    ))}
+                    ))} */}
                   </ul>
                 </span>
               </div>
