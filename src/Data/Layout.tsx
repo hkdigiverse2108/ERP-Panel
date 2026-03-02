@@ -1,4 +1,4 @@
-import { AccountBalance, Calculate, GridViewRounded, People, PersonRounded, PointOfSale, Redeem, Settings } from "@mui/icons-material";
+import { AccountBalance, Calculate, GridViewRounded, People, PersonRounded, PointOfSale, ReceiptLong, Redeem, Settings } from "@mui/icons-material";
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
 
@@ -60,7 +60,7 @@ export const NavItems: NavItem[] = [
   },
   {
     name: PAGE_TITLE.ACCOUNTING.BASE,
-    icon: <Calculate />,
+    icon: <ReceiptLong />,
     children: [
       { name: PAGE_TITLE.ACCOUNTING.ACCOUNT_GROUP.BASE, path: ROUTES.ACCOUNTING.ACCOUNT_GROUP.BASE },
       { name: PAGE_TITLE.ACCOUNTING.ACCOUNT.BASE, path: ROUTES.ACCOUNTING.ACCOUNT.BASE },
