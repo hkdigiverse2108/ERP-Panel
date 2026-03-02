@@ -43,11 +43,15 @@ const SupplierBillForm = () => {
 
   // exclude companyId since page should not handle company selection
   const { _id, createdAt, updatedAt, isDeleted, createdBy, updatedBy, __v, companyId: _companyId, branchId: _branchId, ...cleanData } = data || {};
-  const defaultValues: SupplierBillFormValues = { supplierId: "", supplierBillNo: "", supplierBillDate: DateConfig.utc().toISOString(), taxType: "exclusive", paymentTerm: "", dueDate: "", reverseCharge: false, shippingDate: "", invoiceAmount: "", termsAndConditionIds: [], notes: "", paidAmount: 0, balanceAmount: 0, paymentStatus: "unpaid", status: "active", isActive: true };
+  const today = DateConfig.utc().toISOString();
+  const defaultValues: SupplierBillFormValues = { supplierId: "", supplierBillNo: "", supplierBillDate: today, taxType: "exclusive", paymentTerm: "", dueDate: today, reverseCharge: false, shippingDate: today, invoiceAmount: "", termsAndConditionIds: [], notes: "", paidAmount: 0, balanceAmount: 0, paymentStatus: "unpaid", status: "active", isActive: true };
   const initialValues: SupplierBillFormValues = {
     ...defaultValues,
     ...cleanData,
     supplierId: cleanData?.supplierId?._id || cleanData?.supplierId || defaultValues.supplierId,
+    // ensure dueDate/shippingDate fall back to today when not provided
+    dueDate: cleanData?.dueDate || defaultValues.dueDate,
+    shippingDate: cleanData?.shippingDate || defaultValues.shippingDate,
     // companyId removed intentionally
     // branchId is not part of the form values, ignore
     reverseCharge: Boolean(cleanData?.reverseCharge),
@@ -127,16 +131,28 @@ const SupplierBillForm = () => {
       }
     });
     const taxSummary = Object.entries(taxBreakdown).map(([name, data]) => ({ name, rate: data.rate, amount: Number(data.amount.toFixed(2)) }));
-    // const summaryDiscountAmount = discountAmount + flatDisc;
     const summaryGrossAmount = grossAmount - flatDisc;
-    return { flatDiscount: flatDisc, discountAmount: Number(discountAmount.toFixed(2)), grossAmount: summaryGrossAmount, taxableAmount: taxableAfterDiscount, taxAmount: Number(taxAmount.toFixed(2)), roundOff, netAmount: Number(netAmount.toFixed(2)), taxSummary };
+      const totalDiscount = (discountAmount || 0) + flatDisc;
+      // Return only backend-expected fields. Do NOT include legacy `itemDiscount`/`itemTax` keys.
+      return {
+        flatDiscount: flatDisc,
+        // total discount (items + flat)
+        discountAmount: Number(totalDiscount.toFixed(2)),
+        grossAmount: summaryGrossAmount,
+        taxableAmount: taxableAfterDiscount,
+        // total tax
+        taxAmount: Number(taxAmount.toFixed(2)),
+        roundOff,
+        netAmount: Number(netAmount.toFixed(2)),
+        taxSummary,
+      };
   };
   const summary = calculateSummary();
   useEffect(() => {
     if (!termsConditionData?.data) return;
     const response = termsConditionData.data;
     const all: TermsConditionBase[] = Array.isArray(response) ? response : (response.termsCondition_data ?? []);
-    if (isEditing && data?.termsAndConditionIds ) {
+    if (isEditing && data?.termsAndConditionIds) {
       setSelectedTermIds(data.termsAndConditionIds.map((t: TermsConditionBase) => t._id));
     } else {
       const defaultTerms = all.filter((t) => t.isDefault);
@@ -374,7 +390,7 @@ const SupplierBillForm = () => {
                 </CommonCard>
               </Form>
               <CommonCard hideDivider>
-                <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} productOptions={productOptions} isProductLoading={ProductsDataLoading} returnRoundOffAmount={returnRoundOffAmount} onReturnRoundOffAmountChange={setReturnRoundOffAmount}  selectedTermIds={selectedTermIds} onTermsChange={setSelectedTermIds} />
+                <SupplierBillTabs tabValue={tabValue} setTabValue={setTabValue} rows={rows} handleAdd={handleAdd} handleCut={handleCut} handleRowChange={handleRowChange} returnRows={returnRows} handleAddReturn={handleAddReturn} handleCutReturn={handleCutReturn} handleReturnRowChange={handleReturnRowChange} productOptions={productOptions} isProductLoading={ProductsDataLoading} returnRoundOffAmount={returnRoundOffAmount} onReturnRoundOffAmountChange={setReturnRoundOffAmount} selectedTermIds={selectedTermIds} onTermsChange={setSelectedTermIds} />
               </CommonCard>
               <CommonCard grid={{ xs: 12 }} hideDivider>
                 <AdditionalChargesSection show={showAdditionalCharge} onToggle={setShowAdditionalCharge} rows={additionalChargeRows} onAdd={handleAddAdditionalCharge} onRemove={handleCutAdditionalCharge} onChange={handleAdditionalChargeRowChange} taxOptions={taxOptions} isTaxLoading={TaxDataLoading} flatDiscount={flatDiscount} onFlatDiscountChange={setFlatDiscount} summary={summary} isAdditionalChargeLoading={additionalchargeLoading} additionalChargeOptions={additionalChargeOptions} roundOffAmount={roundOffAmount} onRoundOffAmountChange={setRoundOffAmount} />
