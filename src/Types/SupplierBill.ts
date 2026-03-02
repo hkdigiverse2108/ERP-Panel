@@ -24,6 +24,10 @@ export interface SupplierBillProductItem {
   mfgDate?: string;
   expiryDate?: string;
   unitCost?: number;
+  uomId?: string;
+  unit?: string;
+  itemCode?: string;
+  taxId?: string;
 }
 
 export interface SupplierBillProductDetails {
@@ -128,6 +132,7 @@ export interface ProductRow {
   itemCode: string;
   qty: string | number;
   freeQty: string | number;
+  uomId: string;
   unit: string;
   unitCost: string | number;
   mrp: string | number;
@@ -135,6 +140,7 @@ export interface ProductRow {
   disc1: string | number;
   disc2: string | number;
   taxableAmount: string | number;
+  taxId: string;
   itemTax: string | number;
   landingCost: string | number;
   margin: string | number;
