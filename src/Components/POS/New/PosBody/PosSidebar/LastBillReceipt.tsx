@@ -1,20 +1,23 @@
-import dayjs from "dayjs";
+import { Divider } from "@mui/material";
 import React, { forwardRef } from "react";
 import { useAppSelector } from "../../../../../Store/hooks";
 import type { PosOrderBase } from "../../../../../Types";
+import { FormatDate, FormatDateTime } from "../../../../../Utils";
 
 const LastBillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }, ref) => {
   const { company } = useAppSelector((state) => state.company);
   if (!bill) return null;
 
-  const totalQty = bill?.items?.reduce((acc, item) => acc + (item?.qty || 0), 0) || 0;
-  const totalDiscount = bill?.items?.reduce((acc, item) => acc + ((item?.discountAmount || 0) + (item?.additionalDiscountAmount || 0)), 0) || 0;
+  // const totalQty = bill?.items?.reduce((acc, item) => acc + (item?.qty || 0), 0) || 0;
+
+  // const totalDiscount = bill?.items?.reduce((acc, item) => acc + ((item?.discountAmount || 0) + (item?.additionalDiscountAmount || 0)), 0) || 0;
+
   const getTaxPercent = (item: PosOrderBase["items"][number]) => {
     return item?.productId?.salesTaxId?.percentage || 0;
   };
 
   const getCompanyAddress = () => {
-    const addr = company?.address || bill?.companyId?.address;
+    const addr = company?.address;
     if (!addr) return null;
 
     const parts = [addr.address, addr.city?.name, addr.state?.name, addr.country?.name].filter(Boolean);
@@ -28,64 +31,58 @@ const LastBillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bi
   };
 
   return (
-    <div ref={ref} id="last-bill-print" style={{ width: "150mm", margin: "0 auto", fontFamily: "'Courier New', Courier, monospace", fontSize: "20px", padding: "20px", color: "black", backgroundColor: "white", lineHeight: "1.2" }}>
-      {/* Header Section */}
-      <div style={{ position: "relative", marginBottom: "20px" }}>
-        <center>
-          <h2 style={{ margin: "20px 0 5px 0", fontWeight: "bold", textTransform: "capitalize", fontSize: "25px" }}>{bill?.companyId?.name || "Dhruvi Bakery"}</h2>
-          <div style={{ margin: "5px 0 20px 0", fontSize: "15px", lineHeight: "1.4" }}>
-            {getCompanyAddress() && <div>{getCompanyAddress()}</div>}
-            {/* Phone */}
-            {(() => {
-              let phone: string | undefined = undefined;
-              if (company?.phoneNo?.phoneNo) {
-                phone = company.phoneNo.phoneNo;
-              }
-              if (!phone) {
-                phone = bill?.companyId?.phoneNo?.phoneNo;
-              }
-              return phone ? <div>Ph: +91 {phone}</div> : null;
-            })()}
-          </div>
+    <div ref={ref} id="last-bill-print" className="mx-auto w-[150mm] bg-white text-black p-6 font-mono text-[15px] leading-tight">
+      {/* Header */}
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold capitalize">{bill?.companyId?.name}</h2>
 
-          <h3 style={{ margin: "0 0 10px 0", fontWeight: "bold", fontSize: "16px" }}>Tax Invoice</h3>
-        </center>
+        <div className="text-sm mt-2">
+          {getCompanyAddress() && <div>{getCompanyAddress()}</div>}
+
+          {company?.phoneNo && (
+            <div>
+              Ph: {company.phoneNo.countryCode}-{company.phoneNo.phoneNo}
+            </div>
+          )}
+        </div>
+
+        <h3 className="mt-4 font-bold text-base">Tax Invoice</h3>
       </div>
 
-      {/* Metadata Section */}
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "5px" }}>
-        <div style={{ flex: 1 }}>
-          <div style={{ display: "flex", marginBottom: "2px" }}>
-            <span style={{ width: "80px", fontWeight: "bold" }}>Name</span>
-            <span>: {bill?.customerId?.firstName ? `${bill.customerId.firstName} ${bill.customerId.lastName || ""}` : "Walk-in"}</span>
-          </div>
-          <div style={{ display: "flex" }}>
-            <span style={{ width: "80px", fontWeight: "bold" }}>Mob No.</span>
-            <span>: {bill?.customerId?.phoneNo?.phoneNo || "-"}</span>
-          </div>
+      {/* Customer Meta */}
+      <div className="flex flex-col gap-1 mb-4">
+        <div className="flex gap-2">
+          <span className="font-bold">Name:</span>
+          <span>{bill?.customerId?.firstName ? `${bill.customerId.firstName} ${bill.customerId.lastName || ""}` : "Walk-in"}</span>
         </div>
-        <div style={{ flex: 1 }}>
-          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "2px" }}>
-            <span style={{ fontWeight: "bold", marginRight: "5px" }}>Date :</span>
-            <span>{dayjs(bill.createdAt).format("DD/MM/YYYY")}</span>
-          </div>
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <span style={{ fontWeight: "bold", marginRight: "5px" }}>Invoice No. :</span>
-            <span>{bill.orderNo}</span>
-          </div>
+
+        <div className="flex gap-2">
+          <span className="font-bold">Mob No.:</span>
+          <span>
+            {bill?.customerId?.phoneNo?.countryCode}-{bill?.customerId?.phoneNo?.phoneNo || "-"}
+          </span>
+        </div>
+
+        <div className="flex gap-2">
+          <span className="font-bold">Date:</span>
+          <span>{FormatDate(bill.createdAt)}</span>
+        </div>
+
+        <div className="flex gap-2">
+          <span className="font-bold">Invoice No.:</span>
+          <span>{bill.orderNo}</span>
         </div>
       </div>
 
       {/* Product Table */}
-
-      <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "10px", fontSize: "16px" }}>
+      <table className="w-full text-sm border-t border-dashed border-black mb-4">
         <thead>
-          <tr style={{ borderTop: "1px dashed black", borderBottom: "1px dashed black" }}>
-            <th style={{ textAlign: "left", padding: "4px 0", width: "5%" }}>#</th>
-            <th style={{ textAlign: "left", padding: "4px 0", width: "55%" }}>Item</th>
-            <th style={{ textAlign: "center", padding: "4px 0", width: "10%" }}>Qty</th>
-            <th style={{ textAlign: "center", padding: "4px 0", width: "15%" }}>MRP</th>
-            <th style={{ textAlign: "right", padding: "6px 0", width: "15%" }}>Net Amt.</th>
+          <tr className="border-b border-dashed border-black">
+            <th className="text-left py-1 w-[5%]">#</th>
+            <th className="text-left py-1 w-[50%]">Item</th>
+            <th className="text-center py-1 w-[10%]">Qty</th>
+            <th className="text-center py-1 w-[15%]">MRP</th>
+            <th className="text-right py-1 w-[20%]">Net Amt.</th>
           </tr>
         </thead>
 
@@ -93,31 +90,30 @@ const LastBillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bi
           {bill?.items?.map((item, index) => {
             const taxPercent = getTaxPercent(item);
             const discAmt = (item.discountAmount || 0) + (item.additionalDiscountAmount || 0);
-            const taxAmount = ((item.netAmount || 0) * taxPercent) / 100;
-
+            const net = ((item.mrp || 0) - discAmt) * (item.qty || 0);
+            const taxAmount = ((net * taxPercent) / 100 + net) / (item.qty || 0);
             return (
               <React.Fragment key={index}>
-                <tr style={{ verticalAlign: "top" }}>
-                  <td style={{ padding: "4px 0" }}>{index + 1}</td>
+                <tr className="align-top">
+                  <td className="py-1">{index + 1}</td>
 
-                  <td style={{ padding: "4px 0" }}>
-                    <div style={{ fontWeight: "bold" }}>{item.productId?.name}</div>
+                  <td className="py-1">
+                    <div className="font-bold">{item.productId?.name}</div>
 
-                    {/* Variant / Weight line like screenshot */}
-                    {item.productId?.variant && <div style={{ fontSize: "12px" }}>{item.productId.variant}</div>}
+                    {item.productId?.variant && <div className="text-xs">{item.productId.variant}</div>}
                   </td>
 
-                  <td style={{ textAlign: "center", padding: "4px 0" }}>{Number(item.qty || 0)}</td>
+                  <td className="text-center py-1">{Number(item.qty || 0)}</td>
 
-                  <td style={{ textAlign: "center", padding: "4px 0" }}>{Number(item.mrp || 0)}</td>
+                  <td className="text-center py-1">{Number(item.mrp || 0)}</td>
 
-                  <td style={{ textAlign: "center", padding: "4px 0" }}>{Number(item.netAmount || 0)}</td>
+                  <td className="text-right py-1">{Number(item.netAmount || 0)}</td>
                 </tr>
+
                 <tr>
-                  <td colSpan={5} style={{ padding: "0 0 4px 25px" }}>
-                    <div style={{ fontSize: "11px", fontStyle: "italic", fontWeight: "bold" }}>
-                      GST {taxPercent}% {taxAmount > 0 ? Number(taxAmount.toFixed(2)) : ""} {discAmt > 0 ? `Discount : ${Number(discAmt.toFixed(2))}` : ""}
-                    </div>
+                  <td colSpan={5} className="pl-6 text-[10px] italic font-semibold pb-1">
+                    GST {taxPercent}% {taxAmount > 0 ? Number(taxAmount.toFixed(2)) : ""} ||
+                    {discAmt > 0 && `  Discount: ${Number(discAmt.toFixed(2))}`}
                   </td>
                 </tr>
               </React.Fragment>
@@ -126,59 +122,47 @@ const LastBillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bi
         </tbody>
       </table>
 
-      {/* Totals Section */}
-      <div style={{ borderTop: "1px dashed black", paddingTop: "5px", marginBottom: "10px" }}>
-        {bill.additionalCharges && bill.additionalCharges.length > 0 &&
-          bill.additionalCharges.map((charge, idx) => (
-            <div key={idx} style={{ display: "flex", justifyContent: "flex-end" }}>
-              <span style={{ width: "150px", textAlign: "right", marginRight: "10px", textTransform: "uppercase" }}>{charge.chargeId?.name || "Additional Charge"}</span>
-              <span>:</span>
-              <span style={{ width: "80px", textAlign: "right" }}>{Number(charge.totalAmount?.toFixed(2) || 0)}</span>
-            </div>
-          ))
-        }
-        {(bill.flatDiscountAmount || 0) > 0 && (
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <span style={{ width: "150px", textAlign: "right", marginRight: "10px" }}>FLAT DISCOUNT</span>
-            <span>:</span>
-            <span style={{ width: "80px", textAlign: "right" }}>{Number(bill.flatDiscountAmount?.toFixed(2) || 0)}</span>
+      {/* Totals */}
+      <div className="border-t border-dashed border-black pt-2 mb-4">
+        {bill.additionalCharges?.length > 0 && (
+          <div className="flex justify-end text-sm">
+            <span className="text-right mr-2 capitalize">Additional Charge</span>:<span className="w-20 text-right">{Number(bill.additionalCharges?.reduce((acc, charge) => acc + (charge.totalAmount || 0), 0)?.toFixed(2) || 0)}</span>
           </div>
         )}
-        <div style={{ display: "flex", justifyContent: "flex-end", fontWeight: "bold", marginBottom: "2px", marginTop: "5px" }}>
-          <span style={{ width: "150px", textAlign: "right", marginRight: "10px" }}>TOTAL</span>
-          <span>:</span>
-          <span style={{ width: "80px", textAlign: "right" }}>{Number(bill.totalAmount?.toFixed(2) || 0)}</span>
+
+        {bill.totalDiscount > 0 && (
+          <div className="flex justify-end text-sm">
+            <span className="text-right mr-2 capitalize">Discount</span>:<span className="w-20 text-right">{Number(bill.totalDiscount?.toFixed(2) || 0)}</span>
+          </div>
+        )}
+
+        {bill.flatDiscountAmount > 0 && (
+          <div className="flex justify-end text-sm">
+            <span className="text-right mr-2 capitalize">Flat Discount</span>:<span className="w-20 text-right">{Number(bill.flatDiscountAmount?.toFixed(2) || 0)}</span>
+          </div>
+        )}
+        {bill.roundOff > 0 && (
+          <div className="flex justify-end text-sm">
+            <span className="text-right mr-2 capitalize">Round Off</span>:<span className="w-20 text-right">{Number(bill.roundOff?.toFixed(2) || 0)}</span>
+          </div>
+        )}
+
+        <div className="flex justify-end font-bold text-xl">
+          <span className="text-right mr-2 capitalize">Total</span>:<span className="w-20 text-right">{Number(bill.totalAmount?.toFixed(2) || 0)}</span>
         </div>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <span style={{ width: "150px", textAlign: "right", marginRight: "10px" }}>ROUND OFF</span>
-          <span>:</span>
-          <span style={{ width: "80px", textAlign: "right" }}>{Number(bill.roundOff?.toFixed(2) || 0)}</span>
-        </div>
       </div>
 
-      {/* Summary Footer */}
-      <div style={{ borderTop: "1px dashed black", borderBottom: "1px dashed black", padding: "10px 0", marginBottom: "10px" }}>
-        <center style={{ fontWeight: "bold" }}>
-          <div style={{ marginBottom: "5px" }}>PIECES PURCHASED : {Number(totalQty.toFixed(2))}</div>
-          <div>DISCOUNT ITEMS : {Number(totalDiscount.toFixed(2))}</div>
-        </center>
-      </div>
+      {/* Summary */}
+      {/* <div className="border-y border-dashed border-black py-2 text-center font-bold mb-4">
+        <div>PIECES PURCHASED: {Number(totalQty.toFixed(2))}</div>
+        <div>DISCOUNT ITEMS: {Number(totalDiscount.toFixed(2))}</div>
+      </div> */}
+      <Divider className="my-2! border-dashed! border-black!" />
+      {/* Footer */}
+      <div className="text-center font-bold mb-3">Thank You For Shopping At {bill?.companyId?.name}</div>
 
-      {/* T&C / Customer Details */}
-      <div style={{ marginBottom: "15px" }}>
-        <div style={{ fontSize: "10px", marginBottom: "5px" }}>T & C</div>
-
-        <div style={{ borderTop: "1px dashed black", marginTop: "5px", paddingTop: "5px" }}></div>
-      </div>
-
-      {/* Footer / Barcode */}
-      <center>
-        <div style={{ fontWeight: "bold", marginBottom: "10px" }}>Thank You For Shopping At {bill?.companyId?.name || "Dhruvi Bakery"}</div>
-      </center>
-
-      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "15px", fontWeight: "bold" }}>
-        <span>Printed On: {dayjs().format("DD/MM/YYYY HH:mm:ss A")}</span>
-
+      <div className="flex justify-between text-sm font-bold">
+        <span>Printed On: {FormatDateTime(new Date())}</span>
       </div>
     </div>
   );

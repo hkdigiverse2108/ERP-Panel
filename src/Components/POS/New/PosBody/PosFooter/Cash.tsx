@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useReactToPrint } from "react-to-print";
 import { Mutations } from "../../../../../Api";
 import { CommonButton, CommonTextField } from "../../../../../Attribute";
 import { POS_PAYMENT_METHOD } from "../../../../../Data";
@@ -10,10 +11,11 @@ import { CommonModal } from "../../../../Common";
 
 const keypad = ["1", "2", "3", "+5", "+100", "4", "5", "6", "+10", "+500", "7", "8", "9", "+20", "+2000", "C", "0", ".", "+50", "⌫"];
 
-const Cash = () => {
+const Cash = ({ type, setBill }: { type: string; setBill: any }) => {
   const { isCashModal } = useAppSelector((state) => state.modal);
   const dispatch = useAppDispatch();
   const { PosProduct } = useAppSelector((state) => state.pos);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const [tendered, setTendered] = useState<string>("");
 
@@ -26,6 +28,13 @@ const Cash = () => {
 
   const { mutate: addPosOrder, isPending: addPosOrderLoading } = Mutations.useAddPosOrder();
   const { mutate: editPosOrder, isPending: editPosOrderLoading } = Mutations.useEditPosOrder();
+
+  const handleLastBillPrint = useReactToPrint({
+    contentRef,
+    onAfterPrint: () => {
+      // window.location.reload();
+    },
+  });
 
   const change = useMemo(() => {
     const paid = parseFloat(tendered || "0");
@@ -92,9 +101,11 @@ const Cash = () => {
         },
       ],
     };
-    const onSuccess = () => {
+    const onSuccess = (res: any) => {
+      if (type === "print") handleLastBillPrint();
       dispatch(clearPosProduct());
       dispatch(setCashModal());
+      setBill(res?.data);
     };
     const onError = () => {
       dispatch(setCashModal());

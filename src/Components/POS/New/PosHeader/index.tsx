@@ -1,6 +1,6 @@
 import PrintIcon from "@mui/icons-material/Print";
 import { Grid, Tooltip } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Queries } from "../../../../Api";
 import { CommonRadio, CommonSelect } from "../../../../Attribute";
 import { ORDER_TYPE } from "../../../../Data";
@@ -12,14 +12,19 @@ import Discard from "./Discard";
 import FullScreen from "./FullScreen";
 import ProductList from "./ProductList";
 import WiFi from "./WiFi";
+import LastBillReceipt from "../PosBody/PosSidebar/LastBillReceipt";
+import { useReactToPrint } from "react-to-print";
 
 const PosHeader = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { PosProduct } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
 
+  const { data: orderData } = Queries.useGetLastPosOrder({ lastBillFilter: true });
+  const lastBill = orderData?.data?.posOrder_data?.[0];
   const { data: userDropdown, isLoading: userDropdownLoading } = Queries.useGetUserDropdown();
   const selectedUserId = userDropdown?.data?.find((item) => item._id === user?._id)?._id;
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const [value, setValue] = useState<string[]>([]);
 
@@ -27,6 +32,13 @@ const PosHeader = () => {
     setValue(id);
     dispatch(setSalesManId(id[0]));
   };
+
+  const handleLastBillPrint = useReactToPrint({
+    contentRef,
+    onAfterPrint: () => {
+      // window.location.reload();
+    },
+  });
 
   useEffect(() => {
     if (selectedUserId && !PosProduct.salesManId) {
@@ -36,6 +48,7 @@ const PosHeader = () => {
   }, [PosProduct.salesManId, dispatch, selectedUserId]);
   return (
     <div className={`z-50 flex bg-white dark:bg-gray-900 lg:border-b border-gray-200 dark:border-gray-800 transition-all duration-300 w-full!`}>
+      <div className="print-only hidden">{lastBill && <LastBillReceipt ref={contentRef} bill={lastBill} />}</div>
       <Grid spacing={{ xs: 1, lg: 0 }} container className="flex justify-between items-center p-2 w-full">
         <Grid size={{ xs: 12, lg: 6, xl: 8 }}>
           <Grid container spacing={{ xs: 1, sm: 2 }} className="flex max-sm:justify-center items-center w-full">
@@ -47,7 +60,7 @@ const PosHeader = () => {
           <WiFi />
           {/* <CFB /> */}
           <Tooltip title="Last Bill Print">
-            <div className="head-icon">
+            <div className="head-icon" onClick={handleLastBillPrint}>
               <PrintIcon sx={{ fontSize: { xs: 20, md: 22 } }} />
             </div>
           </Tooltip>

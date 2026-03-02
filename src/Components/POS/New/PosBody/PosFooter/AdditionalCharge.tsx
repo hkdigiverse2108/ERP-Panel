@@ -104,8 +104,8 @@ const AdditionalCharge = () => {
     {
       key: "total",
       header: "Total",
-      render: (row) => row.totalAmount.toFixed(2),
-      footer: () => grandTotal.toFixed(2),
+      render: (row) => row.totalAmount?.toFixed(2),
+      footer: () => grandTotal?.toFixed(2),
     },
     {
       key: "action",
