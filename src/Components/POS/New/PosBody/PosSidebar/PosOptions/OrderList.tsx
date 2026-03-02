@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Queries } from "../../../../../../Api";
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setOrderModal } from "../../../../../../Store/Slices/ModalSlice";
-import { setPosProduct } from "../../../../../../Store/Slices/PosSlice";
+import { setPosLoading, setPosProduct } from "../../../../../../Store/Slices/PosSlice";
 import type { PosOrderBase } from "../../../../../../Types";
 import { FormatDate, FormatPayment } from "../../../../../../Utils";
 import { useDataGrid } from "../../../../../../Utils/Hooks";
@@ -16,7 +16,7 @@ const OrderList = () => {
   const [selectedOrderId, setSelectedOrderId] = useState<string>("");
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params } = useDataGrid({ active: true });
 
-  const { data } = Queries.useGetPosOrderById(selectedOrderId, Boolean(selectedOrderId));
+  const { data, isLoading: orderDataByIdLoading, isFetching: orderDataByIdFetching } = Queries.useGetPosOrderById(selectedOrderId, Boolean(selectedOrderId));
   const { data: orderData, isLoading: orderDataLoading, isFetching: orderDataFetching } = Queries.useGetPosOrder(params, isOrderModal);
 
   const orderDataById = data?.data;
@@ -25,37 +25,46 @@ const OrderList = () => {
 
   const handleEdit = (row: PosOrderBase) => {
     setSelectedOrderId(row._id);
-    const payload = {
-      items: orderDataById?.items?.map((item) => ({
-        _id: item.productId?._id,
-        name: item.productId?.name,
-        discount: item.discountAmount,
-        additionalDiscount: item.additionalDiscountAmount,
-        posQty: item.qty,
-        netAmount: item.netAmount,
-        unitCost: item.unitCost,
-        ...item.productId,
-      })),
-      customerId: orderDataById?.customerId?._id,
-      orderType: orderDataById?.orderType,
-      salesManId: orderDataById?.salesManId?._id,
-      totalQty: orderDataById?.totalQty,
-      totalMrp: orderDataById?.totalMrp,
-      totalTaxAmount: orderDataById?.totalTaxAmount,
-      totalDiscount: orderDataById?.totalDiscount,
-      totalAdditionalCharge: orderDataById?.totalAdditionalCharge,
-      flatDiscountAmount: orderDataById?.flatDiscountAmount,
-      additionalCharges: orderDataById?.additionalCharges,
-      roundOff: orderDataById?.roundOff,
-      remark: orderDataById?.remark,
-      totalAmount: orderDataById?.totalAmount,
-      posOrderId: orderDataById?._id,
-    };
-    console.log("payload", payload);
-    console.log("orderDataById", orderDataById);
-    dispatch(setPosProduct(payload));
     dispatch(setOrderModal());
   };
+
+  useEffect(() => {
+    dispatch(setPosLoading(orderDataByIdLoading || orderDataByIdLoading));
+    if (!orderDataByIdLoading && !orderDataByIdLoading && orderDataById) {
+      const payload = {
+        items: orderDataById?.items?.map((item) => ({
+          _id: item.productId?._id,
+          name: item.productId?.name,
+          discount: item.discountAmount,
+          additionalDiscount: item.additionalDiscountAmount,
+          posQty: item.qty,
+          netAmount: item.netAmount,
+          unitCost: item.unitCost,
+          ...item.productId,
+        })),
+        couponId: orderDataById?.couponId,
+        couponDiscount: orderDataById?.couponDiscount,
+        loyaltyId: orderDataById?.loyaltyId,
+        loyaltyDiscount: orderDataById?.loyaltyDiscount,
+        customerId: orderDataById?.customerId?._id,
+        orderType: orderDataById?.orderType,
+        salesManId: orderDataById?.salesManId?._id,
+        totalQty: orderDataById?.totalQty,
+        totalMrp: orderDataById?.totalMrp,
+        totalTaxAmount: orderDataById?.totalTaxAmount,
+        totalDiscount: orderDataById?.totalDiscount,
+        totalAdditionalCharge: orderDataById?.totalAdditionalCharge,
+        flatDiscountAmount: orderDataById?.flatDiscountAmount,
+        additionalCharges: orderDataById?.additionalCharges,
+        roundOff: orderDataById?.roundOff,
+        remark: orderDataById?.remark,
+        totalAmount: orderDataById?.totalAmount,
+        posOrderId: orderDataById?._id,
+      };
+      console.log("payload", orderDataById);
+      dispatch(setPosProduct(payload));
+    }
+  }, [orderDataById, orderDataByIdLoading, orderDataByIdFetching, dispatch]);
 
   const columns: GridColDef<PosOrderBase>[] = [
     { field: "orderNo", headerName: "Order No", width: 100 }, //

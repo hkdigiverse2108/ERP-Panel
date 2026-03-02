@@ -1,14 +1,14 @@
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import YouTubeIcon from "@mui/icons-material/YouTube";
-import { Badge, Box, IconButton } from "@mui/material";
+import { Badge, Box, IconButton, Skeleton } from "@mui/material";
 import { Queries } from "../../Api";
-import { FormatDate } from "../../Utils";
 import { useAppDispatch } from "../../Store/hooks";
 import { setModalVideoPlay } from "../../Store/Slices/ModalSlice";
+import { FormatDate } from "../../Utils";
 
 const ImportantAnnouncement = () => {
   const dispatch = useAppDispatch();
-  const { data: announcementData } = Queries.useGetAnnouncement();
+  const { data: announcementData, isLoading: announcementPending } = Queries.useGetAnnouncement();
   const Data = announcementData?.data?.announcement_data;
   const handleVideoOpen = (link: string) => dispatch(setModalVideoPlay({ open: true, link: link }));
 
@@ -29,27 +29,38 @@ const ImportantAnnouncement = () => {
         </div>
 
         {/* LIST */}
-        <ul className="flex flex-col h-auto overflow-y-auto custom-scrollbar px-3">
-          {Data?.map((item, index) => (
-            <li key={index}>
-              <div className="flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5">
-                <span className="block">
-                  <span className="flex justify-between items-center mb-1.5 text-theme-sm text-gray-500 dark:text-gray-400 space-x-1">
-                    <span className="font-medium text-gray-800 dark:text-white/90">
-                      Version {item.version}
-                      {item.link && <YouTubeIcon className="text-red-500 ms-2" onClick={() => handleVideoOpen(item.link)} />}
+        <ul className="flex flex-col h-auto overflow-y-auto custom-scrollbar px-3 pb-3">
+          {announcementPending ? (
+            <div className="flex items-center justify-center h-full">
+              <Skeleton variant="rounded" width={"100%"} height={40} />
+            </div>
+          ) : Data?.length === 0 ? (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-gray-500 dark:text-gray-400">No Announcement Found</p>
+            </div>
+          ) : (
+            Data?.map((item, index) => (
+              <li key={index}>
+                <div className="flex gap-3 rounded-lg border-b border-gray-100 p-3  hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5">
+                  <span className="block">
+                    <span className="flex justify-between items-center mb-1.5 text-theme-sm text-gray-500 dark:text-gray-400 space-x-1">
+                      <span className="font-medium text-gray-800 dark:text-white/90">
+                        Version {item.version}
+                        {item.link && <YouTubeIcon className="text-red-500 ms-2" onClick={() => handleVideoOpen(item.link)} />}
+                      </span>
+                      <span className="text-gray-500 text-theme-xs dark:text-gray-400">{FormatDate(item.createdAt)}</span>
                     </span>
-                    <span className="text-gray-500 text-theme-xs dark:text-gray-400">{FormatDate(item.version)}</span>
-                  </span>
-                  <ul className="mb-1.5 ml-4 list-disc text-theme-sm text-gray-500 dark:text-gray-400 space-y-1">
-                    {/* {item.desc.map((descItem, index) => (
+                    <div className="content text-theme-sm text-gray-500 dark:text-gray-400" dangerouslySetInnerHTML={{ __html: item.desc || "" }} />
+                    {/* <ul className="mb-1.5 ml-4 list-disc text-theme-sm text-gray-500 dark:text-gray-400 space-y-1">
+                    {item.desc.map((descItem, index) => (
                       <li key={index}>{descItem}</li>
-                    ))} */}
-                  </ul>
-                </span>
-              </div>
-            </li>
-          ))}
+                    ))}
+                  </ul> */}
+                  </span>
+                </div>
+              </li>
+            ))
+          )}
         </ul>
 
         {/* FOOTER */}

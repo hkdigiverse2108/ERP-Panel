@@ -2,7 +2,7 @@ import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 
 export interface AnnouncementBase extends CommonDataType {
   companyId: string;
-  desc: string[];
+  desc: string;
   link: string;
   version: string;
 }
