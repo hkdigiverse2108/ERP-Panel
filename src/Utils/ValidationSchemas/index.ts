@@ -518,3 +518,9 @@ export const JournalVoucherFormSchema = Yup.object().shape({
       return entries.every((row: any) => Number(row.debit || 0) > 0 || Number(row.credit || 0) > 0);
     }),
 });
+
+export const TermsConditionFormSchema = Yup.object({
+  termsCondition: Validation("string", "Terms and Condition"),
+  isDefault: Validation("boolean", "Is Default", { required: false }),
+  isActive: Validation("boolean", "is Active", { required: false }),
+});

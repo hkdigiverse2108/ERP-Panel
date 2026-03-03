@@ -11,6 +11,8 @@ import CommonTable from "../../../Components/Common/CommonTable";
 import { GenerateOptions } from "../../../Utils";
 import type { AddTermsConditionPayload, CommonTableColumn, EditTermsConditionPayload, ProductBase, ProductSelectCellProps, PurchaseOrderFormValues, PurchaseOrderItem, TaxBase, TermsConditionBase } from "../../../Types";
 import BillingSummary from "./BillingSummary";
+import TermsConditionModal from "./TermsConditionModal";
+import SelectTermsModal from "./SelectTermsModal";
 
 const ProductSelectCell = ({ index, productData, taxData, isLoading }: ProductSelectCellProps) => {
   const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
@@ -40,7 +42,7 @@ const ProductSelectCell = ({ index, productData, taxData, isLoading }: ProductSe
     }
   }, [productId, productData, taxData, setFieldValue, index]);
 
-  return <CommonValidationSelect name={`items.${index}.productId`} label="Search Product" isLoading={isLoading} options={GenerateOptions(productData?.data)} required size="small" />;
+  return <CommonValidationSelect name={`items.${index}.productId`} label="Search Product" isLoading={isLoading} options={GenerateOptions(productData?.data)} required />;
 };
 
 const TotalInputCell = ({ index }: { index: number }) => {
@@ -81,6 +83,7 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
   // ... (rest of the component)
   const [openTermsModal, setOpenTermsModal] = useState(false);
   const [openSelectTermsModal, setOpenSelectTermsModal] = useState(false);
+  // const { data: productData, isLoading: productDataLoading } = Queries.useGetProduct({ companyFilter: values.companyId || undefined });
   const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown({ companyFilter: values.companyId || undefined });
 
   const { data: termsData } = Queries.useGetTermsCondition({ all: true });
@@ -102,8 +105,8 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
     }
   }, [isEditing, termsList, setFieldValue, values.termsAndConditionIds]);
   const { data: taxData } = Queries.useGetTaxDropdown();
-  const { mutate: addTerm } = Mutations.useAddTermsCondition();
-  const { mutate: editTerm } = Mutations.useEditTermsCondition();
+  const { mutate: addTerm, isPending: addTermLoading } = Mutations.useAddTermsCondition();
+  const { mutate: editTerm, isPending: editTermLoading } = Mutations.useEditTermsCondition();
 
   const [selectedTerm, setSelectedTerm] = useState<TermsConditionBase | null>(null);
 
@@ -124,6 +127,7 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
     setOpenTermsModal(true);
   };
   const handleSaveTerm = (term: TermsConditionBase) => {
+
     if (selectedTerm) {
       editTerm({ termsConditionId: term._id, termsCondition: term.termsCondition, isDefault: term.isDefault, companyId: values.companyId } as EditTermsConditionPayload, {
         onSuccess: () => {
@@ -237,13 +241,13 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
                         render: (_row, index) => (
                           <Box display="flex" justifyContent="center" gap={1}>
                             {index === (values.items?.length || 0) - 1 && (
-                              <CommonButton size="small" variant="outlined" onClick={() => push({ productId: "", qty: 1, freeQty: 0, mrp: 0, sellingPrice: 0, discount1: 0, discount2: 0, taxableAmount: 0, unitCost: 0, tax: "0", landingCost: "0", margin: "0", total: 0 })}>
+                              <CommonButton variant="outlined" onClick={() => push({ productId: "", qty: 1, freeQty: 0, mrp: 0, sellingPrice: 0, discount1: 0, discount2: 0, taxableAmount: 0, unitCost: 0, tax: "0", landingCost: "0", margin: "0", total: 0 })}>
                                 <Add fontSize="small" />
                               </CommonButton>
                             )}
 
                             {(values.items?.length || 0) > 1 && (
-                              <CommonButton size="small" color="error" variant="outlined" onClick={() => remove(index)}>
+                              <CommonButton color="error" variant="outlined" onClick={() => remove(index)}>
                                 <Clear fontSize="small" />
                               </CommonButton>
                             )}
@@ -252,7 +256,7 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
                         footer: "Total",
                       },
                       { key: "sr", header: "#", bodyClass: "align-middle text-center w-[50px]", render: (_row, index) => index + 1 },
-                      { key: "productId", header: "Product", bodyClass: "min-w-[250px]", render: (_row, index) => <ProductSelectCell index={index} productData={productData} taxData={taxData} isLoading={productDataLoading} /> },
+                      { key: "productId", header: "Product*", bodyClass: "min-w-[250px]", render: (_row, index) => <ProductSelectCell index={index} productData={productData} taxData={taxData} isLoading={productDataLoading} /> },
                       { key: "mrp", header: "MRP", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.mrp`} type="number" /> },
                       { key: "qty", header: "Qty", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.qty`} type="number" /> },
                       { key: "unit", header: "Unit", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.unit`} disabled /> },
@@ -290,8 +294,8 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
                 <Box display="flex" justifyContent="space-between" mb={2}>
                   <Box fontWeight={600}>Terms & Conditions</Box>
                   <Box display="flex" gap={1}>
-                    <CommonButton startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined" title="new term" disabled={!values.companyId} />
-                    <CommonButton onClick={() => setOpenSelectTermsModal(true)} variant="outlined" disabled={!values.companyId}>
+                    <CommonButton startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined" title="new term" />
+                    <CommonButton onClick={() => setOpenSelectTermsModal(true)} variant="outlined">
                       <Edit />
                     </CommonButton>
                   </Box>
@@ -316,10 +320,10 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
                               <td className="p-2">{term.termsCondition}</td>
                               <td className="p-2 text-center">
                                 <Box display="flex" justifyContent="center" gap={1}>
-                                  <CommonButton size="small" color="primary" variant="text" onClick={() => handleEditTerm(term)}>
+                                  <CommonButton color="primary" variant="text" onClick={() => handleEditTerm(term)}>
                                     <Edit fontSize="small" />
                                   </CommonButton>
-                                  <CommonButton size="small" color="error" variant="text" onClick={() => handleRemoveTermFromPO(term._id)}>
+                                  <CommonButton color="error" variant="text" onClick={() => handleRemoveTermFromPO(term._id)}>
                                     <Clear fontSize="small" />
                                   </CommonButton>
                                 </Box>
@@ -330,20 +334,27 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
                     </table>
                   </Box>
                 </Box>
-              </Box>{" "}
-              {/* Closing Terms Box */}
-              {/* Note Section */}
+              </Box>
               <Box>
                 <CommonValidationTextField name="notes" label="Note" multiline rows={4} placeholder="Enter a note (max 200 characters)" />
               </Box>
-            </Box>{" "}
-            {/* Closing Grid Box */}
+            </Box>
           </CommonTabPanel>
         </Box>
       </CommonCard>
-
-      {/* BILLING SUMMARY - Separated outside TabPanel */}
-      <BillingSummary />
+      <BillingSummary productData={productData} />
+      <TermsConditionModal openModal={openTermsModal} setOpenModal={setOpenTermsModal} onSave={handleSaveTerm} initialValues={selectedTerm} isLoading={addTermLoading || editTermLoading} />
+      <SelectTermsModal
+        open={openSelectTermsModal}
+        onClose={() => setOpenSelectTermsModal(false)}
+        onSave={(selected) =>
+          setFieldValue(
+            "termsAndConditionIds",
+            selected.map((t) => t._id),
+          )
+        }
+        alreadySelected={termsList.filter((t: TermsConditionBase) => values.termsAndConditionIds?.includes(t._id)) || []}
+      />
     </>
   );
 };
