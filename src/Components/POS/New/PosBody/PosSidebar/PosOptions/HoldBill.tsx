@@ -39,10 +39,6 @@ const HoldBill = () => {
         unitCost: item.unitCost,
         ...item.productId,
       })),
-      couponId: bill?.couponId,
-      couponDiscount: bill?.couponDiscount,
-      loyaltyId: bill?.loyaltyId,
-      loyaltyDiscount: bill?.loyaltyDiscount,
       customerId: bill.customerId?._id,
       orderType: bill.orderType,
       salesManId: bill.salesManId?._id,
@@ -57,6 +53,10 @@ const HoldBill = () => {
       remark: bill.remark,
       totalAmount: bill.totalAmount,
       posOrderId: bill._id,
+      couponId: bill?.couponId,
+      couponDiscount: bill?.couponDiscount,
+      loyaltyId: bill?.loyaltyId,
+      loyaltyDiscount: bill?.loyaltyDiscount,
     };
     if (PosProduct?.items.length > 0) {
       dispatch(setDiscardModal());

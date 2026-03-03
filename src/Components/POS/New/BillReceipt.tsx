@@ -1,10 +1,10 @@
 import { Divider } from "@mui/material";
 import React, { forwardRef } from "react";
-import { useAppSelector } from "../../../../../Store/hooks";
-import type { PosOrderBase } from "../../../../../Types";
-import { FormatDate, FormatDateTime } from "../../../../../Utils";
+import { useAppSelector } from "../../../Store/hooks";
+import type { PosOrderBase } from "../../../Types";
+import { FormatDate, FormatDateTime, FormatPayment } from "../../../Utils";
 
-const LastBillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }, ref) => {
+const BillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }, ref) => {
   const { company } = useAppSelector((state) => state.company);
   if (!bill) return null;
 
@@ -34,7 +34,7 @@ const LastBillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bi
     <div ref={ref} id="last-bill-print" className="mx-auto w-[150mm] bg-white text-black p-6 font-mono text-[15px] leading-tight">
       {/* Header */}
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold capitalize">{bill?.companyId?.name}</h2>
+        <h2 className="text-2xl font-bold capitalize">{company?.name}</h2>
 
         <div className="text-sm mt-2">
           {getCompanyAddress() && <div>{getCompanyAddress()}</div>}
@@ -79,9 +79,10 @@ const LastBillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bi
         <thead>
           <tr className="border-b border-dashed border-black">
             <th className="text-left py-1 w-[5%]">#</th>
-            <th className="text-left py-1 w-[50%]">Item</th>
+            <th className="text-left py-1 w-[40%]">Item</th>
             <th className="text-center py-1 w-[10%]">Qty</th>
             <th className="text-center py-1 w-[15%]">MRP</th>
+            <th className="text-center py-1 w-[10%]">GST</th>
             <th className="text-right py-1 w-[20%]">Net Amt.</th>
           </tr>
         </thead>
@@ -90,8 +91,10 @@ const LastBillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bi
           {bill?.items?.map((item, index) => {
             const taxPercent = getTaxPercent(item);
             const discAmt = (item.discountAmount || 0) + (item.additionalDiscountAmount || 0);
+
+            // const totalDiscAmt = (item.qty || 0) * (item.discountAmount || 0);
             const net = ((item.mrp || 0) - discAmt) * (item.qty || 0);
-            const taxAmount = ((net * taxPercent) / 100 + net) / (item.qty || 0);
+            const taxAmount = ((net * taxPercent) / 100);
             return (
               <React.Fragment key={index}>
                 <tr className="align-top">
@@ -106,13 +109,15 @@ const LastBillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bi
                   <td className="text-center py-1">{Number(item.qty || 0)}</td>
 
                   <td className="text-center py-1">{Number(item.mrp || 0)}</td>
+                  <td className="text-center py-1">{Number(taxAmount.toFixed(2))}</td>
 
                   <td className="text-right py-1">{Number(item.netAmount || 0)}</td>
                 </tr>
 
                 <tr>
                   <td colSpan={5} className="pl-6 text-[10px] italic font-semibold pb-1">
-                    GST {taxPercent}% {taxAmount > 0 ? Number(taxAmount.toFixed(2)) : ""} ||
+                    GST {taxPercent}%{/* {taxAmount > 0 ? Number(taxAmount.toFixed(2)) : ""}  */}
+                    ||
                     {discAmt > 0 && `  Discount: ${Number(discAmt.toFixed(2))}`}
                   </td>
                 </tr>
@@ -147,6 +152,12 @@ const LastBillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bi
           </div>
         )}
 
+        {bill.multiplePayments?.map((payment, index) => (
+          <div className="flex justify-end text-sm" key={index}>
+            <span className="text-right mr-2 capitalize">{FormatPayment(payment.method)}</span>:<span className="w-20 text-right">{Number(payment.amount?.toFixed(2) || 0)}</span>
+          </div>
+        ))}
+
         <div className="flex justify-end font-bold text-xl">
           <span className="text-right mr-2 capitalize">Total</span>:<span className="w-20 text-right">{Number(bill.totalAmount?.toFixed(2) || 0)}</span>
         </div>
@@ -168,4 +179,4 @@ const LastBillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bi
   );
 });
 
-export default LastBillReceipt;
+export default BillReceipt;

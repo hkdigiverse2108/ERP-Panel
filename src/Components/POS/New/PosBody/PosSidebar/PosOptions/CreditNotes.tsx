@@ -8,6 +8,7 @@ import { FormatDate } from "../../../../../../Utils";
 import { useDataGrid } from "../../../../../../Utils/Hooks";
 import { CommonActionColumn, CommonCard, CommonDataGrid, CommonDeleteModal, CommonModal } from "../../../../../Common";
 import { Box } from "@mui/material";
+import { setPrintType, setSelectedOrderId } from "../../../../../../Store/Slices/PosSlice";
 
 const CreditNotes = () => {
   const { isCreditNoteModal } = useAppSelector((state) => state.modal);
@@ -19,6 +20,12 @@ const CreditNotes = () => {
   const { data: branchData, isLoading: branchDataLoading, isFetching: branchDataFetching } = Queries.useGetPosCreditNote(params, isCreditNoteModal);
   const allBranches = useMemo(() => branchData?.data?.posCreditNote_data.map((branch) => ({ ...branch, id: branch?._id })) || [], [branchData]);
   const totalRows = branchData?.data?.totalData || 0;
+
+  const handleCloseModal = () => {
+    dispatch(setCreditNoteModal());
+    dispatch(setPrintType(""));
+    dispatch(setSelectedOrderId(""));
+  };
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
@@ -32,20 +39,28 @@ const CreditNotes = () => {
     dispatch(setCreditNoteModal());
   };
 
+  const handlePrintBtn = (row: PosCreditNoteBase) => {
+    dispatch(setPrintType("print"));
+    dispatch(setSelectedOrderId(row?.returnPosOrderId?.posOrderId?._id));
+    dispatch(setCreditNoteModal());
+  };
+
   const columns: GridColDef<PosCreditNoteBase>[] = [
     { field: "creditNoteNo", headerName: "Credit Note No.", width: 120 }, //
     { field: "customerId", headerName: "Customer Name", width: 130, renderCell: ({ value }) => value?.firstName + " " + value?.lastName },
     { field: "createdAt", headerName: "Date", width: 100, renderCell: ({ value }) => FormatDate(value) },
-    { field: "totalAmount", headerName: "Total Amount", width: 100 },
+    { field: "totalAmount", headerName: "Total Amount", width: 110 },
     { field: "creditsUsed", headerName: "Credits Used", width: 100 },
-    { field: "creditsRemaining", headerName: "Credits Remaining", flex: 1, minWidth: 100 },
+    { field: "creditsRemaining", headerName: "Credits Remaining", flex: 1, minWidth: 90 },
     CommonActionColumn<PosCreditNoteBase>({
       onRefund: (row) => (row.creditsRemaining > 0 ? handleRefundBtn(row) : undefined),
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.creditNoteNo }),
+      onPrint: (row) => handlePrintBtn(row),
     }),
   ];
   const CommonDataGridOption = {
     columns,
+    BoxClass: "h-120 overflow-hidden",
     rows: allBranches,
     rowCount: totalRows,
     loading: branchDataLoading || branchDataFetching,
@@ -59,7 +74,7 @@ const CreditNotes = () => {
   };
 
   return (
-    <CommonModal title="Credit Notes" isOpen={isCreditNoteModal} onClose={() => dispatch(setCreditNoteModal())} className="max-w-[1000px]">
+    <CommonModal title="Credit Notes" isOpen={isCreditNoteModal} onClose={handleCloseModal} className="max-w-[1000px]">
       <Box sx={{ display: "grid", gap: 2 }}>
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />

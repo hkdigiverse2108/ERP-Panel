@@ -1,12 +1,13 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { ContactBase } from "./Contacts";
+import type { PosOrderBase } from "./PosOrder";
 
 export interface PosCreditNoteFormValues {
   creditsRemaining: number;
   creditsUsed: number;
   isActive: true;
-  returnPosOrderId: { _id: string; returnOrderNo: string };
+  returnPosOrderId: { _id: string; returnOrderNo: string; posOrderId: PosOrderBase};
   status: string;
   totalAmount: number;
 }

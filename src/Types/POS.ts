@@ -70,6 +70,8 @@ export interface PosSliceState {
   isPosLoading: boolean;
   PosProduct: PosProductType;
   isBtnStatus: string;
+  isSelectedOrderId: string;
+  isPrintType: string;
 }
 export interface PosProductOrderItem {
   qty: number;
@@ -122,6 +124,10 @@ export interface PosProductOrderBase extends Omit<PosProductOrderFormValues, "cu
 
 export interface PosProductOrderApiResponse extends MessageStatus {
   data: PosProductOrderBase[];
+}
+
+export interface PosProductOrderDataResponse extends MessageStatus {
+  data: PosProductOrderBase;
 }
 
 export interface PosCustomerDetailData {

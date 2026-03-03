@@ -6,13 +6,14 @@ import PauseIcon from "@mui/icons-material/Pause";
 import RedeemIcon from "@mui/icons-material/Redeem";
 import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
 import { Grid } from "@mui/material";
-import { useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import { Mutations } from "../../../../../Api";
 import { CommonButton, CommonTextField, ShowNotification } from "../../../../../Attribute";
 import { POS_PAYMENT_METHOD } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setAdditionalChargeModal, setApplyCouponModal, setCardModal, setCashModal, setPayLaterModal, setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
-import { clearPosProduct, setBtnStatus, setFlatDiscountAmount, setMultiplePay, setRemarks, setRoundOff } from "../../../../../Store/Slices/PosSlice";
+import { clearPosProduct, setBtnStatus, setFlatDiscountAmount, setMultiplePay, setPrintType, setRemarks, setRoundOff, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
+import type { PosProductOrderDataResponse } from "../../../../../Types";
 import { RemoveEmptyFields } from "../../../../../Utils";
 import AdditionalCharge from "./AdditionalCharge";
 import ApplyCoupon from "./ApplyCoupon";
@@ -20,19 +21,13 @@ import CardDetails from "./CardDetails";
 import Cash from "./Cash";
 import PayLater from "./PayLater";
 import RedeemCredit from "./RedeemCredit";
-import { useReactToPrint } from "react-to-print";
-import LastBillReceipt from "../PosSidebar/LastBillReceipt";
 
 const PosFooter = () => {
   const { PosProduct, isBtnStatus } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [printType, setPrintType] = useState("");
-
-  const [bill, setBill] = useState(null);
 
   const { mutate: addPosOrder } = Mutations.useAddPosOrder();
-  const { mutate: editPosOrder, isPending: editPosOrderLoading } = Mutations.useEditPosOrder();
+  const { mutate: editPosOrder } = Mutations.useEditPosOrder();
 
   const summaryRowData = [
     { label: "Quantity", value: PosProduct.totalQty }, //totalQty
@@ -71,13 +66,6 @@ const PosFooter = () => {
     return true;
   };
 
-  const handleLastBillPrint = useReactToPrint({
-    contentRef,
-    onAfterPrint: () => {
-      // window.location.reload();
-    },
-  });
-
   const handleHoldBill = (type: string) => {
     if (!validate()) return;
     const { posOrderId, ...rest } = PosProduct;
@@ -86,12 +74,12 @@ const PosFooter = () => {
       items: mappedItems,
       status: "hold",
     };
-    dispatch(setBtnStatus("hold"));
-    const onSuccess = (res: any) => {
+    dispatch(setBtnStatus(type === "print" ? "hold-print" : "hold"));
+    dispatch(setPrintType(type));
+    const onSuccess = (res: PosProductOrderDataResponse) => {
       dispatch(clearPosProduct());
       dispatch(setBtnStatus(""));
-      setBill(res?.data);
-      if (type === "print") handleLastBillPrint();
+      if (type === "print") dispatch(setSelectedOrderId(res?.data?._id));
     };
     const onError = () => {
       dispatch(setBtnStatus(""));
@@ -116,12 +104,12 @@ const PosFooter = () => {
         },
       ],
     };
-    dispatch(setBtnStatus("upi"));
-    const onSuccess = (res: any) => {
+    dispatch(setBtnStatus(type === "print" ? "upi-print" : "upi"));
+    dispatch(setPrintType(type));
+    const onSuccess = (res: PosProductOrderDataResponse) => {
       dispatch(clearPosProduct());
       dispatch(setBtnStatus(""));
-      setBill(res?.data);
-      if (type === "print") handleLastBillPrint();
+      if (type === "print") dispatch(setSelectedOrderId(res?.data?._id));
     };
     const onError = () => {
       dispatch(setBtnStatus(""));
@@ -131,26 +119,28 @@ const PosFooter = () => {
     else addPosOrder(RemoveEmptyFields(payload), { onSuccess, onError });
   };
 
-  const handlePayLater = () => {
+  const handlePayLater = (type: string) => {
     if (!validate(true)) return;
     dispatch(setPayLaterModal({ open: true, data: [] }));
+    dispatch(setPrintType(type));
   };
 
   const handleCard = (type: string) => {
     if (!validate(true)) return;
     dispatch(setCardModal());
-    setPrintType(type);
+    dispatch(setPrintType(type));
   };
 
   const handleCash = (type: string) => {
     if (!validate(true)) return;
     dispatch(setCashModal());
-    setPrintType(type);
+    dispatch(setPrintType(type));
   };
 
-  const handleMultiplePay = () => {
+  const handleMultiplePay = (type: string) => {
     if (!validate(true)) return;
     dispatch(setMultiplePay());
+    dispatch(setPrintType(type));
   };
 
   const handleApplyCoupon = () => {
@@ -195,17 +185,16 @@ const PosFooter = () => {
 
         {/* Action Buttons */}
         <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2 p-2">
-          <div className="print-only hidden">{bill && <LastBillReceipt ref={contentRef} bill={bill} />}</div>
-          <CommonButton title="Multiple Pay" variant="contained" startIcon={<VerticalSplitIcon />} onClick={handleMultiplePay} />
+          <CommonButton title="Multiple Pay" variant="contained" startIcon={<VerticalSplitIcon />} onClick={() => handleMultiplePay("print")} />
           <CommonButton title="Redeem Credit" variant="contained" startIcon={<RedeemIcon />} onClick={handleRedeemCredit} />
-          <CommonButton title="Hold" variant="contained" startIcon={<PauseIcon />} onClick={() => handleHoldBill("")} loading={isBtnStatus === "hold" || editPosOrderLoading} />
-          <CommonButton title="UPI" variant="contained" startIcon={<FastForwardIcon />} onClick={() => handleUpi("")} loading={isBtnStatus === "upi" || editPosOrderLoading} />
+          <CommonButton title="Hold" variant="contained" startIcon={<PauseIcon />} onClick={() => handleHoldBill("")} loading={isBtnStatus === "hold"} />
+          <CommonButton title="UPI" variant="contained" startIcon={<FastForwardIcon />} onClick={() => handleUpi("")} loading={isBtnStatus === "upi"} />
           <CommonButton title="Card" variant="contained" startIcon={<CreditCardIcon />} onClick={() => handleCard("")} />
           <CommonButton title="Cash" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => handleCash("")} />
           <CommonButton title="Apply Coupon" variant="contained" startIcon={<RedeemIcon />} onClick={handleApplyCoupon} />
-          <CommonButton title="Pay Later" variant="contained" startIcon={<CalendarMonthIcon />} onClick={handlePayLater} />
-          <CommonButton title="Hold & Print" variant="contained" startIcon={<PauseIcon />} onClick={() => handleHoldBill("print")} loading={isBtnStatus === "hold" || editPosOrderLoading} />
-          <CommonButton title="UPI & Print" variant="contained" startIcon={<FastForwardIcon />} onClick={() => handleUpi("print")} loading={isBtnStatus === "upi" || editPosOrderLoading} />
+          <CommonButton title="Pay Later" variant="contained" startIcon={<CalendarMonthIcon />} onClick={() => handlePayLater("print")} />
+          <CommonButton title="Hold & Print" variant="contained" startIcon={<PauseIcon />} onClick={() => handleHoldBill("print")} loading={isBtnStatus === "hold-print"} />
+          <CommonButton title="UPI & Print" variant="contained" startIcon={<FastForwardIcon />} onClick={() => handleUpi("print")} loading={isBtnStatus === "upi-print"} />
           <CommonButton title="Card & Print" variant="contained" startIcon={<CreditCardIcon />} onClick={() => handleCard("print")} />
           <CommonButton title="Cash & Print" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => handleCash("print")} />
         </div>
@@ -214,7 +203,7 @@ const PosFooter = () => {
       <CardDetails />
       <ApplyCoupon />
       <PayLater />
-      <Cash type={printType} setBill={setBill} />
+      <Cash />
       <AdditionalCharge />
     </>
   );

@@ -12,7 +12,7 @@ import Discard from "./Discard";
 import FullScreen from "./FullScreen";
 import ProductList from "./ProductList";
 import WiFi from "./WiFi";
-import LastBillReceipt from "../PosBody/PosSidebar/LastBillReceipt";
+import BillReceipt from "../BillReceipt";
 import { useReactToPrint } from "react-to-print";
 
 const PosHeader = () => {
@@ -48,7 +48,7 @@ const PosHeader = () => {
   }, [PosProduct.salesManId, dispatch, selectedUserId]);
   return (
     <div className={`z-50 flex bg-white dark:bg-gray-900 lg:border-b border-gray-200 dark:border-gray-800 transition-all duration-300 w-full!`}>
-      <div className="print-only hidden">{lastBill && <LastBillReceipt ref={contentRef} bill={lastBill} />}</div>
+      <div className="print-only hidden">{lastBill && <BillReceipt ref={contentRef} bill={lastBill} />}</div>
       <Grid spacing={{ xs: 1, lg: 0 }} container className="flex justify-between items-center p-2 w-full">
         <Grid size={{ xs: 12, lg: 6, xl: 8 }}>
           <Grid container spacing={{ xs: 1, sm: 2 }} className="flex max-sm:justify-center items-center w-full">

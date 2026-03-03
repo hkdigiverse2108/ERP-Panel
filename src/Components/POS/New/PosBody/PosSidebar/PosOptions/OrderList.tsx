@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Queries } from "../../../../../../Api";
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setOrderModal } from "../../../../../../Store/Slices/ModalSlice";
-import { setPosLoading, setPosProduct } from "../../../../../../Store/Slices/PosSlice";
+import { setPosLoading, setPosProduct, setPrintType, setSelectedOrderId } from "../../../../../../Store/Slices/PosSlice";
 import type { PosOrderBase } from "../../../../../../Types";
 import { FormatDate, FormatPayment } from "../../../../../../Utils";
 import { useDataGrid } from "../../../../../../Utils/Hooks";
@@ -13,10 +13,10 @@ import { CommonActionColumn, CommonDataGrid, CommonModal } from "../../../../../
 const OrderList = () => {
   const { isOrderModal } = useAppSelector((state) => state.modal);
   const dispatch = useAppDispatch();
-  const [selectedOrderId, setSelectedOrderId] = useState<string>("");
+  const [editSelectedOrderId, setEditSelectedOrderId] = useState<string>("");
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params } = useDataGrid({ active: true });
 
-  const { data, isLoading: orderDataByIdLoading, isFetching: orderDataByIdFetching } = Queries.useGetPosOrderById(selectedOrderId, Boolean(selectedOrderId));
+  const { data, isLoading: orderDataByIdLoading, isFetching: orderDataByIdFetching } = Queries.useGetPosOrderById(editSelectedOrderId, Boolean(editSelectedOrderId));
   const { data: orderData, isLoading: orderDataLoading, isFetching: orderDataFetching } = Queries.useGetPosOrder(params, isOrderModal);
 
   const orderDataById = data?.data;
@@ -24,7 +24,13 @@ const OrderList = () => {
   const totalRows = orderData?.data?.totalData || 0;
 
   const handleEdit = (row: PosOrderBase) => {
-    setSelectedOrderId(row._id);
+    setEditSelectedOrderId(row._id);
+    dispatch(setOrderModal());
+  };
+
+  const handlePrintBtn = (row: PosOrderBase) => {
+    dispatch(setPrintType("print"));
+    dispatch(setSelectedOrderId(row?._id));
     dispatch(setOrderModal());
   };
 
@@ -85,7 +91,7 @@ const OrderList = () => {
     { field: "orderType", headerName: "Order Type", flex: 1, minWidth: 100, renderCell: ({ value }) => FormatPayment(value) },
     CommonActionColumn<PosOrderBase>({
       onEdit: (row) => handleEdit(row),
-      onPrint: () => {},
+      onPrint: (row) => handlePrintBtn(row),
     }),
   ];
   const CommonDataGridOption = {

@@ -4,9 +4,10 @@ import { CommonButton, CommonDatePicker, CommonRadio, CommonSelect } from "../..
 import { PAYMENT_TERMS, POS_PAYMENT_METHOD, SEND_REMINDER } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setPayLaterModal } from "../../../../../Store/Slices/ModalSlice";
-import { clearPosProduct, setMultiplePay } from "../../../../../Store/Slices/PosSlice";
+import { clearPosProduct, setMultiplePay, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
 import { RemoveEmptyFields } from "../../../../../Utils";
 import { CommonModal } from "../../../../Common";
+import type { PosProductOrderDataResponse } from "../../../../../Types";
 
 const DEFAULT_DAYS = 7;
 
@@ -67,9 +68,10 @@ const PayLater = () => {
         paymentTerm: paymentTerms[0],
       },
     };
-    const onSuccess = () => {
+    const onSuccess = (res: PosProductOrderDataResponse) => {
       dispatch(clearPosProduct());
       handleClose();
+      dispatch(setSelectedOrderId(res?.data?._id));
       if (multiplePayments?.length) dispatch(setMultiplePay());
     };
     const onError = () => {
