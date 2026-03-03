@@ -1,14 +1,15 @@
-import { Add, Clear } from "@mui/icons-material";
+import { Add, Clear, Edit } from "@mui/icons-material";
 import { Box, Tab, Tabs } from "@mui/material";
 import { FieldArray, useFormikContext } from "formik";
 import { useEffect, useRef, useState } from "react";
-import { Queries } from "../../../Api";
+import { useQueryClient } from "@tanstack/react-query";
+import { Mutations, Queries } from "../../../Api";
+import { KEYS } from "../../../Constants";
 import { CommonButton, CommonTextField, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
 import { CommonCard, CommonTabPanel } from "../../../Components/Common";
 import CommonTable from "../../../Components/Common/CommonTable";
 import { GenerateOptions } from "../../../Utils";
-import type { CommonTableColumn, ProductBase, ProductSelectCellProps, PurchaseOrderFormValues, PurchaseOrderItem, TaxBase } from "../../../Types";
-import CommonTermsAndCondition from "../../Common/TermsAndConditions/CommonTermsAndCondition";
+import type { AddTermsConditionPayload, CommonTableColumn, EditTermsConditionPayload, ProductBase, ProductSelectCellProps, PurchaseOrderFormValues, PurchaseOrderItem, TaxBase, TermsConditionBase } from "../../../Types";
 import BillingSummary from "./BillingSummary";
 
 const ProductSelectCell = ({ index, productData, taxData, isLoading }: ProductSelectCellProps) => {
@@ -28,10 +29,11 @@ const ProductSelectCell = ({ index, productData, taxData, isLoading }: ProductSe
         if (tax && tax.percentage !== undefined) {
           setFieldValue(`items.${index}.tax`, tax.percentage);
           setFieldValue(`items.${index}.taxName`, tax.name || (tax as TaxBase & { taxName?: string }).taxName || "");
-          setFieldValue(`items.${index}.taxRate`, tax.percentage);
         }
         setFieldValue(`items.${index}.qty`, 1);
         setFieldValue(`items.${index}.unitCost`, product.landingCost || 0);
+        setFieldValue(`items.${index}.uomId`, product.uomId?._id || "");
+        setFieldValue(`items.${index}.unit`, product.uomId?.name || product.unit || "");
         setFieldValue(`items.${index}.mrp`, product.mrp || 0);
       }
       prevProductId.current = productId;
@@ -71,17 +73,78 @@ const TotalInputCell = ({ index }: { index: number }) => {
   return <CommonTextField type="number" onChange={handleTotalChange} value={item.total || 0} />;
 };
 
-interface ProductAndTermProps {
-  selectedTermIds: string[];
-  onTermsChange: (ids: string[]) => void;
-}
-
-const ProductAndTerm = ({ selectedTermIds, onTermsChange }: ProductAndTermProps) => {
+const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
   const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
+  const queryClient = useQueryClient();
   const [tabValue, setTabValue] = useState(0);
 
-  const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown();
+  // ... (rest of the component)
+  const [openTermsModal, setOpenTermsModal] = useState(false);
+  const [openSelectTermsModal, setOpenSelectTermsModal] = useState(false);
+  const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown({ companyFilter: values.companyId || undefined });
+
+  const { data: termsData } = Queries.useGetTermsCondition({ all: true });
+
+  // Helper to handle both array and paginated response
+  const termsList = termsData?.data?.termsCondition_data || [];
+
+  const defaultsInitialized = useRef(false);
+
+  useEffect(() => {
+    if (!isEditing && termsList.length > 0 && !defaultsInitialized.current) {
+      const defaultTerms = termsList.filter((t: TermsConditionBase) => t.isDefault).map((t: TermsConditionBase) => t._id);
+      if (defaultTerms.length > 0) {
+        if (!values.termsAndConditionIds || values.termsAndConditionIds.length === 0) {
+          setFieldValue("termsAndConditionIds", defaultTerms);
+        }
+        defaultsInitialized.current = true;
+      }
+    }
+  }, [isEditing, termsList, setFieldValue, values.termsAndConditionIds]);
   const { data: taxData } = Queries.useGetTaxDropdown();
+  const { mutate: addTerm } = Mutations.useAddTermsCondition();
+  const { mutate: editTerm } = Mutations.useEditTermsCondition();
+
+  const [selectedTerm, setSelectedTerm] = useState<TermsConditionBase | null>(null);
+
+  const handleRemoveTermFromPO = (id: string) => {
+    const currentIds = values.termsAndConditionIds || [];
+    setFieldValue(
+      "termsAndConditionIds",
+      currentIds.filter((termId) => termId !== id),
+    );
+  };
+
+  const handleEditTerm = (term: TermsConditionBase) => {
+    setSelectedTerm(term);
+    setOpenTermsModal(true);
+  };
+  const handleOpenAddTerm = () => {
+    setSelectedTerm(null);
+    setOpenTermsModal(true);
+  };
+  const handleSaveTerm = (term: TermsConditionBase) => {
+    if (selectedTerm) {
+      editTerm({ termsConditionId: term._id, termsCondition: term.termsCondition, isDefault: term.isDefault, companyId: values.companyId } as EditTermsConditionPayload, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: [KEYS.TERMS_CONDITION.BASE] });
+          setOpenTermsModal(false);
+          setSelectedTerm(null);
+        },
+      });
+    } else {
+      addTerm({ termsCondition: term.termsCondition, isDefault: term.isDefault, companyId: values.companyId } as AddTermsConditionPayload, {
+        onSuccess: (data: any) => {
+          queryClient.invalidateQueries({ queryKey: [KEYS.TERMS_CONDITION.BASE] });
+          setOpenTermsModal(false);
+          if (term.isDefault && data?.data?._id) {
+            const currentIds = values.termsAndConditionIds || [];
+            setFieldValue("termsAndConditionIds", [...currentIds, data.data._id]);
+          }
+        },
+      });
+    }
+  };
 
   useEffect(() => {
     let hasChanges = false;
@@ -146,7 +209,7 @@ const ProductAndTerm = ({ selectedTermIds, onTermsChange }: ProductAndTermProps)
     if (hasChanges) {
       setFieldValue("items", newItems);
     }
-  }, [values.items, values.taxType, values.flatDiscount, values.tax, values.roundOff, setFieldValue]);
+  }, [values.items, values.taxType, values.summary?.flatDiscount, values.summary?.roundOff, setFieldValue]);
 
   return (
     <>
@@ -161,8 +224,8 @@ const ProductAndTerm = ({ selectedTermIds, onTermsChange }: ProductAndTermProps)
 
           {/* TAB 0: PRODUCT DETAILS */}
           <CommonTabPanel value={tabValue} index={0}>
-            <Box sx={{ overflowX: "auto" }}>
-              <Box sx={{ minWidth: 1200 }}>
+            <Box className="custom-scrollbar" sx={{ overflowX: "auto" }}>
+              <Box sx={{ minWidth: 1400 }}>
                 <FieldArray name="items">
                   {({ push, remove }) => {
                     const columns: CommonTableColumn<PurchaseOrderItem>[] = [
@@ -189,14 +252,15 @@ const ProductAndTerm = ({ selectedTermIds, onTermsChange }: ProductAndTermProps)
                         footer: "Total",
                       },
                       { key: "sr", header: "#", bodyClass: "align-middle text-center w-[50px]", render: (_row, index) => index + 1 },
-                      { key: "productId", header: "Product*", bodyClass: "min-w-[200px]", render: (_row, index) => <ProductSelectCell index={index} productData={productData} taxData={taxData} isLoading={productDataLoading} /> },
-                      { key: "mrp", header: "MRP", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.mrp`} type="number" /> },
-                      { key: "qty", header: "Qty", bodyClass: "min-w-[80px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.qty`} type="number" /> },
-                      { key: "unitCost", header: "Unit Cost", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.unitCost`} type="number" /> },
+                      { key: "productId", header: "Product", bodyClass: "min-w-[250px]", render: (_row, index) => <ProductSelectCell index={index} productData={productData} taxData={taxData} isLoading={productDataLoading} /> },
+                      { key: "mrp", header: "MRP", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.mrp`} type="number" /> },
+                      { key: "qty", header: "Qty", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.qty`} type="number" /> },
+                      { key: "unit", header: "Unit", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.unit`} disabled /> },
+                      { key: "unitCost", header: "Unit Cost", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.unitCost`} type="number" /> },
                       {
                         key: "tax",
                         header: "Tax",
-                        bodyClass: "min-w-[120px] text-center",
+                        bodyClass: "min-w-[140px] text-center",
                         render: (row) => (
                           <Box className="flex flex-col items-center">
                             <span className="text-sm font-medium">
@@ -206,9 +270,9 @@ const ProductAndTerm = ({ selectedTermIds, onTermsChange }: ProductAndTermProps)
                           </Box>
                         ),
                       },
-                      { key: "landingCost", header: "Landing Cost", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.landingCost`} type="number" disabled /> },
-                      { key: "margin", header: "Margin", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.margin`} type="number" disabled /> },
-                      { key: "total", header: "Total", bodyClass: "min-w-[120px]", render: (_row, index) => <TotalInputCell index={index} />, footer: (data) => data.reduce((sum, item) => sum + (Number(item.total) || 0), 0).toFixed(2) },
+                      { key: "landingCost", header: "Landing Cost", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.landingCost`} type="number" disabled /> },
+                      { key: "margin", header: "Margin", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.margin`} type="number" disabled /> },
+                      { key: "total", header: "Total", bodyClass: "min-w-[140px]", render: (_row, index) => <TotalInputCell index={index} />, footer: (data) => data.reduce((sum, item) => sum + (Number(item.total) || 0), 0).toFixed(2) },
                     ];
 
                     return <CommonTable showFooter data={values.items || []} columns={columns} rowKey={(_row, index) => index.toString()} getRowClass={() => "align-top"} />;
@@ -218,8 +282,62 @@ const ProductAndTerm = ({ selectedTermIds, onTermsChange }: ProductAndTermProps)
             </Box>
           </CommonTabPanel>
 
+          {/* TAB 1: TERMS & CONDITIONS */}
           <CommonTabPanel value={tabValue} index={1}>
-            <CommonTermsAndCondition selectedTermIds={selectedTermIds} onChange={onTermsChange} />
+            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr" }, gap: 3, p: 3 }}>
+              {/* Terms Section */}
+              <Box>
+                <Box display="flex" justifyContent="space-between" mb={2}>
+                  <Box fontWeight={600}>Terms & Conditions</Box>
+                  <Box display="flex" gap={1}>
+                    <CommonButton startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined" title="new term" disabled={!values.companyId} />
+                    <CommonButton onClick={() => setOpenSelectTermsModal(true)} variant="outlined" disabled={!values.companyId}>
+                      <Edit />
+                    </CommonButton>
+                  </Box>
+                </Box>
+
+                <Box className="custom-scrollbar" sx={{ overflowX: "auto" }}>
+                  <Box sx={{ minWidth: "max-content" }}>
+                    <table className="w-full text-sm border border-gray-200 dark:border-gray-700">
+                      <thead className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-200">
+                        <tr>
+                          <th className="p-2 w-10">#</th>
+                          <th className="p-2 text-left">Condition</th>
+                          <th className="p-2 w-20 text-center">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {termsList
+                          .filter((term: TermsConditionBase) => values.termsAndConditionIds?.includes(term._id))
+                          .map((term: TermsConditionBase, index: number) => (
+                            <tr key={term._id} className="text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700">
+                              <td className="p-2">{index + 1}</td>
+                              <td className="p-2">{term.termsCondition}</td>
+                              <td className="p-2 text-center">
+                                <Box display="flex" justifyContent="center" gap={1}>
+                                  <CommonButton size="small" color="primary" variant="text" onClick={() => handleEditTerm(term)}>
+                                    <Edit fontSize="small" />
+                                  </CommonButton>
+                                  <CommonButton size="small" color="error" variant="text" onClick={() => handleRemoveTermFromPO(term._id)}>
+                                    <Clear fontSize="small" />
+                                  </CommonButton>
+                                </Box>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </Box>
+                </Box>
+              </Box>{" "}
+              {/* Closing Terms Box */}
+              {/* Note Section */}
+              <Box>
+                <CommonValidationTextField name="notes" label="Note" multiline rows={4} placeholder="Enter a note (max 200 characters)" />
+              </Box>
+            </Box>{" "}
+            {/* Closing Grid Box */}
           </CommonTabPanel>
         </Box>
       </CommonCard>

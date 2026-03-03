@@ -1,140 +1,90 @@
 import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonActionColumn, CommonDeleteModal, AdvancedSearch, CommonStatsCard } from "../../../Components/Common";
-import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import { Mutations, Queries } from "../../../Api";
+import { CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { Queries, Mutations } from "../../../Api";
-import type { AppGridColDef, ContactBase, PurchaseOrderBase } from "../../../Types";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
-import { BREADCRUMBS, ORDER_STATUS } from "../../../Data";
+import { BREADCRUMBS } from "../../../Data";
+import type { AppGridColDef, PurchaseOrderBase } from "../../../Types";
+import { useDataGrid } from "../../../Utils/Hooks";
+import { FormatDate } from "../../../Utils";
 
 const PurchaseOrder = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
-  const permission = usePagePermission(PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE);
 
-  // ================= API =================
-
-  const { data: purchaseOrderData, isLoading, isFetching } = Queries.useGetPurchaseOrder(params);
-
-  const { mutate: deletePurchaseOrder, isPending: isDeleteLoading } = Mutations.useDeletePurchaseOrder();
-
+  const { data: purchaseOrderData, isLoading: purchaseOrderDataLoading, isFetching: purchaseOrderDataFetching } = Queries.useGetPurchaseOrder(params);
+  const { mutate: deletePurchaseOrderMutate } = Mutations.useDeletePurchaseOrder();
   const { mutate: editPurchaseOrder, isPending: isEditLoading } = Mutations.useEditPurchaseOrder();
 
-  const { data: supplierData, isLoading: supplierLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier" });
+  // Filter Data Queries
+  // const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier" });
 
-  // ================= DATA =================
-
-  const rows: PurchaseOrderBase[] = purchaseOrderData?.data?.purchaseOrder_data?.map((po) => ({ ...po, id: po._id })) || [];
-
+  const allPurchaseOrder = useMemo(() => purchaseOrderData?.data?.purchaseOrder_data?.map((purchaseOrder) => ({ ...purchaseOrder, id: purchaseOrder._id, netAmount: purchaseOrder.summary?.netAmount || 0 })) || [], [purchaseOrderData]);
   const totalRows = purchaseOrderData?.data?.totalData || 0;
 
-  // ================= DELETE =================
+  const summary = useMemo(() => {
+    return CalculateGridSummary(allPurchaseOrder, ["netAmount"]);
+  }, [allPurchaseOrder]);
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
-
-    deletePurchaseOrder(rowToDelete._id as string, {
-      onSuccess: () => setRowToDelete(null),
-    });
+    deletePurchaseOrderMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
   };
 
-  // ================= FILTER =================
-
-  const filter = [CreateFilter("Select Supplier", "supplierFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(supplierData?.data), supplierLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ORDER_STATUS, false, { xs: 12, sm: 6, md: 3 })];
-
-  // ================= STATS =================
-
-  const stats = useMemo(() => {
-    const total = rows.length;
-    return [
-      { label: "All Orders", value: total, color: "primary" },
-      { label: "Delivered", value: rows.filter((r) => r.status === "delivered").length, color: "success" },
-      { label: "Exceed", value: rows.filter((r) => r.status === "exceed").length, color: "error" },
-      { label: "Completed", value: rows.filter((r) => r.status === "completed").length, color: "info" },
-      { label: "Cancelled", value: rows.filter((r) => r.status === "cancelled").length, color: "warning" },
-    ];
-  }, [rows]);
-
-  // ================= COLUMNS =================
+  const handleAdd = () => navigate(ROUTES.PURCHASE_ORDER.ADD_EDIT);
 
   const columns: AppGridColDef<PurchaseOrderBase>[] = [
     { field: "orderNo", headerName: "Order No", width: 150 },
-
-    {
-      field: "supplierId",
-      headerName: "Supplier",
-      width: 250,
-      renderCell: (params) => {
-        const supplier = params.row.supplierId as ContactBase;
-        if (!supplier || typeof supplier !== "object") return "-";
-        const firstName = supplier.firstName || "";
-        const lastName = supplier.lastName || "";
-        const fullName = `${firstName} ${lastName}`.trim();
-        return fullName || supplier.companyName || "-";
-      },
-    },
-
+    { field: "supplierId", headerName: "Supplier", width: 250, valueGetter: (_, row: PurchaseOrderBase) => (row?.supplierId ? `${row.supplierId.firstName || ""} ${row.supplierId.lastName || ""}`.trim() || row.supplierId.companyName || "" : "") },
     { field: "date", headerName: "Order Date", width: 150, renderCell: (params) => FormatDate(params.row.date || params.row.orderDate) },
-
     { field: "netAmount", headerName: "Amount", width: 170, type: "number" },
-
-    { field: "status", headerName: "Status", width: 150 },
-
-    { field: "notes", headerName: "Notes", flex: 1, minWidth: 150, renderCell: (params) => params.row.notes || params.row.note || "-" },
-
-    ...(permission?.edit || permission?.delete
-      ? [
-          CommonActionColumn<PurchaseOrderBase>({
-            ...(permission?.edit && {
-              active: (row) => editPurchaseOrder({ purchaseOrderId: row?._id, isActive: !row.isActive }),
-              editRoute: ROUTES.PURCHASE_ORDER.ADD_EDIT,
-            }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id }) }),
-          }),
-        ]
-      : []),
+    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+    { field: "notes", headerName: "Notes", flex: 1, minWidth: 150 },
+    CommonActionColumn({
+      active: (row) => editPurchaseOrder({ purchaseOrderId: row?._id, isActive: !row.isActive }),
+      editRoute: ROUTES.PURCHASE_ORDER.ADD_EDIT,
+      onDelete: (row) => setRowToDelete({ _id: row?._id }),
+    }),
   ];
-
-  // ================= GRID OPTIONS =================
-
-  const gridOptions = {
+  ``;
+  const CommonDataGridOption = {
     columns,
-    rows,
+    rows: allPurchaseOrder,
     rowCount: totalRows,
-    loading: isLoading || isFetching || isEditLoading,
+    loading: purchaseOrderDataLoading || purchaseOrderDataFetching || isEditLoading,
     isActive,
     setActive,
-    ...(permission?.add && {
-      handleAdd: () => navigate(ROUTES.PURCHASE_ORDER.ADD_EDIT),
-    }),
+    handleAdd,
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    slots: {
+      bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
+    },
   };
 
-  // ================= UI =================
+
+  const stats = [
+    { label: "All Orders", value: totalRows || 0, color: "primary" },
+    { label: "Delivered", value: allPurchaseOrder.filter((item) => item.status === "delivered").length, color: "success" },
+    { label: "Exceed", value: allPurchaseOrder.filter((item) => item.status === "exceed").length, color: "error" },
+    { label: "Completed", value: allPurchaseOrder.filter((item) => item.status === "completed").length, color: "info" },
+    { label: "Cancelled", value: allPurchaseOrder.filter((item) => item.status === "cancelled").length, color: "warning" },
+  ];
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER.BASE} />
-
+      <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <Box sx={{ overflowX: "auto", pb: 1, "& .MuiGrid-container": { flexWrap: "nowrap", minWidth: "max-content" } }}>
-          <CommonStatsCard stats={stats} />
-        </Box>
-
-        <AdvancedSearch filter={filter} />
-
+        <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 4, md: 2.4 }} />
         <CommonCard hideDivider>
-          <CommonDataGrid {...gridOptions} />
+          <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
-
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       </Box>
     </>
   );
