@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import SupplierBillTabs from "../../../Components/Purchase/SupplierBill/SupplierBillDetails/SupplierBillTab";
 import AdditionalChargesSection from "../../../Components/Purchase/SupplierBill/AdditionalChargeSection";
 import SupplierBillDetails from "../../../Components/Purchase/SupplierBill/SupplierBillDetails/SupplierBillDetails";
-import type { AdditionalChargeDetails, AdditionalChargeItem, AdditionalChargeRow, Supplier, ProductRow, SupplierBillFormValues, SupplierBillProductDetails, SupplierBillProductItem } from "../../../Types/SupplierBill";
+import type { AdditionalChargeDetails, AdditionalChargeRow, Supplier, ProductRow, SupplierBillFormValues, SupplierBillProductDetails, SupplierBillProductItem } from "../../../Types/SupplierBill";
 import type { ProductBase, TermsConditionBase } from "../../../Types";
 import { usePagePermission } from "../../../Utils/Hooks";
 
@@ -41,22 +41,10 @@ const SupplierBillForm = () => {
   const permission = usePagePermission(PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE);
   const data = location.state?.data;
 
-  // exclude companyId since page should not handle company selection
   const { _id, createdAt, updatedAt, isDeleted, createdBy, updatedBy, __v, companyId: _companyId, branchId: _branchId, ...cleanData } = data || {};
   const today = DateConfig.utc().toISOString();
   const defaultValues: SupplierBillFormValues = { supplierId: "", supplierBillNo: "", supplierBillDate: today, taxType: "exclusive", paymentTerm: "", dueDate: today, reverseCharge: false, shippingDate: today, invoiceAmount: "", termsAndConditionIds: [], notes: "", paidAmount: 0, balanceAmount: 0, paymentStatus: "unpaid", status: "active", isActive: true };
-  const initialValues: SupplierBillFormValues = {
-    ...defaultValues,
-    ...cleanData,
-    supplierId: cleanData?.supplierId?._id || cleanData?.supplierId || defaultValues.supplierId,
-    // ensure dueDate/shippingDate fall back to today when not provided
-    dueDate: cleanData?.dueDate || defaultValues.dueDate,
-    shippingDate: cleanData?.shippingDate || defaultValues.shippingDate,
-    // companyId removed intentionally
-    // branchId is not part of the form values, ignore
-    reverseCharge: Boolean(cleanData?.reverseCharge),
-    termsAndConditionIds: data?.termsAndConditionIds?.map((t: { _id: string }) => t._id) || [],
-  };
+  const initialValues: SupplierBillFormValues = { ...defaultValues, ...cleanData, supplierId: cleanData?.supplierId?._id || cleanData?.supplierId || defaultValues.supplierId, dueDate: cleanData?.dueDate || defaultValues.dueDate, shippingDate: cleanData?.shippingDate || defaultValues.shippingDate, reverseCharge: Boolean(cleanData?.reverseCharge), termsAndConditionIds: data?.termsAndConditionIds?.map((t: { _id: string }) => t._id) || [] };
 
   const { data: supplierData } = Queries.useGetContactDropdown({ activeFilter: true, typeFilter: "supplier" });
   const suppliers: Supplier[] = (supplierData?.data || []).map((s) => ({ ...s, name: s.companyName || `${s.firstName} ${s.lastName}` }));
@@ -72,7 +60,7 @@ const SupplierBillForm = () => {
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
 
   const emptyRow: ProductRow = { productId: "", itemCode: "", qty: "", freeQty: "", uomId: "", unit: "", unitCost: "", mrp: "", sellingPrice: "", disc1: "", disc2: "", taxableAmount: "", taxId: "", itemTax: "", landingCost: "", margin: "", totalAmount: "", mfgDate: "", expiryDate: "", taxRate: "", taxName: "" };
-  const additionalChargeEmptyRow: AdditionalChargeRow = { chargeId: "", taxableAmount: "", tax: "", taxAmount: "", totalAmount: "" };
+  const additionalChargeEmptyRow: AdditionalChargeRow = { chargeId: "", amount: "", taxId: "", taxAmount: "", totalAmount: "" };
   const [rows, setRows] = useState<ProductRow[]>([emptyRow]);
   const [returnRows, setReturnRows] = useState<ProductRow[]>([emptyRow]);
   const [additionalChargeRows, setAdditionalChargeRows] = useState<AdditionalChargeRow[]>([additionalChargeEmptyRow]);
@@ -98,7 +86,7 @@ const SupplierBillForm = () => {
     const itemTaxable = rows.reduce((s, r) => s + (Number(r.taxableAmount) || 0), 0);
     const itemTax = rows.reduce((s, r) => s + (Number(r.itemTax) || 0), 0);
     const itemGross = rows.reduce((s, r) => s + (Number(r.qty) || 0) * (Number(r.sellingPrice) || 0), 0);
-    const additionalTaxable = additionalChargeRows.reduce((s, r) => s + (Number(r.taxableAmount) || 0), 0);
+    const additionalTaxable = additionalChargeRows.reduce((s, r) => s + (Number(r.amount) || 0), 0);
     const additionalTax = additionalChargeRows.reduce((s, r) => s + (Number(r.taxAmount) || 0), 0);
     const grossAmount = itemGross + additionalTaxable;
     const totalTaxableBeforeDiscount = itemTaxable + additionalTaxable;
@@ -120,8 +108,8 @@ const SupplierBillForm = () => {
     });
     additionalChargeRows.forEach((r) => {
       const amount = Number(r.taxAmount) || 0;
-      if (r.tax && amount > 0) {
-        const taxObj = TaxData?.data?.find((t) => String(t._id) === String(r.tax));
+      if (r.taxId && amount > 0) {
+        const taxObj = TaxData?.data?.find((t) => String(t._id) === String(r.taxId));
         const name = taxObj?.name || "Tax";
         const rate = taxObj?.percentage || 0;
         if (!taxBreakdown[name]) {
@@ -132,20 +120,17 @@ const SupplierBillForm = () => {
     });
     const taxSummary = Object.entries(taxBreakdown).map(([name, data]) => ({ name, rate: data.rate, amount: Number(data.amount.toFixed(2)) }));
     const summaryGrossAmount = grossAmount - flatDisc;
-      const totalDiscount = (discountAmount || 0) + flatDisc;
-      // Return only backend-expected fields. Do NOT include legacy `itemDiscount`/`itemTax` keys.
-      return {
-        flatDiscount: flatDisc,
-        // total discount (items + flat)
-        discountAmount: Number(totalDiscount.toFixed(2)),
-        grossAmount: summaryGrossAmount,
-        taxableAmount: taxableAfterDiscount,
-        // total tax
-        taxAmount: Number(taxAmount.toFixed(2)),
-        roundOff,
-        netAmount: Number(netAmount.toFixed(2)),
-        taxSummary,
-      };
+    const totalDiscount = (discountAmount || 0) + flatDisc;
+    return {
+      flatDiscount: flatDisc,
+      discountAmount: Number(totalDiscount.toFixed(2)),
+      grossAmount: summaryGrossAmount,
+      taxableAmount: taxableAfterDiscount,
+      taxAmount: Number(taxAmount.toFixed(2)),
+      roundOff,
+      netAmount: Number(netAmount.toFixed(2)),
+      taxSummary,
+    };
   };
   const summary = calculateSummary();
   useEffect(() => {
@@ -165,7 +150,6 @@ const SupplierBillForm = () => {
         setRows(
           data.productDetails.item.map((item: SupplierBillProductItem) => {
             let product = item.productId as ProductBase | undefined;
-            // If product data is not fully loaded, lookup from ProductsData
             if (!product?.uomId && ProductsData?.data) {
               const foundProduct = (ProductsData.data || []).find((p) => String(p._id) === String(item.productId));
               if (foundProduct) {
@@ -177,11 +161,20 @@ const SupplierBillForm = () => {
         );
       }
       if (data.additionalCharges?.item && data.additionalCharges.item.length > 0) {
-        setAdditionalChargeRows(data.additionalCharges.item.map((item: AdditionalChargeItem) => ({ chargeId: String(item.chargeId || ""), taxableAmount: item.value?.toString() || "", tax: item.taxRate?.toString() || "", taxAmount: ((item.total || 0) - (item.value || 0))?.toFixed(2) || "", totalAmount: item.total?.toString() || "" })));
+        setAdditionalChargeRows(
+          data.additionalCharges.item.map((item: any) => ({
+            chargeId: item.chargeId?._id || "",
+            amount: item.amount?.toString() || "",
+            taxId: item.taxId?._id || item.taxId || "",
+            taxAmount: item.totalAmount && item.amount ? (item.totalAmount - item.amount).toFixed(2) : "",
+            totalAmount: item.totalAmount?.toString() || "",
+          })),
+        );
         setShowAdditionalCharge(true);
-      } else {
-        setAdditionalChargeRows([additionalChargeEmptyRow]);
       }
+      setShowAdditionalCharge(true);
+    } else {
+      setAdditionalChargeRows([additionalChargeEmptyRow]);
       if (data.summary?.flatDiscount) {
         setFlatDiscount(data.summary.flatDiscount);
       }
@@ -192,7 +185,6 @@ const SupplierBillForm = () => {
         setReturnRoundOffAmount(data.returnProductDetails.summary.roundOff);
       }
     }
-    // termsAndConditionIds handling moved to terms effect
   }, [data, isEditing, ProductsData]);
 
   const mapProductRows = (): SupplierBillProductDetails => {
@@ -200,9 +192,12 @@ const SupplierBillForm = () => {
     return { item, totalQty: item.reduce((s, r) => s + r.qty!, 0), totalTax: rows.reduce((s, r) => s + (+r.itemTax || 0), 0), total: item.reduce((s, r) => s + r.total!, 0) };
   };
   const mapAdditionalCharges = (): AdditionalChargeDetails => {
-    const validRows = additionalChargeRows.filter((row) => row.chargeId);
-    const item = validRows.map(({ chargeId, taxableAmount, tax, totalAmount }) => ({ chargeId: chargeId, value: +taxableAmount || 0, taxRate: +tax || 0, total: +totalAmount || 0 }));
-    return { item, total: item.reduce((a, b) => a + b.total!, 0) };
+    const validRows = additionalChargeRows.filter((row) => row.chargeId && row.taxId);
+    const item = validRows.map((row) => ({ chargeId: row.chargeId, taxId: row.taxId, amount: Number(row.amount) || 0, totalAmount: Number(row.totalAmount) || 0 }));
+    return {
+      item,
+      total: item.reduce((sum, r) => sum + r.totalAmount, 0),
+    };
   };
 
   const handleAdd = () => {
@@ -321,16 +316,16 @@ const SupplierBillForm = () => {
       const finalValue = Array.isArray(value) ? value[0] : value;
       newRows[index] = { ...newRows[index], [field]: finalValue };
       const recalculate = (rowIndex: number) => {
-        const taxable = Number(newRows[rowIndex].taxableAmount) || 0;
-        const taxId = newRows[rowIndex].tax;
+        const amount = Number(newRows[rowIndex].amount) || 0;
+        const taxId = newRows[rowIndex].taxId;
         const taxObj = TaxData?.data?.find((t) => String(t._id) === String(taxId));
         const taxRate = taxObj?.percentage || 0;
-        const taxAmt = (taxable * taxRate) / 100;
-        const total = taxable + taxAmt;
+        const taxAmt = (amount * taxRate) / 100;
+        const total = amount + taxAmt;
         newRows[rowIndex].taxAmount = taxAmt.toFixed(2);
         newRows[rowIndex].totalAmount = total.toFixed(2);
       };
-      if (field === "taxableAmount" || field === "tax") {
+      if (field === "amount" || field === "taxId") {
         recalculate(index);
       }
       if (field === "chargeId") {
@@ -341,10 +336,10 @@ const SupplierBillForm = () => {
         const selectedCharge = additionalchargedata?.data?.find((c: any) => c._id === finalValue);
         if (selectedCharge) {
           if (typeof selectedCharge.defaultValue === "number") {
-            newRows[index].taxableAmount = selectedCharge.defaultValue.toFixed(2);
+            newRows[index].amount = selectedCharge.defaultValue.toFixed(2);
           }
           if (selectedCharge.taxId?._id) {
-            newRows[index].tax = selectedCharge.taxId._id;
+            newRows[index].taxId = selectedCharge.taxId._id;
           }
           recalculate(index);
         }
