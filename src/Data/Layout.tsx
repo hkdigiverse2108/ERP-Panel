@@ -1,4 +1,4 @@
-import { AccountBalance, Calculate, GridViewRounded, People, PersonRounded, PointOfSale, ReceiptLong, Redeem, Settings } from "@mui/icons-material";
+import { AccountBalance,  GridViewRounded, People, PersonRounded, PointOfSale, ReceiptLong, Redeem, Settings } from "@mui/icons-material";
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
 
