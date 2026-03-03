@@ -15,7 +15,7 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
   const { values } = useFormikContext<PurchaseOrderFormValues>();
   const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier", companyId: values.companyId || undefined }, supplierQueryEnabled);
 
-  const selectedSupplier = (supplierData?.data as unknown as Supplier[])?.find((s) => s._id === values.supplierId);
+  const selectedSupplier = (supplierData?.data  as Supplier[])?.find((s) => s._id === values.supplierId);
 
   return (
     <Form noValidate>
@@ -138,7 +138,7 @@ const PurchaseOrderForm = () => {
       const changedFields = GetChangedFields(payload, data);
       await editPurchaseOrder({ ...changedFields, purchaseOrderId: data._id }, { onSuccess: handleSuccess });
     } else {
-      await addPurchaseOrder(RemoveEmptyFields(payload) as unknown as AddPurchaseOrderPayload, { onSuccess: handleSuccess });
+      await addPurchaseOrder(RemoveEmptyFields(payload)  as AddPurchaseOrderPayload, { onSuccess: handleSuccess });
     }
   };
 
