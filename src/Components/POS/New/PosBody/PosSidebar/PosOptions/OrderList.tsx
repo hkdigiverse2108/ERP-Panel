@@ -67,7 +67,6 @@ const OrderList = () => {
         totalAmount: orderDataById?.totalAmount,
         posOrderId: orderDataById?._id,
       };
-      console.log("payload", orderDataById);
       dispatch(setPosProduct(payload));
     }
   }, [orderDataById, orderDataByIdLoading, orderDataByIdFetching, dispatch]);
@@ -95,6 +94,10 @@ const OrderList = () => {
         isPermission: (row) => row.posCashRegisterId?.status !== "open",
       },
       onPrint: (row) => handlePrintBtn(row),
+      onSalesInvoice: {
+        handleSalesInvoice: (row) => {},
+        // isPermission: (row) => row.posCashRegisterId?.status !== "open",
+      },
     }),
   ];
   const CommonDataGridOption = {
@@ -112,7 +115,7 @@ const OrderList = () => {
   };
 
   return (
-    <CommonModal title="POS Details" isOpen={isOrderModal} onClose={() => dispatch(setOrderModal())} className="max-w-[1100px]">
+    <CommonModal title="POS Details" isOpen={isOrderModal} onClose={() => dispatch(setOrderModal())} className="max-w-[1150px]">
       <Box className="mr-2!">
         <CommonDataGrid {...CommonDataGridOption} />
       </Box>

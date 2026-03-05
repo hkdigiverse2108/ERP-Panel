@@ -219,6 +219,7 @@ export interface CommonActionColumnProps<T> {
   active?: (row: T) => void;
   onRefund?: (row: T) => void;
   onPrint?: (row: T) => void;
+  onSalesInvoice?: { handleSalesInvoice: (row: T) => void; isPermission?: (row: T) => boolean };
 }
 
 export interface CommonTableColumn<T> {
