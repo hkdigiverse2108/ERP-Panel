@@ -11,7 +11,7 @@ const Transaction = () => {
   const [range, setRange] = useState({ start: dayjs(), end: dayjs() });
   const [values, setValues] = useState<string[]>([OPTION_TYPE[1].value]);
 
-  const { data: transactionData, isLoading: isTransactionLoading, isFetching: isTransactionFetching } = Queries.useGetDashboardTransactionGraph({ startDate: range.start, endDate: range.end, type: values[0] });
+  const { data: transactionData, isLoading: isTransactionLoading, isFetching: isTransactionFetching } = Queries.useGetDashboardTransactionGraph({ startDate: range.start, endDate: range.end, typeFilter: values[0] });
 
   const chartData = transactionData?.data || [];
   const isLoading = isTransactionLoading || isTransactionFetching;

@@ -38,6 +38,9 @@ export interface CompanyFormValues {
   decimalPoint?: string;
   currency?: string;
 
+  planStartDate?: string;
+  planEndDate?: string;
+
   enableFeedbackModule?: boolean;
   allowRoundOff?: boolean;
   logo?: string;

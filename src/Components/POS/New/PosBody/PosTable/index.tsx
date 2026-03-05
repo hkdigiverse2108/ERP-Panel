@@ -48,7 +48,6 @@ const PosTable = () => {
   }, [finalAmount]);
 
   const roundOffAmount = useMemo(() => (roundedAmount - Number(finalAmount))?.toFixed(2), [roundedAmount, finalAmount]);
-
   useEffect(() => {
     dispatch(setTotalQty(totalQty?.toFixed(2)));
     dispatch(setTotalMrp(totalMrp?.toFixed(0)));
@@ -105,16 +104,8 @@ const PosTable = () => {
       bodyClass: "min-w-32 w-35",
       render: (row) => <CommonTextField type="number" value={row.additionalDiscount || 0} onChange={(e) => updateRow(row._id, { additionalDiscount: Number(e) })} isCurrency disabled />,
     },
-    {
-      key: "unitCost",
-      header: "Unit Cost",
-      bodyClass: "min-w-32 w-35",
-    },
-    {
-      key: "netAmount",
-      header: "Net Amount",
-      bodyClass: "min-w-32 w-35",
-    },
+    { key: "unitCost", header: "Unit Cost", bodyClass: "min-w-32 w-35" },
+    { key: "netAmount", header: "Net Amount", bodyClass: "min-w-32 w-35" },
     ...(!PosProduct.posOrderId
       ? [
           {

@@ -8,8 +8,8 @@ import { CommonButton, CommonValidationSelect, CommonValidationTextField } from 
 import { PAYMENT_MODE, POS_PAYMENT_METHOD } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setPayLaterModal } from "../../../../../Store/Slices/ModalSlice";
-import { clearPosProduct, setMultiplePay } from "../../../../../Store/Slices/PosSlice";
-import type { CommonTableColumn, MultiplePaymentType, PosProductDataModal } from "../../../../../Types";
+import { clearPosProduct, setMultiplePay, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
+import type { CommonTableColumn, MultiplePaymentType, PosProductDataModal, PosProductOrderDataResponse } from "../../../../../Types";
 import { GenerateOptions, RemoveEmptyFields } from "../../../../../Utils";
 import { MultiplePaySchema } from "../../../../../Utils/ValidationSchemas";
 import { CommonTable } from "../../../../Common";
@@ -62,9 +62,10 @@ const MultiplePay = () => {
       multiplePayments: multiplePayments,
     };
     if (Number(rest?.totalAmount) === Number(totalAmount)) {
-      const onSuccess = () => {
+      const onSuccess = (res: PosProductOrderDataResponse) => {
         dispatch(clearPosProduct());
         dispatch(setMultiplePay());
+        dispatch(setSelectedOrderId(res?.data?._id));
       };
       const changedFields = RemoveEmptyFields(payload);
       if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess });

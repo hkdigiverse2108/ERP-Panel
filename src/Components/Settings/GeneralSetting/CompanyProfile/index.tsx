@@ -4,6 +4,7 @@ import { CommonSwitch } from "../../../../Attribute";
 import { ROUTES } from "../../../../Constants";
 import { useAppSelector } from "../../../../Store/hooks";
 import { CommonCard, CommonImageBox } from "../../../Common";
+import { FormatDate } from "../../../../Utils";
 
 const CompanyProfile = () => {
   const { company = {}, financialYear } = useAppSelector((state) => state.company);
@@ -21,6 +22,8 @@ const CompanyProfile = () => {
         { label: "Email", value: company?.email },
         { label: "phone No", value: `+${company?.phoneNo?.countryCode} ${company?.phoneNo?.phoneNo}` },
         { label: "Customer Care No.", value: company?.customerCareNumber },
+        { label: "Plan Start Date", value: FormatDate(company?.planStartDate) },
+        { label: "Plan End Date", value: FormatDate(company?.planEndDate) },
       ],
     },
     {

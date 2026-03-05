@@ -12,7 +12,8 @@ import { CommonButton, CommonTextField, ShowNotification } from "../../../../../
 import { POS_PAYMENT_METHOD } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setAdditionalChargeModal, setApplyCouponModal, setCardModal, setCashModal, setPayLaterModal, setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
-import { clearPosProduct, setBtnStatus, setFlatDiscountAmount, setMultiplePay, setRemarks, setRoundOff } from "../../../../../Store/Slices/PosSlice";
+import { clearPosProduct, setBtnStatus, setFlatDiscountAmount, setMultiplePay, setPrintType, setRemarks, setRoundOff, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
+import type { PosProductOrderDataResponse } from "../../../../../Types";
 import { RemoveEmptyFields } from "../../../../../Utils";
 import AdditionalCharge from "./AdditionalCharge";
 import ApplyCoupon from "./ApplyCoupon";
@@ -26,7 +27,7 @@ const PosFooter = () => {
   const dispatch = useAppDispatch();
 
   const { mutate: addPosOrder } = Mutations.useAddPosOrder();
-  const { mutate: editPosOrder, isPending: editPosOrderLoading } = Mutations.useEditPosOrder();
+  const { mutate: editPosOrder } = Mutations.useEditPosOrder();
 
   const summaryRowData = [
     { label: "Quantity", value: PosProduct.totalQty }, //totalQty
@@ -36,7 +37,7 @@ const PosFooter = () => {
     { label: "Discount", value: PosProduct.totalDiscount }, //totalDiscount
     { label: "Flat Discount" }, //flatDiscountAmount
     { label: "Round OFF" },
-    { label: "Amount", value: PosProduct.totalAmount, highlight: true },
+    { label: "Amount", value: Number(PosProduct?.totalAmount || 0)?.toFixed(0), highlight: true },
   ];
 
   const mappedItems = useMemo(
@@ -65,7 +66,7 @@ const PosFooter = () => {
     return true;
   };
 
-  const handleHoldBill = () => {
+  const handleHoldBill = (type: string) => {
     if (!validate()) return;
     const { posOrderId, ...rest } = PosProduct;
     const payload = {
@@ -73,10 +74,12 @@ const PosFooter = () => {
       items: mappedItems,
       status: "hold",
     };
-    dispatch(setBtnStatus("hold"));
-    const onSuccess = () => {
+    dispatch(setBtnStatus(type === "print" ? "hold-print" : "hold"));
+    dispatch(setPrintType(type));
+    const onSuccess = (res: PosProductOrderDataResponse) => {
       dispatch(clearPosProduct());
       dispatch(setBtnStatus(""));
+      if (type === "print") dispatch(setSelectedOrderId(res?.data?._id));
     };
     const onError = () => {
       dispatch(setBtnStatus(""));
@@ -86,7 +89,7 @@ const PosFooter = () => {
     else addPosOrder(RemoveEmptyFields(payload), { onSuccess, onError });
   };
 
-  const handleUpi = () => {
+  const handleUpi = (type: string) => {
     if (!validate(true)) return;
     const { posOrderId, ...rest } = PosProduct;
 
@@ -101,10 +104,12 @@ const PosFooter = () => {
         },
       ],
     };
-    dispatch(setBtnStatus("upi"));
-    const onSuccess = () => {
+    dispatch(setBtnStatus(type === "print" ? "upi-print" : "upi"));
+    dispatch(setPrintType(type));
+    const onSuccess = (res: PosProductOrderDataResponse) => {
       dispatch(clearPosProduct());
       dispatch(setBtnStatus(""));
+      if (type === "print") dispatch(setSelectedOrderId(res?.data?._id));
     };
     const onError = () => {
       dispatch(setBtnStatus(""));
@@ -114,24 +119,28 @@ const PosFooter = () => {
     else addPosOrder(RemoveEmptyFields(payload), { onSuccess, onError });
   };
 
-  const handlePayLater = () => {
+  const handlePayLater = (type: string) => {
     if (!validate(true)) return;
     dispatch(setPayLaterModal({ open: true, data: [] }));
+    dispatch(setPrintType(type));
   };
 
-  const handleCard = () => {
+  const handleCard = (type: string) => {
     if (!validate(true)) return;
     dispatch(setCardModal());
+    dispatch(setPrintType(type));
   };
 
-  const handleCash = () => {
+  const handleCash = (type: string) => {
     if (!validate(true)) return;
     dispatch(setCashModal());
+    dispatch(setPrintType(type));
   };
 
-  const handleMultiplePay = () => {
+  const handleMultiplePay = (type: string) => {
     if (!validate(true)) return;
     dispatch(setMultiplePay());
+    dispatch(setPrintType(type));
   };
 
   const handleApplyCoupon = () => {
@@ -156,8 +165,8 @@ const PosFooter = () => {
         <Grid container spacing={{ xs: 1, xl: 0 }} className="flex items-center py-2">
           {summaryRowData.map((item, index) => (
             <Grid size={{ xs: 6, md: 3, xl: 1.5 }} key={index} className={`flex flex-col items-center justify-center px-4 ${!item.highlight ? "border-r border-gray-300 dark:border-gray-700" : ""} `}>
-              {item.label === "Flat Discount" && <CommonTextField label="Flat Discount" value={PosProduct.flatDiscountAmount} onChange={(e) => dispatch(setFlatDiscountAmount(e))} isCurrency currencyDisabled />}
-              {item.label === "Round OFF" && <CommonTextField label="Round OFF" value={PosProduct.roundOff} onChange={(e) => dispatch(setRoundOff(e))} />}
+              {item.label === "Flat Discount" && <CommonTextField label="Flat Discount" value={PosProduct.flatDiscountAmount} type="number" onChange={(e) => dispatch(setFlatDiscountAmount(e))} isCurrency currencyDisabled />}
+              {item.label === "Round OFF" && <CommonTextField label="Round OFF" value={PosProduct.roundOff} type="number" onChange={(e) => dispatch(setRoundOff(e))} />}
               {item.value !== undefined && (
                 <>
                   <span className={`font-semibold ${item.highlight ? "text-brand-600 text-2xl" : "text-lg text-gray-900 dark:text-gray-100"}`}>{item.value.toString()}</span>
@@ -176,18 +185,18 @@ const PosFooter = () => {
 
         {/* Action Buttons */}
         <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2 p-2">
-          <CommonButton title="Multiple Pay" variant="contained" startIcon={<VerticalSplitIcon />} onClick={handleMultiplePay} />
+          <CommonButton title="Multiple Pay" variant="contained" startIcon={<VerticalSplitIcon />} onClick={() => handleMultiplePay("print")} />
           <CommonButton title="Redeem Credit" variant="contained" startIcon={<RedeemIcon />} onClick={handleRedeemCredit} />
-          <CommonButton title="Hold" variant="contained" startIcon={<PauseIcon />} onClick={handleHoldBill} loading={isBtnStatus === "hold" || editPosOrderLoading} />
-          <CommonButton title="UPI" variant="contained" startIcon={<FastForwardIcon />} onClick={handleUpi} loading={isBtnStatus === "upi" || editPosOrderLoading} />
-          <CommonButton title="Card" variant="contained" startIcon={<CreditCardIcon />} onClick={handleCard} />
-          <CommonButton title="Cash" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={handleCash} />
+          <CommonButton title="Hold" variant="contained" startIcon={<PauseIcon />} onClick={() => handleHoldBill("")} loading={isBtnStatus === "hold"} />
+          <CommonButton title="UPI" variant="contained" startIcon={<FastForwardIcon />} onClick={() => handleUpi("")} loading={isBtnStatus === "upi"} />
+          <CommonButton title="Card" variant="contained" startIcon={<CreditCardIcon />} onClick={() => handleCard("")} />
+          <CommonButton title="Cash" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => handleCash("")} />
           <CommonButton title="Apply Coupon" variant="contained" startIcon={<RedeemIcon />} onClick={handleApplyCoupon} />
-          <CommonButton title="Pay Later" variant="contained" startIcon={<CalendarMonthIcon />} onClick={handlePayLater} />
-          <CommonButton title="Hold & Print" variant="contained" startIcon={<PauseIcon />} />
-          <CommonButton title="UPI & Print" variant="contained" startIcon={<FastForwardIcon />} />
-          <CommonButton title="Card & Print" variant="contained" startIcon={<CreditCardIcon />} />
-          <CommonButton title="Cash & Print" variant="contained" startIcon={<CurrencyRupeeIcon />} />
+          <CommonButton title="Pay Later" variant="contained" startIcon={<CalendarMonthIcon />} onClick={() => handlePayLater("print")} />
+          <CommonButton title="Hold & Print" variant="contained" startIcon={<PauseIcon />} onClick={() => handleHoldBill("print")} loading={isBtnStatus === "hold-print"} />
+          <CommonButton title="UPI & Print" variant="contained" startIcon={<FastForwardIcon />} onClick={() => handleUpi("print")} loading={isBtnStatus === "upi-print"} />
+          <CommonButton title="Card & Print" variant="contained" startIcon={<CreditCardIcon />} onClick={() => handleCard("print")} />
+          <CommonButton title="Cash & Print" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => handleCash("print")} />
         </div>
       </div>
       <RedeemCredit />

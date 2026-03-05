@@ -72,7 +72,7 @@ const PaymentListBill = forwardRef<HTMLDivElement, { data?: PosPaymentBase }>(({
             <td style={cellStyle}>{FormatDate(data?.createdAt)}</td>
             <td style={cellStyle}>{data?.posOrderId?.orderNo || "-"}</td>
             <td style={cellStyle}>{data?.posOrderId?.totalAmount ?? 0}</td>
-            <td style={cellStyle}>0.00 // baki chhe Api ma</td>
+            <td style={cellStyle}>{data?.kasar ?? 0}</td>
             <td style={cellStyle}>{data?.amount ?? 0}</td>
           </tr>
 

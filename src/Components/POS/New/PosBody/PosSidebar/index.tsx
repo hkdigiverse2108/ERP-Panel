@@ -7,7 +7,7 @@ import { useReactToPrint } from "react-to-print";
 import { Queries } from "../../../../../Api";
 import { CommonButton } from "../../../../../Attribute";
 import { useAppSelector } from "../../../../../Store/hooks";
-import LastBillReceipt from "./LastBillReceipt";
+import BillReceipt from "../../BillReceipt";
 import PosOption from "./PosOptions";
 
 dayjs.extend(relativeTime);
@@ -25,14 +25,14 @@ const PosSidebar = () => {
   const { PosProduct } = useAppSelector((state) => state.pos);
 
   const { data, isLoading, isFetching } = Queries.useGetPosCustomerDetail(PosProduct?.customerId, Boolean(PosProduct?.customerId));
-  const { data: orderData, isLoading: orderPending } = Queries.useGetLastPosOrder({ lastBillFilter: true });
+  const { data: orderData, isLoading: orderPending, isFetching: orderFetching } = Queries.useGetLastPosOrder({ lastBillFilter: true });
   const lastBill = orderData?.data?.posOrder_data?.[0];
   const isPosCustomerDetailLoading = isLoading || isFetching;
   const customerData = PosProduct?.customerId ? data?.data : undefined;
   const contentRef = useRef<HTMLDivElement>(null);
 
   const render = (value: string | number) => (isPosCustomerDetailLoading ? <CircularProgress color="primary" size={10} /> : value);
-  const orderRender = (value: string | number) => (orderPending ? <CircularProgress color="primary" size={10} /> : value);
+  const orderRender = (value: string | number) => (orderPending || orderFetching ? <CircularProgress color="primary" size={10} /> : value);
 
   const handleLastBillPrint = useReactToPrint({
     contentRef,
@@ -44,7 +44,7 @@ const PosSidebar = () => {
   return (
     <div className="p-2 space-y-3">
       {/* PRINT AREA (VISIBLE ONLY IN PRINT MODE) */}
-      <div className="print-only hidden">{lastBill && <LastBillReceipt ref={contentRef} bill={lastBill} />}</div>
+      <div className="print-only hidden">{lastBill && <BillReceipt ref={contentRef} bill={lastBill} />}</div>
 
       {/* ACTION GRID */}
       <PosOption />

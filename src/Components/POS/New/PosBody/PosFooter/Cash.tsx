@@ -4,7 +4,8 @@ import { CommonButton, CommonTextField } from "../../../../../Attribute";
 import { POS_PAYMENT_METHOD } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setCashModal } from "../../../../../Store/Slices/ModalSlice";
-import { clearPosProduct } from "../../../../../Store/Slices/PosSlice";
+import { clearPosProduct, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
+import type { PosProductOrderDataResponse } from "../../../../../Types";
 import { RemoveEmptyFields } from "../../../../../Utils";
 import { CommonModal } from "../../../../Common";
 
@@ -92,9 +93,10 @@ const Cash = () => {
         },
       ],
     };
-    const onSuccess = () => {
+    const onSuccess = (res: PosProductOrderDataResponse) => {
       dispatch(clearPosProduct());
       dispatch(setCashModal());
+      dispatch(setSelectedOrderId(res?.data?._id));
     };
     const onError = () => {
       dispatch(setCashModal());
@@ -128,7 +130,6 @@ const Cash = () => {
           </div>
         </div>
       </div>
-
       {/* RIGHT SIDE */}
     </CommonModal>
   );

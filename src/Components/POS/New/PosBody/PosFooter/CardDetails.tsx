@@ -5,10 +5,11 @@ import { CommonButton, CommonValidationSelect, CommonValidationTextField } from 
 import { POS_PAYMENT_METHOD } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setCardModal } from "../../../../../Store/Slices/ModalSlice";
-import { clearPosProduct } from "../../../../../Store/Slices/PosSlice";
+import { clearPosProduct, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
 import { GenerateOptions, RemoveEmptyFields } from "../../../../../Utils";
 import { CardDetailsSchema } from "../../../../../Utils/ValidationSchemas";
 import { CommonModal } from "../../../../Common";
+import type { PosProductOrderDataResponse } from "../../../../../Types";
 
 const CardDetails = () => {
   const { isCardModal } = useAppSelector((state) => state.modal);
@@ -54,9 +55,10 @@ const CardDetails = () => {
         },
       ],
     };
-    const onSuccess = () => {
+    const onSuccess = (res: PosProductOrderDataResponse) => {
       dispatch(clearPosProduct());
       handleClose();
+      dispatch(setSelectedOrderId(res?.data?._id));
     };
     const onError = () => {
       handleClose();
