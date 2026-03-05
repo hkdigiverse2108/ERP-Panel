@@ -10,8 +10,8 @@ import { useEffect, useRef, useState } from "react";
 import SupplierBillTabs from "../../../Components/Purchase/SupplierBill/SupplierBillDetails/SupplierBillTab";
 import AdditionalChargesSection from "../../../Components/Purchase/SupplierBill/AdditionalChargeSection";
 import SupplierBillDetails from "../../../Components/Purchase/SupplierBill/SupplierBillDetails/SupplierBillDetails";
-import type { AdditionalChargeDetails, AdditionalChargeRow, Supplier, ProductRow, SupplierBillFormValues, SupplierBillProductDetails, SupplierBillProductItem } from "../../../Types/SupplierBill";
-import type { ProductBase, TermsConditionBase } from "../../../Types";
+import type { AdditionalChargeDetails, AdditionalChargeRow, ProductRow, SupplierBillFormValues, SupplierBillProductDetails, SupplierBillProductItem } from "../../../Types/SupplierBill";
+import type { ProductBase, Supplier, TermsConditionBase } from "../../../Types";
 import { usePagePermission } from "../../../Utils/Hooks";
 
 const TaxTypeWatcher = ({ onChange }: { onChange: (taxType: string) => void }) => {
