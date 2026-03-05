@@ -342,7 +342,7 @@ export const ProductItemRemoveFormSchema = Yup.object({
 });
 
 export const MaterialConsumptionFormSchema = Yup.object({
-  branchId: Validation("string", "Branch"),
+  branchId: Validation("string", "Branch", { required: false }),
   date: Validation("string", "Date"),
   type: Validation("string", "Type", { required: false }),
   remark: Validation("string", "Remark", { required: false, extraRules: (s) => s?.trim().max(200, "Maximum 200 characters allowed") }),
@@ -356,7 +356,7 @@ export const CardDetailsSchema = Yup.object({
 });
 
 export const PosPaymentFormSchema = Yup.object({
-  voucherType: Validation("string", "Voucher Type"),
+  voucherType: Validation("string", "Voucher Type"), 
   paymentType: Validation("string", "Payment Type"),
   partyId: Validation("string", "Party Name"),
   posOrderId: Yup.string().when(["voucherType", "paymentType"], {

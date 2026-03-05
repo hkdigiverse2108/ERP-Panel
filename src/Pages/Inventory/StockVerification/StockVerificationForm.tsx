@@ -48,7 +48,6 @@ const StockVerificationForm = () => {
           physicalQty: item.physicalQty,
           differenceQty: item.differenceQty,
           differenceAmount: item.differenceAmount,
-          approvedQty: item.approvedQty ?? item.physicalQty,
         })),
       );
       setEnterRemark(updateData.remark ?? "");
@@ -66,7 +65,6 @@ const StockVerificationForm = () => {
     physicalQty: 0,
     differenceQty: 0 - (product.qty ?? 0),
     differenceAmount: (product.landingCost ?? 0) * (0 - (product.qty ?? 0)),
-    approvedQty: 0,
   });
 
   const updateRow = (id: string, data: Partial<StockVerificationRow>) => {
@@ -75,7 +73,7 @@ const StockVerificationForm = () => {
         if (r.productId !== id) return r;
 
         const updated = { ...r, ...data };
-        const differenceQty = isEditing ? updated?.approvedQty - updated?.systemQty : updated?.physicalQty - updated?.systemQty;
+        const differenceQty = updated?.physicalQty - updated?.systemQty;
         const differenceAmount = updated?.landingCost * differenceQty;
 
         return { ...updated, differenceQty, differenceAmount };
@@ -85,8 +83,6 @@ const StockVerificationForm = () => {
 
   const removeRow = (id: string) => setRows((prev) => prev.filter((r) => r.productId !== id));
   const totalDifferenceQty = rows.reduce((sum, r) => sum + r?.physicalQty, 0);
-
-  const totalApprovedQty = rows.reduce((sum, r) => sum + r?.approvedQty, 0);
 
   const totalDifferenceAmount = rows.reduce((sum, r) => sum + r?.differenceAmount, 0);
 
@@ -103,14 +99,12 @@ const StockVerificationForm = () => {
       physicalQty: r.physicalQty,
       differenceQty: r.differenceQty,
       differenceAmount: r.differenceAmount,
-      approvedQty: r.approvedQty,
     }));
     const payload: StockVerificationFormValues = {
       items,
       totalProducts: rows.length,
       totalPhysicalQty: totalDifferenceQty,
       totalDifferenceAmount: totalDifferenceAmount,
-      totalApprovedQty: totalApprovedQty,
       status: status[0],
       ...(enterRemark && { remark: enterRemark }),
     };
@@ -171,11 +165,10 @@ const StockVerificationForm = () => {
                       if (existing) {
                         return prev.map((r) => {
                           const physicalQty = r.physicalQty + 1;
-                          const approvedQty = isEditing ? r.approvedQty + 1 : 0;
-                          const differenceQty = (isEditing ? approvedQty : physicalQty) - r.systemQty;
-                          const differenceAmount = (r.landingCost ?? 0) * (isEditing ? approvedQty : physicalQty);
+                          const differenceQty = physicalQty - r.systemQty;
+                          const differenceAmount = (r.landingCost ?? 0) * physicalQty;
 
-                          return r.productId === product._id ? { ...r, physicalQty, differenceQty, differenceAmount, approvedQty } : r;
+                          return r.productId === product._id ? { ...r, physicalQty, differenceQty, differenceAmount } : r;
                         });
                       }
 
@@ -203,7 +196,6 @@ const StockVerificationForm = () => {
                         <th className="p-2">Physical Qty</th>
                         <th className="p-2">Difference Qty</th>
                         <th className="p-2">Difference Amount</th>
-                        {isEditing && <th className="p-2">Approve Qty</th>}
                         <th className="p-2">Action</th>
                       </tr>
                     </thead>
@@ -223,11 +215,6 @@ const StockVerificationForm = () => {
                             </td>
                             <td className="p-2 ">{row.differenceQty}</td>
                             <td className="p-2">{row.differenceAmount.toFixed(2)}</td>
-                            {isEditing && (
-                              <td className="p-2 min-w-35 w-35">
-                                <CommonTextField type="number" value={row.approvedQty} onChange={(e) => updateRow(row.productId, { approvedQty: Number(e) })} />
-                              </td>
-                            )}
                             <td className="p-2">
                               <CommonButton color="error" variant="outlined" size="small" onClick={() => removeRow(row.productId)}>
                                 <ClearIcon />
@@ -244,7 +231,6 @@ const StockVerificationForm = () => {
                         <td />
                         <td className="p-3 text-center font-semibold">{totalDifferenceAmount.toFixed(2)}</td>
 
-                        {isEditing && <td className="p-3 text-center font-semibold">{totalApprovedQty}</td>}
                         <td />
                       </tr>
                     </tfoot>

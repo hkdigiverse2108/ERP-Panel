@@ -56,7 +56,7 @@ const CloseBillRegister = forwardRef<HTMLDivElement, { bill?: PosOrderBase; data
         <MetricRow label="Disc" value={data?.discount ?? 0} />
         <MetricRow label="Tax Amount" value={data?.taxAmount ?? 0} />
         <MetricRow label="Sales Return" value={data?.salesReturn ?? 0} />
-        <MetricRow label="Refund" value={data?.refund ?? 0} />
+        <MetricRow label="Refund" value={data?.refund ?? 0} />  
         <MetricRow label="Bank Transfer" value={data?.bankTransferAmount ?? 0} />
         <MetricRow label="Pay Later" value={data?.payLater ?? 0} />
         <MetricRow label="Credit/Advance Redeemed" value={data?.creditAdvanceRedeemed ?? 0} />
