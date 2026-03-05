@@ -26,8 +26,10 @@ interface BomRow {
   mfgDate: string | null;
   expDate: string | null;
   rawProducts?: {
+    baseAvailableQty: number;
     productId: ProductBase;
     availableQty: number;
+    baseUseQty: number;
     useQty: number;
   }[];
 }
@@ -50,6 +52,7 @@ const RecipeWatcher = ({ onChange }: { onChange: (ids: string[]) => void }) => {
   }, [idsKey]);
   return null;
 };
+
 
 const BOLP_PREFIX = "BOLP";
 const parseBimNumber = (value?: string) => {
@@ -104,7 +107,7 @@ const BillOfLiveProductForm = () => {
       expiryDays: recipe.finalProducts?.expiryDays ?? 0,
       mfgDate: DateConfig.utc().toISOString(),
       expDate: null,
-      rawProducts: recipe.rawProducts?.map((r) => ({ productId: r.productId as ProductBase, availableQty: (r.productId as ProductBase)?.qty ?? 0, useQty: r.useQty ?? 0 })) || [],
+      rawProducts: recipe.rawProducts?.map((r) => ({ productId: r.productId as ProductBase, baseAvailableQty: (r.productId as ProductBase)?.qty ?? 0, availableQty: (r.productId as ProductBase)?.qty ?? 0, useQty: r.useQty ?? 0, baseUseQty: r.useQty ?? 0 })) || [],
     };
   };
 
@@ -164,9 +167,45 @@ const BillOfLiveProductForm = () => {
     formikRef.current?.setFieldValue("recipeId", updated);
     setRows((prev) => prev.filter((row) => row.recipeId !== recipeId));
   };
+  const handleQtyChange = (rowId: string, qty: number) => {
+    setRows((prev) =>
+      prev.map((row) => {
+        if (row.id !== rowId) return row;
+
+        const updatedRaw = row.rawProducts?.map((raw) => ({
+          ...raw,
+          availableQty: raw.baseAvailableQty * qty,
+          useQty: raw.baseUseQty * qty,
+        }));
+
+        return {
+          ...row,
+          qty,
+          rawProducts: updatedRaw,
+        };
+      }),
+    );
+  };
 
   const updateRawQty = (rowId: string, index: number, value: number) => {
-    setRows((prev) => prev.map((row) => (row.id === rowId ? { ...row, rawProducts: row.rawProducts?.map((raw, i) => (i === index ? { ...raw, useQty: value } : raw)) } : row)));
+    setRows((prev) =>
+      prev.map((row) =>
+        row.id === rowId
+          ? {
+              ...row,
+              rawProducts: row.rawProducts?.map((raw, i) =>
+                i === index
+                  ? {
+                      ...raw,
+                      useQty: value,
+                      baseUseQty: value / row.qty,
+                    }
+                  : raw,
+              ),
+            }
+          : row,
+      ),
+    );
   };
 
   const initialSyncKeyRef = useRef<string>("");
@@ -224,7 +263,7 @@ const BillOfLiveProductForm = () => {
     }));
 
     if (isEditing) {
-      editBOM({ billOfLiveProductId: data!._id, recipeId: values.recipeId, productDetails, number: formatBimNumber(values.number) }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
+      editBOM({ billOfLiveProductId: data!._id, recipeId: values.recipeId, productDetails, number: formatBimNumber(values.number)}, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
     } else {
       addBOM({ number: formatBimNumber(values.number), date: values.date, allowReverseCalculation: values.allowReverseCalculation, recipeId: values.recipeId, productDetails }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
     }
@@ -248,7 +287,7 @@ const BillOfLiveProductForm = () => {
                       <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="text" label="BOLP" disabled grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 4 }} options={recipeLoading || recipeFetching ? [] : GenerateOptions(recipeData?.data?.recipe_data || [])} isLoading={recipeLoading || recipeFetching} />
+                      <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 4 }}  options={recipeLoading || recipeFetching ? [] : GenerateOptions(recipeData?.data?.recipe_data || [])} isLoading={recipeLoading || recipeFetching} />
                       <CommonValidationSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
                     </Grid>
                   </Form>
@@ -266,7 +305,7 @@ const BillOfLiveProductForm = () => {
                     const productColumns: CommonTableColumn<BomRow>[] = [
                       { key: "sr", header: "Sr No", render: (_, idx) => idx + 1, bodyClass: "w-10" },
                       { key: "name", header: "Product", bodyClass: "text-start min-w-40", render: (r) => r.name },
-                      { key: "qty", header: "Qty", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.qty} onChange={(v) => updateRow(r.id, { qty: Number(v) })} /> },
+                      { key: "qty", header: "Qty", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.qty} onChange={(v) => handleQtyChange(r.id, Number(v))} /> },
                       { key: "purchasePrice", header: "Purchase Price", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.purchasePrice} onChange={(v) => updateRow(r.id, { purchasePrice: Number(v) })} /> },
                       { key: "landingCost", header: "Landing Cost", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.landingCost} onChange={(v) => updateRow(r.id, { landingCost: Number(v) })} /> },
                       { key: "mrp", header: "MRP", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.mrp} onChange={(v) => updateRow(r.id, { mrp: Number(v) })} /> },
