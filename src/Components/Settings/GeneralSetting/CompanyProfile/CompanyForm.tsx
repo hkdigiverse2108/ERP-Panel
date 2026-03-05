@@ -221,7 +221,7 @@ const CompanyForm = () => {
                     <CommonValidationTextField name="PanNo" label="PAN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="taxDeductionAndCollectionAccountNumber" label="TAN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="webSite" label="Web Site" grid={{ xs: 12, md: 4 }} />
-                    <CommonValidationSelect name="financialYear" label="Default Financial Year" options={financialYear} grid={{ xs: 12, md: 4 }} required />
+                    <CommonValidationSelect name="financialYear" label="Financial Year" options={financialYear} grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="corporateIdentificationNumber" label="CIN No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="letterOfUndertaking" label="LUT No." grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="importerExporterCode" label="IEC No." grid={{ xs: 12, md: 4 }} />
