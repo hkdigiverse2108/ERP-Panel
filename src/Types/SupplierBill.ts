@@ -1,11 +1,11 @@
 import type { CommonDataType, MessageStatus, PageStatus, SelectOptionType } from "./Common";
 import type { ProductBase } from "./Product";
-import type { ContactBase } from "./Contacts";
 import type { TermsConditionBase } from "./TermsAndCondition";
+import type { Supplier } from "./PurchaseOrder";
 
 /* ===================== SUPPLIER ===================== */
 
-export type Supplier = ContactBase;
+// export type Supplier = ContactBase;
 
 /* ===================== PRODUCT (FORM) ===================== */
 

@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonCheckbox, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonCard, CommonModal, CommonTable } from "../index";
-import type { CommonTableColumn, CommonTermsAndConditionProps, TermsAndConditionModalProps, TermsConditionApiResponse, TermsConditionBase, TermsConditionFormValues, TermsSelectionFormValues } from "../../../Types";
+import type { CommonTableColumn, CommonTermsAndConditionProps, TermsConditionApiResponse, TermsConditionBase, TermsConditionFormValues, TermsSelectionFormValues } from "../../../Types";
 
-const AddTermModal = ({ open, term, onClose, onSave }: { open: boolean; term: TermsConditionBase | null; onClose: () => void } & TermsAndConditionModalProps) => {
+const AddTermModal = ({ open, term, onClose, onSave }: { open: boolean; term: TermsConditionBase | null; onClose: () => void , onSave: (payload: TermsConditionBase) => void;}) => {
   const isEditing = Boolean(term?._id);
   const initialValues: TermsConditionFormValues = {
     termsCondition: term?.termsCondition || "",
