@@ -95,7 +95,7 @@ const OrderList = () => {
       },
       onPrint: (row) => handlePrintBtn(row),
       onSalesInvoice: {
-        handleSalesInvoice: (row) => {},
+        handleSalesInvoice: () => {},
         // isPermission: (row) => row.posCashRegisterId?.status !== "open",
       },
     }),
