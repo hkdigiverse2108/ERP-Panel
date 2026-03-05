@@ -28,11 +28,12 @@ const PosSidebar = () => {
   const { data: orderData, isLoading: orderPending, isFetching: orderFetching } = Queries.useGetLastPosOrder({ lastBillFilter: true });
   const lastBill = orderData?.data?.posOrder_data?.[0];
   const isPosCustomerDetailLoading = isLoading || isFetching;
+  const isLastBillLoading = orderPending || orderFetching;
   const customerData = PosProduct?.customerId ? data?.data : undefined;
   const contentRef = useRef<HTMLDivElement>(null);
 
   const render = (value: string | number) => (isPosCustomerDetailLoading ? <CircularProgress color="primary" size={10} /> : value);
-  const orderRender = (value: string | number) => (orderPending || orderFetching ? <CircularProgress color="primary" size={10} /> : value);
+  const orderRender = (value: string | number) => (isLastBillLoading ? <CircularProgress color="primary" size={10} /> : value);
 
   const handleLastBillPrint = useReactToPrint({
     contentRef,
@@ -50,6 +51,17 @@ const PosSidebar = () => {
       <PosOption />
 
       {/* CUSTOMER DETAILS */}
+      {PosProduct.loyaltyDiscount || PosProduct.couponDiscount ? (
+        <Box className="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-dark rounded-md p-3">
+          <p className="font-semibold text-base mb-2 dark:text-gray-300">Discount Details</p>
+          <div className="space-y-1">
+            {PosProduct.loyaltyDiscount ? <InfoRow label="Loyalty Discount" value={`₹${PosProduct.loyaltyDiscount}`} /> : ""}
+            {PosProduct.couponDiscount ? <InfoRow label="Coupon Discount" value={`₹${PosProduct.couponDiscount}`} /> : ""}
+          </div>
+        </Box>
+      ) : (
+        ""
+      )}
       <Box className="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-dark rounded-md p-3">
         <p className="font-semibold text-base mb-2 dark:text-gray-300">Customer Details</p>
         <div className="space-y-1">

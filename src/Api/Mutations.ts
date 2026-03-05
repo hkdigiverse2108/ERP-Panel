@@ -85,7 +85,7 @@ export const Mutations = {
 
   //*************** POS **************** */
   useAddPosOrder: () => useMutations<AddPosProductOrderPayload, PosProductOrderDataResponse>([KEYS.POS.ADD, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER, KEYS.POS_ORDER.BASE, KEYS.POS_CASH_REGISTER.DETAILS], (input) => Post(URL_KEYS.POS.ADD, input)),
-  useEditPosOrder: () => useMutations<EditPosProductOrderPayload, PosProductOrderDataResponse>([KEYS.POS.EDIT, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER], (input) => Put(URL_KEYS.POS.EDIT, input)),
+  useEditPosOrder: () => useMutations<EditPosProductOrderPayload, PosProductOrderDataResponse>([KEYS.POS.EDIT, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER,KEYS.POS_ORDER.BASE], (input) => Put(URL_KEYS.POS.EDIT, input)),
   useDeletePosOrder: () => useMutations<string, void>([KEYS.POS.DELETE, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER], (id) => Delete(`${URL_KEYS.POS.BASE}/${id}`)),
 
   // ************ POS Payment ************

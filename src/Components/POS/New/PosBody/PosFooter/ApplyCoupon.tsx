@@ -4,43 +4,36 @@ import { Mutations, Queries } from "../../../../../Api";
 import { CommonButton, CommonTextField, ShowNotification } from "../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setApplyCouponModal } from "../../../../../Store/Slices/ModalSlice";
-import { setCoupon, setTotalAmount, setTotalDiscount } from "../../../../../Store/Slices/PosSlice";
+import { setCoupon, setHandleDiscount, setTotalAmount, setTotalDiscount } from "../../../../../Store/Slices/PosSlice";
 import type { CouponBase } from "../../../../../Types";
 import { useDebounce } from "../../../../../Utils/Hooks";
 import { CommonCard, CommonModal } from "../../../../Common";
 
 const ApplyCoupon = () => {
+  const dispatch = useAppDispatch();
+
+  const { isApplyCouponModal } = useAppSelector((state) => state.modal);
+  const { PosProduct } = useAppSelector((state) => state.pos);
+
   const [isSearch, setSearch] = useState<string>("");
   const searchCoupon = useDebounce(isSearch, 300);
   const [applyingId, setApplyingId] = useState<string>("");
 
-  const { isApplyCouponModal } = useAppSelector((state) => state.modal);
-  const { PosProduct } = useAppSelector((state) => state.pos);
-  console.log("PosProduct", PosProduct);
-
-  const dispatch = useAppDispatch();
-
-  // ✅ Track previous totalAmount with a ref — no re-render triggered on change
   const prevTotalAmountRef = useRef<number | undefined>(undefined);
-
-  const { data: couponData, isLoading: couponDataLoading, isFetching: couponDataFetching } = Queries.useGetCouponDropdown({ ...(searchCoupon && { search: searchCoupon }) });
-  const { mutate: verifyCoupon } = Mutations.useVerifyCoupon();
-
-  // Ref to ensure edit-mode recalculation only runs once per order load
   const editRecalcDoneRef = useRef<string | null>(null);
   const editLoadedRef = useRef<boolean>(false);
 
-  // ✅ Coupon reset — only in CREATE mode when totalAmount changes
+  const { data: couponData, isLoading: couponDataLoading, isFetching: couponDataFetching } = Queries.useGetCouponDropdown({ ...(searchCoupon && { search: searchCoupon }) }, isApplyCouponModal);
+  const { mutate: verifyCoupon } = Mutations.useVerifyCoupon();
+
   useEffect(() => {
     const currentAmount = PosProduct.totalAmount;
     const isEditMode = Boolean(PosProduct.posOrderId);
 
-    // Skip the very first render — just record the baseline amount
     if (prevTotalAmountRef.current === undefined) {
       prevTotalAmountRef.current = currentAmount;
       return;
     }
-    // Only auto-reset coupon in CREATE mode when totalAmount changes
 
     if (isEditMode) {
       if (!editLoadedRef.current) {
@@ -50,83 +43,81 @@ const ApplyCoupon = () => {
       }
       if (prevTotalAmountRef.current !== currentAmount) {
         dispatch(setCoupon({ couponId: "", couponDiscount: 0 }));
-        // ShowNotification("Due to modification in order applied Coupon Discount is removed!", "error");
       }
     } else {
       editLoadedRef.current = false;
       if (prevTotalAmountRef.current !== currentAmount) {
         dispatch(setCoupon({ couponId: "", couponDiscount: 0 }));
-        // ShowNotification("Due to modification in order applied Coupon Discount is removed!", "error");
       }
     }
 
     prevTotalAmountRef.current = currentAmount;
   }, [PosProduct.totalAmount, PosProduct.posOrderId, dispatch]);
 
-  // // ✅ Edit-mode: recalculate discount ONCE when an order is loaded
   useEffect(() => {
     const isEditMode = Boolean(PosProduct.posOrderId);
 
     if (!isEditMode) {
-      // Reset the guard when going back to create mode
       editRecalcDoneRef.current = null;
       return;
     }
 
-    // Only run once per unique order
     if (editRecalcDoneRef.current === PosProduct.posOrderId) return;
     editRecalcDoneRef.current = PosProduct.posOrderId;
 
     const finalDiscount = Number(PosProduct.totalDiscount || 0);
     const payableAmount = Number(PosProduct.totalAmount || 0) - finalDiscount;
-    console.log("finalDiscount", finalDiscount);
-    console.log("payableAmount", payableAmount);
     dispatch(setTotalDiscount(Number(finalDiscount).toFixed(2)));
     if (!isEditMode) dispatch(setTotalAmount(payableAmount));
     else dispatch(setTotalAmount(PosProduct.totalAmount));
 
-    // Sync the amount ref so the create-mode effect doesn't fire
     prevTotalAmountRef.current = payableAmount;
   }, [PosProduct.posOrderId, dispatch]);
 
   const handleApplyCoupon = (coupon: CouponBase) => {
-    // ── REMOVE ────────────────────────────────────────────────────────────
+    if (PosProduct.loyaltyId || PosProduct.redeemCreditId) {
+      dispatch(setHandleDiscount("coupon"));
+      // return;
+    }
+
+    const currentTotalAmount = Number(PosProduct.totalAmount || 0) + Number(PosProduct.loyaltyDiscount || 0);
+    const currentTotalDiscount = Number(PosProduct.totalDiscount || 0) - Number(PosProduct.loyaltyDiscount || 0);
+    const currentCouponDiscount = Number(PosProduct.couponDiscount || 0);
+
     if (PosProduct.couponId === coupon._id) {
-      const restoredAmount = Number(PosProduct.totalAmount) + Number(PosProduct.couponDiscount || 0);
-      const restoredDiscount = Number(PosProduct.totalDiscount || 0) - Number(PosProduct.couponDiscount || 0);
+      const restoredAmount = currentTotalAmount + currentCouponDiscount;
+      const restoredDiscount = currentTotalDiscount - currentCouponDiscount;
 
       dispatch(setCoupon({ couponId: "", couponDiscount: 0 }));
       dispatch(setTotalDiscount(Number(restoredDiscount).toFixed(2)));
       dispatch(setTotalAmount(restoredAmount));
       ShowNotification("Coupon removed successfully", "success");
-      // Sync ref so the useEffect won't treat this amount change as a "product change"
+      setApplyingId("");
+
       prevTotalAmountRef.current = restoredAmount;
       return;
     }
 
-    // ── APPLY ─────────────────────────────────────────────────────────────
-    if ((coupon?.couponPrice ?? 0) > PosProduct.totalAmount) {
+    if ((coupon?.couponPrice ?? 0) > currentTotalAmount) {
       ShowNotification("Coupon price is greater than total amount", "error");
       return;
     }
 
     setApplyingId(coupon._id);
     verifyCoupon(
-      { couponId: coupon._id, totalAmount: PosProduct.totalAmount, customerId: PosProduct.customerId },
+      { couponId: coupon._id, totalAmount: currentTotalAmount, customerId: PosProduct.customerId },
       {
         onSuccess: (response) => {
           const newDiscount = Number(response?.data?.discountAmount || 0);
-          const prevCouponDiscount = Number(PosProduct.couponDiscount || 0);
-
-          // Swap out the old coupon discount for the new one
-          const adjustedDiscount = Number(PosProduct.totalDiscount || 0) - prevCouponDiscount + newDiscount;
-
+          const removedPrevious = currentTotalDiscount - currentCouponDiscount;
+          const finalDiscount = removedPrevious + newDiscount;
+          const payableAmount = currentTotalAmount - newDiscount;
           dispatch(setCoupon({ couponId: coupon._id, couponDiscount: newDiscount }));
-          dispatch(setTotalDiscount(Number(adjustedDiscount).toFixed(2)));
-          dispatch(setTotalAmount(Number(response?.data?.finalAmount)));
+          dispatch(setTotalDiscount(Number(finalDiscount).toFixed(2)));
+          dispatch(setTotalAmount(Number(payableAmount)));
+          ShowNotification("Coupon applied successfully", "success");
 
-          // Sync ref so the useEffect doesn't treat this as a product change
-          prevTotalAmountRef.current = Number(response?.data?.finalAmount);
+          prevTotalAmountRef.current = Number(payableAmount);
 
           setApplyingId("");
           dispatch(setApplyCouponModal());

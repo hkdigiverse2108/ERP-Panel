@@ -1,5 +1,4 @@
 import CloseIcon from "@mui/icons-material/Close";
-import dayjs from "dayjs";
 import { CircularProgress, Grid, Tooltip } from "@mui/material";
 import { Form, Formik, useFormikContext } from "formik";
 import { useEffect, useRef, useState } from "react";
@@ -7,22 +6,24 @@ import { useReactToPrint } from "react-to-print";
 import { Mutations, Queries } from "../../../../Api";
 import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../../Attribute";
 import { STORAGE_KEYS } from "../../../../Constants";
+import { useAppSelector } from "../../../../Store/hooks";
 import type { EditPosCashRegisterPayload, PosCashRegisterFormInitialValues, PosCashRegisterValues } from "../../../../Types";
-import { FormatDateTime, GenerateOptions, RemoveEmptyFields } from "../../../../Utils";
+import { FormatDate, FormatDateTime, FormatTime, GenerateOptions, RemoveEmptyFields } from "../../../../Utils";
 import { CurrentRegisterSchema } from "../../../../Utils/ValidationSchemas";
 import { CommonModal } from "../../../Common";
 import CloseBillRegister from "./CloseRegister";
-import { useAppSelector } from "../../../../Store/hooks";
 
 const CurrentRegister = () => {
   const [open, setOpen] = useState(false);
   const { PosProduct } = useAppSelector((state) => state.pos);
   const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({}, open);
-  const { data: cashRegisterDetails, isLoading: cashRegisterDetailsLoading } = Queries.useGetPosCashRegisterDetails();
+  const { data: cashRegisterDetails, isLoading: cashRegisterDetailsLoading, isFetching: cashRegisterDetailsFetching } = Queries.useGetPosCashRegisterDetails();
 
   const { mutate: editPosCashRegister, isPending: editPosCashRegisterLoading } = Mutations.useEditPosCashRegister();
   const contentRef = useRef<HTMLDivElement>(null);
   const [printData, setPrintData] = useState<PosCashRegisterValues | null>(null);
+
+  const isPosCashRegisterLoading = cashRegisterDetailsLoading || cashRegisterDetailsFetching;
 
   const handlePrint = useReactToPrint({
     contentRef,
@@ -72,7 +73,7 @@ const CurrentRegister = () => {
 
   const currencyNotes = [1, 2, 5, 10, 20, 50, 100, 200, 500];
 
-  const render = (value: string | number) => (cashRegisterDetailsLoading ? <CircularProgress color="inherit" size={10} /> : value);
+  const render = (value: string | number) => (isPosCashRegisterLoading ? <CircularProgress color="inherit" size={10} /> : value);
 
   const DrawerCalculator = ({ currencyNotes }: { currencyNotes: number[] }) => {
     const { values, setFieldValue } = useFormikContext<PosCashRegisterFormInitialValues>();
@@ -107,6 +108,8 @@ const CurrentRegister = () => {
 
     const apiPayload: EditPosCashRegisterPayload = {
       ...rest,
+      ...summary,
+      denominations: denominationsArray,
       posCashRegisterId: cashRegisterDetails?.data?.registerId || "",
     };
 
@@ -124,14 +127,14 @@ const CurrentRegister = () => {
       ...summary,
       totalDenominationAmount: totalDenomAmount,
       denominations: denominationsArray,
-      startDate: dayjs(cashRegisterDetails?.data?.createdAt).format("DD/MM/YYYY"),
-      startTime: dayjs(cashRegisterDetails?.data?.createdAt).format("hh:mm A"),
-      endDate: dayjs().format("DD/MM/YYYY"),
-      endTime: dayjs().format("hh:mm A"),
+      startDate: FormatDate(cashRegisterDetails?.data?.createdAt),
+      startTime: FormatTime(cashRegisterDetails?.data?.createdAt),
+      endDate: FormatDate(new Date().toISOString()),
+      endTime: FormatTime(new Date().toISOString()),
       user: JSON.parse(localStorage.getItem(STORAGE_KEYS.USER) || "{}")?.name || "Admin",
       bankAccountId,
       bankTransferAmount: Number(bankTransferAmount) || 0,
-      salesManId:PosProduct.salesManId,
+      salesManId: PosProduct.salesManId,
     };
 
     const cleanedApiPayload = RemoveEmptyFields(apiPayload) as EditPosCashRegisterPayload;
@@ -170,7 +173,7 @@ const CurrentRegister = () => {
                           {Sales.map((item, index) => (
                             <tr key={index} className="bg-white dark:bg-gray-800 odd:bg-gray-50 dark:odd:bg-gray-dark">
                               <th className="px-3 py-2 text-start font-medium text-gray-600 dark:text-gray-300">{item.label}</th>
-                              <td className="px-3 py-2 text-right font-medium dark:text-gray-100">{render(item?.value?.toFixed(2) || "0.00")}</td>
+                              <td className="px-3 py-2 text-right font-medium dark:text-gray-100">{render(item?.value?.toFixed(2) ?? "0.00")}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -226,9 +229,7 @@ const CurrentRegister = () => {
           </Formik>
         </div>
       </CommonModal>
-      <div className="hidden">
-        {printData && <CloseBillRegister ref={contentRef} data={printData} />}
-      </div>
+      <div className="hidden">{printData && <CloseBillRegister ref={contentRef} data={printData} />}</div>
     </>
   );
 };

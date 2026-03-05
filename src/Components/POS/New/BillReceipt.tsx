@@ -53,7 +53,7 @@ const BillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }
       <div className="flex flex-col gap-1 mb-4">
         <div className="flex gap-2">
           <span className="font-bold">Name:</span>
-          <span>{bill?.customerId?.firstName ? `${bill.customerId.firstName} ${bill.customerId.lastName || ""}` : "Walk-in"}</span>
+          <span>{bill?.customerId?.firstName ? `${bill.customerId.firstName} ${bill.customerId.lastName || ""}` : "Walk in Customer"}</span>
         </div>
 
         <div className="flex gap-2">
@@ -94,7 +94,7 @@ const BillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }
 
             // const totalDiscAmt = (item.qty || 0) * (item.discountAmount || 0);
             const net = ((item.mrp || 0) - discAmt) * (item.qty || 0);
-            const taxAmount = ((net * taxPercent) / 100);
+            const taxAmount = item.productId?.isSalesTaxIncluding ? 0 : (net * taxPercent) / 100;
             return (
               <React.Fragment key={index}>
                 <tr className="align-top">
@@ -117,8 +117,7 @@ const BillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }
                 <tr>
                   <td colSpan={5} className="pl-6 text-[10px] italic font-semibold pb-1">
                     GST {taxPercent}%{/* {taxAmount > 0 ? Number(taxAmount.toFixed(2)) : ""}  */}
-                    ||
-                    {discAmt > 0 && `  Discount: ${Number(discAmt.toFixed(2))}`}
+                    {discAmt > 0 && `||  Discount: ${Number(discAmt.toFixed(2))}`}
                   </td>
                 </tr>
               </React.Fragment>
@@ -159,7 +158,7 @@ const BillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }
         ))}
 
         <div className="flex justify-end font-bold text-xl">
-          <span className="text-right mr-2 capitalize">Total</span>:<span className="w-20 text-right">{Number(bill.totalAmount?.toFixed(2) || 0)}</span>
+          <span className="text-right mr-2 capitalize">Total</span>:<span className="w-20 text-right">{Number(bill.totalAmount?.toFixed(0) || 0)}</span>
         </div>
       </div>
 
