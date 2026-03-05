@@ -16,7 +16,7 @@ const initialState: PosSliceState = {
     totalQty: 0,
     totalMrp: 0,
     totalTaxAmount: 0,
-    totalDiscount: 0,
+    totalDiscount: "0",
     totalAdditionalCharge: 0,
     flatDiscountAmount: 0,
     additionalCharges: [],
@@ -48,6 +48,32 @@ const PosSlice = createSlice({
   name: "Pos",
   initialState,
   reducers: {
+    setHandleDiscount: (state, action) => {
+      if (action.payload === "coupon") {
+        if (state.PosProduct.loyaltyId || state.PosProduct.redeemCreditId) {
+          const restoredAmount = Number(state.PosProduct.totalAmount) + Number(state.PosProduct.loyaltyDiscount || 0);
+          const restoredDiscount = Number(state.PosProduct.totalDiscount || 0) - Number(state.PosProduct.loyaltyDiscount || 0);
+          state.PosProduct.totalAmount = restoredAmount;
+          state.PosProduct.totalDiscount = Number(restoredDiscount).toFixed(2);
+        }
+      }
+      if (action.payload === "loyalty") {
+        if (state.PosProduct.couponId || state.PosProduct.redeemCreditId) {
+          const restoredAmount = Number(state.PosProduct.totalAmount) + Number(state.PosProduct.couponDiscount || 0);
+          const restoredDiscount = Number(state.PosProduct.totalDiscount || 0) - Number(state.PosProduct.couponDiscount || 0);
+          state.PosProduct.totalAmount = restoredAmount;
+          state.PosProduct.totalDiscount = Number(restoredDiscount).toFixed(2);
+        }
+      }
+      if (action.payload === "redeemCredit") {
+        if (state.PosProduct.couponId || state.PosProduct.loyaltyId) {
+          const restoredAmount = Number(state.PosProduct.totalAmount) + Number(state.PosProduct.redeemCreditAmount || 0);
+          const restoredDiscount = Number(state.PosProduct.totalDiscount || 0) - Number(state.PosProduct.redeemCreditAmount || 0);
+          state.PosProduct.totalDiscount = Number(restoredDiscount).toFixed(2);
+          state.PosProduct.totalAmount = restoredAmount;
+        }
+      }
+    },
     setMultiplePay: (state) => {
       state.isMultiplePay = !state.isMultiplePay;
     },
@@ -110,7 +136,7 @@ const PosSlice = createSlice({
         totalQty: 0,
         totalMrp: 0,
         totalTaxAmount: 0,
-        totalDiscount: 0,
+        totalDiscount: "0",
         totalAdditionalCharge: 0,
         flatDiscountAmount: 0,
         additionalCharges: [],
@@ -193,5 +219,5 @@ const PosSlice = createSlice({
   },
 });
 
-export const { setPrintType, setSelectedOrderId, setRedeemCredit, setLoyalty, setCoupon, setBtnStatus, setPosLoading, setPosProduct, setIsSelectProduct, setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesManId, setTotalMrp, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType, clearPosProduct } = PosSlice.actions;
+export const { setPrintType, setSelectedOrderId, setRedeemCredit, setLoyalty, setCoupon, setBtnStatus, setPosLoading, setPosProduct, setIsSelectProduct, setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesManId, setTotalMrp, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType, clearPosProduct, setHandleDiscount } = PosSlice.actions;
 export default PosSlice.reducer;

@@ -1,16 +1,17 @@
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
+import KeyIcon from "@mui/icons-material/Key";
+import PrintIcon from "@mui/icons-material/Print";
+import RotateLeftIcon from "@mui/icons-material/RotateLeft";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { Grid, IconButton } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import type { CommonActionColumnProps } from "../../Types";
-import KeyIcon from "@mui/icons-material/Key";
-import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-import PrintIcon from "@mui/icons-material/Print";
 
-const CommonActionColumn = <T extends { _id?: string; isActive?: boolean; creditsRemaining?: number }>({ onPrint, active, editRoute, onDelete, onEdit, onRefund, permissionRoute }: CommonActionColumnProps<T>): GridColDef<T> => ({
+const CommonActionColumn = <T extends { _id?: string; isActive?: boolean; creditsRemaining?: number }>({ onSalesInvoice, onPrint, active, editRoute, onDelete, onEdit, onRefund, permissionRoute }: CommonActionColumnProps<T>): GridColDef<T> => ({
   field: "actions",
   headerName: "Actions",
   headerAlign: "center",
@@ -56,9 +57,9 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean; credit
             </IconButton>
           </Grid>
         )}
-        {onEdit && (
+        {onEdit?.handleEdit && !onEdit?.isPermission?.(params.row) && (
           <Grid size="auto">
-            <IconButton className="iconButtonStyle" size="small" onClick={() => onEdit(params.row)}>
+            <IconButton className="iconButtonStyle" size="small" onClick={() => onEdit.handleEdit(params.row)}>
               <DriveFileRenameOutlineIcon fontSize="small" />
             </IconButton>
           </Grid>
@@ -74,6 +75,13 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean; credit
           <Grid size="auto">
             <IconButton className="iconButtonStyle" color="error" size="small" onClick={() => onDelete(params.row)}>
               <DeleteForeverIcon fontSize="small" />
+            </IconButton>
+          </Grid>
+        )}
+        {onSalesInvoice?.handleSalesInvoice && !onSalesInvoice?.isPermission?.(params.row) && (
+          <Grid size="auto">
+            <IconButton className="iconButtonStyle" color="primary" size="small" onClick={() => onSalesInvoice.handleSalesInvoice(params.row)}>
+              <RotateLeftIcon fontSize="small" />
             </IconButton>
           </Grid>
         )}
