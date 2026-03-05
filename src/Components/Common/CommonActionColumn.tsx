@@ -56,9 +56,9 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean; credit
             </IconButton>
           </Grid>
         )}
-        {onEdit && (
+        {onEdit?.handleEdit && !onEdit?.isPermission?.(params.row) && (
           <Grid size="auto">
-            <IconButton className="iconButtonStyle" size="small" onClick={() => onEdit(params.row)}>
+            <IconButton className="iconButtonStyle" size="small" onClick={() => onEdit.handleEdit(params.row)}>
               <DriveFileRenameOutlineIcon fontSize="small" />
             </IconButton>
           </Grid>

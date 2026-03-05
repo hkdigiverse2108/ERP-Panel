@@ -38,7 +38,7 @@ const UserRoles = () => {
     { field: "name", headerName: "Roles Name", flex: 1 },
     CommonActionColumn({
       active: (row) => editRoles({ roleId: row?._id, isActive: !row.isActive }),
-      onEdit: (row) => handleEdit(row),
+      onEdit: { handleEdit: (row) => handleEdit(row) },
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
     }),
   ];

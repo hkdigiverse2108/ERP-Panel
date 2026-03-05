@@ -17,7 +17,7 @@ const OrderList = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params } = useDataGrid({ active: true });
 
   const { data, isLoading: orderDataByIdLoading, isFetching: orderDataByIdFetching } = Queries.useGetPosOrderById(editSelectedOrderId, Boolean(editSelectedOrderId));
-  const { data: orderData, isLoading: orderDataLoading, isFetching: orderDataFetching } = Queries.useGetPosOrder(params, isOrderModal);
+  const { data: orderData, isLoading: orderDataLoading, isFetching: orderDataFetching } = Queries.useGetPosOrder({ ...params, orderListFilter: true }, isOrderModal);
 
   const orderDataById = data?.data;
   const allOrders = useMemo(() => orderData?.data?.posOrder_data?.map((order) => ({ ...order, id: order?._id })) || [], [orderData]);
@@ -90,7 +90,10 @@ const OrderList = () => {
     { field: "paymentMethod", headerName: "Payment Mode", width: 120, renderCell: ({ value }) => FormatPayment(value) },
     { field: "orderType", headerName: "Order Type", flex: 1, minWidth: 100, renderCell: ({ value }) => FormatPayment(value) },
     CommonActionColumn<PosOrderBase>({
-      onEdit: (row) => handleEdit(row),
+      onEdit: {
+        handleEdit: (row) => handleEdit(row),
+        isPermission: (row) => row.posCashRegisterId?.status !== "open",
+      },
       onPrint: (row) => handlePrintBtn(row),
     }),
   ];

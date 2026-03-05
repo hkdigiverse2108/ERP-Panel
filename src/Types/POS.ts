@@ -47,7 +47,7 @@ export interface PosProductType {
   totalQty: number;
   totalMrp: number;
   totalTaxAmount: number;
-  totalDiscount: number;
+  totalDiscount: string;
   totalAdditionalCharge: number;
   flatDiscountAmount: number;
   additionalCharges: AdditionalChargeType[];

@@ -5,6 +5,7 @@ import type { CompanyBase } from "./Company";
 import type { ContactBase } from "./Contacts";
 import type { EmployeeBase } from "./Employee";
 import type { MultiplePaymentType, PayLaterType, PosProductDataModal, PosProductOrderItem } from "./POS";
+import type { PosCashRegisterBase } from "./PosCashRegister";
 import type { TaxBase } from "./Tax";
 
 export interface PosOrderFormValues {
@@ -15,6 +16,7 @@ export interface PosOrderFormValues {
   orderType: string;
   salesManId: EmployeeBase;
   items: (Partial<PosProductOrderItem> & { productId?: PosProductDataModal })[];
+  posCashRegisterId: PosCashRegisterBase;
   remark: string;
   totalQty: number;
   totalMrp: number;

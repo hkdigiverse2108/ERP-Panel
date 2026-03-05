@@ -214,7 +214,7 @@ export interface CommonObjectNameColumnOptions {
 export interface CommonActionColumnProps<T> {
   editRoute?: string;
   permissionRoute?: string;
-  onEdit?: (row: T) => void;
+  onEdit?: { handleEdit: (row: T) => void; isPermission?: (row: T) => boolean };
   onDelete?: (row: T) => void;
   active?: (row: T) => void;
   onRefund?: (row: T) => void;
