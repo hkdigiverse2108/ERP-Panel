@@ -15,7 +15,7 @@ const PosFilter = () => {
 
   const dispatch = useAppDispatch();
 
-  const { data: productDropdown, isLoading: productDropdownLoading } = Queries.useGetProductDropdown();
+  const { data: productDropdown, isLoading: productDropdownLoading } = Queries.useGetProductDropdown({ stockFilter: true });
   const id = isSelectProduct || "";
   const { data: productById, isLoading: productByIdLoading, isFetching: productByIdFetching } = Queries.useGetProductById(id);
 
@@ -36,10 +36,11 @@ const PosFilter = () => {
   useEffect(() => {
     if (!productById?.data) return;
     if (productById.data._id !== isSelectProduct) return;
-
-    dispatch(addOrUpdateProduct(productById.data));
-    dispatch(setIsSelectProduct(""));
-  }, [productById?.data, dispatch, isSelectProduct]);
+    if (!productByIdLoading && !productByIdFetching) {
+      dispatch(addOrUpdateProduct(productById.data));
+      dispatch(setIsSelectProduct(""));
+    }
+  }, [productById?.data, dispatch, isSelectProduct, productByIdLoading, productByIdFetching]);
   return (
     <>
       <Grid container spacing={2} className="flex justify-between items-center w-full bg-white dark:bg-gray-dark p-2">

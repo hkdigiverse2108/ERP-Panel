@@ -117,8 +117,7 @@ const BillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }
                 <tr>
                   <td colSpan={5} className="pl-6 text-[10px] italic font-semibold pb-1">
                     GST {taxPercent}%{/* {taxAmount > 0 ? Number(taxAmount.toFixed(2)) : ""}  */}
-                    ||
-                    {discAmt > 0 && `  Discount: ${Number(discAmt.toFixed(2))}`}
+                    {discAmt > 0 && `||  Discount: ${Number(discAmt.toFixed(2))}`}
                   </td>
                 </tr>
               </React.Fragment>

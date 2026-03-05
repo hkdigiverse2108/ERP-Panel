@@ -1,12 +1,12 @@
 import { Divider, Skeleton } from "@mui/material";
-import { CommonButton, ShowNotification } from "../../../../../../Attribute";
+import { useState } from "react";
+import { Mutations, Queries } from "../../../../../../Api";
+import { CommonButton } from "../../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setRedeemLoyaltyModal } from "../../../../../../Store/Slices/ModalSlice";
-import { CommonModal } from "../../../../../Common";
-import { Mutations, Queries } from "../../../../../../Api";
-import { useState } from "react";
-import type { LoyaltyBase, RedeemLoyaltyDataResponse } from "../../../../../../Types";
 import { setLoyalty, setTotalAmount, setTotalDiscount } from "../../../../../../Store/Slices/PosSlice";
+import type { LoyaltyBase, RedeemLoyaltyDataResponse } from "../../../../../../Types";
+import { CommonModal } from "../../../../../Common";
 
 const RedeemLoyalty = () => {
   const { isRedeemLoyaltyModal } = useAppSelector((state) => state.modal);
@@ -20,10 +20,6 @@ const RedeemLoyalty = () => {
   const { mutate: redeemLoyalty } = Mutations.useRedeemLoyalty();
 
   const handleRedeemLoyalty = (loyalty: LoyaltyBase) => {
-    if ((loyalty?.minimumPurchaseAmount ?? 0) > PosProduct?.totalAmount) {
-      ShowNotification("Loyalty price is greater than total amount", "error");
-      return;
-    }
     if (PosProduct.loyaltyId === loyalty._id) {
       const discount = Number(PosProduct.totalDiscount || 0) - Number(isRedeemLoyalty?.discountValue || 0);
       dispatch(setTotalDiscount(Number(discount).toFixed(2)));

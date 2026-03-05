@@ -16,7 +16,6 @@ const ApplyCoupon = () => {
 
   const { isApplyCouponModal } = useAppSelector((state) => state.modal);
   const { PosProduct } = useAppSelector((state) => state.pos);
-  console.log("PosProduct", PosProduct);
 
   const dispatch = useAppDispatch();
 
@@ -79,8 +78,6 @@ const ApplyCoupon = () => {
 
     const finalDiscount = Number(PosProduct.totalDiscount || 0);
     const payableAmount = Number(PosProduct.totalAmount || 0) - finalDiscount;
-    console.log("finalDiscount", finalDiscount);
-    console.log("payableAmount", payableAmount);
     dispatch(setTotalDiscount(Number(finalDiscount).toFixed(2)));
     if (!isEditMode) dispatch(setTotalAmount(payableAmount));
     else dispatch(setTotalAmount(PosProduct.totalAmount));
