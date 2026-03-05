@@ -24,6 +24,10 @@ export interface SupplierBillProductItem {
   mfgDate?: string;
   expiryDate?: string;
   unitCost?: number;
+  uomId?: string;
+  unit?: string;
+  itemCode?: string;
+  taxId?: string;
 }
 
 export interface SupplierBillProductDetails {
@@ -63,9 +67,10 @@ export interface SupplierBillReturnProductDetails {
 
 export interface AdditionalChargeItem {
   chargeId?: string;
-  value?: number;
-  taxRate?: number;
-  total?: number;
+  amount?: number;
+  taxAmount?: number;
+  taxId?: string;
+  totalAmount?: number;
 }
 
 export interface AdditionalChargeDetails {
@@ -78,9 +83,13 @@ export interface AdditionalChargeDetails {
 export interface SupplierBillSummary {
   flatDiscount?: number;
   grossAmount?: number;
+  // item-level values (used by UI components for backwards compatibility)
   itemDiscount?: number;
   taxableAmount?: number;
   itemTax?: number;
+  // backend-friendly canonical fields
+  discountAmount?: number;
+  taxAmount?: number;
   additionalChargeAmount?: number;
   additionalChargeTax?: number;
   billDiscount?: number;
@@ -128,6 +137,7 @@ export interface ProductRow {
   itemCode: string;
   qty: string | number;
   freeQty: string | number;
+  uomId: string;
   unit: string;
   unitCost: string | number;
   mrp: string | number;
@@ -135,6 +145,7 @@ export interface ProductRow {
   disc1: string | number;
   disc2: string | number;
   taxableAmount: string | number;
+  taxId: string;
   itemTax: string | number;
   landingCost: string | number;
   margin: string | number;
@@ -147,8 +158,8 @@ export interface ProductRow {
 
 export interface AdditionalChargeRow {
   chargeId: string;
-  taxableAmount: string;
-  tax: string;
+  amount: string;
+  taxId: string;
   taxAmount: string;
   totalAmount: string;
 }
@@ -270,4 +281,9 @@ export interface SupplierBillTabsProps {
   handleReturnRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
   returnRoundOffAmount: string | number;
   onReturnRoundOffAmountChange: (value: string | number) => void;
+}
+
+export interface ExtendedSupplierBillTabsProps extends Omit<SupplierBillTabsProps, "termsList" | "handleDeleteTerm"> {
+  selectedTermIds: string[];
+  onTermsChange: (ids: string[]) => void;
 }

@@ -253,10 +253,10 @@ const ContactBaseSchema = {
   firstName: Validation("string", "First Name"),
   lastName: Validation("string", "Last Name"),
   email: Validation("string", "Email", { required: false, extraRules: (s) => s.email("Invalid email address") }),
-  companyName: Validation("string", "Company Name"),
+  companyName: Validation("string", "Company Name" , { required: false }),
   phoneNo: PhoneValidation(),
   whatsappNo: PhoneValidation("Whatsapp No", { requiredNumber: false, requiredCountryCode: false }),
-  panNo: Validation("string", "PAN No", {
+  panNo: Validation("string", "PAN No", { required: false,
     extraRules: (s) => s.matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number"),
   }),
   paymentMode: Validation("string", "Payment Mode"),
@@ -267,7 +267,7 @@ const ContactBaseSchema = {
   }),
   dob: Validation("string", "Date of Birth", { required: false }),
   anniversaryDate: Validation("string", "Anniversary Date", { required: false }),
-  telephoneNo: Validation("string", "Telephone No"),
+  telephoneNo: Validation("string", "Telephone No", { required: false }),
   tanNo: Validation("string", "Tan No", { required: false }),
   remarks: Validation("string", "Remarks", { required: false }),
   address: Yup.array().of(ContactAddressSchema).min(1),
@@ -517,4 +517,10 @@ export const JournalVoucherFormSchema = Yup.object().shape({
       if (!entries) return true;
       return entries.every((row: any) => Number(row.debit || 0) > 0 || Number(row.credit || 0) > 0);
     }),
+});
+
+export const TermsConditionFormSchema = Yup.object({
+  termsCondition: Validation("string", "Terms and Condition"),
+  isDefault: Validation("boolean", "Is Default", { required: false }),
+  isActive: Validation("boolean", "is Active", { required: false }),
 });

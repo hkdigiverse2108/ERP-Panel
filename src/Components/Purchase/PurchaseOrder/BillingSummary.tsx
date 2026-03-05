@@ -3,31 +3,26 @@ import { useFormikContext } from "formik";
 import { useEffect, useState } from "react";
 import { CommonValidationTextField } from "../../../Attribute";
 import { CommonCard } from "../../../Components/Common";
-import type { PurchaseOrderFormValues, PurchaseOrderItem } from "../../../Types";
+import type { BillingSummaryProps, PurchaseOrderFormValues, PurchaseOrderItem } from "../../../Types";
 import TaxDetailsTable from "./TaxDetailsTable";
-import { Queries } from "../../../Api";
 
-const BillingSummary = () => {
+const BillingSummary = ({ productData }: BillingSummaryProps) => {
   const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
   const [showTaxDetails, setShowTaxDetails] = useState(false);
-  const { data: productData } = Queries.useGetProductDropdown();
 
-  // ===== CALCULATIONS =====
   useEffect(() => {
-    const items = values.items || [];
+    const newItems = values.items || [];
+    const totalUnitCost = newItems.reduce((sum: number, item: PurchaseOrderItem) => sum + (Number(item.qty) * Number(item.unitCost) || 0), 0) || 0;
 
-    const grossAmount = items.reduce((sum: number, item: PurchaseOrderItem) => sum + (Number(item.qty) * Number(item.unitCost) || 0), 0) || 0;
-
-    const discount = Number(values.flatDiscount) || 0;
-    const roundOff = Number(values.roundOff) || 0;
-
-    const calculatedTax =
-      items.reduce((acc: number, item: PurchaseOrderItem) => {
+    // Calculate Tax Manually from Items
+    const totalCalculatedTax =
+      newItems.reduce((acc: number, item: PurchaseOrderItem) => {
         const qty = Number(item.qty) || 0;
         const unitCost = Number(item.unitCost) || 0;
-        const rate = values.taxType === "out_of_scope" ? 0 : Number(item.tax) || 0;
+        const isOutOfScope = values.taxType === "out_of_scope";
+        const rate = isOutOfScope ? 0 : Number(item.tax) || 0;
 
-        if (values.taxType === "tax_inclusive") {
+        if (values.taxType === "tax_inclusive" && !isOutOfScope) {
           const totalCtx = qty * unitCost;
           return acc + (totalCtx - totalCtx / (1 + rate / 100));
         } else {
@@ -35,29 +30,37 @@ const BillingSummary = () => {
         }
       }, 0) || 0;
 
+    const grossAmount = totalUnitCost;
+    const discountInput = Number(values.summary?.flatDiscount) || 0;
     const taxableAmount = grossAmount;
 
-    let netAmount = 0;
+    if (values.summary?.grossAmount !== grossAmount) setFieldValue("summary.grossAmount", grossAmount);
+    if (values.summary?.taxableAmount !== taxableAmount) setFieldValue("summary.taxableAmount", taxableAmount);
+    if (values.summary?.discountAmount !== discountInput) setFieldValue("summary.discountAmount", discountInput);
+    if (Number(values.summary?.taxAmount) !== Number(totalCalculatedTax)) setFieldValue("summary.taxAmount", totalCalculatedTax);
 
+    const roundOff = Number(values.summary?.roundOff) || 0;
+
+    // Net Amount Calculation
+    let net = 0;
     if (values.taxType === "tax_inclusive") {
-      netAmount = grossAmount - discount + roundOff;
+      net = grossAmount - discountInput + roundOff;
     } else {
-      netAmount = grossAmount + calculatedTax - discount + roundOff;
+      // Exclusive, Out of Scope (behaves like exclusive 0 tax)
+      net = grossAmount + totalCalculatedTax - discountInput + roundOff;
     }
 
-    setFieldValue("grossAmount", grossAmount);
-    setFieldValue("taxableAmount", taxableAmount);
-    setFieldValue("discountAmount", discount);
-    setFieldValue("netAmount", netAmount);
-  }, [values.items, values.taxType, values.flatDiscount, values.roundOff, setFieldValue]);
+    if (values.summary?.netAmount !== net) setFieldValue("summary.netAmount", net);
+  }, [values.items, values.taxType, values.summary?.flatDiscount, values.summary?.roundOff, setFieldValue]);
 
-  // ===== DISPLAY SUMMARY =====
-  const taxAmount = (values.items || []).reduce((acc: number, item: PurchaseOrderItem) => {
+  // Render Scope Calculation for Display
+  const calculatedTaxAmount = (values.items || []).reduce((acc: number, item: PurchaseOrderItem) => {
     const qty = Number(item.qty) || 0;
     const unitCost = Number(item.unitCost) || 0;
-    const rate = values.taxType === "out_of_scope" ? 0 : Number(item.tax) || 0;
+    const isOutOfScope = values.taxType === "out_of_scope";
+    const rate = isOutOfScope ? 0 : Number(item.tax) || 0;
 
-    if (values.taxType === "tax_inclusive") {
+    if (values.taxType === "tax_inclusive" && !isOutOfScope) {
       const totalCtx = qty * unitCost;
       return acc + (totalCtx - totalCtx / (1 + rate / 100));
     } else {
@@ -66,72 +69,73 @@ const BillingSummary = () => {
   }, 0);
 
   const summary = {
-    grossAmount: Number(values.grossAmount) || 0,
-    discountAmount: Number(values.discountAmount) || 0,
-    taxableAmount: Number(values.taxableAmount) || 0,
-    taxAmount,
-    netAmount: Number(values.netAmount) || 0,
+    grossAmount: Number(values.summary?.grossAmount) || 0,
+    discountAmount: Number(values.summary?.discountAmount) || 0,
+    taxableAmount: Number(values.summary?.taxableAmount) || 0,
+    taxAmount: Number(values.summary?.taxAmount) || Number(calculatedTaxAmount) || 0,
+    netAmount: Number(values.summary?.netAmount) || 0,
   };
 
   return (
     <CommonCard hideDivider grid={{ xs: 12 }}>
-      <Box sx={{ p: 2, display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 320px" }, gap: 2 }}>
-        {/* LEFT — TAX DETAILS */}
-        <Box>{showTaxDetails && <TaxDetailsTable items={values.items || []} productData={productData?.data || []} taxType={values.taxType} />}</Box>
-        {/* RIGHT — SUMMARY CARD */}
-        <CommonCard hideDivider paperProps={{ sx: { border: "1px solid", borderColor: "divider", borderRadius: 2, overflow: "hidden", width: { xs: "100%", md: 320 } } }}>
-          <Box className="bg-slate-50 dark:bg-slate-900/50 text-slate-700 dark:text-slate-200">
-            {/* Flat Discount */}
-            <Box className="flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-800">
-              <span className="font-medium text-sm">Flat Discount</span>
-              <Box width={110}>
-                <CommonValidationTextField name="flatDiscount" type="number" isCurrency currencyDisabled />
-              </Box>
-            </Box>
+      <Box sx={{ p: 2, display: "flex", gap: 2, flexDirection: { xs: "column", md: "row" }, justifyContent: "space-between", alignItems: "flex-start" }}>
+        <Box sx={{ width: { xs: "100%", md: "60%" } }}>{showTaxDetails && <TaxDetailsTable items={values.items || []} productData={productData?.data || []} taxType={values.taxType} />}</Box>
 
-            {/* Discount */}
-            <Box className="flex justify-between p-3 border-b border-slate-200 dark:border-slate-800 text-sm">
-              <span className="text-slate-500">Discount</span>
-              <span className="font-medium text-red-500">-{summary.discountAmount.toFixed(2)}</span>
-            </Box>
-
-            {/* Gross */}
-            <Box className="flex justify-between p-3 border-b border-slate-200 dark:border-slate-800 text-sm">
-              <span className="text-slate-500">Gross Amount</span>
-              <span className="font-medium">{summary.grossAmount.toFixed(2)}</span>
-            </Box>
-
-            {/* Taxable */}
-            <Box className="flex justify-between p-3 border-b border-slate-200 dark:border-slate-800 text-sm">
-              <span className="text-slate-500">Taxable Amount</span>
-              <span className="font-medium">{summary.taxableAmount.toFixed(2)}</span>
-            </Box>
-
-            {/* Tax */}
-            <Box className="flex justify-between p-3 border-b border-slate-200 dark:border-slate-800 text-sm group cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors" onClick={() => setShowTaxDetails(!showTaxDetails)}>
-              <span className="text-blue-600 dark:text-blue-400 flex items-center gap-1 font-medium">
-                Tax
-                <Box component="span" sx={{ fontSize: "10px", opacity: 0.7 }}>
-                  {showTaxDetails ? "▲" : "▼"}
-                </Box>
+        <Box className="border text-sm w-full md:w-fit" sx={{ borderRadius: "8px", overflow: "hidden" }}>
+          {/* Row 1: Flat Discount */}
+          <Box className="grid grid-cols-[130px_1fr] border-b border-gray-200 dark:border-gray-700">
+            <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex items-center justify-end font-medium">Flat Discount</Box>
+            <Box className="p-1 px-2 flex justify-end">
+              <span className="text-gray-900 dark:text-gray-100 font-bold ml-1 w-50">
+                <CommonValidationTextField name="summary.flatDiscount" label="" type="number"  isCurrency currencyDisabled />
               </span>
-              <span className="text-blue-600 dark:text-blue-400 font-bold">{summary.taxAmount.toFixed(2)}</span>
-            </Box>
-
-            {/* Roundoff */}
-            <Box className="flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-800">
-              <span className="text-slate-500 text-sm">Roundoff</span>
-              <Box width={110}>
-                <CommonValidationTextField name="roundOff" type="number" />
-              </Box>
-            </Box>
-            {/* Net */}
-            <Box className="flex justify-between p-4 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300">
-              <span className="text-lg font-bold">Net Amount</span>
-              <span className="text-xl font-black">₹{summary.netAmount.toFixed(2)}</span>
             </Box>
           </Box>
-        </CommonCard>
+
+          {/* Gross Amount */}
+          <Box className="grid grid-cols-[130px_1fr] border-b">
+            <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium">Gross Amount</Box>
+            <Box className="p-2 text-right font-medium">{summary.grossAmount.toFixed(2)}</Box>
+          </Box>
+
+          {/* Discount */}
+          <Box className="grid grid-cols-[130px_1fr] border-b">
+            <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium">Discount</Box>
+            <Box className="p-2 text-right">{summary.discountAmount.toFixed(2)}</Box>
+          </Box>
+
+          {/* Taxable Amount */}
+          <Box className="grid grid-cols-[130px_1fr] border-b">
+            <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium">Taxable Amount</Box>
+            <Box className="p-2 text-right">{summary.taxableAmount.toFixed(2)}</Box>
+          </Box>
+
+          {/* Tax */}
+          <Box className="grid grid-cols-[130px_1fr] border-b cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onClick={() => setShowTaxDetails(!showTaxDetails)}>
+            <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium text-blue-500 gap-1 items-center">
+              Tax
+            </Box>
+            <Box className="p-2 flex justify-end items-center">
+              <span className="font-medium align-middle">{summary.taxAmount.toFixed(2)}</span>
+            </Box>
+          </Box>
+          {/* Roundoff */}
+          <Box className="grid grid-cols-[130px_1fr] border-b">
+            <Box className="bg-gray-50 dark:bg-gray-800 p-2 flex justify-end font-medium text-blue-500">Roundoff</Box>
+            <Box className="p-1 px-2 flex justify-end">
+              <span className="text-gray-900 dark:text-gray-100 font-bold ml-1 w-50">
+                <CommonValidationTextField name="summary.roundOff" label="" type="number" />
+              </span>
+
+            </Box>
+          </Box>
+
+          {/* Net Amount */}
+          <Box className="grid grid-cols-[130px_1fr]">
+            <Box className="bg-gray-50 dark:bg-gray-800 p-3 flex justify-end font-bold text-lg">Net Amount</Box>
+            <Box className="p-3 text-right font-bold text-lg">{summary.netAmount.toFixed(2)}</Box>
+          </Box>
+        </Box>
       </Box>
     </CommonCard>
   );

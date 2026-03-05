@@ -54,3 +54,12 @@ export interface TermsConditionApiResponse extends MessageStatus {
 export interface TermsConditionDropdownApiResponse extends MessageStatus {
   data: TermsConditionBase[];
 }
+
+export interface TermsAndConditionModalProps {
+  openModal: boolean;
+  setOpenModal: (value: boolean) => void;
+  onSave: (term: TermsConditionBase) => void;
+  initialValues?: TermsConditionBase | null;
+  isLoading?: boolean;
+  companyId?: string;
+}
