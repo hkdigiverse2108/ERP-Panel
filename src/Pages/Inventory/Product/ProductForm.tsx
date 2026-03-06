@@ -51,7 +51,7 @@ const ProductForm = () => {
       calculateExpiryOn: data?.calculateExpiryOn || "",
       expiryReferenceDate: data?.expiryReferenceDate || DateConfig.utc().toISOString(),
       isExpiryProductSaleable: data?.isExpiryProductSaleable || true,
-      ingredients: data?.ingredients || "",
+      ingredients: data?.ingredients || [],
       shortDescription: data?.shortDescription || "",
       description: data?.description || "",
       nutrition: [...(data?.nutrition?.map((nutrition: NutritionInfo) => ({ name: nutrition.name, value: nutrition.value })) || [{ name: "", value: "" }])],

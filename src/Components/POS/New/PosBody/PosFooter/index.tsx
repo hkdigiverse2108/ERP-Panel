@@ -21,9 +21,10 @@ import CardDetails from "./CardDetails";
 import Cash from "./Cash";
 import PayLater from "./PayLater";
 import RedeemCredit from "./RedeemCredit";
+import { RealEstateAgent } from "@mui/icons-material";
 
 const PosFooter = () => {
-  const { PosProduct, isBtnStatus } = useAppSelector((state) => state.pos);
+  const { PosProduct, isBtnStatus, isReturnPosOrder } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
 
   const { mutate: addPosOrder } = Mutations.useAddPosOrder();
@@ -184,20 +185,27 @@ const PosFooter = () => {
         </Grid>
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2 p-2">
-          <CommonButton title="Multiple Pay" variant="contained" startIcon={<VerticalSplitIcon />} onClick={() => handleMultiplePay("print")} />
-          <CommonButton title="Redeem Credit" variant="contained" startIcon={<RedeemIcon />} onClick={handleRedeemCredit} />
-          <CommonButton title="Hold" variant="contained" startIcon={<PauseIcon />} onClick={() => handleHoldBill("")} loading={isBtnStatus === "hold"} />
-          <CommonButton title="UPI" variant="contained" startIcon={<FastForwardIcon />} onClick={() => handleUpi("")} loading={isBtnStatus === "upi"} />
-          <CommonButton title="Card" variant="contained" startIcon={<CreditCardIcon />} onClick={() => handleCard("")} />
-          <CommonButton title="Cash" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => handleCash("")} />
-          <CommonButton title="Apply Coupon" variant="contained" startIcon={<RedeemIcon />} onClick={handleApplyCoupon} />
-          <CommonButton title="Pay Later" variant="contained" startIcon={<CalendarMonthIcon />} onClick={() => handlePayLater("print")} />
-          <CommonButton title="Hold & Print" variant="contained" startIcon={<PauseIcon />} onClick={() => handleHoldBill("print")} loading={isBtnStatus === "hold-print"} />
-          <CommonButton title="UPI & Print" variant="contained" startIcon={<FastForwardIcon />} onClick={() => handleUpi("print")} loading={isBtnStatus === "upi-print"} />
-          <CommonButton title="Card & Print" variant="contained" startIcon={<CreditCardIcon />} onClick={() => handleCard("print")} />
-          <CommonButton title="Cash & Print" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => handleCash("print")} />
-        </div>
+        {isReturnPosOrder ? (
+          <div className="grid grid-cols-1 xsm:grid-cols-2 gap-2 p-2">
+            <CommonButton title="Refund" variant="contained" startIcon={"₹"} onClick={() => {}} />
+            <CommonButton title="Sales Return" variant="contained" startIcon={<RealEstateAgent />} onClick={() => {}} />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2 p-2">
+            <CommonButton title="Multiple Pay" variant="contained" startIcon={<VerticalSplitIcon />} onClick={() => handleMultiplePay("print")} />
+            <CommonButton title="Redeem Credit" variant="contained" startIcon={<RedeemIcon />} onClick={handleRedeemCredit} />
+            <CommonButton title="Hold" variant="contained" startIcon={<PauseIcon />} onClick={() => handleHoldBill("")} loading={isBtnStatus === "hold"} />
+            <CommonButton title="UPI" variant="contained" startIcon={<FastForwardIcon />} onClick={() => handleUpi("")} loading={isBtnStatus === "upi"} />
+            <CommonButton title="Card" variant="contained" startIcon={<CreditCardIcon />} onClick={() => handleCard("")} />
+            <CommonButton title="Cash" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => handleCash("")} />
+            <CommonButton title="Apply Coupon" variant="contained" startIcon={<RedeemIcon />} onClick={handleApplyCoupon} />
+            <CommonButton title="Pay Later" variant="contained" startIcon={<CalendarMonthIcon />} onClick={() => handlePayLater("print")} />
+            <CommonButton title="Hold & Print" variant="contained" startIcon={<PauseIcon />} onClick={() => handleHoldBill("print")} loading={isBtnStatus === "hold-print"} />
+            <CommonButton title="UPI & Print" variant="contained" startIcon={<FastForwardIcon />} onClick={() => handleUpi("print")} loading={isBtnStatus === "upi-print"} />
+            <CommonButton title="Card & Print" variant="contained" startIcon={<CreditCardIcon />} onClick={() => handleCard("print")} />
+            <CommonButton title="Cash & Print" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => handleCash("print")} />
+          </div>
+        )}
       </div>
       <RedeemCredit />
       <CardDetails />

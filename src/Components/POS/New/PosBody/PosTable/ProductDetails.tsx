@@ -37,7 +37,7 @@ const ProductDetails = () => {
               {ProductData.map((item, index) => (
                 <tr key={index} className="bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark">
                   <td className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300 capitalize">{item.title}</td>
-                  <td className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300 capitalize">{item.value}</td>
+                  <td className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300 capitalize">{item.value ?? "-"}</td>
                 </tr>
               ))}
             </tbody>
