@@ -1,18 +1,15 @@
-import { Add, Clear, Edit } from "@mui/icons-material";
+import { Add, Clear } from "@mui/icons-material";
 import { Box, Tab, Tabs } from "@mui/material";
 import { FieldArray, useFormikContext } from "formik";
 import { useEffect, useRef, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { Mutations, Queries } from "../../../Api";
-import { KEYS } from "../../../Constants";
+import { Queries } from "../../../Api";
 import { CommonButton, CommonTextField, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
-import { CommonCard, CommonTabPanel } from "../../../Components/Common";
+import { CommonCard, CommonTabPanel} from "../../../Components/Common";
 import CommonTable from "../../../Components/Common/CommonTable";
 import { GenerateOptions } from "../../../Utils";
-import type { AddTermsConditionPayload, CommonTableColumn, EditTermsConditionPayload, ProductBase, ProductSelectCellProps, PurchaseOrderFormValues, PurchaseOrderItem, TaxBase, TermsConditionBase } from "../../../Types";
+import type { CommonTableColumn, ProductBase, ProductSelectCellProps, PurchaseOrderFormValues, PurchaseOrderItem, TaxBase, TermsConditionBase } from "../../../Types";
 import BillingSummary from "./BillingSummary";
-import TermsConditionModal from "./TermsConditionModal";
-import SelectTermsModal from "./SelectTermsModal";
+import CommonTermsAndCondition from "../../Common/TermsAndConditions/CommonTermsAndCondition";
 
 const ProductSelectCell = ({ index, productData, taxData, isLoading }: ProductSelectCellProps) => {
   const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
@@ -21,7 +18,6 @@ const ProductSelectCell = ({ index, productData, taxData, isLoading }: ProductSe
 
   useEffect(() => {
     if (productId && productId !== prevProductId.current) {
-      // Product Changed
       const productList = productData?.data || [];
       const product = productList?.find((p: ProductBase) => p._id === productId);
       if (product) {
@@ -42,7 +38,7 @@ const ProductSelectCell = ({ index, productData, taxData, isLoading }: ProductSe
     }
   }, [productId, productData, taxData, setFieldValue, index]);
 
-  return <CommonValidationSelect name={`items.${index}.productId`} label="Search Product" isLoading={isLoading} options={GenerateOptions(productData?.data)} required />;
+  return <CommonValidationSelect name={`items.${index}.productId`} label="Search Product" isLoading={isLoading} options={GenerateOptions(productData?.data)} required  />;
 };
 
 const TotalInputCell = ({ index }: { index: number }) => {
@@ -77,20 +73,10 @@ const TotalInputCell = ({ index }: { index: number }) => {
 
 const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
   const { values, setFieldValue } = useFormikContext<PurchaseOrderFormValues>();
-  const queryClient = useQueryClient();
   const [tabValue, setTabValue] = useState(0);
-
-  // ... (rest of the component)
-  const [openTermsModal, setOpenTermsModal] = useState(false);
-  const [openSelectTermsModal, setOpenSelectTermsModal] = useState(false);
-  // const { data: productData, isLoading: productDataLoading } = Queries.useGetProduct({ companyFilter: values.companyId || undefined });
   const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown({ companyFilter: values.companyId || undefined });
-
-  const { data: termsData } = Queries.useGetTermsCondition({ all: true });
-
-  // Helper to handle both array and paginated response
+  const { data: termsData } = Queries.useGetTermsCondition({ all: true, companyId: values.companyId || undefined });
   const termsList = termsData?.data?.termsCondition_data || [];
-
   const defaultsInitialized = useRef(false);
 
   useEffect(() => {
@@ -105,50 +91,6 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
     }
   }, [isEditing, termsList, setFieldValue, values.termsAndConditionIds]);
   const { data: taxData } = Queries.useGetTaxDropdown();
-  const { mutate: addTerm, isPending: addTermLoading } = Mutations.useAddTermsCondition();
-  const { mutate: editTerm, isPending: editTermLoading } = Mutations.useEditTermsCondition();
-
-  const [selectedTerm, setSelectedTerm] = useState<TermsConditionBase | null>(null);
-
-  const handleRemoveTermFromPO = (id: string) => {
-    const currentIds = values.termsAndConditionIds || [];
-    setFieldValue(
-      "termsAndConditionIds",
-      currentIds.filter((termId) => termId !== id),
-    );
-  };
-
-  const handleEditTerm = (term: TermsConditionBase) => {
-    setSelectedTerm(term);
-    setOpenTermsModal(true);
-  };
-  const handleOpenAddTerm = () => {
-    setSelectedTerm(null);
-    setOpenTermsModal(true);
-  };
-  const handleSaveTerm = (term: TermsConditionBase) => {
-
-    if (selectedTerm) {
-      editTerm({ termsConditionId: term._id, termsCondition: term.termsCondition, isDefault: term.isDefault, companyId: values.companyId } as EditTermsConditionPayload, {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: [KEYS.TERMS_CONDITION.BASE] });
-          setOpenTermsModal(false);
-          setSelectedTerm(null);
-        },
-      });
-    } else {
-      addTerm({ termsCondition: term.termsCondition, isDefault: term.isDefault, companyId: values.companyId } as AddTermsConditionPayload, {
-        onSuccess: (data: any) => {
-          queryClient.invalidateQueries({ queryKey: [KEYS.TERMS_CONDITION.BASE] });
-          setOpenTermsModal(false);
-          if (term.isDefault && data?.data?._id) {
-            const currentIds = values.termsAndConditionIds || [];
-            setFieldValue("termsAndConditionIds", [...currentIds, data.data._id]);
-          }
-        },
-      });
-    }
-  };
 
   useEffect(() => {
     let hasChanges = false;
@@ -241,13 +183,13 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
                         render: (_row, index) => (
                           <Box display="flex" justifyContent="center" gap={1}>
                             {index === (values.items?.length || 0) - 1 && (
-                              <CommonButton variant="outlined" onClick={() => push({ productId: "", qty: 1, freeQty: 0, mrp: 0, sellingPrice: 0, discount1: 0, discount2: 0, taxableAmount: 0, unitCost: 0, tax: "0", landingCost: "0", margin: "0", total: 0 })}>
+                              <CommonButton  variant="outlined" onClick={() => push({ productId: "", qty: 1, freeQty: 0, mrp: 0, sellingPrice: 0, discount1: 0, discount2: 0, taxableAmount: 0, unitCost: 0, tax: "0", landingCost: "0", margin: "0", total: 0 })}>
                                 <Add fontSize="small" />
                               </CommonButton>
                             )}
 
                             {(values.items?.length || 0) > 1 && (
-                              <CommonButton color="error" variant="outlined" onClick={() => remove(index)}>
+                              <CommonButton  color="error" variant="outlined" onClick={() => remove(index)}>
                                 <Clear fontSize="small" />
                               </CommonButton>
                             )}
@@ -257,10 +199,10 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
                       },
                       { key: "sr", header: "#", bodyClass: "align-middle text-center w-[50px]", render: (_row, index) => index + 1 },
                       { key: "productId", header: "Product*", bodyClass: "min-w-[250px]", render: (_row, index) => <ProductSelectCell index={index} productData={productData} taxData={taxData} isLoading={productDataLoading} /> },
-                      { key: "mrp", header: "MRP", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.mrp`} type="number" /> },
-                      { key: "qty", header: "Qty", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.qty`} type="number" /> },
-                      { key: "unit", header: "Unit", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.unit`} disabled /> },
-                      { key: "unitCost", header: "Unit Cost", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.unitCost`} type="number" /> },
+                      { key: "mrp", header: "MRP", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.mrp`} type="number"  /> },
+                      { key: "qty", header: "Qty", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.qty`} type="number"  /> },
+                      { key: "unit", header: "Unit", bodyClass: "min-w-[100px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.unit`}  disabled /> },
+                      { key: "unitCost", header: "Unit Cost", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.unitCost`} type="number"/> },
                       {
                         key: "tax",
                         header: "Tax",
@@ -274,8 +216,8 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
                           </Box>
                         ),
                       },
-                      { key: "landingCost", header: "Landing Cost", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.landingCost`} type="number" disabled /> },
-                      { key: "margin", header: "Margin", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.margin`} type="number" disabled /> },
+                      { key: "landingCost", header: "Landing Cost", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.landingCost`} type="number" disabled  /> },
+                      { key: "margin", header: "Margin", bodyClass: "min-w-[120px]", render: (_row, index) => <CommonValidationTextField name={`items.${index}.margin`} type="number" disabled  /> },
                       { key: "total", header: "Total", bodyClass: "min-w-[140px]", render: (_row, index) => <TotalInputCell index={index} />, footer: (data) => data.reduce((sum, item) => sum + (Number(item.total) || 0), 0).toFixed(2) },
                     ];
 
@@ -288,73 +230,13 @@ const ProductAndTerm = ({ isEditing }: { isEditing: boolean }) => {
 
           {/* TAB 1: TERMS & CONDITIONS */}
           <CommonTabPanel value={tabValue} index={1}>
-            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr" }, gap: 3, p: 3 }}>
-              {/* Terms Section */}
-              <Box>
-                <Box display="flex" justifyContent="space-between" mb={2}>
-                  <Box fontWeight={600}>Terms & Conditions</Box>
-                  <Box display="flex" gap={1}>
-                    <CommonButton startIcon={<Add />} onClick={handleOpenAddTerm} variant="outlined" title="new term" />
-                    <CommonButton onClick={() => setOpenSelectTermsModal(true)} variant="outlined">
-                      <Edit />
-                    </CommonButton>
-                  </Box>
-                </Box>
-
-                <Box className="custom-scrollbar" sx={{ overflowX: "auto" }}>
-                  <Box sx={{ minWidth: "max-content" }}>
-                    <table className="w-full text-sm border border-gray-200 dark:border-gray-700">
-                      <thead className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-200">
-                        <tr>
-                          <th className="p-2 w-10">#</th>
-                          <th className="p-2 text-left">Condition</th>
-                          <th className="p-2 w-20 text-center">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {termsList
-                          .filter((term: TermsConditionBase) => values.termsAndConditionIds?.includes(term._id))
-                          .map((term: TermsConditionBase, index: number) => (
-                            <tr key={term._id} className="text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700">
-                              <td className="p-2">{index + 1}</td>
-                              <td className="p-2">{term.termsCondition}</td>
-                              <td className="p-2 text-center">
-                                <Box display="flex" justifyContent="center" gap={1}>
-                                  <CommonButton color="primary" variant="text" onClick={() => handleEditTerm(term)}>
-                                    <Edit fontSize="small" />
-                                  </CommonButton>
-                                  <CommonButton color="error" variant="text" onClick={() => handleRemoveTermFromPO(term._id)}>
-                                    <Clear fontSize="small" />
-                                  </CommonButton>
-                                </Box>
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
-                  </Box>
-                </Box>
-              </Box>
-              <Box>
-                <CommonValidationTextField name="notes" label="Note" multiline rows={4} placeholder="Enter a note (max 200 characters)" />
-              </Box>
+            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr" }, gap: 3, mt: 2 }}>
+              <CommonTermsAndCondition selectedTermIds={values.termsAndConditionIds || []} onChange={(ids) => setFieldValue("termsAndConditionIds", ids)} />
             </Box>
           </CommonTabPanel>
         </Box>
       </CommonCard>
       <BillingSummary productData={productData} />
-      <TermsConditionModal openModal={openTermsModal} setOpenModal={setOpenTermsModal} onSave={handleSaveTerm} initialValues={selectedTerm} isLoading={addTermLoading || editTermLoading} />
-      <SelectTermsModal
-        open={openSelectTermsModal}
-        onClose={() => setOpenSelectTermsModal(false)}
-        onSave={(selected) =>
-          setFieldValue(
-            "termsAndConditionIds",
-            selected.map((t) => t._id),
-          )
-        }
-        alreadySelected={termsList.filter((t: TermsConditionBase) => values.termsAndConditionIds?.includes(t._id)) || []}
-      />
     </>
   );
 };

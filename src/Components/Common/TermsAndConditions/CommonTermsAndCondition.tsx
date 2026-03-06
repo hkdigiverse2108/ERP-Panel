@@ -8,7 +8,7 @@ import { CommonButton, CommonCheckbox, CommonValidationSwitch, CommonValidationT
 import { CommonCard, CommonModal, CommonTable } from "../index";
 import type { CommonTableColumn, CommonTermsAndConditionProps, TermsConditionApiResponse, TermsConditionBase, TermsConditionFormValues, TermsSelectionFormValues } from "../../../Types";
 
-const AddTermModal = ({ open, term, onClose, onSave }: { open: boolean; term: TermsConditionBase | null; onClose: () => void , onSave: (payload: TermsConditionBase) => void;}) => {
+const AddTermModal = ({ open, term, onClose, onSave }: { open: boolean; term: TermsConditionBase | null; onClose: () => void; onSave: (payload: TermsConditionBase) => void }) => {
   const isEditing = Boolean(term?._id);
   const initialValues: TermsConditionFormValues = {
     termsCondition: term?.termsCondition || "",
@@ -214,7 +214,7 @@ const CommonTermsAndCondition = ({ selectedTermIds, onChange }: CommonTermsAndCo
 
       {/* TABLE */}
       <Box sx={{ border: "1px solid", borderColor: "divider", borderRadius: 2, overflow: "hidden" }}>
-        <CommonTable data={displayTerms} columns={columns} rowKey={(row: TermsConditionBase) => row._id || ""} />
+        <CommonTable data={displayTerms} columns={columns} rowKey={(row: TermsConditionBase) => row._id || ""} getRowClass={() => "bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark border-b border-gray-100 dark:border-gray-700"} />{" "}
       </Box>
 
       {/* NOTE */}
