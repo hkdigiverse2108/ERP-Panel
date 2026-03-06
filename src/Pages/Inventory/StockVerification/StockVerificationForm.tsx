@@ -1,6 +1,6 @@
 import ClearIcon from "@mui/icons-material/Clear";
 import { Box, Grid } from "@mui/material";
-import { Form, Formik } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
@@ -11,6 +11,14 @@ import { BREADCRUMBS, DATA_STATUS } from "../../../Data";
 import type { ProductBase, StockVerificationBase, StockVerificationFormValues, StockVerificationRow } from "../../../Types";
 import { GenerateOptions, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
+
+const FilterWatcher = ({ onChange }: { onChange: (categoryId: string) => void }) => {
+  const { values } = useFormikContext<{ categoryId: string; brandId: string }>();
+  useEffect(() => {
+    onChange(values.categoryId || "");
+  }, [values.categoryId, onChange]);
+  return null;
+};
 
 const StockVerificationForm = () => {
   const [searchValue, setSearchValue] = useState<string[]>([""]);
@@ -25,7 +33,8 @@ const StockVerificationForm = () => {
   const isEditing = Boolean(updateData?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
 
-  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
+  const [dynamicCategory, setDynamicCategory] = useState<string>("");
+  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true, ...(dynamicCategory && { categoryFilter: dynamicCategory }) });
   const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true });
   const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown(filter);
 
@@ -121,6 +130,8 @@ const StockVerificationForm = () => {
     const hasAccess = isEditing ? permission.edit : permission.add;
     if (!hasAccess) navigate(-1);
   }, [isEditing, permission, navigate]);
+
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.STOCK_VERIFICATION[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.STOCK_VERIFICATION[pageMode]} />
@@ -132,6 +143,7 @@ const StockVerificationForm = () => {
                 <Formik enableReinitialize initialValues={{ categoryId: "", brandId: "" }} onSubmit={handleSubmit}>
                   {({ dirty }) => (
                     <Form noValidate>
+                      <FilterWatcher onChange={setDynamicCategory} />
                       <Grid container spacing={2}>
                         <CommonValidationSelect name="categoryId" label="Category" placeholder="Category Selection" options={GenerateOptions(CategoryData?.data)} isLoading={CategoryDataLoading} grid={{ xs: 12, sm: 6, md: 4 }} />
                         <CommonValidationSelect name="brandId" label="Brand" placeholder="Brand Selection" options={GenerateOptions(BrandsData?.data)} isLoading={BrandsDataLoading} grid={{ xs: 12, md: 4 }} />

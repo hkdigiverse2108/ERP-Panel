@@ -70,6 +70,7 @@ const PurchaseOrder = () => {
 
   const stats = [
     { label: "All Orders", value: totalRows || 0, color: "primary" },
+    { label: "In Progress", value: allPurchaseOrder.filter((item) => item.status === "in_progress").length, color: "secondary" },
     { label: "Delivered", value: allPurchaseOrder.filter((item) => item.status === "delivered").length, color: "success" },
     { label: "Exceed", value: allPurchaseOrder.filter((item) => item.status === "exceed").length, color: "error" },
     { label: "Completed", value: allPurchaseOrder.filter((item) => item.status === "completed").length, color: "info" },
@@ -80,7 +81,7 @@ const PurchaseOrder = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 4, md: 2.4 }} />
+        <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 4, md: 2 }} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
