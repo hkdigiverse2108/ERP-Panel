@@ -83,11 +83,9 @@ export interface AdditionalChargeDetails {
 export interface SupplierBillSummary {
   flatDiscount?: number;
   grossAmount?: number;
-  // item-level values (used by UI components for backwards compatibility)
   itemDiscount?: number;
   taxableAmount?: number;
   itemTax?: number;
-  // backend-friendly canonical fields
   discountAmount?: number;
   taxAmount?: number;
   additionalChargeAmount?: number;

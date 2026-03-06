@@ -175,17 +175,22 @@ const SupplierBillForm = () => {
       setShowAdditionalCharge(true);
     } else {
       setAdditionalChargeRows([additionalChargeEmptyRow]);
+
+      if (!data) return;
+
       if (data.summary?.flatDiscount) {
         setFlatDiscount(data.summary.flatDiscount);
       }
+
       if (data.summary?.roundOff) {
         setRoundOffAmount(data.summary.roundOff);
       }
+
       if (data.returnProductDetails?.summary?.roundOff) {
         setReturnRoundOffAmount(data.returnProductDetails.summary.roundOff);
       }
     }
-  }, [data, isEditing, ProductsData]);
+  }, [data, isEditing,  ProductsData?.data]);
 
   const mapProductRows = (): SupplierBillProductDetails => {
     const item = rows.map((r) => ({ productId: r.productId, qty: +r.qty || 0, freeQty: +r.freeQty || 0, mrp: +r.mrp || 0, uomId: r.uomId, unit: r.unit, sellingPrice: +r.sellingPrice || 0, landingCost: +r.landingCost || 0, margin: +r.margin || 0, discount1: +r.disc1 || 0, discount2: +r.disc2 || 0, total: +r.totalAmount || 0 }));

@@ -55,8 +55,6 @@ export interface PurchaseOrderFormValues {
   shippingDate?: string | Date | null;
   shippingNote?: string | null;
 
-  // taxType?: TAX_TYPE;
-
   items?: PurchaseOrderItem[];
 
   termsAndConditionIds?: string[];
