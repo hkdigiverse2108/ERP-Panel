@@ -53,7 +53,7 @@ export const Mutations = {
   //************** bank *****************/
   useAddBank: () => useMutations<AddBankPayload, void>([KEYS.BANK.ADD, KEYS.BANK.BASE], (input) => Post(URL_KEYS.BANK.ADD, input)),
   useEditBank: () => useMutations<EditBankPayload, void>([KEYS.BANK.EDIT, KEYS.BANK.BASE], (input) => Put(URL_KEYS.BANK.EDIT, input)),
-  useDeleteBank: () => useMutations<string, void>([KEYS.BANK.DELETE , KEYS.BANK.BASE], (id) => Delete(`${URL_KEYS.BANK.BASE}/${id}`)),
+  useDeleteBank: () => useMutations<string, void>([KEYS.BANK.DELETE, KEYS.BANK.BASE], (id) => Delete(`${URL_KEYS.BANK.BASE}/${id}`)),
 
   //************** payment **************** */
   // useAddPayment: () => useMutations<FormData, any>([KEYS.PAYMENT.ADD], (input) => Post(URL_KEYS.PAYMENT.ADD, input)),
@@ -84,14 +84,14 @@ export const Mutations = {
   useDeleteMaterialConsumption: () => useMutations<string, void>([KEYS.MATERIAL_CONSUMPTION.DELETE, KEYS.MATERIAL_CONSUMPTION.BASE], (id) => Delete(`${URL_KEYS.MATERIAL_CONSUMPTION.BASE}/${id}`)),
 
   //*************** POS **************** */
-  useAddPosOrder: () => useMutations<AddPosProductOrderPayload, PosProductOrderDataResponse>([KEYS.POS.ADD, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER, KEYS.POS_ORDER.BASE, KEYS.POS_CASH_REGISTER.DETAILS], (input) => Post(URL_KEYS.POS.ADD, input)),
-  useEditPosOrder: () => useMutations<EditPosProductOrderPayload, PosProductOrderDataResponse>([KEYS.POS.EDIT, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER,KEYS.POS_ORDER.BASE], (input) => Put(URL_KEYS.POS.EDIT, input)),
-  useDeletePosOrder: () => useMutations<string, void>([KEYS.POS.DELETE, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER], (id) => Delete(`${URL_KEYS.POS.BASE}/${id}`)),
+  useAddPosOrder: () => useMutations<AddPosProductOrderPayload, PosProductOrderDataResponse>([KEYS.POS.ADD, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER, KEYS.POS_ORDER.BASE, KEYS.POS_CASH_REGISTER.DETAILS, KEYS.POS_ORDER.DROPDOWN], (input) => Post(URL_KEYS.POS.ADD, input)),
+  useEditPosOrder: () => useMutations<EditPosProductOrderPayload, PosProductOrderDataResponse>([KEYS.POS.EDIT, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER, KEYS.POS_ORDER.BASE, KEYS.POS_ORDER.DROPDOWN], (input) => Put(URL_KEYS.POS.EDIT, input)),
+  useDeletePosOrder: () => useMutations<string, void>([KEYS.POS.DELETE, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER, KEYS.POS_ORDER.DROPDOWN], (id) => Delete(`${URL_KEYS.POS.BASE}/${id}`)),
 
   // ************ POS Payment ************
-  useAddPosPayment: () => useMutations<AddPosPaymentPayload, void>([KEYS.POS_PAYMENT.ADD, KEYS.POS_PAYMENT.BASE], (input) => Post(URL_KEYS.POS_PAYMENT.ADD, input)),
-  useEditPosPayment: () => useMutations<EditPosPaymentPayload, void>([KEYS.POS_PAYMENT.EDIT, KEYS.POS_PAYMENT.BASE], (input) => Put(URL_KEYS.POS_PAYMENT.EDIT, input)),
-  useDeletePosPayment: () => useMutations<string, void>([KEYS.POS_PAYMENT.DELETE, KEYS.POS_PAYMENT.BASE], (id) => Delete(`${URL_KEYS.POS_PAYMENT.BASE}/${id}`)),
+  useAddPosPayment: () => useMutations<AddPosPaymentPayload, void>([KEYS.POS_PAYMENT.ADD, KEYS.POS_PAYMENT.BASE, KEYS.POS_ORDER.DROPDOWN], (input) => Post(URL_KEYS.POS_PAYMENT.ADD, input)),
+  useEditPosPayment: () => useMutations<EditPosPaymentPayload, void>([KEYS.POS_PAYMENT.EDIT, KEYS.POS_PAYMENT.BASE, KEYS.POS_ORDER.DROPDOWN], (input) => Put(URL_KEYS.POS_PAYMENT.EDIT, input)),
+  useDeletePosPayment: () => useMutations<string, void>([KEYS.POS_PAYMENT.DELETE, KEYS.POS_PAYMENT.BASE, KEYS.POS_ORDER.DROPDOWN], (id) => Delete(`${URL_KEYS.POS_PAYMENT.BASE}/${id}`)),
 
   // ************ POS Cash Register ************
   useAddPosCashRegister: () => useMutations<AddPosCashRegisterPayload, void>([KEYS.POS_CASH_REGISTER.ADD, KEYS.POS_CASH_REGISTER.BASE, KEYS.POS_CASH_REGISTER.DETAILS], (input) => Post(URL_KEYS.POS_CASH_REGISTER.ADD, input)),

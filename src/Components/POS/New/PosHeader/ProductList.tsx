@@ -3,7 +3,7 @@ import { Box, Paper, Skeleton, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Queries } from "../../../../Api";
 import { CommonSelect } from "../../../../Attribute";
-import { useAppDispatch } from "../../../../Store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
 import { addOrUpdateProduct } from "../../../../Store/Slices/PosSlice";
 import { GenerateOptions } from "../../../../Utils";
 import { CommonDrawer } from "../../../Common";
@@ -15,14 +15,18 @@ const ProductList = () => {
   const [productValue, setProductValue] = useState<string>("");
   const dispatch = useAppDispatch();
 
+  const { isReturnPosOrder } = useAppSelector((state) => state.pos);
+
   const { data: category, isLoading: categoryLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true }, open);
   const id = value[0] || "";
   const { data: productDropdown, isLoading: productDropdownLoading } = Queries.useGetProductDropdown(id ? { categoryFilter: id } : {}, open);
   const { data: productById } = Queries.useGetProductById(productValue);
 
   const handleAddProduct = (product: ProductBase) => {
-    if (Number(product.qty) <= 0) return;
-    setProductValue(product._id);
+    if (!isReturnPosOrder) {
+      if (Number(product.qty) <= 0) return;
+      setProductValue(product._id);
+    }
   };
 
   useEffect(() => {

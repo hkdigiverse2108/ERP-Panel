@@ -9,6 +9,7 @@ const keypad = ["1", "2", "3", "+10", "4", "5", "6", "+20", "7", "8", "9", "+50"
 
 const QtyCount = () => {
   const { isQtyCountModal } = useAppSelector((state) => state.modal);
+  const { isReturnPosOrder } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
   const [prevData, setPrevData] = useState(isQtyCountModal.data);
 
@@ -18,7 +19,7 @@ const QtyCount = () => {
 
   const MIN_QTY = prevData?.uomId?.name === "PIECES" ? 0 : 0.1;
 
-  const maxQty = isQtyCountModal.data?.qty ?? Infinity;
+  const maxQty = isReturnPosOrder ? (prevData?.originalQty ?? Infinity) : (isQtyCountModal.data?.qty ?? Infinity);
   if (isQtyCountModal.data !== prevData) {
     setPrevData(isQtyCountModal.data);
     if (isQtyCountModal.data) setTendered(isQtyCountModal.data.posQty?.toString() ?? qtyCount);

@@ -37,10 +37,10 @@ const filterNavItems = (navItems: NavItem[], permissions: ChildDetailsApiRespons
 
         if (allowedChildren.length === 0) return null;
 
-        return { ...item, name: parentPerm.displayName, children: allowedChildren as NavItem[] };
+        return { ...item, name: parentPerm.displayName, number: parentPerm.number, children: allowedChildren as NavItem[] };
       }
 
-      return { ...item, name: parentPerm.displayName };
+      return { ...item, name: parentPerm.displayName, number: parentPerm.number };
     })
     .filter(Boolean) as NavItem[];
 };
@@ -55,8 +55,11 @@ const Sidebar = () => {
   const [openSubmenu, setOpenSubmenu] = useState<{ type: "main" | "others"; index: number } | null>(null);
   const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>({});
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const allowedNavItems = useMemo(() => filterNavItems(NavItems, permission), [permission]);
+  const allowedNavItems = useMemo(() => {
+    const items = filterNavItems(NavItems, permission);
 
+    return items.sort((a, b) => (a.number || 0) - (b.number || 0));
+  }, [permission]);
   const isActive = useCallback((path: string) => location.pathname === path || location.pathname.startsWith(path + "/"), [location.pathname]);
 
   useEffect(() => {

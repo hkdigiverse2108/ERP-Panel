@@ -5,20 +5,23 @@ import { useEffect, useMemo } from "react";
 import { CommonButton, CommonTextField } from "../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setProductDetailsModal, setQtyCountModal } from "../../../../../Store/Slices/ModalSlice";
-import { removeProduct, setTotalAmount, setTotalDiscount, setTotalMrp, setTotalQty, setRoundOff, setTotalTaxAmount, updateProduct } from "../../../../../Store/Slices/PosSlice";
+import { removeProduct, setTotalAmount, setTotalDiscount, setTotalMrp, setTotalQty, setRoundOff, setTotalTaxAmount, updateProduct, clearPosProduct } from "../../../../../Store/Slices/PosSlice";
 import type { CommonTableColumn, PosProductDataModal } from "../../../../../Types";
 import ProductDetails from "./ProductDetails";
 import QtyCount from "./QtyCount";
 import { CommonTable } from "../../../../Common";
 
 const PosTable = () => {
-  const { PosProduct, isPosLoading } = useAppSelector((state) => state.pos);
+  const { PosProduct, isPosLoading, isReturnPosOrder } = useAppSelector((state) => state.pos);
   const productData = PosProduct.items;
 
   const dispatch = useAppDispatch();
   const updateRow = (_id: string, data: Partial<PosProductDataModal>) => dispatch(updateProduct({ _id, data }));
 
-  const removeRow = (_id: string) => dispatch(removeProduct(_id));
+  const removeRow = (_id: string) => {
+    if (productData.length === 1) dispatch(clearPosProduct());
+    else dispatch(removeProduct(_id));
+  };
 
   const calcNetAmount = (row: PosProductDataModal) => ((row.mrp - row.discount - row.additionalDiscount) * row.posQty)?.toFixed(2);
 
@@ -57,6 +60,11 @@ const PosTable = () => {
     dispatch(setRoundOff(Number(roundOffAmount)?.toFixed(2)));
   }, [totalMrp, totalDiscount, dispatch, totalQty, totalTaxAmount, roundOffAmount, roundedAmount]);
 
+  const isDisabled = (row: PosProductDataModal) => {
+    if (isReturnPosOrder) return row.posQty >= row.originalQty;
+    else return row.posQty >= (row.qty ?? Infinity);
+  };
+
   const columns: CommonTableColumn<PosProductDataModal>[] = [
     { key: "sr", header: "Sr No.", render: (_, i) => i + 1 },
     {
@@ -85,7 +93,7 @@ const PosTable = () => {
             {row.posQty}
           </span>
 
-          <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, { posQty: roundQty(row.posQty + qtyCount(row)) })} disabled={row.posQty >= (row.qty ?? Infinity)}>
+          <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, { posQty: roundQty(row.posQty + qtyCount(row)) })} disabled={isDisabled(row)}>
             <AddIcon />
           </CommonButton>
         </div>
@@ -106,19 +114,19 @@ const PosTable = () => {
     },
     { key: "unitCost", header: "Unit Cost", bodyClass: "min-w-32 w-35" },
     { key: "netAmount", header: "Net Amount", bodyClass: "min-w-32 w-35" },
-    ...(!PosProduct.posOrderId
-      ? [
-          {
-            key: "action",
-            header: "",
-            render: (row: PosProductDataModal) => (
-              <CommonButton variant="outlined" size="small" color="error" sx={{ minWidth: 40 }} onClick={() => removeRow(row._id)}>
-                <CloseIcon />
-              </CommonButton>
-            ),
-          },
-        ]
-      : []),
+    // ...(!PosProduct.posOrderId || isReturnPosOrder
+    //   ? [
+    {
+      key: "action",
+      header: "",
+      render: (row: PosProductDataModal) => (
+        <CommonButton variant="outlined" size="small" color="error" sx={{ minWidth: 40 }} onClick={() => removeRow(row._id)}>
+          <CloseIcon />
+        </CommonButton>
+      ),
+    },
+    //   ]
+    // : []),
   ];
 
   const CommonTableOption = {

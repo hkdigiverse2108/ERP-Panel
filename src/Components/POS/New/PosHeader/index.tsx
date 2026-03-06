@@ -17,7 +17,7 @@ import { useReactToPrint } from "react-to-print";
 
 const PosHeader = () => {
   const { user } = useAppSelector((state) => state.auth);
-  const { PosProduct } = useAppSelector((state) => state.pos);
+  const { PosProduct ,isReturnPosOrder} = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
 
   const { data: orderData } = Queries.useGetLastPosOrder({ lastBillFilter: true });
@@ -52,7 +52,7 @@ const PosHeader = () => {
       <Grid spacing={{ xs: 1, lg: 0 }} container className="flex justify-between items-center p-2 w-full">
         <Grid size={{ xs: 12, lg: 6, xl: 8 }}>
           <Grid container spacing={{ xs: 1, sm: 2 }} className="flex max-sm:justify-center items-center w-full">
-            <CommonRadio value={PosProduct.orderType} onChange={(e) => dispatch(setOrderType(e))} options={ORDER_TYPE} grid={{ xs: "auto" }} />
+            <CommonRadio value={PosProduct.orderType} onChange={(e) => dispatch(setOrderType(e))} options={ORDER_TYPE} disabled={isReturnPosOrder} grid={{ xs: "auto" }} />
             <CommonSelect label="Select Salesman" options={GenerateOptions(userDropdown?.data)} isLoading={userDropdownLoading} value={value} onChange={handleChange} limitTags={1} grid={{ xs: 12, xsm: 6, lg: 4, xl: 3 }} />
           </Grid>
         </Grid>

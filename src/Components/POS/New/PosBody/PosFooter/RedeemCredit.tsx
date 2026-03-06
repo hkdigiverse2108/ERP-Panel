@@ -73,6 +73,7 @@ const RedeemCredit = () => {
     const payable = payableAmount >= 0 ? payableAmount?.toFixed(2) : "0.00";
     dispatch(setTotalAmount(Number(payable)));
     setIsTotalAmount(Number(payable));
+    handleClose();
   };
 
   const handleRemoveCredit = () => {
