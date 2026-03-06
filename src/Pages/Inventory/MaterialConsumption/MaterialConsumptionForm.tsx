@@ -114,7 +114,7 @@ const MaterialConsumptionForm = () => {
                   <CommonCard hideDivider grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       {isEditing && <CommonValidationTextField name="number" label="Consumption No" grid={{ xs: 12, sm: 6, md: 4 }} disabled />}
-                      <CommonValidationSelect name="branchId" label="Select branchId" options={GenerateOptions(branchData?.data)} isLoading={branchLoading} grid={{ xs: 12, sm: 6, md: 4 }} required />
+                      <CommonValidationSelect name="branchId" label="Select branchId" options={GenerateOptions(branchData?.data)} isLoading={branchLoading} grid={{ xs: 12, sm: 6, md: 4 }} />
                       <CommonValidationSelect name="type" label="Select Type" options={CONSUMPTION_TYPE} grid={{ xs: 12, sm: 6, md: 4 }} />
                       <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, sm: isEditing ? 6 : 12, md: isEditing ? 3 : 4 }} required />
                       <CommonValidationTextField name="remark" label="Remark" grid={{ xs: 12, md: isEditing ? 9 : 12 }} multiline />
