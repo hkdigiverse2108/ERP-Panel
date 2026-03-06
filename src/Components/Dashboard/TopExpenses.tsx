@@ -11,7 +11,7 @@ const TopExpenses = () => {
   const [range, setRange] = useState({ start: dayjs(), end: dayjs() });
   const { data, isLoading, isFetching } = Queries.useGetDashboardTopExpenses({ startDate: range.start, endDate: range.end });
 
-  const allRowData = useMemo(() => data?.data?.map((item) => ({ ...item, id: item?._id })) || [], [data]);
+  const allRowData = useMemo(() => data?.data?.map((item, i) => ({ ...item, id: item?._id || i })) || [], [data]);
   const totalRows = data?.data?.length || 0;
 
   const { sortModel, setSortModel, filterModel, setFilterModel } = useDataGrid();
