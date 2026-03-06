@@ -8,6 +8,9 @@ const initialState: PosSliceState = {
   isBtnStatus: "",
   isSelectedOrderId: "",
   isPrintType: "",
+  isReturnPosOrder: false,
+  isSalesInvoice: "",
+  isEditPosOrder: false,
   PosProduct: {
     items: [],
     customerId: "",
@@ -128,6 +131,15 @@ const PosSlice = createSlice({
       state.PosProduct.items = [];
     },
     clearPosProduct: (state) => {
+      state.isMultiplePay = false;
+      state.isSelectProduct = "";
+      state.isPosLoading = false;
+      state.isBtnStatus = "";
+      state.isSelectedOrderId = "";
+      state.isPrintType = "";
+      state.isReturnPosOrder = false;
+      state.isSalesInvoice = "";
+      state.isEditPosOrder = false;
       state.PosProduct = {
         items: [],
         customerId: "",
@@ -152,7 +164,6 @@ const PosSlice = createSlice({
         redeemCreditAmount: 0,
         redeemCreditType: "",
       };
-      state.isSelectProduct = "";
     },
 
     setCustomerId: (state, action) => {
@@ -216,8 +227,17 @@ const PosSlice = createSlice({
     setPrintType: (state, action) => {
       state.isPrintType = action.payload;
     },
+    setReturnPosOrder: (state) => {
+      state.isReturnPosOrder = !state.isReturnPosOrder;
+    },
+    setSalesInvoice: (state, action) => {
+      state.isSalesInvoice = action.payload;
+    },
+    setEditPosOrder: (state) => {
+      state.isEditPosOrder = !state.isEditPosOrder;
+    },
   },
 });
 
-export const { setPrintType, setSelectedOrderId, setRedeemCredit, setLoyalty, setCoupon, setBtnStatus, setPosLoading, setPosProduct, setIsSelectProduct, setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesManId, setTotalMrp, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType, clearPosProduct, setHandleDiscount } = PosSlice.actions;
+export const { setSalesInvoice, setPrintType, setSelectedOrderId, setRedeemCredit, setLoyalty, setCoupon, setBtnStatus, setPosLoading, setPosProduct, setIsSelectProduct, setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesManId, setTotalMrp, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType, clearPosProduct, setHandleDiscount, setReturnPosOrder, setEditPosOrder } = PosSlice.actions;
 export default PosSlice.reducer;

@@ -6,12 +6,12 @@ import { Mutations, Queries } from "../../../../../../Api";
 import { CommonTextField } from "../../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setHoldBillDrawer } from "../../../../../../Store/Slices/DrawerSlice";
-import { setPosProduct } from "../../../../../../Store/Slices/PosSlice";
+import { setDiscardModal } from "../../../../../../Store/Slices/ModalSlice";
+import { clearPosProduct, setSalesInvoice } from "../../../../../../Store/Slices/PosSlice";
 import type { PosProductOrderBase } from "../../../../../../Types";
 import { FormatDateTime } from "../../../../../../Utils";
-import { CommonDeleteModal, CommonDrawer } from "../../../../../Common";
 import { useDebounce } from "../../../../../../Utils/Hooks";
-import { setDiscardModal } from "../../../../../../Store/Slices/ModalSlice";
+import { CommonDeleteModal, CommonDrawer } from "../../../../../Common";
 
 const HoldBill = () => {
   const { isHoldBillDrawer } = useAppSelector((stale) => stale.drawer);
@@ -28,55 +28,24 @@ const HoldBill = () => {
   const dispatch = useAppDispatch();
 
   const handleBillClick = (bill: PosProductOrderBase) => {
-    const payload = {
-      items: bill?.items?.map((item) => ({
-        _id: item.productId?._id,
-        name: item.productId?.name,
-        discount: item.discountAmount,
-        additionalDiscount: item.additionalDiscountAmount,
-        posQty: item.qty,
-        netAmount: item.netAmount,
-        unitCost: item.unitCost,
-        ...item.productId,
-      })),
-      customerId: bill.customerId?._id,
-      orderType: bill.orderType,
-      salesManId: bill.salesManId?._id,
-      totalQty: bill.totalQty,
-      totalMrp: bill.totalMrp,
-      totalTaxAmount: bill.totalTaxAmount,
-      totalDiscount: bill.totalDiscount,
-      totalAdditionalCharge: bill.totalAdditionalCharge,
-      flatDiscountAmount: bill.flatDiscountAmount,
-      additionalCharges: bill.additionalCharges,
-      roundOff: bill.roundOff,
-      remark: bill.remark,
-      totalAmount: bill.totalAmount,
-      posOrderId: bill._id,
-      couponId: bill?.couponId,
-      couponDiscount: bill?.couponDiscount,
-      loyaltyId: bill?.loyaltyId,
-      loyaltyDiscount: bill?.loyaltyDiscount,
-    };
     if (PosProduct?.items.length > 0) {
       dispatch(setDiscardModal());
       dispatch(setHoldBillDrawer());
     } else {
-      dispatch(setPosProduct(payload));
+      dispatch(setSalesInvoice(bill._id));
       dispatch(setHoldBillDrawer());
     }
   };
 
-  // const handleDelete = (id: string) => deleteHoldBill(id, { onSuccess: () => dispatch(setHoldBillDrawer()) });
   const handleDelete = (bill: PosProductOrderBase) => setRowToDelete(bill);
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
-    // handleDelete(rowToDelete._id);
     deleteHoldBill(rowToDelete._id, {
       onSuccess: () => {
         dispatch(setHoldBillDrawer());
         setRowToDelete(null);
+        dispatch(clearPosProduct());
       },
     });
   };

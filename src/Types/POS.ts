@@ -23,6 +23,7 @@ export interface PosProductDataModal extends Omit<ProductBase, "sellingPrice" | 
   unitCost: number;
   netAmount: number;
   variant?: string;
+  originalQty: number;
 }
 
 export interface AdditionalChargeType {
@@ -72,6 +73,9 @@ export interface PosSliceState {
   isBtnStatus: string;
   isSelectedOrderId: string;
   isPrintType: string;
+  isReturnPosOrder: boolean;
+  isSalesInvoice: string;
+  isEditPosOrder: boolean;
 }
 export interface PosProductOrderItem {
   qty: number;

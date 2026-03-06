@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Queries } from "../../../../../../Api";
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
-import { setOrderModal } from "../../../../../../Store/Slices/ModalSlice";
-import { setPosLoading, setPosProduct, setPrintType, setSelectedOrderId } from "../../../../../../Store/Slices/PosSlice";
+import { setDiscardModal, setOrderModal } from "../../../../../../Store/Slices/ModalSlice";
+import { setEditPosOrder, setPrintType, setReturnPosOrder, setSalesInvoice, setSelectedOrderId } from "../../../../../../Store/Slices/PosSlice";
 import type { PosOrderBase } from "../../../../../../Types";
 import { FormatDate, FormatPayment } from "../../../../../../Utils";
 import { useDataGrid } from "../../../../../../Utils/Hooks";
@@ -12,20 +12,24 @@ import { CommonActionColumn, CommonDataGrid, CommonModal } from "../../../../../
 
 const OrderList = () => {
   const { isOrderModal } = useAppSelector((state) => state.modal);
+  const { PosProduct } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
-  const [editSelectedOrderId, setEditSelectedOrderId] = useState<string>("");
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params } = useDataGrid({ active: true });
 
-  const { data, isLoading: orderDataByIdLoading, isFetching: orderDataByIdFetching } = Queries.useGetPosOrderById(editSelectedOrderId, Boolean(editSelectedOrderId));
   const { data: orderData, isLoading: orderDataLoading, isFetching: orderDataFetching } = Queries.useGetPosOrder({ ...params, orderListFilter: true }, isOrderModal);
 
-  const orderDataById = data?.data;
   const allOrders = useMemo(() => orderData?.data?.posOrder_data?.map((order) => ({ ...order, id: order?._id })) || [], [orderData]);
   const totalRows = orderData?.data?.totalData || 0;
 
   const handleEdit = (row: PosOrderBase) => {
-    setEditSelectedOrderId(row._id);
-    dispatch(setOrderModal());
+    if (PosProduct?.items.length > 0) {
+      dispatch(setDiscardModal());
+      dispatch(setOrderModal());
+    } else {
+      dispatch(setEditPosOrder());
+      dispatch(setSalesInvoice(row._id));
+      dispatch(setOrderModal());
+    }
   };
 
   const handlePrintBtn = (row: PosOrderBase) => {
@@ -34,42 +38,16 @@ const OrderList = () => {
     dispatch(setOrderModal());
   };
 
-  useEffect(() => {
-    dispatch(setPosLoading(orderDataByIdLoading || orderDataByIdLoading));
-    if (!orderDataByIdLoading && !orderDataByIdLoading && orderDataById) {
-      const payload = {
-        items: orderDataById?.items?.map((item) => ({
-          _id: item.productId?._id,
-          name: item.productId?.name,
-          discount: item.discountAmount,
-          additionalDiscount: item.additionalDiscountAmount,
-          posQty: item.qty,
-          netAmount: item.netAmount,
-          unitCost: item.unitCost,
-          ...item.productId,
-        })),
-        couponId: orderDataById?.couponId,
-        couponDiscount: orderDataById?.couponDiscount,
-        loyaltyId: orderDataById?.loyaltyId,
-        loyaltyDiscount: orderDataById?.loyaltyDiscount,
-        customerId: orderDataById?.customerId?._id,
-        orderType: orderDataById?.orderType,
-        salesManId: orderDataById?.salesManId?._id,
-        totalQty: orderDataById?.totalQty,
-        totalMrp: orderDataById?.totalMrp,
-        totalTaxAmount: orderDataById?.totalTaxAmount,
-        totalDiscount: orderDataById?.totalDiscount,
-        totalAdditionalCharge: orderDataById?.totalAdditionalCharge,
-        flatDiscountAmount: orderDataById?.flatDiscountAmount,
-        additionalCharges: orderDataById?.additionalCharges,
-        roundOff: orderDataById?.roundOff,
-        remark: orderDataById?.remark,
-        totalAmount: orderDataById?.totalAmount,
-        posOrderId: orderDataById?._id,
-      };
-      dispatch(setPosProduct(payload));
+  const handleSalesInvoiceBtn = (row: PosOrderBase) => {
+    if (PosProduct?.items.length > 0) {
+      dispatch(setDiscardModal());
+      dispatch(setOrderModal());
+    } else {
+      dispatch(setReturnPosOrder());
+      dispatch(setSalesInvoice(row._id));
+      dispatch(setOrderModal());
     }
-  }, [orderDataById, orderDataByIdLoading, orderDataByIdFetching, dispatch]);
+  };
 
   const columns: GridColDef<PosOrderBase>[] = [
     { field: "orderNo", headerName: "Order No", width: 100 }, //
@@ -95,7 +73,7 @@ const OrderList = () => {
       },
       onPrint: (row) => handlePrintBtn(row),
       onSalesInvoice: {
-        handleSalesInvoice: () => {},
+        handleSalesInvoice: (row) => handleSalesInvoiceBtn(row),
         // isPermission: (row) => row.posCashRegisterId?.status !== "open",
       },
     }),

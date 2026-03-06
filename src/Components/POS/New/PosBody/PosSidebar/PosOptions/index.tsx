@@ -23,7 +23,7 @@ const ActionItem: FC<{ icon: JSX.Element; label: string; onClick?: () => void }>
 
 const PosOption = () => {
   const dispatch = useAppDispatch();
-  const { PosProduct } = useAppSelector((state) => state.pos);
+  const { PosProduct ,isReturnPosOrder} = useAppSelector((state) => state.pos);
 
   const validate = (requireCustomer = false) => {
     if (!PosProduct.items?.length) {
@@ -32,6 +32,10 @@ const PosOption = () => {
     }
     if (requireCustomer && !PosProduct.customerId) {
       ShowNotification("Please select customer", "error");
+      return false;
+    }
+    if (isReturnPosOrder){
+      ShowNotification("Kindly edit the bill to use loyalty.", "error");
       return false;
     }
     return true;
