@@ -9,6 +9,7 @@ import type { PosOrderBase } from "../../../../../../Types";
 import { FormatDate, FormatPayment } from "../../../../../../Utils";
 import { useDataGrid } from "../../../../../../Utils/Hooks";
 import { CommonActionColumn, CommonDataGrid, CommonModal } from "../../../../../Common";
+import { POS_ORDER_STATUS } from "../../../../../../Data";
 
 const OrderList = () => {
   const { isOrderModal } = useAppSelector((state) => state.modal);
@@ -74,7 +75,7 @@ const OrderList = () => {
       onPrint: (row) => handlePrintBtn(row),
       onSalesInvoice: {
         handleSalesInvoice: (row) => handleSalesInvoiceBtn(row),
-        // isPermission: (row) => row.posCashRegisterId?.status !== "open",
+        isPermission: (row) => ![POS_ORDER_STATUS.COMPLETED].includes(row.status),
       },
     }),
   ];

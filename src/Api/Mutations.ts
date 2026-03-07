@@ -84,7 +84,7 @@ export const Mutations = {
   useDeleteMaterialConsumption: () => useMutations<string, void>([KEYS.MATERIAL_CONSUMPTION.DELETE, KEYS.MATERIAL_CONSUMPTION.BASE], (id) => Delete(`${URL_KEYS.MATERIAL_CONSUMPTION.BASE}/${id}`)),
 
   //*************** POS **************** */
-  useAddPosOrder: () => useMutations<AddPosProductOrderPayload, PosProductOrderDataResponse>([KEYS.POS.ADD, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER, KEYS.POS_ORDER.BASE, KEYS.POS_CASH_REGISTER.DETAILS, KEYS.POS_ORDER.DROPDOWN], (input) => Post(URL_KEYS.POS.ADD, input)),
+  useAddPosOrder: () => useMutations<AddPosProductOrderPayload, PosProductOrderDataResponse>([KEYS.POS.ADD, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER, KEYS.POS_ORDER.BASE, KEYS.POS_CASH_REGISTER.DETAILS, KEYS.POS_ORDER.DROPDOWN, KEYS.POS_CREDIT_NOTE.DROPDOWN], (input) => Post(URL_KEYS.POS.ADD, input)),
   useEditPosOrder: () => useMutations<EditPosProductOrderPayload, PosProductOrderDataResponse>([KEYS.POS.EDIT, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER, KEYS.POS_ORDER.BASE, KEYS.POS_ORDER.DROPDOWN], (input) => Put(URL_KEYS.POS.EDIT, input)),
   useDeletePosOrder: () => useMutations<string, void>([KEYS.POS.DELETE, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER, KEYS.POS_ORDER.DROPDOWN], (id) => Delete(`${URL_KEYS.POS.BASE}/${id}`)),
 
@@ -133,7 +133,7 @@ export const Mutations = {
   useAddPosCreditNote: () => useMutations<AddPosCreditNotePayload, void>([KEYS.POS_CREDIT_NOTE.ADD, KEYS.POS_CREDIT_NOTE.BASE], (input) => Post(URL_KEYS.POS_CREDIT_NOTE.ADD, input)),
   useEditPosCreditNote: () => useMutations<EditPosCreditNotePayload, void>([KEYS.POS_CREDIT_NOTE.EDIT, KEYS.POS_CREDIT_NOTE.BASE], (input) => Put(URL_KEYS.POS_CREDIT_NOTE.EDIT, input)),
   useDeletePosCreditNote: () => useMutations<string, void>([KEYS.POS_CREDIT_NOTE.DELETE, KEYS.POS_CREDIT_NOTE.BASE], (id) => Delete(`${URL_KEYS.POS_CREDIT_NOTE.BASE}/${id}`)),
-  useRefundCreditNote: () => useMutations<PosCreditNoteRefundFormValues, void>([KEYS.POS_CREDIT_NOTE.REFUND, KEYS.POS_CREDIT_NOTE.BASE], (input) => Post(URL_KEYS.POS_CREDIT_NOTE.REFUND, input)),
+  useRefundCreditNote: () => useMutations<PosCreditNoteRefundFormValues, void>([KEYS.POS_CREDIT_NOTE.REFUND, KEYS.POS_CREDIT_NOTE.BASE, KEYS.POS_ORDER.DROPDOWN, KEYS.POS_ORDER.BASE], (input) => Post(URL_KEYS.POS_CREDIT_NOTE.REFUND, input)),
   useRedeemCreditNote: () => useMutations<PosCreditNoteRedeemFormValues, PosCreditNoteRedeemResponse>([KEYS.POS_CREDIT_NOTE.REDEEM], (input) => Post(URL_KEYS.POS_CREDIT_NOTE.REDEEM, input)),
 
   //*************** Credit Note *********
@@ -152,7 +152,7 @@ export const Mutations = {
   useDeleteJournalVoucher: () => useMutations<string, void>([KEYS.JOURNAL_VOUCHER.DELETE, KEYS.JOURNAL_VOUCHER.BASE], (id) => Delete(`${URL_KEYS.JOURNAL_VOUCHER.BASE}/${id}`)),
 
   //*************** POS Return Order *********
-  useAddReturnPosOrder: () => useMutations<AddReturnPosOrderPayload, void>([KEYS.RETURN_POS_ORDER.ADD, KEYS.RETURN_POS_ORDER.BASE], (input) => Post(URL_KEYS.RETURN_POS_ORDER.ADD, input)),
-  useEditReturnPosOrder: () => useMutations<EditReturnPosOrderPayload, void>([KEYS.RETURN_POS_ORDER.EDIT, KEYS.RETURN_POS_ORDER.BASE], (input) => Put(URL_KEYS.RETURN_POS_ORDER.EDIT, input)),
-  useDeleteReturnPosOrder: () => useMutations<string, void>([KEYS.RETURN_POS_ORDER.DELETE, KEYS.RETURN_POS_ORDER.BASE], (id) => Delete(`${URL_KEYS.RETURN_POS_ORDER.BASE}/${id}`)),
+  useAddReturnPosOrder: () => useMutations<AddReturnPosOrderPayload, void>([KEYS.RETURN_POS_ORDER.ADD, KEYS.RETURN_POS_ORDER.BASE, KEYS.POS_CREDIT_NOTE.BASE, KEYS.POS_ORDER.BASE, KEYS.POS_ORDER.DROPDOWN], (input) => Post(URL_KEYS.RETURN_POS_ORDER.ADD, input)),
+  useEditReturnPosOrder: () => useMutations<EditReturnPosOrderPayload, void>([KEYS.RETURN_POS_ORDER.EDIT, KEYS.RETURN_POS_ORDER.BASE, KEYS.POS_CREDIT_NOTE.BASE], (input) => Put(URL_KEYS.RETURN_POS_ORDER.EDIT, input)),
+  useDeleteReturnPosOrder: () => useMutations<string, void>([KEYS.RETURN_POS_ORDER.DELETE, KEYS.RETURN_POS_ORDER.BASE, KEYS.POS_CREDIT_NOTE.BASE], (id) => Delete(`${URL_KEYS.RETURN_POS_ORDER.BASE}/${id}`)),
 };

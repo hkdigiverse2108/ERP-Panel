@@ -9,15 +9,21 @@ import type { PosCreditNoteRefundFormValues, ReturnPosOrderFormValues } from "..
 import { GenerateOptions, RemoveEmptyFields } from "../../../../../../Utils";
 import { ReturnPosOrderFormSchema } from "../../../../../../Utils/ValidationSchemas";
 import { CommonModal } from "../../../../../Common";
+import { RETURN_POS_ORDER_TYPE } from "../../../../../../Data";
+import { clearPosProduct } from "../../../../../../Store/Slices/PosSlice";
 
 const OrderRefund = () => {
   const { isOrderRefundModal } = useAppSelector((state) => state.modal);
+  const { PosProduct } = useAppSelector((state) => state.pos);
+
   const dispatch = useAppDispatch();
 
   const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown();
   const { mutate: refundCreditNote, isPending: isRefundCreditNoteLoading } = Mutations.useRefundCreditNote();
+  const { mutate: addReturnPosOrder, isPending: isAddReturnPosOrderLoading } = Mutations.useAddReturnPosOrder();
 
   const posOrderData = isOrderRefundModal.data;
+  const isSalesReturn = isOrderRefundModal.isSalesReturn;
 
   const initialValues: PosCreditNoteRefundFormValues = {
     posCreditNoteId: posOrderData?._id || "",
@@ -27,15 +33,47 @@ const OrderRefund = () => {
     refundDescription: "",
   };
 
-  const handleClose = () => dispatch(setOrderRefundModal({ open: false, data: null }));
+  const handleClose = () => dispatch(setOrderRefundModal({ open: false, data: null, isSalesReturn: false }));
 
   const handleSubmit = async (values: PosCreditNoteRefundFormValues, { setSubmitting }: FormikHelpers<PosCreditNoteRefundFormValues>) => {
-    await refundCreditNote(RemoveEmptyFields(values), {
-      onSettled: () => {
-        handleClose();
-        setSubmitting(false);
-      },
-    });
+    if (isSalesReturn) {
+      const payload = {
+        posOrderId: PosProduct.posOrderId,
+        customerId: PosProduct.customerId,
+        salesManId: PosProduct.salesManId,
+        items: PosProduct.items?.map((item) => ({
+          productId: item?._id,
+          qty: item?.posQty,
+          mrp: item?.mrp,
+          netAmount: item?.netAmount,
+        })),
+        total: PosProduct.totalAmount,
+        type: RETURN_POS_ORDER_TYPE.REFUND,
+        reason: PosProduct.remark,
+        refundViaCash: values.refundViaCash,
+        refundViaBank: values.refundViaBank,
+        bankAccountId: values.bankAccountId,
+        refundDescription: values.refundDescription,
+        additionalCharges: PosProduct.additionalCharges,
+        roundOff: PosProduct.roundOff,
+        flatDiscount: PosProduct.flatDiscountAmount,
+        discountAmount: PosProduct.totalDiscount,
+      };
+      await addReturnPosOrder(RemoveEmptyFields(payload), {
+        onSuccess: () => {
+          dispatch(clearPosProduct());
+          setSubmitting(false);
+          handleClose();
+        },
+      });
+    } else {
+      await refundCreditNote(RemoveEmptyFields(values), {
+        onSettled: () => {
+          handleClose();
+          setSubmitting(false);
+        },
+      });
+    }
   };
 
   const AutoAdjustLogic = ({ creditsRemaining }: { creditsRemaining: number }) => {
@@ -62,9 +100,14 @@ const OrderRefund = () => {
         if (newCash !== cash) setFieldValue("refundViaCash", newCash, false);
       }
 
+      if (!values.bankAccountId) {
+        setFieldValue("refundViaCash", creditsRemaining, true);
+        setFieldValue("refundViaBank", 0, true);
+      }
+
       prevCash.current = cash;
       prevBank.current = bank;
-    }, [values.refundViaCash, values.refundViaBank, creditsRemaining, setFieldValue]);
+    }, [values.refundViaCash, values.refundViaBank, creditsRemaining, setFieldValue, values.bankAccountId]);
 
     return null;
   };
@@ -82,7 +125,7 @@ const OrderRefund = () => {
                 <CommonValidationTextField name="refundViaBank" label="Bank Amount" grid={12} disabled={!values.bankAccountId} />
                 <CommonValidationTextField name="refundDescription" label="Description" grid={12} />
                 <Grid size={12} sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
-                  <CommonButton type="submit" variant="contained" title="Finalize Payment" loading={isRefundCreditNoteLoading} />
+                  <CommonButton type="submit" variant="contained" title="Finalize Payment" loading={isRefundCreditNoteLoading || isAddReturnPosOrderLoading} />
                 </Grid>
               </Grid>
             </Form>

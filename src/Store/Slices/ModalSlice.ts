@@ -21,7 +21,7 @@ const initialState: ModalStateSlice = {
   isAdditionalChargeModal: { open: false, data: null },
   isProductDetailsModal: { open: false, data: null },
   isQtyCountModal: { open: false, data: null },
-  isOrderRefundModal: { open: false, data: null },
+  isOrderRefundModal: { open: false, data: null, isSalesReturn: false },
   isDiscardModal: false,
 };
 

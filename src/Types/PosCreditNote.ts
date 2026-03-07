@@ -29,6 +29,7 @@ export interface PosCreditNoteRedeemResponse extends MessageStatus {
     code: string;
     date: string;
     id: string;
+    totalAmount: number;
     redeemableAmount: number;
     type: string;
   };

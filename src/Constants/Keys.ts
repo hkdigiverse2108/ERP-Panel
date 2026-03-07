@@ -246,6 +246,7 @@ export const KEYS = {
   POS_CREDIT_NOTE: {
     BASE: "pos-credit-note",
     ADD: "pos-credit-note-add",
+    DROPDOWN: "pos-credit-note-dropdown",
     EDIT: "pos-credit-note-edit",
     DELETE: "pos-credit-note-delete",
     REFUND: "pos-credit-note-refund",

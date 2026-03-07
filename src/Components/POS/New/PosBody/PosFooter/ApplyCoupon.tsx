@@ -79,8 +79,9 @@ const ApplyCoupon = () => {
       dispatch(setHandleDiscount("coupon"));
       // return;
     }
+    const totalDiscount = Number(PosProduct.loyaltyDiscount || 0) + Number(PosProduct.redeemCreditAmount || 0);
 
-    const currentTotalAmount = Number(PosProduct.totalAmount || 0) + Number(PosProduct.loyaltyDiscount || 0);
+    const currentTotalAmount = Number(PosProduct.totalAmount || 0) + totalDiscount;
     const currentTotalDiscount = Number(PosProduct.totalDiscount || 0) - Number(PosProduct.loyaltyDiscount || 0);
     const currentCouponDiscount = Number(PosProduct.couponDiscount || 0);
 

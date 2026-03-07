@@ -54,7 +54,7 @@ const PosSlice = createSlice({
     setHandleDiscount: (state, action) => {
       if (action.payload === "coupon") {
         if (state.PosProduct.loyaltyId || state.PosProduct.redeemCreditId) {
-          const restoredAmount = Number(state.PosProduct.totalAmount) + Number(state.PosProduct.loyaltyDiscount || 0);
+          const restoredAmount = Number(state.PosProduct.totalAmount) + Number(state.PosProduct.loyaltyDiscount || 0) + Number(state.PosProduct.redeemCreditAmount || 0);
           const restoredDiscount = Number(state.PosProduct.totalDiscount || 0) - Number(state.PosProduct.loyaltyDiscount || 0);
           state.PosProduct.totalAmount = restoredAmount;
           state.PosProduct.totalDiscount = Number(restoredDiscount).toFixed(2);
@@ -62,7 +62,7 @@ const PosSlice = createSlice({
       }
       if (action.payload === "loyalty") {
         if (state.PosProduct.couponId || state.PosProduct.redeemCreditId) {
-          const restoredAmount = Number(state.PosProduct.totalAmount) + Number(state.PosProduct.couponDiscount || 0);
+          const restoredAmount = Number(state.PosProduct.totalAmount) + Number(state.PosProduct.couponDiscount || 0) + Number(state.PosProduct.redeemCreditAmount || 0);
           const restoredDiscount = Number(state.PosProduct.totalDiscount || 0) - Number(state.PosProduct.couponDiscount || 0);
           state.PosProduct.totalAmount = restoredAmount;
           state.PosProduct.totalDiscount = Number(restoredDiscount).toFixed(2);
@@ -70,10 +70,11 @@ const PosSlice = createSlice({
       }
       if (action.payload === "redeemCredit") {
         if (state.PosProduct.couponId || state.PosProduct.loyaltyId) {
-          const restoredAmount = Number(state.PosProduct.totalAmount) + Number(state.PosProduct.redeemCreditAmount || 0);
-          const restoredDiscount = Number(state.PosProduct.totalDiscount || 0) - Number(state.PosProduct.redeemCreditAmount || 0);
+          const restoredAmount = Number(state.PosProduct.totalAmount) + Number(state.PosProduct.couponDiscount || 0) + Number(state.PosProduct.loyaltyDiscount || 0);
+          const restoredDiscount = Number(state.PosProduct.totalDiscount || 0) - Number(state.PosProduct.couponDiscount || 0) - Number(state.PosProduct.loyaltyDiscount || 0);
+          const payable = restoredAmount >= 0 ? restoredAmount?.toFixed(2) : "0.00";
           state.PosProduct.totalDiscount = Number(restoredDiscount).toFixed(2);
-          state.PosProduct.totalAmount = restoredAmount;
+          state.PosProduct.totalAmount = Number(payable);
         }
       }
     },

@@ -18,7 +18,7 @@ const PosFilter = () => {
   const { data: productDropdown, isLoading: productDropdownLoading } = Queries.useGetProductDropdown({ stockFilter: true });
   const id = isSelectProduct || "";
   const { data: productById, isLoading: productByIdLoading, isFetching: productByIdFetching } = Queries.useGetProductById(id);
-  const { data: posOrderDropdown, isLoading: posOrderDropdownLoading, isFetching: posOrderDropdownFetching } = Queries.useGetPosOrderDropdown({ customerFilter: PosProduct?.customerId });
+  const { data: posOrderDropdown, isLoading: posOrderDropdownLoading, isFetching: posOrderDropdownFetching } = Queries.useGetPosOrderDropdown({ customerFilter: PosProduct?.customerId, returnableFilter: true });
   const { data: customerDropdown, isLoading: customerDropdownLoading } = Queries.useGetContactDropdown({ typeFilter: "customer" });
 
   const handleCustomerChange = (value: string[]) => {
