@@ -473,7 +473,7 @@ export interface ModalStateSlice {
   isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
   isProductDetailsModal: { open: boolean; data: PosProductDataModal | null };
   isQtyCountModal: { open: boolean; data: PosProductDataModal | null };
-  isOrderRefundModal: { open: boolean; data: PosCreditNoteBase | null };
+  isOrderRefundModal: { open: boolean; data: PosCreditNoteBase | null; isSalesReturn?: boolean };
   isDiscardModal: boolean;
 }
 

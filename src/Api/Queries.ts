@@ -98,7 +98,7 @@ export const Queries = {
   useGetPosOrder: (params?: Params, enabled?: boolean) => useBaseQuery<PosOrderApiResponse>([KEYS.POS_ORDER.BASE, params], URL_KEYS.POS_ORDER.ALL, params, enabled),
   useGetPosOrderById: (id?: string, enabled?: boolean) => useQueries<PosOrderByIdResponse>([KEYS.POS_ORDER.BASE, id], () => Get(`${URL_KEYS.POS_ORDER.BASE}/${id}`), { enabled: enabled, staleTime: 0, refetchOnWindowFocus: false, retry: 1 }),
   useGetLastPosOrder: (params?: Params, enabled?: boolean) => useQueries<PosOrderApiResponse>([KEYS.POS_ORDER.BASE, params], () => Get(URL_KEYS.POS_ORDER.ALL, params), { enabled: enabled }),
-  useGetPosOrderDropdown: (params?: Params, enabled?: boolean) => useQueries<PosOrderDropdownApiResponse>([KEYS.POS_ORDER.DROPDOWN, params], () => Get(URL_KEYS.POS_ORDER.DROPDOWN, params), { enabled: enabled }),
+  useGetPosOrderDropdown: (params?: Params, enabled?: boolean) => useQueries<PosOrderDropdownApiResponse>([KEYS.POS_ORDER.DROPDOWN, KEYS.POS_ORDER.BASE, params], () => Get(URL_KEYS.POS_ORDER.DROPDOWN, params), { enabled: enabled }),
 
   //*************** POS Customer Detail **************** */
   useGetPosCustomerDetail: (id?: string, enabled?: boolean) => useQueries<PosCustomerDetailApiResponse>([KEYS.POS.CUSTOMER_DETAIL, id], () => Get(`${URL_KEYS.POS.CUSTOMER_DETAIL}/${id}`), { enabled: enabled }),
@@ -148,7 +148,7 @@ export const Queries = {
 
   //*************** Pos Credit Note *********
   useGetPosCreditNote: (params?: Params, enabled?: boolean) => useBaseQuery<PosCreditNoteApiResponse>([KEYS.POS_CREDIT_NOTE.BASE, params], URL_KEYS.POS_CREDIT_NOTE.ALL, params, enabled),
-  useGetPosCreditNoteRedeemDropdown: (params?: Params, enabled?: boolean) => useQueries<PosCreditNoteRedeemDropdownApiResponse>([KEYS.POS_CREDIT_NOTE.BASE, params], () => Get(URL_KEYS.POS_CREDIT_NOTE.REDEEM_DROPDOWN, params), { enabled: enabled }),
+  useGetPosCreditNoteRedeemDropdown: (params?: Params, enabled?: boolean) => useQueries<PosCreditNoteRedeemDropdownApiResponse>([KEYS.POS_CREDIT_NOTE.DROPDOWN, KEYS.POS_CREDIT_NOTE.BASE, params], () => Get(URL_KEYS.POS_CREDIT_NOTE.REDEEM_DROPDOWN, params), { enabled: enabled }),
 
   //*************** Credit Note *********
   useGetCreditNote: (params?: Params, enabled?: boolean) => useBaseQuery<CreditNoteApiResponse>([KEYS.CREDIT_NOTE.BASE, params], URL_KEYS.CREDIT_NOTE.ALL, params, enabled),

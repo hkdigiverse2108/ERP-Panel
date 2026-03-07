@@ -1,39 +1,38 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
-import type { CompanyBase } from "./Company";
 import type { ContactBase } from "./Contacts";
 import type { EmployeeBase } from "./Employee";
+import type { AdditionalChargeType } from "./POS";
 import type { PosOrderBase } from "./PosOrder";
-import type { ProductBase } from "./Product";
 
 export interface ReturnPosOrderFormValues {
-  bankAccountId?: string;
-  isActive?: boolean;
-  reason?: string;
-  refundDescription?: string;
-  refundViaBank?: number;
-  refundViaCash?: number;
-  returnOrderNo?: string;
-  total?: number;
-  type?: string;
-  items?: {
-    productId?: ProductBase;
-    quantity?: number;
-    price?: number;
-    total?: number;
-  }[];
-  companyId?: string;
+  posOrderId?: string;
   customerId?: string;
   salesManId?: string;
-  posOrderId?: string;
+  items?: {
+    productId: string;
+    qty?: number;
+    mrp?: number;
+    netAmount?: number;
+  }[];
+  total?: number;
+  type?: string;
+  reason?: string;
+  refundViaCash?: number;
+  refundViaBank?: number;
+  bankAccountId?: string;
+  refundDescription?: string;
+  additionalCharges?: AdditionalChargeType[];
+  roundOff?: number;
+  flatDiscount?: number;
+  discountAmount?: string;
 }
 
 export type AddReturnPosOrderPayload = ReturnPosOrderFormValues;
 
 export type EditReturnPosOrderPayload = ReturnPosOrderFormValues & { creditNoteId?: string };
 
-export interface ReturnPosOrderBase extends Omit<ReturnPosOrderFormValues, "companyId" | "customerId" | "salesManId" | "posOrderId">, CommonDataType {
+export interface ReturnPosOrderBase extends Omit<ReturnPosOrderFormValues, "customerId" | "salesManId" | "posOrderId">, CommonDataType {
   creditNoteNo: string;
-  companyId: CompanyBase;
   customerId: ContactBase;
   salesManId: EmployeeBase;
   posOrderId: PosOrderBase;

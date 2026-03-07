@@ -298,7 +298,21 @@ export const LOYALTY_REDEMPTION_TYPE = [
 ];
 
 export const CASH_CONTROL_TYPE = [
-  {label: "Opening", value: "opening"},
-  {label: "Add", value: "add"},
-  {label: "Close", value: "close"},
+  { label: "Opening", value: "opening" },
+  { label: "Add", value: "add" },
+  { label: "Close", value: "close" },
 ];
+
+export const RETURN_POS_ORDER_TYPE = {
+  REFUND: "refund",
+  SALES_RETURN: "sales_return",
+};
+
+export const POS_ORDER_STATUS = {
+  PENDING: "pending",
+  COMPLETED: "completed",
+  HOLD: "hold",
+  CANCELLED: "cancelled",
+  PARTIALLY_RETURNED: "partially_returned",
+  RETURNED: "returned",
+};

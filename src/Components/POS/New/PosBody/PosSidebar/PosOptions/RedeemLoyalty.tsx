@@ -77,7 +77,7 @@ const RedeemLoyalty = () => {
       // return;
     }
 
-    const currentTotalAmount = Number(PosProduct.totalAmount || 0) + Number(PosProduct.couponDiscount || 0);
+    const currentTotalAmount = Number(PosProduct.totalAmount || 0) + Number(PosProduct.couponDiscount || 0) + Number(PosProduct.redeemCreditAmount || 0);
     const currentTotalDiscount = Number(PosProduct.totalDiscount || 0) - Number(PosProduct.couponDiscount || 0);
     const currentLoyaltyDiscount = Number(PosProduct.loyaltyDiscount || 0);
 

@@ -9,9 +9,9 @@ import { Grid } from "@mui/material";
 import { useMemo } from "react";
 import { Mutations } from "../../../../../Api";
 import { CommonButton, CommonTextField, ShowNotification } from "../../../../../Attribute";
-import { POS_PAYMENT_METHOD } from "../../../../../Data";
+import { POS_PAYMENT_METHOD, RETURN_POS_ORDER_TYPE } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
-import { setAdditionalChargeModal, setApplyCouponModal, setCardModal, setCashModal, setPayLaterModal, setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
+import { setAdditionalChargeModal, setApplyCouponModal, setCardModal, setCashModal, setOrderRefundModal, setPayLaterModal, setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
 import { clearPosProduct, setBtnStatus, setFlatDiscountAmount, setMultiplePay, setPrintType, setRemarks, setRoundOff, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
 import type { PosProductOrderDataResponse } from "../../../../../Types";
 import { RemoveEmptyFields } from "../../../../../Utils";
@@ -22,6 +22,7 @@ import Cash from "./Cash";
 import PayLater from "./PayLater";
 import RedeemCredit from "./RedeemCredit";
 import { RealEstateAgent } from "@mui/icons-material";
+import OrderRefund from "../PosSidebar/PosOptions/OrderRefund";
 
 const PosFooter = () => {
   const { PosProduct, isBtnStatus, isReturnPosOrder } = useAppSelector((state) => state.pos);
@@ -29,6 +30,8 @@ const PosFooter = () => {
 
   const { mutate: addPosOrder } = Mutations.useAddPosOrder();
   const { mutate: editPosOrder } = Mutations.useEditPosOrder();
+
+  const { mutate: addReturnPosOrder, isPending: isAddReturnPosOrderLoading } = Mutations.useAddReturnPosOrder();
 
   const summaryRowData = [
     { label: "Quantity", value: PosProduct.totalQty }, //totalQty
@@ -154,6 +157,43 @@ const PosFooter = () => {
     dispatch(setRedeemCreditModal());
   };
 
+  const handleSalesReturn = async () => {
+    const payload = {
+      posOrderId: PosProduct.posOrderId,
+      customerId: PosProduct.customerId,
+      salesManId: PosProduct.salesManId,
+      items: PosProduct.items?.map((item) => ({
+        productId: item?._id,
+        qty: item?.posQty,
+        mrp: item?.mrp,
+        netAmount: item?.netAmount,
+      })),
+      total: PosProduct.totalAmount,
+      type: RETURN_POS_ORDER_TYPE.SALES_RETURN,
+      reason: PosProduct.remark,
+      refundViaCash: PosProduct.totalAmount,
+      additionalCharges: PosProduct.additionalCharges,
+      roundOff: PosProduct.roundOff,
+      flatDiscount: PosProduct.flatDiscountAmount,
+      discountAmount: PosProduct.totalDiscount,
+    };
+    await addReturnPosOrder(RemoveEmptyFields(payload), {
+      onSuccess: () => {
+        dispatch(clearPosProduct());
+        // dispatch(setPrintType("print"));
+        // dispatch(setSelectedOrderId(PosProduct.posOrderId));
+      },
+    });
+  };
+
+  const handleRefund = () => {
+    const payload = {
+      posOrderId: PosProduct.posOrderId,
+      creditsRemaining: PosProduct.totalAmount,
+    };
+    dispatch(setOrderRefundModal({ open: true, data: payload, isSalesReturn: true }));
+  };
+
   return (
     <>
       <div className="w-full bg-white dark:bg-gray-dark">
@@ -187,8 +227,8 @@ const PosFooter = () => {
         {/* Action Buttons */}
         {isReturnPosOrder ? (
           <div className="grid grid-cols-1 xsm:grid-cols-2 gap-2 p-2">
-            <CommonButton title="Refund" variant="contained" startIcon={"₹"} onClick={() => {}} />
-            <CommonButton title="Sales Return" variant="contained" startIcon={<RealEstateAgent />} onClick={() => {}} />
+            <CommonButton title="Refund" variant="contained" startIcon={"₹"} onClick={() => handleRefund()} />
+            <CommonButton title="Sales Return" variant="contained" startIcon={<RealEstateAgent />} onClick={() => handleSalesReturn()} loading={isAddReturnPosOrderLoading} />
           </div>
         ) : (
           <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2 p-2">
@@ -213,6 +253,7 @@ const PosFooter = () => {
       <PayLater />
       <Cash />
       <AdditionalCharge />
+      <OrderRefund />
     </>
   );
 };
