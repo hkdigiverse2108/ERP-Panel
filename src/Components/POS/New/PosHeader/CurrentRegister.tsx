@@ -7,13 +7,17 @@ import { Mutations, Queries } from "../../../../Api";
 import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../../Attribute";
 import { STORAGE_KEYS } from "../../../../Constants";
 import { useAppSelector } from "../../../../Store/hooks";
-import type { EditPosCashRegisterPayload, PosCashRegisterFormInitialValues, PosCashRegisterValues } from "../../../../Types";
+import type { EditPosCashRegisterPayload, PosCashRegisterFormInitialValues, PosCashRegisterValues, PosOrderBase } from "../../../../Types";
 import { FormatDate, FormatDateTime, FormatTime, GenerateOptions, RemoveEmptyFields } from "../../../../Utils";
 import { CurrentRegisterSchema } from "../../../../Utils/ValidationSchemas";
 import { CommonModal } from "../../../Common";
 import CloseBillRegister from "./CloseRegister";
 
-const CurrentRegister = () => {
+interface CurrentRegisterProps {
+  lastBill?: PosOrderBase;
+}
+
+const CurrentRegister = ({ lastBill }: CurrentRegisterProps) => {
   const [open, setOpen] = useState(false);
   const { PosProduct } = useAppSelector((state) => state.pos);
   const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({}, open);
@@ -229,7 +233,7 @@ const CurrentRegister = () => {
           </Formik>
         </div>
       </CommonModal>
-      <div className="hidden">{printData && <CloseBillRegister ref={contentRef} data={printData} />}</div>
+      <div className="hidden">{printData && <CloseBillRegister ref={contentRef} data={printData} bill={lastBill} />}</div>
     </>
   );
 };

@@ -15,7 +15,7 @@ import Tab from "@mui/material/Tab";
 import { useState, type SyntheticEvent } from "react";
 import { useLocation } from "react-router-dom";
 import { CommonBreadcrumbs } from "../../../Components/Common";
-import { CompanyProfile, Profile, ReportFormats, UserRoles } from "../../../Components/Settings/GeneralSetting";
+import { CompanyProfile, Profile, ReportFormats, UserRoles, Taxes } from "../../../Components/Settings/GeneralSetting";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import AdditionalCharges from "../../../Components/Settings/GeneralSetting/AdditionalCharges";
@@ -41,7 +41,7 @@ const GeneralSetting = () => {
   ];
 
   // Map tab index → component
-  const tabViews = [<Profile />, <CompanyProfile />, <ReportFormats />, <Profile />, <UserRoles />, <Profile />, <Profile />, <AdditionalCharges />, <Profile />, <Profile />, <Profile />];
+  const tabViews = [<Profile />, <CompanyProfile />, <Taxes />, <ReportFormats />, <UserRoles />, <Profile />, <Profile />, <AdditionalCharges />, <Profile />, <Profile />, <Profile />];
 
   return (
     <>

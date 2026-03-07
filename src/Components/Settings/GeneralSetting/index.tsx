@@ -6,5 +6,6 @@ import CompanyProfile from "./CompanyProfile";
 import CompanyForm from "./CompanyProfile/CompanyForm";
 import AdditionalCharges from "./AdditionalCharges";
 import AdditionalChargesForm from "./AdditionalCharges/AdditionalChargesForm";
+import Taxes from "./Taxes";
 
-export { ReportFormats, Profile, UserForm, UserRoles, CompanyProfile, CompanyForm , AdditionalCharges, AdditionalChargesForm };
+export { ReportFormats, Profile, UserForm, UserRoles, CompanyProfile, CompanyForm, AdditionalCharges, AdditionalChargesForm, Taxes };

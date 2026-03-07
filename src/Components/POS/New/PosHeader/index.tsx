@@ -17,7 +17,7 @@ import { useReactToPrint } from "react-to-print";
 
 const PosHeader = () => {
   const { user } = useAppSelector((state) => state.auth);
-  const { PosProduct ,isReturnPosOrder} = useAppSelector((state) => state.pos);
+  const { PosProduct, isReturnPosOrder } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
 
   const { data: orderData } = Queries.useGetLastPosOrder({ lastBillFilter: true });
@@ -68,7 +68,7 @@ const PosHeader = () => {
           <ProductList />
           <Discard />
           <FullScreen />
-          <CurrentRegister />
+          <CurrentRegister lastBill={lastBill} />
         </Grid>
       </Grid>
     </div>
