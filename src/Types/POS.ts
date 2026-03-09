@@ -76,6 +76,7 @@ export interface PosSliceState {
   isReturnPosOrder: boolean;
   isSalesInvoice: string;
   isEditPosOrder: boolean;
+  isReturnPosOrderId:string
 }
 export interface PosProductOrderItem {
   qty: number;

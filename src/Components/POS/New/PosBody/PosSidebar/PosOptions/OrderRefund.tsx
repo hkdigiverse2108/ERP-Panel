@@ -10,7 +10,7 @@ import { GenerateOptions, RemoveEmptyFields } from "../../../../../../Utils";
 import { ReturnPosOrderFormSchema } from "../../../../../../Utils/ValidationSchemas";
 import { CommonModal } from "../../../../../Common";
 import { RETURN_POS_ORDER_TYPE } from "../../../../../../Data";
-import { clearPosProduct } from "../../../../../../Store/Slices/PosSlice";
+import { clearPosProduct, setPrintType, setReturnPosOrderId } from "../../../../../../Store/Slices/PosSlice";
 
 const OrderRefund = () => {
   const { isOrderRefundModal } = useAppSelector((state) => state.modal);
@@ -45,6 +45,9 @@ const OrderRefund = () => {
           productId: item?._id,
           qty: item?.posQty,
           mrp: item?.mrp,
+          discountAmount: item?.discount,
+          additionalDiscountAmount: item?.additionalDiscount,
+          unitCost: item?.unitCost,
           netAmount: item?.netAmount,
         })),
         total: PosProduct.totalAmount,
@@ -60,7 +63,9 @@ const OrderRefund = () => {
         discountAmount: PosProduct.totalDiscount,
       };
       await addReturnPosOrder(RemoveEmptyFields(payload), {
-        onSuccess: () => {
+        onSuccess: (res) => {
+          dispatch(setPrintType("print"));
+          dispatch(setReturnPosOrderId(res?.data?._id));
           dispatch(clearPosProduct());
           setSubmitting(false);
           handleClose();
@@ -68,7 +73,9 @@ const OrderRefund = () => {
       });
     } else {
       await refundCreditNote(RemoveEmptyFields(values), {
-        onSettled: () => {
+        onSettled: (res) => {
+          dispatch(setPrintType("print"));
+          dispatch(setReturnPosOrderId(res?.data?.returnPosOrderId));
           handleClose();
           setSubmitting(false);
         },
@@ -120,9 +127,9 @@ const OrderRefund = () => {
             <Form noValidate>
               <AutoAdjustLogic creditsRemaining={posOrderData?.creditsRemaining || 0} />
               <Grid container spacing={2} py={1}>
-                <CommonValidationTextField name="refundViaCash" label="Cash Amount" grid={12} required />
+                <CommonValidationTextField name="refundViaCash" label="Cash Amount" type="number" grid={12} required />
                 <CommonValidationSelect name="bankAccountId" label="Bank" options={GenerateOptions(bankDropdown?.data)} disabled={bankDropdownLoading} grid={12} />
-                <CommonValidationTextField name="refundViaBank" label="Bank Amount" grid={12} disabled={!values.bankAccountId} />
+                <CommonValidationTextField name="refundViaBank" label="Bank Amount" type="number" grid={12} disabled={!values.bankAccountId} />
                 <CommonValidationTextField name="refundDescription" label="Description" grid={12} />
                 <Grid size={12} sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
                   <CommonButton type="submit" variant="contained" title="Finalize Payment" loading={isRefundCreditNoteLoading || isAddReturnPosOrderLoading} />

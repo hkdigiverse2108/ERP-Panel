@@ -173,6 +173,7 @@ export const KEYS = {
   POS_ORDER: {
     BASE: "pos-order",
     DROPDOWN: "pos-order-dropdown",
+    BY_ID: "pos-order-by-id",
     ADD: "pos-order-add",
     EDIT: "pos-order-edit",
     DELETE: "pos-order-delete",

@@ -9,6 +9,7 @@ const initialState: PosSliceState = {
   isSelectedOrderId: "",
   isPrintType: "",
   isReturnPosOrder: false,
+  isReturnPosOrderId: "",
   isSalesInvoice: "",
   isEditPosOrder: false,
   PosProduct: {
@@ -136,9 +137,10 @@ const PosSlice = createSlice({
       state.isSelectProduct = "";
       state.isPosLoading = false;
       state.isBtnStatus = "";
-      state.isSelectedOrderId = "";
-      state.isPrintType = "";
+      // state.isSelectedOrderId = "";
+      // state.isPrintType = "";
       state.isReturnPosOrder = false;
+      // state.isReturnPosOrderId = "";
       state.isSalesInvoice = "";
       state.isEditPosOrder = false;
       state.PosProduct = {
@@ -237,8 +239,11 @@ const PosSlice = createSlice({
     setEditPosOrder: (state) => {
       state.isEditPosOrder = !state.isEditPosOrder;
     },
+    setReturnPosOrderId: (state, action) => {
+      state.isReturnPosOrderId = action.payload;
+    },
   },
 });
 
-export const { setSalesInvoice, setPrintType, setSelectedOrderId, setRedeemCredit, setLoyalty, setCoupon, setBtnStatus, setPosLoading, setPosProduct, setIsSelectProduct, setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesManId, setTotalMrp, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType, clearPosProduct, setHandleDiscount, setReturnPosOrder, setEditPosOrder } = PosSlice.actions;
+export const { setReturnPosOrderId, setSalesInvoice, setPrintType, setSelectedOrderId, setRedeemCredit, setLoyalty, setCoupon, setBtnStatus, setPosLoading, setPosProduct, setIsSelectProduct, setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesManId, setTotalMrp, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType, clearPosProduct, setHandleDiscount, setReturnPosOrder, setEditPosOrder } = PosSlice.actions;
 export default PosSlice.reducer;

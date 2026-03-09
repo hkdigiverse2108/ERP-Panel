@@ -1,14 +1,14 @@
+import { Box } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { Mutations, Queries } from "../../../../../../Api";
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setCreditNoteModal, setOrderRefundModal } from "../../../../../../Store/Slices/ModalSlice";
+import { setPrintType, setReturnPosOrderId, setSelectedOrderId } from "../../../../../../Store/Slices/PosSlice";
 import type { PosCreditNoteBase } from "../../../../../../Types";
 import { FormatDate } from "../../../../../../Utils";
 import { useDataGrid } from "../../../../../../Utils/Hooks";
 import { CommonActionColumn, CommonCard, CommonDataGrid, CommonDeleteModal, CommonModal } from "../../../../../Common";
-import { Box } from "@mui/material";
-import { setPrintType, setSelectedOrderId } from "../../../../../../Store/Slices/PosSlice";
 
 const CreditNotes = () => {
   const { isCreditNoteModal } = useAppSelector((state) => state.modal);
@@ -41,7 +41,7 @@ const CreditNotes = () => {
 
   const handlePrintBtn = (row: PosCreditNoteBase) => {
     dispatch(setPrintType("print"));
-    dispatch(setSelectedOrderId(row?.returnPosOrderId?.posOrderId?._id));
+    dispatch(setReturnPosOrderId(row?.returnPosOrderId?._id));
     dispatch(setCreditNoteModal());
   };
 
