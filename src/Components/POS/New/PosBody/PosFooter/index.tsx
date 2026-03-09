@@ -12,7 +12,7 @@ import { CommonButton, CommonTextField, ShowNotification } from "../../../../../
 import { POS_PAYMENT_METHOD, RETURN_POS_ORDER_TYPE } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setAdditionalChargeModal, setApplyCouponModal, setCardModal, setCashModal, setOrderRefundModal, setPayLaterModal, setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
-import { clearPosProduct, setBtnStatus, setFlatDiscountAmount, setMultiplePay, setPrintType, setRemarks, setRoundOff, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
+import { clearPosProduct, setBtnStatus, setFlatDiscountAmount, setMultiplePay, setPrintType, setRemarks, setReturnPosOrderId, setRoundOff, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
 import type { PosProductOrderDataResponse } from "../../../../../Types";
 import { RemoveEmptyFields } from "../../../../../Utils";
 import AdditionalCharge from "./AdditionalCharge";
@@ -162,12 +162,7 @@ const PosFooter = () => {
       posOrderId: PosProduct.posOrderId,
       customerId: PosProduct.customerId,
       salesManId: PosProduct.salesManId,
-      items: PosProduct.items?.map((item) => ({
-        productId: item?._id,
-        qty: item?.posQty,
-        mrp: item?.mrp,
-        netAmount: item?.netAmount,
-      })),
+      items: mappedItems,
       total: PosProduct.totalAmount,
       type: RETURN_POS_ORDER_TYPE.SALES_RETURN,
       reason: PosProduct.remark,
@@ -178,10 +173,10 @@ const PosFooter = () => {
       discountAmount: PosProduct.totalDiscount,
     };
     await addReturnPosOrder(RemoveEmptyFields(payload), {
-      onSuccess: () => {
+      onSuccess: (res) => {
+        dispatch(setPrintType("print"));
+        dispatch(setReturnPosOrderId(res?.data?._id));
         dispatch(clearPosProduct());
-        // dispatch(setPrintType("print"));
-        // dispatch(setSelectedOrderId(PosProduct.posOrderId));
       },
     });
   };

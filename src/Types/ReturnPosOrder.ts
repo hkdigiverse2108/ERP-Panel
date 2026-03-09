@@ -46,6 +46,13 @@ export interface ReturnPosOrderApiResponse extends MessageStatus {
   data: ReturnPosOrderDataResponse;
 }
 
+export interface ReturnPosOrderByIdResponse extends MessageStatus {
+  data: PosOrderBase;
+}
+export interface ReturnPosOrderResponse extends MessageStatus {
+  data: ReturnPosOrderBase;
+}
+
 export interface ReturnPosOrderDropdownApiResponse extends MessageStatus {
   data: ReturnPosOrderBase[];
 }

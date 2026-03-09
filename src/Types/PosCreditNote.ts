@@ -7,7 +7,7 @@ export interface PosCreditNoteFormValues {
   creditsRemaining: number;
   creditsUsed: number;
   isActive: true;
-  returnPosOrderId: { _id: string; returnOrderNo: string; posOrderId: PosOrderBase};
+  returnPosOrderId: { _id: string; returnOrderNo: string; posOrderId: PosOrderBase };
   status: string;
   totalAmount: number;
 }
@@ -55,4 +55,9 @@ export interface PosCreditNoteApiResponse extends MessageStatus {
 
 export interface PosCreditNoteRedeemDropdownApiResponse extends MessageStatus {
   data: { customerId: string; id: string; no: string }[];
+}
+export interface PosCreditNoteRefundResponse {
+  data: {
+    returnPosOrderId: string;
+  };
 }

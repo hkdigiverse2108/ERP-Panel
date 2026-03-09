@@ -13,14 +13,13 @@ const ApplyCoupon = () => {
   const dispatch = useAppDispatch();
 
   const { isApplyCouponModal } = useAppSelector((state) => state.modal);
-  const { PosProduct } = useAppSelector((state) => state.pos);
+  const { PosProduct, isReturnPosOrder } = useAppSelector((state) => state.pos);
 
   const [isSearch, setSearch] = useState<string>("");
   const searchCoupon = useDebounce(isSearch, 300);
   const [applyingId, setApplyingId] = useState<string>("");
 
   const prevTotalAmountRef = useRef<number | undefined>(undefined);
-  // const editRecalcDoneRef = useRef<string | null>(null);
   const editLoadedRef = useRef<boolean>(false);
 
   const { data: couponData, isLoading: couponDataLoading, isFetching: couponDataFetching } = Queries.useGetCouponDropdown({ ...(searchCoupon && { search: searchCoupon }) }, isApplyCouponModal);
@@ -29,68 +28,31 @@ const ApplyCoupon = () => {
   useEffect(() => {
     const currentAmount = Number(PosProduct.totalAmount || 0);
     const isEditMode = Boolean(PosProduct.posOrderId);
+    if (isReturnPosOrder) return;
 
     if (prevTotalAmountRef.current === 0) {
       prevTotalAmountRef.current = currentAmount;
-      // console.log("prevTotalAmountRef.current!!!!!!!!!!!", prevTotalAmountRef.current);
-
       return;
     }
 
     if (isEditMode) {
       if (!editLoadedRef.current) {
-        // console.log("aaaaa----------");
-
         editLoadedRef.current = true;
-        // console.log("prevTotalAmountRef.current---", prevTotalAmountRef.current);
         prevTotalAmountRef.current = currentAmount;
-        // console.log("prevTotalAmountRef.current=====", prevTotalAmountRef.current);
-
         return;
       }
       if (prevTotalAmountRef.current !== currentAmount) {
-        // console.log("a");
-
         dispatch(setCoupon({ couponId: "", couponDiscount: 0 }));
       }
     } else {
       editLoadedRef.current = false;
       if (prevTotalAmountRef.current !== currentAmount) {
-        // console.log("b");
         dispatch(setCoupon({ couponId: "", couponDiscount: 0 }));
       }
     }
 
     prevTotalAmountRef.current = currentAmount;
   }, [PosProduct.totalAmount, PosProduct.posOrderId, dispatch]);
-
-  // useEffect(() => {
-  //   const isEditMode = Boolean(PosProduct.posOrderId);
-
-  //   if (!isEditMode) {
-  //     editRecalcDoneRef.current = null;
-  //     return;
-  //   }
-
-  //   if (editRecalcDoneRef.current === PosProduct.posOrderId) return;
-  //   editRecalcDoneRef.current = PosProduct.posOrderId;
-  //   console.log("d");
-
-  //   const finalDiscount = Number(PosProduct.totalDiscount || 0);
-  //   const payableAmount = Number(PosProduct.totalAmount || 0) - finalDiscount;
-
-  //   if (isEditMode) {
-  //     dispatch(setTotalAmount(PosProduct.totalAmount));
-  //     dispatch(setTotalDiscount(Number(finalDiscount)));
-  //     prevTotalAmountRef.current = Number(PosProduct.totalAmount);
-  //     console.log("payableAmount", PosProduct.totalAmount);
-  //     console.log("finalDiscount", Number(finalDiscount));
-  //   } else {
-  //     dispatch(setTotalAmount(payableAmount));
-  //     dispatch(setTotalDiscount(Number(finalDiscount).toFixed(2)));
-  //     prevTotalAmountRef.current = payableAmount;
-  //   }
-  // }, [PosProduct.posOrderId, dispatch]);
 
   const handleApplyCoupon = (coupon: CouponBase) => {
     if (PosProduct.loyaltyId || PosProduct.redeemCreditId) {

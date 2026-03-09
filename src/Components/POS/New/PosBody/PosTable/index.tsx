@@ -57,7 +57,7 @@ const PosTable = () => {
   }, [finalAmount]);
 
   const finalTotal = Number(finalAmount) + Number(PosProduct.roundOff || roundOffAmount);
-  const finalPayable = finalTotal >= 0 ? finalTotal?.toFixed(0) : "0.00";
+  const finalPayable = finalTotal >= 0 ? finalTotal?.toFixed(2) : "0.00";
   useEffect(() => {
     dispatch(setTotalQty(totalQty?.toFixed(2)));
     dispatch(setTotalMrp(totalMrp?.toFixed(0)));

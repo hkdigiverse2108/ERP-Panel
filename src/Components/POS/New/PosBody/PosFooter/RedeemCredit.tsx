@@ -12,7 +12,7 @@ import { CommonModal } from "../../../../Common";
 const RedeemCredit = () => {
   const dispatch = useAppDispatch();
   const { isRedeemCreditModal } = useAppSelector((state) => state.modal);
-  const { PosProduct } = useAppSelector((state) => state.pos);
+  const { PosProduct, isReturnPosOrder } = useAppSelector((state) => state.pos);
 
   const [type, setType] = useState<string>("credit_note");
   const [creditNoteId, setCreditNoteId] = useState<string>("");
@@ -24,7 +24,6 @@ const RedeemCredit = () => {
   const { mutate: redeemCreditNote, isPending: isPosCustomerDetailPending } = Mutations.useRedeemCreditNote();
 
   const prevTotalAmountRef = useRef<number | undefined>(undefined);
-  // const editRecalcDoneRef = useRef<string | null>(null);
   const editLoadedRef = useRef<boolean>(false);
 
   const posCreditNoteDropdownOptions = posCreditNoteDropdown?.data?.map((item) => ({ label: item.no, value: item.id }));
@@ -34,6 +33,7 @@ const RedeemCredit = () => {
   useEffect(() => {
     const currentAmount = Number(PosProduct.totalAmount || 0);
     const isEditMode = Boolean(PosProduct.posOrderId);
+    if (isReturnPosOrder) return;
 
     if (prevTotalAmountRef.current === 0) {
       prevTotalAmountRef.current = currentAmount;
@@ -62,26 +62,6 @@ const RedeemCredit = () => {
 
     prevTotalAmountRef.current = currentAmount;
   }, [PosProduct?.totalAmount, PosProduct.posOrderId, dispatch]);
-
-  // useEffect(() => {
-  //   const isEditMode = Boolean(PosProduct.posOrderId);
-
-  //   if (!isEditMode) {
-  //     editRecalcDoneRef.current = null;
-  //     return;
-  //   }
-
-  //   if (editRecalcDoneRef.current === PosProduct.posOrderId) return;
-  //   editRecalcDoneRef.current = PosProduct.posOrderId;
-
-  //   const finalDiscount = Number(PosProduct.totalDiscount || 0);
-  //   const payableAmount = Number(totalAmount || 0) - finalDiscount;
-  //   dispatch(setTotalDiscount(Number(finalDiscount).toFixed(2)));
-  //   if (!isEditMode) dispatch(setTotalAmount(payableAmount));
-  //   else dispatch(setTotalAmount(totalAmount));
-
-  //   prevTotalAmountRef.current = payableAmount;
-  // }, [PosProduct.posOrderId, dispatch]);
 
   const isCredit = type === "credit_note";
   const creditDetails = [
