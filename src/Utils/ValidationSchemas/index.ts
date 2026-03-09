@@ -253,12 +253,10 @@ const ContactBaseSchema = {
   firstName: Validation("string", "First Name"),
   lastName: Validation("string", "Last Name"),
   email: Validation("string", "Email", { required: false, extraRules: (s) => s.email("Invalid email address") }),
-  companyName: Validation("string", "Company Name" , { required: false }),
+  companyName: Validation("string", "Company Name", { required: false }),
   phoneNo: PhoneValidation(),
   whatsappNo: PhoneValidation("Whatsapp No", { requiredNumber: false, requiredCountryCode: false }),
-  panNo: Validation("string", "PAN No", { required: false,
-    extraRules: (s) => s.matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number"),
-  }),
+  panNo: Validation("string", "PAN No", { required: false, extraRules: (s) => s.matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),
   paymentMode: Validation("string", "Payment Mode"),
   paymentTerms: Validation("string", "Payment Terms", { required: false }),
   openingBalance: Yup.object().shape({
@@ -356,7 +354,7 @@ export const CardDetailsSchema = Yup.object({
 });
 
 export const PosPaymentFormSchema = Yup.object({
-  voucherType: Validation("string", "Voucher Type"), 
+  voucherType: Validation("string", "Voucher Type"),
   paymentType: Validation("string", "Payment Type"),
   partyId: Validation("string", "Party Name"),
   posOrderId: Yup.string().when(["voucherType", "paymentType"], {
@@ -437,7 +435,7 @@ export const CurrentRegisterSchema = Yup.object({
     otherwise: (schema) => schema.notRequired(),
   }),
   cashFlow: Validation("string", "Cash Flow").test("is-positive", "Cash Flow must be greater than or equal to 0", (value) => !value || Number(value) >= 0),
-  totalCashLeftInDrawer: Validation("string", "Total Cash Left In Drawer").test("is-positive", "Total Cash Left In Drawer must be greater than or equal to 0", (value) => !value || Number(value) >= 0),
+  totalCashInDrawer: Validation("string", "Total Cash In Drawer").test("is-positive", "Total Cash In Drawer must be greater than or equal to 0", (value) => !value || Number(value) >= 0),
   physicalDrawerCash: Validation("string", "Physical Drawer").test("is-positive", "Physical Drawer must be greater than or equal to 0", (value) => !value || Number(value) >= 0),
   closingNote: Validation("string", "Closing Note", { required: false }),
 
@@ -504,7 +502,7 @@ export const JournalVoucherFormSchema = Yup.object().shape({
         debit: Validation("number", "Debit", { required: false, extraRules: (s) => s.transform((v, o) => (String(o).trim() === "" ? null : v)).nullable() }),
         credit: Validation("number", "Credit", { required: false, extraRules: (s) => s.transform((v, o) => (String(o).trim() === "" ? null : v)).nullable() }),
         description: Validation("string", "Description", { required: false }),
-      })
+      }),
     )
     .min(2, "At least two entries are required")
     .test("equal-totals", "Total Debit must equal Total Credit", function (entries) {

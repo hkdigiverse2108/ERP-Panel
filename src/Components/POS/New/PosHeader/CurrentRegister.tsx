@@ -1,7 +1,7 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { CircularProgress, Grid, Tooltip } from "@mui/material";
 import { Form, Formik, useFormikContext } from "formik";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type FC } from "react";
 import { useReactToPrint } from "react-to-print";
 import { Mutations, Queries } from "../../../../Api";
 import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../../Attribute";
@@ -13,11 +13,7 @@ import { CurrentRegisterSchema } from "../../../../Utils/ValidationSchemas";
 import { CommonModal } from "../../../Common";
 import CloseBillRegister from "./CloseRegister";
 
-interface CurrentRegisterProps {
-  lastBill?: PosOrderBase;
-}
-
-const CurrentRegister = ({ lastBill }: CurrentRegisterProps) => {
+const CurrentRegister: FC<{ lastBill?: PosOrderBase }> = ({ lastBill }) => {
   const [open, setOpen] = useState(false);
   const { PosProduct } = useAppSelector((state) => state.pos);
   const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({}, open);
@@ -51,7 +47,7 @@ const CurrentRegister = ({ lastBill }: CurrentRegisterProps) => {
     bankAccountId: "",
     bankTransferAmount: 0,
     cashFlow: 0,
-    totalCashLeftInDrawer: 0,
+    totalCashInDrawer: 0,
     physicalDrawerCash: 0,
     closingNote: "",
     denominations: {} as Record<number, string>,
@@ -86,15 +82,15 @@ const CurrentRegister = ({ lastBill }: CurrentRegisterProps) => {
 
     const totalAmount = currencyNotes.reduce((sum, note) => sum + getAmount(note), 0);
 
-    const totalCashLeftInDrawer = (summary?.openingCash || 0) + (summary?.cashPayment || 0) - (summary?.cashRefund || 0);
-    const totalCash = totalCashLeftInDrawer - Number(values.bankTransferAmount || 0);
+    const totalCashInDrawer = (summary?.openingCash || 0) + (summary?.cashPayment || 0) - (summary?.cashRefund || 0);
+    const totalCash = totalCashInDrawer - Number(values.bankTransferAmount || 0);
 
     useEffect(() => {
       const physicalCash = (totalAmount || 0).toFixed(2);
       const calculatedCash = Math.max(0, totalCash || 0).toFixed(2);
 
       setFieldValue("physicalDrawerCash", physicalCash);
-      setFieldValue("totalCashLeftInDrawer", calculatedCash);
+      setFieldValue("totalCashInDrawer", calculatedCash);
       setFieldValue("cashFlow", calculatedCash);
     }, [totalAmount, totalCash, setFieldValue]);
 
@@ -164,8 +160,8 @@ const CurrentRegister = ({ lastBill }: CurrentRegisterProps) => {
               const getAmount = (note: number) => (Number(values.denominations?.[note]) || 0) * note;
               const totalAmount = currencyNotes.reduce((sum, note) => sum + getAmount(note), 0);
 
-              const totalCashLeftInDrawer = (Number(values?.totalCashLeftInDrawer) || 0) - (Number(values?.physicalDrawerCash) || 0);
-              const cashFlow = Number(values?.physicalDrawerCash) - (Number(values?.totalCashLeftInDrawer) || 0);
+              const totalCashInDrawer = (Number(values?.totalCashInDrawer) || 0) - (Number(values?.physicalDrawerCash) || 0);
+              const cashFlow = Number(values?.physicalDrawerCash) - (Number(values?.totalCashInDrawer) || 0);
 
               return (
                 <Form noValidate className="flex flex-col gap-5">
@@ -217,10 +213,10 @@ const CurrentRegister = ({ lastBill }: CurrentRegisterProps) => {
                         <CommonValidationSelect name="bankAccountId" label="Bank Account" options={GenerateOptions(bankDropdown?.data)} isLoading={bankDropdownLoading} grid={{ xs: 12 }} />
                         <CommonValidationTextField name="bankTransferAmount" label="Bank Transfer" type="number" grid={{ xs: 12 }} disabled={!values.bankAccountId} required={!!values.bankAccountId} />
                         <CommonValidationTextField name="cashFlow" label="Cash Flow" grid={{ xs: 12 }} />
-                        <CommonValidationTextField name="totalCashLeftInDrawer" label="Total Cash Left In Drawer" grid={{ xs: 12 }} disabled />
+                        <CommonValidationTextField name="totalCashInDrawer" label="Total Cash Left In Drawer" grid={{ xs: 12 }} disabled />
                         <CommonValidationTextField name="physicalDrawerCash" label="Physical Drawer" type="number" grid={{ xs: 12 }} required />
                         <Grid size={{ xs: 12 }} className="flex justify-start">
-                          {totalCashLeftInDrawer > 0 ? <p className="text-red-500 text-base">Short : {totalCashLeftInDrawer.toFixed(2)} ₹</p> : <p className="text-green-500 text-base">Extra : {cashFlow.toFixed(2)} ₹</p>}
+                          {totalCashInDrawer > 0 ? <p className="text-red-500 text-base">Short : {totalCashInDrawer.toFixed(2)} ₹</p> : <p className="text-green-500 text-base">Extra : {cashFlow.toFixed(2)} ₹</p>}
                         </Grid>
                         <CommonValidationTextField name="closingNote" label="Closing Note" grid={{ xs: 12 }} rows={3} multiline />
                       </Grid>

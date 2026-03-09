@@ -143,7 +143,7 @@ const CloseBillRegister = forwardRef<HTMLDivElement, { bill?: PosOrderBase; data
         <MetricRow label="Profit*" value={data?.profit ?? 0} />
 
         <div style={{ borderTop: "1px dashed black", marginBottom: "5px", marginTop: "5px" }}></div>
-        <MetricRow label="System Calculated Cash in Drawer" value={data?.totalCashLeftInDrawer ?? 0} />
+        <MetricRow label="System Calculated Cash in Drawer" value={data?.totalCashInDrawer ?? 0} />
         <MetricRow label="Actual Cash in Drawer" value={data?.physicalDrawerCash ?? 0} />
         <div style={{ borderTop: "1px dashed black", marginBottom: "5px", marginTop: "5px" }}></div>
       </div>

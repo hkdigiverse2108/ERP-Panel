@@ -24,7 +24,7 @@ const SalesRegister = () => {
 
   const rows = useMemo(() => {
     const apiData = data?.data?.posCashRegister_data;
-    return apiData?.map((r: PosCashRegisterBase) => ({ ...r, id: r._id, shortExceed: (r.physicalDrawerCash || 0) - (r.totalCashLeftInDrawer || 0) })) || [];
+    return apiData?.map((r: PosCashRegisterBase) => ({ ...r, id: r._id, shortExceed: (r.physicalDrawerCash || 0) - (r.totalCashInDrawer || 0) })) || [];
   }, [data]);
 
   const totalRows = data?.data?.totalData || 0;

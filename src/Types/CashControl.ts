@@ -47,7 +47,7 @@ export interface CashControlBase extends CashControlFormValues, CommonDataType {
     updatedAt: string;
     closingNote: string;
     physicalDrawerCash: number;
-    totalCashLeftInDrawer: number;
+    totalCashInDrawer: number;
     totalDenominationAmount: number;
   };
 }

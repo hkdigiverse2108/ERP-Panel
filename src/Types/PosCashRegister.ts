@@ -11,7 +11,7 @@ export interface PosCashRegisterFormInitialValues {
   bankAccountId: string;
   bankTransferAmount: number;
   cashFlow: number;
-  totalCashLeftInDrawer: number;
+  totalCashInDrawer: number;
   physicalDrawerCash: number;
   closingNote: string;
   denominations: Record<number, string>;
@@ -59,7 +59,7 @@ export interface EditPosCashRegisterPayload {
   bankAccountId?: string;
   bankTransferAmount?: number;
   cashFlow?: number;
-  totalCashLeftInDrawer?: number;
+  totalCashInDrawer?: number;
   physicalDrawerCash?: number;
   closingNote?: string;
   denominations?: Denomination[];

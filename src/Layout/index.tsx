@@ -12,6 +12,7 @@ import { setCompany, setFinancialYear } from "../Store/Slices/CompanySlice";
 import CommonVideoModal from "../Components/Common/Modal/CommonVideoModal";
 import Loader from "./Loader";
 import { useCompanyFinancialYears } from "../Utils/Hooks";
+import { ROUTES } from "../Constants";
 
 const Layout = () => {
   const { isExpanded, isMobileOpen, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
@@ -26,7 +27,7 @@ const Layout = () => {
   const isAppLoading = userLoading || permissionLoading || companyLoading || companyFetching || adminSettingLoading;
 
   useEffect(() => {
-    if (location.pathname.startsWith("/pos")) dispatch(setSidebarOpen(false));
+    if (location.pathname.startsWith(ROUTES.POS.NEW)) dispatch(setSidebarOpen(false));
     else dispatch(setSidebarOpen(true));
   }, [dispatch, location.pathname]);
 
