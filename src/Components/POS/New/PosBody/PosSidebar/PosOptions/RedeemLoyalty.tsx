@@ -17,17 +17,17 @@ const RedeemLoyalty = () => {
   const [applyingId, setApplyingId] = useState<string>("");
 
   const prevTotalAmountRef = useRef<number | undefined>(undefined);
-  const editRecalcDoneRef = useRef<string | null>(null);
+  // const editRecalcDoneRef = useRef<string | null>(null);
   const editLoadedRef = useRef<boolean>(false);
 
   const { data: loyaltyData, isLoading: loyaltyDataLoading, isFetching: loyaltyDataFetching } = Queries.useGetLoyaltyDropdown({}, isRedeemLoyaltyModal);
   const { mutate: redeemLoyalty } = Mutations.useRedeemLoyalty();
 
   useEffect(() => {
-    const currentAmount = PosProduct.totalAmount;
+    const currentAmount = Number(PosProduct.totalAmount || 0);
     const isEditMode = Boolean(PosProduct.posOrderId);
 
-    if (prevTotalAmountRef.current === undefined) {
+    if (prevTotalAmountRef.current === 0) {
       prevTotalAmountRef.current = currentAmount;
       return;
     }
@@ -51,25 +51,25 @@ const RedeemLoyalty = () => {
     prevTotalAmountRef.current = currentAmount;
   }, [PosProduct.totalAmount, PosProduct.posOrderId, dispatch]);
 
-  useEffect(() => {
-    const isEditMode = Boolean(PosProduct.posOrderId);
+  // useEffect(() => {
+  //   const isEditMode = Boolean(PosProduct.posOrderId);
 
-    if (!isEditMode) {
-      editRecalcDoneRef.current = null;
-      return;
-    }
+  //   if (!isEditMode) {
+  //     editRecalcDoneRef.current = null;
+  //     return;
+  //   }
 
-    if (editRecalcDoneRef.current === PosProduct.posOrderId) return;
-    editRecalcDoneRef.current = PosProduct.posOrderId;
+  //   if (editRecalcDoneRef.current === PosProduct.posOrderId) return;
+  //   editRecalcDoneRef.current = PosProduct.posOrderId;
 
-    const finalDiscount = Number(PosProduct.totalDiscount || 0);
-    const payableAmount = Number(PosProduct.totalAmount || 0) - finalDiscount;
-    dispatch(setTotalDiscount(Number(finalDiscount).toFixed(2)));
-    if (!isEditMode) dispatch(setTotalAmount(payableAmount));
-    else dispatch(setTotalAmount(PosProduct.totalAmount));
+  //   const finalDiscount = Number(PosProduct.totalDiscount || 0);
+  //   const payableAmount = Number(PosProduct.totalAmount || 0) - finalDiscount;
+  //   dispatch(setTotalDiscount(Number(finalDiscount).toFixed(2)));
+  //   if (!isEditMode) dispatch(setTotalAmount(payableAmount));
+  //   else dispatch(setTotalAmount(PosProduct.totalAmount));
 
-    prevTotalAmountRef.current = payableAmount;
-  }, [PosProduct.posOrderId, dispatch]);
+  //   prevTotalAmountRef.current = payableAmount;
+  // }, [PosProduct.posOrderId, dispatch]);
 
   const handleRedeemLoyalty = (loyalty: LoyaltyBase) => {
     if (PosProduct.couponId || PosProduct.redeemCreditId) {

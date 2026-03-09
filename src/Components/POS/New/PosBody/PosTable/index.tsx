@@ -41,8 +41,11 @@ const PosTable = () => {
   const totalMrp = useMemo(() => productData?.reduce((acc, row) => acc + row.mrp * row.posQty, 0), [productData]);
   const totalTaxAmount = useMemo(() => productData?.reduce((acc, row) => acc + Number(calcTotalTaxAmount(row)), 0) ?? 0, [productData]);
   const totalDiscount = useMemo(() => productData?.reduce((acc, row) => acc + row.discount * row.posQty, 0), [productData]);
+  const finalDiscount = useMemo(() => totalDiscount + PosProduct.couponDiscount + PosProduct.loyaltyDiscount, [totalDiscount, PosProduct.couponDiscount, PosProduct.loyaltyDiscount]);
+  const totalDiscountAmount = useMemo(() => Number(PosProduct.couponDiscount || 0) + Number(PosProduct.loyaltyDiscount || 0) + Number(PosProduct.flatDiscountAmount || 0) + Number(PosProduct.totalAdditionalCharge || 0) + Number(PosProduct.redeemCreditAmount || 0), [PosProduct.couponDiscount, PosProduct.loyaltyDiscount, PosProduct.flatDiscountAmount, PosProduct.totalAdditionalCharge, PosProduct.redeemCreditAmount]);
+
   const totalAmount = useMemo(() => productData?.reduce((acc, row) => acc + row.netAmount, 0) ?? 0, [productData]);
-  const finalAmount = useMemo(() => (totalAmount - PosProduct.flatDiscountAmount + Number(PosProduct.totalAdditionalCharge))?.toFixed(2), [totalAmount, PosProduct.flatDiscountAmount, PosProduct.totalAdditionalCharge]);
+  const finalAmount = useMemo(() => (totalAmount - totalDiscountAmount)?.toFixed(2), [totalAmount, totalDiscountAmount]);
 
   const roundOffAmount = useMemo(() => {
     const amt = Number(finalAmount);
@@ -54,16 +57,17 @@ const PosTable = () => {
   }, [finalAmount]);
 
   const finalTotal = Number(finalAmount) + Number(PosProduct.roundOff || roundOffAmount);
+  const finalPayable = finalTotal >= 0 ? finalTotal?.toFixed(0) : "0.00";
   useEffect(() => {
     dispatch(setTotalQty(totalQty?.toFixed(2)));
     dispatch(setTotalMrp(totalMrp?.toFixed(0)));
-    dispatch(setTotalDiscount(totalDiscount?.toFixed(2)));
+    dispatch(setTotalDiscount(finalDiscount?.toFixed(2)));
     dispatch(setTotalTaxAmount(totalTaxAmount?.toFixed(2)));
     if (!PosProduct.roundOff) {
       dispatch(setRoundOff(Number(roundOffAmount)?.toFixed(2)));
     }
-    dispatch(setTotalAmount(finalTotal.toFixed(0)));
-  }, [totalMrp, totalDiscount, dispatch, totalQty, totalTaxAmount, roundOffAmount, finalTotal, PosProduct.roundOff]);
+    dispatch(setTotalAmount(finalPayable));
+  }, [totalMrp, finalDiscount, dispatch, totalQty, totalTaxAmount, roundOffAmount, finalPayable, PosProduct.roundOff]);
 
   const isDisabled = (row: PosProductDataModal) => {
     if (isReturnPosOrder) return row.posQty >= row.originalQty;

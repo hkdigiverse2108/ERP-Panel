@@ -127,7 +127,7 @@ export const Mutations = {
   useRedeemLoyalty: () => useMutations<RedeemLoyaltyPayload, RedeemLoyaltyApiResponse>([KEYS.LOYALTY.REDEEM], (input) => Post(URL_KEYS.LOYALTY.REDEEM, input)),
 
   //*************** Cash Control *********
-  useAddCashControl: () => useMutations<AddCashControlPayload, void>([KEYS.CASH_CONTROL.ADD, KEYS.CASH_CONTROL.BASE], (input) => Post(URL_KEYS.CASH_CONTROL.ADD, input)),
+  useAddCashControl: () => useMutations<AddCashControlPayload, void>([KEYS.CASH_CONTROL.ADD, KEYS.CASH_CONTROL.BASE, KEYS.POS_CASH_REGISTER.DETAILS], (input) => Post(URL_KEYS.CASH_CONTROL.ADD, input)),
 
   //*************** POS Credit Note *********
   useAddPosCreditNote: () => useMutations<AddPosCreditNotePayload, void>([KEYS.POS_CREDIT_NOTE.ADD, KEYS.POS_CREDIT_NOTE.BASE], (input) => Post(URL_KEYS.POS_CREDIT_NOTE.ADD, input)),

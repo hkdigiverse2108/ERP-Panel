@@ -29,15 +29,15 @@ const GeneralSetting = () => {
     { label: "User Profile", value: 0, icon: <PersonIcon /> },
     { label: "Company Profile", value: 1, icon: <CorporateFare /> },
     { label: "Taxes", value: 2, icon: <ReceiptLongIcon /> },
-    { label: "Report Formats", value: 3, icon: <SettingsIcon /> },
+    // { label: "Report Formats", value: 3, icon: <SettingsIcon /> },
     { label: "User Roles", value: 4, icon: <AccountTreeIcon /> },
-    { label: "Prefix", value: 5, icon: <TagIcon /> },
-    { label: "Payment Terms", value: 6, icon: <PaymentIcon /> },
+    // { label: "Prefix", value: 5, icon: <TagIcon /> },
+    // { label: "Payment Terms", value: 6, icon: <PaymentIcon /> },
     { label: "Additional Charges", value: 7, icon: <AddCircleIcon /> },
-    { label: "Consumption Type", value: 8, icon: <BarChartIcon /> },
-    { label: "Hardware", value: 9, icon: <DevicesIcon /> },
-    { label: "Manage Account", value: 10, icon: <ManageAccountsIcon /> },
-    { label: "MAC Binding Master", value: 11, icon: <LanIcon /> },
+    // { label: "Consumption Type", value: 8, icon: <BarChartIcon /> },
+    // { label: "Hardware", value: 9, icon: <DevicesIcon /> },
+    // { label: "Manage Account", value: 10, icon: <ManageAccountsIcon /> },
+    // { label: "MAC Binding Master", value: 11, icon: <LanIcon /> },
   ];
 
   // Map tab index → component

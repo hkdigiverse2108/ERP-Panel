@@ -5,7 +5,7 @@ import { CommonButton, CommonRadio, CommonSelect, CommonTextField } from "../../
 import { REDEEM_CREDIT_TYPE } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
-import { setHandleDiscount, setRedeemCredit, setTotalAmount, setTotalDiscount } from "../../../../../Store/Slices/PosSlice";
+import { setHandleDiscount, setRedeemCredit, setTotalAmount } from "../../../../../Store/Slices/PosSlice";
 import { FormatDate } from "../../../../../Utils";
 import { CommonModal } from "../../../../Common";
 
@@ -24,7 +24,7 @@ const RedeemCredit = () => {
   const { mutate: redeemCreditNote, isPending: isPosCustomerDetailPending } = Mutations.useRedeemCreditNote();
 
   const prevTotalAmountRef = useRef<number | undefined>(undefined);
-  const editRecalcDoneRef = useRef<string | null>(null);
+  // const editRecalcDoneRef = useRef<string | null>(null);
   const editLoadedRef = useRef<boolean>(false);
 
   const posCreditNoteDropdownOptions = posCreditNoteDropdown?.data?.map((item) => ({ label: item.no, value: item.id }));
@@ -32,10 +32,10 @@ const RedeemCredit = () => {
   const render = (value: string | number) => (isPosCustomerDetailPending ? <CircularProgress color="primary" size={10} className="mr-2!" /> : value);
 
   useEffect(() => {
-    const currentAmount = PosProduct?.totalAmount;
+    const currentAmount = Number(PosProduct.totalAmount || 0);
     const isEditMode = Boolean(PosProduct.posOrderId);
 
-    if (prevTotalAmountRef.current === undefined) {
+    if (prevTotalAmountRef.current === 0) {
       prevTotalAmountRef.current = currentAmount;
       return;
     }
@@ -63,25 +63,25 @@ const RedeemCredit = () => {
     prevTotalAmountRef.current = currentAmount;
   }, [PosProduct?.totalAmount, PosProduct.posOrderId, dispatch]);
 
-  useEffect(() => {
-    const isEditMode = Boolean(PosProduct.posOrderId);
+  // useEffect(() => {
+  //   const isEditMode = Boolean(PosProduct.posOrderId);
 
-    if (!isEditMode) {
-      editRecalcDoneRef.current = null;
-      return;
-    }
+  //   if (!isEditMode) {
+  //     editRecalcDoneRef.current = null;
+  //     return;
+  //   }
 
-    if (editRecalcDoneRef.current === PosProduct.posOrderId) return;
-    editRecalcDoneRef.current = PosProduct.posOrderId;
+  //   if (editRecalcDoneRef.current === PosProduct.posOrderId) return;
+  //   editRecalcDoneRef.current = PosProduct.posOrderId;
 
-    const finalDiscount = Number(PosProduct.totalDiscount || 0);
-    const payableAmount = Number(totalAmount || 0) - finalDiscount;
-    dispatch(setTotalDiscount(Number(finalDiscount).toFixed(2)));
-    if (!isEditMode) dispatch(setTotalAmount(payableAmount));
-    else dispatch(setTotalAmount(totalAmount));
+  //   const finalDiscount = Number(PosProduct.totalDiscount || 0);
+  //   const payableAmount = Number(totalAmount || 0) - finalDiscount;
+  //   dispatch(setTotalDiscount(Number(finalDiscount).toFixed(2)));
+  //   if (!isEditMode) dispatch(setTotalAmount(payableAmount));
+  //   else dispatch(setTotalAmount(totalAmount));
 
-    prevTotalAmountRef.current = payableAmount;
-  }, [PosProduct.posOrderId, dispatch]);
+  //   prevTotalAmountRef.current = payableAmount;
+  // }, [PosProduct.posOrderId, dispatch]);
 
   const isCredit = type === "credit_note";
   const creditDetails = [
