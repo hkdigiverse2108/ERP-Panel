@@ -51,12 +51,13 @@ const PosSidebar = () => {
       <PosOption />
 
       {/* CUSTOMER DETAILS */}
-      {PosProduct.loyaltyDiscount || PosProduct.couponDiscount ? (
+      {PosProduct.loyaltyDiscount || PosProduct.couponDiscount || PosProduct.redeemCreditAmount ? (
         <Box className="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-dark rounded-md p-3">
           <p className="font-semibold text-base mb-2 dark:text-gray-300">Discount Details</p>
           <div className="space-y-1">
             {PosProduct.loyaltyDiscount ? <InfoRow label="Loyalty Discount" value={`₹${PosProduct.loyaltyDiscount}`} /> : ""}
             {PosProduct.couponDiscount ? <InfoRow label="Coupon Discount" value={`₹${PosProduct.couponDiscount}`} /> : ""}
+            {PosProduct.redeemCreditAmount ? <InfoRow label={PosProduct.redeemCreditType === "credit_note" ? "Credit Discount" : "Advance Payment"} value={`₹${PosProduct.redeemCreditAmount}`} /> : ""}
           </div>
         </Box>
       ) : (
