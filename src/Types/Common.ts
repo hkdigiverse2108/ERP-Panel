@@ -12,6 +12,14 @@ import type { PosCreditNoteBase } from "./PosCreditNote";
 
 export type GridType = number | object | "auto" | "grow";
 
+export interface CompanyDetails {
+  title: string;
+  items: {
+    label: string;
+    value: string | number;
+  }[];
+}
+
 export interface PhoneNumberType {
   countryCode?: string;
   phoneNo?: string;
