@@ -58,3 +58,21 @@ export const FormatPayment = (text?: string) =>
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ")
     : "-";
+
+
+//======== Profile Strength=========
+let companyStrength = { filled: 0, total: 0 };
+
+export const getStrength = (sections: any[]) => {
+  const allFields = sections.map((section) => section.items).flat();
+  const filled = allFields.filter((item) => item.value !== null && item.value !== undefined && item.value !== "").length;
+  const total = allFields.length;
+
+  return { filled, total };
+};
+export const setCompanyStrength = (strength: { filled: number; total: number }) => {
+  companyStrength = strength;
+};
+export const getCompanyStrength = () => {
+  return companyStrength;
+};
