@@ -42,7 +42,7 @@ const PurchaseOrderFormContent = ({ isEditing, addLoading, editLoading, navigate
               {/* BILLING ADDRESS */}
               <Box display="flex" gap={1}>
                 <Box fontWeight={600}>Billing Address:</Box>
-                {selectedSupplier?.address?.length ? (
+                {selectedSupplier?.address?.length ? (  
                   <Box color="text.secondary">
                     <Box>{selectedSupplier.address[0]?.addressLine1}</Box>
                     <Box>

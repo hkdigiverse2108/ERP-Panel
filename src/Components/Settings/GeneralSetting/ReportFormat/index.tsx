@@ -4,6 +4,12 @@ import { Box, FormControlLabel, Grid, Radio, RadioGroup, Tab, Tabs } from "@mui/
 import { ImagePath } from "../../../../Constants";
 import { CommonModal } from "../../../Common";
 import BillReceipt80mm from "./BillReceipt80mm";
+import BillReceiptA4B2B from "./BillReceiptA4B2B";
+import BillReceiptA4B2BType2 from "./BillReceiptA4B2BType2";
+import BillReceipt80mmB2C from "./BillReceipt80mmB2C";
+import BillReceipt80mmB2CType2 from "./BillReceipt80mmB2CType2";
+import BillReceipt80mmType2 from "./BillReceipt80mmType2";
+
 import BillReceiptA5 from "./BillReceiptA5";
 import type { PosOrderBase } from "../../../../Types";
 
@@ -94,13 +100,20 @@ const ReportFormats = () => {
   const reportData: IReportData = {
     0: [
       { value: "pos-jasper-80", label: "Mark as default 80MM Page", component: <BillReceipt80mm bill={mockBill} /> },
+      { value: "pos-jasper-80-type2", label: "Mark as default 80MM Page (Type 2)", component: <BillReceipt80mmType2 bill={mockBill} /> },
       { value: "pos-jasper-a5", label: "Mark as default A5 Page", component: <BillReceiptA5 bill={mockBill} /> },
       { value: "pos1", label: "POS Offline - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
       { value: "pos2", label: "POS Offline - Report 2", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
       { value: "pos4", label: "POS Offline - Report 2", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
     ],
-    1: [{ value: "b2c1", label: "B2C - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` }],
+    1: [
+      { value: "thermal_80mm_17_jasper", label: "Thermal_80mm-17(jasper)", component: <BillReceipt80mmB2C bill={mockBill} /> },
+      { value: "thermal_80mm_b2c_type2", label: "Thermal_80mm B2C Type 2", component: <BillReceipt80mmB2CType2 bill={mockBill} /> },
+      { value: "b2c1", label: "B2C - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` }
+    ],
     2: [
+      { value: "a4_b2b_invoice", label: "A4 B2B Invoice", component: <BillReceiptA4B2B bill={mockBill} /> },
+      { value: "a4_b2b_invoice_type2", label: "A4 B2B Invoice (Type 2)", component: <BillReceiptA4B2BType2 bill={mockBill} /> },
       { value: "b2b1", label: "B2B - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
       { value: "b2b1", label: "B2B - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
     ],
