@@ -22,7 +22,8 @@ const RecipeForm = () => {
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
 
-  const { data: productData } = Queries.useGetProduct({ activeFilter: true });
+  const { data: productData, isLoading: productDataLoading } = Queries.useGetProductDropdown();
+  const { data: productDataNew, isLoading: productDataNewLoading } = Queries.useGetProductDropdown({ isNewProduct: true });
   const { mutate: addRecipe, isPending: isAddLoading } = Mutations.useAddRecipe();
   const { mutate: editRecipe, isPending: isEditLoading } = Mutations.useEditRecipe();
 
@@ -89,7 +90,7 @@ const RecipeForm = () => {
                           const rawProducts = values.rawProducts || [];
                           return (
                             <Box key={index} display="flex" flexWrap="wrap" gap={2} sx={{ mb: 2 }}>
-                              <CommonValidationSelect name={`rawProducts.${index}.productId`} label="Product" options={GenerateOptions(productData?.data.product_data)} required grid={{ xs: 12, md: 4 }} />
+                              <CommonValidationSelect name={`rawProducts.${index}.productId`} label="Product" options={GenerateOptions(productData?.data)} isLoading={productDataLoading} required grid={{ xs: 12, md: 4 }} />
                               <CommonValidationTextField name={`rawProducts.${index}.useQty`} label="Use Qty" type="number" required grid={{ xs: 12, md: 3 }} />
                               <CommonValidationTextField name={`rawProducts.${index}.mrp`} label="MRP" type="number" grid={{ xs: 12, md: 3 }} />
                               <Grid size={{ xs: 12, md: 2 }}>
@@ -117,7 +118,7 @@ const RecipeForm = () => {
                 {/* FINAL PRODUCTS */}
                 <CommonCard title="Final Products">
                   <Box p={2} display="flex" flexWrap="wrap" gap={2}>
-                    <CommonValidationSelect name="finalProducts.productId" label="Product" options={GenerateOptions(productData?.data.product_data)} required grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="finalProducts.productId" label="Product" options={GenerateOptions(productDataNew?.data)} isLoading={productDataNewLoading} required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="finalProducts.qtyGenerate" label="Qty Generate" type="number" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="finalProducts.mrp" label="MRP" type="number" grid={{ xs: 12, md: 4 }} />
                   </Box>

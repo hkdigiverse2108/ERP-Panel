@@ -58,3 +58,8 @@ export const FormatPayment = (text?: string) =>
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ")
     : "-";
+
+export const FormatCountryCode = (code?: string) => {
+  if (!code) return "";
+  return code.startsWith("+") ? code : `+${code}`;
+};

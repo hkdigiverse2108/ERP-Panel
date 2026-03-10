@@ -7,7 +7,7 @@ import { CommonButton, CommonSelect } from "../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
 import { setCustomerModal, setDiscardModal } from "../../../../Store/Slices/ModalSlice";
 import { addOrUpdateProduct, setCustomerId, setIsSelectProduct, setPosLoading, setReturnPosOrder, setSalesInvoice } from "../../../../Store/Slices/PosSlice";
-import { GenerateOptions } from "../../../../Utils";
+import { FormatCountryCode, GenerateOptions } from "../../../../Utils";
 import CustomerForm from "./CustomerForm";
 
 const PosFilter = () => {
@@ -38,6 +38,14 @@ const PosFilter = () => {
     }
   };
 
+  const customerOptions = customerDropdown?.data?.map((item) => {
+    return {
+      value: item._id,
+      label: item.firstName + " " + item.lastName,
+      phone: FormatCountryCode(item.phoneNo?.countryCode) + " " + item.phoneNo?.phoneNo,
+    };
+  });
+
   useEffect(() => {
     dispatch(setPosLoading(productByIdLoading || productByIdFetching));
   }, [productByIdLoading, productByIdFetching, dispatch]);
@@ -56,7 +64,7 @@ const PosFilter = () => {
         <CommonSelect label="Select Product" options={GenerateOptions(productDropdown?.data)} isLoading={productDropdownLoading} disabled={productByIdLoading || productByIdFetching || isReturnPosOrder} value={[isSelectProduct]} onChange={(e) => dispatch(setIsSelectProduct(e[0]))} limitTags={1} grid={{ xs: 12, xsm: 6, sm: 4 }} />
         <Grid size={{ xs: 12, xsm: 6, sm: 4 }} className="flex justify-end">
           <Grid container className="flex justify-center items-center w-full">
-            <CommonSelect label="Select Customer" options={GenerateOptions(customerDropdown?.data)} isLoading={customerDropdownLoading} value={[PosProduct?.customerId]} onChange={handleCustomerChange} limitTags={1} disabled={isReturnPosOrder} grid={{ xs: 10 }} />
+            <CommonSelect label="Select Customer" options={customerOptions || []} isLoading={customerDropdownLoading} value={[PosProduct?.customerId]} onChange={handleCustomerChange} limitTags={1} disabled={isReturnPosOrder} searchKeys={["label", "phone"]} grid={{ xs: 10 }} />
             <Grid size={{ xs: 2 }} className="flex justify-center items-center">
               {!PosProduct?.customerId ? (
                 <CommonButton size="small" onClick={() => dispatch(setCustomerModal({ open: true, data: null }))} disabled={isReturnPosOrder} sx={{ minWidth: 40, p: 0 }} variant="contained">

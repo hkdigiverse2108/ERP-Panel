@@ -42,6 +42,7 @@ export interface CommonDrawerProps extends Omit<DrawerProps, "anchor" | "title">
 export type SelectOptionType = {
   label: string;
   value: string;
+  [key: string]: any;
 };
 export interface CommonStatsItem {
   label: string;
@@ -65,6 +66,7 @@ export interface CommonSelectProps {
   placeholder?: string;
   syncFieldName?: string;
   isLoading?: boolean;
+  searchKeys?: string[];
 }
 
 export interface CommonValidationSelectProps extends Omit<CommonSelectProps, "onChange" | "value"> {
