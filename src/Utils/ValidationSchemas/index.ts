@@ -50,6 +50,7 @@ export const EmployeeFormSchema = Yup.object({
   username: Validation("string", "Username"),
   designation: Validation("string", "Designation", { required: false }),
   phoneNo: PhoneValidation(),
+  profileImage: Validation("string", "Profile Image", { required: false }),
   email: Validation("string", "Email", { required: true, extraRules: (s) => s.trim().email("Invalid email address") }),
   branchId: Validation("string", "Branch Name", { required: false }),
   panNumber: Validation("string", "PAN Number", { required: false, extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number") }),

@@ -1,17 +1,20 @@
 import { Box, Grid } from "@mui/material";
-import { Form, Formik, type FormikHelpers } from "formik";
+import { Form, Formik, useFormikContext, type FormikHelpers, type FormikValues } from "formik";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../../Api";
 import { CommonPhoneNumber, CommonValidationSelect, CommonValidationTextField } from "../../../../Attribute";
 import { PAGE_TITLE } from "../../../../Constants";
 import { BREADCRUMBS } from "../../../../Data";
+import { setSelectedFiles, setUploadModal } from "../../../../Store/Slices/ModalSlice";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
 import { setUser } from "../../../../Store/Slices/AuthSlice";
-import type { EmployeeFormValues } from "../../../../Types";
+import type { EmployeeFormValues, ImageSyncProps } from "../../../../Types";
 import { GenerateOptions, GetChangedFields } from "../../../../Utils";
 import { EmployeeFormSchema } from "../../../../Utils/ValidationSchemas";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../../Common";
+import { CommonFormImageBox } from "../../../Common/CommonUploadImage/CommonImageBox";
 import { useDependentReset } from "../../../../Utils/Hooks";
+import { useEffect, useState } from "react";
 
 const UserForm = () => {
   const navigate = useNavigate();
@@ -20,6 +23,7 @@ const UserForm = () => {
   const { user: UserData } = useAppSelector((state) => state.auth);
   const { data: branchData, isLoading: branchDataLoading } = Queries.useGetBranchDropdown();
   const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditUser();
+  const [activeImageKey, setActiveImageKey] = useState<"profileImage" | null>(null);
 
   const initialValues: EmployeeFormValues = {
     fullName: UserData?.fullName || "",
@@ -29,6 +33,7 @@ const UserForm = () => {
       countryCode: UserData?.phoneNo?.countryCode || "",
       phoneNo: UserData?.phoneNo?.phoneNo || "",
     },
+    profileImage: UserData?.profileImage || null,
     email: UserData?.email || "",
     panNumber: UserData?.panNumber || "",
     branchId: UserData?.branchId?._id || "",
@@ -56,6 +61,27 @@ const UserForm = () => {
     extraWages: UserData?.extraWages || null,
     target: UserData?.target || null,
     isActive: UserData?.isActive ?? true,
+  };
+
+  const FormikImageSync = <T extends FormikValues>({ activeKey, clearActiveKey }: ImageSyncProps) => {
+    const { selectedFiles } = useAppSelector((state) => state.modal);
+    const { setFieldValue } = useFormikContext<T>();
+
+    useEffect(() => {
+      if (!selectedFiles[0] || !activeKey) return;
+
+      setFieldValue(activeKey, selectedFiles[0]);
+
+      dispatch(setSelectedFiles([]));
+      clearActiveKey();
+    }, [selectedFiles, activeKey, setFieldValue, clearActiveKey, dispatch]);
+
+    return null;
+  };
+
+  const handleUpload = () => {
+    setActiveImageKey("profileImage");
+    dispatch(setUploadModal({ open: true, type: "image", multiple: false }));
   };
 
   const handleSubmit = async (values: EmployeeFormValues, { resetForm }: FormikHelpers<EmployeeFormValues>) => {
@@ -91,6 +117,7 @@ const UserForm = () => {
           {({ dirty, values }) => (
             <Form noValidate>
               <AddressDependencyHandler />
+              <FormikImageSync activeKey={activeImageKey} clearActiveKey={() => setActiveImageKey(null)} />
               <Grid container spacing={2}>
                 {/* BASIC DETAILS */}
                 <CommonCard title="Basic Details" grid={{ xs: 12 }}>
@@ -138,6 +165,7 @@ const UserForm = () => {
                     <CommonValidationTextField name="target" type="number" label="Target" grid={{ xs: 12, md: 4 }} />
                   </Grid>
                 </CommonCard>
+                 <CommonFormImageBox name="profileImage" label="Profile Image" type="image" grid={{ xs: 12, md: 4 }} onUpload={handleUpload} />
                 <CommonBottomActionBar save disabled={!dirty} isLoading={isEditLoading} />
               </Grid>
             </Form>
