@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
-import React, { forwardRef } from "react";
+import { forwardRef, type ReactNode } from "react";
 import { useAppSelector } from "../../../../Store/hooks";
-import type { PosCashRegisterValues, PosOrderBase } from "../../../../Types";
+import type { PosCashRegisterValues } from "../../../../Types";
 
-const MetricRow = ({ label, value }: { label: string; value: React.ReactNode }) => (
+const MetricRow = ({ label, value }: { label: string; value: ReactNode }) => (
   <div style={{ display: "flex", justifyContent: "space-between" }}>
     <span>{label}</span>
     <div style={{ display: "flex", width: "125px" }}>
@@ -13,7 +13,7 @@ const MetricRow = ({ label, value }: { label: string; value: React.ReactNode }) 
   </div>
 );
 
-const CloseBillRegister = forwardRef<HTMLDivElement, { bill?: PosOrderBase; data?: PosCashRegisterValues }>(({ data, bill }, ref) => {
+const CloseBillRegister = forwardRef<HTMLDivElement, { data?: PosCashRegisterValues }>(({ data }, ref) => {
   const { company } = useAppSelector((state) => state.company);
   const currentDate = dayjs().format("DD/MM/YYYY, HH:mm");
 
@@ -31,7 +31,7 @@ const CloseBillRegister = forwardRef<HTMLDivElement, { bill?: PosOrderBase; data
       <div style={{ display: "flex", flexDirection: "column", gap: "0px", marginBottom: "5px", fontWeight: "bold" }}>
         <div style={{ display: "flex" }}>
           <span style={{ width: "120px" }}>User</span>
-          <span>: {data?.user || "-"}</span>
+          <span>: {company?.name || "-"}</span>
         </div>
         <div style={{ display: "flex" }}>
           <span style={{ width: "120px" }}>Start</span>
@@ -50,16 +50,16 @@ const CloseBillRegister = forwardRef<HTMLDivElement, { bill?: PosOrderBase; data
       <div style={{ borderTop: "1px dashed black", marginBottom: "5px" }}></div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "0px", marginBottom: "5px" }}>
-        {/* <MetricRow label="No of Bills" value={data?.noOfBills ?? 0} />
-        <MetricRow label="No of Items" value={data?.noOfItems ?? 0} /> */}
+        <MetricRow label="No of Bills" value={data?.numberOfBills ?? 0} />
+        <MetricRow label="No of Items" value={data?.numberOfItems ?? 0} />
         {/* <MetricRow label="Total Sales" value={data?.totalSales ?? 0} /> */}
         {/* <MetricRow label="Disc (Total)" value={data?.discount ?? 0} /> */}
         {/* <MetricRow label="Tax Amount (Total)" value={data?.taxAmount ?? 0} /> */}
-        <MetricRow label="Receipt No" value={bill?.orderNo || "-"} />
-        <MetricRow label="Subtotal " value={bill?.totalMrp ?? 0} />
-        <MetricRow label="Disc " value={bill?.totalDiscount ?? 0} />
-        <MetricRow label="Tax Amount " value={bill?.totalTaxAmount ?? 0} />
-        <MetricRow label="Total Amount " value={bill?.totalAmount ?? 0} />
+        {/* <MetricRow label="Receipt No" value={bill?.orderNo || "-"} />
+        <MetricRow label="Subtotal " value={bill?.totalMrp ?? 0} /> */}
+        <MetricRow label="Total Amount " value={data?.totalSales ?? 0} />
+        <MetricRow label="Disc " value={data?.discount ?? 0} />
+        <MetricRow label="Tax Amount " value={data?.taxAmount ?? 0} />
         <MetricRow label="Sales Return" value={data?.salesReturn ?? 0} />
         <MetricRow label="Refund" value={data?.refund ?? 0} />
         <MetricRow label="Bank Transfer" value={data?.bankTransferAmount ?? 0} />

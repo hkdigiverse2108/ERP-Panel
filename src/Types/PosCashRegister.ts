@@ -42,8 +42,8 @@ export interface PosCashRegisterValues extends Omit<PosCashRegisterFormInitialVa
   startTime?: string;
   endDate?: string;
   endTime?: string;
-  noOfBills?: number;
-  noOfItems?: number;
+  numberOfBills?: number;
+  numberOfItems?: number;
   discount?: number;
   taxAmount?: number;
   refund?: number;

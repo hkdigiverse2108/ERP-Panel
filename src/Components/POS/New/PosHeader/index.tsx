@@ -68,7 +68,7 @@ const PosHeader = () => {
           <ProductList />
           <Discard />
           <FullScreen />
-          <CurrentRegister lastBill={lastBill} />
+          <CurrentRegister />
         </Grid>
       </Grid>
     </div>
