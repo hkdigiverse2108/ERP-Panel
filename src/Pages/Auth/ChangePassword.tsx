@@ -14,13 +14,13 @@ import { ChangePasswordSchema } from "../../Utils/ValidationSchemas";
 const ChangePassword = () => {
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
-
   const { mutate: changePassword, isPending: isLoading } = Mutations.useChangePassword();
 
   const initialValues: ChangePasswordPayload = {
     email: user?.email || "",
     oldPassword: "",
     newPassword: "",
+    confirmPassword :"",
     loginSource: LoginSource,
   };
 
@@ -44,6 +44,7 @@ const ChangePassword = () => {
                   <Grid container spacing={2} sx={{ p: 2 }}>
                     <CommonValidationTextField name="oldPassword" label="Old Password" type="password" showPasswordToggle required grid={{ xs: 12 }} />
                     <CommonValidationTextField name="newPassword" label="New Password" type="password" showPasswordToggle required grid={{ xs: 12 }} />
+                    <CommonValidationTextField name="confirmPassword" label="Confirm Password" type="password" showPasswordToggle required grid={{ xs: 12 }} />
                   </Grid>
                 </CommonCard>
 
