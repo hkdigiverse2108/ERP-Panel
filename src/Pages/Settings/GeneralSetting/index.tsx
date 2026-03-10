@@ -8,7 +8,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 // import PaymentIcon from "@mui/icons-material/Payment";
 import PersonIcon from "@mui/icons-material/Person";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-// import SettingsIcon from "@mui/icons-material/Settings";
+ import SettingsIcon from "@mui/icons-material/Settings";
 // import TagIcon from "@mui/icons-material/Tag";
 import { Box, Grid, Tabs } from "@mui/material";
 import Tab from "@mui/material/Tab";
@@ -29,7 +29,7 @@ const GeneralSetting = () => {
     { label: "User Profile", value: 0, icon: <PersonIcon /> },
     { label: "Company Profile", value: 1, icon: <CorporateFare /> },
     { label: "Taxes", value: 2, icon: <ReceiptLongIcon /> },
-    // { label: "Report Formats", value: 3, icon: <SettingsIcon /> },
+     { label: "Report Formats", value: 3, icon: <SettingsIcon /> },
     { label: "User Roles", value: 4, icon: <AccountTreeIcon /> },
     // { label: "Prefix", value: 5, icon: <TagIcon /> },
     // { label: "Payment Terms", value: 6, icon: <PaymentIcon /> },
