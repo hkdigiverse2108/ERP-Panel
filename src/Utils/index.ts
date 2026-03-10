@@ -1,9 +1,9 @@
+export * from "./DateConfig";
 export * from "./DateFormatted";
 export * from "./FormHelpers";
-export * from "./DateConfig";
 export * from "./ValidationSchemas";
 import { STORAGE_KEYS } from "../Constants";
-import type { GridType, Params, SelectOptionType } from "../Types";
+import type { CompanyDetails, GridType, Params, SelectOptionType } from "../Types";
 
 export const Stringify = (value: object): string => {
   try {
@@ -62,4 +62,23 @@ export const FormatPayment = (text?: string) =>
 export const FormatCountryCode = (code?: string) => {
   if (!code) return "";
   return code.startsWith("+") ? code : `+${code}`;
+};
+
+//======== Profile Strength=========
+let companyStrength = { filled: 0, total: 0 };
+
+export const getStrength = (sections: CompanyDetails[]) => {
+  const allFields = sections.map((section) => section.items).flat();
+  const filled = allFields.filter((item) => item.value !== null && item.value !== undefined && item.value !== "").length;
+  const total = allFields.length;
+
+  return { filled, total };
+};
+
+export const setCompanyStrength = (strength: { filled: number; total: number }) => {
+  companyStrength = strength;
+};
+
+export const getCompanyStrength = () => {
+  return companyStrength;
 };
