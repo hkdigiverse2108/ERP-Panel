@@ -50,7 +50,7 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
   return grid ? <Grid size={grid}>{Input}</Grid> : Input;
 };
 
-export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value, onChange, multiple = false, limitTags, size, grid, disabled, readOnly, isLoading, placeholder, ...props }) => {
+export const CommonSelect: FC<CommonSelectProps> = ({ searchKeys, label, options = [], value, onChange, multiple = false, limitTags, size, grid, disabled, readOnly, isLoading, placeholder, ...props }) => {
   const selectedValue = multiple ? (value || []).map((v) => options.find((o) => o.value === v)).filter((v): v is SelectOptionType => Boolean(v)) : (options.find((o) => o.value === value?.[0]) ?? null);
   const Input = (
     <Autocomplete
@@ -64,6 +64,15 @@ export const CommonSelect: FC<CommonSelectProps> = ({ label, options = [], value
       readOnly={readOnly}
       getOptionLabel={(opt) => opt.label}
       isOptionEqualToValue={(option, val) => option.value === val.value}
+      filterOptions={(options, { inputValue }) => {
+        const search = inputValue.toLowerCase().trim();
+
+        if (!search) return options;
+
+        return options.filter((option) => {
+          return (searchKeys || ["label"]).some((key) => option[key]?.toString().toLowerCase().includes(search));
+        });
+      }}
       onChange={(_, newValue) => {
         if (multiple) {
           onChange((newValue as SelectOptionType[]).map((o) => o.value));
