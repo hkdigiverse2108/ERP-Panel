@@ -268,7 +268,18 @@ const ContactBaseSchema = {
   telephoneNo: Validation("string", "Telephone No", { required: false }),
   tanNo: Validation("string", "Tan No", { required: false }),
   remarks: Validation("string", "Remarks", { required: false }),
-  address: Yup.array().of(ContactAddressSchema).min(1),
+  address: Yup.array().of(
+  ContactAddressSchema.when("$contactType", (contactType, schema) => {
+    if (contactType?.[0] === "customer") return schema;
+    return schema.shape({
+      contactFirstName: Validation("string", "Contact First Name", { required: false }),
+      country: Validation("string", "Country", { required: false }),
+      state: Validation("string", "State", { required: false }),
+      city: Validation("string", "City", { required: false }),
+      gstIn: Yup.string().notRequired(),
+    });
+  })
+),
   bankDetails: Yup.object().shape({
     ifscCode: Validation("string", "IFSC Code", { required: false }),
     name: Validation("string", "Bank Name", { required: false }),
