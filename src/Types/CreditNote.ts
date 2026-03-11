@@ -3,12 +3,12 @@ import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from 
 
 export interface CreditNoteFormValues {
   type?: string;
-  voucherNumber?: string;
   date?: string;
   bankAccountId?: string;
   amount?: string;
   description?: string;
   isActive?: boolean;
+  file?: string | File | null;
   _submitAction?: string;
   phoneNo?: PhoneNumberType;
 }

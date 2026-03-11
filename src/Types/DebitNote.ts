@@ -1,14 +1,15 @@
 import type { AccountBase } from "./Account";
-import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
 
 export interface DebitNoteFormValues {
-  voucherNumber?: string;
+  type?: string;
+  bankAccountId?: string;
   date?: string;
-  fromAccountId?: string;
-  toAccountId?: string;
   amount?: string;
+  phoneNo?: PhoneNumberType;
   description?: string;
   isActive?: boolean;
+  file?: string | File | null;
   _submitAction?: string;
 }
 

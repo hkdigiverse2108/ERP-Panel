@@ -42,7 +42,7 @@ const CreditNote = () => {
               active: (row) => editCreditNote({ creditNoteId: row?._id as string, isActive: !row.isActive }),
               editRoute: ROUTES.ACCOUNTING.CREDIT_NOTE.ADD_EDIT,
             }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherNumber }) }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.amount }) }),
           }),
         ]
       : []),
