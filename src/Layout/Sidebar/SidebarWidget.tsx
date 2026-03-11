@@ -22,7 +22,7 @@ const SidebarWidget = () => {
     <div className="mx-auto mb-10 w-full max-w-60 rounded-2xl bg-gray-50 px-4 py-5 text-center dark:bg-gray-dark">
       <p className="mb-4 text-gray-700 text-theme-sm dark:text-gray-400">Want insider tips & updates? Follow us:</p>
 
-      <div className="flex justify-center items-center gap-2">
+      <div className="flex flex-wrap justify-center items-center gap-2">
         {adminSetting?.links?.map((item, index) => {
           const IconComponent = iconMap[item?.icon?.toLowerCase() as keyof typeof iconMap];
 

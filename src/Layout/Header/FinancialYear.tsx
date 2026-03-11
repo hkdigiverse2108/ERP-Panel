@@ -8,7 +8,6 @@ const FinancialYear = () => {
   const { financialYear, company } = useAppSelector((state) => state.company);
 
   const { mutate: editCompanyMutate, isPending: isEditLoading } = Mutations.useEditCompany();
-
   const dispatch = useAppDispatch();
 
   const financialYearData = financialYear?.find((item) => item.value === company?.financialYear);
@@ -19,6 +18,7 @@ const FinancialYear = () => {
       {
         onSuccess: (response) => {
           dispatch(setCompany(response?.data));
+          window.location.reload();
         },
       },
     );
