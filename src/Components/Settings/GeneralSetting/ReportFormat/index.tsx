@@ -6,6 +6,7 @@ import { CommonModal } from "../../../Common";
 import BillReceipt80mm from "./BillReceipt80mm";
 import BillReceiptA4B2B from "./BillReceiptA4B2B";
 import BillReceiptA4B2BType2 from "./BillReceiptA4B2BType2";
+import BillReceiptA4B2BType3 from "./BillReceiptA4B2BType3";
 import BillReceipt80mmB2C from "./BillReceipt80mmB2C";
 import BillReceipt80mmB2CType2 from "./BillReceipt80mmB2CType2";
 import BillReceipt80mmType2 from "./BillReceipt80mmType2";
@@ -114,6 +115,7 @@ const ReportFormats = () => {
     2: [
       { value: "a4_b2b_invoice", label: "A4 B2B Invoice", component: <BillReceiptA4B2B bill={mockBill} /> },
       { value: "a4_b2b_invoice_type2", label: "A4 B2B Invoice (Type 2)", component: <BillReceiptA4B2BType2 bill={mockBill} /> },
+      { value: "a4_b2b_invoice_type3", label: "A4 B2B Invoice (Type 3)", component: <BillReceiptA4B2BType3 bill={mockBill} /> },
       { value: "b2b1", label: "B2B - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
       { value: "b2b1", label: "B2B - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
     ],

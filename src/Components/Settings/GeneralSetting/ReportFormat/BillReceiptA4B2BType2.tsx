@@ -35,9 +35,9 @@ const BillReceiptA4B2BType2 = forwardRef<HTMLDivElement, { bill: PosOrderBase }>
         const addr = company?.address;
         if (!addr) return [];
         return [
-            addr.address, 
-            addr.city?.name, 
-            addr.state?.name, 
+            addr.address,
+            addr.city?.name,
+            addr.state?.name,
             addr.country?.name,
             addr.pinCode ? `-${addr.pinCode}` : ""
         ].filter(Boolean);
@@ -47,10 +47,10 @@ const BillReceiptA4B2BType2 = forwardRef<HTMLDivElement, { bill: PosOrderBase }>
         const addr = bill?.customerId?.address?.[0];
         if (!addr) return [];
         return [
-            addr.addressLine1, 
-            addr.addressLine2, 
-            addr.city?.name, 
-            addr.state?.name, 
+            addr.addressLine1,
+            addr.addressLine2,
+            addr.city?.name,
+            addr.state?.name,
             addr.country?.name,
             addr.pinCode || ""
         ].filter(Boolean);
@@ -70,7 +70,7 @@ const BillReceiptA4B2BType2 = forwardRef<HTMLDivElement, { bill: PosOrderBase }>
         }
         const discAmt = (item.discountAmount || 0) + (item.additionalDiscountAmount || 0);
         const net = ((item.mrp || 0) - discAmt) * (item.qty || 0);
-        
+
         let taxAmt = 0;
         if (item.productId?.isSalesTaxIncluding) {
             taxAmt = net - (net / (1 + (taxPercent / 100)));
@@ -99,7 +99,7 @@ const BillReceiptA4B2BType2 = forwardRef<HTMLDivElement, { bill: PosOrderBase }>
     const dueAmount = Math.max(0, finalBillAmount - tendered);
 
     const formattedDate = bill.createdAt ? FormatDate(bill.createdAt) : FormatDate(new Date());
-    
+
     // Add 60 days for due date placeholder
     const dueDateObj = new Date(bill.createdAt || new Date());
     dueDateObj.setDate(dueDateObj.getDate() + 60);
@@ -107,7 +107,7 @@ const BillReceiptA4B2BType2 = forwardRef<HTMLDivElement, { bill: PosOrderBase }>
 
     return (
         <div ref={ref} id="last-bill-print" className="mx-auto w-[210mm] min-h-[297mm] bg-white text-black p-6 font-sans text-[11px] leading-snug flex flex-col">
-            
+
             {/* Header */}
             <div className="flex justify-between items-start mb-4">
                 <div className="pt-8">
@@ -119,7 +119,7 @@ const BillReceiptA4B2BType2 = forwardRef<HTMLDivElement, { bill: PosOrderBase }>
                         </h2>
                     )}
                 </div>
-                
+
                 <div className="text-right">
                     <div className="font-bold text-[16px]">Tax Invoice</div>
                     <div className="font-bold text-[14px]">{company?.name || "VasyERP Solution Private LTD"}</div>
@@ -150,7 +150,7 @@ const BillReceiptA4B2BType2 = forwardRef<HTMLDivElement, { bill: PosOrderBase }>
             <div className="flex justify-between text-[11px] mb-4">
                 <div className="flex flex-col flex-1">
                     <div className="font-bold">Buyer :- {bill?.customerId?.firstName ? `${bill.customerId.firstName} ${bill.customerId.lastName || ""}` : "Customer name"}</div>
-                    
+
                     {getCustomerAddressFields().length > 0 ? (
                         <>
                             <div>Address:- {getCustomerAddressFields()[0] || ""}</div>
@@ -188,7 +188,7 @@ const BillReceiptA4B2BType2 = forwardRef<HTMLDivElement, { bill: PosOrderBase }>
                     <div className="flex w-full justify-between mt-1 items-start">
                         <span className="font-bold">Payment Terms</span>
                         <span>:</span>
-                        <span className="w-28 text-right break-words leading-tight">Payment term<br/>name</span>
+                        <span className="w-28 text-right break-words leading-tight">Payment term<br />name</span>
                     </div>
                 </div>
             </div>
@@ -205,7 +205,7 @@ const BillReceiptA4B2BType2 = forwardRef<HTMLDivElement, { bill: PosOrderBase }>
                         <th className="p-1 font-normal w-[10%]">Rate</th>
                         <th className="p-1 font-normal w-[8%]">Discount</th>
                         <th className="p-1 font-normal w-[8%]">Tax Rate</th>
-                        <th className="p-1 font-normal w-[12%]">Tax<br/>Amount</th>
+                        <th className="p-1 font-normal w-[12%]">Tax<br />Amount</th>
                         <th className="p-1 text-right px-2 font-normal w-[14%]">Total</th>
                     </tr>
                 </thead>
@@ -214,7 +214,7 @@ const BillReceiptA4B2BType2 = forwardRef<HTMLDivElement, { bill: PosOrderBase }>
                         const taxPercent = getTaxPercent(item);
                         const discAmt = (item.discountAmount || 0) + (item.additionalDiscountAmount || 0);
                         const net = ((item.mrp || 0) - discAmt) * (item.qty || 0);
-                        
+
                         let taxAmt = 0;
                         if (item.productId?.isSalesTaxIncluding) {
                             taxAmt = net - (net / (1 + (taxPercent / 100)));
@@ -344,7 +344,7 @@ const BillReceiptA4B2BType2 = forwardRef<HTMLDivElement, { bill: PosOrderBase }>
                         <span className="w-24 text-right">{Number(dueAmount).toFixed(3)}</span>
                     </div>
                     <div className="flex justify-between mb-1">
-                        <span className="leading-tight">Received<br/>Amount</span>
+                        <span className="leading-tight">Received<br />Amount</span>
                         <span className="leading-none mt-auto">:</span>
                         <span className="w-24 text-right mt-auto">{Number(tendered).toFixed(3)}</span>
                     </div>
@@ -428,8 +428,8 @@ const BillReceiptA4B2BType2 = forwardRef<HTMLDivElement, { bill: PosOrderBase }>
 
             {/* Signature Area */}
             {/* <div className="flex w-full justify-end pr-6 mb-8 mt-4 relative"> */}
-                {/* Simulated signature cursive text */}
-                {/* <div className="absolute right-8 -top-12 opacity-80" style={{ fontFamily: "cursive", fontSize: "28px", color: "black", transform: "rotate(-10deg)" }}>
+            {/* Simulated signature cursive text */}
+            {/* <div className="absolute right-8 -top-12 opacity-80" style={{ fontFamily: "cursive", fontSize: "28px", color: "black", transform: "rotate(-10deg)" }}>
                     Signature
                 </div>
                 <div className="border-t border-black w-[150px] text-center pt-1 font-bold text-[10px]">

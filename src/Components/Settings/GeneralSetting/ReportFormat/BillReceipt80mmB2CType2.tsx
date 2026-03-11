@@ -11,9 +11,9 @@ const BillReceipt80mmB2CType2 = forwardRef<HTMLDivElement, { bill: PosOrderBase 
         if (!addr) return null;
 
         const parts = [
-            addr.address, 
-            addr.city?.name, 
-            addr.state?.name, 
+            addr.address,
+            addr.city?.name,
+            addr.state?.name,
             addr.country?.name
         ].filter(Boolean);
 
@@ -36,7 +36,7 @@ const BillReceipt80mmB2CType2 = forwardRef<HTMLDivElement, { bill: PosOrderBase 
         month: "2-digit",
         year: "numeric"
     });
-    
+
     // Formatting time like "05:44 PM"
     const formattedTime = dateObj.toLocaleTimeString("en-US", {
         hour: "2-digit",
@@ -46,7 +46,7 @@ const BillReceipt80mmB2CType2 = forwardRef<HTMLDivElement, { bill: PosOrderBase 
 
     return (
         <div ref={ref} id="last-bill-print" className="mx-auto w-[80mm] bg-white text-black p-4 font-serif text-[12px] leading-snug flex flex-col items-center">
-            
+
             {/* Logo / Header */}
             <div className="text-center w-full mb-2">
                 {company?.logo ? (
@@ -119,7 +119,7 @@ const BillReceipt80mmB2CType2 = forwardRef<HTMLDivElement, { bill: PosOrderBase 
                     <span>Change Qatar Riyals</span>
                     <span>{Number(change || 0).toFixed(3)}</span>
                 </div>
-                
+
                 <div className="flex w-full items-center mb-1">
                     <span>***</span>
                     <div className="flex-1 border-t border-dashed border-black mx-1"></div>

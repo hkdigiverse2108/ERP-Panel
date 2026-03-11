@@ -35,9 +35,9 @@ const BillReceiptA4B2B = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ b
         if (!addr) return null;
 
         const parts = [
-            addr.address, 
-            addr.city?.name, 
-            addr.state?.name, 
+            addr.address,
+            addr.city?.name,
+            addr.state?.name,
             addr.country?.name
         ].filter(Boolean);
 
@@ -53,10 +53,10 @@ const BillReceiptA4B2B = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ b
         if (!addr) return "";
 
         const parts = [
-            addr.addressLine1, 
-            addr.addressLine2, 
-            addr.city?.name, 
-            addr.state?.name, 
+            addr.addressLine1,
+            addr.addressLine2,
+            addr.city?.name,
+            addr.state?.name,
             addr.country?.name
         ].filter(Boolean);
 
@@ -82,7 +82,7 @@ const BillReceiptA4B2B = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ b
         }
         const discAmt = (item.discountAmount || 0) + (item.additionalDiscountAmount || 0);
         const net = ((item.mrp || 0) - discAmt) * (item.qty || 0);
-        
+
         // Detailed tax calc
         let taxAmt = 0;
         if (item.productId?.isSalesTaxIncluding) {
@@ -215,7 +215,7 @@ const BillReceiptA4B2B = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ b
                             const taxPercent = getTaxPercent(item);
                             const discAmt = (item.discountAmount || 0) + (item.additionalDiscountAmount || 0);
                             const net = ((item.mrp || 0) - discAmt) * (item.qty || 0);
-                            
+
                             let taxAmt = 0;
                             if (item.productId?.isSalesTaxIncluding) {
                                 taxAmt = net - (net / (1 + (taxPercent / 100)));
@@ -244,7 +244,7 @@ const BillReceiptA4B2B = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ b
                                     <td className="border-r border-black p-1">{Number(item.discountAmount || 0).toFixed(3)}(%)</td>
                                     <td className="border-r border-black p-1">{Number(item.additionalDiscountAmount || 0).toFixed(3)}(%)</td>
                                     <td className="border-r border-black p-1 font-bold">
-                                        {Number(taxableVal).toFixed(3)}<br/><span className="text-[8px] font-normal">{taxAmt > 0 && "55Rs."}</span>
+                                        {Number(taxableVal).toFixed(3)}<br /><span className="text-[8px] font-normal">{taxAmt > 0 && "55Rs."}</span>
                                     </td>
                                     <td className="border-r border-black p-1 font-bold">{taxPercent > 0 ? `${taxPercent.toFixed(1)}%` : "6%"}</td>
                                     <td className="border-r border-black p-1">{Number(taxAmt).toFixed(3)}</td>
