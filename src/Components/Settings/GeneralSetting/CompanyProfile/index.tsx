@@ -4,7 +4,7 @@ import { CommonSwitch } from "../../../../Attribute";
 import { ROUTES } from "../../../../Constants";
 import { useAppSelector } from "../../../../Store/hooks";
 import { CommonCard, CommonImageBox } from "../../../Common";
-import { FormatDate } from "../../../../Utils";
+import { FormatDate, getStrength, setCompanyStrength } from "../../../../Utils";
 
 const CompanyProfile = () => {
   const { company = {}, financialYear } = useAppSelector((state) => state.company);
@@ -79,6 +79,9 @@ const CompanyProfile = () => {
     { label: "Report Formats Logo", src: company?.reportFormatLogo, alt: "reportFormatLogo" },
     { label: "Authorised Signature", src: company?.authorizedSignature, alt: "authorizedSignature" },
   ];
+
+  const companyStrength = getStrength(CompanyDetails)
+  setCompanyStrength(companyStrength)
 
   const topContent = (
     <Grid size="auto">

@@ -1,19 +1,18 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { CircularProgress, Grid, Tooltip } from "@mui/material";
 import { Form, Formik, useFormikContext } from "formik";
-import { useEffect, useRef, useState, type FC } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { Mutations, Queries } from "../../../../Api";
 import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../../Attribute";
-import { STORAGE_KEYS } from "../../../../Constants";
 import { useAppSelector } from "../../../../Store/hooks";
-import type { EditPosCashRegisterPayload, PosCashRegisterFormInitialValues, PosCashRegisterValues, PosOrderBase } from "../../../../Types";
+import type { EditPosCashRegisterPayload, PosCashRegisterFormInitialValues, PosCashRegisterValues } from "../../../../Types";
 import { FormatDate, FormatDateTime, FormatTime, GenerateOptions, RemoveEmptyFields } from "../../../../Utils";
 import { CurrentRegisterSchema } from "../../../../Utils/ValidationSchemas";
 import { CommonModal } from "../../../Common";
 import CloseBillRegister from "./CloseRegister";
 
-const CurrentRegister: FC<{ lastBill?: PosOrderBase }> = ({ lastBill }) => {
+const CurrentRegister = () => {
   const [open, setOpen] = useState(false);
   const { PosProduct } = useAppSelector((state) => state.pos);
   const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({}, open);
@@ -131,7 +130,6 @@ const CurrentRegister: FC<{ lastBill?: PosOrderBase }> = ({ lastBill }) => {
       startTime: FormatTime(cashRegisterDetails?.data?.createdAt),
       endDate: FormatDate(new Date().toISOString()),
       endTime: FormatTime(new Date().toISOString()),
-      user: JSON.parse(localStorage.getItem(STORAGE_KEYS.USER) || "{}")?.name || "Admin",
       bankAccountId,
       bankTransferAmount: Number(bankTransferAmount) || 0,
       salesManId: PosProduct.salesManId,
@@ -229,7 +227,7 @@ const CurrentRegister: FC<{ lastBill?: PosOrderBase }> = ({ lastBill }) => {
           </Formik>
         </div>
       </CommonModal>
-      <div className="hidden">{printData && <CloseBillRegister ref={contentRef} data={printData} bill={lastBill} />}</div>
+      <div className="hidden">{printData && <CloseBillRegister ref={contentRef} data={printData} />}</div>
     </>
   );
 };

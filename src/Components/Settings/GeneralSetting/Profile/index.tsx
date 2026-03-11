@@ -1,8 +1,9 @@
-import { Grid } from "@mui/material";
+import { Grid, Tooltip } from "@mui/material";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../../../../Constants";
 import { useAppSelector } from "../../../../Store/hooks";
 import { CommonCard } from "../../../Common";
+import { getCompanyStrength, getStrength } from "../../../../Utils";
 
 const Profile = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -55,13 +56,29 @@ const Profile = () => {
       ],
     },
   ];
+
+  const userStrength = getStrength(CompanyDetails)
+  const companyStrength = getCompanyStrength();
+  const totalFilled = userStrength.filled + companyStrength.filled;
+  const totalFields = userStrength.total + companyStrength.total;
+  const mergedPercent = Math.round((totalFilled / totalFields) * 100);
+
   return (
     <Grid container spacing={2}>
       <Grid size={12} className="p-5 border border-gray-200 rounded-lg dark:border-gray-800">
         <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex flex-col items-center w-full gap-6 xl:flex-row">
             <div className="flex items-center bg-brand-500 text-white rounded-full border border-gray-200 dropdown-toggle dark:border-gray-800">
-              <span className="overflow-hidden rounded-full flex h-18 w-18 text-2xl justify-center items-center">{profileInitials}</span>
+             <Tooltip title={`${mergedPercent}%`} arrow>               
+              <div className="relative flex items-center justify-center w-20 h-20">
+                    <svg className="absolute w-full h-full " viewBox="0 0 40 40" style={{ transform: "rotate(-90deg)" }} >
+                      <circle cx="20" cy="20" r="18" className="stroke-gray-200 dark:stroke-gray-700" strokeWidth="4" fill="none"/>
+                      <circle cx="20" cy="20" r="18" className="stroke-green-500 dark:stroke-green-600 transition-all duration-500" strokeWidth="4" strokeLinecap="round" fill="none" strokeDasharray={2 * Math.PI * 18} strokeDashoffset={(1 - mergedPercent / 100) * 2 * Math.PI * 18}/>
+                    </svg>
+                    <div className="flex items-center justify-center bg-brand-500 text-white rounded-full w-16 h-16 z-10">{profileInitials}</div>
+              </div>
+              </Tooltip>
+              
             </div>
             <div className="order-3 xl:order-2">
               <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">{user?.fullName}</h4>
