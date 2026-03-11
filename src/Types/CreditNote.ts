@@ -1,15 +1,16 @@
 import type { AccountBase } from "./Account";
-import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
 
 export interface CreditNoteFormValues {
+  type?: string;
   voucherNumber?: string;
   date?: string;
-  fromAccountId?: string;
-  toAccountId?: string;
+  bankAccountId?: string;
   amount?: string;
   description?: string;
   isActive?: boolean;
   _submitAction?: string;
+  phoneNo?: PhoneNumberType;
 }
 
 export type AddCreditNotePayload = CreditNoteFormValues;
