@@ -1,14 +1,14 @@
-import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { Queries } from "../../Api/Queries";
 import type { AppGridColDef, ReceivableBase } from "../../Types";
+import { DateConfig } from "../../Utils";
 import { useDataGrid } from "../../Utils/Hooks";
 import { CommonCard, CommonDataGrid } from "../Common";
 
 const TodayReceivable = () => {
-  const [range] = useState({ start: dayjs().startOf("day"), end: dayjs().endOf("day") });
-
-  const { data, isLoading, isFetching } = Queries.useGetDashboardReceivable({ startDate: range.start, endDate: range.end });
+  const [range] = useState({ start: DateConfig.utc().startOf("day"), end: DateConfig.utc().endOf("day") });
+  const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }), [range]);
+  const { data, isLoading, isFetching } = Queries.useGetDashboardReceivable(queryParams);
 
   const allRowData = useMemo(() => data?.data?.map((item) => ({ ...item, id: item?._id })) || [], [data]);
   const totalRows = data?.data?.length || 0;

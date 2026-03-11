@@ -1,15 +1,17 @@
 import { Box, CircularProgress, Grid } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Queries } from "../../Api";
 import { CommonDateRangeSelector } from "../../Attribute";
 import { CommonCard } from "../Common";
+import { DateConfig } from "../../Utils";
 
 const SalesAndPurchase = () => {
-  const [range, setRange] = useState({ start: dayjs(), end: dayjs() });
+  const [range, setRange] = useState({ start: DateConfig.utc().startOf("week"), end: DateConfig.utc().endOf("week") });
+  const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }), [range]);
 
-  const { data: salesAndPurchaseData, isLoading: isSalesAndPurchaseLoading, isFetching: isSalesAndPurchaseFetching } = Queries.useGetDashboardSalesAndPurchaseGraph({ startDate: range.start, endDate: range.end });
+  const { data: salesAndPurchaseData, isLoading: isSalesAndPurchaseLoading, isFetching: isSalesAndPurchaseFetching } = Queries.useGetDashboardSalesAndPurchaseGraph(queryParams);
 
   const chartData = salesAndPurchaseData?.data || [];
   const isLoading = isSalesAndPurchaseLoading || isSalesAndPurchaseFetching;

@@ -1,17 +1,19 @@
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { CommonCard } from "../Common";
 import { Box, CircularProgress, Grid } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { CommonDateRangeSelector, CommonSelect } from "../../Attribute";
 import { Queries } from "../../Api";
 import { OPTION_TYPE } from "../../Data";
+import { DateConfig } from "../../Utils";
 
 const Transaction = () => {
-  const [range, setRange] = useState({ start: dayjs(), end: dayjs() });
+  const [range, setRange] = useState({ start: DateConfig.utc().startOf("month"), end: DateConfig.utc().endOf("month") });
   const [values, setValues] = useState<string[]>([OPTION_TYPE[1].value]);
+  const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }), [range]);
 
-  const { data: transactionData, isLoading: isTransactionLoading, isFetching: isTransactionFetching } = Queries.useGetDashboardTransactionGraph({ startDate: range.start, endDate: range.end, typeFilter: values[0] });
+  const { data: transactionData, isLoading: isTransactionLoading, isFetching: isTransactionFetching } = Queries.useGetDashboardTransactionGraph({ ...queryParams, typeFilter: values[0] });
 
   const chartData = transactionData?.data || [];
   const isLoading = isTransactionLoading || isTransactionFetching;

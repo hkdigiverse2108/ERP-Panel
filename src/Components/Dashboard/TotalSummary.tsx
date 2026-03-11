@@ -1,15 +1,15 @@
 import { CircularProgress, Grid, Paper, Typography } from "@mui/material";
-import dayjs from "dayjs";
-import { useState } from "react";
-import { CommonDateRangeSelector, CommonSelect } from "../../Attribute";
-import { CommonCard } from "../Common";
+import { useMemo, useState } from "react";
 import { Queries } from "../../Api";
+import { CommonDateRangeSelector, CommonSelect } from "../../Attribute";
+import { DateConfig } from "../../Utils";
+import { CommonCard } from "../Common";
 
 const TotalSummary = () => {
   const [values, setValues] = useState<string[]>([]);
-  const [range, setRange] = useState({ start: dayjs(), end: dayjs() });
-
-  const { data, isLoading, isFetching } = Queries.useGetDashboardTransaction({ startDate: range.start, endDate: range.end });
+  const [range, setRange] = useState({ start: DateConfig.utc().startOf("day"), end: DateConfig.utc().endOf("day") });
+  const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }), [range]);
+  const { data, isLoading, isFetching } = Queries.useGetDashboardTransaction(queryParams);
 
   const stats = [
     { type: "totalSales", label: "Total Sales", value: "₹0", color: "bg-brand-100! dark:bg-brand-800!" },
@@ -68,7 +68,7 @@ const TotalSummary = () => {
   );
 
   return (
-    <CommonCard grid={{ xs: 12}} topContent={topContent}>
+    <CommonCard grid={{ xs: 12 }} topContent={topContent}>
       <Grid container spacing={1.5} p={1.5}>
         {stats.map((item, index) => (
           <Grid size={{ xs: 6, sm: 4, lg: 3, xl: 2 }} key={index}>
