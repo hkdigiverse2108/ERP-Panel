@@ -103,7 +103,7 @@ const DebitNoteForm = () => {
                     <CommonValidationTextField name="amount" label="Amount" type="number" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationSelect name="bankAccountId" label="Bank Account" options={GenerateOptions(bankAccountData?.data)} isLoading={bankAccountLoading} grid={{ xs: 12, md: 4 }} required />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationTextField name="description" label="Description" grid={{ xs: 12 }} multiline rows={4} />
+                    <CommonValidationTextField name="description" label="Description" grid={{ xs: 12, md:8 }} multiline/>
                     <CommonFormImageBox name="file" label="File" type="image" grid={{ xs: 12 }} onUpload={handleUpload} onDelete={() => setFieldValue("file", null)} />
 
                     {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
