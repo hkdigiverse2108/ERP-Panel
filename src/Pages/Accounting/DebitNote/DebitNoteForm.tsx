@@ -19,6 +19,7 @@ const DebitNoteForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
+  console.log(data);
   const permission = usePagePermission(PAGE_TITLE.ACCOUNTING.DEBIT_NOTE.BASE);
   const [activeImageKey, setActiveImageKey] = useState<"file" | null>(null);
   const dispatch = useAppDispatch();
@@ -44,6 +45,7 @@ const DebitNoteForm = () => {
     }),
     [data],
   );
+  console.log(initialValues);
   const FormikImageSync = <T extends FormikValues>({ activeKey, clearActiveKey }: ImageSyncProps) => {
     const { selectedFiles } = useAppSelector((state) => state.modal);
     const dispatch = useAppDispatch();
