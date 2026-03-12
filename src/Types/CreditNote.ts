@@ -8,7 +8,7 @@ export interface CreditNoteFormValues {
   amount?: string;
   description?: string;
   isActive?: boolean;
-  file?: string | File | null;
+  image?: string | File | null;
   _submitAction?: string;
   phoneNo?: PhoneNumberType;
 }

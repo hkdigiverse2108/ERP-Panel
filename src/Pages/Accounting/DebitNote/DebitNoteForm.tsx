@@ -21,7 +21,7 @@ const DebitNoteForm = () => {
   const { data } = location.state || {};
   console.log(data);
   const permission = usePagePermission(PAGE_TITLE.ACCOUNTING.DEBIT_NOTE.BASE);
-  const [activeImageKey, setActiveImageKey] = useState<"file" | null>(null);
+  const [activeImageKey, setActiveImageKey] = useState<"image" | null>(null);
   const dispatch = useAppDispatch();
   const { data: bankAccountData, isLoading: bankAccountLoading } = Queries.useGetBankDropdown();
   const { mutate: addDebitNote, isPending: isAddLoading } = Mutations.useAddDebitNote();
@@ -63,7 +63,7 @@ const DebitNoteForm = () => {
     return null;
   };
   const handleUpload = () => {
-    setActiveImageKey("file");
+    setActiveImageKey("image");
     dispatch(setUploadModal({ open: true, type: "image" }));
   };
 
@@ -106,7 +106,7 @@ const DebitNoteForm = () => {
                     <CommonValidationSelect name="bankAccountId" label="Bank Account" options={GenerateOptions(bankAccountData?.data)} isLoading={bankAccountLoading} grid={{ xs: 12, md: 4 }} required />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="description" label="Description" grid={{ xs: 12, md:8 }} multiline/>
-                    <CommonFormImageBox name="file" label="File" type="image" grid={{ xs: 12 }} onUpload={handleUpload} onDelete={() => setFieldValue("file", null)} />
+                    <CommonFormImageBox name="image" label="Image" type="image" grid={{ xs: 12 }} onUpload={handleUpload} onDelete={() => setFieldValue("image", null)} />
 
                     {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                   </Grid>
