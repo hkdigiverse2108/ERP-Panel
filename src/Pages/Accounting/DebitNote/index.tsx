@@ -9,6 +9,7 @@ import { BREADCRUMBS } from "../../../Data";
 import type { DebitNoteBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { FormatDate } from "../../../Utils";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const DebitNote = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -33,6 +34,7 @@ const DebitNote = () => {
   const columns: GridColDef<DebitNoteBase>[] = [
     { field: "amount", headerName: "Amount", width: 200 },
     { field: "date", headerName: "Date", width: 200, valueGetter: (v) => FormatDate(v) },
+    CommonObjectPropertyColumn<DebitNoteBase>("bankName", "bankAccountId", "name", { headerName: "Bank name", width: 300 }),
     CommonPhoneColumns("phoneNo", { headerName: "Phone No", width: 200 }),
     { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete

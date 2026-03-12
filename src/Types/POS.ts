@@ -30,14 +30,12 @@ export interface AdditionalChargeType {
   chargeId: string;
   value: number;
   taxId: string;
-  accountGroupId: string;
   totalAmount: number;
 }
 
-export interface AdditionalChargeRowType extends Omit<AdditionalChargeType, "chargeId" | "taxId" | "accountGroupId"> {
+export interface AdditionalChargeRowType extends Omit<AdditionalChargeType, "chargeId" | "taxId"> {
   chargeId: string;
   taxId: string;
-  accountGroupId: string;
 }
 
 export interface PosProductType {

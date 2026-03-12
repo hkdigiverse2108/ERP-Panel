@@ -129,13 +129,6 @@ export const PAGE_TITLE = {
   },
   ACCOUNTING: {
     BASE: "Accounting",
-    ACCOUNT_GROUP: {
-      BASE: "Account Group",
-      TREE: "Account Group Tree",
-    },
-    ACCOUNT: {
-      BASE: "Account",
-    },
     CREDIT_NOTE: {
       BASE: "Credit Note",
       ADD: "Add Credit Note",
@@ -145,11 +138,6 @@ export const PAGE_TITLE = {
       BASE: "Debit Note",
       ADD: "Add Debit Note",
       EDIT: "Edit Debit Note",
-    },
-    JOURNAL_VOUCHER: {
-      BASE: "Journal Voucher",
-      ADD: "Add Journal Voucher",
-      EDIT: "Edit Journal Voucher",
     },
   },
 } as const;

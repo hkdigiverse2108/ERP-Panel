@@ -1,6 +1,11 @@
 import { Navigate } from "react-router-dom";
 import { CompanyForm, UserForm } from "../Components/Settings/GeneralSetting";
 import { PAGE_TITLE, ROUTES } from "../Constants";
+import CreditNote from "../Pages/Accounting/CreditNote";
+import CreditNoteForm from "../Pages/Accounting/CreditNote/CreditNoteForm";
+import DebitNote from "../Pages/Accounting/DebitNote";
+import DebitNoteForm from "../Pages/Accounting/DebitNote/DebitNoteForm";
+import ChangePassword from "../Pages/Auth/ChangePassword";
 import SignInForm from "../Pages/Auth/SignInForm";
 import Bank from "../Pages/Bank/Bank";
 import BankForm from "../Pages/Bank/Bank/BankForm";
@@ -9,9 +14,18 @@ import PaymentList from "../Pages/Bank/Payment";
 import PaymentForm from "../Pages/Bank/Payment/PaymentForm";
 import Contact from "../Pages/Contacts";
 import ContactForm from "../Pages/Contacts/ContactForm";
+import Coupon from "../Pages/CRM/Coupon";
+import CouponForm from "../Pages/CRM/Coupon/CouponForm";
+import Loyalty from "../Pages/CRM/Loyalty";
+import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
 import Dashboard from "../Pages/Dashboard";
 import Employees from "../Pages/Employee";
 import EmployeeForm from "../Pages/Employee/EmployeeForm";
+import Permission from "../Pages/Employee/Permission";
+import BillOfMaterials from "../Pages/Inventory/BillOfLiveProduct";
+import BillOfMaterialsForm from "../Pages/Inventory/BillOfLiveProduct/BillOfLiveProductForm";
+import MaterialConsumption from "../Pages/Inventory/MaterialConsumption";
+import MaterialConsumptionForm from "../Pages/Inventory/MaterialConsumption/MaterialConsumptionForm";
 import Product from "../Pages/Inventory/Product";
 import ItemForm from "../Pages/Inventory/Product/ItemForm";
 import ProductForm from "../Pages/Inventory/Product/ProductForm";
@@ -19,35 +33,16 @@ import Recipe from "../Pages/Inventory/Recipe";
 import RecipeForm from "../Pages/Inventory/Recipe/RecipeFrom";
 import Stocks from "../Pages/Inventory/Stock";
 import StockVerification from "../Pages/Inventory/StockVerification";
-import NewPos from "../Pages/POS/New";
-import GeneralSetting from "../Pages/Settings/GeneralSetting";
-import ChangePassword from "../Pages/Auth/ChangePassword";
 import StockVerificationForm from "../Pages/Inventory/StockVerification/StockVerificationForm";
-import BillOfMaterials from "../Pages/Inventory/BillOfLiveProduct";
-import BillOfMaterialsForm from "../Pages/Inventory/BillOfLiveProduct/BillOfLiveProductForm";
-import Permission from "../Pages/Employee/Permission";
-import SupplierBill from "../Pages/Purchase/SupplierBill";
-import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
-import MaterialConsumption from "../Pages/Inventory/MaterialConsumption";
-import MaterialConsumptionForm from "../Pages/Inventory/MaterialConsumption/MaterialConsumptionForm";
+import CreditNoteList from "../Pages/POS/CreditNote";
+import NewPos from "../Pages/POS/New";
+import OrderList from "../Pages/POS/OrderList";
+import SalesRegister from "../Pages/POS/SalesRegister";
 import PurchaseOrder from "../Pages/Purchase/PurchaseOrder";
 import PurchaseOrderForm from "../Pages/Purchase/PurchaseOrder/PurchaseOrderForm";
-import Coupon from "../Pages/CRM/Coupon";
-import CouponForm from "../Pages/CRM/Coupon/CouponForm";
-import LoyaltyForm from "../Pages/CRM/Loyalty/LoyaltyForm";
-import Loyalty from "../Pages/CRM/Loyalty";
-import OrderList from "../Pages/POS/OrderList";
-import CreditNoteList from "../Pages/POS/CreditNote";
-import AccountGroup from "../Pages/Accounting/AccountGroup";
-import AccountGroupTree from "../Pages/Accounting/AccountGroup/AccountGroupTree";
-import Account from "../Pages/Accounting/Account";
-import CreditNote from "../Pages/Accounting/CreditNote";
-import CreditNoteForm from "../Pages/Accounting/CreditNote/CreditNoteForm";
-import SalesRegister from "../Pages/POS/SalesRegister";
-import DebitNote from "../Pages/Accounting/DebitNote";
-import DebitNoteForm from "../Pages/Accounting/DebitNote/DebitNoteForm";
-import JournalVoucher from "../Pages/Accounting/JournalVoucher";
-import JournalVoucherForm from "../Pages/Accounting/JournalVoucher/JournalVoucherForm";
+import SupplierBill from "../Pages/Purchase/SupplierBill";
+import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
+import GeneralSetting from "../Pages/Settings/GeneralSetting";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -107,17 +102,12 @@ export const PageRoutes = [
   { path: ROUTES.LOYALTY.BASE, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <Loyalty /> },
   { path: ROUTES.LOYALTY.ADD_EDIT, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <LoyaltyForm /> },
 
-  { path: ROUTES.ACCOUNTING.ACCOUNT_GROUP.BASE, name: PAGE_TITLE.ACCOUNTING.ACCOUNT_GROUP.BASE, element: <AccountGroup /> },
-  { path: ROUTES.ACCOUNTING.ACCOUNT_GROUP.TREE, name: PAGE_TITLE.ACCOUNTING.ACCOUNT_GROUP.BASE, element: <AccountGroupTree /> },
-  { path: ROUTES.ACCOUNTING.ACCOUNT.BASE, name: PAGE_TITLE.ACCOUNTING.ACCOUNT.BASE, element: <Account /> },
   { path: ROUTES.ACCOUNTING.CREDIT_NOTE.BASE, name: PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.BASE, element: <CreditNote /> },
   { path: ROUTES.ACCOUNTING.CREDIT_NOTE.ADD_EDIT, name: PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.BASE, element: <CreditNoteForm /> },
 
   { path: ROUTES.POS.SALES_REGISTER, name: PAGE_TITLE.POS.SALES_REGISTER, element: <SalesRegister /> },
   { path: ROUTES.ACCOUNTING.DEBIT_NOTE.BASE, name: PAGE_TITLE.ACCOUNTING.DEBIT_NOTE.BASE, element: <DebitNote /> },
   { path: ROUTES.ACCOUNTING.DEBIT_NOTE.ADD_EDIT, name: PAGE_TITLE.ACCOUNTING.DEBIT_NOTE.BASE, element: <DebitNoteForm /> },
-  { path: ROUTES.ACCOUNTING.JOURNAL_VOUCHER.BASE, name: PAGE_TITLE.ACCOUNTING.JOURNAL_VOUCHER.BASE, element: <JournalVoucher /> },
-  { path: ROUTES.ACCOUNTING.JOURNAL_VOUCHER.ADD_EDIT, name: PAGE_TITLE.ACCOUNTING.JOURNAL_VOUCHER.BASE, element: <JournalVoucherForm /> },
 ];
 
 export const AuthRoutes = [

@@ -211,19 +211,6 @@ export const URL_KEYS = {
     ADD: "/additional-charge/add",
     EDIT: "/additional-charge/edit",
   },
-  ACCOUNT: {
-    BASE: "/account",
-    DROPDOWN: "/account/dropdown",
-    ALL: "/account/all",
-    ADD: "/account/add",
-    EDIT: "/account/edit",
-  },
-  ACCOUNT_GROUP: {
-    BASE: "/account-group",
-    DROPDOWN: "/account-group/dropdown",
-    ALL: "/account-group/all",
-    TREE: "/account-group/tree",
-  },
   TERMS_CONDITION: {
     BASE: "/terms-condition",
     DROPDOWN: "/terms-condition/dropdown",
@@ -298,13 +285,6 @@ export const URL_KEYS = {
     EDIT: "/debit-note/edit",
     DELETE: "/debit-note/delete",
   },
-  JOURNAL_VOUCHER: {
-    BASE: "/journal-voucher",
-    ALL: "/journal-voucher/all",
-    ADD: "/journal-voucher/add",
-    EDIT: "/journal-voucher/edit",
-    DELETE: "/journal-voucher/delete",
-  },
   RETURN_POS_ORDER: {
     BASE: "/return-pos-order",
     ALL: "/return-pos-order/all",
@@ -312,11 +292,18 @@ export const URL_KEYS = {
     EDIT: "/return-pos-order/edit",
     DELETE: "/return-pos-order/delete",
   },
-  
+
   SALES_REGISTER: {
     BASE: "/sales-register",
     ADD: "/sales-register/add",
     EDIT: "/sales-register/edit",
     ALL: "/sales-register/all",
+  },
+  EXPENSE: {
+    BASE: "/expense",
+    ALL: "/expense/all",
+    ADD: "/expense/add",
+    EDIT: "/expense/edit",
+    DELETE: "/expense/delete",
   },
 } as const;

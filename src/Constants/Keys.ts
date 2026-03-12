@@ -197,15 +197,6 @@ export const KEYS = {
     EDIT: "additional-charge-edit",
     DELETE: "additional-charge-delete",
   },
-  ACCOUNT: {
-    BASE: "account",
-    ADD: "account-add",
-    EDIT: "account-edit",
-    DELETE: "account-delete",
-  },
-  ACCOUNT_GROUP: {
-    BASE: "account-group",
-  },
   TERMS_CONDITION: {
     BASE: "terms-condition",
     ADD: "terms-condition-add",
@@ -265,16 +256,16 @@ export const KEYS = {
     EDIT: "debit-note-edit",
     DELETE: "debit-note-delete",
   },
-  JOURNAL_VOUCHER: {
-    BASE: "journal-voucher",
-    ADD: "journal-voucher-add",
-    EDIT: "journal-voucher-edit",
-    DELETE: "journal-voucher-delete",
-  },
   RETURN_POS_ORDER: {
     BASE: "return-pos-order",
     ADD: "return-pos-order-add",
     EDIT: "return-pos-order-edit",
     DELETE: "return-pos-order-delete",
+  },
+  EXPENSE: {
+    BASE: "expense",
+    ADD: "expense-add",
+    EDIT: "expense-edit",
+    DELETE: "expense-delete",
   },
 };

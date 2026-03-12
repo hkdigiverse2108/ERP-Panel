@@ -99,13 +99,6 @@ export const ROUTES = {
     ADD_EDIT: "/purchase-order/add-edit",
   },
   ACCOUNTING: {
-    ACCOUNT_GROUP: {
-      BASE: "/accounting/account-group",
-      TREE: "/accounting/account-group/tree",
-    },
-    ACCOUNT: {
-      BASE: "/accounting/account",
-    },
     CREDIT_NOTE: {
       BASE: "/accounting/credit-note",
       ADD_EDIT: "/accounting/credit-note/add-edit",
@@ -113,10 +106,6 @@ export const ROUTES = {
     DEBIT_NOTE: {
       BASE: "/accounting/debit-note",
       ADD_EDIT: "/accounting/debit-note/add-edit",
-    },
-    JOURNAL_VOUCHER: {
-      BASE: "/accounting/journal-voucher",
-      ADD_EDIT: "/accounting/journal-voucher/add-edit",
     },
   },
   SALES_REGISTER: {

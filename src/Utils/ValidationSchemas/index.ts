@@ -380,10 +380,10 @@ export const PosPaymentFormSchema = Yup.object({
   paidAmount: Validation("number", "Paid Amount", { required: false }),
   pendingAmount: Validation("number", "Pending Amount", { required: false }),
   kasar: Validation("number", "Kasar", { required: false }),
-  amount: Validation("number", "Amount"),
+  amount: Validation("number", "Amount", { required: true, extraRules: (s) => s.min(1, "Amount must be at least 1") }),
   remark: Validation("string", "Remark", { required: false }),
   isNonGST: Validation("boolean", "Is Non GST", { required: false }),
-  accountId: RequiredWhen("voucherType", [VOUCHER_TYPE[1].value], "Account", "string"),
+  // accountId: RequiredWhen("voucherType", [VOUCHER_TYPE[1].value], "Account", "string"),
 });
 
 export const PurchaseOrderFormSchema = Yup.object({
@@ -501,33 +501,6 @@ export const DebitNoteFormSchema = Yup.object().shape({
   amount: Validation("number", "Amount"),
   description: Validation("string", "Description", { required: false }),
   isActive: Yup.boolean(),
-});
-
-export const JournalVoucherFormSchema = Yup.object().shape({
-  paymentNo: Validation("string", "Payment No", { required: false }),
-  date: Validation("string", "Date"),
-  description: Validation("string", "Description", { required: false }),
-  status: Validation("string", "Status"),
-  entries: Yup.array()
-    .of(
-      Yup.object().shape({
-        accountId: Validation("string", "Account"),
-        debit: Validation("number", "Debit", { required: false, extraRules: (s) => s.transform((v, o) => (String(o).trim() === "" ? null : v)).nullable() }),
-        credit: Validation("number", "Credit", { required: false, extraRules: (s) => s.transform((v, o) => (String(o).trim() === "" ? null : v)).nullable() }),
-        description: Validation("string", "Description", { required: false }),
-      }),
-    )
-    .min(2, "At least two entries are required")
-    .test("equal-totals", "Total Debit must equal Total Credit", function (entries) {
-      if (!entries) return true;
-      const totalDebit = entries.reduce((acc, curr) => acc + Number(curr.debit || 0), 0);
-      const totalCredit = entries.reduce((acc, curr) => acc + Number(curr.credit || 0), 0);
-      return Math.abs(totalDebit - totalCredit) < 0.01 && totalDebit > 0;
-    })
-    .test("debit-or-credit", "Either Debit or Credit must be provided for all rows", function (entries) {
-      if (!entries) return true;
-      return entries.every((row: any) => Number(row.debit || 0) > 0 || Number(row.credit || 0) > 0);
-    }),
 });
 
 export const TermsConditionFormSchema = Yup.object({
