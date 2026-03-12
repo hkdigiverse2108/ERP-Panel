@@ -1,26 +1,23 @@
 import { Box, Grid } from "@mui/material";
-import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { Queries } from "../../../Api";
 import { CommonDateRangeSelector } from "../../../Attribute";
-import { AdvancedSearch, CalculateGridSummary, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter} from "../../../Components/Common";
+import { AdvancedSearch, CalculateGridSummary, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef } from "../../../Types";
 import type { PosCashRegisterBase } from "../../../Types/PosCashRegister";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, DateConfig, FormatDate, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
 
 const SalesRegister = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params, advancedFilter, updateAdvancedFilter } = useDataGrid({ active: false });
 
-  const [dateRange, setDateRange] = useState({ start: dayjs(), end: dayjs() });
-
+  const [dateRange, setDateRange] = useState({ start: DateConfig.utc().startOf("day"), end: DateConfig.utc().endOf("day") });
+  const queryParams = useMemo(() => ({ startDate: dateRange.start.toISOString(), endDate: dateRange.end.toISOString() }), [dateRange]);
   const { data: userDropdown, isLoading: userDropdownLoading } = Queries.useGetUserDropdown();
 
-  const queryParams = useMemo(() => ({ ...params, startDate: dateRange.start.format("YYYY-MM-DD"), endDate: dateRange.end.format("YYYY-MM-DD") }), [params, dateRange]);
-
-  const { data, isLoading, isFetching } = Queries.useGetPosCashRegister(queryParams);
+  const { data, isLoading, isFetching } = Queries.useGetPosCashRegister({ ...params, ...queryParams });
 
   const rows = useMemo(() => {
     const apiData = data?.data?.posCashRegister_data;
@@ -44,17 +41,17 @@ const SalesRegister = () => {
       width: 180,
       renderCell: (params) => {
         const s = params.row.salesManId;
-        return typeof s === "string" || !s ? "-" : s.name || "-";
+        return typeof s === "string" || !s ? "-" : s.fullName || "-";
       },
     },
-    { field: "createdAt", headerName: "From Date", width: 150, renderCell: (params) => FormatDate(params.value) },
-    { field: "updatedAt", headerName: "To Date", width: 150, renderCell: (params) => FormatDate(params.value) },
+    { field: "createdAt", headerName: "From Date", width: 100, renderCell: (params) => FormatDate(params.value) },
+    { field: "updatedAt", headerName: "To Date", width: 100, renderCell: (params) => FormatDate(params.value) },
     { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
-    { field: "openingCash", headerName: "Cash In Hand", width: 130 },
-    { field: "cashPayment", headerName: "Cash", width: 110 },
-    { field: "cardPayment", headerName: "Card", width: 110 },
-    { field: "upiPayment", headerName: "UPI", width: 110 },
-    { field: "payLater", headerName: "Pay Later", width: 110 },
+    { field: "openingCash", headerName: "Cash In Hand", width: 100 },
+    { field: "cashPayment", headerName: "Cash", width: 100 },
+    { field: "cardPayment", headerName: "Card", width: 100 },
+    { field: "upiPayment", headerName: "UPI", width: 100 },
+    { field: "payLater", headerName: "Pay Later", width: 100 },
     { field: "totalSales", headerName: "Total Sales", width: 130 },
     { field: "creditAdvanceRedeemed", headerName: "Credit/Advance Redeemed", width: 190 },
     { field: "salesReturn", headerName: "Sales Return Amount", width: 160 },
@@ -90,7 +87,7 @@ const SalesRegister = () => {
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <AdvancedSearch filter={filter}>
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <CommonDateRangeSelector value={dateRange} onChange={setDateRange} active="This Month" />
+            <CommonDateRangeSelector value={dateRange} onChange={setDateRange} />
           </Grid>
         </AdvancedSearch>
         <CommonCard hideDivider>

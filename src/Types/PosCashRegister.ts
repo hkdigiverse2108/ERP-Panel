@@ -1,5 +1,6 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
+import type { EmployeeBase } from "./Employee";
 
 export interface Denomination {
   currency?: number;
@@ -68,7 +69,7 @@ export interface EditPosCashRegisterPayload {
 
 export interface PosCashRegisterBase extends Omit<PosCashRegisterValues,"salesManId">, CommonDataType {
   companyId: CompanyBase;
-  salesManId?: string | { _id: string; name?: string } | null;
+  salesManId?: EmployeeBase;
 }
 
 export interface PosCashRegisterDataResponse extends PageStatus {
