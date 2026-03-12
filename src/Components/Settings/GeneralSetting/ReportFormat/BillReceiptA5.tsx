@@ -64,9 +64,9 @@ const BillReceiptA5 = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill
                     </div>
                     {company?.address?.state?.name && <div className="mt-1">State : {company.address.state.name} ({company?.address?.state?.code || "24"})</div>}
                 </div>
-            </div>
+            </div>  
 
-            {/* Customer Meta */}
+            {/* Customer Meta */}   
             <div className="flex justify-between mb-4 text-[13px] font-bold">
                 <div className="flex flex-col gap-1 w-1/2">
                     <div className="flex">

@@ -12,7 +12,9 @@ import BillReceipt80mmB2CType2 from "./BillReceipt80mmB2CType2";
 import BillReceipt80mmType2 from "./BillReceipt80mmType2";
 
 import BillReceiptA5 from "./BillReceiptA5";
+import MaterialInwardReceipt from "./MaterialInwardReceipt";
 import type { PosOrderBase } from "../../../../Types";
+import type { SupplierBillBase } from "../../../../Types/SupplierBill";
 
 export interface ISelectOption {
   label: string;
@@ -75,6 +77,33 @@ const mockBill: PosOrderBase = {
   ],
 } as any;
 
+const mockMaterialInward: SupplierBillBase = {
+  _id: "mi1",
+  supplierBillNo: "mi88231",
+  supplierId: { firstName: "karva", lastName: "" } as any,
+  supplierBillDate: "2025-08-05",
+  notes: "Zaid",
+  productDetails: {
+    totalQty: 1,
+    item: [
+      {
+        productId: { name: "Ching's Secret Singapore Curry Instant Noodles 60 g", uomId: { name: "Gram" } } as any,
+        qty: 1,
+      }
+    ]
+  },
+  summary: {
+    netAmount: 9.00
+  },
+  termsAndConditionIds: [
+    { termsCondition: "demo" },
+    { termsCondition: "demoterm" },
+    { termsCondition: "test" },
+    { termsCondition: "testing purchase terms and conditions" },
+    { termsCondition: "I agree to the mentioned items and conditions" },
+  ] as any
+} as any;
+
 const ReportFormats = () => {
   const [format, setFormat] = useState<string[]>([]);
   const [tab, setTab] = useState(0);
@@ -120,6 +149,7 @@ const ReportFormats = () => {
       { value: "b2b1", label: "B2B - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
     ],
     3: [
+      { value: "material-inward-receipt", label: "Goods Receipt Note", component: <MaterialInwardReceipt bill={mockMaterialInward} /> },
       { value: "b2b1", label: "B2B - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
       { value: "b2b1", label: "B2B - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
       { value: "b2b1", label: "B2B - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },

@@ -47,7 +47,7 @@ const JournalVoucherFormContent = ({ values, errors, isEditing, accountData, acc
                                             <Typography variant="h6" color="text.secondary" textAlign="right">
                                                 Total:
                                             </Typography>
-                                        ),
+                                        ),  
                                     },
                                     {
                                         key: "debit",
