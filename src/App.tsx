@@ -6,7 +6,7 @@ import { Router } from "./Routers";
 import { useAppSelector } from "./Store/hooks";
 import { getTheme } from "./Theme";
 import { GlobalSnackbar } from "./Attribute";
-import PWABadge from "./PWABadge";
+// import PWABadge from "./PWABadge";
 
 function App() {
   const { isToggleTheme } = useAppSelector((state) => state.layout);
@@ -16,7 +16,7 @@ function App() {
       <ThemeProvider theme={getTheme(isToggleTheme === "light" ? "light" : "dark")}>
         <RouterProvider router={Router} />
         <GlobalSnackbar />
-        <PWABadge />
+        {/* <PWABadge /> */}
       </ThemeProvider>
     </LocalizationProvider>
   );

@@ -1,17 +1,23 @@
-import { Grid, Tooltip } from "@mui/material";
+import { Box, CircularProgress, Grid, Typography, type CircularProgressProps } from "@mui/material";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../../../../Constants";
 import { useAppSelector } from "../../../../Store/hooks";
-import { CommonCard } from "../../../Common";
 import { getCompanyStrength, getStrength } from "../../../../Utils";
+import { CommonCard, CommonProfileAvatar } from "../../../Common";
+
+const CircularProgressWithLabel = (props: CircularProgressProps & { value: number }) => {
+  return (
+    <Box sx={{ position: "relative", display: "inline-flex" }}>
+      <CircularProgress variant="determinate" {...props} />
+      <Box sx={{ top: 0, left: 0, bottom: 0, right: 0, position: "absolute", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <Typography variant="caption" component="div" sx={{ color: "text.secondary" }}>{`${Math.round(props.value)}%`}</Typography>
+      </Box>
+    </Box>
+  );
+};
 
 const Profile = () => {
   const { user } = useAppSelector((state) => state.auth);
-
-  const nameWords = user?.fullName?.trim().split(/\s+/);
-  const firstInitial = nameWords?.[0]?.split("")[0];
-  const lastInitial = nameWords?.length > 1 ? nameWords[nameWords?.length - 1]?.split("")[0] : "";
-  const profileInitials = (firstInitial + lastInitial).toLocaleUpperCase();
 
   const CompanyDetails = [
     {
@@ -57,7 +63,7 @@ const Profile = () => {
     },
   ];
 
-  const userStrength = getStrength(CompanyDetails)
+  const userStrength = getStrength(CompanyDetails);
   const companyStrength = getCompanyStrength();
   const totalFilled = userStrength.filled + companyStrength.filled;
   const totalFields = userStrength.total + companyStrength.total;
@@ -69,19 +75,21 @@ const Profile = () => {
         <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex flex-col items-center w-full gap-6 xl:flex-row">
             <div className="flex items-center bg-brand-500 text-white rounded-full border border-gray-200 dropdown-toggle dark:border-gray-800">
-             <Tooltip title={`${mergedPercent}%`} arrow>               
+              {/* <Tooltip title={`${mergedPercent}%`} arrow> */}
               <div className="relative flex items-center justify-center w-20 h-20">
-                    <svg className="absolute w-full h-full " viewBox="0 0 40 40" style={{ transform: "rotate(-90deg)" }} >
-                      <circle cx="20" cy="20" r="18" className="stroke-gray-200 dark:stroke-gray-700" strokeWidth="4" fill="none"/>
-                      <circle cx="20" cy="20" r="18" className="stroke-green-500 dark:stroke-green-600 transition-all duration-500" strokeWidth="4" strokeLinecap="round" fill="none" strokeDasharray={2 * Math.PI * 18} strokeDashoffset={(1 - mergedPercent / 100) * 2 * Math.PI * 18}/>
-                    </svg>
-                    <div className="flex items-center justify-center bg-brand-500 text-white rounded-full w-16 h-16 z-10">{profileInitials}</div>
+                {/* <svg className="absolute w-full h-full " viewBox="0 0 40 40" style={{ transform: "rotate(-90deg)" }}>
+                    <circle cx="20" cy="20" r="18" className="stroke-gray-200 dark:stroke-gray-700" strokeWidth="4" fill="none" />
+                    <circle cx="20" cy="20" r="18" className="stroke-green-500 dark:stroke-green-600 transition-all duration-500" strokeWidth="4" strokeLinecap="round" fill="none" strokeDasharray={2 * Math.PI * 18} strokeDashoffset={(1 - mergedPercent / 100) * 2 * Math.PI * 18} />
+                  </svg>  */}
+                <CommonProfileAvatar fullName={user?.fullName} profileImage={user?.profileImage} className="w-full h-full" />
               </div>
-              </Tooltip>
-              
+              {/* </Tooltip> */}
             </div>
             <div className="order-3 xl:order-2">
-              <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">{user?.fullName}</h4>
+              <div className="flex items-center gap-2">
+                <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">{user?.fullName}</h4>
+                <CircularProgressWithLabel value={mergedPercent} />
+              </div>
               <div className="flex flex-col items-center gap-1 text-center xl:flex-row xl:gap-3 xl:text-left">
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   +{user?.phoneNo?.countryCode} {user?.phoneNo?.phoneNo}

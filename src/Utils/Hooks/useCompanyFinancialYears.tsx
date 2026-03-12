@@ -42,7 +42,6 @@ export const useCompanyFinancialYears = (isoDate?: string) => {
 
 export const useFinancialYearsFilter = (params?: Params) => {
   const { company } = useAppSelector((state) => state.company);
-  console.log("company", company);
 
   if (!company?.financialYear) return params;
   const startDate = company?.financialYear.split(" - ")[0];

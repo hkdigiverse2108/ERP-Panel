@@ -1,4 +1,4 @@
-import type { AccountBase } from "./Account";
+import type { BankBase } from "./Bank";
 import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
 
 export interface DebitNoteFormValues {
@@ -17,9 +17,8 @@ export type AddDebitNotePayload = DebitNoteFormValues;
 
 export type EditDebitNotePayload = DebitNoteFormValues & { debitNoteId: string };
 
-export interface DebitNoteBase extends Omit<DebitNoteFormValues, "fromAccountId" | "toAccountId">, CommonDataType {
-  fromAccountId: AccountBase;
-  toAccountId: AccountBase;
+export interface DebitNoteBase extends Omit<DebitNoteFormValues, "bankAccountId">, CommonDataType {
+  bankAccountId: BankBase;
 }
 
 export interface DebitNoteDataResponse extends PageStatus {
