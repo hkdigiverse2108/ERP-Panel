@@ -319,4 +319,12 @@ export const URL_KEYS = {
     EDIT: "/sales-register/edit",
     ALL: "/sales-register/all",
   },
+  COMPANY_DRIVE: {
+    BASE:"/company-drive",
+    ADD:"/company-drive/add",
+    ALL:"/company-drive/all",
+    EDIT:"/company-drive/update",
+    DELETE:"/company-drive/delete",
+  },
+
 } as const;

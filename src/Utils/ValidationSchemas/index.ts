@@ -534,3 +534,10 @@ export const TermsConditionFormSchema = Yup.object({
   isDefault: Validation("boolean", "Is Default", { required: false }),
   isActive: Validation("boolean", "is Active", { required: false }),
 });
+
+export const CompanyDriveCreateSchema = Yup.object({
+  documentName: Validation("string", "Document Name"),
+  documentUrl: Validation("string", "PDF"),
+  remark: Validation("string", "Remark"),
+  isActive: Yup.boolean(),
+});

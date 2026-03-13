@@ -1,4 +1,4 @@
-import { AccountBalance,  GridViewRounded, People, PersonRounded, PointOfSale, ReceiptLong, Redeem, Settings } from "@mui/icons-material";
+import { AccountBalance, GridViewRounded, InsertDriveFileOutlined, People, PersonRounded, PointOfSale, ReceiptLong, Redeem, Settings } from "@mui/icons-material";
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
 
@@ -68,5 +68,10 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.ACCOUNTING.DEBIT_NOTE.BASE, path: ROUTES.ACCOUNTING.DEBIT_NOTE.BASE },
       { name: PAGE_TITLE.ACCOUNTING.JOURNAL_VOUCHER.BASE, path: ROUTES.ACCOUNTING.JOURNAL_VOUCHER.BASE },
     ],
+  },
+  {
+    name: PAGE_TITLE.UTILITIES.BASE,
+    icon: <InsertDriveFileOutlined />,
+    children: [{ name: PAGE_TITLE.COMPANY_DRIVE.BASE, path: ROUTES.COMPANY_DRIVE.BASE }],
   },
 ];

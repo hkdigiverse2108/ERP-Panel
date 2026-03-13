@@ -277,4 +277,10 @@ export const KEYS = {
     EDIT: "return-pos-order-edit",
     DELETE: "return-pos-order-delete",
   },
+  COMPANY_DRIVE: {
+    BASE: "company-drive",
+    ADD: "company-drive-add",
+    EDIT: "company-drive-edit",
+    DELETE: "company-drive-delete",
+  }
 };

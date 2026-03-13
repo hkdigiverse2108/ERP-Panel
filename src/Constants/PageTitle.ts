@@ -152,4 +152,12 @@ export const PAGE_TITLE = {
       EDIT: "Edit Journal Voucher",
     },
   },
+  UTILITIES: {
+    BASE: "Utilities",
+  },
+  COMPANY_DRIVE: {
+    BASE: "Company Drive",
+    ADD: "Add Company Drive",
+    EDIT: "Edit Company Drive",
+  },
 } as const;

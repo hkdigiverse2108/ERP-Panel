@@ -48,6 +48,7 @@ import DebitNote from "../Pages/Accounting/DebitNote";
 import DebitNoteForm from "../Pages/Accounting/DebitNote/DebitNoteForm";
 import JournalVoucher from "../Pages/Accounting/JournalVoucher";
 import JournalVoucherForm from "../Pages/Accounting/JournalVoucher/JournalVoucherForm";
+import CompanyDrive from "../Pages/Utilities/CompanyDrive";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -118,6 +119,8 @@ export const PageRoutes = [
   { path: ROUTES.ACCOUNTING.DEBIT_NOTE.ADD_EDIT, name: PAGE_TITLE.ACCOUNTING.DEBIT_NOTE.BASE, element: <DebitNoteForm /> },
   { path: ROUTES.ACCOUNTING.JOURNAL_VOUCHER.BASE, name: PAGE_TITLE.ACCOUNTING.JOURNAL_VOUCHER.BASE, element: <JournalVoucher /> },
   { path: ROUTES.ACCOUNTING.JOURNAL_VOUCHER.ADD_EDIT, name: PAGE_TITLE.ACCOUNTING.JOURNAL_VOUCHER.BASE, element: <JournalVoucherForm /> },
+  { path: ROUTES.COMPANY_DRIVE.BASE, name: PAGE_TITLE.COMPANY_DRIVE.BASE, element: <CompanyDrive /> },
+
 ];
 
 export const AuthRoutes = [

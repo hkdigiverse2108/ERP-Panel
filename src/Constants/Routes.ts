@@ -98,6 +98,9 @@ export const ROUTES = {
     BASE: "/purchase-order",
     ADD_EDIT: "/purchase-order/add-edit",
   },
+  COMPANY_DRIVE: {
+    BASE: "/company-drive",
+  },
   ACCOUNTING: {
     ACCOUNT_GROUP: {
       BASE: "/accounting/account-group",

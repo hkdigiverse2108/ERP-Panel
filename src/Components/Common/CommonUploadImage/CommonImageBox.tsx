@@ -83,7 +83,7 @@ export const CommonFormImageBox: FC<CommonFormImageBoxProps> = ({ name, label, t
   return (
     <Grid size={grid} className="flex flex-col gap-2">
       {/* Label */}
-      <p className="text-sm font-medium">
+      <p className="text-sm font-medium dark:text-gray-400">
         {label}
         {(hasError || required) && <span className="text-red-600 ml-1">*</span>}
       </p>
