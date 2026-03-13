@@ -25,6 +25,8 @@ const MultiplePay = () => {
   const { mutate: editPosOrder, isPending: editPosOrderLoading } = Mutations.useEditPosOrder();
 
   const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown();
+  const { data: customerDropdown } = Queries.useGetContactDropdown({ typeFilter: "customer" });
+  const customerData = customerDropdown?.data?.find((item) => item._id === PosProduct?.customerId);
 
   const initialValues: { multiplePayments: MultiplePaymentType[] } = {
     multiplePayments: [
@@ -99,7 +101,7 @@ const MultiplePay = () => {
               <h3 className="text-3xl font-medium mb-1 text-gray-600 dark:text-gray-300">Sale Summary</h3>
               <div>
                 <span className="text-sm text-gray-600 dark:text-gray-300">Customer : </span>
-                <span className="text-sm text-brand-500">Walk in Customer</span>
+                <span className="text-sm text-brand-500">{customerData?.firstName + " " + customerData?.lastName}</span>
               </div>
               <div className="border border-gray-200 dark:border-gray-600 rounded-md overflow-hidden my-3">
                 <div className="max-h-120 overflow-y-auto custom-scrollbar">
