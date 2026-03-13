@@ -97,6 +97,7 @@ export const KEYS = {
     ADD: "product-add",
     EDIT: "product-edit",
     DELETE: "product-delete",
+    DETECT: "product-detect",
   },
   STOCK: {
     BASE: "stock",

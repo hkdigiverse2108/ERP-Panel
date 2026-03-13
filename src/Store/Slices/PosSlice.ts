@@ -12,6 +12,7 @@ const initialState: PosSliceState = {
   isReturnPosOrderId: "",
   isSalesInvoice: "",
   isEditPosOrder: false,
+  isProductScan:false,
   PosProduct: {
     items: [],
     customerId: "",
@@ -95,7 +96,6 @@ const PosSlice = createSlice({
     setPosProduct: (state, action) => {
       state.PosProduct = action.payload;
     },
-
     addOrUpdateProduct: (state, action) => {
       if (!action.payload || !action.payload._id) return;
 
@@ -118,6 +118,31 @@ const PosSlice = createSlice({
         calculateAmounts(newRow);
         state.PosProduct.items.push(newRow);
       }
+    },
+    setPosProductItems: (state, action) => {
+      if (!action.payload) return;
+
+      action.payload.forEach((item: PosProductDataModal) => {
+        const existingProduct = state.PosProduct.items.find((p) => p._id === item._id);
+
+        if (existingProduct) {
+          existingProduct.posQty += item.detect_qty || 1;
+          calculateAmounts(existingProduct);
+        } else {
+          const newRow = {
+            ...item,
+            posQty: item.detect_qty || 1,
+            discount: item.sellingDiscount || 0,
+            additionalDiscount: 0,
+            unitCost: 0,
+            netAmount: 0,
+          };
+
+          calculateAmounts(newRow);
+
+          state.PosProduct.items.unshift(newRow);
+        }
+      });
     },
     updateProduct: (state, action) => {
       const row = state.PosProduct.items.find((item) => item._id === action.payload._id);
@@ -242,8 +267,11 @@ const PosSlice = createSlice({
     setReturnPosOrderId: (state, action) => {
       state.isReturnPosOrderId = action.payload;
     },
+    setIsProductScan: (state) => {
+      state.isProductScan = !state.isProductScan;
+    },
   },
 });
 
-export const { setReturnPosOrderId, setSalesInvoice, setPrintType, setSelectedOrderId, setRedeemCredit, setLoyalty, setCoupon, setBtnStatus, setPosLoading, setPosProduct, setIsSelectProduct, setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesManId, setTotalMrp, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType, clearPosProduct, setHandleDiscount, setReturnPosOrder, setEditPosOrder } = PosSlice.actions;
+export const { setPosProductItems, setReturnPosOrderId, setSalesInvoice, setPrintType, setSelectedOrderId, setRedeemCredit, setLoyalty, setCoupon, setBtnStatus, setPosLoading, setPosProduct, setIsSelectProduct, setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesManId, setTotalMrp, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType, clearPosProduct, setHandleDiscount, setReturnPosOrder, setEditPosOrder, setIsProductScan } = PosSlice.actions;
 export default PosSlice.reducer;

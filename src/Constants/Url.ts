@@ -99,6 +99,7 @@ export const URL_KEYS = {
     ADD: "/product/add",
     ALL: "/product/all",
     EDIT: "/product/edit",
+    DETECT: "/product/detect",
   },
 
   STOCK: {
