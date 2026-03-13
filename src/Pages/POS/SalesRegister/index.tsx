@@ -71,7 +71,7 @@ const SalesRegister = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: true,
+    isExport: false,
     fileName: "Sales_Register",
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
@@ -85,7 +85,7 @@ const SalesRegister = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.POS.SALES_REGISTER} maxItems={1} breadcrumbs={BREADCRUMBS.SALES_REGISTER.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <AdvancedSearch filter={filter}>
+        <AdvancedSearch filter={filter} defaultExpanded>
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <CommonDateRangeSelector value={dateRange} onChange={setDateRange} />
           </Grid>
