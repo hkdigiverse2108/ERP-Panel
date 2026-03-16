@@ -12,6 +12,7 @@ import CustomerForm from "./CustomerForm";
 
 const PosFilter = () => {
   const { isSelectProduct, PosProduct, isSalesInvoice, isReturnPosOrder } = useAppSelector((state) => state.pos);
+  console.log(PosProduct);
 
   const dispatch = useAppDispatch();
 

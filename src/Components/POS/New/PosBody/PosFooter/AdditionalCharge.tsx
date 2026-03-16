@@ -16,6 +16,7 @@ const AdditionalCharge = () => {
   const isModalOpen = isAdditionalChargeModal.open;
 
   const [rows, setRows] = useState<AdditionalChargeRowType[]>(useMemo(() => PosProduct?.additionalCharges ?? [], [PosProduct?.additionalCharges]));
+  console.log(rows);
 
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown({}, isModalOpen);
   const { data: AdditionalChargeData, isLoading: AdditionalChargeDataLoading } = Queries.useGetAdditionalChargeDropdown({ typeFilter: "sales" }, isModalOpen);
@@ -71,13 +72,13 @@ const AdditionalCharge = () => {
     dispatch(setTotalAdditionalCharge(grandTotal.toFixed(2)));
     dispatch(setAdditionalChargeModal({ open: false, data: null }));
   };
-
+  const toArray = (val?: string | string[]) => (Array.isArray(val) ? val : val ? [val] : []);
   const columns: CommonTableColumn<AdditionalChargeRowType>[] = [
     {
       key: "additionalCharge",
       header: "Additional Charge",
       bodyClass: "min-w-40 w-80",
-      render: (row, index) => <CommonSelect label="Select Additional Charge" value={[row.chargeId]} options={GenerateOptions(AdditionalChargeData?.data)} isLoading={AdditionalChargeDataLoading} onChange={(val) => updateRow(index, "chargeId", val)} />,
+      render: (row, index) => <CommonSelect label="Select Additional Charge" value={toArray(row.chargeId)} options={GenerateOptions(AdditionalChargeData?.data)} isLoading={AdditionalChargeDataLoading} onChange={(val) => updateRow(index, "chargeId", val)} />,
       footer: () => <CommonButton variant="outlined" size="small" onClick={addRow} title="+ Additional Charge" />,
     },
     {

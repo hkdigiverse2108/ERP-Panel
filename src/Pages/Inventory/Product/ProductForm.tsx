@@ -152,7 +152,7 @@ const ProductForm = () => {
                           <CommonValidationSwitch name="isExpiryProductSaleable" label="Expiry Product Saleable" grid={{ xs: 12, sm: 6, xl: 3 }} />
                         </>
                       )}
-                      <CommonValidationCreatableSelect name="ingredients" label="Ingredients" options={[]} grid={{ xs: 12, sm: 6 }} required />
+                      <CommonValidationCreatableSelect name="ingredients" label="Ingredients" options={[]} grid={{ xs: 12, sm: 6 }} />
                       <CommonValidationTextField name="shortDescription" label="short Description" multiline grid={{ xs: 12, sm: 6 }} />
                       <CommonValidationQuillInput name="description" label="Description" grid={{ xs: 12 }} />
                       <Grid size={12}>

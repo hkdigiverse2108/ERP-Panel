@@ -14,6 +14,7 @@ import ProductList from "./ProductList";
 import WiFi from "./WiFi";
 import BillReceipt from "../BillReceipt";
 import { useReactToPrint } from "react-to-print";
+import ProductScan from "./ProductScan";
 
 const PosHeader = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -57,6 +58,7 @@ const PosHeader = () => {
           </Grid>
         </Grid>
         <Grid size={{ xs: 12, lg: 6, xl: 4 }} gap={1} className="flex max-sm:justify-between  lg:justify-end">
+          <ProductScan />
           <WiFi />
           {/* <CFB /> */}
           <Tooltip title="Last Bill Print">
