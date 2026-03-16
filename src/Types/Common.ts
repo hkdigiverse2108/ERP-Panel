@@ -234,7 +234,7 @@ export interface CommonActionColumnProps<T> {
   onDelete?: (row: T) => void;
   active?: (row: T) => void;
   onRefund?: (row: T) => void;
-  onPrint?: (row: T) => void;
+  onPrint?: { handlePrint: (row: T) => void; isPermission?: (row: T) => boolean };
   onSalesInvoice?: { handleSalesInvoice: (row: T) => void; isPermission?: (row: T) => boolean };
 }
 
@@ -580,12 +580,15 @@ export type DependentSelectProps<T extends ApiOption, P = string | undefined> = 
   required?: boolean;
   disabled?: boolean;
   enabled?: boolean;
+  value?: string[];
+  onChange?: (values: string[]) => void;
   query: (
     params?: P,
     enabled?: boolean,
   ) => {
     data?: { data: T[] };
     isLoading: boolean;
+    isFetching: boolean;
   };
 };
 

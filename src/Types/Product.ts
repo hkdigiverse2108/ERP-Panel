@@ -73,6 +73,7 @@ export interface ProductBase extends Omit<ProductFormValues, "categoryId" | "sub
   salesTaxId?: TaxBase;
   purchaseTaxId?: TaxBase;
   uomId?: UomBase;
+  detect_qty?: number;
 }
 
 export interface ProductDataResponse extends PageStatus {
@@ -90,3 +91,9 @@ export interface ProductSingleApiResponse extends MessageStatus {
   data: ProductBase;
 }
 
+export interface ProductDetectDataResponse extends PageStatus {
+  sku_matches_details: ProductBase[];
+}
+export interface ProductDetectApiResponse extends MessageStatus {
+  data: ProductDetectDataResponse;
+}

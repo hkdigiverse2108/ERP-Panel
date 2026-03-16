@@ -50,9 +50,9 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean; credit
             </Link>
           </Grid>
         )}
-        {onPrint && (
+        {onPrint?.handlePrint && !onPrint?.isPermission?.(params.row) && (
           <Grid size="auto">
-            <IconButton className="iconButtonStyle" size="small" onClick={() => onPrint(params.row)}>
+            <IconButton className="iconButtonStyle" size="small" onClick={() => onPrint.handlePrint(params.row)}>
               <PrintIcon fontSize="small" />
             </IconButton>
           </Grid>

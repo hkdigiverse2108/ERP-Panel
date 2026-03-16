@@ -7,9 +7,12 @@ import { CommonDateRangeSelector, CommonSelect } from "../../Attribute";
 import { Queries } from "../../Api";
 import { OPTION_TYPE } from "../../Data";
 import { DateConfig } from "../../Utils";
+import { useAppSelector } from "../../Store/hooks";
 
 const Transaction = () => {
-  const [range, setRange] = useState({ start: DateConfig.utc().startOf("month"), end: DateConfig.utc().endOf("month") });
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
   const [values, setValues] = useState<string[]>([OPTION_TYPE[1].value]);
   const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }), [range]);
 
@@ -32,7 +35,7 @@ const Transaction = () => {
         <CommonSelect label="Select Transaction" options={OPTION_TYPE} value={values} onChange={(v) => setValues(v)} limitTags={1} />
       </Grid>
       <Grid size={{ xs: 12, sm: 4, xl: 4 }}>
-        <CommonDateRangeSelector value={range} onChange={setRange} active="This Month" />
+        <CommonDateRangeSelector value={range} onChange={setRange}/>
       </Grid>
     </>
   );

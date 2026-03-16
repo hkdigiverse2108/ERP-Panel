@@ -6,9 +6,12 @@ import type { AppGridColDef, TopCustomersBase } from "../../Types";
 import { DateConfig } from "../../Utils";
 import { useDataGrid } from "../../Utils/Hooks";
 import { CommonCard, CommonDataGrid, CommonObjectNameColumn } from "../Common";
+import { useAppSelector } from "../../Store/hooks";
 
 const TopCustomers = () => {
-  const [range, setRange] = useState({ start: DateConfig.utc().startOf("month"), end: DateConfig.utc().endOf("month") });
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
   const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }), [range]);
   const { data, isLoading, isFetching } = Queries.useGetDashboardTopCustomers(queryParams);
 
@@ -40,7 +43,7 @@ const TopCustomers = () => {
 
   const topContent = (
     <Grid size={{ xs: 12, sm: 5, md: 4 }}>
-      <CommonDateRangeSelector value={range} onChange={setRange} active="This Month" />
+      <CommonDateRangeSelector value={range} onChange={setRange} />
     </Grid>
   );
   return (
