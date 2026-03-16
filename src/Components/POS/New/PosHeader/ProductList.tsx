@@ -1,5 +1,5 @@
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import { Box, Paper, Skeleton, Tooltip, Typography } from "@mui/material";
+﻿import DashboardIcon from "@mui/icons-material/Dashboard";
+import { Box, CardMedia, Paper, Skeleton, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Queries } from "../../../../Api";
 import { CommonSelect } from "../../../../Attribute";
@@ -29,6 +29,8 @@ const ProductList = () => {
     }
   };
 
+  const getProductImage = (product: ProductBase) => {if (product?.images && product.images.length > 0 && product.images[0]) {  return product.images[0];}return "";};
+
   useEffect(() => {
     if (!productById?.data) return;
     dispatch(addOrUpdateProduct(productById.data));
@@ -56,20 +58,35 @@ const ProductList = () => {
             </Typography>
           ) : (
             <Box sx={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: 1.5 }}>
-              {productDropdown?.data?.map((item, index) => (
-                <Paper key={index} elevation={0} onClick={() => handleAddProduct(item)} className="p-4 rounded-lg! cursor-pointer border border-gray-200! dark:border-gray-600! bg-gray-50! dark:bg-gray-800! hover:bg-gray-100! dark:hover:bg-gray-dark! hover:border-gray-300! dark:hover:border-gray-600!">
-                  <Typography fontWeight={600} noWrap title={item.name}>
-                    {item.name}
-                  </Typography>
+              {productDropdown?.data?.map((item, index) => {
+                const imageSrc = getProductImage(item);
 
-                  <Typography variant="body2" color={Number(item.qty) <= 0 ? "red" : "text.secondary"} sx={{ mt: 0.5 }}>
-                    Qty : {Number(item.qty).toFixed(2)}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                    Price : {Number(item.sellingPrice).toFixed(2)} ₹
-                  </Typography>
-                </Paper>
-              ))}
+                return (
+                  <Paper key={index} elevation={0} onClick={() => handleAddProduct(item)} className="p-4 rounded-lg! cursor-pointer border border-gray-200! dark:border-gray-600! bg-gray-50! dark:bg-gray-800! hover:bg-gray-100! dark:hover:bg-gray-dark! hover:border-gray-300! dark:hover:border-gray-600!">
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                      {/* Product Details */}
+                      <Box sx={{ minWidth: 0, flex: 1 }}>
+                        <Typography fontWeight={600} noWrap title={item.name}>
+                          {item.name}
+                        </Typography>
+                        <Typography variant="body2" color={Number(item.qty) <= 0 ? "red" : "text.secondary"} sx={{ mt: 0.5 }}>
+                          Qty : {Number(item.qty).toFixed(2)}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                          Price : {Number(item.sellingPrice).toFixed(2)} ₹
+                        </Typography>
+                      </Box>
+
+                      {/* Product Image */}
+                      {imageSrc ? (
+                        <Box sx={{ width: 100, height: 100, flexShrink: 0, borderRadius: 1, bgcolor: "action.hover", overflow: "hidden" }}>
+                          <CardMedia component="img" image={imageSrc} alt={item.name || "Product"} loading="lazy" onError={(event) => {   const box = event.currentTarget.parentElement;   if (box) box.style.display = "none"; }} sx={{ width: "100%", height: "100%", objectFit: "cover" }}/>
+                        </Box>
+                      ) : null}
+                    </Box>
+                  </Paper>
+                );
+              })}
             </Box>
           )}
         </Box>
