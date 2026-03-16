@@ -4,10 +4,13 @@ import { Queries } from "../../Api";
 import { CommonDateRangeSelector, CommonSelect } from "../../Attribute";
 import { DateConfig } from "../../Utils";
 import { CommonCard } from "../Common";
+import { useAppSelector } from "../../Store/hooks";
 
 const TotalSummary = () => {
   const [values, setValues] = useState<string[]>([]);
-  const [range, setRange] = useState({ start: DateConfig.utc().startOf("day"), end: DateConfig.utc().endOf("day") });
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
   const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }), [range]);
   const { data, isLoading, isFetching } = Queries.useGetDashboardTransaction(queryParams);
 

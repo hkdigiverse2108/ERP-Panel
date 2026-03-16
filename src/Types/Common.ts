@@ -234,7 +234,7 @@ export interface CommonActionColumnProps<T> {
   onDelete?: (row: T) => void;
   active?: (row: T) => void;
   onRefund?: (row: T) => void;
-  onPrint?: (row: T) => void;
+  onPrint?: { handlePrint: (row: T) => void; isPermission?: (row: T) => boolean };
   onSalesInvoice?: { handleSalesInvoice: (row: T) => void; isPermission?: (row: T) => boolean };
 }
 

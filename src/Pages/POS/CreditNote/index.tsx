@@ -80,7 +80,7 @@ const CreditNoteList = () => {
     CommonActionColumn<PosCreditNoteBase>({
       onRefund: (row) => (row.creditsRemaining > 0 ? handleRefundBtn(row) : undefined),
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.creditNoteNo }),
-      onPrint: (row) => handlePrintBtn(row),
+      onPrint: { handlePrint: (row) => handlePrintBtn(row) },
     }),
   ];
 

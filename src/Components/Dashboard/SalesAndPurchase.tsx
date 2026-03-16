@@ -6,9 +6,12 @@ import { Queries } from "../../Api";
 import { CommonDateRangeSelector } from "../../Attribute";
 import { CommonCard } from "../Common";
 import { DateConfig } from "../../Utils";
+import { useAppSelector } from "../../Store/hooks";
 
 const SalesAndPurchase = () => {
-  const [range, setRange] = useState({ start: DateConfig.utc().startOf("week"), end: DateConfig.utc().endOf("week") });
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
   const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }), [range]);
 
   const { data: salesAndPurchaseData, isLoading: isSalesAndPurchaseLoading, isFetching: isSalesAndPurchaseFetching } = Queries.useGetDashboardSalesAndPurchaseGraph(queryParams);
@@ -24,7 +27,7 @@ const SalesAndPurchase = () => {
 
   const topContent = (
     <Grid size={{ xs: 12, sm: 5, md: 4 }}>
-      <CommonDateRangeSelector value={range} onChange={setRange} active="This Week" />
+      <CommonDateRangeSelector value={range} onChange={setRange} />
     </Grid>
   );
 

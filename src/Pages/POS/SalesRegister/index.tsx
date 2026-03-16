@@ -1,19 +1,23 @@
 import { Box, Grid } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Queries } from "../../../Api";
 import { CommonDateRangeSelector } from "../../../Attribute";
-import { AdvancedSearch, CalculateGridSummary, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter } from "../../../Components/Common";
+import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef } from "../../../Types";
-import type { PosCashRegisterBase } from "../../../Types/PosCashRegister";
-import { CreateFilter, DateConfig, FormatDate, GenerateOptions } from "../../../Utils";
+import type { PosCashRegisterBase, PosCashRegisterValues } from "../../../Types/PosCashRegister";
+import { CreateFilter, DateConfig, FormatDate, FormatTime, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
+import { useReactToPrint } from "react-to-print";
+import CloseBillRegister from "../../../Components/POS/New/PosHeader/CloseRegister";
 
 const SalesRegister = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params, advancedFilter, updateAdvancedFilter } = useDataGrid({ active: false });
+  const [printData, setPrintData] = useState<PosCashRegisterValues | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
-  const [dateRange, setDateRange] = useState({ start: DateConfig.utc().startOf("day"), end: DateConfig.utc().endOf("day") });
+  const [dateRange, setDateRange] = useState({ start: DateConfig.utc().startOf("month"), end: DateConfig.utc().endOf("month") });
   const queryParams = useMemo(() => ({ startDate: dateRange.start.toISOString(), endDate: dateRange.end.toISOString() }), [dateRange]);
   const { data: userDropdown, isLoading: userDropdownLoading } = Queries.useGetUserDropdown();
 
@@ -33,6 +37,29 @@ const SalesRegister = () => {
   const salesmanOptions = useMemo(() => {
     return userDropdown?.data?.map((user) => ({ ...user, name: user.fullName || user.username || "Unnamed" })) || [];
   }, [userDropdown]);
+
+  const handlePrint = useReactToPrint({
+    contentRef,
+    onAfterPrint: () => {
+      setPrintData(null);
+    },
+  });
+
+  useEffect(() => {
+    if (printData && contentRef.current) {
+      handlePrint();
+    }
+  }, [printData, handlePrint]);
+  const handlePrintBtn = (row: PosCashRegisterBase) => {
+    const printPayload = {
+      ...row,
+      startDate: FormatDate(row?.createdAt),
+      startTime: FormatTime(row?.createdAt),
+      endDate: FormatDate(row?.updatedAt),
+      endTime: FormatTime(row?.updatedAt),
+    };
+    setPrintData(printPayload as PosCashRegisterValues);
+  };
 
   const columns: AppGridColDef<PosCashRegisterBase>[] = [
     {
@@ -58,6 +85,9 @@ const SalesRegister = () => {
     { field: "bankTransferAmount", headerName: "Cash Transfered To HO", width: 180 },
     { field: "physicalDrawerCash", headerName: "Closing Amount", width: 150 },
     { field: "shortExceed", headerName: "Short/Exceed", width: 140 },
+    CommonActionColumn<PosCashRegisterBase>({
+      onPrint: { handlePrint: (row) => handlePrintBtn(row), isPermission: (row) => row.status !== "closed" },
+    }),
   ];
 
   const gridOptions = {
@@ -94,6 +124,7 @@ const SalesRegister = () => {
           <CommonDataGrid {...gridOptions} />
         </CommonCard>
       </Box>
+      <div className="hidden">{printData && <CloseBillRegister ref={contentRef} data={printData} />}</div>
     </>
   );
 };

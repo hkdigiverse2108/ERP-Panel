@@ -131,7 +131,7 @@ const OrderList = () => {
               handleEdit: (row) => handleEdit(row),
               isPermission: (row) => row.posCashRegisterId?.status !== "open",
             },
-            onPrint: (row) => handlePrintBtn(row),
+            onPrint: { handlePrint: (row) => handlePrintBtn(row) },
             onSalesInvoice: {
               handleSalesInvoice: (row) => handleSalesInvoiceBtn(row),
               isPermission: (row) => ![POS_ORDER_STATUS.COMPLETED].includes(row.status),

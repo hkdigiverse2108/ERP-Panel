@@ -51,7 +51,7 @@ const PaymentList = () => {
     { field: "amount", headerName: "Amount", width: 100 },
     { field: "createdAt", headerName: "Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDateTime(params.row.createdAt) },
     CommonActionColumn<PosPaymentBase>({
-      onPrint: (row) => setPrintData(row),
+      onPrint: { handlePrint: (row) => setPrintData(row) },
     }),
   ];
 
