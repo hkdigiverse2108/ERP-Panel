@@ -11,6 +11,7 @@ export interface DebitNoteFormValues {
   isActive?: boolean;
   image?: string | File | null;
   _submitAction?: string;
+  personName?: string;
 }
 
 export type AddDebitNotePayload = DebitNoteFormValues;

@@ -32,6 +32,7 @@ const DebitNote = () => {
   const handleAdd = () => navigate(ROUTES.ACCOUNTING.DEBIT_NOTE.ADD_EDIT);
 
   const columns: GridColDef<DebitNoteBase>[] = [
+    { field: "personName", headerName: "Person Name", width: 200 },
     { field: "amount", headerName: "Amount", width: 200 },
     { field: "date", headerName: "Date", width: 200, valueGetter: (v) => FormatDate(v) },
     CommonObjectPropertyColumn<DebitNoteBase>("bankName", "bankAccountId", "name", { headerName: "Bank name", width: 300 }),

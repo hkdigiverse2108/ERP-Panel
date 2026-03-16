@@ -11,6 +11,7 @@ export interface CreditNoteFormValues {
   image?: string | File | null;
   _submitAction?: string;
   phoneNo?: PhoneNumberType;
+  personName?: string;
 }
 
 export type AddCreditNotePayload = CreditNoteFormValues;

@@ -1,6 +1,6 @@
 import { Box, Grid } from "@mui/material";
 import { Form, Formik, useFormikContext, type FormikHelpers, type FormikValues } from "formik";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonPhoneNumber, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
@@ -30,6 +30,7 @@ const CreditNoteForm = () => {
 
   const initialValues: CreditNoteFormValues = {
     type: data?.type || "payin",
+    personName: data?.personName || "",
     date: data?.date || DateConfig.utc().toISOString(),
     bankAccountId: data?.bankAccountId?._id || "",
     amount: data?.amount || "",
@@ -95,11 +96,12 @@ const CreditNoteForm = () => {
               <Grid container spacing={2}>
                 <CommonCard hideDivider grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
+                    <CommonValidationTextField name="personName" label="Person Name"  grid={{ xs: 12, md: 4 }}  />
                     <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="amount" label="Amount" type="number" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationSelect name="bankAccountId" label="Bank Account" options={GenerateOptions(bankAccountData?.data)} isLoading={bankAccountLoading} grid={{ xs: 12, md: 4 }} required />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationTextField name="description" label="Description" grid={{ xs: 12, md: 8 }} multiline />
+                    <CommonValidationTextField name="description" label="Description" grid={{ xs: 12, md: 4 }} multiline />
                     <CommonFormImageBox name="image" label="Image" type="image" grid={{ xs: 12 }} onUpload={handleUpload} onDelete={() => setFieldValue("image", null)} />
 
                     {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}

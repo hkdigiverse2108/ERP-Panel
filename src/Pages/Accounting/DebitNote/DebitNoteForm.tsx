@@ -33,6 +33,7 @@ const DebitNoteForm = () => {
   const initialValues: DebitNoteFormValues = useMemo(
     () => ({
       type: data?.type || "receiver",
+      personName: data?.personName || "",
       date: data?.date || DateConfig.utc().toISOString(),
       bankAccountId: data?.bankAccountId?._id || "",
       amount: data?.amount || "",
@@ -101,11 +102,12 @@ const DebitNoteForm = () => {
               <Grid container spacing={2}>
                 <CommonCard hideDivider grid={{ xs: 12 }}>
                   <Grid container spacing={2} sx={{ p: 2 }}>
+                    <CommonValidationTextField name="personName" label="Person Name"  grid={{ xs: 12, md: 4 }} />
                     <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationTextField name="amount" label="Amount" type="number" grid={{ xs: 12, md: 4 }} required />
                     <CommonValidationSelect name="bankAccountId" label="Bank Account" options={GenerateOptions(bankAccountData?.data)} isLoading={bankAccountLoading} grid={{ xs: 12, md: 4 }} required />
                     <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
-                    <CommonValidationTextField name="description" label="Description" grid={{ xs: 12, md:8 }} multiline/>
+                    <CommonValidationTextField name="description" label="Description" grid={{ xs: 12, md: 4 }} multiline />
                     <CommonFormImageBox name="image" label="Image" type="image" grid={{ xs: 12 }} onUpload={handleUpload} onDelete={() => setFieldValue("image", null)} />
 
                     {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}

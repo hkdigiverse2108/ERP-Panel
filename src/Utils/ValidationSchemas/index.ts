@@ -485,6 +485,7 @@ export const ReturnPosOrderFormSchema = Yup.object({
 
 export const CreditNoteFormSchema = Yup.object().shape({
   date: Validation("string", "Date"),
+  personName: Validation("string", "Person Name", { required: false }),
   bankAccountId: Validation("string", "Bank Account"),
   image: Validation("string", "Image", { required: false }),
   phoneNo: PhoneValidation(),
@@ -495,6 +496,7 @@ export const CreditNoteFormSchema = Yup.object().shape({
 
 export const DebitNoteFormSchema = Yup.object().shape({
   date: Validation("string", "Date"),
+  personName: Validation("string", "Person Name", { required: false }),
   bankAccountId: Validation("string", "Bank Account"),
   image: Validation("string", "Image", { required: false }),
   phoneNo: PhoneValidation(),
