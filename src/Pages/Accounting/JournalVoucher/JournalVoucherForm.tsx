@@ -174,7 +174,7 @@ const JournalVoucherForm = () => {
             else navigate(-1);
         };
 
-        if (isEditing) {
+        if (isEditing) {    
             const changedFields = GetChangedFields(payload, data);
             await editJournalVoucher({ ...changedFields, journalVoucherId: data._id } as any, { onSuccess: handleSuccess });
         } else {

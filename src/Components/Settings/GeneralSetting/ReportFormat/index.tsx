@@ -13,8 +13,10 @@ import BillReceipt80mmType2 from "./BillReceipt80mmType2";
 
 import BillReceiptA5 from "./BillReceiptA5";
 import MaterialInwardReceipt from "./MaterialInwardReceipt";
+import PurchaseOrderReport from "./PurchaseOrderReport";
 import type { PosOrderBase } from "../../../../Types";
 import type { SupplierBillBase } from "../../../../Types/SupplierBill";
+import type { PurchaseOrderBase } from "../../../../Types/PurchaseOrder";
 
 export interface ISelectOption {
   label: string;
@@ -104,6 +106,41 @@ const mockMaterialInward: SupplierBillBase = {
   ] as any
 } as any;
 
+const mockPurchaseOrder: PurchaseOrderBase = {
+  _id: "pord1",
+  orderNo: "PORD500",
+  orderDate: new Date().toISOString(),
+  date: new Date().toISOString(),
+  supplierId: {
+    _id: "supp1",
+    firstName: "karva",
+    lastName: "enterprise",
+    gstNo: "24ACTPJ9050C1ZL",
+    address: [{ addressLine1: "G57, CITY CENTER", addressLine2: "NEAR IDGH CIRCEL", city: { name: "Anjar" }, state: { name: "Gujarat" }, country: { name: "India" } }]
+  } as any,
+  items: [
+    {
+      productId: { name: "Ching's Secret Singapore Curry Instant Noodles 60 g", hsnCode: "1234" } as any,
+      itemCode: "8901595963409",
+      qty: 1,
+      unit: "gm",
+      unitCost: 9.00,
+      taxName: "0.00",
+      taxableAmount: 9.00,
+      taxAmount: 0.00,
+      total: 9.00
+    }
+  ],
+  summary: {
+    netAmount: 9.00,
+    roundOff: 0.00
+  },
+  termsAndConditionIds: [
+    { termsCondition: "demoterm" },
+    { termsCondition: "test" }
+  ] as any
+} as any;
+
 const ReportFormats = () => {
   const [format, setFormat] = useState<string[]>([]);
   const [tab, setTab] = useState(0);
@@ -155,6 +192,7 @@ const ReportFormats = () => {
       { value: "b2b1", label: "B2B - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
     ],
     4: [
+      { value: "purchase-order-report", label: "Purchase Order Report", component: <PurchaseOrderReport bill={mockPurchaseOrder} /> },
       { value: "b2b1", label: "B2B - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
       { value: "pos1", label: "POS Offline - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
     ],
