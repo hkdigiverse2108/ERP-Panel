@@ -187,7 +187,7 @@ const JournalVoucherForm = () => {
         if (!hasAccess) navigate(-1);
     }, [isEditing, permission, navigate]);
 
-    return (
+    return (        
         <>
             <CommonBreadcrumbs title={PAGE_TITLE.ACCOUNTING.JOURNAL_VOUCHER[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.JOURNAL_VOUCHER[pageMode]} />
 
