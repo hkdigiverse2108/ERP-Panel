@@ -45,6 +45,9 @@ export interface PosOrderFormValues {
   redeemCreditId: string;
   redeemCreditAmount: number;
   redeemCreditType: string;
+  discountId: string;
+  discountAmount: number;
+  discountMode: string;
 }
 
 export type AddPosOrderPayload = PosOrderFormValues;
