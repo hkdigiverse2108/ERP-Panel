@@ -16,7 +16,6 @@ const AdditionalCharge = () => {
   const isModalOpen = isAdditionalChargeModal.open;
 
   const [rows, setRows] = useState<AdditionalChargeRowType[]>(useMemo(() => PosProduct?.additionalCharges ?? [], [PosProduct?.additionalCharges]));
-  console.log(rows);
 
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown({}, isModalOpen);
   const { data: AdditionalChargeData, isLoading: AdditionalChargeDataLoading } = Queries.useGetAdditionalChargeDropdown({ typeFilter: "sales" }, isModalOpen);

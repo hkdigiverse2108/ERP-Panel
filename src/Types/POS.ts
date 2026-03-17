@@ -62,6 +62,10 @@ export interface PosProductType {
   redeemCreditId: string;
   redeemCreditAmount: number;
   redeemCreditType: string;
+  discountId: string;
+  discountAmount: number;
+  discountMode: string;
+  freeProducts: PosProductDataModal[];
 }
 
 export interface PosSliceState {

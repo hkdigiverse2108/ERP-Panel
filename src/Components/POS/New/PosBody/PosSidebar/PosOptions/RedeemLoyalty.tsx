@@ -52,13 +52,13 @@ const RedeemLoyalty = () => {
   }, [PosProduct.totalAmount, PosProduct.posOrderId, dispatch]);
 
   const handleRedeemLoyalty = (loyalty: LoyaltyBase) => {
-    if (PosProduct.couponId || PosProduct.redeemCreditId) {
+    if (PosProduct.couponId || PosProduct.redeemCreditId || PosProduct.discountId) {
       dispatch(setHandleDiscount("loyalty"));
       // return;
     }
 
-    const currentTotalAmount = Number(PosProduct.totalAmount || 0) + Number(PosProduct.couponDiscount || 0) + Number(PosProduct.redeemCreditAmount || 0);
-    const currentTotalDiscount = Number(PosProduct.totalDiscount || 0) - Number(PosProduct.couponDiscount || 0);
+    const currentTotalAmount = Number(PosProduct.totalAmount || 0) + Number(PosProduct.couponDiscount || 0) + Number(PosProduct.redeemCreditAmount || 0) + Number(PosProduct.discountAmount || 0);
+    const currentTotalDiscount = Number(PosProduct.totalDiscount || 0) - Number(PosProduct.couponDiscount || 0) - Number(PosProduct.discountAmount || 0);
     const currentLoyaltyDiscount = Number(PosProduct.loyaltyDiscount || 0);
 
     if (PosProduct.loyaltyId === loyalty._id) {

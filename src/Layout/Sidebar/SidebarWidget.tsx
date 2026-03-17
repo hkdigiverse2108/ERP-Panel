@@ -28,9 +28,11 @@ const SidebarWidget = () => {
 
           if (!IconComponent) return null;
           return (
-            <a key={index} href={item.link} target="_blank" rel="noopener" className={iconClass}>
-              <IconComponent fontSize="medium" />
-            </a>
+            item.isActive && (
+              <a key={index} href={item.link} target="_blank" rel="noopener" className={iconClass}>
+                <IconComponent fontSize="medium" />
+              </a>
+            )
           );
         })}
       </div>

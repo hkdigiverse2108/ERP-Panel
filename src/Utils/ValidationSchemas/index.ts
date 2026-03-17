@@ -427,6 +427,20 @@ export const LoyaltyFormSchema = Yup.object({
   isActive: Validation("boolean", "Is Active"),
 });
 
+export const DiscountFormSchema = Yup.object({
+  name: Validation("string", "Name"),
+  discountCode: Validation("string", "Discount Code"),
+  discountValue: Validation("number", "Discount Value"),
+  usageLimit: Validation("number", "Usage Limit"),
+  expiryDays: Validation("number", "Expiry Days"),
+  startDate: Validation("string", "Start Date"),
+  endDate: Validation("string", "End Date"),
+  redemptionType: Validation("string", "Redemption Type"),
+  singleTimeUse: Validation("boolean", "Single Time Use"),
+  status: Validation("string", "Status"),
+  isActive: Validation("boolean", "Is Active"),
+});
+
 export const PointSetupSchema = Yup.object({
   amount: Validation("string", "Amount", {
     required: true,

@@ -16,7 +16,7 @@ const RedeemCredit = () => {
 
   const [type, setType] = useState<string>("credit_note");
   const [creditNoteId, setCreditNoteId] = useState<string>("");
-  const totalAmount = Number(PosProduct?.totalAmount) + Number(PosProduct?.loyaltyDiscount || 0) + Number(PosProduct?.couponDiscount || 0);
+  const totalAmount = Number(PosProduct?.totalAmount) + Number(PosProduct?.loyaltyDiscount || 0) + Number(PosProduct?.couponDiscount || 0) + Number(PosProduct?.discountAmount || 0);
   const [isDetails, setDetails] = useState({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: totalAmount?.toString() });
 
   const { data: posCreditNoteDropdown, isLoading: isPosCreditNoteDropdownLoading, isFetching: isPosCreditNoteDropdownFetching } = Queries.useGetPosCreditNoteRedeemDropdown({ typeFilter: type, customerFilter: PosProduct?.customerId }, Boolean(PosProduct?.customerId));
@@ -105,7 +105,7 @@ const RedeemCredit = () => {
   };
 
   const handleApplyCredit = () => {
-    if (PosProduct.loyaltyId || PosProduct.couponId) dispatch(setHandleDiscount("redeemCredit"));
+    if (PosProduct.loyaltyId || PosProduct.couponId || PosProduct.discountId) dispatch(setHandleDiscount("redeemCredit"));
 
     dispatch(setRedeemCredit({ redeemCreditId: isDetails.id, redeemCreditAmount: Number(isDetails.apply), redeemCreditType: type }));
     const payableAmount = totalAmount - Number(isDetails.apply);

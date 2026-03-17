@@ -316,3 +316,20 @@ export const POS_ORDER_STATUS = {
   PARTIALLY_RETURNED: "partially_returned",
   RETURNED: "returned",
 };
+
+export const DISCOUNT_APPLICABLE = [
+  { label: "Product Wise", value: "product_wise" },
+  { label: "Entire Bill", value: "entire_bill" },
+];
+
+export const DISCOUNT_MODE = [
+  { label: "Normal", value: "normal" },
+  { label: "Range Wise", value: "range_wise" },
+  { label: "Buy X Get Y", value: "buy_x_get_y" },
+  { label: "Product At Fix Amount", value: "product_at_fix_amount" },
+];
+
+export const VALUE_TYPE = [
+  { label: "Percentage", value: "percentage" },
+  { label: "Flat", value: "flat" },
+];

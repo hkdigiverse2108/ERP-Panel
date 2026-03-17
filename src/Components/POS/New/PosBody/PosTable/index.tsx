@@ -41,7 +41,8 @@ const PosTable = () => {
   const totalMrp = useMemo(() => productData?.reduce((acc, row) => acc + row.mrp * row.posQty, 0), [productData]);
   const totalTaxAmount = useMemo(() => productData?.reduce((acc, row) => acc + Number(calcTotalTaxAmount(row)), 0) ?? 0, [productData]);
   const totalDiscount = useMemo(() => productData?.reduce((acc, row) => acc + row.discount * row.posQty, 0), [productData]);
-  const finalDiscount = useMemo(() => totalDiscount + PosProduct.couponDiscount + PosProduct.loyaltyDiscount, [totalDiscount, PosProduct.couponDiscount, PosProduct.loyaltyDiscount]);
+  const totalAdditionalDiscount = useMemo(() => productData?.reduce((acc, row) => acc + row.additionalDiscount * row.posQty, 0), [productData]);
+  const finalDiscount = useMemo(() => totalDiscount + totalAdditionalDiscount + PosProduct.couponDiscount + PosProduct.loyaltyDiscount, [totalDiscount, totalAdditionalDiscount, PosProduct.couponDiscount, PosProduct.loyaltyDiscount]);
   const totalDiscountAmount = useMemo(() => Number(PosProduct.couponDiscount || 0) + Number(PosProduct.loyaltyDiscount || 0) + Number(PosProduct.flatDiscountAmount || 0) + Number(PosProduct.redeemCreditAmount || 0) - Number(PosProduct.totalAdditionalCharge || 0), [PosProduct.couponDiscount, PosProduct.loyaltyDiscount, PosProduct.flatDiscountAmount, PosProduct.totalAdditionalCharge, PosProduct.redeemCreditAmount]);
 
   const totalAmount = useMemo(() => productData?.reduce((acc, row) => acc + row.netAmount, 0) ?? 0, [productData]);

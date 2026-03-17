@@ -94,6 +94,10 @@ export const ROUTES = {
     BASE: "/loyalty",
     ADD_EDIT: "/loyalty/add-edit",
   },
+  DISCOUNT: {
+    BASE: "/discount",
+    ADD_EDIT: "/discount/add-edit",
+  },
   PURCHASE_ORDER: {
     BASE: "/purchase-order",
     ADD_EDIT: "/purchase-order/add-edit",

@@ -43,6 +43,8 @@ import PurchaseOrderForm from "../Pages/Purchase/PurchaseOrder/PurchaseOrderForm
 import SupplierBill from "../Pages/Purchase/SupplierBill";
 import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
 import GeneralSetting from "../Pages/Settings/GeneralSetting";
+import Discount from "../Pages/CRM/Discount";
+import DiscountForm from "../Pages/CRM/Discount/DiscountForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -101,6 +103,9 @@ export const PageRoutes = [
 
   { path: ROUTES.LOYALTY.BASE, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <Loyalty /> },
   { path: ROUTES.LOYALTY.ADD_EDIT, name: PAGE_TITLE.CRM.LOYALTY.BASE, element: <LoyaltyForm /> },
+
+  { path: ROUTES.DISCOUNT.BASE, name: PAGE_TITLE.CRM.DISCOUNT.BASE, element: <Discount /> },
+  { path: ROUTES.DISCOUNT.ADD_EDIT, name: PAGE_TITLE.CRM.DISCOUNT.BASE, element: <DiscountForm /> },
 
   { path: ROUTES.ACCOUNTING.CREDIT_NOTE.BASE, name: PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.BASE, element: <CreditNote /> },
   { path: ROUTES.ACCOUNTING.CREDIT_NOTE.ADD_EDIT, name: PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.BASE, element: <CreditNoteForm /> },
