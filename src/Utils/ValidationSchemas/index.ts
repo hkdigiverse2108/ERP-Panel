@@ -564,7 +564,6 @@ export const ExpenseFormSchema = Yup.object({
 });
 
 export const SalaryFormSchema = Yup.object({
-  companyId: Validation("string", "Company"),
   partyId: Validation("string", "Party"),
   image: Validation("string", "Image", { required: false }),
   fromDate: Validation("string", "Date"),
