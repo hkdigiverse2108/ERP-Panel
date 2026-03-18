@@ -227,7 +227,7 @@ const OrderReport = forwardRef<HTMLDivElement, { bill: PurchaseOrderBase }>(({ b
 
                         <div className="w-full flex flex-col items-center mt-auto">
                             <div className="border-t border-black w-48 text-center pt-1 font-bold text-[11px] uppercase tracking-tighter mt-1">
-                                Authorised Signatory
+                                   Authorised Signatory
                             </div>
                         </div>
                     </div>

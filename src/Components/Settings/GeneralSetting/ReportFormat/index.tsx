@@ -15,6 +15,7 @@ import BillReceiptA5 from "./BillReceiptA5";
 import MaterialInwardReceipt from "./MaterialInwardReceipt";
 import PurchaseOrderReport from "./PurchaseOrderReport";
 import OrderReport from "./OrderReport";
+import OrderReceipt80mm from "./OrderReceipt80mm";
 import type { PosOrderBase } from "../../../../Types";
 import type { SupplierBillBase } from "../../../../Types/SupplierBill";
 import type { PurchaseOrderBase } from "../../../../Types/PurchaseOrder";
@@ -195,6 +196,7 @@ const ReportFormats = () => {
     4: [
       { value: "purchase-order-report", label: "Purchase Order Report", component: <PurchaseOrderReport bill={mockPurchaseOrder} /> },
       { value: "order-report-v2", label: "Order Report V2", component: <OrderReport bill={mockPurchaseOrder} /> },
+      { value: "order-receipt-80mm", label: "Thermal Order Receipt", component: <OrderReceipt80mm bill={mockPurchaseOrder} /> },
       { value: "b2b1", label: "B2B - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
       { value: "pos1", label: "POS Offline - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
     ],

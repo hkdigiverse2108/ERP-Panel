@@ -243,7 +243,7 @@ const BillReceiptA4B2BType3 = forwardRef<HTMLDivElement, { bill: PosOrderBase }>
                     </div>
                 </div>
 
-                {/* Items Table */}
+                {/* Items Table */} 
                 <table className="w-full text-center border-collapse text-[9px]">
                     <thead>
                         <tr className="border-y border-black font-bold">
@@ -291,7 +291,7 @@ const BillReceiptA4B2BType3 = forwardRef<HTMLDivElement, { bill: PosOrderBase }>
                                     <td className="border-r border-black p-1">UOM</td>
                                     <td className="border-r border-black p-1">{Number(item.mrp || 0).toFixed(3)}</td>
                                     <td className="border-r border-black p-1">{Number(discAmt || 0).toFixed(3)}(%)</td>
-                                    <td className="border-r border-black p-1 font-bold">
+                                    <td className="border-r border-black p-1  font-bold">
                                         {Number(taxableVal).toFixed(3)}
                                     </td>
                                     <td className="border-r border-black p-1 font-bold">
