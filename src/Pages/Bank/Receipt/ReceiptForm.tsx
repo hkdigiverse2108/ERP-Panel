@@ -1,6 +1,6 @@
 import { Box, Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonSelect, CommonTextField, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
@@ -46,6 +46,16 @@ const ReceiptForm = () => {
     remark: data?.remark || "",
   };
 
+  const PartySync = ({ partyId, setPartyId }: { partyId?: string; setPartyId: (id?: string) => void }) => {
+    useEffect(() => {
+      setPartyId(partyId);
+    }, [partyId, setPartyId]);
+
+    return null;
+  };
+
+  const [partyId, setPartyId] = useState(initialValues.partyId);
+  const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: partyId, duePaymentFilter: true }, Boolean(partyId));
   const handleSubmit = async (values: PosPaymentFormValues, { resetForm }: FormikHelpers<PosPaymentFormValues>) => {
     const { _submitAction, voucherDetails, ...rest } = values;
     const payload = { ...rest };
@@ -80,8 +90,6 @@ const ReceiptForm = () => {
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={ReciptFormSchema} enableReinitialize>
           {({ resetForm, setFieldValue, dirty, values }) => {
-            const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: values.partyId, duePaymentFilter: true }, Boolean(values.partyId));
-
             const handleTableChange = (key: string, value: string | number | undefined) => {
               let newValues = { ...values, [key]: value };
               if (key === "posOrderId") {
@@ -147,6 +155,7 @@ const ReceiptForm = () => {
 
             return (
               <Form noValidate>
+                <PartySync partyId={values.partyId} setPartyId={setPartyId} />
                 <Grid container spacing={2}>
                   <CommonCard title="Receipt Details" grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
