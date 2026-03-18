@@ -1,4 +1,4 @@
-import type { Breakpoint, ButtonProps, DrawerProps, PaperProps as MuiPaperProps, TextFieldProps } from "@mui/material";
+import type { Breakpoint, ButtonProps, DrawerProps, PaperProps as MuiPaperProps, TextFieldProps, Theme, SxProps } from "@mui/material";
 import type { GridColDef, GridFilterModel, GridPaginationModel, GridRowsProp, GridSlotsComponentsProps, GridSortModel, GridValidRowModel } from "@mui/x-data-grid";
 import type { Dayjs } from "dayjs";
 import type { MuiTelInputProps } from "mui-tel-input";
@@ -58,11 +58,7 @@ export type SelectOptionType = {
   value: string;
   [key: string]: any;
 };
-export interface CommonStatsItem {
-  label: string;
-  value: number | string;
-  color?: string;
-}
+
 
 export interface CommonSelectProps {
   label?: string;
@@ -624,4 +620,21 @@ export interface TabPanelProps {
   children?: ReactNode;
   index: number;
   value: number;
+}
+
+
+export interface CommonStatsItem {
+  label: string;
+  value: number | string;
+  color?: string;
+  desc?: string;
+  selected?: boolean;
+  onClick?: () => void;
+}
+
+export interface CommonStatsCardProps {
+  stats: CommonStatsItem[];
+  grid?: GridType;
+  paperSx?: SxProps<Theme>;
+  variant?: "default" | "radio";
 }
