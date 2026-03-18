@@ -8,14 +8,14 @@ import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonStatsCard, 
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, PAYMENT_MODE } from "../../../Data";
 import type { CommonTableColumn, PosOrderBase, PosPaymentFormValues } from "../../../Types";
-import { GenerateOptions, GetChangedFields, PaymentFormSchema, RemoveEmptyFields } from "../../../Utils";
+import { GenerateOptions, GetChangedFields, ReciptFormSchema, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 
-const PaymentForm = () => {
+const ReceiptForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state || {};
-  const permission = usePagePermission(PAGE_TITLE.PAYMENT.BASE);
+  const permission = usePagePermission(PAGE_TITLE.RECEIPT.BASE);
 
   const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown();
 
@@ -27,13 +27,13 @@ const PaymentForm = () => {
 
   const initialValues: PosPaymentFormValues = {
     companyId: data?.companyId?._id || "",
-    voucherType: data?.voucherType || "purchase",
+    voucherType: data?.voucherType || "sales",
     paymentType: data?.paymentType || "advance",
     partyId: data?.partyId?._id || "",
     bankId: data?.bankId?._id || data?.bankId || "",
     posOrderId: data?.posOrderId?._id || data?.posOrderId || "",
     paymentMode: data?.paymentMode || "cash",
-    date: data?.paymentDate || null,
+    date: data?.date || null,
     amount: data?.amount || 0,
     totalAmount: data?.totalAmount || 0,
     paidAmount: data?.paidAmount || 0,
@@ -41,7 +41,7 @@ const PaymentForm = () => {
     kasar: data?.kasar || 0,
     isNonGST: data?.isNonGST || false,
     isActive: data?.isActive ?? true,
-    posCashRegisterId: data?.posCashRegisterId?._id || "",
+    posCashRegisterId: data?.posCashRegisterId?._id || undefined,
     remark: data?.remark || "",
   };
 
@@ -75,9 +75,9 @@ const PaymentForm = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.PAYMENT[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.PAYMENT[pageMode]} />
+      <CommonBreadcrumbs title={PAGE_TITLE.RECEIPT[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.RECEIPT[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
-        <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={PaymentFormSchema} enableReinitialize>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={ReciptFormSchema} enableReinitialize>
           {({ resetForm, setFieldValue, dirty, values }) => {
             const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: values.partyId, duePaymentFilter: true }, Boolean(values.partyId));
             const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({ companyId: values?.companyId }, Boolean(values?.companyId));
@@ -148,10 +148,10 @@ const PaymentForm = () => {
             return (
               <Form noValidate>
                 <Grid container spacing={2}>
-                  <CommonCard title="Payment Details" grid={{ xs: 12 }}>
+                  <CommonCard title="Receipt Details" grid={{ xs: 12 }}>
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="partyId" label="Party" required isLoading={contactDataLoading} options={GenerateOptions(contactData?.data)} grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationDatePicker name="date" label="Payment Date" required grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationDatePicker name="date" label="Receipt Date" required grid={{ xs: 12, md: 4 }} />
                       <Grid size={{ xs: 12 }}>
                         <CommonStatsCard
                           variant="radio"
@@ -200,4 +200,4 @@ const PaymentForm = () => {
   );
 };
 
-export default PaymentForm;
+export default ReceiptForm;

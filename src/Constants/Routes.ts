@@ -71,6 +71,18 @@ export const ROUTES = {
     BASE: "/payment",
     ADD_EDIT: "/payment/add-edit",
   },
+  RECEIPT: {
+    BASE: "/receipt",
+    ADD_EDIT: "/receipt/add-edit",
+  },
+  EXPENSE: {
+    BASE: "/expense",
+    ADD_EDIT: "/expense/add-edit",
+  },
+  SALARY: {
+    BASE: "/salary",
+    ADD_EDIT: "/salary/add-edit",
+  },
   POS: {
     BASE: "/pos",
     NEW: "/pos/new",

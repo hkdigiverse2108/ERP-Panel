@@ -94,6 +94,22 @@ export const PAGE_TITLE = {
     EDIT: "Edit Payment",
     ADD: "Add Payment",
   },
+  RECEIPT: {
+    BASE: "Receipt",
+    ADD: "Add Receipt",
+    EDIT: "Edit Receipt",
+  },
+  EXPENSE: {
+    BASE: "Expense",
+    ADD: "Add Expense",
+    EDIT: "Edit Expense",
+  },
+  SALARY: {
+    BASE: "Salary",
+    ADD: "Add Salary",
+    EDIT: "Edit Salary",
+  },
+
   POS: {
     BASE: "POS",
     NEW: "New POS",

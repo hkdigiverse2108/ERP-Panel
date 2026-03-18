@@ -43,6 +43,8 @@ import PurchaseOrderForm from "../Pages/Purchase/PurchaseOrder/PurchaseOrderForm
 import SupplierBill from "../Pages/Purchase/SupplierBill";
 import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
 import GeneralSetting from "../Pages/Settings/GeneralSetting";
+import ReceiptForm from "../Pages/Bank/Receipt/ReceiptForm";
+import Receipt from "../Pages/Bank/Receipt";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -73,6 +75,9 @@ export const PageRoutes = [
   { path: ROUTES.BANK.ADD_EDIT, name: PAGE_TITLE.BANK.BASE, element: <BankForm /> },
 
   { path: ROUTES.TRANSACTION.BASE, name: PAGE_TITLE.TRANSACTION.BASE, element: <BankTransaction /> },
+
+  { path: ROUTES.RECEIPT.BASE, name: PAGE_TITLE.RECEIPT.BASE, element: <Receipt /> },
+  { path: ROUTES.RECEIPT.ADD_EDIT, name: PAGE_TITLE.RECEIPT.BASE, element: <ReceiptForm /> },
 
   { path: ROUTES.PAYMENT.BASE, name: PAGE_TITLE.PAYMENT.BASE, element: <PaymentList /> },
   { path: ROUTES.PAYMENT.ADD_EDIT, name: PAGE_TITLE.PAYMENT.BASE, element: <PaymentForm /> },
