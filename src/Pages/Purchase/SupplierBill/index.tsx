@@ -6,16 +6,22 @@ import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcr
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, PAYMENT_STATUS_OPTIONS } from "../../../Data";
 import type { AppGridColDef, SupplierBillBase } from "../../../Types";
-import { CreateFilter, FormatDate } from "../../../Utils";
+import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 
 const SupplierBill = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
+
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE);
+    // Filter Data Queries
+  const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier" });
+
+  
   const { data, isLoading, isFetching } = Queries.useGetSupplierBillDetails(params);
   const { mutate: deleteSupplierBill } = Mutations.useDeleteSupplierBill();
   const { mutate: editSupplierBill } = Mutations.useEditSupplierBill();
+  
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
     deleteSupplierBill(rowToDelete?._id as string, {
@@ -50,7 +56,7 @@ const SupplierBill = () => {
       { label: "Unpaid", value: Math.round(unpaidAmount) },
     ];
   }, [rows]);
-  const filter = [CreateFilter("Payment Status", "paymentStatus", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
+  const filter = [CreateFilter("Select Supplier", "supplierFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(supplierData?.data), supplierDataLoading, { xs: 12, sm: 6, md: 3 }),CreateFilter("Payment Status", "paymentStatus", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
 
   const columns: AppGridColDef<SupplierBillBase>[] = [
     { field: "paymentStatus", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 110, renderCell: (params) => <span className={`status-${params.row.paymentStatus}`}>{params.row.paymentStatus}</span> },
