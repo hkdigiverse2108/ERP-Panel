@@ -18,6 +18,7 @@ const ReceiptForm = () => {
   const permission = usePagePermission(PAGE_TITLE.RECEIPT.BASE);
 
   const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown();
+  const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown();
 
   const { mutate: addPayment, isPending: isAddLoading } = Mutations.useAddPosPayment();
   const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPosPayment();
@@ -80,7 +81,6 @@ const ReceiptForm = () => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={ReciptFormSchema} enableReinitialize>
           {({ resetForm, setFieldValue, dirty, values }) => {
             const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: values.partyId, duePaymentFilter: true }, Boolean(values.partyId));
-            const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown({ companyId: values?.companyId }, Boolean(values?.companyId));
 
             const handleTableChange = (key: string, value: string | number | undefined) => {
               let newValues = { ...values, [key]: value };
