@@ -19,7 +19,7 @@ const SupplierBill = () => {
 
   
   const { data, isLoading, isFetching } = Queries.useGetSupplierBillDetails(params);
-  const { mutate: deleteSupplierBill } = Mutations.useDeleteSupplierBill();
+  const { mutate: deleteSupplierBill, isPending: deleteSupplierBillLoading } = Mutations.useDeleteSupplierBill();
   const { mutate: editSupplierBill } = Mutations.useEditSupplierBill();
   
   const handleDeleteBtn = () => {
@@ -117,7 +117,7 @@ const SupplierBill = () => {
         <CommonCard hideDivider>
           <CommonDataGrid {...gridOptions} />
         </CommonCard>
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} loading={deleteSupplierBillLoading} />
       </Box>
     </>
   );

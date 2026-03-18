@@ -5,10 +5,9 @@ import { FieldArray, useFormikContext } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { Queries } from "../../../Api";
 import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
-import { CommonTabPanel, CommonTable } from "../../Common";
+import { CommonTabPanel, CommonTable, CommonTermsAndCondition } from "../../Common";
 import { GenerateOptions } from "../../../Utils";
 import type { CommonTableColumn, ProductBase, SupplierBillProductItem, SupplierBillReturnProductItem, TaxBase } from "../../../Types";
-import CommonTermsAndCondition from "../../Common/TermsAndConditions/CommonTermsAndCondition";
 
 interface SupplierBillTabsProps {
     emptyRow: SupplierBillProductItem;
