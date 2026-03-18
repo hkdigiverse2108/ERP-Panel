@@ -316,3 +316,8 @@ export const POS_ORDER_STATUS = {
   PARTIALLY_RETURNED: "partially_returned",
   RETURNED: "returned",
 };
+
+export const EXPENSE_TYPE_OPTIONS = [
+  { label: "Income", value: "income" },
+  { label: "Expense", value: "expense" },
+];
