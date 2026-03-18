@@ -75,6 +75,9 @@ export const URL_KEYS = {
     BASE: "/tax",
     DROPDOWN: "/tax/dropdown",
     ALL: "/tax/all",
+    ADD: "/tax/add",
+    EDIT: "/tax/edit",
+    DELETE: "/tax/delete",
   },
   UOM: {
     BASE: "/uom",

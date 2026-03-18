@@ -11,7 +11,7 @@ export type AddTaxPayload = TaxFormValues;
 
 export type EditTaxPayload = AddTaxPayload & { taxId?: string };
 
-export type TaxBase = TaxFormValues & CommonDataType;
+export type TaxBase = TaxFormValues & CommonDataType & { companyId?: string };
 
 export interface TaxDataResponse extends PageStatus {
   tax_data: TaxBase[];

@@ -17,6 +17,11 @@ export const PAGE_TITLE = {
       ADD: "Add Additional Charge",
       EDIT: "Edit Additional Charge",
     },
+    TAX: {
+      BASE: "Tax",
+      ADD: "Add Tax",
+      EDIT: "Edit Tax",
+    },
   },
   USER: {
     BASE: "User",
