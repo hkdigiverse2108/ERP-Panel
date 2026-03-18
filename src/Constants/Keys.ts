@@ -269,4 +269,11 @@ export const KEYS = {
     EDIT: "expense-edit",
     DELETE: "expense-delete",
   },
+
+  BANK_TRANSACTION: {
+    BASE: "bank-transaction",
+    ADD: "bank-transaction-add",
+    EDIT: "bank-transaction-edit",
+    DELETE: "bank-transaction-delete",
+  },
 };

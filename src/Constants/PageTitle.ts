@@ -86,8 +86,10 @@ export const PAGE_TITLE = {
     ADD: "Add Bank",
     EDIT: "Edit Bank",
   },
-  TRANSACTION: {
-    BASE: "Transaction",
+  BANK_TRANSACTION: {
+    BASE: "Bank Transaction",
+    ADD: "Add Bank Transaction",
+    EDIT: "Edit Bank Transaction",
   },
   PAYMENT: {
     BASE: "Payment",

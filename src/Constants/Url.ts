@@ -307,4 +307,11 @@ export const URL_KEYS = {
     EDIT: "/expense/edit",
     DELETE: "/expense/delete",
   },
+  BANK_TRANSACTION: {
+    BASE: "/bank-transaction",
+    ADD: "/bank-transaction/add",
+    EDIT: "/bank-transaction/edit",
+    ALL: "/bank-transaction/all",
+    DROPDOWN: "/bank-transaction/dropdown",
+  },
 } as const;

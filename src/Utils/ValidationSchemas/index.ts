@@ -205,6 +205,15 @@ export const BankFormSchema = Yup.object().shape({
   }).nullable(),
 });
 
+export const BankTransactionFormSchema = Yup.object({
+  transactionDate: Validation("string", "Transaction Date"),
+  transactionType: Validation("string", "Transaction Type"),
+  fromAccount: Validation("string", "From Account"),
+  toAccount: Validation("string", "To Account"),
+  amount: Validation("number", "Amount"),
+  description: Validation("string", "Description", { required: false }),
+});
+
 export const RecipeFormSchema = Yup.object({
   name: Validation("string", "name"),
   date: Yup.mixed().required("Date is required"),

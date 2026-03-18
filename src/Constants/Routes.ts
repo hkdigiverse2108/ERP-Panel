@@ -63,9 +63,9 @@ export const ROUTES = {
     BASE: "/bank",
     ADD_EDIT: "/bank/add-edit",
   },
-  TRANSACTION: {
-    BASE: "/transaction",
-    ADD_EDIT: "/transaction/add-edit",
+  BANK_TRANSACTION: {
+    BASE: "/bank-transaction",
+    ADD_EDIT: "/bank-transaction/add-edit",
   },
   PAYMENT: {
     BASE: "/payment",

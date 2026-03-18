@@ -9,6 +9,7 @@ import type { LocationBase } from "./Location";
 import type { AdditionalChargesBase } from "./AdditionalCharges";
 import type { MultiplePaymentType, PosProductDataModal } from "./POS";
 import type { PosCreditNoteBase } from "./PosCreditNote";
+import type { BankTransactionBase } from "./BankTransaction";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -491,6 +492,7 @@ export interface ModalStateSlice {
   isQtyCountModal: { open: boolean; data: PosProductDataModal | null };
   isOrderRefundModal: { open: boolean; data: PosCreditNoteBase | null; isSalesReturn?: boolean };
   isDiscardModal: boolean;
+  isBankTransactionModal: { open: boolean; data: BankTransactionBase | null };
 }
 
 // ************ Modal End ***********
