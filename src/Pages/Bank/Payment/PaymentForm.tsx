@@ -42,7 +42,7 @@ const PaymentForm = () => {
     kasar: data?.kasar || 0,
     isNonGST: data?.isNonGST || false,
     isActive: data?.isActive ?? true,
-    posCashRegisterId: data?.posCashRegisterId?._id || "",
+
     remark: data?.remark || "",
   };
 
@@ -63,7 +63,7 @@ const PaymentForm = () => {
 
     if (isEditing) {
       const changedFields = GetChangedFields(payload, data);
-      await editPayment({ ...changedFields, paymentId: data._id }, { onSuccess: handleSuccess });
+      await editPayment({ ...changedFields, posPaymentId: data._id }, { onSuccess: handleSuccess });
     } else {
       await addPayment(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }

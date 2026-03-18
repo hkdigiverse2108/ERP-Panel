@@ -63,7 +63,7 @@ const ReceiptForm = () => {
 
     if (isEditing) {
       const changedFields = GetChangedFields(payload, data);
-      await editPayment({ ...changedFields, paymentId: data._id }, { onSuccess: handleSuccess });
+      await editPayment({ ...changedFields, posPaymentId: data._id }, { onSuccess: handleSuccess });
     } else {
       await addPayment(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
     }
