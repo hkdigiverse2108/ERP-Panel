@@ -269,4 +269,10 @@ export const KEYS = {
     EDIT: "expense-edit",
     DELETE: "expense-delete",
   },
+  SALARY: {
+    BASE: "salary",
+    ADD: "salary-add",
+    EDIT: "salary-edit",
+    DELETE: "salary-delete",
+  }
 };

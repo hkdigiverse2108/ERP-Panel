@@ -41,3 +41,4 @@ export * from "./ReturnPosOrder";
 export * from "./CreditNote";
 export * from "./DebitNote";
 export * from "./Expense";
+export * from "./Salary";
