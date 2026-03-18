@@ -24,6 +24,7 @@ import type { AdditionalChargesBase } from "./AdditionalCharges";
 import type { MultiplePaymentType, PosProductDataModal } from "./POS";
 import type { PosCreditNoteBase } from "./PosCreditNote";
 import type { TaxBase } from "./Tax";
+import type { TermsConditionBase } from "./TermsAndCondition";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -541,6 +542,9 @@ export interface ModalStateSlice {
   };
   isDiscardModal: boolean;
   isTaxModal: { open: boolean; data: TaxBase | null };
+  selectedTermIds: string[];
+  isTermsAndConditionFormModal: { open: boolean; data: TermsConditionBase | null; };
+  isTermsAndConditionSelectionModal: { open: boolean; alreadySelectedIds: string[];};
 }
 
 // ************ Modal End ***********

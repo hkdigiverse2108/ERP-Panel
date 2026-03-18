@@ -13,6 +13,8 @@ import CommonVideoModal from "../Components/Common/Modal/CommonVideoModal";
 import Loader from "./Loader";
 import { useCompanyFinancialYears } from "../Utils/Hooks";
 import { ROUTES } from "../Constants";
+import CommonTermsAndConditionFormModal from "../Components/Common/TermsAndConditions/CommonTermsAndConditionFormModal";
+import CommonTermsAndConditionSelectModal from "../Components/Common/TermsAndConditions/CommonTermsAndConditionSelectModal";
 
 const Layout = () => {
   const { isExpanded, isMobileOpen, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
@@ -84,6 +86,8 @@ const Layout = () => {
       </div>
       <CommonUpload />
       <CommonVideoModal />
+      <CommonTermsAndConditionFormModal />
+      <CommonTermsAndConditionSelectModal />
     </>
   );
 };

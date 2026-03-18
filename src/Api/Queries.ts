@@ -113,7 +113,7 @@ export const Queries = {
 
   //*************** Additional Chargers **************** */
   useGetAdditionalCharges: (params?: Params) => useBaseQuery<AdditionalChargesApiResponse>([KEYS.ADDITIONAL_CHARGES.BASE, params], URL_KEYS.ADDITIONAL_CHARGES.ALL, params),
-  useGetAdditionalChargeDropdown: (params?: Params, enabled?: boolean) => useQueries<AdditionalChargesDropdownApiResponse>([KEYS.ADDITIONAL_CHARGES.BASE, params], () => Get(URL_KEYS.ADDITIONAL_CHARGES.DROPDOWN, params), { enabled: enabled }),
+  useGetAdditionalChargesDropdown: (params?: Params, enabled?: boolean) => useQueries<AdditionalChargesDropdownApiResponse>([KEYS.ADDITIONAL_CHARGES.BASE, params], () => Get(URL_KEYS.ADDITIONAL_CHARGES.DROPDOWN, params), { enabled: enabled }),
 
   //*************** Terms and Conditions **************** */
   useGetTermsCondition: (params?: Params, enabled?: boolean) => useBaseQuery<TermsConditionApiResponse>([KEYS.TERMS_CONDITION.BASE, params], URL_KEYS.TERMS_CONDITION.ALL, params, enabled),

@@ -19,7 +19,7 @@ const AdditionalCharge = () => {
   console.log(rows);
 
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown({}, isModalOpen);
-  const { data: AdditionalChargeData, isLoading: AdditionalChargeDataLoading } = Queries.useGetAdditionalChargeDropdown({ typeFilter: "sales" }, isModalOpen);
+  const { data: AdditionalChargeData, isLoading: AdditionalChargeDataLoading } = Queries.useGetAdditionalChargesDropdown({ typeFilter: "sales" }, isModalOpen);
 
   const calculateTotal = (value: number, tax: string) => {
     const rate = TaxData?.data?.find((item) => item._id === tax)?.percentage ?? 0;
