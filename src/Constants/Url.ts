@@ -365,4 +365,18 @@ export const URL_KEYS = {
     DROPDOWN: "/sales-credit-note/dropdown",
     ADD_EDIT: "/sales-credit-note/add-edit",
   },
+  SALARY:{
+    BASE: "/salary",
+    ALL: "/salary/all",
+    ADD: "/salary/add",
+    EDIT: "/salary/edit",
+    DELETE: "/salary/delete",
+  },
+  BANK_TRANSACTION: {
+    BASE: "/bank-transaction",
+    ADD: "/bank-transaction/add",
+    EDIT: "/bank-transaction/edit",
+    ALL: "/bank-transaction/all",
+    DROPDOWN: "/bank-transaction/dropdown",
+  },
 } as const;

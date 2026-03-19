@@ -1,26 +1,13 @@
-import type {
-  Breakpoint,
-  ButtonProps,
-  DrawerProps,
-  PaperProps as MuiPaperProps,
-  TextFieldProps,
-} from "@mui/material";
-import type {
-  GridColDef,
-  GridFilterModel,
-  GridPaginationModel,
-  GridRowsProp,
-  GridSlotsComponentsProps,
-  GridSortModel,
-  GridValidRowModel,
-} from "@mui/x-data-grid";
+import type { Breakpoint, ButtonProps, DrawerProps, PaperProps as MuiPaperProps, SxProps, TextFieldProps, Theme } from "@mui/material";
+import type { GridColDef, GridFilterModel, GridPaginationModel, GridRowsProp, GridSlotsComponentsProps, GridSortModel, GridValidRowModel } from "@mui/x-data-grid";
 import type { Dayjs } from "dayjs";
 import type { MuiTelInputProps } from "mui-tel-input";
 import type { FocusEvent, ReactNode } from "react";
 import * as Yup from "yup";
+import type { AdditionalChargesBase } from "./AdditionalCharges";
+import type { BankTransactionBase } from "./BankTransaction";
 import type { ContactBase } from "./Contacts";
 import type { LocationBase } from "./Location";
-import type { AdditionalChargesBase } from "./AdditionalCharges";
 import type { MultiplePaymentType, PosProductDataModal } from "./POS";
 import type { PosCreditNoteBase } from "./PosCreditNote";
 import type { TaxBase } from "./Tax";
@@ -77,11 +64,7 @@ export type SelectOptionType = {
   value: string;
   [key: string]: any;
 };
-export interface CommonStatsItem {
-  label: string;
-  value: number | string;
-  color?: string;
-}
+
 
 export interface CommonSelectProps {
   label?: string;
@@ -542,6 +525,7 @@ export interface ModalStateSlice {
     isSalesReturn?: boolean;
   };
   isDiscardModal: boolean;
+  isBankTransactionModal: { open: boolean; data: BankTransactionBase | null };
   isTaxModal: { open: boolean; data: TaxBase | null };
   selectedTermIds: string[];
   isTermsAndConditionFormModal: {
@@ -730,4 +714,20 @@ export interface TransactionSummary {
   roundOff: number;
   netAmount: number;
   taxSummary?: TaxSummaryItem[];
+}
+
+export interface CommonStatsItem {
+  label: string;
+  value: number | string;
+  color?: string;
+  desc?: string;
+  selected?: boolean;
+  onClick?: () => void;
+}
+
+export interface CommonStatsCardProps {
+  stats: CommonStatsItem[];
+  grid?: GridType;
+  paperSx?: SxProps<Theme>;
+  variant?: "default" | "radio";
 }

@@ -320,5 +320,18 @@ export const KEYS = {
     EDIT: "sales-credit-note-edit",
     DELETE: "sales-credit-note-delete",
     DROPDOWN: "sales-credit-note-dropdown",
+
   },
-};
+  SALARY: {
+    BASE: "salary",
+    ADD: "salary-add",
+    EDIT: "salary-edit",
+    DELETE: "salary-delete",
+  },
+  BANK_TRANSACTION: {
+    BASE: "bank-transaction",
+    ADD: "bank-transaction-add",
+    EDIT: "bank-transaction-edit",
+    DELETE: "bank-transaction-delete",
+  },
+}

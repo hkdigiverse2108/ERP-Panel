@@ -465,3 +465,7 @@ export const INVOICE_STATUS_STATS = [
   { label: "Paid", value: "paid" },
   { label: "UnPaid", value: "unpaid" },
 ];
+export const EXPENSE_TYPE_OPTIONS = [
+  { label: "Income", value: "income" },
+  { label: "Expense", value: "expense" },
+];

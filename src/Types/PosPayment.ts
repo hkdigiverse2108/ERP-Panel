@@ -5,13 +5,13 @@ import type { ContactBase } from "./Contacts";
 import type { PosOrderBase } from "./PosOrder";
 
 export interface PosPaymentFormValues {
-  paymentNo?: string;
   voucherType?: string;
   paymentType?: string;
   partyId?: string;
   bankId?: string;
   posOrderId?: string;
   paymentMode?: string;
+  date?: string | Date | null;
   totalAmount?: number;
   paidAmount?: number;
   pendingAmount?: number;
@@ -20,8 +20,13 @@ export interface PosPaymentFormValues {
   isNonGST?: boolean;
   isActive?: boolean;
   companyId?: string;
-  accountId?: string;
   remark?: string;
+  status?: string;
+  voucherDetails?: VoucherRow[];
+  _submitAction?: string;
+  posCashRegisterId?: string;
+  discountAmount?: number;
+  taxId?: string;
   //Expense
   fromDate?: string;
   image?: string;
@@ -32,12 +37,13 @@ export type AddPosPaymentPayload = PosPaymentFormValues & {
 };
 
 export type EditPosPaymentPayload = AddPosPaymentPayload & {
-  paymentId: string;
+  posPaymentId: string;
 };
 
 /* ================= BASE MODEL ================= */
 export type PosPaymentBase = Omit<PosPaymentFormValues, "partyId" | "bankId" | "posOrderId" | "companyId"> &
   CommonDataType & {
+    paymentNo?: string;
     partyId?: ContactBase;
     bankId?: BankBase;
     posOrderId?: PosOrderBase;
@@ -51,4 +57,17 @@ export interface PosPaymentDataResponse extends PageStatus {
 
 export interface PosPaymentApiResponse extends MessageStatus {
   data: PosPaymentDataResponse;
+}
+
+export interface VoucherRow {
+  id: string;
+  posOrderId?: string;
+  paymentMode?: string;
+  bankId?: string;
+  netAmount: number;
+  paidAmount: number;
+  pendingAmount: number;
+  kasarAmount: number;
+  amount: number;
+  paymentAmount: number;
 }

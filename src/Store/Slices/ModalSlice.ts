@@ -23,6 +23,7 @@ const initialState: ModalStateSlice = {
   isQtyCountModal: { open: false, data: null },
   isOrderRefundModal: { open: false, data: null, isSalesReturn: false },
   isDiscardModal: false,
+  isBankTransactionModal: { open: false, data: null },
   isTaxModal: { open: false, data: null },
   selectedTermIds: [],
   isTermsAndConditionFormModal: { open: false, data: null },
@@ -104,6 +105,9 @@ const ModalSlice = createSlice({
     setDiscardModal: (state) => {
       state.isDiscardModal = !state.isDiscardModal;
     },
+    setBankTransactionModal: (state, action) => {
+      state.isBankTransactionModal = action.payload;
+    },
     setTaxModal: (state, action) => {
       state.isTaxModal = action.payload;
     },
@@ -146,6 +150,7 @@ export const {
   setSelectedTermIds,
   setTermsAndConditionFormModal,
   setTermsAndConditionSelectionModal,
+  setBankTransactionModal
 } = ModalSlice.actions;
 
 export default ModalSlice.reducer;
