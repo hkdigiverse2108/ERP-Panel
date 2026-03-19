@@ -75,6 +75,9 @@ export const URL_KEYS = {
     BASE: "/tax",
     DROPDOWN: "/tax/dropdown",
     ALL: "/tax/all",
+    ADD: "/tax/add",
+    EDIT: "/tax/edit",
+    DELETE: "/tax/delete",
   },
   UOM: {
     BASE: "/uom",
@@ -314,5 +317,19 @@ export const URL_KEYS = {
     ADD: "/expense/add",
     EDIT: "/expense/edit",
     DELETE: "/expense/delete",
+  },
+  SALARY:{
+    BASE: "/salary",
+    ALL: "/salary/all",
+    ADD: "/salary/add",
+    EDIT: "/salary/edit",
+    DELETE: "/salary/delete",
+  },
+  BANK_TRANSACTION: {
+    BASE: "/bank-transaction",
+    ADD: "/bank-transaction/add",
+    EDIT: "/bank-transaction/edit",
+    ALL: "/bank-transaction/all",
+    DROPDOWN: "/bank-transaction/dropdown",
   },
 } as const;

@@ -1,28 +1,45 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
 import type { ContactBase } from "./Contacts";
+import type { EmployeeBase } from "./Employee";
+import type { SalaryBase } from "./Salary";
+
 
 export interface ExpenseFormValues {
-  amount?: number;
-  image?: string;
-  description?: string;
   partyId?: string;
-  type?: string;
-  total?: number;
-  fromDate?: string;
+  bankId?: string;
+  posOrderId?: string;
+  fromDate?: string | Date | null;
+  amount?: number;
   isActive?: boolean;
+  companyId?: string;
+  description?: string;
+  status?: string;
+  _submitAction?: string;
+  type?: string;
+  image?: string | File | null;
+  isSalary?: boolean;
 }
 
-export type AddExpensePayload = ExpenseFormValues;
+export type AddExpensePayload = ExpenseFormValues & {
+  companyId?: string;
+};
 
-export type EditExpensePayload = AddExpensePayload & { paymentId: string };
+export type EditExpensePayload = AddExpensePayload & {
+  expenseId: string;
+};
 
 /* ================= BASE MODEL ================= */
-export type ExpenseBase = Omit<ExpenseFormValues, "partyId" | "companyId"> & CommonDataType & { partyId?: ContactBase; companyId?: CompanyBase };
+export type ExpenseBase = Omit<ExpenseFormValues, "partyId" | "companyId"> &
+  CommonDataType & {
+    partyId?: ContactBase | EmployeeBase;
+    companyId?: CompanyBase;
+    total?: SalaryBase;
+  };
 
 /* ================= API RESPONSES ================= */
 export interface ExpenseDataResponse extends PageStatus {
-  Expense_data: ExpenseBase[];
+  expense_data: ExpenseBase[];
 }
 
 export interface ExpenseApiResponse extends MessageStatus {

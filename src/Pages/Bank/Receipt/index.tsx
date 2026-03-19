@@ -2,20 +2,20 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
+import {  CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, PosPaymentBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { FormatDate } from "../../../Utils";
 
-const Payment = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+const Receipt = () => {
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params} = useDataGrid();
 
   const navigate = useNavigate();
-  const permission = usePagePermission(PAGE_TITLE.PAYMENT.BASE);
+  const permission = usePagePermission(PAGE_TITLE.RECEIPT.BASE);
 
-  const { data, isLoading, isFetching } = Queries.useGetPosPayment({ ...params, voucherTypeFilter: "purchase" });
+  const { data, isLoading, isFetching } = Queries.useGetPosPayment({ ...params, voucherTypeFilter: "sales" });
   const { mutate: deletePayment, isPending: isDeleteLoading } = Mutations.useDeletePosPayment();
   const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPosPayment();
   const rows = useMemo(() => {
@@ -24,7 +24,7 @@ const Payment = () => {
 
   const totalRows = data?.data?.totalData || 0;
 
-  const handleAdd = () => navigate(ROUTES.PAYMENT.ADD_EDIT);
+  const handleAdd = () => navigate(ROUTES.RECEIPT.ADD_EDIT);
 
   const handleDelete = () => {
     if (!rowToDelete) return;
@@ -34,8 +34,7 @@ const Payment = () => {
   };
 
   const columns: AppGridColDef<PosPaymentBase>[] = [
-    CommonObjectNameColumn<PosPaymentBase>("companyId", { headerName: "Company", width: 200 }),
-    { field: "voucherType", headerName: "Payment No", width: 200 },
+    { field: "voucherType", headerName: "Receipt No", width: 200 },
     { field: "partyId", headerName: "Party Name", width: 230, valueGetter: (_v, row: PosPaymentBase) => (row?.partyId ? `${row?.partyId?.firstName} ${row?.partyId?.lastName}` : "-") },
     { field: "paymentMode", headerName: "Payment Mode", width: 140 },
     { field: "paymentType", headerName: "Payment Type", width: 140 },
@@ -48,7 +47,7 @@ const Payment = () => {
           CommonActionColumn<PosPaymentBase>({
             ...(permission?.edit && {
               active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
-              editRoute: ROUTES.PAYMENT.ADD_EDIT,
+              editRoute: ROUTES.RECEIPT.ADD_EDIT,
             }),
             ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherType }) }),
           }),
@@ -73,9 +72,10 @@ const Payment = () => {
   };
 
 
+
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.PAYMENT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PAYMENT.BASE} />
+      <CommonBreadcrumbs title={PAGE_TITLE.RECEIPT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.RECEIPT.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonCard hideDivider>
@@ -88,4 +88,4 @@ const Payment = () => {
   );
 };
 
-export default Payment;
+export default Receipt;

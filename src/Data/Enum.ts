@@ -333,3 +333,7 @@ export const VALUE_TYPE = [
   { label: "Percentage", value: "percentage" },
   { label: "Flat", value: "flat" },
 ];
+export const EXPENSE_TYPE_OPTIONS = [
+  { label: "Income", value: "income" },
+  { label: "Expense", value: "expense" },
+];
