@@ -519,3 +519,8 @@ export const TermsConditionFormSchema = Yup.object({
   isDefault: Validation("boolean", "Is Default", { required: false }),
   isActive: Validation("boolean", "is Active", { required: false }),
 });
+
+export const TaxFormSchema = Yup.object({
+  name: Validation("string", "Tax Name"),
+  percentage: Validation("number", "Percentage"),
+});

@@ -76,6 +76,9 @@ export const KEYS = {
 
   TAX: {
     BASE: "tax",
+    ADD: "tax-add",
+    EDIT: "tax-edit",
+    DELETE: "tax-delete",
   },
   UOM: {
     BASE: "/uom",
