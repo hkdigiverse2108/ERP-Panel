@@ -1,6 +1,6 @@
 import * as Yup from "yup";
-import { PAYMENT_TYPE, VOUCHER_TYPE } from "../../Data";
-import type { DepValue, Primitive } from "../../Types";
+import { DISCOUNT_APPLY_TO_ENUM, DISCOUNT_MODE_ENUM, MINIMUM_REQUIREMENT_ENUM, PAYMENT_TYPE, VOUCHER_TYPE } from "../../Data";
+import type { Primitive } from "../../Types";
 import { Validation } from "./Validation";
 
 const RequiredWhenTrue = (dependentField: string, message: string, baseSchema: Yup.AnySchema) => {
@@ -11,15 +11,29 @@ const RequiredWhenTrue = (dependentField: string, message: string, baseSchema: Y
   });
 };
 
-export const RequiredWhen = (dependentField: string, requiredValues: Primitive[], label: string, type: "string" | "number" = "string") => {
-  return Yup.mixed().when(dependentField, (value: DepValue) => {
-    const match = Array.isArray(value) ? value.some((v) => requiredValues.includes(v)) : requiredValues.includes(value as Primitive);
+export const RequiredWhen = (dependentField: string, requiredValues: Primitive[], label: string, type: "string" | "number" | "array" = "string", options?: { extraRules?: (schema: Yup.AnySchema) => Yup.AnySchema }) => {
+  let schema: Yup.AnySchema;
+
+  // Base schema by type
+  if (type === "number") schema = Yup.number();
+  else if (type === "array") schema = Yup.array();
+  else schema = Yup.string();
+
+  // Apply extra rules if provided
+  if (options?.extraRules) schema = options.extraRules(schema);
+
+  return schema.test("required-when", `${label} is required`, (value, { from }) => {
+    const root = from?.[from.length - 1]?.value;
+    const dependentValue = root?.[dependentField];
+    const match = requiredValues.includes(dependentValue);
 
     if (match) {
-      return Validation(type, label);
+      if (type === "array") return Array.isArray(value) && value.length > 0;
+      if (type === "number") return value !== undefined && value !== null;
+      return !!value;
     }
 
-    return Validation(type, label, { required: false });
+    return true;
   });
 };
 
@@ -437,17 +451,53 @@ export const LoyaltyFormSchema = Yup.object({
 });
 
 export const DiscountFormSchema = Yup.object({
-  name: Validation("string", "Name"),
+  branchIds: Validation("array", "Branch", { minItems: 1 }),
+  title: Validation("string", "Title"),
   discountCode: Validation("string", "Discount Code"),
-  discountValue: Validation("number", "Discount Value"),
-  usageLimit: Validation("number", "Usage Limit"),
-  expiryDays: Validation("number", "Expiry Days"),
-  startDate: Validation("string", "Start Date"),
-  endDate: Validation("string", "End Date"),
-  redemptionType: Validation("string", "Redemption Type"),
-  singleTimeUse: Validation("boolean", "Single Time Use"),
-  status: Validation("string", "Status"),
-  isActive: Validation("boolean", "Is Active"),
+  autoApply: Validation("boolean", "Auto Apply"),
+  discountApplicable: Validation("string", "Discount Applicable"),
+  excludeAlreadyDiscounted: RequiredWhenTrue("discountApplicable", "Exclude Already Discounted", Yup.boolean()),
+
+  discountMode: Validation("string", "Discount Mode"),
+
+  discountType: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.NORMAL], "Discount Type", "string"),
+  discountValue: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.NORMAL], "Discount Value", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Discount value must be at least 1") }),
+  rangeWiseRules: Yup.array().of(
+    Yup.object({
+      minQty: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.RANGE_WISE], "Minimum Quantity", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Minimum quantity must be at least 1") }),
+      maxQty: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.RANGE_WISE], "Maximum Quantity", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Maximum quantity must be at least 1") }),
+      discountValue: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.RANGE_WISE], "Discount Value", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Discount value must be at least 1") }),
+      discountType: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.RANGE_WISE], "Discount Type", "string"),
+    }),
+  ),
+  // .min(1, "At least one range wise rule is required"),
+
+  categoryIds: RequiredWhen("appliesTo", [DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY], "Category", "array"),
+  productIds: RequiredWhen("appliesTo", [DISCOUNT_APPLY_TO_ENUM.SPECIFIC_PRODUCTS], "Product", "array"),
+  brandIds: RequiredWhen("appliesTo", [DISCOUNT_APPLY_TO_ENUM.SPECIFIC_BRAND], "Brand", "array"),
+  excludedProductIds: RequiredWhen("appliesTo", [DISCOUNT_APPLY_TO_ENUM.SPECIFIC_BRAND, DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY, DISCOUNT_APPLY_TO_ENUM.SPECIFIC_PRODUCTS], "Brand", "array"),
+
+  buyXGetY: Yup.object({
+    buyQty: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.BUY_X_GET_Y], "Select Quantity", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Select Quantity must be at least 1") }),
+    getProductIds: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.BUY_X_GET_Y], "Select Products", "array"),
+    getQty: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.BUY_X_GET_Y], "Select Qty", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Select Qty must be at least 1") }),
+  }),
+
+  productAtFixAmount: Yup.object({
+    minimumAmount: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT], "Minimum Purchase Amount", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Minimum Purchase Amount must be at least 1") }),
+    freeProductIds: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT], "Select Products", "array"),
+    freeQty: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT], "Select Qty", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Select Qty must be at least 1") }),
+  }),
+
+  minimumRequirement: RequiredWhen("discountMode", [DISCOUNT_MODE_ENUM.NORMAL], "Minimum Requirement", "string"),
+  minimumPurchaseAmount: RequiredWhen("minimumRequirement", [MINIMUM_REQUIREMENT_ENUM.MIN_PURCHASE_AMOUNT], "Minimum Purchase Amount", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Minimum Purchase Amount must be at least 1") }),
+  minimumQuantity: RequiredWhen("minimumRequirement", [MINIMUM_REQUIREMENT_ENUM.MIN_QUANTITY], "Minimum Quantity", "number", { extraRules: (s) => (s as Yup.NumberSchema).min(1, "Minimum Quantity must be at least 1") }),
+
+  usageLimitTotal: Validation("number", "Usage Limit Total", { required: false, extraRules: (s) => (s as Yup.NumberSchema).min(1, "Usage Limit Total must be at least 1") }),
+  usageLimitPerCustomer: Validation("boolean", "Usage Limit Per Customer", { required: false }),
+
+  startDateTime: Validation("string", "Start Date Time"),
+  endDateTime: RequiredWhenTrue("hasEndDate", "End Date Time", Yup.string()),
 });
 
 export const PointSetupSchema = Yup.object({
@@ -533,7 +583,6 @@ export const TermsConditionFormSchema = Yup.object({
   isDefault: Validation("boolean", "Is Default", { required: false }),
   isActive: Validation("boolean", "is Active", { required: false }),
 });
-
 
 export const PaymentFormSchema = Yup.object({
   partyId: Validation("string", "Party"),

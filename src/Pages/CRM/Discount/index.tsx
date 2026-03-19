@@ -2,65 +2,67 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS, COUPON_DISCOUNT_TYPE, COUPON_STATUS } from "../../../Data";
-import type { AppGridColDef, CouponBase } from "../../../Types";
+import { BREADCRUMBS } from "../../../Data";
+import type { AppGridColDef, DiscountBase } from "../../../Types";
+import { FormatDate, FormatPayment, FormatValidity } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { FormatDate } from "../../../Utils";
 
 const Discount = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.CRM.DISCOUNT.BASE);
-
-  const { data: discountData, isLoading: discountDataLoading, isFetching: discountDataFetching } = Queries.useGetDiscount({ ...params });
-  const { mutate: deleteDiscountMutate, isPending: isDeleteLoading } = Mutations.useDeleteDiscount();
-  const { mutate: editDiscount, isPending: isEditLoading } = Mutations.useEditDiscount();
-
-  const allDiscount = useMemo(() => discountData?.data?.discount_data.map((item) => ({ ...item, id: item?._id })) || [], [discountData]);
-  const totalRows = discountData?.data?.totalData || 0;
+  const { data, isLoading, isFetching } = Queries.useGetDiscount(params);
+  const { mutate: deleteDiscount } = Mutations.useDeleteDiscount();
+  const { mutate: editDiscount } = Mutations.useEditDiscount();
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
-    deleteDiscountMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
+    deleteDiscount(rowToDelete?._id as string, {
+      onSuccess: () => setRowToDelete(null),
+    });
   };
 
-  const handleAdd = () => navigate(ROUTES.DISCOUNT.ADD_EDIT);
+  const rows = useMemo(() => data?.data?.discount_data.map((r: DiscountBase) => ({ ...r, id: r?._id })) || [], [data]);
 
-  const columns: AppGridColDef<CouponBase>[] = [
-    { field: "title", headerName: "Discount name", width: 170 },
-    { field: "discountCode", headerName: "Discount code", width: 100 },
-    { field: "discountValue", headerName: "Discount value", width: 120 },
-    { field: "usageLimit", headerName: "Usage limit", width: 100 },
-    { field: "usedCount", headerName: "Used count", width: 100 },
-    { field: "expiryDays", headerName: "Expiry days", width: 100 },
-    { field: "startDate", headerName: "Start Date", width: 150, renderCell: (params) => FormatDate(params.row.startDate) },
-    { field: "endDate", headerName: "End Date", width: 150, renderCell: (params) => FormatDate(params.row.endDate) },
-    { field: "redemptionType", headerName: "Redemption Type", width: 150, renderCell: (params) => COUPON_DISCOUNT_TYPE.find((item) => item.value === params.row.redemptionType)?.label },
-    { field: "singleTimeUse", headerName: "Single Time Use", width: 150, renderCell: (params) => (params.row.singleTimeUse ? "Yes" : "No") },
-    { field: "status", headerName: "Status", flex: 1, minWidth: 100, renderCell: (params) => COUPON_STATUS.find((item) => item.value === params.row.status)?.label },
+  const stats = useMemo(() => {
+    return [
+      { label: "Total Discounts", value: data?.data?.totalData || 0 },
+      { label: "Active Discounts", value: data?.data?.activeDiscounts || 0 },
+      { label: "Order with Discounts", value: data?.data?.orderWithDiscounts || 0 },
+      { label: "Revenue from Discounts", value: data?.data?.revenue || 0 },
+      { label: "Discount Given", value: data?.data?.discountGiven || 0 },
+    ];
+  }, [data]);
+
+  const columns: AppGridColDef<DiscountBase>[] = [
+    { field: "title", headerName: "Title", width: 200 },
+    { field: "createdAt", headerName: "Created On", width: 160, valueGetter: (v) => FormatDate(v) },
+    { field: "validity", headerName: "Validity", width: 250, valueGetter: (v, row) => FormatValidity(v, row) },
+    { field: "orders", headerName: "Orders", width: 150 },
+    { field: "revenue", headerName: "Revenue", width: 150 },
+    { field: "discountValue", headerName: "Discount", width: 150 },
+    { field: "discountType", headerName: "Discount Type", width: 150, valueGetter: (v) => FormatPayment(v) },
+    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 100, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
     ...(permission?.edit || permission?.delete
       ? [
-          CommonActionColumn<CouponBase>({
-            ...(permission?.edit && {
-              active: (row) => editDiscount({ discountId: row?._id, isActive: !row.isActive }),
-              editRoute: ROUTES.DISCOUNT.ADD_EDIT,
-            }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+          CommonActionColumn<DiscountBase>({
+            ...(permission?.edit && { active: (row) => editDiscount({ discountId: row?._id, isActive: !row.isActive }), editRoute: ROUTES.DISCOUNT.ADD_EDIT }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.title || row?.discountCode }) }),
           }),
         ]
       : []),
   ];
 
-  const CommonDataGridOption = {
+  const gridOptions = {
     columns,
-    rows: allDiscount,
-    rowCount: totalRows,
-    loading: discountDataLoading || discountDataFetching || isEditLoading,
+    rows,
+    rowCount: data?.data?.totalData || 0,
+    loading: isLoading || isFetching,
     isActive,
     setActive,
-    ...(permission?.add && { handleAdd }),
+    ...(permission?.add && { handleAdd: () => navigate(ROUTES.DISCOUNT.ADD_EDIT) }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,
@@ -72,12 +74,13 @@ const Discount = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.CRM.DISCOUNT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.DISCOUNT.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+      <CommonBreadcrumbs title={PAGE_TITLE.CRM.DISCOUNT.BASE} breadcrumbs={BREADCRUMBS.DISCOUNT.BASE} />
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 1.5 }}>
+        <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 4, md: 2.3 }} />
         <CommonCard hideDivider>
-          <CommonDataGrid {...CommonDataGridOption} />
+          <CommonDataGrid {...gridOptions} />
         </CommonCard>
-        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
       </Box>
     </>
   );

@@ -148,11 +148,17 @@ input[type="number"] {
 .status-pending{
   @apply text-white capitalize text-center w-full bg-amber-500 dark:bg-amber-600 h-6 leading-6 rounded-sm;
 }
-
+.status-active,
+.status-available,
+.status-paid,
+.status-delivered,
 .status-approved{
   @apply text-white capitalize text-center w-full bg-green-500 dark:bg-green-600 h-6 leading-6 rounded-sm;
 }
-
+.status-inactive,
+.status-closed,
+.status-used,
+.status-unpaid,
 .status-rejected{
   @apply text-white capitalize text-center w-full bg-red-500 dark:bg-red-600 h-6 leading-6 rounded-sm;
 }
@@ -161,31 +167,11 @@ input[type="number"] {
   @apply text-white capitalize text-center w-full bg-cyan-400  dark:bg-cyan-500  h-6 leading-6 rounded-sm;
 }
 
-.status-closed {
-  @apply text-white capitalize text-center w-full bg-red-500 dark:bg-red-600 h-6 leading-6 rounded-sm;
-}
-
-.status-available {
-  @apply text-white capitalize text-center w-full bg-green-500 dark:bg-green-600 h-6 leading-6 rounded-sm;
-}
-
-
-.status-used {
-  @apply text-white capitalize text-center w-full bg-red-500 dark:bg-red-600 h-6 leading-6 rounded-sm;
-}
 
 .status-in_progress {
   @apply text-white capitalize text-center w-full bg-yellow-500 dark:bg-yellow-600 h-6 leading-6 rounded-sm;
 }
-.status-delivered {
-  @apply text-white capitalize text-center w-full bg-green-500 dark:bg-green-600 h-6 leading-6 rounded-sm;
-}
-.status-paid {
-  @apply text-white capitalize text-center w-full bg-green-500 dark:bg-green-600 h-6 leading-6 rounded-sm;
-}
-.status-unpaid {
-  @apply text-white capitalize text-center w-full bg-red-500 dark:bg-red-600 h-6 leading-6 rounded-sm;
-}
+
 
 .iconButtonStyle{
   @apply w-11 h-8.5 rounded-md! border! border-gray-200! dark:border-gray-600!;
