@@ -65,7 +65,7 @@ export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows
       const pageWidth = doc.internal.pageSize.getWidth();
 
       doc.setFontSize(14);
-      doc.text(fileName, pageWidth / 2, 30, { align: "center" });
+      doc.text(title, pageWidth / 2, 30, { align: "center" });
 
       if (user) {
         doc.setFontSize(10);
