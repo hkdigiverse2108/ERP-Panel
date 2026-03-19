@@ -46,7 +46,7 @@ const Receipt = () => {
       ? [
           CommonActionColumn<PosPaymentBase>({
             ...(permission?.edit && {
-              active: (row) => editPayment({ paymentId: row?._id, isActive: !row.isActive }),
+              active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
               editRoute: ROUTES.RECEIPT.ADD_EDIT,
             }),
             ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherType }) }),

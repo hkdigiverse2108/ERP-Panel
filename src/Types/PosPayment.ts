@@ -27,6 +27,9 @@ export interface PosPaymentFormValues {
   posCashRegisterId?: string;
   discountAmount?: number;
   taxId?: string;
+  //Expense
+  fromDate?: string;
+  image?: string;
 }
 
 export type AddPosPaymentPayload = PosPaymentFormValues & {
@@ -40,6 +43,7 @@ export type EditPosPaymentPayload = AddPosPaymentPayload & {
 /* ================= BASE MODEL ================= */
 export type PosPaymentBase = Omit<PosPaymentFormValues, "partyId" | "bankId" | "posOrderId" | "companyId"> &
   CommonDataType & {
+    paymentNo?: string;
     partyId?: ContactBase;
     bankId?: BankBase;
     posOrderId?: PosOrderBase;
@@ -54,7 +58,6 @@ export interface PosPaymentDataResponse extends PageStatus {
 export interface PosPaymentApiResponse extends MessageStatus {
   data: PosPaymentDataResponse;
 }
-
 
 export interface VoucherRow {
   id: string;
