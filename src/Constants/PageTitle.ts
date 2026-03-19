@@ -150,4 +150,32 @@ export const PAGE_TITLE = {
       EDIT: "Edit Debit Note",
     },
   },
+  SALES: {
+    BASE: "Sales",
+    ESTIMATE: {
+      BASE: "Estimate",
+      ADD: "Add Estimate",
+      EDIT: "Edit Estimate",
+    },
+    SALES_ORDER: {
+      BASE: "Sales Order",
+      ADD: "Add Sales Order",
+      EDIT: "Edit Sales Order",
+    },
+    INVOICE: {
+      BASE: "Invoice",
+      ADD: "Add Invoice",
+      EDIT: "Edit Invoice",
+    },
+    DELIVERY_CHALLAN: {
+      BASE: "Delivery Challan",
+      ADD: "Add Delivery Challan",
+      EDIT: "Edit Delivery Challan",
+    },
+    SALES_CREDIT_NOTE: {
+      BASE: "Sales Credit Note",
+      ADD: "Add Sales Credit Note",
+      EDIT: "Edit Sales Credit Note",
+    },
+  },
 } as const;

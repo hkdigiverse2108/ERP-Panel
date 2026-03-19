@@ -1,4 +1,5 @@
 import type {
+  AdditionalChargeItem,
   CommonDataType,
   MessageStatus,
   PageStatus,
@@ -9,7 +10,6 @@ import type { TermsConditionBase } from "./TermsAndCondition";
 import type { Supplier } from "./PurchaseOrder";
 import type { UomBase } from "./Uom";
 import type { TaxBase } from "./Tax";
-import type { AdditionalChargesBase } from "./AdditionalCharges";
 
 /* ===================== SUPPLIER ===================== */
 
@@ -78,20 +78,7 @@ export interface SupplierBillReturnProductDetails {
   summary?: SupplierBillReturnProductSummary;
 }
 
-/* ===================== ADDITIONAL CHARGES ===================== */
 
-export interface AdditionalChargeItem {
-  chargeId?: string | AdditionalChargesBase;
-  amount?: number;
-  taxAmount?: number;
-  taxId?: string | TaxBase;
-  totalAmount?: number;
-}
-
-export interface AdditionalChargeDetails {
-  item?: AdditionalChargeItem[];
-  total?: number;
-}
 
 /* ===================== SUMMARY ===================== */
 
@@ -256,11 +243,6 @@ export interface SupplierBillBase extends CommonDataType {
 
   paymentStatus?: "paid" | "unpaid" | "partial";
   status?: "active" | "cancelled";
-
-  companyId?: {
-    _id: string;
-    name?: string;
-  };
 
   isActive?: boolean;
 }

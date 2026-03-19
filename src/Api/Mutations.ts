@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AddAdditionalChargesPayload, AddBankPayload, AddBillOfLiveProductPayload, AddCashControlPayload, AddContactPayload, AddCouponPayload, AddCreditNotePayload, AddDebitNotePayload, AddEmployeePayload, AddExpensePayload, AddLoyaltyPayload, AddMaterialConsumptionPayload, AddPosCashRegisterPayload, AddPosCreditNotePayload, AddPosPaymentPayload, AddPosProductOrderPayload, AddProductPayload, AddPurchaseOrderPayload, AddRecipePayload, AddReturnPosOrderPayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddStockVerificationPayload, AddSupplierBillPayload, AddTaxPayload, AddTermsConditionPayload, CallRequestFormValues, ChangePasswordPayload, CompanyApiResponse, EditAdditionalChargesPayload, EditBankPayload, EditBillOfLiveProductPayload, EditCompanyPayload, EditContactPayload, EditCouponPayload, EditCreditNotePayload, EditDebitNotePayload, EditEmployeePayload, EditExpensePayload, EditLoyaltyPayload, EditLoyaltyPointPayload, EditMaterialConsumptionPayload, EditPermissionPayload, EditPosCashRegisterPayload, EditPosCreditNotePayload, EditPosPaymentPayload, EditPosProductOrderPayload, EditProductPayload, EditPurchaseOrderPayload, EditRecipePayload, EditReturnPosOrderPayload, EditRolesPayload, EditStockVerificationPayload, EditSupplierBillPayload, EditTaxPayload, EditTermsConditionPayload, EmployeeApiResponse, LoginPayload, LoginResponse, PosCreditNoteRedeemFormValues, PosCreditNoteRedeemResponse, PosCreditNoteRefundFormValues, PosCreditNoteRefundResponse, PosProductOrderDataResponse, ProductDetectApiResponse, RedeemLoyaltyApiResponse, RedeemLoyaltyPayload, ReturnPosOrderResponse, UploadResponse, VerifyCouponApiResponse, VerifyCouponPayload, AddPurchaseDebitNotePayload, EditPurchaseDebitNotePayload } from "../Types";
+import type { AddAdditionalChargesPayload, AddBankPayload, AddBillOfLiveProductPayload, AddCashControlPayload, AddContactPayload, AddCouponPayload, AddCreditNotePayload, AddDebitNotePayload, AddEmployeePayload, AddExpensePayload, AddLoyaltyPayload, AddMaterialConsumptionPayload, AddPosCashRegisterPayload, AddPosCreditNotePayload, AddPosPaymentPayload, AddPosProductOrderPayload, AddProductPayload, AddPurchaseOrderPayload, AddRecipePayload, AddReturnPosOrderPayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddStockVerificationPayload, AddSupplierBillPayload, AddTaxPayload, AddTermsConditionPayload, CallRequestFormValues, ChangePasswordPayload, CompanyApiResponse, EditAdditionalChargesPayload, EditBankPayload, EditBillOfLiveProductPayload, EditCompanyPayload, EditContactPayload, EditCouponPayload, EditCreditNotePayload, EditDebitNotePayload, EditEmployeePayload, EditExpensePayload, EditLoyaltyPayload, EditLoyaltyPointPayload, EditMaterialConsumptionPayload, EditPermissionPayload, EditPosCashRegisterPayload, EditPosCreditNotePayload, EditPosPaymentPayload, EditPosProductOrderPayload, EditProductPayload, EditPurchaseOrderPayload, EditRecipePayload, EditReturnPosOrderPayload, EditRolesPayload, EditStockVerificationPayload, EditSupplierBillPayload, EditTaxPayload, EditTermsConditionPayload, EmployeeApiResponse, LoginPayload, LoginResponse, PosCreditNoteRedeemFormValues, PosCreditNoteRedeemResponse, PosCreditNoteRefundFormValues, PosCreditNoteRefundResponse, PosProductOrderDataResponse, ProductDetectApiResponse, RedeemLoyaltyApiResponse, RedeemLoyaltyPayload, ReturnPosOrderResponse, UploadResponse, VerifyCouponApiResponse, VerifyCouponPayload, AddPurchaseDebitNotePayload, EditPurchaseDebitNotePayload, AddEstimatePayload, EditEstimatePayload, AddSalesOrderPayload, EditSalesOrderPayload, AddInvoicePayload, EditInvoicePayload, AddDeliveryChallanPayload, EditDeliveryChallanPayload, AddSalesCreditNotePayload, EditSalesCreditNotePayload } from "../Types";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
 
@@ -167,5 +167,31 @@ export const Mutations = {
   useEditPurchaseDebitNote: () => useMutations<EditPurchaseDebitNotePayload, void>([KEYS.PURCHASE_DEBIT_NOTE.EDIT, KEYS.PURCHASE_DEBIT_NOTE.BASE], (input) => Put(URL_KEYS.PURCHASE_DEBIT_NOTE.EDIT, input)),
   useDeletePurchaseDebitNote: () => useMutations<string, void>([KEYS.PURCHASE_DEBIT_NOTE.DELETE, KEYS.PURCHASE_DEBIT_NOTE.BASE], (id) => Delete(`${URL_KEYS.PURCHASE_DEBIT_NOTE.BASE}/${id}`)),
 
+    //*************** Estimate **************** */
+  useAddEstimate: () => useMutations<AddEstimatePayload, void>([KEYS.ESTIMATE.ADD, KEYS.ESTIMATE.BASE], (input) => Post(URL_KEYS.ESTIMATE.ADD, input)),
+  useEditEstimate: () => useMutations<EditEstimatePayload, void>([KEYS.ESTIMATE.EDIT, KEYS.ESTIMATE.BASE], (input) => Put(URL_KEYS.ESTIMATE.EDIT, input)),
+  useDeleteEstimate: () => useMutations<string, void>([KEYS.ESTIMATE.DELETE, KEYS.ESTIMATE.BASE], (id) => Delete(`${URL_KEYS.ESTIMATE.BASE}/${id}`)),
 
+  //*************** Sales Order **************** */
+
+  useAddSalesOrder: () => useMutations<AddSalesOrderPayload, void>([KEYS.SALES_ORDER.ADD, KEYS.SALES_ORDER.BASE], (input) => Post(URL_KEYS.SALES_ORDER.ADD, input)),
+  useEditSalesOrder: () => useMutations<EditSalesOrderPayload, void>([KEYS.SALES_ORDER.EDIT, KEYS.SALES_ORDER.BASE], (input) => Put(URL_KEYS.SALES_ORDER.EDIT, input)),
+  useDeleteSalesOrder: () => useMutations<string, void>([KEYS.SALES_ORDER.DELETE, KEYS.SALES_ORDER.BASE], (id) => Delete(`${URL_KEYS.SALES_ORDER.BASE}/${id}`)),
+
+  //*************** Invoice **************** */
+
+  useAddInvoice: () => useMutations<AddInvoicePayload, void>([KEYS.INVOICE.ADD, KEYS.INVOICE.BASE], (input) => Post(URL_KEYS.INVOICE.ADD, input)),
+  useEditInvoice: () => useMutations<EditInvoicePayload, void>([KEYS.INVOICE.EDIT, KEYS.INVOICE.BASE], (input) => Put(URL_KEYS.INVOICE.EDIT, input)),
+  useDeleteInvoice: () => useMutations<string, void>([KEYS.INVOICE.DELETE, KEYS.INVOICE.BASE], (id) => Delete(`${URL_KEYS.INVOICE.BASE}/${id}`)),
+
+  //*************** Delivery Challan **************** */
+
+  useAddDeliveryChallan: () => useMutations<AddDeliveryChallanPayload, void>([KEYS.DELIVERY_CHALLAN.ADD, KEYS.DELIVERY_CHALLAN.BASE], (input) => Post(URL_KEYS.DELIVERY_CHALLAN.ADD, input)),
+  useEditDeliveryChallan: () => useMutations<EditDeliveryChallanPayload, void>([KEYS.DELIVERY_CHALLAN.EDIT, KEYS.DELIVERY_CHALLAN.BASE], (input) => Put(URL_KEYS.DELIVERY_CHALLAN.EDIT, input)),
+  useDeleteDeliveryChallan: () => useMutations<string, void>([KEYS.DELIVERY_CHALLAN.DELETE, KEYS.DELIVERY_CHALLAN.BASE], (id) => Delete(`${URL_KEYS.DELIVERY_CHALLAN.BASE}/${id}`)),
+  
+  //*************** Sales Credit Note **************** */
+  useAddSalesCreditNote: () => useMutations<AddSalesCreditNotePayload, void>([KEYS.SALES_CREDIT_NOTE.ADD, KEYS.SALES_CREDIT_NOTE.BASE], (input) => Post(URL_KEYS.SALES_CREDIT_NOTE.ADD, input)),
+  useEditSalesCreditNote: () => useMutations<EditSalesCreditNotePayload, void>([KEYS.SALES_CREDIT_NOTE.EDIT, KEYS.SALES_CREDIT_NOTE.BASE], (input) => Put(URL_KEYS.SALES_CREDIT_NOTE.EDIT, input)),
+  useDeleteSalesCreditNote: () => useMutations<string, void>([KEYS.SALES_CREDIT_NOTE.DELETE, KEYS.SALES_CREDIT_NOTE.BASE], (id) => Delete(`${URL_KEYS.SALES_CREDIT_NOTE.BASE}/${id}`)),
 };

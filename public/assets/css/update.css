@@ -187,6 +187,34 @@ input[type="number"] {
   @apply text-white capitalize text-center w-full bg-red-500 dark:bg-red-600 h-6 leading-6 rounded-sm;
 }
 
+.status-invoiced,
+.status-invoice_created,
+.status-invoice-created {
+  @apply text-white capitalize text-center w-full bg-blue-500 dark:bg-blue-600 h-6 leading-6 rounded-sm px-2;
+}
+.status-delivery_challan_created {
+  @apply text-white capitalize text-center w-full bg-green-500 dark:bg-green-600 h-6 leading-6 rounded-sm px-2;
+}
+.status-cancelled {
+  @apply text-white capitalize text-center w-full bg-red-500 dark:bg-red-600 h-6 leading-6 rounded-sm px-2;
+}
+.status-partial,
+.status-partial_invoice_created,
+.status-partial_delivery_challan_created {
+  @apply text-white capitalize text-center w-full bg-amber-500 dark:bg-amber-600 h-6 leading-6 rounded-sm px-2;
+}
+.status-partially_cancelled {
+  @apply text-white capitalize text-center w-full bg-gray-500 dark:bg-gray-600 h-6 leading-6 rounded-sm px-2;
+}
+.status-order-created {
+  @apply text-white capitalize text-center w-full bg-cyan-500 dark:bg-cyan-600 h-6 leading-6 rounded-sm px-2;
+}
+.iconButtonStyle {
+  @apply w-11 h-8.5 rounded-md! border! border-gray-200! dark:border-gray-600!;
+}
+
+
+
 .iconButtonStyle{
   @apply w-11 h-8.5 rounded-md! border! border-gray-200! dark:border-gray-600!;
 }

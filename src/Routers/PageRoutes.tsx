@@ -45,6 +45,16 @@ import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
 import PurchaseDebitNote from "../Pages/Purchase/PurchaseDebitNote";
 import PurchaseDebitNoteForm from "../Pages/Purchase/PurchaseDebitNote/PurchaseDebitNoteForm";
 import GeneralSetting from "../Pages/Settings/GeneralSetting";
+import Estimate from "../Pages/Sales/Estimate";
+import EstimateForm from "../Pages/Sales/Estimate/EstimateForm";
+import SalesOrder from "../Pages/Sales/SalesOrder";
+import SalesOrderForm from "../Pages/Sales/SalesOrder/SalesOrderForm";
+import Invoice from "../Pages/Sales/Invoice";
+import InvoiceForm from "../Pages/Sales/Invoice/InvoiceForm";
+import DeliveryChallan from "../Pages/Sales/DeliveryChallan";
+import DeliveryChallanForm from "../Pages/Sales/DeliveryChallan/DeliveryChallanForm";
+import SalesCreditNote from "../Pages/Sales/SalesCreditNote";
+import SalesCreditNoteForm from "../Pages/Sales/SalesCreditNote/SalesCreditNoteForm";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -113,6 +123,22 @@ export const PageRoutes = [
   { path: ROUTES.POS.SALES_REGISTER, name: PAGE_TITLE.POS.SALES_REGISTER, element: <SalesRegister /> },
   { path: ROUTES.ACCOUNTING.DEBIT_NOTE.BASE, name: PAGE_TITLE.ACCOUNTING.DEBIT_NOTE.BASE, element: <DebitNote /> },
   { path: ROUTES.ACCOUNTING.DEBIT_NOTE.ADD_EDIT, name: PAGE_TITLE.ACCOUNTING.DEBIT_NOTE.BASE, element: <DebitNoteForm /> },
+
+  { path: ROUTES.ESTIMATE.BASE, name: PAGE_TITLE.SALES.ESTIMATE.BASE, element: <Estimate /> },
+  { path: ROUTES.ESTIMATE.ADD_EDIT, name: PAGE_TITLE.SALES.ESTIMATE.BASE, element: <EstimateForm /> },
+
+  { path: ROUTES.SALES_ORDER.BASE, name: PAGE_TITLE.SALES.SALES_ORDER.BASE, element: <SalesOrder /> },
+  { path: ROUTES.SALES_ORDER.ADD_EDIT, name: PAGE_TITLE.SALES.SALES_ORDER.BASE, element: <SalesOrderForm /> },
+  
+  { path: ROUTES.INVOICE.BASE, name: PAGE_TITLE.SALES.INVOICE.BASE, element: <Invoice /> },
+  { path: ROUTES.INVOICE.ADD_EDIT, name: PAGE_TITLE.SALES.INVOICE.BASE, element: <InvoiceForm /> },
+
+  { path: ROUTES.DELIVERY_CHALLAN.BASE, name: PAGE_TITLE.SALES.DELIVERY_CHALLAN.BASE, element: <DeliveryChallan /> },
+  { path: ROUTES.DELIVERY_CHALLAN.ADD_EDIT, name: PAGE_TITLE.SALES.DELIVERY_CHALLAN.BASE, element: <DeliveryChallanForm /> },
+
+  { path: ROUTES.SALES_CREDIT_NOTE.BASE, name: PAGE_TITLE.SALES.SALES_CREDIT_NOTE.BASE, element: <SalesCreditNote /> },
+  { path: ROUTES.SALES_CREDIT_NOTE.ADD_EDIT, name: PAGE_TITLE.SALES.SALES_CREDIT_NOTE.BASE, element: <SalesCreditNoteForm /> },
+
 ];
 
 export const AuthRoutes = [

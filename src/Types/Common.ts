@@ -419,6 +419,7 @@ export interface CommonDataType {
   updatedBy: null;
   createdAt: string;
   updatedAt: string;
+  isActive?: boolean;
 }
 
 export interface AddressBase {
@@ -543,8 +544,14 @@ export interface ModalStateSlice {
   isDiscardModal: boolean;
   isTaxModal: { open: boolean; data: TaxBase | null };
   selectedTermIds: string[];
-  isTermsAndConditionFormModal: { open: boolean; data: TermsConditionBase | null; };
-  isTermsAndConditionSelectionModal: { open: boolean; alreadySelectedIds: string[];};
+  isTermsAndConditionFormModal: {
+    open: boolean;
+    data: TermsConditionBase | null;
+  };
+  isTermsAndConditionSelectionModal: {
+    open: boolean;
+    alreadySelectedIds: string[];
+  };
 }
 
 // ************ Modal End ***********
@@ -684,4 +691,43 @@ export interface TabPanelProps {
   children?: ReactNode;
   index: number;
   value: number;
+}
+
+/* ===================== ADDITIONAL CHARGES ===================== */
+
+export interface AdditionalChargeItem {
+  chargeId?: string | AdditionalChargesBase;
+  amount?: number;
+  taxAmount?: number;
+  taxId?: string | TaxBase;
+  totalAmount?: number;
+}
+// ************ Common Shipping Details Start ***********
+export interface ShippingDetails {
+  shippingType: "delivery" | "pickup";
+  shippingDate: string;
+  referenceNo: string;
+  transportDate: string;
+  modeOfTransport: string;
+  transporterId?: string | null;
+  vehicleNo: string;
+  weight: number;
+}
+
+// ************ Common Transaction Summary Start ***********
+export interface TaxSummaryItem {
+  name: string;
+  rate: number;
+  amount: number;
+}
+
+export interface TransactionSummary {
+  flatDiscount: number;
+  grossAmount: number;
+  discountAmount: number;
+  taxableAmount: number;
+  taxAmount: number;
+  roundOff: number;
+  netAmount: number;
+  taxSummary?: TaxSummaryItem[];
 }

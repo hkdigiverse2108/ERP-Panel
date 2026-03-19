@@ -1,4 +1,4 @@
-import { AccountBalance, GridViewRounded, People, PersonRounded, PointOfSale, ReceiptLong, Redeem, Settings } from "@mui/icons-material";
+import { AccountBalance, GridViewRounded, People, PersonRounded, PointOfSale, ReceiptLong, Redeem, Settings, ShoppingCart } from "@mui/icons-material";
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
 
@@ -52,6 +52,17 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE, path: ROUTES.SUPPLIER_BILL.BASE },
       { name: PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE, path: ROUTES.PURCHASE_ORDER.BASE },
       { name: PAGE_TITLE.PURCHASE.PURCHASE_DEBIT_NOTE.BASE, path: ROUTES.PURCHASE_DEBIT_NOTE.BASE },
+    ],
+  },
+  {
+    name: PAGE_TITLE.SALES.BASE,
+    icon: <ShoppingCart />,
+    children: [
+      { name: PAGE_TITLE.SALES.ESTIMATE.BASE, path: ROUTES.ESTIMATE.BASE },
+      { name: PAGE_TITLE.SALES.SALES_ORDER.BASE, path: ROUTES.SALES_ORDER.BASE },
+      { name: PAGE_TITLE.SALES.INVOICE.BASE, path: ROUTES.INVOICE.BASE },
+      { name: PAGE_TITLE.SALES.DELIVERY_CHALLAN.BASE, path: ROUTES.DELIVERY_CHALLAN.BASE },
+      { name: PAGE_TITLE.SALES.SALES_CREDIT_NOTE.BASE, path: ROUTES.SALES_CREDIT_NOTE.BASE },
     ],
   },
   {

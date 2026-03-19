@@ -1,9 +1,8 @@
-import type {  CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus, ShippingDetails } from "./Common";
 import type { ProductBase } from "./Product";
 import type { ContactBase } from "./Contacts";
 import type { TaxBase } from "./Tax";
 import type { UomBase } from "./Uom";
-import type { AdditionalChargeItem } from "./SupplierBill";
 import type { TermsConditionBase } from "./TermsAndCondition";
 
 /* ===================== PRODUCT (FORM) ===================== */
@@ -32,20 +31,6 @@ export interface PurchaseDebitNoteProductDetails {
   totalTax?: number;
   totalAmount?: number;
 }
-
-/* ===================== SHIPPING ===================== */
-
-export interface PurchaseDebitNoteShippingDetails {
-  shippingType?: "delivery" | "pickup";
-  shippingDate?: string | Date;
-  referenceNo?: string;
-  transportDate?: string | Date;
-  modeOfTransport?: string;
-  transporterId?: string | null;
-  vehicleNo?: string;
-  weight?: number;
-}
-
 /* ===================== SUMMARY ===================== */
 
 export interface PurchaseDebitNoteSummary {
@@ -78,12 +63,11 @@ export interface PurchaseDebitNoteFormValues {
   productDetails?: PurchaseDebitNoteProductItem[];
   additionalCharges?: AdditionalChargeItem[];
   termsAndConditionIds?: string[];
-  shippingDetails?: PurchaseDebitNoteShippingDetails;
+  shippingDetails?: ShippingDetails;
   summary?: PurchaseDebitNoteSummary;
 
   notes?: string;
   status?: "open" | "closed" | "cancelled";
-  companyId?: string;
   isActive?: boolean;
   _submitAction?: string;
 }
@@ -119,15 +103,11 @@ export interface PurchaseDebitNoteBase extends CommonDataType {
   })[];
 
   termsAndConditionIds?: TermsConditionBase[];
-  shippingDetails?: PurchaseDebitNoteShippingDetails;
+  shippingDetails?: ShippingDetails;
   summary?: PurchaseDebitNoteSummary;
 
   notes?: string;
   status?: "open" | "closed" | "cancelled";
-  companyId?: {
-    _id: string;
-    name?: string;
-  };
   isActive?: boolean;
 }
 
