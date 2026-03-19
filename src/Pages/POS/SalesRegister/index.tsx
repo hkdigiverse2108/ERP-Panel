@@ -4,7 +4,7 @@ import { Queries } from "../../../Api";
 import { CommonDateRangeSelector } from "../../../Attribute";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { BREADCRUMBS } from "../../../Data";
+import { BREADCRUMBS, SALES_REGISTER_STATUS } from "../../../Data";
 import type { AppGridColDef } from "../../../Types";
 import type { PosCashRegisterBase, PosCashRegisterValues } from "../../../Types/PosCashRegister";
 import { CreateFilter, DateConfig, FormatDate, FormatTime, GenerateOptions } from "../../../Utils";
@@ -108,7 +108,8 @@ const SalesRegister = () => {
     },
   };
 
-  const filter = [CreateFilter("Select Salesman", "salesManId", advancedFilter, updateAdvancedFilter, GenerateOptions(salesmanOptions), userDropdownLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [CreateFilter("Select Salesman", "salesManId", advancedFilter, updateAdvancedFilter, GenerateOptions(salesmanOptions), userDropdownLoading, { xs: 12, sm: 6, md: 3 }),//
+     CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, SALES_REGISTER_STATUS, false, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>

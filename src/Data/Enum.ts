@@ -448,6 +448,11 @@ export const INVOICE_STATUS = [
   { label: "Cancelled", value: "cancelled" },
 ];
 
+export const SALES_REGISTER_STATUS = [
+  { label: "Open", value: "open" },
+  { label: "Closed", value: "closed" },
+];
+
 export const INVOICE_PAYMENT_STATUS_OPTIONS = [
   { label: "Paid", value: "paid" },
   { label: "Unpaid", value: "unpaid" },
