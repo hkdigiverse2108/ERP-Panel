@@ -21,7 +21,7 @@ const DiscountForm = () => {
   const { mutate: addDiscount, isPending: isAddLoading } = Mutations.useAddDiscount();
   const { mutate: editDiscount, isPending: isEditLoading } = Mutations.useEditDiscount();
 
-  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetContactDropdown();
+  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown();
   const { data: CategoryData, isLoading: CategoryLoading } = Queries.useGetCategoryDropdown();
   const { data: ProductData, isLoading: ProductLoading } = Queries.useGetProductDropdown();
   const { data: BrandData, isLoading: BrandLoading } = Queries.useGetBrandDropdown();
