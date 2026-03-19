@@ -13,7 +13,7 @@ const Employee = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.USER.BASE);
 
-  const { data: employeeData, isLoading: employeeDataLoading, isFetching: employeeDataFetching } = Queries.useGetEmployee({...params});
+  const { data: employeeData, isLoading: employeeDataLoading, isFetching: employeeDataFetching } = Queries.useGetEmployee({ ...params });
   const { mutate: deleteEmployeeMutate, isPending: isDeleteLoading } = Mutations.useDeleteEmployee();
   const { mutate: editEmployee, isPending: isEditLoading } = Mutations.useEditEmployee();
 
@@ -28,15 +28,12 @@ const Employee = () => {
   const handleAdd = () => navigate(ROUTES.USERS.ADD_EDIT);
 
   const columns: AppGridColDef<EmployeeBase>[] = [
-    { field: "username", headerName: "User Name", type: "string", width: 170 },
-    { field: "fullName", headerName: "Full Name", width: 170 },
-    { field: "designation", headerName: "designation", width: 170 },
-    { field: "email", headerName: "Email", width: 240 },
-    CommonPhoneColumns<EmployeeBase>(),
-    { field: "panNumber", headerName: "PAN Number", width: 150 },
-    { field: "wages", headerName: "Wages", type: "number", width: 150 },
-    { field: "extraWages", headerName: "Extra Wages", type: "number", width: 150 },
-    { field: "commission", headerName: "Commission", type: "number", flex: 1, minWidth: 150 },
+    { field: "username", headerName: "User Name", type: "string", width: 200 },
+    { field: "fullName", headerName: "Full Name", width: 200 },
+    { field: "designation", headerName: "designation", width: 200 },
+    { field: "email", headerName: "Email", width: 200 },
+    CommonPhoneColumns<EmployeeBase>("phoneNo", { headerName: "Phone No", width: 200 }),
+    { field: "panNumber", headerName: "PAN Number", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<EmployeeBase>({
@@ -53,7 +50,7 @@ const Employee = () => {
 
   const CommonDataGridOption = {
     columns,
-    rows: allEmployee, 
+    rows: allEmployee,
     rowCount: totalRows,
     loading: employeeDataLoading || employeeDataFetching || isEditLoading,
     isActive,
@@ -65,6 +62,7 @@ const Employee = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: "Employee",
   };
 
   return (
