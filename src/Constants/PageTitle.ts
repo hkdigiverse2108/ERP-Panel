@@ -131,6 +131,11 @@ export const PAGE_TITLE = {
       ADD: "Add Purchase Order",
       EDIT: "Edit Purchase Order",
     },
+    PURCHASE_DEBIT_NOTE: {
+      BASE: "Purchase Debit Note",
+      ADD: "Add Purchase Debit Note",
+      EDIT: "Edit Purchase Debit Note",
+    },
   },
   ACCOUNTING: {
     BASE: "Accounting",

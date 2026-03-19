@@ -802,3 +802,23 @@ export const SupplierBillFormSchema = Yup.object({
     )
     .min(1, "At least one item is required"),
 });
+
+export const PurchaseDebitNoteFormSchema = Yup.object({
+  supplierId: Validation("string", "Supplier"),
+  debitNoteDate: Validation("string", "Debit Note Date"),
+  dueDate: Validation("string", "Due Date", { required: false }),
+  productDetails: Yup.array()
+    .of(
+      Yup.object({
+        productId: Validation("string", "Product"),
+        qty: Validation("number", "Quantity", { extraRules: (s) => s.min(1, "Quantity must be at least 1") }),
+        unitCost: Validation("number", "Unit Cost", { required: false, extraRules: (s) => s.min(0) }),
+        discount1: Validation("number", "Discount", { required: false, extraRules: (s) => s.min(0) }),
+      }),
+    )
+    .min(1, "At least one item is required"),
+  summary: Yup.object({
+    flatDiscount: Validation("number", "Flat Discount", { required: false }),
+    roundOff: Validation("number", "Round Off", { required: false }),
+  }),
+});

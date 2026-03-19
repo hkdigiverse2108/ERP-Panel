@@ -266,6 +266,13 @@ export const KEYS = {
     EDIT: "return-pos-order-edit",
     DELETE: "return-pos-order-delete",
   },
+  PURCHASE_DEBIT_NOTE: {
+    BASE: "purchase-debit-note",
+    ADD: "purchase-debit-note-add",
+    EDIT: "purchase-debit-note-edit",
+    DELETE: "purchase-debit-note-delete",
+    DROPDOWN: "purchase-debit-note-dropdown",
+  },
   EXPENSE: {
     BASE: "expense",
     ADD: "expense-add",

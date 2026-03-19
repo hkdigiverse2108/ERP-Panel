@@ -316,3 +316,16 @@ export const POS_ORDER_STATUS = {
   PARTIALLY_RETURNED: "partially_returned",
   RETURNED: "returned",
 };
+
+export const PURCHASE_DEBIT_NOTE_STATUS_OPTIONS = [
+  { label: "All", value: "all" },
+  { label: "Open", value: "open" },
+  { label: "Closed", value: "closed" },
+  { label: "Cancelled", value: "cancelled" },
+];
+
+
+export const SHIPPING_TYPE_OPTIONS = [
+  { label: "Delivery", value: "delivery" },
+  { label: "Pickup", value: "pickup" },
+];

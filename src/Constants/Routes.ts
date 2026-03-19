@@ -98,6 +98,10 @@ export const ROUTES = {
     BASE: "/purchase-order",
     ADD_EDIT: "/purchase-order/add-edit",
   },
+  PURCHASE_DEBIT_NOTE: {
+    BASE: "/purchase-debit-note",
+    ADD_EDIT: "/purchase-debit-note/add-edit",
+  },
   ACCOUNTING: {
     CREDIT_NOTE: {
       BASE: "/accounting/credit-note",

@@ -42,6 +42,8 @@ import PurchaseOrder from "../Pages/Purchase/PurchaseOrder";
 import PurchaseOrderForm from "../Pages/Purchase/PurchaseOrder/PurchaseOrderForm";
 import SupplierBill from "../Pages/Purchase/SupplierBill";
 import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
+import PurchaseDebitNote from "../Pages/Purchase/PurchaseDebitNote";
+import PurchaseDebitNoteForm from "../Pages/Purchase/PurchaseDebitNote/PurchaseDebitNoteForm";
 import GeneralSetting from "../Pages/Settings/GeneralSetting";
 
 export const PageRoutes = [
@@ -95,6 +97,9 @@ export const PageRoutes = [
 
   { path: ROUTES.PURCHASE_ORDER.BASE, name: PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE, element: <PurchaseOrder /> },
   { path: ROUTES.PURCHASE_ORDER.ADD_EDIT, name: PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE, element: <PurchaseOrderForm /> },
+
+  { path: ROUTES.PURCHASE_DEBIT_NOTE.BASE, name: PAGE_TITLE.PURCHASE.PURCHASE_DEBIT_NOTE.BASE, element: <PurchaseDebitNote /> },
+  { path: ROUTES.PURCHASE_DEBIT_NOTE.ADD_EDIT, name: PAGE_TITLE.PURCHASE.PURCHASE_DEBIT_NOTE.BASE, element: <PurchaseDebitNoteForm /> },
 
   { path: ROUTES.COUPON.BASE, name: PAGE_TITLE.CRM.COUPON.BASE, element: <Coupon /> },
   { path: ROUTES.COUPON.ADD_EDIT, name: PAGE_TITLE.CRM.COUPON.BASE, element: <CouponForm /> },

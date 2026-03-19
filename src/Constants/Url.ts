@@ -303,6 +303,13 @@ export const URL_KEYS = {
     EDIT: "/sales-register/edit",
     ALL: "/sales-register/all",
   },
+  PURCHASE_DEBIT_NOTE: {
+    BASE: "/purchase-debit-note",
+    ALL: "/purchase-debit-note/all",
+    DROPDOWN: "/purchase-debit-note/dropdown",
+    ADD: "/purchase-debit-note/add",
+    EDIT: "/purchase-debit-note/edit",
+  },
   EXPENSE: {
     BASE: "/expense",
     ALL: "/expense/all",
