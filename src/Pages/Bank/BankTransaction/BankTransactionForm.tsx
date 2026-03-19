@@ -6,10 +6,10 @@ import { CommonButton, CommonValidationSelect, CommonValidationSwitch, CommonVal
 import { CommonModal } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { useAppSelector } from "../../../Store/hooks";
-import { setBankTransactionModal } from "../../../Store/Slices/ModalSlice";
 import type { BankTransactionBase, BankTransactionFormValues, EditBankTransactionPayload } from "../../../Types";
 import { GenerateOptions, RemoveEmptyFields } from "../../../Utils";
 import { BankTransactionFormSchema } from "../../../Utils/ValidationSchemas";
+import { setBankTransactionModal } from "../../../Store/Slices/ModalSlice";
 
 const BankTransactionForm = () => {
   const { mutate: addBankTransaction, isPending: isAddLoading } = Mutations.useAddBankTransaction();

@@ -132,6 +132,7 @@ export const {
   setContactModal,
   setDiscardModal,
   setTaxModal,
+  setBankTransactionModal
 } = ModalSlice.actions;
 
 export default ModalSlice.reducer;
