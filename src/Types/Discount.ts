@@ -3,6 +3,7 @@ import type { CategoryBase } from "./Category";
 import type { BrandBase } from "./Brand";
 import type { ProductBase } from "./Product";
 import type { BranchBase } from "./Branch";
+import type { PosProductOrderItem } from "./POS";
 
 
 /* ---------------- SUB TYPES ---------------- */
@@ -97,4 +98,14 @@ export interface DiscountApiResponse extends MessageStatus {
 
 export interface DiscountDropdownApiResponse extends MessageStatus {
   data: DiscountBase[];
+}
+
+
+export interface VerifyDiscountPayload {
+  discountId?: string;
+  discountCode?: string;
+  customerId?: string;
+  totalAmount?: number;
+  totalQty?: number;
+  items?: (Partial<PosProductOrderItem> & { productId?: string })[];
 }

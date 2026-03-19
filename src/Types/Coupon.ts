@@ -1,5 +1,5 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
-import type { PosProductDataModal } from "./POS";
+import type { PosProductDataModal} from "./POS";
 
 export interface CouponFormValues {
   couponPrice?: number;
