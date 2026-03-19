@@ -42,3 +42,4 @@ export * from "./CreditNote";
 export * from "./DebitNote";
 export * from "./Expense";
 export * from "./Salary";
+export * from "./BankTransaction";

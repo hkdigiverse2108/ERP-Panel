@@ -23,7 +23,7 @@ export const NavItems: NavItem[] = [
     icon: <AccountBalance />,
     children: [
       { name: PAGE_TITLE.BANK.BASE, path: ROUTES.BANK.BASE },
-      { name: PAGE_TITLE.TRANSACTION.BASE, path: ROUTES.TRANSACTION.BASE },
+      { name: PAGE_TITLE.BANK_TRANSACTION.BASE, path: ROUTES.BANK_TRANSACTION.BASE },
       { name: PAGE_TITLE.PAYMENT.BASE, path: ROUTES.PAYMENT.BASE },
       { name: PAGE_TITLE.RECEIPT.BASE, path: ROUTES.RECEIPT.BASE },
       { name: PAGE_TITLE.EXPENSE.BASE, path: ROUTES.EXPENSE.BASE },
