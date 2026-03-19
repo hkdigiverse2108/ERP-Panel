@@ -16,6 +16,8 @@ import MaterialInwardReceipt from "./MaterialInwardReceipt";
 import PurchaseOrderReport from "./PurchaseOrderReport";
 import OrderReport from "./OrderReport";
 import OrderReceipt80mm from "./OrderReceipt80mm";
+import EstimateReceipt from "./EstimateReceipt";
+import EstimateReceiptType2 from "./EstimateReceiptType2";
 import type { PosOrderBase } from "../../../../Types";
 import type { SupplierBillBase } from "../../../../Types/SupplierBill";
 import type { PurchaseOrderBase } from "../../../../Types/PurchaseOrder";
@@ -199,6 +201,12 @@ const ReportFormats = () => {
       { value: "order-receipt-80mm", label: "Thermal Order Receipt", component: <OrderReceipt80mm bill={mockPurchaseOrder} /> },
       { value: "b2b1", label: "B2B - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
       { value: "pos1", label: "POS Offline - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
+    ],
+    7: [
+      { value: "estimate-receipt", label: "Estimate Receipt", component: <EstimateReceipt bill={mockBill} /> },
+      { value: "estimate-receipt-type-2", label: "Estimate Receipt Type 2", component: <EstimateReceiptType2 bill={mockBill} /> },
+      { value: "b2b1", label: "B2B - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
+      { value: "b2b1", label: "B2B - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
     ],
   };
 

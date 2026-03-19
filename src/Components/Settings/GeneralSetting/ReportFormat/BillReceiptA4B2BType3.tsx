@@ -237,7 +237,7 @@ const BillReceiptA4B2BType3 = forwardRef<HTMLDivElement, { bill: PosOrderBase }>
                             <span></span>
                         </div>
                         <div className="flex justify-between mt-1">
-                            <span>IRN No.</span>
+                            <span>IRN No.</span>    
                             <span></span>
                         </div>
                     </div>
