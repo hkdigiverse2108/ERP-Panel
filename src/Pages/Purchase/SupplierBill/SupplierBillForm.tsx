@@ -7,7 +7,7 @@ import { DateConfig, GetChangedFields, RemoveEmptyFields, SupplierBillFormSchema
 import { BREADCRUMBS } from "../../../Data";
 import { Mutations } from "../../../Api";
 import { useEffect, } from "react";
-import type { AdditionalChargeItem, SupplierBillFormValues, SupplierBillProductItem, SupplierBillReturnProductItem, } from "../../../Types/SupplierBill";
+import type { SupplierBillFormValues, SupplierBillProductItem, SupplierBillReturnProductItem,AdditionalChargeItem } from "../../../Types";
 import { usePagePermission } from "../../../Utils/Hooks";
 import { CommonSummaryWatcher } from "../../../Components/Common/CommonSummarySection";
 import SupplierBillDetails from "../../../Components/Purchase/SupplierBill/SupplierBillDetails";

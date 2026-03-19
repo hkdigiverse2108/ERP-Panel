@@ -6,7 +6,6 @@ import type {
   ShippingDetails,
   TransactionSummary,
 } from "./Common";
-import type { CompanyBase } from "./Company";
 import type { Address, ContactBase } from "./Contacts";
 import type { ProductBase } from "./Product";
 import type { TaxBase } from "./Tax";
