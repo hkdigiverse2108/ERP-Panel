@@ -3,7 +3,7 @@ import type { CategoryBase } from "./Category";
 import type { BrandBase } from "./Brand";
 import type { ProductBase } from "./Product";
 import type { BranchBase } from "./Branch";
-import type { CompanyBase } from "./Company";
+
 
 /* ---------------- SUB TYPES ---------------- */
 
@@ -31,7 +31,6 @@ export interface ProductAtFixAmount {
 /* ---------------- FORM VALUES ---------------- */
 
 export interface DiscountFormValues {
-  companyId?: string;
   title?: string;
   discountCode?: string;
   autoApply?: boolean;
@@ -72,8 +71,7 @@ export type EditDiscountPayload = AddDiscountPayload & { discountId: string };
 
 /* ---------------- BASE TYPE ---------------- */
 
-export interface DiscountBase extends Omit<DiscountFormValues, "categoryIds" | "brandIds" | "productIds" | "excludedProductIds" | "branchIds" | "companyId" | "buyXGetY" | "productAtFixAmount">, CommonDataType {
-  companyId?: CompanyBase;
+export interface DiscountBase extends Omit<DiscountFormValues, "categoryIds" | "brandIds" | "productIds" | "excludedProductIds" | "branchIds" | "buyXGetY" | "productAtFixAmount">, CommonDataType {
   branchIds?: BranchBase[];
   categoryIds?: CategoryBase[];
   brandIds?: BrandBase[];

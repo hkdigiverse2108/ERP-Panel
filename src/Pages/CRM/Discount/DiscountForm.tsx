@@ -4,7 +4,7 @@ import { FieldArray, Form, Formik, type FormikHelpers } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonValidationCheckbox, CommonValidationDatePicker, CommonValidationRadio, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
-import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, DependentSelect } from "../../../Components/Common";
+import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BOOLEAN_OPTIONS, BREADCRUMBS, DISCOUNT_APPLICABLE, DISCOUNT_APPLICABLE_ENUM, DISCOUNT_APPLY_TO, DISCOUNT_APPLY_TO_ENUM, DISCOUNT_MODE, DISCOUNT_MODE_ENUM, DISCOUNT_VALUE_TYPE, MINIMUM_REQUIREMENT, MINIMUM_REQUIREMENT_ENUM } from "../../../Data";
 import type { BranchBase, BrandBase, CategoryBase, DiscountFormValues, ProductBase } from "../../../Types";
@@ -38,7 +38,6 @@ const DiscountForm = () => {
 
   // ✅ INITIAL VALUES
   const initialValues: DiscountFormValues = {
-    companyId: data?.companyId?._id || "",
     branchIds: data?.branchIds?.length ? branchIds : [],
     title: data?.title || "",
     discountCode: data?.discountCode || "",
@@ -92,7 +91,6 @@ const DiscountForm = () => {
     };
 
     const payload = {
-      companyId: rest?.companyId,
       branchIds: rest.branchIds,
       title: rest?.title,
       discountCode: rest?.discountCode,
@@ -287,14 +285,12 @@ const DiscountForm = () => {
                           </Grid>
                           {DISCOUNT_MODE_ENUM.BUY_X_GET_Y === values.discountMode && (
                             <>
-                              <DependentSelect params={{ companyFilter: values?.companyId }} name="buyXGetY.getProductIds" label="Select Products" multiple required query={Queries.useGetProductDropdown} grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} />
-                              <CommonValidationTextField name="buyXGetY.getQty" label="Select Qty" type="number" grid={{ xs: 12, md: 4 }} maxDigits={5} required />
+                              <CommonValidationSelect name="buyXGetY.getProductIds" label="Select Products" multiple options={GenerateOptions(ProductData?.data)} isLoading={ProductLoading} grid={{ xs: 12, md: 4 }} required /> <CommonValidationTextField name="buyXGetY.getQty" label="Select Qty" type="number" grid={{ xs: 12, md: 4 }} maxDigits={5} required />
                             </>
                           )}
                           {DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT === values.discountMode && (
                             <>
-                              <DependentSelect params={{ companyFilter: values?.companyId }} name="productAtFixAmount.freeProductIds" label="Select Products" multiple required query={Queries.useGetProductDropdown} grid={{ xs: 12, md: 4 }} disabled={!values?.companyId} />
-                              <CommonValidationTextField name="productAtFixAmount.freeQty" label="Select Qty" type="number" grid={{ xs: 12, md: 4 }} maxDigits={5} required />
+                              <CommonValidationSelect name="productAtFixAmount.freeProductIds" label="Select Products" multiple options={GenerateOptions(ProductData?.data)} isLoading={ProductLoading} grid={{ xs: 12, md: 4 }} required /> <CommonValidationTextField name="productAtFixAmount.freeQty" label="Select Qty" type="number" grid={{ xs: 12, md: 4 }} maxDigits={5} required />
                             </>
                           )}
                         </>
