@@ -2,7 +2,7 @@ import { CircularProgress } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { Mutations, Queries } from "../../../../../Api";
 import { CommonButton, CommonRadio, CommonSelect, CommonTextField } from "../../../../../Attribute";
-import { REDEEM_CREDIT_TYPE } from "../../../../../Data";
+import { REDEEM_CREDIT_TYPE, REDEEM_CREDIT_TYPE_ENUM } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
 import { setHandleDiscount, setRedeemCredit, setTotalAmount } from "../../../../../Store/Slices/PosSlice";
@@ -14,7 +14,7 @@ const RedeemCredit = () => {
   const { isRedeemCreditModal } = useAppSelector((state) => state.modal);
   const { PosProduct, isReturnPosOrder } = useAppSelector((state) => state.pos);
 
-  const [type, setType] = useState<string>("credit_note");
+  const [type, setType] = useState<string>(REDEEM_CREDIT_TYPE_ENUM?.CREDIT_NOTE);
   const [creditNoteId, setCreditNoteId] = useState<string>("");
   const totalAmount = Number(PosProduct?.totalAmount) + Number(PosProduct?.loyaltyDiscount || 0) + Number(PosProduct?.couponDiscount || 0);
   const [isDetails, setDetails] = useState({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: totalAmount?.toString() });
@@ -63,7 +63,7 @@ const RedeemCredit = () => {
     prevTotalAmountRef.current = currentAmount;
   }, [PosProduct?.totalAmount, PosProduct.posOrderId, dispatch]);
 
-  const isCredit = type === "credit_note";
+  const isCredit = type === REDEEM_CREDIT_TYPE_ENUM?.CREDIT_NOTE;
   const creditDetails = [
     { label: `${isCredit ? "Credit Note" : "Adv Payment"} Date`, value: FormatDate(isDetails.date) || "N/A" }, //
     { label: `${isCredit ? "Credit " : "Adv Payment"} Amount`, value: isDetails.amount },

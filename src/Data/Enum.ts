@@ -172,6 +172,11 @@ export const REDEEM_CREDIT_TYPE = [
   { label: "Advance Payment", value: "advance_payment" },
 ];
 
+export const REDEEM_CREDIT_TYPE_ENUM = {
+  CREDIT_NOTE: "credit_note",
+  ADVANCE_PAYMENT: "advance_payment",
+};
+
 export const PAYMENT_TERMS = [
   { label: "7 Days", value: "7_days" },
   { label: "15 Days", value: "15_days" },
