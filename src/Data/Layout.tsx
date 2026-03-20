@@ -1,4 +1,4 @@
-import { AccountBalance, GridViewRounded, People, PersonRounded, PointOfSale, ReceiptLong, Redeem, Settings, ShoppingCart } from "@mui/icons-material";
+import { AccountBalance, GridViewRounded, People, PersonRounded, PointOfSale, ReceiptLong, Redeem, Settings, ShoppingCart, Work } from "@mui/icons-material";
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
 
@@ -50,7 +50,7 @@ export const NavItems: NavItem[] = [
   },
   {
     name: PAGE_TITLE.PURCHASE.BASE,
-    icon: <Settings />,
+    icon: <Work />,
     children: [
       { name: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE, path: ROUTES.SUPPLIER_BILL.BASE },
       { name: PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE, path: ROUTES.PURCHASE_ORDER.BASE },
