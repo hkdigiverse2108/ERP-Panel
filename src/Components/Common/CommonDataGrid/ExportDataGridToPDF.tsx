@@ -17,7 +17,7 @@ const normalizeExportValue = (value: unknown): string | number => {
 /* -------------------------------------------------------
    Export Function
 ------------------------------------------------------- */
-export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows, fileName = "data.pdf", title = "" }: ExportToPDFProps<T>): void => {
+export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows, fileName = "data.pdf", title = "", user }: ExportToPDFProps<T>): void => {
   const doc = new jsPDF("l", "pt", "a4");
 
   /* -----------------------------------------------
@@ -55,7 +55,7 @@ export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows
     body: tableRows,
     startY: 60,
     styles: { fontSize: 10 },
-    headStyles: { fillColor: [22, 160, 133] },
+    headStyles: { fillColor: "#252dae" },
     columnStyles: exportableColumns.reduce((acc, _, index) => {
       acc[index] = { cellWidth: "auto" };
       return acc;
@@ -65,11 +65,11 @@ export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows
       const pageWidth = doc.internal.pageSize.getWidth();
 
       doc.setFontSize(14);
-      doc.text(fileName, pageWidth / 2, 30, { align: "center" });
+      doc.text(title, pageWidth / 2, 30, { align: "center" });
 
-      if (title) {
+      if (user) {
         doc.setFontSize(10);
-        doc.text(`Exported by: ${title}`, pageWidth / 2, 48, {
+        doc.text(`Exported by: ${user}`, pageWidth / 2, 48, {
           align: "center",
         });
       }
