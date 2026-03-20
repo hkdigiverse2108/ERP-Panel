@@ -1,5 +1,4 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
-import type { CompanyBase } from "./Company";
 import type { ContactBase } from "./Contacts";
 import type { EmployeeBase } from "./Employee";
 import type { SalaryBase } from "./Salary";
@@ -12,7 +11,6 @@ export interface ExpenseFormValues {
   fromDate?: string | Date | null;
   amount?: number;
   isActive?: boolean;
-  companyId?: string;
   description?: string;
   status?: string;
   _submitAction?: string;
@@ -30,10 +28,9 @@ export type EditExpensePayload = AddExpensePayload & {
 };
 
 /* ================= BASE MODEL ================= */
-export type ExpenseBase = Omit<ExpenseFormValues, "partyId" | "companyId"> &
+export type ExpenseBase = Omit<ExpenseFormValues, "partyId" | "total"> &
   CommonDataType & {
     partyId?: ContactBase | EmployeeBase;
-    companyId?: CompanyBase;
     total?: SalaryBase;
   };
 
