@@ -13,6 +13,8 @@ const RedeemCredit = () => {
   const dispatch = useAppDispatch();
   const { isRedeemCreditModal } = useAppSelector((state) => state.modal);
   const { PosProduct, isReturnPosOrder } = useAppSelector((state) => state.pos);
+  console.log("PosProduct", PosProduct);
+  console.log(isReturnPosOrder);
 
   const [type, setType] = useState<string>(REDEEM_CREDIT_TYPE_ENUM?.CREDIT_NOTE);
   const [creditNoteId, setCreditNoteId] = useState<string>("");
@@ -34,11 +36,12 @@ const RedeemCredit = () => {
     const currentAmount = Number(PosProduct.totalAmount || 0);
     const isEditMode = Boolean(PosProduct.posOrderId);
     if (isReturnPosOrder) return;
-
+    // if (!PosProduct.redeemCreditId) {
     if (prevTotalAmountRef.current === 0) {
       prevTotalAmountRef.current = currentAmount;
       return;
     }
+    // }
 
     if (isEditMode) {
       if (!editLoadedRef.current) {
@@ -123,12 +126,18 @@ const RedeemCredit = () => {
     setDetails({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: (Number(totalAmount) + Number(isDetails.apply))?.toFixed(2) });
   };
 
+  // useEffect(() => {
+  //   if (PosProduct?.redeemCreditId) {
+  //     setCreditNoteId(PosProduct?.redeemCreditId);
+  //   }
+  // }, [PosProduct?.redeemCreditId]);
+
   return (
     <CommonModal title="Redeem Credit" isOpen={isRedeemCreditModal} onClose={handleClose} className="max-w-[400px]">
       <div className="space-y-3">
         {/* Type Selection */}
         <div className="flex justify-center">
-          <CommonRadio value={type} onChange={handleTypeChange} options={REDEEM_CREDIT_TYPE} />
+          <CommonRadio value={type} onChange={handleTypeChange} options={REDEEM_CREDIT_TYPE} disabled={!!PosProduct?.redeemCreditId} />
         </div>
 
         {/* Invoice Balance */}
