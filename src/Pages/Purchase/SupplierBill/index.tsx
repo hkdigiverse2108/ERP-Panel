@@ -14,14 +14,14 @@ const SupplierBill = () => {
 
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE);
-    // Filter Data Queries
+  // Filter Data Queries
   const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier" });
 
-  
   const { data, isLoading, isFetching } = Queries.useGetSupplierBillDetails(params);
   const { mutate: deleteSupplierBill, isPending: deleteSupplierBillLoading } = Mutations.useDeleteSupplierBill();
   const { mutate: editSupplierBill } = Mutations.useEditSupplierBill();
-  
+  const summaryData = data?.data?.summary;
+
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
     deleteSupplierBill(rowToDelete?._id as string, {
@@ -46,17 +46,13 @@ const SupplierBill = () => {
     return CalculateGridSummary(rows, ["billAmount", "taxAmount", "paidAmount", "balanceAmount"]);
   }, [rows]);
 
-  const stats = useMemo(() => {
-    const totalAmount = rows.reduce((acc, r) => acc + Number(r?.billAmount || 0), 0);
-    const paidAmount = rows.reduce((acc, r) => acc + Number(r.paidAmount || 0), 0);
-    const unpaidAmount = rows.reduce((acc, r) => acc + Number(r.balanceAmount || 0), 0);
-    return [
-      { label: "Total Expense", value: Math.round(totalAmount) },
-      { label: "Paid", value: Math.round(paidAmount) },
-      { label: "Unpaid", value: Math.round(unpaidAmount) },
-    ];
-  }, [rows]);
-  const filter = [CreateFilter("Select Supplier", "supplierFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(supplierData?.data), supplierDataLoading, { xs: 12, sm: 6, md: 3 }),CreateFilter("Payment Status", "paymentStatus", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
+  const stats = [
+    { label: "Total Expense", value: summaryData?.totalPurchase || 0 },
+    { label: "Paid", value: summaryData?.paidAmount || 0 },
+    { label: "Unpaid", value: summaryData?.unpaidAmount || 0 },
+  ];
+
+  const filter = [CreateFilter("Select Supplier", "supplierFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(supplierData?.data), supplierDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Payment Status", "paymentStatus", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
 
   const columns: AppGridColDef<SupplierBillBase>[] = [
     { field: "paymentStatus", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 110, renderCell: (params) => <span className={`status-${params.row.paymentStatus}`}>{params.row.paymentStatus}</span> },
@@ -81,14 +77,13 @@ const SupplierBill = () => {
 
     ...(permission?.edit || permission?.delete
       ? [
-        CommonActionColumn<SupplierBillBase>({
-          ...(permission?.edit && { active: (row) => editSupplierBill({ supplierBillId: row?._id, isActive: !row.isActive }), editRoute: ROUTES.SUPPLIER_BILL.ADD_EDIT }),
-          ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.supplierBillNo }) }),
-        }),
-      ]
+          CommonActionColumn<SupplierBillBase>({
+            ...(permission?.edit && { active: (row) => editSupplierBill({ supplierBillId: row?._id, isActive: !row.isActive }), editRoute: ROUTES.SUPPLIER_BILL.ADD_EDIT }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.supplierBillNo }) }),
+          }),
+        ]
       : []),
   ];
-
 
   const gridOptions = {
     columns,
@@ -112,7 +107,7 @@ const SupplierBill = () => {
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE} breadcrumbs={BREADCRUMBS.SUPPLIER_BILL.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <CommonStatsCard stats={stats} />
+        <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 4 }} />
         <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...gridOptions} />

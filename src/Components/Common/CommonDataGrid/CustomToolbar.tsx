@@ -21,7 +21,8 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiR
   const { user } = useAppSelector((state) => state.auth);
   const { company } = useAppSelector((state) => state.company);
   const companyName = company?.name ?? "Company";
-  const exportFileName = `${fileName?.replace(/\s+/g, "-")}-${companyName?.replace(/\s+/g, "-")}-${new Date().toISOString().split("T")[0]}`;
+  const exportFileName = `${fileName ? `${fileName?.replace(/\s+/g, "-")}-` : ""}${companyName?.replace(/\s+/g, "-")}-${new Date().toISOString().split("T")[0]}`;
+  const { adminSetting } = useAppSelector((state) => state.layout);
 
   const handleSearch = () => {
     onFilterModelChange({ ...filterModel, quickFilterValues: [searchText] });
@@ -98,7 +99,7 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiR
                   columns,
                   rows,
                   fileName: exportFileName,
-                  title: user?.fullName,
+                  title: fileName ?? companyName,
                 });
                 setAnchorEl(null);
               }}
@@ -125,8 +126,9 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiR
                   columns,
                   rows,
                   fileName: exportFileName,
-                  title: user?.fullName,
+                  title: companyName,
                   user: user?.fullName,
+                  email: adminSetting?.email,
                 });
                 setAnchorEl(null);
               }}

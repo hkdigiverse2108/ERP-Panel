@@ -18,7 +18,7 @@ export interface EstimateItem {
   productId: string | ProductBase;
   qty: number;
   freeQty: number;
-  uomId: string | UomBase; 
+  uomId: string | UomBase;
   price: number;
   discount1: number;
   // discount2: number;
@@ -66,6 +66,12 @@ export interface EstimateBase extends Omit<EstimateFormValues, "customerId" | "t
 
 export interface EstimateDataResponse extends PageStatus {
   estimate_data: EstimateBase[];
+  summary: {
+    allEstimates: number;
+    invoiceCreated: number;
+    orderCreated: number;
+    pending: number;
+  };
 }
 
 export interface EstimateApiResponse extends MessageStatus {

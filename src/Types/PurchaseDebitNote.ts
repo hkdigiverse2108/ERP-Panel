@@ -123,7 +123,7 @@ export type EditPurchaseDebitNotePayload = Partial<PurchaseDebitNoteFormValues> 
 
 export interface PurchaseDebitNoteDataResponse extends PageStatus {
   purchaseDebitNote_data: PurchaseDebitNoteBase[];
-  totalData: number;
+  totalAmount: number;
 }
 
 export interface PurchaseDebitNoteApiResponse extends MessageStatus {

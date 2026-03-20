@@ -22,6 +22,7 @@ const Estimate = () => {
 
   const allEstimate = useMemo(() => estimate?.data?.estimate_data?.map((estimate) => ({ ...estimate, id: estimate._id, netAmount: estimate.transactionSummary?.netAmount || 0, taxAmount: estimate.transactionSummary?.taxAmount || 0 })) || [], [estimate]);
   const totalRows = estimate?.data?.totalData || 0;
+  const summaryData = estimate?.data?.summary;
 
   const summary = useMemo(() => {
     return CalculateGridSummary(allEstimate, ["netAmount", "taxAmount"]);
@@ -36,7 +37,7 @@ const Estimate = () => {
 
   const columns: AppGridColDef<EstimateBase>[] = [
     { field: "estimateNo", headerName: "Estimate No", flex: 1, minWidth: 120 },
-    { field: "customerId", headerName: "Customer Name", flex: 1, minWidth: 150, valueGetter: (_, row: EstimateBase) => (row?.customerId ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim()  || "" : "") },
+    { field: "customerId", headerName: "Customer Name", flex: 1, minWidth: 150, valueGetter: (_, row: EstimateBase) => (row?.customerId ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || "" : "") },
     { field: "date", headerName: "Estimate Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.date) },
     { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.dueDate) },
     { field: "netAmount", headerName: "Amount", flex: 1, minWidth: 110, type: "number" },
@@ -70,10 +71,10 @@ const Estimate = () => {
   const filter = [CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ESTIMATE_STATUS, false, { xs: 12, sm: 6, md: 3 })];
 
   const stats = [
-    { label: "All Orders", value: totalRows || 0, color: "primary" },
-    { label: "Pending", value: allEstimate.filter((item) => item.status === "pending").length, color: "success" },
-    { label: "Order Created", value: allEstimate.filter((item) => item.status === "order-created").length, color: "error" },
-    { label: "Invoice Created", value: allEstimate.filter((item) => item.status === "invoice-created").length, color: "info" },
+    { label: "All Orders", value: summaryData?.allEstimates || 0, color: "primary" },
+    { label: "Pending", value: summaryData?.pending || 0, color: "success" },
+    { label: "Order Created", value: summaryData?.orderCreated || 0, color: "error" },
+    { label: "Invoice Created", value: summaryData?.invoiceCreated || 0, color: "info" },
   ];
 
   return (
