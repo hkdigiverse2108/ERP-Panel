@@ -18,6 +18,8 @@ import OrderReport from "./OrderReport";
 import OrderReceipt80mm from "./OrderReceipt80mm";
 import EstimateReceipt from "./EstimateReceipt";
 import EstimateReceiptType2 from "./EstimateReceiptType2";
+import DeliveryChallanReceipt from "./DeliveryChallanReceipt";
+import DeliveryChallanReceiptType2 from "./DeliveryChallanReceiptType2";
 import type { PosOrderBase } from "../../../../Types";
 import type { SupplierBillBase } from "../../../../Types/SupplierBill";
 import type { PurchaseOrderBase } from "../../../../Types/PurchaseOrder";
@@ -207,6 +209,10 @@ const ReportFormats = () => {
       { value: "estimate-receipt-type-2", label: "Estimate Receipt Type 2", component: <EstimateReceiptType2 bill={mockBill} /> },
       { value: "b2b1", label: "B2B - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
       { value: "b2b1", label: "B2B - Report 1", preview: `${ImagePath}/report-format/thermal_80mm-offline.jpg` },
+    ],
+    8: [
+      { value: "delivery-challan-receipt", label: "Delivery Challan", component: <DeliveryChallanReceipt bill={mockBill} /> },
+      { value: "delivery-challan-receipt-type-2", label: "Delivery Challan (Type 2)", component: <DeliveryChallanReceiptType2 bill={mockBill} /> },
     ],
   };
 

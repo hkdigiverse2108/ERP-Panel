@@ -1,27 +1,7 @@
  import { forwardRef } from "react";
 import { useAppSelector } from "../../../../Store/hooks";
 import type { PurchaseOrderBase } from "../../../../Types/PurchaseOrder";
-import { FormatDate } from "../../../../Utils";
-
-const aToWords = [
-    "", "One ", "Two ", "Three ", "Four ", "Five ", "Six ", "Seven ", "Eight ", "Nine ", "Ten ", "Eleven ", "Twelve ", "Thirteen ", "Fourteen ", "Fifteen ", "Sixteen ", "Seventeen ", "Eighteen ", "Nineteen "
-];
-const bToWords = [
-    "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
-];
-
-function inWords(num: number) {
-    if ((num = num || 0) === 0) return "Zero";
-    const n = (`000000000${num}`).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
-    if (!n) return "";
-    let str = "";
-    str += (n[1] !== "00") ? (aToWords[Number(n[1])] || bToWords[parseInt(n[1][0])] + " " + aToWords[parseInt(n[1][1])]) + "Crore " : "";
-    str += (n[2] !== "00") ? (aToWords[Number(n[2])] || bToWords[parseInt(n[2][0])] + " " + aToWords[parseInt(n[2][1])]) + "Lakh " : "";
-    str += (n[3] !== "00") ? (aToWords[Number(n[3])] || bToWords[parseInt(n[3][0])] + " " + aToWords[parseInt(n[3][1])]) + "Thousand " : "";
-    str += (n[4] !== "0") ? (aToWords[Number(n[4])] || bToWords[parseInt(n[4][0])] + " " + aToWords[parseInt(n[4][1])]) + "Hundred " : "";
-    str += (n[5] !== "00") ? ((str !== "") ? "and " : "") + (aToWords[Number(n[5])] || bToWords[parseInt(n[5][0])] + " " + aToWords[parseInt(n[5][1])]) : "";
-    return str.trim() + " Only";
-}
+import { FormatDate, inWords } from "../../../../Utils";
 
 const PurchaseOrderReport = forwardRef<HTMLDivElement, { bill: PurchaseOrderBase }>(({ bill }, ref) => {
     const { company } = useAppSelector((state) => state.company);
@@ -275,7 +255,7 @@ const PurchaseOrderReport = forwardRef<HTMLDivElement, { bill: PurchaseOrderBase
                     </div>
 
                 <div className="w-full border-b border-black p-1.5 font-bold text-[11px]">
-                    Rupees {inWords(Math.round(netAmount))}
+                    Rupees {inWords(Math.round(netAmount))} Only
                 </div>
 
                 {/* Footer terms & Signature */}

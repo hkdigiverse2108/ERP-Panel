@@ -1,27 +1,7 @@
 import { forwardRef } from "react";
 import { useAppSelector } from "../../../../Store/hooks";
 import type { PurchaseOrderBase } from "../../../../Types/PurchaseOrder";
-import { FormatDate } from "../../../../Utils";
-
-const aToWords = [
-    "", "One ", "Two ", "Three ", "Four ", "Five ", "Six ", "Seven ", "Eight ", "Nine ", "Ten ", "Eleven ", "Twelve ", "Thirteen ", "Fourteen ", "Fifteen ", "Sixteen ", "Seventeen ", "Eighteen ", "Nineteen "
-];
-const bToWords = [
-    "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
-];
-
-function inWords(num: number) {
-    if ((num = num || 0) === 0) return "Zero";
-    const n = (`000000000${num}`).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
-    if (!n) return "";
-    let str = "";
-    str += (n[1] !== "00") ? (aToWords[Number(n[1])] || bToWords[parseInt(n[1][0])] + " " + aToWords[parseInt(n[1][1])]) + "Crore " : "";
-    str += (n[2] !== "00") ? (aToWords[Number(n[2])] || bToWords[parseInt(n[2][0])] + " " + aToWords[parseInt(n[2][1])]) + "Lakh " : "";
-    str += (n[3] !== "00") ? (aToWords[Number(n[3])] || bToWords[parseInt(n[3][0])] + " " + aToWords[parseInt(n[3][1])]) + "Thousand " : "";
-    str += (n[4] !== "0") ? (aToWords[Number(n[4])] || bToWords[parseInt(n[4][0])] + " " + aToWords[parseInt(n[4][1])]) + "Hundred " : "";
-    str += (n[5] !== "00") ? ((str !== "") ? "and " : "") + (aToWords[Number(n[5])] || bToWords[parseInt(n[5][0])] + " " + aToWords[parseInt(n[5][1])]) : "";
-    return str.trim() + " Only";
-}
+import { FormatDate, inWords } from "../../../../Utils";
 
 const OrderReport = forwardRef<HTMLDivElement, { bill: PurchaseOrderBase }>(({ bill }, ref) => {
     const { company } = useAppSelector((state) => state.company);
@@ -180,7 +160,7 @@ const OrderReport = forwardRef<HTMLDivElement, { bill: PurchaseOrderBase }>(({ b
 
                 <div className="flex w-full border-b border-black">
                     <div className="flex-1 border-r border-black flex flex-col p-1">
-                        <div className="font-bold text-[10px]">Rupees {inWords(Math.round(netAmount))}</div>
+                        <div className="font-bold text-[10px]">Rupees {inWords(Math.round(netAmount))} Only</div>
                     </div>
                     <div className="w-[300px] flex flex-col text-[11px] font-bold">
                         <div className="flex justify-between p-1 px-2 border-b border-black">

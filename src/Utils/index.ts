@@ -2,6 +2,7 @@ export * from "./DateConfig";
 export * from "./DateFormatted";
 export * from "./FormHelpers";
 export * from "./ValidationSchemas";
+export * from "./NumToWords";
 import { STORAGE_KEYS } from "../Constants";
 import type { CompanyDetails, GridType, Params, SelectOptionType } from "../Types";
 
@@ -40,7 +41,7 @@ export const GenerateOptions = (data?: { _id: string; name?: string; firstName?:
 };
 
 export const CreateFilter = (label: string, filterKey: string, advancedFilter: Record<string, string[]>, updateAdvancedFilter: (key: string, value: string[]) => void, options: SelectOptionType[], isLoading?: boolean, grid?: GridType, multiple?: boolean, limitTags?: number) => ({
-  label,
+  label, 
   options,
   value: advancedFilter[filterKey] || [],
   multiple,
