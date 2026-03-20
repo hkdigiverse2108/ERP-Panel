@@ -474,3 +474,8 @@ export const EXPENSE_TYPE_OPTIONS = [
   { label: "Income", value: "income" },
   { label: "Expense", value: "expense" },
 ];
+
+export const CREDIT_NOTE_STATUS = [
+  { label: "Available", value: "available" },
+  { label: "Used", value: "used" },
+];

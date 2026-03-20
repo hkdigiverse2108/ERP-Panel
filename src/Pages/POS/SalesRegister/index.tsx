@@ -34,9 +34,6 @@ const SalesRegister = () => {
     return CalculateGridSummary(rows, ["openingCash", "cashPayment", "cardPayment", "upiPayment", "payLater", "totalSales", "creditAdvanceRedeemed", "salesReturn", "physicalDrawerCash", "shortExceed"]);
   }, [rows]);
 
-  const salesmanOptions = useMemo(() => {
-    return userDropdown?.data?.map((user) => ({ ...user, name: user.fullName || user.username || "Unnamed" })) || [];
-  }, [userDropdown]);
 
   const handlePrint = useReactToPrint({
     contentRef,
@@ -108,7 +105,7 @@ const SalesRegister = () => {
     },
   };
 
-  const filter = [CreateFilter("Select Salesman", "salesManId", advancedFilter, updateAdvancedFilter, GenerateOptions(salesmanOptions), userDropdownLoading, { xs: 12, sm: 6, md: 3 }),//
+  const filter = [CreateFilter("Select Salesman", "salesManFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(userDropdown?.data), userDropdownLoading, { xs: 12, sm: 6, md: 3 }),//
      CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, SALES_REGISTER_STATUS, false, { xs: 12, sm: 6, md: 3 })];
 
   return (

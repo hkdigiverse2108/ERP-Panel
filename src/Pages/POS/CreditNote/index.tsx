@@ -1,15 +1,15 @@
 import { Box } from "@mui/material";
 import { useEffect, useMemo, useRef } from "react";
 import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
 import OrderRefund from "../../../Components/POS/New/PosBody/PosSidebar/PosOptions/OrderRefund";
 import { PAGE_TITLE } from "../../../Constants";
-import { BREADCRUMBS } from "../../../Data";
+import { BREADCRUMBS, CREDIT_NOTE_STATUS } from "../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
 import { setOrderRefundModal } from "../../../Store/Slices/ModalSlice";
 import { setPrintType, setReturnPosOrderId } from "../../../Store/Slices/PosSlice";
 import type { AppGridColDef, PosCreditNoteBase } from "../../../Types";
-import { FormatDate } from "../../../Utils";
+import { CreateFilter, FormatDate } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
 import BillReceipt from "../../../Components/POS/New/BillReceipt";
 import { useReactToPrint } from "react-to-print";
@@ -17,7 +17,7 @@ import { useReactToPrint } from "react-to-print";
 const CreditNoteList = () => {
   const dispatch = useAppDispatch();
   const { isReturnPosOrderId, isPrintType } = useAppSelector((state) => state.pos);
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, params } = useDataGrid({ active: false });
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, params, advancedFilter, updateAdvancedFilter } = useDataGrid({ active: false });
   const { mutate: deletePosCreditNoteMutate, isPending: isDeleteLoading } = Mutations.useDeletePosCreditNote();
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -97,11 +97,13 @@ const CreditNoteList = () => {
     onFilterModelChange: setFilterModel,
     isExport: false,
   };
+  const filter = [CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, CREDIT_NOTE_STATUS, false, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.POS.CREDIT_NOTE} breadcrumbs={BREADCRUMBS.POS_CREDIT_NOTE.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
