@@ -3,15 +3,15 @@ import { type GridRenderCellParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal } from "../../../Components/Common";
+import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS } from "../../../Data";
+import { BREADCRUMBS, STOCK_VARIFICATION_STATUS } from "../../../Data";
 import type { AppGridColDef, StockVerificationBase } from "../../../Types";
-import { FormatDate } from "../../../Utils";
+import { CreateFilter, FormatDate } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 
 const StockVerification = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, params } = useDataGrid({ active: false });
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, params, advancedFilter, updateAdvancedFilter } = useDataGrid({ active: false });
 
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE);
@@ -38,20 +38,20 @@ const StockVerification = () => {
     { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
     ...(permission?.edit || permission?.delete
       ? [
-        {
-          ...CommonActionColumn<StockVerificationBase>({
-            ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
-          }),
-          renderCell: (params: GridRenderCellParams<StockVerificationBase>) =>
-            params.row.status === "pending"
-              ? CommonActionColumn<StockVerificationBase>({
-                ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
-                ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
-              }).renderCell?.(params)
-              : "-",
-        },
-      ]
+          {
+            ...CommonActionColumn<StockVerificationBase>({
+              ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
+              ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
+            }),
+            renderCell: (params: GridRenderCellParams<StockVerificationBase>) =>
+              params.row.status === "pending"
+                ? CommonActionColumn<StockVerificationBase>({
+                    ...(permission?.edit && { editRoute: ROUTES.STOCK_VERIFICATION.ADD_EDIT }),
+                    ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.stockVerificationNo }) }),
+                  }).renderCell?.(params)
+                : "-",
+          },
+        ]
       : []),
   ];
 
@@ -75,11 +75,12 @@ const StockVerification = () => {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },
   };
-
+  const filter = [CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, STOCK_VARIFICATION_STATUS, false, { xs: 12, sm: 6, md: 3 })];
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.STOCK_VERIFICATION.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
