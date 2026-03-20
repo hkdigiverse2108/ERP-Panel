@@ -485,3 +485,9 @@ export const STOCK_VARIFICATION_STATUS = [
   { label: "Pending", value: "pending" },
   { label: "Rejected", value: "rejected" },
 ];
+
+export const PAYMENT_TYPE_OPTIONS = [
+  { label: "Against_Bill", value: "against_bill" },
+  { label: "Advance", value: "advance" },
+  { label: "On_Account", value: "on_account" },
+];
