@@ -1,12 +1,4 @@
-import type {
-  AdditionalChargeItem,
-  AddressApi,
-  CommonDataType,
-  MessageStatus,
-  PageState,
-  ShippingDetails,
-  TransactionSummary,
-} from "./Common";
+import type { AdditionalChargeItem, AddressApi, CommonDataType, MessageStatus, PageStatus, ShippingDetails, TransactionSummary } from "./Common";
 import type { ContactBase } from "./Contacts";
 import type { ProductBase } from "./Product";
 import type { TaxBase } from "./Tax";
@@ -51,15 +43,7 @@ export interface DeliveryChallanBase extends CommonDataType {
   status: string;
 }
 
-export interface DeliveryChallanFormValues extends Omit<
-  DeliveryChallanBase,
-  | keyof CommonDataType
-  | "deliveryChallanNo"
-  | "customerId"
-  | "items"
-  | "billingAddress"
-  | "shippingAddress"
-> {
+export interface DeliveryChallanFormValues extends Omit<DeliveryChallanBase, keyof CommonDataType | "deliveryChallanNo" | "customerId" | "items" | "billingAddress" | "shippingAddress"> {
   deliveryChallanNo?: string;
   customerId: string;
   items: DeliveryChallanItem[];
@@ -76,10 +60,14 @@ export type EditDeliveryChallanPayload = Partial<AddDeliveryChallanPayload> & {
   isActive?: boolean;
 };
 
-export interface DeliveryChallanDataResponse {
+export interface DeliveryChallanDataResponse extends PageStatus {
   deliveryChallan_data: DeliveryChallanBase[];
-  state: PageState;
-  totalData: number;
+  summary: {
+    allDeliveryChallans: number;
+    cancelled: number;
+    delivered: number;
+    invoiceCreated: number;
+  };
 }
 
 export interface DeliveryChallanApiResponse extends MessageStatus {

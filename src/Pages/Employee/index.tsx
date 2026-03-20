@@ -30,7 +30,7 @@ const Employee = () => {
   const columns: AppGridColDef<EmployeeBase>[] = [
     { field: "username", headerName: "User Name", type: "string", width: 200 },
     { field: "fullName", headerName: "Full Name", width: 200 },
-    { field: "designation", headerName: "designation", width: 200 },
+    { field: "designation", headerName: "Designation", width: 200 },
     { field: "email", headerName: "Email", width: 200 },
     CommonPhoneColumns<EmployeeBase>("phoneNo", { headerName: "Phone No", width: 200 }),
     { field: "panNumber", headerName: "PAN Number", flex: 1, minWidth: 200 },

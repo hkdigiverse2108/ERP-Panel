@@ -1,35 +1,14 @@
 import type { CompanyFormValues } from "../Types";
 
-export const PRODUCT_TYPE = [
-  "finished",
-  "raw_material",
-  "semi_finished",
-  "service",
-  "non_inventory",
-] as const;
+export const PRODUCT_TYPE = ["finished", "raw_material", "semi_finished", "service", "non_inventory"] as const;
 
 export const RECIPE_TYPE = ["assemble", "unassemble"] as const;
 
 export const PRODUCT_STATUS = ["active", "inactive"] as const;
 export const ACCOUNT_TYPE = ["bank", "cash", "other"] as const;
-export const ACCOUNT_NATURE = [
-  "assets",
-  "liabilities",
-  "income",
-  "expenses",
-] as const;
-export const CUSTOMER_TYPE = [
-  "retailer",
-  "wholesaler",
-  "merchant",
-  "other",
-] as const;
-export const SUPPLIER_TYPE = [
-  "manufacturer",
-  "stockiest",
-  "trader",
-  "other",
-] as const;
+export const ACCOUNT_NATURE = ["assets", "liabilities", "income", "expenses"] as const;
+export const CUSTOMER_TYPE = ["retailer", "wholesaler", "merchant", "other"] as const;
+export const SUPPLIER_TYPE = ["manufacturer", "stockiest", "trader", "other"] as const;
 export const CONTACT_STATUS = ["active", "inactive"] as const;
 export const DISCOUNT_TYPE = ["percentage", "flat"] as const;
 export const DISCOUNT_STATUS = ["active", "inactive"] as const;
@@ -37,13 +16,7 @@ export const EMPLOYEE_STATUS = ["active", "inactive"] as const;
 export const INVOICE_PAYMENT_STATUS = ["paid", "unpaid", "partial"] as const;
 export const LOYALTY_STATUS = ["active", "inactive"] as const;
 export const SUPPLIER_PAYMENT_STATUS = ["paid", "unpaid", "partial"] as const;
-export const VOUCHAR_TYPE = [
-  "journal",
-  "payment",
-  "receipt",
-  "expense",
-  "contra",
-] as const;
+export const VOUCHAR_TYPE = ["journal", "payment", "receipt", "expense", "contra"] as const;
 
 export const PRODUCT_TYPE_OPTIONS = [
   { label: "Finished", value: "finished" },
@@ -53,20 +26,12 @@ export const PRODUCT_TYPE_OPTIONS = [
   { label: "Non Inventory", value: "non_inventory" },
 ];
 
-export const CATEGORY_OPTIONS = [
-  { label: "Flour", value: "679a1c2f8f4de1a01234abcd" },
-];
-export const SUB_CATEGORY_OPTIONS = [
-  { label: "Whole Wheat", value: "679a1c3d8f4e1a001234abce" },
-];
+export const CATEGORY_OPTIONS = [{ label: "Flour", value: "679a1c2f8f4de1a01234abcd" }];
+export const SUB_CATEGORY_OPTIONS = [{ label: "Whole Wheat", value: "679a1c3d8f4e1a001234abce" }];
 
-export const BRAND_OPTIONS = [
-  { label: "Organic Brand", value: "679a1c4e8f4e1a001234abcf" },
-];
+export const BRAND_OPTIONS = [{ label: "Organic Brand", value: "679a1c4e8f4e1a001234abcf" }];
 
-export const SUB_BRAND_OPTIONS = [
-  { label: "Premium", value: "679a1c5f8f4e1a001234abd0" },
-];
+export const SUB_BRAND_OPTIONS = [{ label: "Premium", value: "679a1c5f8f4e1a001234abd0" }];
 
 export const DEPARTMENT_OPTIONS = [
   { label: "First Shop", value: "firstShop" },
@@ -75,31 +40,8 @@ export const DEPARTMENT_OPTIONS = [
 
 export const UOM_OPTIONS = [{ label: "KG", value: "679a1c7f8f4e1a001234abd2" }];
 
-export const TOOLBAR_OPTIONS = [
-  ["bold", "italic", "underline"],
-  ["blockquote", "code-block"],
-  [{ header: 1 }, { header: 2 }],
-  [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
-  [{ script: "sub" }, { script: "super" }],
-  [{ indent: "-1" }, { indent: "+1" }],
-  [{ direction: "rtl" }],
-  [{ size: ["small", false, "large", "huge"] }],
-  [{ header: [1, 2, 3, 4, 5, 6, false] }],
-  [{ color: [] }, { background: [] }],
-  [{ align: [] }],
-];
-export const CHAT_TOOLBAR_OPTIONS = [
-  ["bold", "italic"],
-  ["blockquote"],
-  ["link"],
-  [{ header: 1 }, { header: 2 }],
-  [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
-  [{ script: "sub" }, { script: "super" }],
-  [{ indent: "-1" }, { indent: "+1" }],
-  [{ header: [1, 2, 3, 4, 5, 6, false] }],
-  [{ align: [] }],
-  ["clean"],
-];
+export const TOOLBAR_OPTIONS = [["bold", "italic", "underline"], ["blockquote", "code-block"], [{ header: 1 }, { header: 2 }], [{ list: "ordered" }, { list: "bullet" }, { list: "check" }], [{ script: "sub" }, { script: "super" }], [{ indent: "-1" }, { indent: "+1" }], [{ direction: "rtl" }], [{ size: ["small", false, "large", "huge"] }], [{ header: [1, 2, 3, 4, 5, 6, false] }], [{ color: [] }, { background: [] }], [{ align: [] }]];
+export const CHAT_TOOLBAR_OPTIONS = [["bold", "italic"], ["blockquote"], ["link"], [{ header: 1 }, { header: 2 }], [{ list: "ordered" }, { list: "bullet" }, { list: "check" }], [{ script: "sub" }, { script: "super" }], [{ indent: "-1" }, { indent: "+1" }], [{ header: [1, 2, 3, 4, 5, 6, false] }], [{ align: [] }], ["clean"]];
 
 export const TAX_OPTIONS = [
   { label: "NON GST 0", value: "NON_GST_0" },
@@ -230,6 +172,11 @@ export const REDEEM_CREDIT_TYPE = [
   { label: "Advance Payment", value: "advance_payment" },
 ];
 
+export const REDEEM_CREDIT_TYPE_ENUM = {
+  CREDIT_NOTE: "credit_note",
+  ADVANCE_PAYMENT: "advance_payment",
+};
+
 export const PAYMENT_TERMS = [
   { label: "7 Days", value: "7_days" },
   { label: "15 Days", value: "15_days" },
@@ -299,14 +246,7 @@ export const CONSUMPTION_TYPE = [
   { label: "Scrap / Wastage", value: "scrap_wastage" },
 ];
 
-export const BANK_UI_FIELDS: (keyof CompanyFormValues)[] = [
-  "bankName",
-  "bankIFSC",
-  "branchName",
-  "accountHolderName",
-  "bankAccountNumber",
-  "upiId",
-];
+export const BANK_UI_FIELDS: (keyof CompanyFormValues)[] = ["bankName", "bankIFSC", "branchName", "accountHolderName", "bankAccountNumber", "upiId"];
 
 export const DATA_STATUS = [
   { label: "Pending", value: "pending" },
@@ -402,7 +342,6 @@ export const ESTIMATE_STATUS = [
   { label: "Invoice Created", value: "invoice-created" },
 ];
 
-
 export const SALES_ORDER_STATUS_OPTIONS = [
   { label: "All", value: "all" },
   { label: "Pending", value: "pending" },
@@ -459,17 +398,6 @@ export const INVOICE_PAYMENT_STATUS_OPTIONS = [
   { label: "Partial", value: "partial" },
 ];
 
-export const INVOICE_STATUS_STATS = [
-  { label: "All", value: "all" },
-  { label: "Invoiced", value: "invoiced" },
-  { label: "Delivery Challan Created", value: "delivery_challan_created" },
-  { label: "Partial Delivery Challan Created", value: "partial_delivery_challan_created" },
-  { label: "Partially Cancelled", value: "partially_cancelled" },
-  { label: "Cancelled", value: "cancelled" },
-  { label: "Total Sales", value: "total_sales" },
-  { label: "Paid", value: "paid" },
-  { label: "UnPaid", value: "unpaid" },
-];
 export const EXPENSE_TYPE_OPTIONS = [
   { label: "Income", value: "income" },
   { label: "Expense", value: "expense" },

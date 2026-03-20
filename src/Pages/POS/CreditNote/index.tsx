@@ -1,7 +1,10 @@
 import { Box } from "@mui/material";
 import { useEffect, useMemo, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
+import BillReceipt from "../../../Components/POS/New/BillReceipt";
 import OrderRefund from "../../../Components/POS/New/PosBody/PosSidebar/PosOptions/OrderRefund";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS, CREDIT_NOTE_STATUS } from "../../../Data";
@@ -9,10 +12,8 @@ import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
 import { setOrderRefundModal } from "../../../Store/Slices/ModalSlice";
 import { setPrintType, setReturnPosOrderId } from "../../../Store/Slices/PosSlice";
 import type { AppGridColDef, PosCreditNoteBase } from "../../../Types";
-import { CreateFilter, FormatDate } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
-import BillReceipt from "../../../Components/POS/New/BillReceipt";
-import { useReactToPrint } from "react-to-print";
+import { CreateFilter } from "../../../Utils";
 
 const CreditNoteList = () => {
   const dispatch = useAppDispatch();
@@ -70,13 +71,14 @@ const CreditNoteList = () => {
   }, [PrintBill, isPrintType, isReturnPosOrderId]);
 
   const columns: AppGridColDef<PosCreditNoteBase>[] = [
-     { field: "creditNoteNo", headerName: "Credit Note No.",  width: 180 },
-    { field: "customerId", headerName: "Customer Name",  width: 230, renderCell: (params) => (params.row.customerId ? `${params.row.customerId.firstName || ""} ${params.row.customerId.lastName || ""}`.trim() : "-") },
-    { field: "createdAt", headerName: "Date",  width: 190, renderCell: (params) => FormatDate(params.row.createdAt) },
-    { field: "totalAmount", headerName: "Total Amount",  width: 150 },
-    { field: "creditsUsed", headerName: "Credits Used",  width: 150 },
-    { field: "creditsRemaining", headerName: "Credits Remaining", width: 150 },
-    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 130, renderCell: (params) => <span className={`status-${params.row.status || ""}`}>{params.row.status}</span> },
+    { field: "creditNoteNo", headerName: "Credit Note No.", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<PosCreditNoteBase>("customerId", "customerId", ["firstName", "lastName"], { headerName: "Customer Name", width: 150 }),
+    CommonObjectPropertyColumn<PosCreditNoteBase>("created", "createdAt", [], { headerName: "Date", width: 120, type: "date" }),
+    { field: "totalAmount", headerName: "Total Amount", flex: 1, minWidth: 120 },
+    { field: "creditsUsed", headerName: "Credits Used", flex: 1, minWidth: 120 },
+    { field: "refundedAmount", headerName: "Refunded Amount", flex: 1, minWidth: 150 },
+    { field: "creditsRemaining", headerName: "Credits Remaining", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<PosCreditNoteBase>("status", "status", [], { headerName: "Status", width: 150, type: "status" }),
     CommonActionColumn<PosCreditNoteBase>({
       onRefund: (row) => (row.creditsRemaining > 0 ? handleRefundBtn(row) : undefined),
       onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.creditNoteNo }),
@@ -95,7 +97,7 @@ const CreditNoteList = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: false,
+    fileName: "Credit Note",
   };
   const filter = [CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, CREDIT_NOTE_STATUS, false, { xs: 12, sm: 6, md: 3 })];
 

@@ -4,7 +4,11 @@ import type { FC } from "react";
 
 const CommonStatsCard: FC<CommonStatsCardProps> = ({ stats, grid = { xs: 10, sm: 4, md: 4 }, paperSx, variant = "default" }) => {
   const theme = useTheme();
-
+  // const formatNumber = (num: number) => {
+  //   return new Intl.NumberFormat("en-IN", {
+  //     maximumFractionDigits: 2,
+  //   }).format(num);
+  // };
   return (
     <Box width="100%">
       <Grid container spacing={3}>
@@ -20,8 +24,8 @@ const CommonStatsCard: FC<CommonStatsCardProps> = ({ stats, grid = { xs: 10, sm:
                 </Box>
               </Box>
             ) : (
-              <Box textAlign="center">
-                <Paper elevation={0} className={item.color} sx={{ borderRadius: 3, width: 100, height: 70, display: "flex", alignItems: "center", justifyContent: "center", mb: 1, backgroundColor: theme.palette.mode === "dark" ? "#1e293b" : "#edf3ff", color: theme.palette.mode === "dark" ? "#ffffff" : "#1e293b", transition: "0.2s ease", ...paperSx }}>
+              <Box textAlign="center" alignItems="center">
+                <Paper elevation={0} className={item.color} sx={{ borderRadius: 3, minWidth: 80, height: 70, display: "flex", alignItems: "center", justifyContent: "center", p: 1, mb: 1, backgroundColor: theme.palette.mode === "dark" ? "#1e293b" : "#edf3ff", color: theme.palette.mode === "dark" ? "#ffffff" : "#1e293b", transition: "0.2s ease", ...paperSx }}>
                   <Typography sx={{ fontSize: 22, fontWeight: 700, lineHeight: 1 }}>{item.value}</Typography>
                 </Paper>
                 <Typography sx={{ fontSize: 13, fontWeight: 500, color: theme.palette.mode === "dark" ? "grey.400" : "text.secondary" }}>{item.label}</Typography>

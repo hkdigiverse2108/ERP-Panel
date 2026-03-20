@@ -1,10 +1,4 @@
-import type {
-  AdditionalChargeItem,
-  CommonDataType,
-  MessageStatus,
-  PageStatus,
-  SelectOptionType,
-} from "./Common";
+import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus, SelectOptionType } from "./Common";
 import type { ProductBase } from "./Product";
 import type { TermsConditionBase } from "./TermsAndCondition";
 import type { Supplier } from "./PurchaseOrder";
@@ -77,8 +71,6 @@ export interface SupplierBillReturnProductDetails {
   total?: number;
   summary?: SupplierBillReturnProductSummary;
 }
-
-
 
 /* ===================== SUMMARY ===================== */
 
@@ -172,11 +164,7 @@ export interface AdditionalChargesSectionProps {
   rows: AdditionalChargeRow[];
   onAdd: () => void;
   onRemove: (index: number) => void;
-  onChange: (
-    index: number,
-    field: keyof AdditionalChargeRow,
-    value: string | number | string[],
-  ) => void;
+  onChange: (index: number, field: keyof AdditionalChargeRow, value: string | number | string[]) => void;
   taxOptions: SelectOptionType[];
   isTaxLoading: boolean;
   flatDiscount: string | number;
@@ -256,10 +244,14 @@ export type EditSupplierBillPayload = Partial<SupplierBillFormValues> & {
 };
 
 /* ===================== API RESPONSES ===================== */
-
 export interface SupplierBillDataResponse extends PageStatus {
   supplierBill_data: SupplierBillBase[];
   totalData: number;
+  summary: {
+    paidAmount: number;
+    totalPurchase: number;
+    unpaidAmount: number;
+  };
 }
 
 export interface SupplierBillApiResponse extends MessageStatus {
@@ -271,11 +263,7 @@ export interface SupplierBillTabsProps {
   rows: ProductRow[];
   handleAdd: () => void;
   handleCut: (index: number) => void;
-  handleRowChange: (
-    index: number,
-    field: keyof ProductRow,
-    value: string | number | string[],
-  ) => void;
+  handleRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
   productOptions: SelectOptionType[];
   isProductLoading: boolean;
   termsList: TermsConditionBase[];
@@ -283,19 +271,12 @@ export interface SupplierBillTabsProps {
   returnRows: ProductRow[];
   handleAddReturn: () => void;
   handleCutReturn: (index: number) => void;
-  handleReturnRowChange: (
-    index: number,
-    field: keyof ProductRow,
-    value: string | number | string[],
-  ) => void;
+  handleReturnRowChange: (index: number, field: keyof ProductRow, value: string | number | string[]) => void;
   returnRoundOffAmount: string | number;
   onReturnRoundOffAmountChange: (value: string | number) => void;
 }
 
-export interface ExtendedSupplierBillTabsProps extends Omit<
-  SupplierBillTabsProps,
-  "termsList" | "handleDeleteTerm"
-> {
+export interface ExtendedSupplierBillTabsProps extends Omit<SupplierBillTabsProps, "termsList" | "handleDeleteTerm"> {
   selectedTermIds: string[];
   onTermsChange: (ids: string[]) => void;
 }

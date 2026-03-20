@@ -1,17 +1,9 @@
-import type {
-  AdditionalChargeItem,
-  CommonDataType,
-  MessageStatus,
-  PageStatus,
-  ShippingDetails,
-  TransactionSummary,
-} from "./Common";
+import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus, ShippingDetails, TransactionSummary } from "./Common";
 import type { Address, ContactBase } from "./Contacts";
 import type { ProductBase } from "./Product";
 import type { TaxBase } from "./Tax";
 import type { TermsConditionBase } from "./TermsAndCondition";
 import type { UomBase } from "./Uom";
-
 
 export interface SalesOrderItem {
   productId: string | ProductBase;
@@ -21,7 +13,7 @@ export interface SalesOrderItem {
   price: number;
   discount1: number;
   // discount2: number;
-  taxId: string | TaxBase ;
+  taxId: string | TaxBase;
   taxableAmount: number;
   totalAmount: number;
   unit?: string;
@@ -57,17 +49,7 @@ export type AddSalesOrderPayload = SalesOrderFormValues;
 
 export type EditSalesOrderPayload = SalesOrderFormValues & { salesOrderId?: string };
 
-export interface SalesOrderBase
-  extends
-    Omit<
-      SalesOrderFormValues,
-      | "customerId"
-      | "termsAndConditionIds"
-      | "additionalCharges"
-      | "billingAddress"
-      | "shippingAddress"
-    >,
-    CommonDataType {
+export interface SalesOrderBase extends Omit<SalesOrderFormValues, "customerId" | "termsAndConditionIds" | "additionalCharges" | "billingAddress" | "shippingAddress">, CommonDataType {
   salesOrderNo: string;
   estimateNo: string;
   customerId: ContactBase;
@@ -80,6 +62,13 @@ export interface SalesOrderBase
 
 export interface SalesOrderDataResponse extends PageStatus {
   salesOrder_data: SalesOrderBase[];
+  summary: {
+    allSalesOrders: number;
+    cancelled: number;
+    deliveryChallanCreated: number;
+    invoiceCreated: number;
+    pending: number;
+  };
 }
 
 export interface SalesOrderApiResponse extends MessageStatus {

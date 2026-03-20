@@ -3,7 +3,7 @@ import { saveAs } from "file-saver";
 import * as XLSX from "xlsx-js-style";
 import type { AppGridColDef } from "../../../Types";
 
-export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, rows, fileName = "data", title = "Report" }: { columns: AppGridColDef<T>[]; rows: readonly T[]; fileName?: string; title?: string }) => {
+export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, rows, fileName = "data", title }: { columns: AppGridColDef<T>[]; rows: readonly T[]; fileName?: string; title?: string }) => {
   const exportableColumns = columns.filter((col) => !col.disableExport && col.field !== "actions");
 
   /* ---------------------------------- */
@@ -47,7 +47,7 @@ export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, ro
   /* Title style                        */
   /* ---------------------------------- */
   worksheet["A1"].s = {
-    font: { bold: true, sz: 14 },
+    font: { bold: true, sz: 16 },
     alignment: { horizontal: "center", vertical: "center" },
   };
 

@@ -35,7 +35,7 @@ const DebitNote = () => {
     { field: "personName", headerName: "Person Name", width: 200 },
     { field: "amount", headerName: "Amount", width: 200 },
     { field: "date", headerName: "Date", width: 200, valueGetter: (v) => FormatDate(v) },
-    CommonObjectPropertyColumn<DebitNoteBase>("bankName", "bankAccountId", "name", { headerName: "Bank name", width: 300 }),
+    CommonObjectPropertyColumn<DebitNoteBase>("bankName", "bankAccountId", ["name"], { headerName: "Bank name", width: 300 }),
     CommonPhoneColumns("phoneNo", { headerName: "Phone No", width: 200 }),
     { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete

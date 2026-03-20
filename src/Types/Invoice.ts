@@ -1,12 +1,4 @@
-import type {
-  AdditionalChargeItem,
-  AddressApi,
-  CommonDataType,
-  MessageStatus,
-  PageState,
-  ShippingDetails,
-  TransactionSummary,
-} from "./Common";
+import type { AdditionalChargeItem, AddressApi, CommonDataType, MessageStatus, PageStatus, ShippingDetails, TransactionSummary } from "./Common";
 import type { ContactBase } from "./Contacts";
 import type { DeliveryChallanBase } from "./DeliveryChallan";
 import type { EmployeeBase } from "./Employee";
@@ -61,17 +53,7 @@ export interface InvoiceBase extends CommonDataType {
   status: string;
 }
 
-export interface InvoiceFormValues extends Omit<
-  InvoiceBase,
-  | keyof CommonDataType
-  | "invoiceNo"
-  | "customerId"
-  | "salesManId"
-  | "items"
-  | "billingAddress"
-  | "shippingAddress"
-  | "reverseCharge"
-> {
+export interface InvoiceFormValues extends Omit<InvoiceBase, keyof CommonDataType | "invoiceNo" | "customerId" | "salesManId" | "items" | "billingAddress" | "shippingAddress" | "reverseCharge"> {
   invoiceNo?: string;
   customerId: string;
   salesManId?: string;
@@ -90,10 +72,17 @@ export type EditInvoicePayload = Partial<AddInvoicePayload> & {
   isActive?: boolean;
 };
 
-export interface InvoiceDataResponse {
+export interface InvoiceDataResponse extends PageStatus {
   invoice_data: InvoiceBase[];
-  state: PageState;
-  totalData: number;
+  summary: {
+    allInvoices: number;
+    cancelled: number;
+    deliveryChallanCreated: number;
+    invoiced: number;
+    paidAmount: number;
+    totalSales: number;
+    unpaidAmount: number;
+  };
 }
 
 export interface InvoiceApiResponse extends MessageStatus {
