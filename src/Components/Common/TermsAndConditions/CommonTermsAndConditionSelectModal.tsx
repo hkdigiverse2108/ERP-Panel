@@ -1,26 +1,34 @@
-import { Box, Checkbox, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import { Box, Checkbox, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Queries } from "../../../Api";
 import { CommonButton } from "../../../Attribute";
 import { CommonModal } from "../../../Components/Common";
-import type { SelectTermsModalProps } from "../../../Types";
+import { useAppSelector } from "../../../Store/hooks";
+import { setSelectedTermIds, setTermsAndConditionSelectionModal } from "../../../Store/Slices/ModalSlice";
 
-const SelectTermsModal = ({ open, onClose, onSave, alreadySelected }: SelectTermsModalProps) => {
-  const { data: termsData, isLoading } = Queries.useGetTermsCondition({ all: true });
-  // Helper to handle both array and paginated response
+const CommonTermsAndConditionSelectModal = () => {
+  const { isTermsAndConditionSelectionModal } = useAppSelector((state) => state.modal);
+  const dispatch = useDispatch();
+
+  const { open, alreadySelectedIds } = isTermsAndConditionSelectionModal;
+
+  const { data: termsData, isLoading } = Queries.useGetTermsCondition({ all: true }, !!open);
   const termsList = termsData?.data?.termsCondition_data || [];
 
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  // console.log("termsList", companyId);
+
+  const [localSelectedIds, setLocalSelectedIds] = useState<string[]>([]);
 
   useEffect(() => {
     if (open) {
-      setSelectedIds(alreadySelected.map((t) => t._id));
+      setLocalSelectedIds(alreadySelectedIds || []);
     }
-  }, [open, alreadySelected]);
+  }, [open, alreadySelectedIds]);
 
   const handleToggle = (id: string) => {
-    const currentIndex = selectedIds.indexOf(id);
-    const newChecked = [...selectedIds];
+    const currentIndex = localSelectedIds.indexOf(id);
+    const newChecked = [...localSelectedIds];
 
     if (currentIndex === -1) {
       newChecked.push(id);
@@ -28,40 +36,43 @@ const SelectTermsModal = ({ open, onClose, onSave, alreadySelected }: SelectTerm
       newChecked.splice(currentIndex, 1);
     }
 
-    setSelectedIds(newChecked);
+    setLocalSelectedIds(newChecked);
+  };
+
+  const handleClose = () => {
+    dispatch(setTermsAndConditionSelectionModal({ open: false, alreadySelectedIds: [] }));
   };
 
   const handleSave = () => {
-    if (termsList) {
-      const selectedTerms = termsList.filter((t) => selectedIds.includes(t._id));
-      onSave(selectedTerms);
-    }
-    onClose();
+    dispatch(setSelectedTermIds(localSelectedIds));
+    handleClose();
   };
 
+  if (!open) return null;
+
   return (
-    <CommonModal title="Select Terms & Conditions" isOpen={open} onClose={onClose} className="w-full max-w-2xl">
-      <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2, height: "80vh", maxHeight: 600 }}>
+    <CommonModal title="Select Terms & Conditions" isOpen={open} onClose={handleClose} className="w-full max-w-2xl">
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 1, height: "80vh", maxHeight: 600 }}>
         {/* Stats */}
         <Box display="flex" justifyContent="flex-end" alignItems="center">
           <Box sx={{ color: "text.secondary", fontSize: "0.875rem" }}>
-            Selected: <b>{selectedIds.length}</b>
+            Selected: <b>{localSelectedIds.length}</b>
           </Box>
         </Box>
 
-        <Divider />
+        {/* <Divider /> */}
 
         {/* List */}
         <Box sx={{ flex: 1, overflowY: "auto", border: 1, borderColor: "divider", borderRadius: 1 }}>
           {isLoading ? (
             <Box p={3} textAlign="center">
-              <Typography>Loading terms...</Typography>
+              <Typography>Loading Terms...</Typography>
             </Box>
           ) : termsList && termsList.length > 0 ? (
             <List dense disablePadding>
               {termsList.map((term, index) => {
                 const labelId = `checkbox-list-label-${term._id}`;
-                const isSelected = selectedIds.indexOf(term._id) !== -1;
+                const isSelected = localSelectedIds.indexOf(term._id) !== -1;
                 return (
                   <ListItem
                     key={term._id}
@@ -75,15 +86,7 @@ const SelectTermsModal = ({ open, onClose, onSave, alreadySelected }: SelectTerm
                       <ListItemIcon sx={{ minWidth: 40 }}>
                         <Checkbox edge="start" checked={isSelected} tabIndex={-1} disableRipple inputProps={{ "aria-labelledby": labelId }} />
                       </ListItemIcon>
-                      <ListItemText
-                        id={labelId}
-                        primary={term.termsCondition}
-                        primaryTypographyProps={{
-                          variant: "body2",
-                          color: "text.primary",
-                          sx: { whiteSpace: "pre-wrap" },
-                        }}
-                      />
+                      <ListItemText id={labelId} primary={term.termsCondition} />
                     </ListItemButton>
                   </ListItem>
                 );
@@ -98,12 +101,12 @@ const SelectTermsModal = ({ open, onClose, onSave, alreadySelected }: SelectTerm
         {/* Footer */}
         <Box display="flex" justifyContent="flex-end" alignItems="center" pt={1}>
           <Box display="flex" gap={2}>
-            <CommonButton title="Cancel" variant="outlined" onClick={onClose} />
-            <CommonButton title={`Save (${selectedIds.length})`} variant="contained" onClick={handleSave} />
+            <CommonButton title="Cancel" variant="outlined" onClick={handleClose} />
+            <CommonButton title={`Save (${localSelectedIds.length})`} variant="contained" onClick={handleSave} />
           </Box>
         </Box>
       </Box>
     </CommonModal>
   );
 };
-export default SelectTermsModal;
+export default CommonTermsAndConditionSelectModal;

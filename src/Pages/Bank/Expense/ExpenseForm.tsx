@@ -20,7 +20,7 @@ const ExpenseForm = () => {
   const navigate = useNavigate();
   const { data } = location.state || {};
   const permission = usePagePermission(PAGE_TITLE.EXPENSE.BASE);
-  const [activeImageKey, setActiveImageKey] = useState<"file" | null>(null);
+  const [activeImageKey, setActiveImageKey] = useState<"image" | null>(null);
   const dispatch = useAppDispatch();
 
   const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown();
@@ -32,7 +32,6 @@ const ExpenseForm = () => {
   const pageMode = isEditing ? "EDIT" : "ADD";
 
   const initialValues: ExpenseFormValues = {
-    companyId: data?.companyId?._id || "",
     partyId: data?.partyId?._id || "",
     fromDate: data?.fromDate || null,
     amount: data?.amount || 0,
@@ -57,7 +56,7 @@ const ExpenseForm = () => {
     return null;
   };
   const handleUpload = () => {
-    setActiveImageKey("file");
+    setActiveImageKey("image");
     dispatch(setUploadModal({ open: true, type: "image" }));
   };
 

@@ -26,11 +26,11 @@ export const CleanParams = (params?: Params): Params | undefined => {
   return Object.fromEntries(Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== ""));
 };
 
-export const GenerateOptions = (data?: { _id: string; name?: string; firstName?: string; lastName?: string; title?: string; fullName?: string; orderNo?: string }[]) => {
+export const GenerateOptions = (data?: { _id: string; name?: string; firstName?: string; lastName?: string; title?: string; fullName?: string; orderNo?: string |null; estimateNo?: string |null}[]) => {
   if (!data || !Array.isArray(data)) return [];
 
   return data.map((item) => {
-    const label = item.name?.trim() || [item.firstName, item.lastName].filter(Boolean).join(" ") || item.title?.trim() || item.fullName?.trim() || item.orderNo?.trim() || "Unnamed";
+    const label = item.name?.trim() || [item.firstName, item.lastName].filter(Boolean).join(" ") || item.title?.trim() || item.fullName?.trim() || item.orderNo?.trim() || item.estimateNo?.trim() || "Unnamed";
 
     return {
       value: item._id,

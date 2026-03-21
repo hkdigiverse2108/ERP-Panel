@@ -4,13 +4,14 @@ import { Queries } from "../../../Api";
 import { CommonDateRangeSelector } from "../../../Attribute";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { BREADCRUMBS } from "../../../Data";
+import { BREADCRUMBS, SALES_REGISTER_STATUS } from "../../../Data";
 import type { AppGridColDef } from "../../../Types";
 import type { PosCashRegisterBase, PosCashRegisterValues } from "../../../Types/PosCashRegister";
 import { CreateFilter, DateConfig, FormatDate, FormatTime, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
 import { useReactToPrint } from "react-to-print";
 import CloseBillRegister from "../../../Components/POS/New/PosHeader/CloseRegister";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const SalesRegister = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params, advancedFilter, updateAdvancedFilter } = useDataGrid({ active: false });
@@ -34,9 +35,6 @@ const SalesRegister = () => {
     return CalculateGridSummary(rows, ["openingCash", "cashPayment", "cardPayment", "upiPayment", "payLater", "totalSales", "creditAdvanceRedeemed", "salesReturn", "physicalDrawerCash", "shortExceed"]);
   }, [rows]);
 
-  const salesmanOptions = useMemo(() => {
-    return userDropdown?.data?.map((user) => ({ ...user, name: user.fullName || user.username || "Unnamed" })) || [];
-  }, [userDropdown]);
 
   const handlePrint = useReactToPrint({
     contentRef,
@@ -62,29 +60,21 @@ const SalesRegister = () => {
   };
 
   const columns: AppGridColDef<PosCashRegisterBase>[] = [
-    {
-      field: "salesManId",
-      headerName: "Salesman",
-      width: 180,
-      renderCell: (params) => {
-        const s = params.row.salesManId;
-        return typeof s === "string" || !s ? "-" : s.fullName || "-";
-      },
-    },
-    { field: "createdAt", headerName: "From Date", width: 100, renderCell: (params) => FormatDate(params.value) },
-    { field: "updatedAt", headerName: "To Date", width: 100, renderCell: (params) => FormatDate(params.value) },
-    { field: "status", headerName: "Status", headerAlign: "center", width: 110, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+    CommonObjectPropertyColumn<PosCashRegisterBase>("salesManId", "salesManId", ["fullName"], { headerName: "Sales Man", width: 150 }),
+    CommonObjectPropertyColumn<PosCashRegisterBase>("created", "createdAt", [], { headerName: "From Date", width: 100, type: "date" }),
+    CommonObjectPropertyColumn<PosCashRegisterBase>("updated", "updatedAt", [], { headerName: "To Date", width: 100, type: "date" }),
+    CommonObjectPropertyColumn<PosCashRegisterBase>("status", "status", [], { headerName: "Status", width: 100, type: "status" }),
     { field: "openingCash", headerName: "Cash In Hand", width: 100 },
     { field: "cashPayment", headerName: "Cash", width: 100 },
     { field: "cardPayment", headerName: "Card", width: 100 },
     { field: "upiPayment", headerName: "UPI", width: 100 },
     { field: "payLater", headerName: "Pay Later", width: 100 },
     { field: "totalSales", headerName: "Total Sales", width: 130 },
-    { field: "creditAdvanceRedeemed", headerName: "Credit/Advance Redeemed", width: 190 },
+    { field: "creditAdvanceRedeemed", headerName: "Credit / Advance Redeemed", width: 190 },
     { field: "salesReturn", headerName: "Sales Return Amount", width: 160 },
     { field: "bankTransferAmount", headerName: "Cash Transfered To HO", width: 180 },
     { field: "physicalDrawerCash", headerName: "Closing Amount", width: 150 },
-    { field: "shortExceed", headerName: "Short/Exceed", width: 140 },
+    { field: "shortExceed", headerName: "Short / Exceed",flex:1, minWidth: 140 },
     CommonActionColumn<PosCashRegisterBase>({
       onPrint: { handlePrint: (row) => handlePrintBtn(row), isPermission: (row) => row.status !== "closed" },
     }),
@@ -101,14 +91,14 @@ const SalesRegister = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: false,
-    fileName: "Sales_Register",
+    fileName: "Sales Register",
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },
   };
 
-  const filter = [CreateFilter("Select Salesman", "salesManId", advancedFilter, updateAdvancedFilter, GenerateOptions(salesmanOptions), userDropdownLoading, { xs: 12, sm: 6, md: 3 })];
+  const filter = [CreateFilter("Select Salesman", "salesManFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(userDropdown?.data), userDropdownLoading, { xs: 12, sm: 6, md: 3 }),//
+     CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, SALES_REGISTER_STATUS, false, { xs: 12, sm: 6, md: 3 })];
 
   return (
     <>

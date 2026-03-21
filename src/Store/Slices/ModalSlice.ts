@@ -25,6 +25,12 @@ const initialState: ModalStateSlice = {
   isDiscardModal: false,
   isBankTransactionModal: { open: false, data: null },
   isTaxModal: { open: false, data: null },
+  selectedTermIds: [],
+  isTermsAndConditionFormModal: { open: false, data: null },
+  isTermsAndConditionSelectionModal: {
+    open: false,
+    alreadySelectedIds: [],
+  },
 };
 
 const ModalSlice = createSlice({
@@ -105,6 +111,15 @@ const ModalSlice = createSlice({
     setTaxModal: (state, action) => {
       state.isTaxModal = action.payload;
     },
+    setSelectedTermIds: (state, action) => {
+      state.selectedTermIds = action.payload;
+    },
+    setTermsAndConditionFormModal: (state, action) => {
+      state.isTermsAndConditionFormModal = action.payload;
+    },
+    setTermsAndConditionSelectionModal: (state, action) => {
+      state.isTermsAndConditionSelectionModal = action.payload;
+    },
   },
 });
 
@@ -132,6 +147,9 @@ export const {
   setContactModal,
   setDiscardModal,
   setTaxModal,
+  setSelectedTermIds,
+  setTermsAndConditionFormModal,
+  setTermsAndConditionSelectionModal,
   setBankTransactionModal
 } = ModalSlice.actions;
 

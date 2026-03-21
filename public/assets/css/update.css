@@ -24,7 +24,7 @@
 .MuiDataGrid-filler,
 .MuiDataGrid-scrollbarFiller,
 .MuiDataGrid-columnHeader {
-  @apply bg-gray-50! dark:bg-gray-900! dark:border-gray-700!;
+  @apply bg-gray-50! dark:bg-gray-900! dark:border-gray-700! capitalize!;
 }
 .MuiDataGrid-toolbar {
   @apply min-h-auto!;
@@ -66,11 +66,11 @@
   @apply dark:text-gray-300!;
 }
 
-.MuiDataGrid-cell.MuiDataGrid-cell--textLeft{
+.MuiDataGrid-cell.MuiDataGrid-cell--textLeft {
   @apply items-center! flex!;
 }
 
-.MuiDataGrid-main .css-980l56{
+.MuiDataGrid-main .css-980l56 {
   @apply hidden;
 }
 
@@ -141,25 +141,32 @@ input[type="number"] {
   @apply rounded-s-sm! rounded-e-none! w-9! h-10! bg-brand-600! text-white! text-xl! hover:bg-brand-600!;
 }
 
-.currency-btn.Mui-disabled{
+.currency-btn.Mui-disabled {
   @apply bg-gray-200! text-gray-400! dark:bg-gray-700! dark:text-gray-400!;
 }
-
-.status-pending{
+.status-partial,
+.status-partial_invoice_created,
+.status-partial_delivery_challan_created,
+.status-pending {
   @apply text-white capitalize text-center w-full bg-amber-500 dark:bg-amber-600 h-6 leading-6 rounded-sm;
 }
 .status-active,
-.status-available,
+.status-completed,
 .status-paid,
 .status-delivered,
-.status-approved{
+.status-available,
+.status-delivery_challan_created,
+.status-approved {
   @apply text-white capitalize text-center w-full bg-green-500 dark:bg-green-600 h-6 leading-6 rounded-sm;
 }
 .status-inactive,
-.status-closed,
-.status-used,
+.status-returned,
+.status-partially,
+.status-cancelled,
 .status-unpaid,
-.status-rejected{
+.status-used,
+.status-closed,
+.status-rejected {
   @apply text-white capitalize text-center w-full bg-red-500 dark:bg-red-600 h-6 leading-6 rounded-sm;
 }
 
@@ -167,12 +174,26 @@ input[type="number"] {
   @apply text-white capitalize text-center w-full bg-cyan-400  dark:bg-cyan-500  h-6 leading-6 rounded-sm;
 }
 
-
 .status-in_progress {
   @apply text-white capitalize text-center w-full bg-yellow-500 dark:bg-yellow-600 h-6 leading-6 rounded-sm;
 }
 
+.status-hold,
+.status-invoiced,
+.status-invoice_created,
+.status-invoice-created {
+  @apply text-white capitalize text-center w-full bg-blue-500 dark:bg-blue-600 h-6 leading-6 rounded-sm px-2;
+}
+.status-partially_cancelled {
+  @apply text-white capitalize text-center w-full bg-gray-500 dark:bg-gray-600 h-6 leading-6 rounded-sm px-2;
+}
+.status-order-created {
+  @apply text-white capitalize text-center w-full bg-cyan-500 dark:bg-cyan-600 h-6 leading-6 rounded-sm px-2;
+}
+.iconButtonStyle {
+  @apply w-11 h-8.5 rounded-md! border! border-gray-200! dark:border-gray-600!;
+}
 
-.iconButtonStyle{
+.iconButtonStyle {
   @apply w-11 h-8.5 rounded-md! border! border-gray-200! dark:border-gray-600!;
 }

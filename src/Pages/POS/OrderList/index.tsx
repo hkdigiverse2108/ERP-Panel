@@ -4,13 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
 import { Queries } from "../../../Api";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import BillReceipt from "../../../Components/POS/New/BillReceipt";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, ORDER_STATUS, POS_ORDER_STATUS } from "../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
 import { setEditPosOrder, setPrintType, setReturnPosOrder, setSalesInvoice, setSelectedOrderId } from "../../../Store/Slices/PosSlice";
 import type { AppGridColDef, PosOrderBase } from "../../../Types";
-import { CreateFilter, FormatDate, FormatPayment } from "../../../Utils";
+import { CreateFilter } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 
 const OrderList = () => {
@@ -75,55 +76,18 @@ const OrderList = () => {
 
   const columns: AppGridColDef<PosOrderBase>[] = [
     { field: "orderNo", headerName: "Invoice No", flex: 1, minWidth: 150 },
-    {
-      field: "createdAt",
-      headerName: "Date",
-      flex: 1,
-      minWidth: 120,
-      renderCell: (params) => (params.row.createdAt ? FormatDate(params.row.createdAt) : "-"),
-    },
-    {
-      field: "dueDate",
-      headerName: "Due Date",
-      flex: 1,
-      minWidth: 120,
-      renderCell: (params) => (params.row.payLater?.dueDate ? FormatDate(params.row.payLater.dueDate) : "-"),
-    },
-    {
-      field: "customerName",
-      headerName: "Customer Name",
-      flex: 1,
-      minWidth: 150,
-      renderCell: (params) => {
-        const customer = params.row.customerId;
-        return customer ? `${customer.firstName || ""} ${customer.lastName || ""}`.trim() : "Walk-in";
-      },
-    },
+    CommonObjectPropertyColumn<PosOrderBase>("created", "createdAt", [], { headerName: "Date", width: 120, type: "date" }),
+    CommonObjectPropertyColumn<PosOrderBase>("dueDate", "payLater", ["dueDate"], { headerName: "Due Date", width: 120, type: "date" }),
+    CommonObjectPropertyColumn<PosOrderBase>("customerId", "customerId", ["firstName", "lastName"], { headerName: "Customer Name", width: 150 }),
+    // CommonObjectPropertyColumn<PosOrderBase>("customer No.", "customerId.phoneNo", ["countryCode", "phoneNo"], { headerName: "Customer No.", width: 150, type: "phone" }),
     { field: "totalAmount", headerName: "Total Amount", flex: 1, minWidth: 120 },
     { field: "dueAmount", headerName: "Due Amount", flex: 1, minWidth: 100 },
-    { field: "paymentMethod", headerName: "Payment Mode", flex: 1, minWidth: 120, renderCell: (params) => FormatPayment(params.row.paymentMethod) },
-    { field: "paymentStatus", headerName: "Payment Status", flex: 1, minWidth: 130, renderCell: (params) => FormatPayment(params.row.paymentStatus) },
-    {
-      field: "creditAppliedAmt",
-      headerName: "Credit Applied Amt",
-      flex: 1,
-      minWidth: 150,
-      renderCell: (params) => (params.row.totalAmount && params.row.dueAmount ? params.row.totalAmount - params.row.dueAmount : 0),
-    },
-    { field: "orderType", headerName: "Order Type", flex: 1, minWidth: 100, renderCell: (params) => FormatPayment(params.row.orderType) },
-    { field: "remark", headerName: "Feedback", flex: 1, minWidth: 120 },
-    {
-      field: "createdBy",
-      headerName: "Created By",
-      flex: 1,
-      minWidth: 150,
-      renderCell: (params) => {
-        const salesMan = params.row.salesManId;
-        return salesMan ? `${salesMan.fullName || ""}`.trim() : "-";
-      },
-    },
-    { field: "channelName", headerName: "Channel Name", flex: 1, minWidth: 130, renderCell: () => "POS" },
-    { field: "status", headerName: "Status", flex: 1, minWidth: 120, renderCell: (params) => FormatPayment(params.row.status) },
+    CommonObjectPropertyColumn<PosOrderBase>("paymentMethod", "paymentMethod", [], { headerName: "Payment Mode", width: 120, type: "format" }),
+    CommonObjectPropertyColumn<PosOrderBase>("paymentStatus", "paymentStatus", [], { headerName: "Payment Status", width: 130, type: "status" }),
+    { field: "redeemCreditAmount", headerName: "Credit Applied Amt", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<PosOrderBase>("orderType", "orderType", [], { headerName: "Order Type", width: 120, type: "format" }),
+    CommonObjectPropertyColumn<PosOrderBase>("salesManId", "salesManId", ["fullName"], { headerName: "Sales Man", width: 150 }),
+    CommonObjectPropertyColumn<PosOrderBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 150, type: "status" }),
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<PosOrderBase>({
@@ -152,7 +116,8 @@ const OrderList = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: false,
+    fileName: "Order List",
+    // isExport: false,
   };
 
   const filter = [CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ORDER_STATUS, false, { xs: 12, sm: 6, md: 3 })];

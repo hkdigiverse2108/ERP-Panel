@@ -75,7 +75,12 @@ const NewPos = () => {
         totalDiscount: orderDataById?.totalDiscount,
         totalAdditionalCharge: orderDataById?.totalAdditionalCharge,
         flatDiscountAmount: orderDataById?.flatDiscountAmount,
-        additionalCharges: orderDataById?.additionalCharges,
+        additionalCharges: orderDataById?.additionalCharges?.map((row) => ({
+          chargeId: row.chargeId?._id,
+          value: row.value,
+          taxId: row.taxId?._id,
+          totalAmount: row.totalAmount,
+        })),
         roundOff: orderDataById?.roundOff,
         remark: orderDataById?.remark,
         totalAmount: orderDataById?.totalAmount,

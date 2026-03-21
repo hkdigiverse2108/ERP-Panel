@@ -2,17 +2,17 @@ import { Box, Grid } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS } from "../../../Data";
+import { BREADCRUMBS, EXPENSE_TYPE_OPTIONS } from "../../../Data";
 import type { AppGridColDef, ExpenseBase } from "../../../Types";
 import type { GridRenderCellParams } from "@mui/x-data-grid";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { FormatDate } from "../../../Utils";
+import { CreateFilter, FormatDate } from "../../../Utils";
 import { CommonButton } from "../../../Attribute";
 
 const Expense = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
 
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.EXPENSE.BASE);
@@ -63,8 +63,9 @@ const Expense = () => {
       },
     },
     { field: "fromDate", headerName: "Expense Date", width: 190, valueGetter: (v) => FormatDate(v) },
-    { field: "amount", headerName: "Amount", width: 200 },
-    { field: "description", headerName: "Description", width: 200 },
+    { field: "amount", headerName: "Amount", width: 150 },
+    { field: "type", headerName: "Expense Type", width: 150 },
+    { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
           {
@@ -108,6 +109,7 @@ const Expense = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
   };
+  const filter = [CreateFilter("Select Expense Type", "typeFilter", advancedFilter, updateAdvancedFilter, EXPENSE_TYPE_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
 
   const topContent = (
     <Grid size={"auto"}>
@@ -120,11 +122,13 @@ const Expense = () => {
       </Grid>
     </Grid>
   );
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.EXPENSE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.EXPENSE.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch filter={filter} />
         <CommonCard title={PAGE_TITLE.SALARY.BASE} topContent={topContent}>
           <CommonDataGrid {...gridOptions} />
         </CommonCard>

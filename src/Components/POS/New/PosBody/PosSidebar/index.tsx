@@ -9,6 +9,7 @@ import { CommonButton } from "../../../../../Attribute";
 import { useAppSelector } from "../../../../../Store/hooks";
 import BillReceipt from "../../BillReceipt";
 import PosOption from "./PosOptions";
+import { REDEEM_CREDIT_TYPE_ENUM } from "../../../../../Data";
 
 dayjs.extend(relativeTime);
 
@@ -57,8 +58,7 @@ const PosSidebar = () => {
           <div className="space-y-1">
             {PosProduct.loyaltyDiscount ? <InfoRow label="Loyalty Discount" value={`₹${PosProduct.loyaltyDiscount}`} /> : ""}
             {PosProduct.couponDiscount ? <InfoRow label="Coupon Discount" value={`₹${PosProduct.couponDiscount}`} /> : ""}
-            {PosProduct.redeemCreditAmount ? <InfoRow label={PosProduct.redeemCreditType === "credit_note" ? "Credit Discount" : "Advance Payment"} value={`₹${PosProduct.redeemCreditAmount}`} /> : ""}
-            {PosProduct.discountAmount ? <InfoRow label="Discount" value={`₹${PosProduct.discountAmount}`} /> : ""}
+            {PosProduct.redeemCreditAmount ? <InfoRow label={PosProduct.redeemCreditType === REDEEM_CREDIT_TYPE_ENUM?.CREDIT_NOTE ? "Credit Discount" : "Advance Payment"} value={`₹${PosProduct.redeemCreditAmount}`} /> : ""}
           </div>
         </Box>
       ) : (

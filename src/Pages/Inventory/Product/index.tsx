@@ -59,7 +59,7 @@ const Product = () => {
 
   const columns: AppGridColDef<ProductBase>[] = [
     { field: "name", headerName: "Name", width: 200 },
-    { field: "printName", headerName: "Print Name", width: 150 },
+    { field: "printName", headerName: "Print Name", width: 200 },
     CommonObjectNameColumn<ProductBase>("categoryId", { headerName: "Category", width: 150 }),
     CommonObjectNameColumn<ProductBase>("brandId", { headerName: "Brand", width: 150 }),
     CommonObjectNameColumn<ProductBase>("purchaseTaxId", { headerName: "Purchase Tax", width: 150 }),
@@ -104,6 +104,8 @@ const Product = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: "Product",
+    isExport: !isRemoveItem,
   };
 
   const filter = [

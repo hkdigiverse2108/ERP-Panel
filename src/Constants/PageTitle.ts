@@ -154,6 +154,11 @@ export const PAGE_TITLE = {
       ADD: "Add Purchase Order",
       EDIT: "Edit Purchase Order",
     },
+    PURCHASE_DEBIT_NOTE: {
+      BASE: "Purchase Debit Note",
+      ADD: "Add Purchase Debit Note",
+      EDIT: "Edit Purchase Debit Note",
+    },
   },
   ACCOUNTING: {
     BASE: "Accounting",
@@ -166,6 +171,34 @@ export const PAGE_TITLE = {
       BASE: "Debit Note",
       ADD: "Add Debit Note",
       EDIT: "Edit Debit Note",
+    },
+  },
+  SALES: {
+    BASE: "Sales",
+    ESTIMATE: {
+      BASE: "Estimate",
+      ADD: "Add Estimate",
+      EDIT: "Edit Estimate",
+    },
+    SALES_ORDER: {
+      BASE: "Sales Order",
+      ADD: "Add Sales Order",
+      EDIT: "Edit Sales Order",
+    },
+    INVOICE: {
+      BASE: "Invoice",
+      ADD: "Add Invoice",
+      EDIT: "Edit Invoice",
+    },
+    DELIVERY_CHALLAN: {
+      BASE: "Delivery Challan",
+      ADD: "Add Delivery Challan",
+      EDIT: "Edit Delivery Challan",
+    },
+    SALES_CREDIT_NOTE: {
+      BASE: "Sales Credit Note",
+      ADD: "Add Sales Credit Note",
+      EDIT: "Edit Sales Credit Note",
     },
   },
 } as const;

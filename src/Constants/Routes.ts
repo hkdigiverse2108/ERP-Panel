@@ -114,6 +114,10 @@ export const ROUTES = {
     BASE: "/purchase-order",
     ADD_EDIT: "/purchase-order/add-edit",
   },
+  PURCHASE_DEBIT_NOTE: {
+    BASE: "/purchase-debit-note",
+    ADD_EDIT: "/purchase-debit-note/add-edit",
+  },
   ACCOUNTING: {
     CREDIT_NOTE: {
       BASE: "/accounting/credit-note",
@@ -127,5 +131,28 @@ export const ROUTES = {
   SALES_REGISTER: {
     BASE: "/sales-register",
     EDIT: "/sales-register/edit",
+  },
+
+  ESTIMATE: {
+    BASE: "/estimate",
+    ADD_EDIT: "/estimate/add-edit",
+  },
+
+  SALES_ORDER: {
+    BASE: "/sales-order",
+    ADD_EDIT: "/sales-order/add-edit",
+  },
+
+  INVOICE: {
+    BASE: "/invoice",
+    ADD_EDIT: "/invoice/add-edit",
+  },
+  DELIVERY_CHALLAN: {
+    BASE: "/delivery-challan",
+    ADD_EDIT: "/delivery-challan/add-edit",
+  },
+  SALES_CREDIT_NOTE: {
+    BASE: "/sales-credit-note",
+    ADD_EDIT: "/sales-credit-note/add-edit",
   },
 } as const;

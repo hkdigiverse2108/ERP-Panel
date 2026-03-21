@@ -172,6 +172,11 @@ export const REDEEM_CREDIT_TYPE = [
   { label: "Advance Payment", value: "advance_payment" },
 ];
 
+export const REDEEM_CREDIT_TYPE_ENUM = {
+  CREDIT_NOTE: "credit_note",
+  ADVANCE_PAYMENT: "advance_payment",
+};
+
 export const PAYMENT_TERMS = [
   { label: "7 Days", value: "7_days" },
   { label: "15 Days", value: "15_days" },
@@ -179,6 +184,8 @@ export const PAYMENT_TERMS = [
   { label: "60 Days", value: "60_days" },
   { label: "90 Days", value: "90_days" },
 ];
+
+export const PAYMENT_TERMS_OPTIONS = PAYMENT_TERMS;
 
 export const SEND_REMINDER = [
   { label: "Yes", value: "yes" },
@@ -333,6 +340,80 @@ export const VALUE_TYPE = [
   { label: "Percentage", value: "percentage" },
   { label: "Flat", value: "flat" },
 ];
+export const PURCHASE_DEBIT_NOTE_STATUS_OPTIONS = [
+  { label: "All", value: "all" },
+  { label: "Open", value: "open" },
+  { label: "Closed", value: "closed" },
+  { label: "Cancelled", value: "cancelled" },
+];
+
+export const SHIPPING_TYPE_OPTIONS = [
+  { label: "Delivery", value: "delivery" },
+  { label: "Pickup", value: "pickup" },
+];
+
+export const ESTIMATE_STATUS = [
+  { label: "Pending", value: "pending" },
+  { label: "Order Created", value: "order-created" },
+  { label: "Invoice Created", value: "invoice-created" },
+];
+
+export const SALES_ORDER_STATUS_OPTIONS = [
+  { label: "All", value: "all" },
+  { label: "Pending", value: "pending" },
+  { label: "Invoice Created", value: "invoice_created" },
+  { label: "Partial Invoice Created", value: "partial_invoice_created" },
+  { label: "Delivery Challan Created", value: "delivery_challan_created" },
+  { label: "Partial Delivery Challan Created", value: "partial_delivery_challan_created" },
+  { label: "Partially Cancelled", value: "partially_cancelled" },
+  { label: "Cancelled", value: "cancelled" },
+];
+
+export const INVOICE_CREATED_FROM_OPTIONS = [
+  { label: "Sales Order", value: "sales-order" },
+  { label: "Delivery Challan", value: "delivery-challan" },
+];
+
+export const DELIVERY_CHALLAN_STATUS_OPTIONS = [
+  { label: "Invoice Created", value: "invoice_created" },
+  { label: "Delivered", value: "delivered" },
+  { label: "Cancelled", value: "cancelled" },
+];
+
+export const DELIVERY_CHALLAN_CREATED_FROM_OPTIONS = [
+  { label: "Invoice", value: "invoice" },
+  { label: "Sales Order", value: "sales-order" },
+];
+
+export const SALES_CREDIT_NOTE_STATUS_OPTIONS = [
+  { label: "All", value: "all" },
+  { label: "Open", value: "open" },
+  { label: "Paid", value: "paid" },
+  { label: "Due", value: "due" },
+];
+
+export const SALES_CREDIT_NOTE_PRODUCT_TYPE_OPTIONS = [
+  { label: "All", value: "all" },
+  { label: "Expiry", value: "expiry" },
+];
+
+export const INVOICE_STATUS = [
+  { label: "Invoiced", value: "invoiced" },
+  { label: "Delivery Challan Created", value: "delivery_challan_created" },
+  { label: "Cancelled", value: "cancelled" },
+];
+
+export const SALES_REGISTER_STATUS = [
+  { label: "Open", value: "open" },
+  { label: "Closed", value: "closed" },
+];
+
+export const INVOICE_PAYMENT_STATUS_OPTIONS = [
+  { label: "Paid", value: "paid" },
+  { label: "Unpaid", value: "unpaid" },
+  { label: "Partial", value: "partial" },
+];
+
 export const EXPENSE_TYPE_OPTIONS = [
   { label: "Income", value: "income" },
   { label: "Expense", value: "expense" },
@@ -382,4 +463,14 @@ export const DISCOUNT_MODE_ENUM = {
 export const DISCOUNT_VALUE_TYPE = [
   { label: "Percentage", value: "percentage" },
   { label: "Flat", value: "flat" },
+];
+export const CREDIT_NOTE_STATUS = [
+  { label: "Available", value: "available" },
+  { label: "Used", value: "used" },
+];
+
+export const PAYMENT_TYPE_OPTIONS = [
+  { label: "Against_Bill", value: "against_bill" },
+  { label: "Advance", value: "advance" },
+  { label: "On_Account", value: "on_account" },
 ];

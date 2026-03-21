@@ -10,7 +10,7 @@ import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { FormatDate } from "../../../Utils";
 
 const Salary = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params} = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
 
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.SALARY.BASE);
@@ -38,6 +38,7 @@ const Salary = () => {
     { field: "fromDate", headerName: "From Date", width: 190, valueGetter: (v) => FormatDate(v) },
     { field: "toDate", headerName: "To Date", width: 190, valueGetter: (v) => FormatDate(v) },
     { field: "amount", headerName: "Amount", width: 200 },
+    { field: "type", headerName: "Expense Type", width: 150 },
     { field: "incentive", headerName: "Incentive", width: 200 },
     { field: "description", headerName: "Description", width: 200 },
     { field: "total", headerName: "Total", flex: 1, minWidth: 200 },
@@ -70,7 +71,6 @@ const Salary = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
   };
-
 
   return (
     <>

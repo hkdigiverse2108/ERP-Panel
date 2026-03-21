@@ -311,12 +311,67 @@ export const URL_KEYS = {
     EDIT: "/sales-register/edit",
     ALL: "/sales-register/all",
   },
+  PURCHASE_DEBIT_NOTE: {
+    BASE: "/purchase-debit-note",
+    ALL: "/purchase-debit-note/all",
+    DROPDOWN: "/purchase-debit-note/dropdown",
+    ADD: "/purchase-debit-note/add",
+    EDIT: "/purchase-debit-note/edit",
+  },
   EXPENSE: {
     BASE: "/expense",
     ALL: "/expense/all",
     ADD: "/expense/add",
     EDIT: "/expense/edit",
     DELETE: "/expense/delete",
+  },
+
+  //*************** Estimate **************** */
+  ESTIMATE: {
+    BASE: "/estimate",
+    ALL: "/estimate/all",
+    ADD: "/estimate/add",
+    EDIT: "/estimate/edit",
+    DELETE: "/estimate/delete",
+    DROPDOWN: "/estimate/dropdown",
+  },
+
+  //*************** Sales Order **************** */
+  SALES_ORDER: {
+    BASE: "/sales-order",
+    ALL: "/sales-order/all",
+    ADD: "/sales-order/add",
+    EDIT: "/sales-order/edit",
+    DELETE: "/sales-order/delete",
+    DROPDOWN: "/sales-order/dropdown",
+  },
+
+  //*************** Invoice **************** */
+  INVOICE: {
+    BASE: "/invoice",
+    ALL: "/invoice/all",
+    ADD: "/invoice/add",
+    EDIT: "/invoice/edit",
+    DELETE: "/invoice/delete",
+    DROPDOWN: "/invoice/dropdown",
+  },
+  //*************** Delivery Challan **************** */
+  DELIVERY_CHALLAN: {
+    BASE: "/delivery-challan",
+    ALL: "/delivery-challan/all",
+    ADD: "/delivery-challan/add",
+    EDIT: "/delivery-challan/edit",
+    DELETE: "/delivery-challan/delete",
+    DROPDOWN: "/delivery-challan/dropdown",
+  },
+  SALES_CREDIT_NOTE: {
+    BASE: "/sales-credit-note",
+    ALL: "/sales-credit-note/all",
+    ADD: "/sales-credit-note/add",
+    EDIT: "/sales-credit-note/edit",
+    DELETE: "/sales-credit-note/delete",
+    DROPDOWN: "/sales-credit-note/dropdown",
+    ADD_EDIT: "/sales-credit-note/add-edit",
   },
   SALARY:{
     BASE: "/salary",

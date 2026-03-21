@@ -11,6 +11,7 @@ import type { LocationBase } from "./Location";
 import type { MultiplePaymentType, PosProductDataModal } from "./POS";
 import type { PosCreditNoteBase } from "./PosCreditNote";
 import type { TaxBase } from "./Tax";
+import type { TermsConditionBase } from "./TermsAndCondition";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -35,6 +36,7 @@ export interface PhoneNumberType {
 
 export type AppGridColDef<T extends GridValidRowModel> = GridColDef<T> & {
   exportFormatter?: (value: unknown, row: T) => string | number;
+  isSummary?: boolean;
 };
 
 // ************ Drawer Start ***********
@@ -216,13 +218,18 @@ export interface ExportToPDFProps<T extends GridValidRowModel> {
   rows: readonly T[];
   fileName?: string;
   title?: string;
+  user?: string;
+  email?: string;
 }
+
+export type ColumnFormatType = "default" | "phone" | "date" | "datetime" | "format" | "status";
 
 export interface CommonObjectNameColumnOptions {
   headerName?: string;
   width?: number;
   flex?: number;
   minWidth?: number;
+  type?: ColumnFormatType;
 }
 
 export interface CommonActionColumnProps<T> {
@@ -383,6 +390,7 @@ export interface CommonDataType {
   updatedBy: null;
   createdAt: string;
   updatedAt: string;
+  isActive?: boolean;
 }
 
 export interface AddressBase {
@@ -504,6 +512,15 @@ export interface ModalStateSlice {
   isDiscardModal: boolean;
   isBankTransactionModal: { open: boolean; data: BankTransactionBase | null };
   isTaxModal: { open: boolean; data: TaxBase | null };
+  selectedTermIds: string[];
+  isTermsAndConditionFormModal: {
+    open: boolean;
+    data: TermsConditionBase | null;
+  };
+  isTermsAndConditionSelectionModal: {
+    open: boolean;
+    alreadySelectedIds: string[];
+  };
 }
 
 // ************ Modal End ***********
@@ -639,6 +656,45 @@ export interface TabPanelProps {
   children?: ReactNode;
   index: number;
   value: number;
+}
+
+/* ===================== ADDITIONAL CHARGES ===================== */
+
+export interface AdditionalChargeItem {
+  chargeId?: string | AdditionalChargesBase;
+  amount?: number;
+  taxAmount?: number;
+  taxId?: string | TaxBase;
+  totalAmount?: number;
+}
+// ************ Common Shipping Details Start ***********
+export interface ShippingDetails {
+  shippingType: "delivery" | "pickup";
+  shippingDate: string;
+  referenceNo: string;
+  transportDate: string;
+  modeOfTransport: string;
+  transporterId?: string | null;
+  vehicleNo: string;
+  weight: number;
+}
+
+// ************ Common Transaction Summary Start ***********
+export interface TaxSummaryItem {
+  name: string;
+  rate: number;
+  amount: number;
+}
+
+export interface TransactionSummary {
+  flatDiscount: number;
+  grossAmount: number;
+  discountAmount: number;
+  taxableAmount: number;
+  taxAmount: number;
+  roundOff: number;
+  netAmount: number;
+  taxSummary?: TaxSummaryItem[];
 }
 
 export interface CommonStatsItem {
