@@ -408,12 +408,6 @@ export const CREDIT_NOTE_STATUS = [
   { label: "Used", value: "used" },
 ];
 
-export const STOCK_VARIFICATION_STATUS = [
-  { label: "Approved", value: "approved" },
-  { label: "Pending", value: "pending" },
-  { label: "Rejected", value: "rejected" },
-];
-
 export const PAYMENT_TYPE_OPTIONS = [
   { label: "Against_Bill", value: "against_bill" },
   { label: "Advance", value: "advance" },

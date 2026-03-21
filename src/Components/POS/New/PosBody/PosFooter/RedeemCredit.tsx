@@ -13,8 +13,6 @@ const RedeemCredit = () => {
   const dispatch = useAppDispatch();
   const { isRedeemCreditModal } = useAppSelector((state) => state.modal);
   const { PosProduct, isReturnPosOrder } = useAppSelector((state) => state.pos);
-  console.log("PosProduct", PosProduct);
-  console.log(isReturnPosOrder);
 
   const [type, setType] = useState<string>(REDEEM_CREDIT_TYPE_ENUM?.CREDIT_NOTE);
   const [creditNoteId, setCreditNoteId] = useState<string>("");
@@ -36,12 +34,12 @@ const RedeemCredit = () => {
     const currentAmount = Number(PosProduct.totalAmount || 0);
     const isEditMode = Boolean(PosProduct.posOrderId);
     if (isReturnPosOrder) return;
-    // if (!PosProduct.redeemCreditId) {
-    if (prevTotalAmountRef.current === 0) {
-      prevTotalAmountRef.current = currentAmount;
-      return;
+    if (!PosProduct.redeemCreditId) {
+      if (prevTotalAmountRef.current === 0) {
+        prevTotalAmountRef.current = currentAmount;
+        return;
+      }
     }
-    // }
 
     if (isEditMode) {
       if (!editLoadedRef.current) {
@@ -95,7 +93,7 @@ const RedeemCredit = () => {
           const redeemableAmount = data?.data?.redeemableAmount?.toFixed(2);
           const payableAmount = Number(totalAmount) - Number(redeemableAmount);
           const payable = payableAmount >= 0 ? payableAmount?.toFixed(2) : "0.00";
-          setDetails((prev) => ({ ...prev, id: data?.data?.id, date: data?.data?.date, amount: redeemableTotalAmount, available: redeemableAmount, apply: redeemableAmount, payable: payable }));
+          setDetails((prev) => ({ ...prev, id: data?.data?.id, date: data?.data?.date, amount: redeemableTotalAmount, available: redeemableAmount, apply: totalAmount.toFixed(2), payable: payable }));
         },
       });
     } else {
@@ -126,11 +124,31 @@ const RedeemCredit = () => {
     setDetails({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: (Number(totalAmount) + Number(isDetails.apply))?.toFixed(2) });
   };
 
-  // useEffect(() => {
-  //   if (PosProduct?.redeemCreditId) {
-  //     setCreditNoteId(PosProduct?.redeemCreditId);
-  //   }
-  // }, [PosProduct?.redeemCreditId]);
+  useEffect(() => {
+    if (PosProduct?.redeemCreditId) {
+      setCreditNoteId(PosProduct?.redeemCreditId);
+      const code = posCreditNoteDropdown?.data?.find((item) => item.id === PosProduct?.redeemCreditId);
+      if (code) {
+        const payload = {
+          code: code?.no,
+          type: type,
+          customerId: PosProduct?.customerId,
+        };
+        redeemCreditNote(payload, {
+          onSuccess: (data) => {
+            const redeemableTotalAmount = data?.data?.totalAmount?.toFixed(2);
+            const redeemableAmount = data?.data?.redeemableAmount?.toFixed(2);
+            const payableAmount = Number(totalAmount);
+            const payable = payableAmount >= 0 ? payableAmount?.toFixed(2) : "0.00";
+            const available = (Number(redeemableAmount) + Number(PosProduct?.redeemCreditAmount))?.toFixed(2);
+            setDetails((prev) => ({ ...prev, id: data?.data?.id, date: data?.data?.date, amount: redeemableTotalAmount, available: available, apply: PosProduct?.redeemCreditAmount?.toFixed(2), payable: payable }));
+          },
+        });
+      } else {
+        setDetails({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: totalAmount?.toString() });
+      }
+    }
+  }, [PosProduct?.redeemCreditId]);
 
   return (
     <CommonModal title="Redeem Credit" isOpen={isRedeemCreditModal} onClose={handleClose} className="max-w-[400px]">

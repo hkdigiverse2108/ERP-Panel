@@ -48,17 +48,44 @@ export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows
   );
 
   /* -----------------------------------------------
+   Summary Row Calculation
+----------------------------------------------- */
+  const hasSummary = exportableColumns.some((col) => (col as any).isSummary);
+  const summaryRow: (string | number)[] | null = hasSummary
+    ? exportableColumns.map((col, colIndex) => {
+        if (colIndex === 0) return "Total";
+
+        if ((col as any).isSummary) {
+          const total = rows.reduce((sum, row) => {
+            const value = (row as Record<string, unknown>)[col.field];
+
+            if (typeof value === "number") return sum + value;
+            if (!isNaN(Number(value))) return sum + Number(value);
+
+            return sum;
+          }, 0);
+
+          return total;
+        }
+
+        return "";
+      })
+    : null;
+
+  /* -----------------------------------------------
      PDF Table
   ----------------------------------------------- */
   autoTable(doc, {
     head: [tableHeaders],
     body: tableRows,
+    ...(summaryRow && { foot: [summaryRow] }),
 
     startY: 60,
-    margin: { top: 20, bottom: 30, left: 20, right: 20 }, // ✅ bottom space for footer
+    margin: { top: 20, bottom: 30, left: 20, right: 20 },
 
     styles: { fontSize: 10 },
     headStyles: { fillColor: "#e0e0e0", fontSize: 10, fontStyle: "normal", textColor: "#000000" },
+    footStyles: { fillColor: "#f5f5f5", textColor: "#000", fontStyle: "bold" },
 
     didDrawPage: (data) => {
       const pageNumber = doc.getNumberOfPages();

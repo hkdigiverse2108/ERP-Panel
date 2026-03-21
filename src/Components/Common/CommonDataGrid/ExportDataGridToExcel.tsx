@@ -23,7 +23,33 @@ export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, ro
     }),
   );
 
-  const sheetData = [[title], headers, ...dataRows];
+  /* ---------------------------------- */
+  /* Summary Row                        */
+  /* ---------------------------------- */
+  const hasSummary = exportableColumns.some((col) => (col as any).isSummary);
+
+  const summaryRow: (string | number)[] | null = hasSummary
+    ? exportableColumns.map((col, colIndex) => {
+        if (colIndex === 0) return "Total";
+
+        if ((col as any).isSummary) {
+          const total = rows.reduce((sum, row) => {
+            const value = (row as Record<string, unknown>)[col.field];
+
+            if (typeof value === "number") return sum + value;
+            if (!isNaN(Number(value))) return sum + Number(value);
+
+            return sum;
+          }, 0);
+
+          return total;
+        }
+
+        return "";
+      })
+    : null;
+
+  const sheetData = [[title], headers, ...dataRows, ...(summaryRow ? [summaryRow] : [])];
   const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
 
   /* ---------------------------------- */
@@ -66,6 +92,30 @@ export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, ro
       },
     };
   });
+
+  /* ---------------------------------- */
+  /* Summary Row Style                  */
+  /* ---------------------------------- */
+  if (summaryRow) {
+    const summaryRowIndex = 2 + dataRows.length; // title(0) + header(1) + data
+
+    exportableColumns.forEach((_, colIndex) => {
+      const ref = XLSX.utils.encode_cell({ r: summaryRowIndex, c: colIndex });
+
+      if (worksheet[ref]) {
+        worksheet[ref].s = {
+          font: { bold: true },
+          alignment: { horizontal: colIndex === 0 ? "left" : "right" },
+          fill: {
+            fgColor: { rgb: "F5F5F5" },
+          },
+          border: {
+            top: { style: "thin" },
+          },
+        };
+      }
+    });
+  }
 
   /* ---------------------------------- */
   /* Workbook                           */

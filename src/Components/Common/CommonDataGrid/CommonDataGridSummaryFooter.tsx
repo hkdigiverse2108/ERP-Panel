@@ -4,6 +4,8 @@ import { GridFooterContainer, gridVisibleColumnDefinitionsSelector, useGridApiCo
 export const CommonDataGridSummaryFooter = ({ summary, label = "Total" }: { summary: Record<string, string | number>; label?: string }) => {
   const apiRef = useGridApiContext();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
+  console.log("visibleColumns",visibleColumns);
+  
   return (
     <GridFooterContainer sx={{ overflowX: "auto", px: 0, width: "fit-content" }}>
       <Box sx={{ display: "flex", minWidth: "max-content" }}>

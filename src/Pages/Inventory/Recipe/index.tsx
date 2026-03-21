@@ -3,10 +3,10 @@ import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, RecipeBase } from "../../../Types";
-import { FormatDate } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 
 const Recipe = () => {
@@ -41,10 +41,10 @@ const Recipe = () => {
   };
 
   const columns: AppGridColDef<RecipeBase>[] = [
-    { field: "number", headerName: "Recipe No", width: 200 },
-    { field: "name", headerName: "Recipe Name", width: 270 },
-    { field: "date", headerName: "Recipe Date", width: 220, valueGetter: (v) => FormatDate(v) },
-    { field: "type", headerName: "Recipe Type", minWidth: 150, flex: 1 },
+    { field: "number", headerName: "Recipe No", width: 300 },
+    { field: "name", headerName: "Recipe Name", width: 300 },
+    CommonObjectPropertyColumn<RecipeBase>("date", "date", [], { headerName: "Recipe Date", width: 300, type: "date" }),
+    CommonObjectPropertyColumn<RecipeBase>("type", "type", [], { headerName: "Recipe Type", flex: 1, minWidth: 300, type: "format" }),
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<RecipeBase>({
@@ -72,6 +72,7 @@ const Recipe = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: "Recipe",
   };
 
   return (
