@@ -20,6 +20,8 @@ import EstimateReceipt from "./EstimateReceipt";
 import EstimateReceiptType2 from "./EstimateReceiptType2";
 import DeliveryChallanReceipt from "./DeliveryChallanReceipt";
 import DeliveryChallanReceiptType2 from "./DeliveryChallanReceiptType2";
+import StockTransferReceipt from "./StockTransferReceipt";
+import PaymentReceipt from "./PaymentReceipt";
 import type { PosOrderBase } from "../../../../Types";
 import type { SupplierBillBase } from "../../../../Types/SupplierBill";
 import type { PurchaseOrderBase } from "../../../../Types/PurchaseOrder";
@@ -147,6 +149,30 @@ const mockPurchaseOrder: PurchaseOrderBase = {
   ] as any
 } as any;
 
+const mockReceipt = {
+  _id: "rec1",
+  voucherNo: "REC2721",
+  createdAt: "2023-07-31T00:00:00.000Z",
+  type: "AgainstBill",
+  paymentMode: "Cash",
+  customerId: {
+    firstName: "Akash",
+    gstin: "22AAAAA0000A1Z5",
+    address: [{ addressLine1: "Crystal Indus Logistic Park, Block No.11, National Highway 8, Survey No. , Taluka Bavala" }]
+  },
+  items: [
+    {
+      billDate: "2023-07-31T00:00:00.000Z",
+      billNo: "INVQ419",
+      billAmount: 5643.00,
+      kasarAmount: 0.00,
+      paymentAmount: 5643.00,
+    }
+  ],
+  amount: 5643.00,
+  totalAmount: 5643.00
+} as any;
+
 const ReportFormats = () => {
   const [format, setFormat] = useState<string[]>([]);
   const [tab, setTab] = useState(0);
@@ -213,6 +239,12 @@ const ReportFormats = () => {
     8: [
       { value: "delivery-challan-receipt", label: "Delivery Challan", component: <DeliveryChallanReceipt bill={mockBill} /> },
       { value: "delivery-challan-receipt-type-2", label: "Delivery Challan (Type 2)", component: <DeliveryChallanReceiptType2 bill={mockBill} /> },
+    ],
+    9: [
+      { value: "stock-transfer-receipt", label: "Stock Transfer", component: <StockTransferReceipt bill={mockBill} /> },
+    ],
+    10: [
+      { value: "payment-receipt", label: "Payment Receipt", component: <PaymentReceipt bill={mockReceipt} /> },
     ],
   };
 

@@ -46,7 +46,7 @@ const OrderList = () => {
       renderCell: (params) => (params.row.payLater?.dueDate ? dayjs(params.row.payLater.dueDate).format("DD/MM/YYYY") : "-"),
     },
     {
-      field: "customerName",
+      field: "customerName",      
       headerName: "Customer Name",
       flex: 1,
       minWidth: 150,  
@@ -61,7 +61,7 @@ const OrderList = () => {
     { field: "paymentStatus", headerName: "Payment Status", flex: 1, minWidth: 130 },
     {
       field: "creditAppliedAmt",
-      headerName: "Credit Applied Amt",
+      headerName: "Credit Applied Amt", 
       flex: 1,
       minWidth: 150,
       renderCell: (params) => (params.row.totalAmount && params.row.dueAmount ? params.row.totalAmount - params.row.dueAmount : 0),
