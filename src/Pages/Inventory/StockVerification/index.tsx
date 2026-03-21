@@ -72,7 +72,7 @@ const StockVerification = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    fileName: "Stock Verification",
+    fileName: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE,
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },

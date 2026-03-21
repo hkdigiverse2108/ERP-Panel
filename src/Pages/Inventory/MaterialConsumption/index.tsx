@@ -1,13 +1,13 @@
 import { Box } from "@mui/material";
-import { type GridColDef } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
+import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import type { MaterialConsumptionBase } from "../../../Types";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import type { AppGridColDef, MaterialConsumptionBase } from "../../../Types";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 
 const MaterialConsumption = () => {
@@ -30,13 +30,13 @@ const MaterialConsumption = () => {
 
   const handleAdd = () => navigate(ROUTES.MATERIAL_CONSUMPTION.ADD_EDIT);
 
-  const columns: GridColDef<MaterialConsumptionBase>[] = [
-    CommonObjectNameColumn<MaterialConsumptionBase>("branchId", { headerName: "Branch", width: 200 }),
+  const columns: AppGridColDef<MaterialConsumptionBase>[] = [
     { field: "number", headerName: "MC No.", width: 100 },
-    { field: "type", headerName: "Type", width: 150 },
-    { field: "totalQty", type: "number", headerName: "Total Qty", width: 150 },
-    { field: "totalAmount", type: "number", headerName: "Total Amount", width: 150 },
-    { field: "date", headerName: "Date", width: 150, renderCell: (params) => FormatDate(params.row.date) },
+    CommonObjectPropertyColumn<MaterialConsumptionBase>("branchId", "branchId", ["name"], { headerName: "Branch", width: 200 }),
+    CommonObjectPropertyColumn<MaterialConsumptionBase>("type", "type", [], { headerName: "Type", width: 150, type: "format" }),
+    { field: "totalQty", type: "number", headerName: "Total Qty", width: 150, isSummary: true },
+    { field: "totalAmount", type: "number", headerName: "Total Amount", width: 150, isSummary: true },
+    CommonObjectPropertyColumn<MaterialConsumptionBase>("date", "date", [], { headerName: "Date", width: 120, type: "date" }),
     { field: "remark", headerName: "Remark", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
@@ -69,6 +69,7 @@ const MaterialConsumption = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE,
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },

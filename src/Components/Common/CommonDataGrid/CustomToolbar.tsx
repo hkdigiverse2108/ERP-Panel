@@ -14,7 +14,7 @@ import type { CustomToolbarProps } from "../../../Types";
 import { ExportDataGridToExcel } from "./ExportDataGridToExcel";
 import { ExportDataGridToPDF } from "./ExportDataGridToPDF";
 
-const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiRef, columns, rows, handleAdd, isActive, setActive, filterModel, onFilterModelChange }) => {
+const CustomToolbar: FC<CustomToolbarProps> = ({ onExportAll, isExport = true, fileName, apiRef, columns, rows, handleAdd, isActive, setActive, filterModel, onFilterModelChange }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [searchText, setSearchText] = useState(filterModel?.quickFilterValues?.[0] || "");
 
@@ -22,10 +22,31 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiR
   const { company } = useAppSelector((state) => state.company);
   const companyName = company?.name ?? "Company";
   const exportFileName = `${fileName ? `${fileName?.replace(/\s+/g, "-")}-` : ""}${companyName?.replace(/\s+/g, "-")}-${new Date().toISOString().split("T")[0]}`;
+  const exportAllFileName = `${fileName ? `All-${fileName?.replace(/\s+/g, "-")}-` : ""}${companyName?.replace(/\s+/g, "-")}-${new Date().toISOString().split("T")[0]}`;
   const { adminSetting } = useAppSelector((state) => state.layout);
 
   const handleSearch = () => {
     onFilterModelChange({ ...filterModel, quickFilterValues: [searchText] });
+  };
+
+  const extractArray = (data: any): any[] => {
+    if (!data) return [];
+    // 1. Direct array
+    if (Array.isArray(data)) return data;
+    // 2. Common nested "data"
+    if (Array.isArray(data?.data)) return data.data;
+    // 3. 🔥 Find FIRST array dynamically
+    for (const key in data) if (Array.isArray(data[key])) return data[key];
+    return [];
+  };
+
+  const handleExportAll = async () => {
+    if (!onExportAll) return;
+    const res: any = await onExportAll.onExportAll();
+    const raw = res?.data?.data ?? res?.data;
+    const list = extractArray(raw);
+    const finalData = list.map((item) => ({ ...item, id: item?._id || item?.id }));
+    ExportDataGridToExcel({ columns, rows: finalData, fileName: exportAllFileName, title: fileName ?? companyName, companyName: companyName });
   };
 
   return (
@@ -95,18 +116,19 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiR
             {/* EXCEL */}
             <MenuItem
               onClick={() => {
-                ExportDataGridToExcel({
-                  columns,
-                  rows,
-                  fileName: exportFileName,
-                  title: fileName ?? companyName,
-                });
+                ExportDataGridToExcel({ columns, rows, fileName: exportFileName, title: fileName ?? companyName, companyName: companyName });
                 setAnchorEl(null);
               }}
             >
               <GridOnIcon fontSize="small" sx={{ mr: 1 }} />
               Excel
             </MenuItem>
+            {onExportAll && (
+              <MenuItem onClick={handleExportAll} disabled={onExportAll?.isFetching}>
+                <GridOnIcon fontSize="small" sx={{ mr: 1 }} />
+                {onExportAll?.isFetching ? "Loading..." : "All Data Excel"}
+              </MenuItem>
+            )}
 
             {/* PRINT */}
             {/* <MenuItem
@@ -122,14 +144,7 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ isExport = true, fileName, apiR
             {/* PDF */}
             <MenuItem
               onClick={() => {
-                ExportDataGridToPDF({
-                  columns,
-                  rows,
-                  fileName: exportFileName,
-                  title: companyName,
-                  user: user?.fullName,
-                  email: adminSetting?.email,
-                });
+                ExportDataGridToPDF({ columns, rows, fileName: exportFileName, title: companyName, user: user?.fullName, email: adminSetting?.email });
                 setAnchorEl(null);
               }}
             >

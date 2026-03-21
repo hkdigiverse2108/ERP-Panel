@@ -72,7 +72,7 @@ const Recipe = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    fileName: "Recipe",
+    fileName: PAGE_TITLE.INVENTORY.RECIPE.BASE,
   };
 
   return (

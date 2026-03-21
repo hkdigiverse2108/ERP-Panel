@@ -3,11 +3,11 @@ import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, BillOfLiveProductBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { FormatDate } from "../../../Utils";
 
 const BillOfLiveProduct = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -32,8 +32,9 @@ const BillOfLiveProduct = () => {
   };
 
   const columns: AppGridColDef<BillOfLiveProductBase>[] = [
-    { field: "number", headerName: "Bill Of Live Product No.", width: 400 },
-    { field: "date", headerName: "Bill Of Live Product Date", valueGetter: (v) => FormatDate(v), flex: 1 },
+    { field: "number", headerName: "Bill Of Live Product No.", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<BillOfLiveProductBase>("date", "date", [], { headerName: "Bill Of Live Product Date", flex: 1, minWidth: 120, type: "date" }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<BillOfLiveProductBase>({
@@ -43,7 +44,7 @@ const BillOfLiveProduct = () => {
         ]
       : []),
   ];
-  
+
   const gridOptions = {
     columns,
     rows,
@@ -58,6 +59,7 @@ const BillOfLiveProduct = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE,
   };
 
   return (

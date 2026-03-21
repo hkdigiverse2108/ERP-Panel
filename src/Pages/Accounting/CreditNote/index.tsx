@@ -3,13 +3,12 @@ import type { GridColDef } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonPhoneColumns } from "../../../Components/Common";
+import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { CreditNoteBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { FormatDate } from "../../../Utils";
-import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const CreditNote = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -34,9 +33,9 @@ const CreditNote = () => {
   const columns: GridColDef<CreditNoteBase>[] = [
     { field: "personName", headerName: "Person Name", width: 200 },
     { field: "amount", headerName: "Amount", width: 200 },
-    { field: "date", headerName: "Date", width: 200, valueGetter: (v) => FormatDate(v) },
+    CommonObjectPropertyColumn<CreditNoteBase>("date", "date", [], { headerName: "Date", width: 200, type: "date" }),
     CommonObjectPropertyColumn<CreditNoteBase>("bankName", "bankAccountId", ["name"], { headerName: "Bank name", width: 300 }),
-    CommonPhoneColumns("phoneNo", { headerName: "Phone No", width: 200 }),
+    CommonObjectPropertyColumn<CreditNoteBase>("phoneNo", "phoneNo", [], { headerName: "Phone No", width: 200, type: "phone" }),
     { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
@@ -65,6 +64,7 @@ const CreditNote = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.BASE,
   };
 
   return (

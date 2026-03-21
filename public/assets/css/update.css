@@ -161,7 +161,7 @@ input[type="number"] {
 }
 .status-inactive,
 .status-returned,
-.status-partially,
+.status-partially_returned,
 .status-cancelled,
 .status-unpaid,
 .status-used,

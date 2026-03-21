@@ -3,11 +3,11 @@ import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS, COUPON_DISCOUNT_TYPE, COUPON_STATUS } from "../../../Data";
+import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, CouponBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { FormatDate } from "../../../Utils";
 
 const Coupon = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -29,17 +29,16 @@ const Coupon = () => {
   const handleAdd = () => navigate(ROUTES.COUPON.ADD_EDIT);
 
   const columns: AppGridColDef<CouponBase>[] = [
-    { field: "name", headerName: "Coupon name", width: 170 },
-    { field: "couponPrice", headerName: "Coupon Price", width: 100 },
-    { field: "redeemValue", headerName: "Redeem value", width: 120 },
-    { field: "usageLimit", headerName: "Usage limit", width: 100 },
-    { field: "usedCount", headerName: "Used count", width: 100 },
-    { field: "expiryDays", headerName: "Expiry days", width: 100 },
-    { field: "startDate", headerName: "Start Date", width: 150, renderCell: (params) => FormatDate(params.row.startDate) },
-    { field: "endDate", headerName: "End Date", width: 150, renderCell: (params) => FormatDate(params.row.endDate) },
-    { field: "redemptionType", headerName: "Redemption Type", width: 150, renderCell: (params) => COUPON_DISCOUNT_TYPE.find((item) => item.value === params.row.redemptionType)?.label },
-    { field: "singleTimeUse", headerName: "Single Time Use", width: 150, renderCell: (params) => (params.row.singleTimeUse ? "Yes" : "No") },
-    { field: "status", headerName: "Status", flex: 1, minWidth: 100, renderCell: (params) => COUPON_STATUS.find((item) => item.value === params.row.status)?.label },
+    { field: "name", headerName: "Coupon name", flex: 1, minWidth: 170 },
+    { field: "couponPrice", headerName: "Coupon Price", flex: 1, minWidth: 100 },
+    { field: "redeemValue", headerName: "Redeem value", flex: 1, minWidth: 120 },
+    { field: "usageLimit", headerName: "Usage limit", flex: 1, minWidth: 100 },
+    { field: "usedCount", headerName: "Used count", flex: 1, minWidth: 100 },
+    { field: "expiryDays", headerName: "Expiry days", flex: 1, minWidth: 100 },
+    CommonObjectPropertyColumn<CouponBase>("startDate", "startDate", [], { headerName: "Start Date", flex: 1, minWidth: 100, type: "date" }),
+    CommonObjectPropertyColumn<CouponBase>("endDate", "endDate", [], { headerName: "End Date", flex: 1, minWidth: 100, type: "date" }),
+    CommonObjectPropertyColumn<CouponBase>("redemptionType", "redemptionType", [], { headerName: "Redemption Type", flex: 1, minWidth: 150, type: "format" }),
+    CommonObjectPropertyColumn<CouponBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 100, type: "status" }),
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<CouponBase>({
@@ -67,7 +66,7 @@ const Coupon = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: false,
+    fileName: PAGE_TITLE.CRM.COUPON.BASE,
   };
 
   return (

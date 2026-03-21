@@ -23,6 +23,7 @@ const SalesRegister = () => {
   const { data: userDropdown, isLoading: userDropdownLoading } = Queries.useGetUserDropdown();
 
   const { data, isLoading, isFetching } = Queries.useGetPosCashRegister({ ...params, ...queryParams });
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPosCashRegister({}, false);
 
   const rows = useMemo(() => {
     const apiData = data?.data?.posCashRegister_data;
@@ -34,7 +35,6 @@ const SalesRegister = () => {
   const summary = useMemo(() => {
     return CalculateGridSummary(rows, ["openingCash", "cashPayment", "cardPayment", "upiPayment", "payLater", "totalSales", "creditAdvanceRedeemed", "salesReturn", "physicalDrawerCash", "shortExceed"]);
   }, [rows]);
-
 
   const handlePrint = useReactToPrint({
     contentRef,
@@ -64,17 +64,17 @@ const SalesRegister = () => {
     CommonObjectPropertyColumn<PosCashRegisterBase>("created", "createdAt", [], { headerName: "From Date", width: 100, type: "date" }),
     CommonObjectPropertyColumn<PosCashRegisterBase>("updated", "updatedAt", [], { headerName: "To Date", width: 100, type: "date" }),
     CommonObjectPropertyColumn<PosCashRegisterBase>("status", "status", [], { headerName: "Status", width: 100, type: "status" }),
-    { field: "openingCash", headerName: "Cash In Hand", width: 100 },
-    { field: "cashPayment", headerName: "Cash", width: 100 },
-    { field: "cardPayment", headerName: "Card", width: 100 },
-    { field: "upiPayment", headerName: "UPI", width: 100 },
-    { field: "payLater", headerName: "Pay Later", width: 100 },
-    { field: "totalSales", headerName: "Total Sales", width: 130 },
-    { field: "creditAdvanceRedeemed", headerName: "Credit / Advance Redeemed", width: 190 },
-    { field: "salesReturn", headerName: "Sales Return Amount", width: 160 },
+    { field: "openingCash", headerName: "Cash In Hand", width: 100, isSummary: true },
+    { field: "cashPayment", headerName: "Cash", width: 100, isSummary: true },
+    { field: "cardPayment", headerName: "Card", width: 100, isSummary: true },
+    { field: "upiPayment", headerName: "UPI", width: 100, isSummary: true },
+    { field: "payLater", headerName: "Pay Later", width: 100, isSummary: true },
+    { field: "totalSales", headerName: "Total Sales", width: 130, isSummary: true },
+    { field: "creditAdvanceRedeemed", headerName: "Credit / Advance Redeemed", width: 190, isSummary: true },
+    { field: "salesReturn", headerName: "Sales Return Amount", width: 160, isSummary: true },
     { field: "bankTransferAmount", headerName: "Cash Transfered To HO", width: 180 },
-    { field: "physicalDrawerCash", headerName: "Closing Amount", width: 150 },
-    { field: "shortExceed", headerName: "Short / Exceed",flex:1, minWidth: 140 },
+    { field: "physicalDrawerCash", headerName: "Closing Amount", width: 150, isSummary: true },
+    { field: "shortExceed", headerName: "Short / Exceed", flex: 1, minWidth: 140, isSummary: true },
     CommonActionColumn<PosCashRegisterBase>({
       onPrint: { handlePrint: (row) => handlePrintBtn(row), isPermission: (row) => row.status !== "closed" },
     }),
@@ -91,14 +91,17 @@ const SalesRegister = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    fileName: "Sales Register",
+    fileName: PAGE_TITLE.POS.SALES_REGISTER,
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
-  const filter = [CreateFilter("Select Salesman", "salesManFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(userDropdown?.data), userDropdownLoading, { xs: 12, sm: 6, md: 3 }),//
-     CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, SALES_REGISTER_STATUS, false, { xs: 12, sm: 6, md: 3 })];
+  const filter = [
+    CreateFilter("Select Salesman", "salesManFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(userDropdown?.data), userDropdownLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, SALES_REGISTER_STATUS, false, { xs: 12, sm: 6, md: 3 }),
+  ];
 
   return (
     <>

@@ -190,6 +190,7 @@ export interface CommonDataGridProps {
 
   slots?: any;
   slotProps?: GridSlotsComponentsProps;
+  onExportAll?: { onExportAll: () => void; isFetching: boolean };
 }
 
 export interface CustomToolbarProps {
@@ -204,6 +205,7 @@ export interface CustomToolbarProps {
   fileName?: string;
   filterModel: GridFilterModel;
   onFilterModelChange: (model: GridFilterModel) => void;
+  onExportAll?: { onExportAll: () => void; isFetching: boolean };
 }
 
 export interface ExportToExcelProps<T extends GridValidRowModel> {

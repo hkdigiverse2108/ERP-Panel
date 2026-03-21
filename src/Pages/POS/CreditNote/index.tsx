@@ -97,7 +97,7 @@ const CreditNoteList = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    fileName: "Credit Note",
+    fileName: PAGE_TITLE.POS.CREDIT_NOTE,
   };
   const filter = [CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, CREDIT_NOTE_STATUS, false, { xs: 12, sm: 6, md: 3 })];
 

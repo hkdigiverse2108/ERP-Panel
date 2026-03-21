@@ -104,7 +104,7 @@ const Product = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    fileName: "Product",
+    fileName: PAGE_TITLE.INVENTORY.PRODUCT.BASE,
     isExport: !isRemoveItem,
   };
 

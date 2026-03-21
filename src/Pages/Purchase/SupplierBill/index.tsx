@@ -3,10 +3,11 @@ import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, PAYMENT_STATUS_OPTIONS } from "../../../Data";
 import type { AppGridColDef, SupplierBillBase } from "../../../Types";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 
 const SupplierBill = () => {
@@ -55,25 +56,22 @@ const SupplierBill = () => {
   const filter = [CreateFilter("Select Supplier", "supplierFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(supplierData?.data), supplierDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Payment Status", "paymentStatus", advancedFilter, updateAdvancedFilter, PAYMENT_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
 
   const columns: AppGridColDef<SupplierBillBase>[] = [
-    { field: "paymentStatus", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 110, renderCell: (params) => <span className={`status-${params.row.paymentStatus}`}>{params.row.paymentStatus}</span> },
-    // CommonObjectNameColumn<SupplierBillBase>("companyId", { headerName: "Company", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<SupplierBillBase>("paymentStatus", "paymentStatus", [], { headerName: "Status", flex: 1, minWidth: 110, type: "status" }),
     { field: "supplierBillNo", headerName: "Bill No", flex: 1, minWidth: 110 },
+    CommonObjectPropertyColumn<SupplierBillBase>("supplierId", "supplierId", ["firstName", "lastName"], { headerName: "Supplier", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<SupplierBillBase>("supplierBillDate", "supplierBillDate", [], { headerName: "Bill Date", flex: 1, minWidth: 100, type: "date" }),
 
-    { field: "supplierId", headerName: "Supplier", flex: 1, minWidth: 150, valueGetter: (_, row: SupplierBillBase) => (row?.supplierId ? `${row.supplierId.firstName || ""} ${row.supplierId.lastName || ""}`.trim() : "") },
+    { field: "billAmount", headerName: "Bill Amount", flex: 1, minWidth: 130, isSummary: true },
 
-    { field: "supplierBillDate", headerName: "Bill Date", flex: 1, minWidth: 130, valueGetter: (v) => FormatDate(v) },
+    { field: "paidAmount", headerName: "Paid Amount", flex: 1, minWidth: 130, isSummary: true },
 
-    { field: "billAmount", headerName: "Bill Amount", flex: 1, minWidth: 130, valueGetter: (_, row: SupplierBillBase) => row?.summary?.netAmount ?? Number(row?.invoiceAmount ?? 0) },
+    { field: "balanceAmount", headerName: "Due Amount", flex: 1, minWidth: 130, isSummary: true },
 
-    { field: "paidAmount", headerName: "Paid Amount", flex: 1, minWidth: 130, valueGetter: (v) => Number(v ?? 0) },
+    { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 140, type: "number", isSummary: true },
 
-    { field: "balanceAmount", headerName: "Due Amount", flex: 1, minWidth: 130, valueGetter: (v) => Number(v ?? 0) },
+    CommonObjectPropertyColumn<SupplierBillBase>("dueDate", "dueDate", [], { headerName: "Due Date", flex: 1, minWidth: 100, type: "date" }),
 
-    { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 140, type: "number" },
-
-    { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 140, valueGetter: (v) => FormatDate(v) },
-
-    { field: "notes", headerName: "Notes", flex: 1, minWidth: 280 },
+    { field: "notes", headerName: "Notes", flex: 1, minWidth: 180 },
 
     ...(permission?.edit || permission?.delete
       ? [
@@ -102,6 +100,7 @@ const SupplierBill = () => {
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },
+    fileName: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE,
   };
   return (
     <>

@@ -5,7 +5,7 @@ import type { CommonDataGridProps } from "../../../Types";
 import CustomToolbar from "./CustomToolbar";
 import NoRowsOverlay from "./NoRowsOverlay";
 
-const CommonDataGrid: FC<CommonDataGridProps> = ({ isToolbar = true, slots, slotProps, isExport, pagination, fileName, columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass, handleAdd, isActive, setActive }) => {
+const CommonDataGrid: FC<CommonDataGridProps> = ({onExportAll, isToolbar = true, slots, slotProps, isExport, pagination, fileName, columns, rows, rowCount, loading = false, paginationModel, onPaginationModelChange, sortModel, onSortModelChange, filterModel, onFilterModelChange, defaultHidden = [], BoxClass, handleAdd, isActive, setActive }) => {
   const apiRef = useGridApiRef();
 
   const visibilityModel = useMemo(() => {
@@ -48,7 +48,7 @@ const CommonDataGrid: FC<CommonDataGridProps> = ({ isToolbar = true, slots, slot
         rowCount={rowCount}
         loading={loading}
         slots={{
-          toolbar: () => isToolbar && <CustomToolbar filterModel={filterModel} onFilterModelChange={onFilterModelChange} isExport={isExport} fileName={fileName} apiRef={apiRef} columns={fixedColumns} rows={rows} rowCount={rowCount} handleAdd={handleAdd} isActive={isActive} setActive={setActive} />,
+          toolbar: () => isToolbar && <CustomToolbar onExportAll={onExportAll} filterModel={filterModel} onFilterModelChange={onFilterModelChange} isExport={isExport} fileName={fileName} apiRef={apiRef} columns={fixedColumns} rows={rows} rowCount={rowCount} handleAdd={handleAdd} isActive={isActive} setActive={setActive} />,
           noRowsOverlay: () => <NoRowsOverlay />,
           bottomContainer: (props) => <>{slots?.bottomContainer?.(props)}</>,
         }}

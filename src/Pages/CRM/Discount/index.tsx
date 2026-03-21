@@ -3,10 +3,11 @@ import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, DiscountBase } from "../../../Types";
-import { FormatDate, FormatPayment, FormatValidity } from "../../../Utils";
+import { FormatValidity } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 
 const Discount = () => {
@@ -37,14 +38,15 @@ const Discount = () => {
   }, [data]);
 
   const columns: AppGridColDef<DiscountBase>[] = [
-    { field: "title", headerName: "Title", width: 200 },
-    { field: "createdAt", headerName: "Created On", width: 160, valueGetter: (v) => FormatDate(v) },
-    { field: "validity", headerName: "Validity", width: 250, valueGetter: (v, row) => FormatValidity(v, row) },
-    { field: "orders", headerName: "Orders", width: 150 },
-    { field: "revenue", headerName: "Revenue", width: 150 },
-    { field: "discountValue", headerName: "Discount", width: 150 },
-    { field: "discountType", headerName: "Discount Type", width: 150, valueGetter: (v) => FormatPayment(v) },
-    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 100, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
+    { field: "title", headerName: "Title", flex: 1, minWidth: 170 },
+    CommonObjectPropertyColumn<DiscountBase>("createdAt", "createdAt", [], { headerName: "Created On", flex: 1, minWidth: 100, type: "date" }),
+    CommonObjectPropertyColumn<DiscountBase>("createdAt", "createdAt", [], { headerName: "Created On", flex: 1, minWidth: 100, type: "date" }),
+    { field: "validity", headerName: "Validity", width: 200, valueGetter: (v, row) => FormatValidity(v, row) },
+    { field: "orders", headerName: "Orders", flex: 1, minWidth: 100 },
+    { field: "revenue", headerName: "Revenue", flex: 1, minWidth: 100 },
+    { field: "discountValue", headerName: "Discount", flex: 1, minWidth: 100 },
+    CommonObjectPropertyColumn<DiscountBase>("discountType", "discountType", [], { headerName: "Discount Type", flex: 1, minWidth: 100, type: "format" }),
+    CommonObjectPropertyColumn<DiscountBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 100, type: "status" }),
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<DiscountBase>({
@@ -69,7 +71,7 @@ const Discount = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: false,
+    fileName: PAGE_TITLE.CRM.DISCOUNT.BASE,
   };
 
   return (

@@ -1,6 +1,6 @@
 import type { GridValidRowModel } from "@mui/x-data-grid";
 import type { AppGridColDef, ColumnFormatType, CommonObjectNameColumnOptions, PhoneNumberType } from "../../../Types";
-import { FormatCountryCode, FormatDate, FormatDateTime, FormatPayment } from "../../../Utils";
+import { FormatCountryCode, FormatDate, FormatDateTime, FormatPayment, FormatValidity } from "../../../Utils";
 
 // Common Object Name Column
 export const CommonObjectNameColumn = <T extends GridValidRowModel>(field: string, options?: CommonObjectNameColumnOptions): AppGridColDef<T> => ({
@@ -106,7 +106,7 @@ export const CommonObjectPropertyColumn = <T extends GridValidRowModel>(field: s
 
   renderCell: ({ value }) => {
     if (options?.type === "status") {
-      return <span className={`status-${value?.toLowerCase()}`}>{value}</span>;
+      return <span className={`status-${value?.toString().toLowerCase().replace(" ", "_")}`}>{value}</span>;
     }
 
     return String(value ?? "-");

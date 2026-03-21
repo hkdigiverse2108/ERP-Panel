@@ -25,6 +25,7 @@ const OrderList = () => {
   const { isSelectedOrderId, isPrintType } = useAppSelector((state) => state.pos);
 
   const { data: orderData, isLoading: orderDataLoading, isFetching: orderDataFetching } = Queries.useGetPosOrder(params);
+  const { refetch: fetchAllOrders, isFetching: orderDataAllFetching, isLoading: orderDataAllLoading } = Queries.useGetPosOrder({}, false);
   const { data: posOrderById, isLoading: posOrderByIdLoading, isFetching: posOrderByIdFetching } = Queries.useGetPosOrderById(isSelectedOrderId, Boolean(isSelectedOrderId));
 
   const allOrders = useMemo(() => orderData?.data?.posOrder_data?.map((order) => ({ ...order, id: order?._id })) || [], [orderData]);
@@ -116,8 +117,8 @@ const OrderList = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    fileName: "Order List",
-    // isExport: false,
+    fileName: PAGE_TITLE.POS.ORDER_LIST,
+    onExportAll: { onExportAll: fetchAllOrders, isFetching: orderDataAllLoading || orderDataAllFetching },
   };
 
   const filter = [CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ORDER_STATUS, false, { xs: 12, sm: 6, md: 3 })];
