@@ -42,6 +42,7 @@ const CategorySales = () => {
     pagination: false,
     isToolbar: false,
     isExport: false,
+    fileName: "Category Sales",
   };
 
   const topContent = (

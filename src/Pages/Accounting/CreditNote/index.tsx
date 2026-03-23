@@ -16,6 +16,7 @@ const CreditNote = () => {
   const permission = usePagePermission(PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.BASE);
 
   const { data: creditNote_data, isLoading: creditNoteDataLoading, isFetching: creditNoteDataFetching } = Queries.useGetCreditNote(params);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetCreditNote({}, false);
 
   const { mutate: deleteCreditNoteMutate } = Mutations.useDeleteCreditNote();
   const { mutate: editCreditNote, isPending: isEditLoading } = Mutations.useEditCreditNote();
@@ -65,6 +66,7 @@ const CreditNote = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   return (

@@ -16,18 +16,19 @@ const PurchaseOrder = () => {
   const navigate = useNavigate();
 
   const { data: purchaseOrderData, isLoading: purchaseOrderDataLoading, isFetching: purchaseOrderDataFetching } = Queries.useGetPurchaseOrder(params);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPurchaseOrder({}, false);
   const { mutate: deletePurchaseOrderMutate, isPending: deletePurchaseOrderLoading } = Mutations.useDeletePurchaseOrder();
   const { mutate: editPurchaseOrder, isPending: isEditLoading } = Mutations.useEditPurchaseOrder();
 
   // Filter Data Queries
   const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier" });
 
-  const allPurchaseOrder = useMemo(() => purchaseOrderData?.data?.purchaseOrder_data?.map((purchaseOrder) => ({ ...purchaseOrder, id: purchaseOrder._id, netAmount: purchaseOrder.summary?.netAmount || 0 })) || [], [purchaseOrderData]);
+  const allPurchaseOrder = useMemo(() => purchaseOrderData?.data?.purchaseOrder_data?.map((purchaseOrder) => ({ ...purchaseOrder, id: purchaseOrder._id })) || [], [purchaseOrderData]);
   const totalRows = purchaseOrderData?.data?.totalData || 0;
   const summaryData = purchaseOrderData?.data?.summary;
 
   const summary = useMemo(() => {
-    return CalculateGridSummary(allPurchaseOrder, ["netAmount"]);
+    return CalculateGridSummary(allPurchaseOrder, ["summary.netAmount"]);
   }, [allPurchaseOrder]);
 
   const handleDeleteBtn = () => {
@@ -41,7 +42,7 @@ const PurchaseOrder = () => {
     { field: "orderNo", headerName: "Order No", flex: 1, minWidth: 150 },
     CommonObjectPropertyColumn<PurchaseOrderBase>("supplierId", "supplierId", ["firstName", "lastName"], { headerName: "Supplier", flex: 1, minWidth: 150 }),
     CommonObjectPropertyColumn<PurchaseOrderBase>("orderDate", "orderDate", [], { headerName: "Order Date", flex: 1, minWidth: 150, type: "date" }),
-    { field: "netAmount", headerName: "Amount", flex: 1, minWidth: 110, type: "number", isSummary: true },
+    CommonObjectPropertyColumn<PurchaseOrderBase>("summary.netAmount", "summary.netAmount", ["netAmount"], { headerName: "Amount", flex: 1, minWidth: 110, isSummary: true }),
     CommonObjectPropertyColumn<PurchaseOrderBase>("status", "status", [], { headerName: "Status", width: 150, type: "status" }),
     { field: "notes", headerName: "Notes", flex: 1, minWidth: 150 },
     CommonActionColumn({
@@ -69,6 +70,7 @@ const PurchaseOrder = () => {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },
     fileName: PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   const filter = [CreateFilter("Select Supplier", "supplier", advancedFilter, updateAdvancedFilter, GenerateOptions(supplierData?.data), supplierDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ORDER_STATUS, false, { xs: 12, sm: 6, md: 3 })];

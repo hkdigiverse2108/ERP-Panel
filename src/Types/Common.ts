@@ -184,7 +184,7 @@ export interface CommonDataGridProps {
   defaultHidden?: string[];
   BoxClass?: string;
   isExport?: boolean;
-  fileName?: string;
+  fileName: string;
   pagination?: boolean;
   isToolbar?: boolean;
 
@@ -232,6 +232,8 @@ export interface CommonObjectNameColumnOptions {
   flex?: number;
   minWidth?: number;
   type?: ColumnFormatType;
+  isSummary?: boolean;
+  
 }
 
 export interface CommonActionColumnProps<T> {

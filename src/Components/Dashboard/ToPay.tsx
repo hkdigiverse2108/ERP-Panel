@@ -33,6 +33,7 @@ const ToPay = () => {
     pagination: false,
     isToolbar: false,
     isExport: false,
+    fileName: "To Pay",
   };
 
   return (

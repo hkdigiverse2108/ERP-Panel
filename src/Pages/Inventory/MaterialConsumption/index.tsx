@@ -16,6 +16,7 @@ const MaterialConsumption = () => {
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE);
 
   const { data: materialConsumptionData, isLoading: materialConsumptionDataLoading, isFetching: materialConsumptionDataFetching } = Queries.useGetMaterialConsumption(params);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetMaterialConsumption({}, false);
   const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown();
   const { mutate: deleteMaterialConsumptionMutate, isPending: isDeleteLoading } = Mutations.useDeleteMaterialConsumption();
   const { mutate: editMaterialConsumption, isPending: isEditLoading } = Mutations.useEditMaterialConsumption();
@@ -70,6 +71,7 @@ const MaterialConsumption = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },

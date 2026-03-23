@@ -16,28 +16,18 @@ const PurchaseDebitNote = () => {
   const permission = usePagePermission(PAGE_TITLE.PURCHASE.PURCHASE_DEBIT_NOTE.BASE);
 
   const { data: purchaseDebitNote, isLoading, isFetching } = Queries.useGetPurchaseDebitNote(params);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPurchaseDebitNote({}, false);
   const { mutate: editPurchaseDebitNote, isPending: isEditLoading } = Mutations.useEditPurchaseDebitNote();
   const { mutate: deletePurchaseDebitNote, isPending: deletePurchaseDebitNoteLoading } = Mutations.useDeletePurchaseDebitNote();
 
   // Filter Data Queries
   const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier" });
 
-  const allRows = useMemo(
-    () =>
-      purchaseDebitNote?.data?.purchaseDebitNote_data?.map((item) => ({
-        ...item,
-        id: item._id,
-        netAmount: item.summary?.netAmount || 0,
-        taxAmount: item.summary?.taxAmount || 0,
-      })) || [],
-    [purchaseDebitNote],
-  );
+  const allRows = useMemo(() => purchaseDebitNote?.data?.purchaseDebitNote_data?.map((item) => ({ ...item, id: item._id })) || [], [purchaseDebitNote]);
 
   const totalRows = purchaseDebitNote?.data?.totalData || 0;
 
-  const summary = useMemo(() => {
-    return CalculateGridSummary(allRows, ["netAmount", "taxAmount"]);
-  }, [allRows]);
+  const summary = useMemo(() => CalculateGridSummary(allRows, ["summary.netAmount", "summary.taxAmount"]), [allRows]);
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
@@ -49,8 +39,8 @@ const PurchaseDebitNote = () => {
     CommonObjectPropertyColumn<PurchaseDebitNoteBase>("status", "status", [], { headerName: "Status", width: 110, type: "status" }),
     CommonObjectPropertyColumn<PurchaseDebitNoteBase>("supplierId", "supplierId", ["firstName", "lastName"], { headerName: "Supplier", flex: 1, minWidth: 200 }),
     CommonObjectPropertyColumn<PurchaseDebitNoteBase>("debitNoteDate", "debitNoteDate", [], { headerName: "Debit Note Date", width: 150, type: "date" }),
-    { field: "netAmount", headerName: "Debit Note Amount", flex: 1, minWidth: 150, type: "number", isSummary: true },
-    { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 120, type: "number", isSummary: true },
+    CommonObjectPropertyColumn<PurchaseDebitNoteBase>("summary.netAmount", "summary.netAmount", ["netAmount"], { headerName: "Debit Note Amount", flex: 1, minWidth: 150, isSummary: true }),
+    CommonObjectPropertyColumn<PurchaseDebitNoteBase>("summary.taxAmount", "summary.taxAmount", ["taxAmount"], { headerName: "Tax Amount", flex: 1, minWidth: 120, isSummary: true }),
     { field: "notes", headerName: "Notes", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
@@ -106,6 +96,7 @@ const PurchaseDebitNote = () => {
                 bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
               }}
               fileName={PAGE_TITLE.PURCHASE.PURCHASE_DEBIT_NOTE.BASE}
+              onExportAll={{ onExportAll: fetchAll, isFetching: AllLoading || AllFetching }}
             />
           </Box>
         </CommonCard>

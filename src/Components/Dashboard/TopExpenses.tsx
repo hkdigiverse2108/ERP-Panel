@@ -39,6 +39,7 @@ const TopExpenses = () => {
     pagination: false,
     isToolbar: false,
     isExport: false,
+    fileName: "Top Expenses",
   };
 
   const topContent = (

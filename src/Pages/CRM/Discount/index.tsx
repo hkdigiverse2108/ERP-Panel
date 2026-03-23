@@ -7,7 +7,6 @@ import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDat
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, DiscountBase } from "../../../Types";
-import { FormatValidity } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 
 const Discount = () => {
@@ -39,9 +38,9 @@ const Discount = () => {
 
   const columns: AppGridColDef<DiscountBase>[] = [
     { field: "title", headerName: "Title", flex: 1, minWidth: 170 },
-    CommonObjectPropertyColumn<DiscountBase>("createdAt", "createdAt", [], { headerName: "Created On", flex: 1, minWidth: 100, type: "date" }),
-    CommonObjectPropertyColumn<DiscountBase>("createdAt", "createdAt", [], { headerName: "Created On", flex: 1, minWidth: 100, type: "date" }),
-    { field: "validity", headerName: "Validity", width: 200, valueGetter: (v, row) => FormatValidity(v, row) },
+    CommonObjectPropertyColumn<DiscountBase>("createdAt", "createdAt", [], { headerName: "Created On", width: 100, type: "date" }),
+    CommonObjectPropertyColumn<DiscountBase>("startDateTime", "startDateTime", [], { headerName: "Start Date Time", flex: 1, minWidth: 100, type: "datetime" }),
+    CommonObjectPropertyColumn<DiscountBase>("endDateTime", "endDateTime", [], { headerName: "End Date Time", flex: 1, minWidth: 100, type: "datetime" }),
     { field: "orders", headerName: "Orders", flex: 1, minWidth: 100 },
     { field: "revenue", headerName: "Revenue", flex: 1, minWidth: 100 },
     { field: "discountValue", headerName: "Discount", flex: 1, minWidth: 100 },

@@ -1,15 +1,15 @@
 import { Grid } from "@mui/material";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useReactToPrint } from "react-to-print";
 import { Queries } from "../../../../../../Api";
 import { CommonRadio } from "../../../../../../Attribute";
 import { VOUCHER_TYPE } from "../../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setPaymentListModal } from "../../../../../../Store/Slices/ModalSlice";
 import type { AppGridColDef, PosPaymentBase } from "../../../../../../Types";
-import { FormatDateTime } from "../../../../../../Utils";
 import { useDataGrid } from "../../../../../../Utils/Hooks";
 import { CommonActionColumn, CommonCard, CommonDataGrid, CommonModal } from "../../../../../Common";
-import { useReactToPrint } from "react-to-print";
+import { CommonObjectPropertyColumn } from "../../../../../Common/CommonDataGrid/CommonColumns";
 import PaymentListBill from "./PaymentListBill";
 
 const PaymentList = () => {
@@ -39,17 +39,11 @@ const PaymentList = () => {
 
   const columns: AppGridColDef<PosPaymentBase>[] = [
     { field: "paymentNo", headerName: "Payment No", width: 100 },
-    { field: "partyId", headerName: "Customer Name", width: 150, renderCell: ({ value }) => value?.firstName + " " + value?.lastName },
-    { field: "paymentMode", headerName: "Mode", width: 80 },
-    {
-      field: "paymentType",
-      headerName: "Type",
-      width: 100,
-      renderCell: (params) => (params.row.paymentType === "against_bill" ? "Against Bill" : "Advance"),
-      exportFormatter: (value) => (value === "against_bill" ? "Against Bill" : "Advance"),
-    },
+    CommonObjectPropertyColumn<PosPaymentBase>("partyId", "partyId", ["firstName", "lastName"], { headerName: "Customer Name", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<PosPaymentBase>("paymentMode", "paymentMode", [], { headerName: "Mode", width: 80, type: "format" }),
+    CommonObjectPropertyColumn<PosPaymentBase>("paymentType", "paymentType", [], { headerName: "Type", width: 100, type: "format" }),
     { field: "amount", headerName: "Amount", width: 100 },
-    { field: "createdAt", headerName: "Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDateTime(params.row.createdAt) },
+    CommonObjectPropertyColumn<PosPaymentBase>("createdAt", "createdAt", [], { headerName: "Date", flex: 1, minWidth: 150, type: "datetime" }),
     CommonActionColumn<PosPaymentBase>({
       onPrint: { handlePrint: (row) => setPrintData(row) },
     }),
@@ -67,6 +61,7 @@ const PaymentList = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     isExport: false,
+    fileName: "Payment List",
   };
 
   const topContent = (

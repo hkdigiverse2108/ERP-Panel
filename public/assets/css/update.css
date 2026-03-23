@@ -150,6 +150,7 @@ input[type="number"] {
 .status-pending {
   @apply text-white capitalize text-center w-full bg-amber-500 dark:bg-amber-600 h-6 leading-6 rounded-sm;
 }
+.status-cleared,
 .status-active,
 .status-completed,
 .status-paid,
@@ -159,6 +160,7 @@ input[type="number"] {
 .status-approved {
   @apply text-white capitalize text-center w-full bg-green-500 dark:bg-green-600 h-6 leading-6 rounded-sm;
 }
+.status-unclear,
 .status-inactive,
 .status-returned,
 .status-partially_returned,

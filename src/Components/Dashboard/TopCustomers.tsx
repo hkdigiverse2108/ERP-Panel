@@ -39,6 +39,7 @@ const TopCustomers = () => {
     pagination: false,
     isToolbar: false,
     isExport: false,
+    fileName: "Top Customers",
   };
 
   const topContent = (

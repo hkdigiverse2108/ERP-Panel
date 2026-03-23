@@ -57,6 +57,8 @@ const UserRoles = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    isExport: false,
+    fileName: PAGE_TITLE.ROLES.BASE,
   };
 
   return (

@@ -167,6 +167,7 @@ const Permission = () => {
     onFilterModelChange: setFilterModel,
     isExport: false,
     pagination: false,
+    fileName: "Permission",
   };
 
   return (

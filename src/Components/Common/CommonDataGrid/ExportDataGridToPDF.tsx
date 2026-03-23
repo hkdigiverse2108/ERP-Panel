@@ -47,6 +47,10 @@ export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows
     }),
   );
 
+  const getNestedValue = (obj: any, path: string) => {
+    return path.split(".").reduce((acc, key) => acc?.[key], obj);
+  };
+
   /* -----------------------------------------------
    Summary Row Calculation
 ----------------------------------------------- */
@@ -57,7 +61,7 @@ export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows
 
         if ((col as any).isSummary) {
           const total = rows.reduce((sum, row) => {
-            const value = (row as Record<string, unknown>)[col.field];
+            const value = getNestedValue(row, col.field);
 
             if (typeof value === "number") return sum + value;
             if (!isNaN(Number(value))) return sum + Number(value);

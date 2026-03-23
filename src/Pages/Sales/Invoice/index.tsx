@@ -3,10 +3,11 @@ import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, INVOICE_STATUS } from "../../../Data";
 import type { AppGridColDef, InvoiceBase } from "../../../Types";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
 
 const Invoice = () => {
@@ -14,6 +15,7 @@ const Invoice = () => {
   const navigate = useNavigate();
 
   const { data: invoice, isLoading: invoiceLoading, isFetching: invoiceFetching } = Queries.useGetInvoice(params);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetInvoice({}, false);
   const { mutate: deleteInvoiceMutate } = Mutations.useDeleteInvoice();
   const { mutate: editInvoice, isPending: isEditLoading } = Mutations.useEditInvoice();
 
@@ -25,8 +27,6 @@ const Invoice = () => {
       invoice?.data?.invoice_data?.map((invoice) => ({
         ...invoice,
         id: invoice._id,
-        netAmount: Number((invoice.transactionSummary?.netAmount || 0).toFixed(2)),
-        taxAmount: Number((invoice.transactionSummary?.taxAmount || 0).toFixed(2)),
         dueAmount: Number(((invoice.transactionSummary?.netAmount || 0) - (invoice.paidAmount || 0)).toFixed(2)),
       })) || [],
     [invoice],
@@ -35,9 +35,7 @@ const Invoice = () => {
   const totalRows = invoice?.data?.totalData || 0;
   const summaryData = invoice?.data?.summary;
 
-  const summary = useMemo(() => {
-    return CalculateGridSummary(allInvoice, ["netAmount", "taxAmount", "paidAmount", "dueAmount"]);
-  }, [allInvoice]);
+  const summary = useMemo(() => CalculateGridSummary(allInvoice, ["transactionSummary.netAmount", "transactionSummary.taxAmount", "paidAmount", "dueAmount"]), [allInvoice]);
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
@@ -48,15 +46,15 @@ const Invoice = () => {
 
   const columns: AppGridColDef<InvoiceBase>[] = [
     { field: "invoiceNo", headerName: "Invoice No", flex: 1, minWidth: 120 },
-    { field: "date", headerName: "Invoice Date", flex: 1, minWidth: 130, renderCell: (params) => FormatDate(params.row.date) },
-    { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 130, renderCell: (params) => FormatDate(params.row.dueDate) },
-    { field: "customerId", headerName: "Customer Name", flex: 1, minWidth: 150, valueGetter: (_, row: InvoiceBase) => (row?.customerId ? (typeof row.customerId === "object" ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || "" : "") : "") },
-    { field: "netAmount", headerName: "Net Amount", flex: 1, minWidth: 110, type: "number" },
-    { field: "paidAmount", headerName: "Paid Amount", flex: 1, minWidth: 110, type: "number" },
-    { field: "dueAmount", headerName: "Due Amount", width: 110, type: "number" },
-    { field: "status", headerName: "Status", headerAlign: "center", width: 190, renderCell: (params) => <span className={`status-${params.row.status} overflow-hidden! text-nowrap`}>{params.row.status}</span> },
-    { field: "paymentStatus", headerName: "Payment Status", width: 120, renderCell: (params) => <span className={`status-${params.row.paymentStatus}`}>{params.row.paymentStatus}</span> },
-    { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 110 },
+    CommonObjectPropertyColumn<InvoiceBase>("date", "date", [], { headerName: "Invoice Date", flex: 1, minWidth: 120, type: "date" }),
+    CommonObjectPropertyColumn<InvoiceBase>("dueDate", "dueDate", [], { headerName: "Due Date", flex: 1, minWidth: 120, type: "date" }),
+    CommonObjectPropertyColumn<InvoiceBase>("customerId", "customerId", ["firstName", "lastName"], { headerName: "Customer Name", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<InvoiceBase>("transactionSummary.netAmount", "transactionSummary.netAmount", ["netAmount"], { headerName: "Net Amount", flex: 1, minWidth: 110, isSummary: true }),
+    { field: "paidAmount", headerName: "Paid Amount", flex: 1, minWidth: 110, isSummary: true },
+    { field: "dueAmount", headerName: "Due Amount", width: 110, isSummary: true },
+    CommonObjectPropertyColumn<InvoiceBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 100, type: "status" }),
+    CommonObjectPropertyColumn<InvoiceBase>("paymentStatus", "paymentStatus", [], { headerName: "Payment Status", flex: 1, minWidth: 100, type: "status" }),
+    CommonObjectPropertyColumn<InvoiceBase>("transactionSummary.taxAmount", "transactionSummary.taxAmount", ["taxAmount"], { headerName: "Tax Amount", flex: 1, minWidth: 110, isSummary: true }),
     CommonActionColumn({
       active: (row) => editInvoice({ invoiceId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.INVOICE.ADD_EDIT,
@@ -81,6 +79,8 @@ const Invoice = () => {
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },
+    fileName: PAGE_TITLE.SALES.INVOICE.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   const filter = [CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, INVOICE_STATUS, false, { xs: 12, sm: 6, md: 3 })];

@@ -34,6 +34,7 @@ const TodayReceivable = () => {
     pagination: false,
     isToolbar: false,
     isExport: false,
+    fileName: "Today's Receivable",
   };
 
   return (

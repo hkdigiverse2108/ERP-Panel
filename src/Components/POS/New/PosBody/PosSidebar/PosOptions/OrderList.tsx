@@ -2,14 +2,14 @@ import { Box } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { Queries } from "../../../../../../Api";
+import { POS_ORDER_STATUS } from "../../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setDiscardModal, setOrderModal } from "../../../../../../Store/Slices/ModalSlice";
 import { setEditPosOrder, setPrintType, setReturnPosOrder, setSalesInvoice, setSelectedOrderId } from "../../../../../../Store/Slices/PosSlice";
 import type { PosOrderBase } from "../../../../../../Types";
-import { FormatDate, FormatPayment } from "../../../../../../Utils";
 import { useDataGrid } from "../../../../../../Utils/Hooks";
 import { CommonActionColumn, CommonDataGrid, CommonModal } from "../../../../../Common";
-import { POS_ORDER_STATUS } from "../../../../../../Data";
+import { CommonObjectPropertyColumn } from "../../../../../Common/CommonDataGrid/CommonColumns";
 
 const OrderList = () => {
   const { isOrderModal } = useAppSelector((state) => state.modal);
@@ -52,21 +52,12 @@ const OrderList = () => {
 
   const columns: GridColDef<PosOrderBase>[] = [
     { field: "orderNo", headerName: "Order No", width: 100 }, //
-    { field: "createdAt", headerName: "Date", width: 100, renderCell: ({ value }) => FormatDate(value) },
-    { field: "customerId", headerName: "Customer Name", width: 150, renderCell: ({ value }) => value?.firstName + " " + value?.lastName },
-    {
-      field: "customerNumber",
-      headerName: "Customer Mo.Number",
-      width: 160,
-      valueGetter: (_value, row) => {
-        const obj = row?.customerId?.phoneNo;
-        const val = typeof obj === "object" && obj !== null ? obj?.countryCode + " " + obj?.phoneNo : "-";
-        return typeof val === "string" || typeof val === "number" ? val : "-";
-      },
-    },
+    CommonObjectPropertyColumn<PosOrderBase>("createdAt", "createdAt", [], { headerName: "Date", flex: 1, minWidth: 100, type: "date" }),
+    CommonObjectPropertyColumn<PosOrderBase>("customerId", "customerId", ["firstName", "lastName"], { headerName: "Customer Name", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<PosOrderBase>("customer No.", "customerId.phoneNo", ["countryCode", "phoneNo"], { headerName: "Customer No.", width: 150, type: "phone" }),
     { field: "totalAmount", headerName: "Total Amount", width: 120 },
-    { field: "paymentMethod", headerName: "Payment Mode", width: 120, renderCell: ({ value }) => FormatPayment(value) },
-    { field: "orderType", headerName: "Order Type", flex: 1, minWidth: 100, renderCell: ({ value }) => FormatPayment(value) },
+    CommonObjectPropertyColumn<PosOrderBase>("paymentMethod", "paymentMethod", [], { headerName: "Payment Mode", width: 120, type: "format" }),
+    CommonObjectPropertyColumn<PosOrderBase>("orderType", "orderType", [], { headerName: "Order Type", flex: 1, minWidth: 120, type: "format" }),
     CommonActionColumn<PosOrderBase>({
       onEdit: {
         handleEdit: (row) => handleEdit(row),
@@ -81,6 +72,7 @@ const OrderList = () => {
   ];
   const CommonDataGridOption = {
     columns,
+    BoxClass: "h-150 overflow-hidden",
     rows: allOrders,
     rowCount: totalRows,
     loading: orderDataLoading || orderDataFetching,
@@ -91,6 +83,7 @@ const OrderList = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     isExport: false,
+    fileName: "Order List",
   };
 
   return (

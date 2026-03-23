@@ -14,6 +14,7 @@ const BillOfLiveProduct = () => {
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE);
   const { data, isLoading, isFetching } = Queries.useGetBillOfLiveProduct(params);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetBillOfLiveProduct({}, false);
   const { mutate: deleteBOM, isPending: isDeleteLoading } = Mutations.useDeleteBillOfLiveProduct();
   const { mutate: editBOM, isPending: isEditLoading } = Mutations.useEditBillOfLiveProduct();
   const rows = useMemo(() => {
@@ -60,6 +61,7 @@ const BillOfLiveProduct = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   return (

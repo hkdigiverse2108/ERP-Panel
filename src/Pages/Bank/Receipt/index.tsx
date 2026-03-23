@@ -3,11 +3,12 @@ import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, PAYMENT_TYPE_OPTIONS } from "../../../Data";
 import type { AppGridColDef, PosPaymentBase } from "../../../Types";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 
 const Receipt = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -16,12 +17,12 @@ const Receipt = () => {
   const permission = usePagePermission(PAGE_TITLE.RECEIPT.BASE);
 
   const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown();
-  const { data, isLoading, isFetching } = Queries.useGetPosPayment({ ...params, voucherTypeFilter: "sales" });
+  const { data, isLoading, isFetching } = Queries.useGetPosPayment({ ...params });
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPosPayment({}, false);
   const { mutate: deletePayment, isPending: isDeleteLoading } = Mutations.useDeletePosPayment();
   const { mutate: editPayment, isPending: isEditLoading } = Mutations.useEditPosPayment();
-  const rows = useMemo(() => {
-    return data?.data?.posPayment_data.map((r) => ({ ...r, id: r?._id })) || [];
-  }, [data]);
+
+  const rows = useMemo(() => data?.data?.posPayment_data.map((r) => ({ ...r, id: r?._id })) || [], [data]);
 
   const totalRows = data?.data?.totalData || 0;
 
@@ -36,13 +37,12 @@ const Receipt = () => {
 
   const columns: AppGridColDef<PosPaymentBase>[] = [
     { field: "voucherType", headerName: "Receipt No", width: 200 },
-    { field: "partyId", headerName: "Party Name", width: 250, valueGetter: (_v, row: PosPaymentBase) => (row?.partyId ? `${row?.partyId?.firstName} ${row?.partyId?.lastName}` : "-") },
-    { field: "paymentMode", headerName: "Payment Mode", width: 140 },
-    { field: "paymentType", headerName: "Payment Type", width: 140 },
-    { field: "date", headerName: "Payment Date", width: 190, valueGetter: (v) => FormatDate(v) },
-    { field: "amount", headerName: "Amount", width: 190, valueGetter: (_v, row: PosPaymentBase) => row?.amount ?? row?.totalAmount ?? 0 },
-    { field: "status", headerName: "Status", headerAlign: "center", minWidth: 110, flex: 1, renderCell: (params) => <span className={`status-${params.row.status}`}>{params.row.status}</span> },
-
+    CommonObjectPropertyColumn<PosPaymentBase>("partyId", "partyId", ["firstName", "lastName"], { headerName: "Party Name", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<PosPaymentBase>("paymentMode", "paymentMode", [], { headerName: "Payment Mode", flex: 1, minWidth: 150, type: "format" }),
+    CommonObjectPropertyColumn<PosPaymentBase>("paymentType", "paymentType", [], { headerName: "Payment Type", flex: 1, minWidth: 150, type: "format" }),
+    CommonObjectPropertyColumn<PosPaymentBase>("date", "date", [], { headerName: "Payment Date", flex: 1, minWidth: 150, type: "date" }),
+    { field: "amount", headerName: "Amount", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<PosPaymentBase>("status", "status", [], { headerName: "Status", width: 150, type: "status" }),
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<PosPaymentBase>({
@@ -70,6 +70,8 @@ const Receipt = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.RECEIPT.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
   const filter = [
     CreateFilter("Select Payment Type", "paymentTypeFilter", advancedFilter, updateAdvancedFilter, PAYMENT_TYPE_OPTIONS, false, { xs: 12, sm: 6, md: 3 }), //

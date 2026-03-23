@@ -19,6 +19,7 @@ const SupplierBill = () => {
   const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier" });
 
   const { data, isLoading, isFetching } = Queries.useGetSupplierBillDetails(params);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetSupplierBillDetails({}, false);
   const { mutate: deleteSupplierBill, isPending: deleteSupplierBillLoading } = Mutations.useDeleteSupplierBill();
   const { mutate: editSupplierBill } = Mutations.useEditSupplierBill();
   const summaryData = data?.data?.summary;
@@ -31,21 +32,9 @@ const SupplierBill = () => {
   };
 
   const rows = useMemo(() => {
-    return (
-      data?.data?.supplierBill_data.map((r: SupplierBillBase) => ({
-        ...r,
-        id: r?._id,
-        billAmount: r?.summary?.netAmount ?? Number(r?.invoiceAmount ?? 0),
-        taxAmount: Number(r?.summary?.taxAmount ?? 0),
-        paidAmount: Number(r.paidAmount || 0),
-        balanceAmount: Number(r.balanceAmount || 0),
-      })) || []
-    );
+    return data?.data?.supplierBill_data.map((r: SupplierBillBase) => ({ ...r, id: r?._id })) || [];
   }, [data]);
-
-  const summary = useMemo(() => {
-    return CalculateGridSummary(rows, ["billAmount", "taxAmount", "paidAmount", "balanceAmount"]);
-  }, [rows]);
+  const summary = useMemo(() => CalculateGridSummary(rows, ["summary.netAmount", "summary.taxAmount", "paidAmount", "balanceAmount"]), [rows]);
 
   const stats = [
     { label: "Total Expense", value: summaryData?.totalPurchase || 0 },
@@ -61,13 +50,13 @@ const SupplierBill = () => {
     CommonObjectPropertyColumn<SupplierBillBase>("supplierId", "supplierId", ["firstName", "lastName"], { headerName: "Supplier", flex: 1, minWidth: 150 }),
     CommonObjectPropertyColumn<SupplierBillBase>("supplierBillDate", "supplierBillDate", [], { headerName: "Bill Date", flex: 1, minWidth: 100, type: "date" }),
 
-    { field: "billAmount", headerName: "Bill Amount", flex: 1, minWidth: 130, isSummary: true },
+    CommonObjectPropertyColumn<SupplierBillBase>("summary.netAmount", "summary.netAmount", ["netAmount"], { headerName: "Bill Amount", flex: 1, minWidth: 100, isSummary: true }),
 
     { field: "paidAmount", headerName: "Paid Amount", flex: 1, minWidth: 130, isSummary: true },
 
     { field: "balanceAmount", headerName: "Due Amount", flex: 1, minWidth: 130, isSummary: true },
 
-    { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 140, type: "number", isSummary: true },
+    CommonObjectPropertyColumn<SupplierBillBase>("summary.taxAmount", "summary.taxAmount", ["taxAmount"], { headerName: "Tax Amount", flex: 1, minWidth: 100, isSummary: true }),
 
     CommonObjectPropertyColumn<SupplierBillBase>("dueDate", "dueDate", [], { headerName: "Due Date", flex: 1, minWidth: 100, type: "date" }),
 
@@ -101,6 +90,7 @@ const SupplierBill = () => {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },
     fileName: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
   return (
     <>

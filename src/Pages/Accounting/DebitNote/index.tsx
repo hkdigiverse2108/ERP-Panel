@@ -16,6 +16,7 @@ const DebitNote = () => {
   const permission = usePagePermission(PAGE_TITLE.ACCOUNTING.DEBIT_NOTE.BASE);
 
   const { data: debitNote_data, isLoading: debitNoteDataLoading, isFetching: debitNoteDataFetching } = Queries.useGetDebitNote(params);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetDebitNote({}, false);
 
   const { mutate: deleteDebitNoteMutate } = Mutations.useDeleteDebitNote();
   const { mutate: editDebitNote, isPending: isEditLoading } = Mutations.useEditDebitNote();
@@ -65,6 +66,7 @@ const DebitNote = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.ACCOUNTING.DEBIT_NOTE.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   return (

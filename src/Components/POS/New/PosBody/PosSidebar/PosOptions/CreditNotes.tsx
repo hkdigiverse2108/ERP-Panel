@@ -6,9 +6,9 @@ import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setCreditNoteModal, setOrderRefundModal } from "../../../../../../Store/Slices/ModalSlice";
 import { setPrintType, setReturnPosOrderId, setSelectedOrderId } from "../../../../../../Store/Slices/PosSlice";
 import type { PosCreditNoteBase } from "../../../../../../Types";
-import { FormatDate } from "../../../../../../Utils";
 import { useDataGrid } from "../../../../../../Utils/Hooks";
 import { CommonActionColumn, CommonCard, CommonDataGrid, CommonDeleteModal, CommonModal } from "../../../../../Common";
+import { CommonObjectPropertyColumn } from "../../../../../Common/CommonDataGrid/CommonColumns";
 
 const CreditNotes = () => {
   const { isCreditNoteModal } = useAppSelector((state) => state.modal);
@@ -47,8 +47,8 @@ const CreditNotes = () => {
 
   const columns: GridColDef<PosCreditNoteBase>[] = [
     { field: "creditNoteNo", headerName: "Credit Note No.", width: 120 }, //
-    { field: "customerId", headerName: "Customer Name", width: 130, renderCell: ({ value }) => value?.firstName + " " + value?.lastName },
-    { field: "createdAt", headerName: "Date", width: 100, renderCell: ({ value }) => FormatDate(value) },
+    CommonObjectPropertyColumn<PosCreditNoteBase>("customerId", "customerId", ["firstName", "lastName"], { headerName: "Customer Name", flex: 1, minWidth: 130 }),
+    CommonObjectPropertyColumn<PosCreditNoteBase>("createdAt", "createdAt", [], { headerName: "Date", flex: 1, minWidth: 100, type: "date" }),
     { field: "totalAmount", headerName: "Total Amount", width: 110 },
     { field: "creditsUsed", headerName: "Credits Used", width: 100 },
     { field: "creditsRemaining", headerName: "Credits Remaining", flex: 1, minWidth: 90 },
@@ -73,6 +73,7 @@ const CreditNotes = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     isExport: false,
+    fileName: "Credit Notes",
   };
 
   return (

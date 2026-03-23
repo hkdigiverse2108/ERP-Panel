@@ -26,7 +26,7 @@ export const Queries = {
   useGetEmployee: (params?: Params) => useBaseQuery<EmployeeApiResponse>([KEYS.USERS.BASE, params], URL_KEYS.USERS.ALL, params),
 
   // ************ Contact ***********
-  useGetContact: (params?: Params) => useBaseQuery<ContactApiResponse>([KEYS.CONTACT.BASE, params], URL_KEYS.CONTACT.ALL, params),
+  useGetContact: (params?: Params, enabled?: boolean) => useBaseQuery<ContactApiResponse>([KEYS.CONTACT.BASE, params], URL_KEYS.CONTACT.ALL, params, enabled),
   useGetContactDropdown: (params?: Params, enabled?: boolean) => useQueries<ContactDropdownApiResponse>([KEYS.CONTACT.BASE, params], () => Get(URL_KEYS.CONTACT.DROPDOWN, params), { enabled: enabled }),
 
   // ************ Branch ***********
@@ -56,33 +56,33 @@ export const Queries = {
   useGetAnnouncement: () => useBaseQuery<AnnouncementApiResponse>([KEYS.ANNOUNCEMENT.BASE], URL_KEYS.ANNOUNCEMENT.ALL),
 
   //***************product**************** */
-  useGetProduct: (params?: Params) => useBaseQuery<ProductApiResponse>([KEYS.PRODUCT.BASE, params], URL_KEYS.PRODUCT.ALL, params),
+  useGetProduct: (params?: Params, enabled?: boolean) => useBaseQuery<ProductApiResponse>([KEYS.PRODUCT.BASE, params], URL_KEYS.PRODUCT.ALL, params, enabled),
   useGetProductDropdown: (params?: Params, enabled?: boolean) => useQueries<ProductDropDownApiResponse>([KEYS.PRODUCT.BASE, params], () => Get(URL_KEYS.PRODUCT.DROPDOWN, params), { enabled: enabled }),
   useGetProductById: (id?: string) => useQueries<ProductSingleApiResponse>([KEYS.PRODUCT.BASE, id], () => Get(`${URL_KEYS.PRODUCT.BASE}/${id}`), { enabled: !!id, staleTime: 0, refetchOnWindowFocus: true, retry: 1 }),
 
   //************ bank ********/
-  useGetBank: (params?: Params) => useBaseQuery<BankApiResponse>([KEYS.BANK.BASE, params], URL_KEYS.BANK.ALL, params),
+  useGetBank: (params?: Params, enabled?: boolean) => useBaseQuery<BankApiResponse>([KEYS.BANK.BASE, params], URL_KEYS.BANK.ALL, params, enabled),
   useGetBankDropdown: (params?: Params, enabled?: boolean) => useQueries<BankDropdownApiResponse>([KEYS.BANK.BASE, params], () => Get(URL_KEYS.BANK.DROPDOWN, params), { enabled: enabled }),
 
   // ************ Expense *********** */
-  useGetExpense: (params?: Params) => useQueries<ExpenseApiResponse>([KEYS.EXPENSE.BASE, params], () => Get(URL_KEYS.EXPENSE.ALL, params)),
+  useGetExpense: (params?: Params, enabled?: boolean) => useQueries<ExpenseApiResponse>([KEYS.EXPENSE.BASE, params], () => Get(URL_KEYS.EXPENSE.ALL, params), { enabled: enabled }),
 
   //*************** Salary *************** */
-  useGetSalary: (params?: Params) => useQueries<SalaryApiResponse>([KEYS.SALARY.BASE, params], () => Get(URL_KEYS.SALARY.ALL, params)),
+  useGetSalary: (params?: Params, enabled?: boolean) => useQueries<SalaryApiResponse>([KEYS.SALARY.BASE, params], () => Get(URL_KEYS.SALARY.ALL, params), { enabled: enabled }),
 
   //***************bank transaction**************** */
-  useGetBankTransaction: (params?: Params) => useQueries<BankTransactionApiResponse>([KEYS.BANK_TRANSACTION.BASE, params], () => Get(URL_KEYS.BANK_TRANSACTION.ALL, params)),
+  useGetBankTransaction: (params?: Params, enabled?: boolean) => useQueries<BankTransactionApiResponse>([KEYS.BANK_TRANSACTION.BASE, params], () => Get(URL_KEYS.BANK_TRANSACTION.ALL, params), { enabled: enabled }),
   useGetBankTransactionDropdown: (params?: Params, enabled?: boolean) => useQueries<BankTransactionDropdownApiResponse>([KEYS.BANK_TRANSACTION.BASE, params], () => Get(URL_KEYS.BANK_TRANSACTION.DROPDOWN, params), { enabled: enabled }),
 
   //************ recipe ********/
-  useGetRecipe: (params?: Params) => useBaseQuery<RecipeApiResponse>([KEYS.RECIPE.BASE, params], URL_KEYS.RECIPE.ALL, params),
+  useGetRecipe: (params?: Params, enabled?: boolean) => useBaseQuery<RecipeApiResponse>([KEYS.RECIPE.BASE, params], URL_KEYS.RECIPE.ALL, params, enabled),
   useGetRecipeDropdown: (params?: Params, enabled?: boolean) => useQueries<RecipeDropdownApiResponse>([KEYS.RECIPE.BASE, params], () => Get(URL_KEYS.RECIPE.DROPDOWN, params), { enabled: enabled }),
 
   //*************** stock **************** */
-  useGetStock: (params?: Params) => useBaseQuery<StockApiResponse>([KEYS.STOCK.BASE, params], URL_KEYS.STOCK.ALL, params),
+  useGetStock: (params?: Params, enabled?: boolean) => useBaseQuery<StockApiResponse>([KEYS.STOCK.BASE, params], URL_KEYS.STOCK.ALL, params, enabled),
 
   //*************** stock verification **************** */
-  useGetStockVerification: (params?: Params) => useBaseQuery<StockVerificationApiResponse>([KEYS.STOCK_VERIFICATION.BASE, params], URL_KEYS.STOCK_VERIFICATION.ALL, params),
+  useGetStockVerification: (params?: Params, enabled?: boolean) => useBaseQuery<StockVerificationApiResponse>([KEYS.STOCK_VERIFICATION.BASE, params], URL_KEYS.STOCK_VERIFICATION.ALL, params, enabled),
 
   //*************** Location **************** */
   useGetCountryLocation: () => useQueries<CountryApiResponse>([KEYS.LOCATION.BASE], () => Get(URL_KEYS.LOCATION.COUNTRY)),
@@ -90,17 +90,17 @@ export const Queries = {
   useGetCityLocation: (id?: string) => useQueries<CountryApiResponse>([KEYS.LOCATION.BASE, id], () => Get(`${URL_KEYS.LOCATION.CITY}/${id}`), { enabled: !!id }),
 
   //************ bill of materials ********/
-  useGetBillOfLiveProduct: (params?: Params) => useBaseQuery<BillOfLiveProductApiResponse>([KEYS.BILL_OF_LIVE_PRODUCT.BASE, params], URL_KEYS.BILL_OF_LIVE_PRODUCT.ALL, params),
+  useGetBillOfLiveProduct: (params?: Params, enabled?: boolean) => useBaseQuery<BillOfLiveProductApiResponse>([KEYS.BILL_OF_LIVE_PRODUCT.BASE, params], URL_KEYS.BILL_OF_LIVE_PRODUCT.ALL, params, enabled),
 
   //*************** Permission **************** */
   useGetPermissionDetails: (params?: Params, enabled?: boolean) => useQueries<PermissionDetailsApiResponse>([KEYS.PERMISSION.DETAILS, params], () => Get(URL_KEYS.PERMISSION.DETAILS, params), { enabled: enabled }),
   useGetPermissionChildDetails: (params?: Params, enabled?: boolean) => useQueries<PermissionChildApiResponse>([KEYS.PERMISSION.DETAILS, params], () => Get(URL_KEYS.PERMISSION.CHILD, params), { enabled: enabled }),
 
   //************ Supplier Bill ********/
-  useGetSupplierBillDetails: (params?: Params) => useBaseQuery<SupplierBillApiResponse>([KEYS.SUPPLIER_BILL.BASE, params], URL_KEYS.SUPPLIER_BILL.ALL, params),
+  useGetSupplierBillDetails: (params?: Params, enabled?: boolean) => useBaseQuery<SupplierBillApiResponse>([KEYS.SUPPLIER_BILL.BASE, params], URL_KEYS.SUPPLIER_BILL.ALL, params, enabled),
 
   //*************** Material Consumption **************** */
-  useGetMaterialConsumption: (params?: Params) => useBaseQuery<MaterialConsumptionApiResponse>([KEYS.MATERIAL_CONSUMPTION.BASE, params], URL_KEYS.MATERIAL_CONSUMPTION.ALL, params),
+  useGetMaterialConsumption: (params?: Params, enabled?: boolean) => useBaseQuery<MaterialConsumptionApiResponse>([KEYS.MATERIAL_CONSUMPTION.BASE, params], URL_KEYS.MATERIAL_CONSUMPTION.ALL, params, enabled),
 
   //*************** POS **************** */
   useGetPosHoldOrder: (params?: Params, enabled?: boolean) => useQueries<PosProductOrderApiResponse>([KEYS.POS.HOLD_ORDER, KEYS.POS.BASE, params], () => Get(URL_KEYS.POS.HOLD_ORDER, params), { enabled: enabled }),
@@ -130,7 +130,7 @@ export const Queries = {
   useGetTermsCondition: (params?: Params, enabled?: boolean) => useBaseQuery<TermsConditionApiResponse>([KEYS.TERMS_CONDITION.BASE, params], URL_KEYS.TERMS_CONDITION.ALL, params, enabled),
 
   //*************** Purchase Order *********
-  useGetPurchaseOrder: (params?: Params) => useBaseQuery<PurchaseOrderApiResponse>([KEYS.PURCHASE_ORDER.BASE, params], URL_KEYS.PURCHASE_ORDER.ALL, params),
+  useGetPurchaseOrder: (params?: Params, enabled?: boolean) => useBaseQuery<PurchaseOrderApiResponse>([KEYS.PURCHASE_ORDER.BASE, params], URL_KEYS.PURCHASE_ORDER.ALL, params, enabled),
   useGetPurchaseOrderDropdown: (params?: Params) => useQueries<PurchaseOrderDropdownApiResponse>([KEYS.PURCHASE_ORDER.BASE, params], () => Get(URL_KEYS.PURCHASE_ORDER.DROPDOWN, params)),
 
   //*************** Coupon *********

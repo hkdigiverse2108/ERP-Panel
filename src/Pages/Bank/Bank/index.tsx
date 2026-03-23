@@ -14,17 +14,11 @@ const Bank = () => {
   const permission = usePagePermission(PAGE_TITLE.BANK.BASE);
 
   const { data: bankData, isLoading, isFetching } = Queries.useGetBank(params);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetBank({}, false);
   const { mutate: deleteBankMutate, isPending: isDeleteLoading } = Mutations.useDeleteBank();
   const { mutate: editBank, isPending: isEditLoading } = Mutations.useEditBank();
 
-  const allBanks = useMemo(
-    () =>
-      bankData?.data?.bank_data?.map((bank) => ({
-        ...bank,
-        id: bank?._id,
-      })) || [],
-    [bankData],
-  );
+  const allBanks = useMemo(() => bankData?.data?.bank_data?.map((bank) => ({ ...bank, id: bank?._id })) || [], [bankData]);
 
   const totalRows = bankData?.data?.totalData || 0;
 
@@ -38,20 +32,10 @@ const Bank = () => {
   const handleAdd = () => navigate(ROUTES.BANK.ADD_EDIT);
 
   const columns: AppGridColDef<BankBase>[] = [
-    { field: "name", headerName: "Bank Name", width: 200 },
-    { field: "accountHolderName", headerName: "Account Holder Name", width: 200 },
-    { field: "ifscCode", headerName: "IFSC Code", width: 160 },
-    {
-      field: "openingBalance",
-      headerName: "Balance",
-      width: 160,
-      valueGetter: (_values, row) => {
-        const credit = row.openingBalance?.creditBalance || 0;
-        const debit = row.openingBalance?.debitBalance || 0;
-        return credit - debit;
-      },
-    },
-    { field: "bankAccountNumber", headerName: "Account No.", width: 200 },
+    { field: "name", headerName: "Bank Name", flex: 1, minWidth: 200 },
+    { field: "accountHolderName", headerName: "Account Holder Name", flex: 1, minWidth: 200 },
+    { field: "ifscCode", headerName: "IFSC Code", flex: 1, minWidth: 160 },
+    { field: "bankAccountNumber", headerName: "Account No.", flex: 1, minWidth: 200 },
     { field: "addressLine1", headerName: "Address", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
@@ -80,6 +64,8 @@ const Bank = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.BANK.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   return (

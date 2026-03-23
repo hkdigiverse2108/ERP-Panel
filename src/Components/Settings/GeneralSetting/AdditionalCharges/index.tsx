@@ -6,6 +6,7 @@ import { CommonActionColumn, CommonCard, CommonDataGrid, CommonDeleteModal } fro
 import { useDispatch } from "react-redux";
 import { setAdditionalChargeModal } from "../../../../Store/Slices/ModalSlice";
 import AdditionalChargesForm from "./AdditionalChargesForm";
+import { CommonObjectPropertyColumn } from "../../../Common/CommonDataGrid/CommonColumns";
 
 const AdditionalCharges = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -35,7 +36,7 @@ const AdditionalCharges = () => {
     { field: "name", headerName: "Additional Charge", width: 250 },
     { field: "defaultValue", headerName: "Default Value", width: 200 },
     { field: "hsnSac", headerName: "HSN Code", width: 200 },
-    { field: "taxId", headerName: "Tax", flex: 1, valueGetter: (_v, row) => (typeof row.taxId === "object" ? row.taxId?.name : row.taxId) },
+    CommonObjectPropertyColumn<AdditionalChargesBase>("taxId", "taxId", ["name"], { headerName: "Tax", flex: 1, minWidth: 150 }),
     CommonActionColumn<AdditionalChargesBase>({
       active: (row) =>
         editAdditionalCharges({
@@ -61,6 +62,7 @@ const AdditionalCharges = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE,
   };
 
   return (

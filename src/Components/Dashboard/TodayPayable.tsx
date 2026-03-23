@@ -35,6 +35,7 @@ const TodayPayable = () => {
     pagination: false,
     isToolbar: false,
     isExport: false,
+    fileName: "Today's Payable",
   };
 
   return (

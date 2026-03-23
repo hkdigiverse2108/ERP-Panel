@@ -1,12 +1,13 @@
+import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import type { AppGridColDef, EstimateBase } from "../../../Types";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 import { BREADCRUMBS, SALES_ORDER_STATUS_OPTIONS } from "../../../Data";
-import { Box } from "@mui/material";
+import type { AppGridColDef, SalesOrderBase } from "../../../Types";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
 
 const SalesOrder = () => {
@@ -14,18 +15,19 @@ const SalesOrder = () => {
   const navigate = useNavigate();
 
   const { data: salesOrder, isLoading: salesOrderLoading, isFetching: salesOrderFetching } = Queries.useGetSalesOrder(params);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetSalesOrder({}, false);
   const { mutate: deleteSalesOrderMutate } = Mutations.useDeleteSalesOrder();
   const { mutate: editSalesOrder, isPending: isEditLoading } = Mutations.useEditSalesOrder();
 
   // Filter Data Queries
   const { data: customerData, isLoading: customerDataLoading } = Queries.useGetContactDropdown({ typeFilter: "customer" });
 
-  const allSalesOrder = useMemo(() => salesOrder?.data?.salesOrder_data?.map((salesOrder) => ({ ...salesOrder, id: salesOrder._id, netAmount: salesOrder.transactionSummary?.netAmount || 0, taxAmount: salesOrder.transactionSummary?.taxAmount || 0 })) || [], [salesOrder]);
+  const allSalesOrder = useMemo(() => salesOrder?.data?.salesOrder_data?.map((salesOrder) => ({ ...salesOrder, id: salesOrder._id })) || [], [salesOrder]);
   const totalRows = salesOrder?.data?.totalData || 0;
   const summaryData = salesOrder?.data?.summary;
 
   const summary = useMemo(() => {
-    return CalculateGridSummary(allSalesOrder, ["netAmount", "taxAmount"]);
+    return CalculateGridSummary(allSalesOrder, ["transactionSummary.netAmount", "transactionSummary.taxAmount"]);
   }, [allSalesOrder]);
 
   const handleDeleteBtn = () => {
@@ -35,14 +37,14 @@ const SalesOrder = () => {
 
   const handleAdd = () => navigate(ROUTES.SALES_ORDER.ADD_EDIT);
 
-  const columns: AppGridColDef<EstimateBase>[] = [
+  const columns: AppGridColDef<SalesOrderBase>[] = [
     { field: "salesOrderNo", headerName: "Sales Order No", flex: 1, minWidth: 150 },
-    { field: "date", headerName: "Sales Order Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.date) },
-    { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.dueDate) },
-    { field: "customerId", headerName: "Customer Name", flex: 1, minWidth: 150, valueGetter: (_, row: EstimateBase) => (row?.customerId ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || "" : "") },
-    { field: "netAmount", headerName: "Amount", flex: 1, minWidth: 110, type: "number" },
-    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 190, renderCell: (params) => <span className={`status-${params.row.status} overflow-hidden`}>{params.row.status}</span> },
-    { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 110 },
+    CommonObjectPropertyColumn<SalesOrderBase>("date", "date", [], { headerName: "Sales Order Date", flex: 1, minWidth: 120, type: "date" }),
+    CommonObjectPropertyColumn<SalesOrderBase>("dueDate", "dueDate", [], { headerName: "Due Date", flex: 1, minWidth: 120, type: "date" }),
+    CommonObjectPropertyColumn<SalesOrderBase>("customerId", "customerId", ["firstName", "lastName"], { headerName: "Customer Name", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<SalesOrderBase>("transactionSummary.netAmount", "transactionSummary.netAmount", ["netAmount"], { headerName: "Amount", flex: 1, minWidth: 110, isSummary: true }),
+    CommonObjectPropertyColumn<SalesOrderBase>("transactionSummary.taxAmount", "transactionSummary.taxAmount", ["taxAmount"], { headerName: "Tax Amount", flex: 1, minWidth: 110, isSummary: true }),
+    CommonObjectPropertyColumn<SalesOrderBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 200, type: "status" }),
     CommonActionColumn({
       active: (row) => editSalesOrder({ salesOrderId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.SALES_ORDER.ADD_EDIT,
@@ -67,6 +69,8 @@ const SalesOrder = () => {
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },
+    fileName: PAGE_TITLE.SALES.SALES_ORDER.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   const filter = [CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, SALES_ORDER_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];

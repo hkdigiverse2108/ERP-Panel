@@ -1,12 +1,13 @@
+import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import type { AppGridColDef, SalesCreditNoteBase } from "../../../Types";
-import { CreateFilter, FormatDate, GenerateOptions } from "../../../Utils";
 import { BREADCRUMBS, SALES_CREDIT_NOTE_STATUS_OPTIONS } from "../../../Data";
-import { Box } from "@mui/material";
+import type { AppGridColDef, SalesCreditNoteBase } from "../../../Types";
+import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
 
 const SalesCreditNote = () => {
@@ -14,28 +15,18 @@ const SalesCreditNote = () => {
   const navigate = useNavigate();
 
   const { data: salesCreditNote, isLoading: salesCreditNoteLoading, isFetching: salesCreditNoteFetching } = Queries.useGetSalesCreditNote(params);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetSalesCreditNote({}, false);
   const { mutate: deleteSalesCreditNoteMutate } = Mutations.useDeleteSalesCreditNote();
   const { mutate: editSalesCreditNote, isPending: isEditLoading } = Mutations.useEditSalesCreditNote();
 
   // Filter Data Queries
   const { data: customerData, isLoading: customerDataLoading } = Queries.useGetContactDropdown({ typeFilter: "customer" });
 
-  const allSalesCreditNote = useMemo(
-    () =>
-      salesCreditNote?.data?.salesCreditNote_data?.map((item) => ({
-        ...item,
-        id: item._id,
-        netAmount: item.summary?.netAmount || 0,
-        taxAmount: item.summary?.taxAmount || 0,
-      })) || [],
-    [salesCreditNote],
-  );
+  const allSalesCreditNote = useMemo(() => salesCreditNote?.data?.salesCreditNote_data?.map((item) => ({ ...item, id: item._id })) || [], [salesCreditNote]);
 
   const totalRows = salesCreditNote?.data?.totalData || 0;
 
-  const summary = useMemo(() => {
-    return CalculateGridSummary(allSalesCreditNote, ["netAmount", "taxAmount", "creditUsed", "creditRemaining"]);
-  }, [allSalesCreditNote]);
+  const summary = useMemo(() => CalculateGridSummary(allSalesCreditNote, ["summary.netAmount", "summary.taxAmount", "creditUsed", "creditRemaining"]), [allSalesCreditNote]);
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
@@ -46,14 +37,15 @@ const SalesCreditNote = () => {
 
   const columns: AppGridColDef<SalesCreditNoteBase>[] = [
     { field: "creditNoteNo", headerName: "Credit Note No.", flex: 1, minWidth: 150 },
-    { field: "creditNoteDate", headerName: "Credit Note Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.creditNoteDate) },
-    { field: "dueDate", headerName: "Due Date", flex: 1, minWidth: 150, renderCell: (params) => FormatDate(params.row.dueDate) },
-    { field: "customerId", headerName: "Customer Name", flex: 1, minWidth: 200, valueGetter: (_, row: SalesCreditNoteBase) => (row?.customerId ? `${row.customerId.firstName || ""} ${row.customerId.lastName || ""}`.trim() || "" : "") },
-    { field: "netAmount", headerName: "Net Amount", flex: 1, minWidth: 120, type: "number" },
-    { field: "creditUsed", headerName: "Credit Used", flex: 1, minWidth: 120, type: "number" },
-    { field: "creditRemaining", headerName: "Credit Remaining", flex: 1, minWidth: 150, type: "number" },
-    { field: "status", headerName: "Status", headerAlign: "center", flex: 1, minWidth: 120, renderCell: (params) => <span className={`status-${params.row.status} overflow-hidden`}>{params.row.status}</span> },
-    { field: "taxAmount", headerName: "Tax Amount", flex: 1, minWidth: 120, type: "number" },
+
+    CommonObjectPropertyColumn<SalesCreditNoteBase>("creditNoteDate", "creditNoteDate", [], { headerName: "Credit Note Date", flex: 1, minWidth: 120, type: "date" }),
+    CommonObjectPropertyColumn<SalesCreditNoteBase>("dueDate", "dueDate", [], { headerName: "Due Date", flex: 1, minWidth: 120, type: "date" }),
+    CommonObjectPropertyColumn<SalesCreditNoteBase>("customerId", "customerId", ["firstName", "lastName"], { headerName: "Customer Name", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<SalesCreditNoteBase>("summary.netAmount", "summary.netAmount", ["netAmount"], { headerName: "Net Amount", flex: 1, minWidth: 120, isSummary: true }),
+    CommonObjectPropertyColumn<SalesCreditNoteBase>("summary.taxAmount", "summary.taxAmount", ["taxAmount"], { headerName: "Tax Amount", flex: 1, minWidth: 120, isSummary: true }),
+    CommonObjectPropertyColumn<SalesCreditNoteBase>("creditUsed", "creditUsed", ["creditUsed"], { headerName: "Credit Used", flex: 1, minWidth: 120, isSummary: true }),
+    CommonObjectPropertyColumn<SalesCreditNoteBase>("creditRemaining", "creditRemaining", ["creditRemaining"], { headerName: "Credit Remaining", flex: 1, minWidth: 150, isSummary: true }),
+    CommonObjectPropertyColumn<SalesCreditNoteBase>("status", "status", [], { headerName: "Status", width: 150, type: "status" }),
     CommonActionColumn({
       active: (row) => editSalesCreditNote({ salesCreditNoteId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.SALES_CREDIT_NOTE.ADD_EDIT,
@@ -78,6 +70,8 @@ const SalesCreditNote = () => {
     slots: {
       bottomContainer: () => <CommonDataGridSummaryFooter summary={summary} />,
     },
+    fileName: PAGE_TITLE.SALES.SALES_CREDIT_NOTE.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   const filter = [CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, SALES_CREDIT_NOTE_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];

@@ -1,15 +1,16 @@
 import { Box, Grid } from "@mui/material";
+import type { GridRenderCellParams } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonObjectNameColumn } from "../../../Components/Common";
+import { CommonButton } from "../../../Attribute";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, EXPENSE_TYPE_OPTIONS } from "../../../Data";
 import type { AppGridColDef, ExpenseBase } from "../../../Types";
-import type { GridRenderCellParams } from "@mui/x-data-grid";
+import { CreateFilter } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import { CreateFilter, FormatDate } from "../../../Utils";
-import { CommonButton } from "../../../Attribute";
 
 const Expense = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -19,14 +20,14 @@ const Expense = () => {
   const permissionSalary = usePagePermission(PAGE_TITLE.SALARY.BASE);
 
   const { data, isLoading, isFetching } = Queries.useGetExpense({ ...params, avoidSalary: false });
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetExpense({ avoidSalary: false }, false);
   const { mutate: deleteExpense, isPending: isDeleteLoading } = Mutations.useDeleteExpense();
   const { mutate: editExpense, isPending: isEditLoading } = Mutations.useEditExpense();
 
   const { mutate: deleteSalary, isPending: isDeleteSalaryLoading } = Mutations.useDeleteSalary();
   const { mutate: editSalary, isPending: isEditSalaryLoading } = Mutations.useEditSalary();
-  const rows = useMemo(() => {
-    return data?.data?.expense_data.map((r) => ({ ...r, id: r?._id })) || [];
-  }, [data]);
+
+  const rows = useMemo(() => data?.data?.expense_data.map((r) => ({ ...r, id: r?._id })) || [], [data]);
 
   const totalRows = data?.data?.totalData || 0;
 
@@ -44,28 +45,11 @@ const Expense = () => {
   };
 
   const columns: AppGridColDef<ExpenseBase>[] = [
-    CommonObjectNameColumn<ExpenseBase>("companyId", { headerName: "Company", width: 200 }),
-    { field: "salary", headerName: "Salary", width: 200, valueGetter: (_v, row: ExpenseBase) => (row?.isSalary ? row?.total : "-") },
-    {
-      field: "partyId",
-      headerName: "Party Name",
-      width: 230,
-      valueGetter: (_v, row: ExpenseBase) => {
-        const party = row?.partyId;
-        if (!party) return "-";
-        if ("fullName" in party) {
-          return party.fullName;
-        }
-        if ("firstName" in party) {
-          return `${party.firstName ?? ""} ${party.lastName ?? ""}`;
-        }
-        return "-";
-      },
-    },
-    { field: "fromDate", headerName: "Expense Date", width: 190, valueGetter: (v) => FormatDate(v) },
-    { field: "amount", headerName: "Amount", width: 150 },
-    { field: "type", headerName: "Expense Type", width: 150 },
-    { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<ExpenseBase>("partyId", "partyId", ["fullName"], { headerName: "Party Name", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<ExpenseBase>("salary", "total", [], { headerName: "Salary", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<ExpenseBase>("fromDate", "fromDate", [], { headerName: "Expense Date", flex: 1, minWidth: 150, type: "date" }),
+    { field: "amount", headerName: "Amount", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<ExpenseBase>("type", "type", [], { headerName: "Expense Type", flex: 1, minWidth: 150, type: "format" }),
     ...(permission?.edit || permission?.delete
       ? [
           {
@@ -108,6 +92,8 @@ const Expense = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.EXPENSE.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
   const filter = [CreateFilter("Select Expense Type", "typeFilter", advancedFilter, updateAdvancedFilter, EXPENSE_TYPE_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
 
@@ -129,7 +115,7 @@ const Expense = () => {
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <AdvancedSearch filter={filter} />
-        <CommonCard title={PAGE_TITLE.SALARY.BASE} topContent={topContent}>
+        <CommonCard title={PAGE_TITLE.EXPENSE.BASE} topContent={topContent}>
           <CommonDataGrid {...gridOptions} />
         </CommonCard>
 

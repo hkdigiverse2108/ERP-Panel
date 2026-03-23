@@ -42,6 +42,7 @@ const BestSellingProduct = () => {
     pagination: false,
     isToolbar: false,
     isExport: false,
+    fileName: "Best Selling Product",
   };
 
   const topContent = (

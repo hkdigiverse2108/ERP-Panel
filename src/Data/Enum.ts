@@ -470,7 +470,7 @@ export const CREDIT_NOTE_STATUS = [
 ];
 
 export const PAYMENT_TYPE_OPTIONS = [
-  { label: "Against_Bill", value: "against_bill" },
+  { label: "Against Bill", value: "against_bill" },
   { label: "Advance", value: "advance" },
-  { label: "On_Account", value: "on_account" },
+  { label: "On Account", value: "on_account" },
 ];

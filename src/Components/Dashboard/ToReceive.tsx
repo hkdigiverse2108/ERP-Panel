@@ -33,6 +33,7 @@ const ToReceive = () => {
     pagination: false,
     isToolbar: false,
     isExport: false,
+    fileName: "To Receive",
   };
 
   return (

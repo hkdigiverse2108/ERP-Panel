@@ -13,6 +13,7 @@ import { useAppSelector } from "../../../Store/hooks";
 import type { CustomToolbarProps } from "../../../Types";
 import { ExportDataGridToExcel } from "./ExportDataGridToExcel";
 import { ExportDataGridToPDF } from "./ExportDataGridToPDF";
+import { PAGE_TITLE } from "../../../Constants";
 
 const CustomToolbar: FC<CustomToolbarProps> = ({ onExportAll, isExport = true, fileName, apiRef, columns, rows, handleAdd, isActive, setActive, filterModel, onFilterModelChange }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -45,7 +46,12 @@ const CustomToolbar: FC<CustomToolbarProps> = ({ onExportAll, isExport = true, f
     const res: any = await onExportAll.onExportAll();
     const raw = res?.data?.data ?? res?.data;
     const list = extractArray(raw);
-    const finalData = list.map((item) => ({ ...item, id: item?._id || item?.id }));
+    const finalData = list.map((item) => ({
+      ...item,
+      id: item?._id || item?.id,
+      ...(fileName === PAGE_TITLE.POS.SALES_REGISTER && { shortExceed: (item.physicalDrawerCash || 0) - (item.totalCashInDrawer || 0) }),
+      ...(fileName === PAGE_TITLE.SALES.INVOICE.BASE && { dueAmount: Number(((item.transactionSummary?.netAmount || 0) - (item.paidAmount || 0)).toFixed(2)) }),
+    }));
     ExportDataGridToExcel({ columns, rows: finalData, fileName: exportAllFileName, title: fileName ?? companyName, companyName: companyName });
   };
 

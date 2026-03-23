@@ -16,6 +16,7 @@ const Recipe = () => {
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.RECIPE.BASE);
 
   const { data, isLoading, isFetching } = Queries.useGetRecipe(params);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetRecipe({}, false);
   const { mutate: deleteRecipe, isPending: isDeleteLoading } = Mutations.useDeleteRecipe();
   const { mutate: editRecipe, isPending: isEditLoading } = Mutations.useEditRecipe();
   const rows = useMemo(() => {
@@ -73,6 +74,7 @@ const Recipe = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.INVENTORY.RECIPE.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   return (

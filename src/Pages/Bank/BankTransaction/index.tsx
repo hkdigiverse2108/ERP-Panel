@@ -3,13 +3,13 @@ import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { Mutations, Queries } from "../../../Api";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import { setBankTransactionModal } from "../../../Store/Slices/ModalSlice";
 import type { AppGridColDef, BankTransactionBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import BankTransactionForm from "./BankTransactionForm";
-import {  FormatDate } from "../../../Utils";
 
 const BankTransaction = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -17,6 +17,7 @@ const BankTransaction = () => {
   const permission = usePagePermission(PAGE_TITLE.BANK_TRANSACTION.BASE);
 
   const { data: bankTransaction_data, isLoading: bankTransactionDataLoading, isFetching: bankTransactionDataFetching } = Queries.useGetBankTransaction(params);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetBankTransaction({}, false);
   const { mutate: deleteBankTransactionMutate } = Mutations.useDeleteBankTransaction();
   const { mutate: editBankTransaction, isPending: isEditLoading } = Mutations.useEditBankTransaction();
 
@@ -33,27 +34,12 @@ const BankTransaction = () => {
   const handleEdit = (row: BankTransactionBase) => dispatch(setBankTransactionModal({ open: true, data: row }));
 
   const columns: AppGridColDef<BankTransactionBase>[] = [
-    { field: "voucherNo", headerName: "Voucher No", width: 150 },
-    { field: "transactionDate", headerName: "Transaction Date", width: 150, valueGetter: (v) => FormatDate(v) },
-    { field: "transactionType", headerName: "Transaction Type", width: 150, renderCell: ({ value }) => <span style={{ textTransform: "capitalize" }}>{value as string}</span> },
-    {
-      field: "fromAccount",
-      headerName: "From Account",
-      flex: 1,
-      minWidth: 200,
-      renderCell: ({ value }) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
-      exportFormatter: (value) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
-    },
-    {
-      field: "toAccount",
-      headerName: "To Account",
-      flex: 1,
-      minWidth: 200,
-      renderCell: ({ value }) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
-      exportFormatter: (value) => (typeof value === "object" && value !== null ? (value as { name?: string })?.name || "-" : "-"),
-    },
-    { field: "amount", headerName: "Amount", width: 150 },
-    { field: "description", headerName: "Description",  flex: 1, minWidth: 200 },
+    { field: "voucherNo", headerName: "Voucher No", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<BankTransactionBase>("transactionDate", "transactionDate", [], { headerName: "Transaction Date", flex: 1, minWidth: 150, type: "date" }),
+    CommonObjectPropertyColumn<BankTransactionBase>("transactionType", "transactionType", [], { headerName: "Transaction Type", flex: 1, minWidth: 150, type: "format" }),
+    CommonObjectPropertyColumn<BankTransactionBase>("fromAccount", "fromAccount", ["name"], { headerName: "From Account", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<BankTransactionBase>("toAccount", "toAccount", ["name"], { headerName: "To Account", flex: 1, minWidth: 150 }),
+    { field: "amount", headerName: "Amount", flex: 1, minWidth: 150 },
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<BankTransactionBase>({
@@ -81,7 +67,8 @@ const BankTransaction = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: false,
+    fileName: PAGE_TITLE.BANK_TRANSACTION.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   return (

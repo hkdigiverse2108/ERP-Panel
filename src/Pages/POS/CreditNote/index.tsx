@@ -23,9 +23,10 @@ const CreditNoteList = () => {
   const contentRef = useRef<HTMLDivElement>(null);
 
   const { data: returnPosOrder, isLoading: returnPosOrderLoading, isFetching: returnPosOrderFetching } = Queries.useGetReturnPosOrderById(isReturnPosOrderId, Boolean(isReturnPosOrderId));
-  const { data: branchData, isLoading: branchDataLoading, isFetching: branchDataFetching } = Queries.useGetPosCreditNote(params, true);
-  const allBranches = useMemo(() => branchData?.data?.posCreditNote_data.map((branch) => ({ ...branch, id: branch?._id })) || [], [branchData]);
-  const totalRows = branchData?.data?.totalData || 0;
+  const { data: posCreditNoteData, isLoading: posCreditNoteDataLoading, isFetching: posCreditNoteDataFetching } = Queries.useGetPosCreditNote(params, true);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPosCreditNote({}, false);
+  const allPosCreditNote = useMemo(() => posCreditNoteData?.data?.posCreditNote_data.map((item) => ({ ...item, id: item?._id })) || [], [posCreditNoteData]);
+  const totalRows = posCreditNoteData?.data?.totalData || 0;
 
   const PrintBill = returnPosOrder?.data;
   const PrintBillReady = !returnPosOrderLoading && !returnPosOrderFetching;
@@ -88,9 +89,9 @@ const CreditNoteList = () => {
 
   const CommonDataGridOption = {
     columns,
-    rows: allBranches,
+    rows: allPosCreditNote,
     rowCount: totalRows,
-    loading: branchDataLoading || branchDataFetching,
+    loading: posCreditNoteDataLoading || posCreditNoteDataFetching,
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,
@@ -98,6 +99,7 @@ const CreditNoteList = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.POS.CREDIT_NOTE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
   const filter = [CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, CREDIT_NOTE_STATUS, false, { xs: 12, sm: 6, md: 3 })];
 

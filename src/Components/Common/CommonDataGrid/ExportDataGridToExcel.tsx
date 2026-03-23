@@ -29,6 +29,9 @@ export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, ro
   /* Summary Row                        */
   /* ---------------------------------- */
   const hasSummary = exportableColumns.some((col) => (col as any).isSummary);
+  const getNestedValue = (obj: any, path: string) => {
+    return path.split(".").reduce((acc, key) => acc?.[key], obj);
+  };
 
   const summaryRow: (string | number)[] | null = hasSummary
     ? exportableColumns.map((col, colIndex) => {
@@ -36,7 +39,7 @@ export const ExportDataGridToExcel = <T extends GridValidRowModel>({ columns, ro
 
         if ((col as any).isSummary) {
           const total = rows.reduce((sum, row) => {
-            const value = (row as Record<string, unknown>)[col.field];
+            const value = getNestedValue(row, col.field);
 
             if (typeof value === "number") return sum + value;
             if (!isNaN(Number(value))) return sum + Number(value);
