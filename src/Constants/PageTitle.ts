@@ -19,8 +19,24 @@ export const PAGE_TITLE = {
     },
     TAX: {
       BASE: "Tax",
+      TITLE: "Taxes",
       ADD: "Add Tax",
       EDIT: "Edit Tax",
+    },
+    PREFIX: {
+      BASE: "Prefix",
+      ADD: "Add Prefix",
+      EDIT: "Edit Prefix",
+    },
+    PAYMENT_TERMS: {
+      BASE: "Payment Terms",
+      ADD: "Add Payment Terms",
+      EDIT: "Edit Payment Terms",
+    },
+    CONSUMPTION_TYPE: {
+      BASE: "Consumption Type",
+      ADD: "Add Consumption Type",
+      EDIT: "Edit Consumption Type",
     },
   },
   USER: {
@@ -31,7 +47,8 @@ export const PAGE_TITLE = {
     PERMISSION: "User Permission",
   },
   ROLES: {
-    BASE: "User Roles",
+    BASE: "role",
+    TITLE: "User Roles",
     ADD: "Add Roles",
     EDIT: "Edit Roles",
   },

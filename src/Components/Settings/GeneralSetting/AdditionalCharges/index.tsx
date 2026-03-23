@@ -1,4 +1,4 @@
-import { useDataGrid } from "../../../../Utils/Hooks";
+import { useDataGrid, usePagePermission } from "../../../../Utils/Hooks";
 import { PAGE_TITLE } from "../../../../Constants";
 import { Mutations, Queries } from "../../../../Api";
 import type { AdditionalChargesBase, AppGridColDef } from "../../../../Types";
@@ -17,6 +17,7 @@ const AdditionalCharges = () => {
   const { mutate: editAdditionalCharges, isPending: isEditLoading } = Mutations.useEditAdditionalCharges();
   const allRows = additional_charge_data?.data?.additional_charge_data?.map((additionalCharges: AdditionalChargesBase) => ({ ...additionalCharges, id: additionalCharges._id })) || [];
   const totalRows = additional_charge_data?.data?.totalData || 0;
+  const permission = usePagePermission(PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE);
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
@@ -37,15 +38,14 @@ const AdditionalCharges = () => {
     { field: "defaultValue", headerName: "Default Value", width: 200 },
     { field: "hsnSac", headerName: "HSN Code", width: 200 },
     CommonObjectPropertyColumn<AdditionalChargesBase>("taxId", "taxId", ["name"], { headerName: "Tax", flex: 1, minWidth: 150 }),
-    CommonActionColumn<AdditionalChargesBase>({
-      active: (row) =>
-        editAdditionalCharges({
-          additionalChargeId: row._id,
-          isActive: !row.isActive,
-        }),
-      onEdit: { handleEdit: (row) => handleEdit(row) },
-      onDelete: (row) => setRowToDelete({ _id: row._id, title: row.name }),
-    }),
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<AdditionalChargesBase>({
+            ...(permission?.edit && { active: (row) => editAdditionalCharges({ additionalChargeId: row._id, isActive: !row.isActive }), onEdit: { handleEdit: (row) => handleEdit(row) } }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row._id, title: row.name }) }),
+          }),
+        ]
+      : []),
   ];
 
   const CommonDataGridOption = {
@@ -55,7 +55,7 @@ const AdditionalCharges = () => {
     loading: additionalChargesDataLoading || additionalChargesDataFetching || isEditLoading,
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,

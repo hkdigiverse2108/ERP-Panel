@@ -90,6 +90,24 @@ export const KEYS = {
     EDIT: "role-edit",
     DELETE: "role-delete",
   },
+  PREFIX: {
+    BASE: "prefix",
+    ADD: "prefix-add",
+    EDIT: "prefix-edit",
+    DELETE: "prefix-delete",
+  },
+  PAYMENT_TERMS: {
+    BASE: "payment-terms",
+    ADD: "payment-terms-add",
+    EDIT: "payment-terms-edit",
+    DELETE: "payment-terms-delete",
+  },
+  CONSUMPTION_TYPE: {
+    BASE: "consumption-type",
+    ADD: "consumption-type-add",
+    EDIT: "consumption-type-edit",
+    DELETE: "consumption-type-delete",
+  },
 
   ANNOUNCEMENT: {
     BASE: "announcement",
@@ -328,7 +346,6 @@ export const KEYS = {
     EDIT: "sales-credit-note-edit",
     DELETE: "sales-credit-note-delete",
     DROPDOWN: "sales-credit-note-dropdown",
-
   },
   SALARY: {
     BASE: "salary",
@@ -342,4 +359,4 @@ export const KEYS = {
     EDIT: "bank-transaction-edit",
     DELETE: "bank-transaction-delete",
   },
-}
+};

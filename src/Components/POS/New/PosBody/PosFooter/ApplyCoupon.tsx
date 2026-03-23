@@ -15,7 +15,6 @@ const ApplyCoupon = () => {
 
   const { isApplyCouponModal } = useAppSelector((state) => state.modal);
   const { PosProduct, isReturnPosOrder } = useAppSelector((state) => state.pos);
-  console.log("PosProduct", PosProduct);
 
   const [isSearch, setSearch] = useState<string>("");
   const searchCoupon = useDebounce(isSearch, 300);

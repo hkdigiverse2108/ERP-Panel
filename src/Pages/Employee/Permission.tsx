@@ -4,10 +4,10 @@ import { useLocation } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
 import { CommonButton, CommonCheckbox } from "../../Attribute";
 import { CommonBreadcrumbs, CommonCard, CommonDataGrid } from "../../Components/Common";
-import type { AppGridColDef, PermissionColumnKey, PermissionDetailsApiPayload, PermissionKey } from "../../Types";
-import { useDataGrid } from "../../Utils/Hooks";
 import { PAGE_TITLE } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
+import type { AppGridColDef, PermissionColumnKey, PermissionDetailsApiPayload, PermissionKey } from "../../Types";
+import { useDataGrid } from "../../Utils/Hooks";
 
 const PERMISSION_KEYS: PermissionKey[] = ["add", "edit", "delete", "view"];
 
@@ -19,6 +19,15 @@ const Permission = () => {
 
   const [permissionRows, setPermissionRows] = useState<PermissionDetailsApiPayload[]>([]);
   const { data, isLoading, isFetching } = Queries.useGetPermissionDetails({ userId: userData?._id, ...params }, Boolean(userData?._id));
+
+  // console.log("permissionRows", permissionRows);
+  // console.log("data", data);
+  const unmatchedData = useMemo(() => {
+    if (!data?.data) return [];
+
+    return permissionRows.filter((row) => !data.data.some((item) => item._id === row._id && item.add === row.add && item.edit === row.edit && item.delete === row.delete && item.view === row.view));
+  }, [permissionRows, data]);
+  console.log("unmatchedData", unmatchedData);
 
   const { mutate: editPermission, isPending: isEditPermissionLoading } = Mutations.useEditUserPermission();
   /* -------------------- */
@@ -121,7 +130,8 @@ const Permission = () => {
   const allColumn: AppGridColDef<PermissionDetailsApiPayload> = {
     field: "all",
     headerName: "All",
-    width: 150,
+    flex: 1,
+    minWidth: 150,
     align: "center",
     headerAlign: "center",
     sortable: false,
@@ -144,7 +154,7 @@ const Permission = () => {
     await editPermission(payload);
   };
 
-  const topContent = <CommonButton variant="contained" title="Save All" size="small" loading={isEditPermissionLoading} onClick={handleSaveAll} />;
+  const topContent = <CommonButton variant="contained" title="Save All" size="small" disabled={unmatchedData.length === 0} loading={isEditPermissionLoading} onClick={handleSaveAll} />;
 
   const columns: AppGridColDef<PermissionDetailsApiPayload>[] = [
     { field: "tabName", headerName: "Tab Name", width: 300 }, //

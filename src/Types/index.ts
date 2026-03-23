@@ -50,3 +50,6 @@ export * from "./DeliveryChallan";
 export * from "./SalesCreditNote";
 export * from "./Salary";
 export * from "./BankTransaction";
+export * from "./Prefix";
+export * from "./PaymentTerms";
+export * from "./ConsumptionType";

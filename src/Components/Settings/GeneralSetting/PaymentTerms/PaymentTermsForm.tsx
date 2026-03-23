@@ -1,0 +1,67 @@
+import { Grid } from "@mui/material";
+import { Form, Formik, type FormikHelpers } from "formik";
+import { useDispatch } from "react-redux";
+import { Mutations } from "../../../../Api";
+import { CommonButton, CommonValidationSwitch, CommonValidationTextField } from "../../../../Attribute";
+import { PAGE_TITLE } from "../../../../Constants";
+import { useAppSelector } from "../../../../Store/hooks";
+import { setPaymentTermsModal } from "../../../../Store/Slices/ModalSlice";
+import type { PaymentTermsFormValues } from "../../../../Types";
+import { GetChangedFields, PaymentTermsFormSchema, RemoveEmptyFields } from "../../../../Utils";
+import { CommonModal } from "../../../Common";
+
+const PaymentTermsForm = () => {
+  const { mutate: addPaymentTerms, isPending: isAddLoading } = Mutations.useAddPaymentTerms();
+  const { mutate: editPaymentTerms, isPending: isEditLoading } = Mutations.useEditPaymentTerms();
+
+  const dispatch = useDispatch();
+  const { isPaymentTermsModal } = useAppSelector((state) => state.modal);
+
+  const isEdit = isPaymentTermsModal.data;
+  const openModal = isPaymentTermsModal.open;
+  const isEditing = Boolean(isEdit?._id);
+  const pageMode = isEditing ? "EDIT" : "ADD";
+
+  const initialValues: PaymentTermsFormValues = {
+    name: isEdit?.name || "",
+    isActive: isEdit?.isActive ?? true,
+  };
+
+  const closeModal = () => dispatch(setPaymentTermsModal({ open: false, data: null }));
+
+  const handleSubmit = (values: PaymentTermsFormValues, { resetForm }: FormikHelpers<PaymentTermsFormValues>) => {
+    const onSuccessHandler = () => {
+      resetForm();
+      closeModal();
+    };
+
+    if (isEditing) {
+      const changedFields = GetChangedFields(values, isEdit as Partial<PaymentTermsFormValues>);
+      editPaymentTerms({ ...changedFields, paymentTermsId: isEdit?._id }, { onSuccess: onSuccessHandler });
+    } else {
+      addPaymentTerms(RemoveEmptyFields(values), { onSuccess: onSuccessHandler });
+    }
+  };
+
+  return (
+    <CommonModal title={PAGE_TITLE.SETTINGS.PAYMENT_TERMS[pageMode]} isOpen={openModal} onClose={closeModal} className="max-w-125">
+      <Formik<PaymentTermsFormValues> enableReinitialize initialValues={initialValues} validationSchema={PaymentTermsFormSchema} onSubmit={handleSubmit}>
+        {({ dirty }) => (
+          <Form noValidate>
+            <Grid container spacing={2} sx={{ p: 1 }}>
+              <CommonValidationTextField name="name" label="Payment Terms Name" required grid={{ xs: 12 }} />
+              <CommonValidationTextField name="percentage" label="percentage" type="number" required grid={{ xs: 12 }} />
+
+              {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
+              <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
+                <CommonButton variant="outlined" onClick={closeModal} title="Cancel" />
+                <CommonButton type="submit" variant="contained" title="Save" loading={isEditLoading || isAddLoading} disabled={!dirty} />
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
+    </CommonModal>
+  );
+};
+export default PaymentTermsForm;

@@ -125,9 +125,14 @@ const RedeemCredit = () => {
   };
 
   useEffect(() => {
+    console.log("a");
+
     if (PosProduct?.redeemCreditId) {
+      console.log("b");
       setCreditNoteId(PosProduct?.redeemCreditId);
       const code = posCreditNoteDropdown?.data?.find((item) => item.id === PosProduct?.redeemCreditId);
+      console.log(PosProduct?.redeemCreditId);
+      
       if (code) {
         const payload = {
           code: code?.no,
@@ -148,7 +153,7 @@ const RedeemCredit = () => {
         setDetails({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: totalAmount?.toString() });
       }
     }
-  }, [PosProduct?.redeemCreditId]);
+  }, [PosProduct?.redeemCreditId,posCreditNoteDropdown]);
 
   return (
     <CommonModal title="Redeem Credit" isOpen={isRedeemCreditModal} onClose={handleClose} className="max-w-[400px]">

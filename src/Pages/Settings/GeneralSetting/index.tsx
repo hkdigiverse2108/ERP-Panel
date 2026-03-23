@@ -1,47 +1,54 @@
-import { CorporateFare } from "@mui/icons-material";
-import AccountTreeIcon from "@mui/icons-material/AccountTree";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-// import BarChartIcon from "@mui/icons-material/BarChart";
-// import DevicesIcon from "@mui/icons-material/Devices";
-// import LanIcon from "@mui/icons-material/Lan";
-// import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-// import PaymentIcon from "@mui/icons-material/Payment";
-import PersonIcon from "@mui/icons-material/Person";
-import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-// import SettingsIcon from "@mui/icons-material/Settings";
-// import TagIcon from "@mui/icons-material/Tag";
+import { AccountTree, AddCircle, BarChart, CorporateFare, Payment, Person, ReceiptLong, Tag } from "@mui/icons-material";
 import { Box, Grid, Tabs } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import { useState, type SyntheticEvent } from "react";
 import { useLocation } from "react-router-dom";
 import { CommonBreadcrumbs } from "../../../Components/Common";
-import { CompanyProfile, Profile, ReportFormats, UserRoles, Taxes } from "../../../Components/Settings/GeneralSetting";
+import { CompanyProfile, Profile, ReportFormats, Taxes, UserRoles } from "../../../Components/Settings/GeneralSetting";
+import AdditionalCharges from "../../../Components/Settings/GeneralSetting/AdditionalCharges";
+import ConsumptionType from "../../../Components/Settings/GeneralSetting/ConsumptionType";
+import PaymentTerms from "../../../Components/Settings/GeneralSetting/PaymentTerms";
+import Prefix from "../../../Components/Settings/GeneralSetting/Prefix";
 import { PAGE_TITLE } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
-import AdditionalCharges from "../../../Components/Settings/GeneralSetting/AdditionalCharges";
+import { usePagePermission } from "../../../Utils/Hooks";
 
 const GeneralSetting = () => {
   const location = useLocation();
-  const [value, setValue] = useState<number>(() => (typeof location.state === "number" ? location.state : 0));
+  const [value, setValue] = useState<number>(() => (typeof location.state === "number" ? location.state : 6));
 
   const handleChange = (_: SyntheticEvent, newValue: number) => setValue(newValue);
+  const TaxPermission = usePagePermission(PAGE_TITLE.SETTINGS.TAX.BASE);
+  const RolesPermission = usePagePermission(PAGE_TITLE.ROLES.BASE);
+  const AdditionalChargesPermission = usePagePermission(PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE);
+  const PrefixPermission = usePagePermission(PAGE_TITLE.SETTINGS.PREFIX.BASE);
+  const PaymentTermsPermission = usePagePermission(PAGE_TITLE.SETTINGS.PAYMENT_TERMS.BASE);
+  const ConsumptionTypePermission = usePagePermission(PAGE_TITLE.SETTINGS.CONSUMPTION_TYPE.BASE);
+
   const generalSettingTabs = [
-    { label: "User Profile", value: 0, icon: <PersonIcon /> },
+    { label: "User Profile", value: 0, icon: <Person /> },
     { label: "Company Profile", value: 1, icon: <CorporateFare /> },
-    { label: "Taxes", value: 2, icon: <ReceiptLongIcon /> },
-    // { label: "Report Formats", value: 3, icon: <SettingsIcon /> },
-    { label: "User Roles", value: 4, icon: <AccountTreeIcon /> },
-    // { label: "Prefix", value: 5, icon: <TagIcon /> },
-    // { label: "Payment Terms", value: 6, icon: <PaymentIcon /> },
-    { label: "Additional Charges", value: 7, icon: <AddCircleIcon /> },
-    // { label: "Consumption Type", value: 8, icon: <BarChartIcon /> },
-    // { label: "Hardware", value: 9, icon: <DevicesIcon /> },
-    // { label: "Manage Account", value: 10, icon: <ManageAccountsIcon /> },
-    // { label: "MAC Binding Master", value: 11, icon: <LanIcon /> },
+    ...(TaxPermission.view ? [{ label: PAGE_TITLE.SETTINGS.TAX.TITLE, value: 2, icon: <ReceiptLong /> }] : []),
+    // { label: "Report Formats", value: 3, icon: <Settings /> },
+    ...(RolesPermission.view ? [{ label: PAGE_TITLE.ROLES.TITLE, value: 4, icon: <AccountTree /> }] : []),
+    ...(PrefixPermission.view ? [{ label: PAGE_TITLE.SETTINGS.PREFIX.BASE, value: 5, icon: <Tag /> }] : []),
+    ...(PaymentTermsPermission.view ? [{ label: PAGE_TITLE.SETTINGS.PAYMENT_TERMS.BASE, value: 6, icon: <Payment /> }] : []),
+    ...(AdditionalChargesPermission.view ? [{ label: PAGE_TITLE.SETTINGS.ADDITIONAL_CHARGES.BASE, value: 7, icon: <AddCircle /> }] : []),
+    ...(ConsumptionTypePermission.view ? [{ label: PAGE_TITLE.SETTINGS.CONSUMPTION_TYPE.BASE, value: 8, icon: <BarChart /> }] : []),
   ];
 
   // Map tab index → component
-  const tabViews = [<Profile />, <CompanyProfile />, <Taxes />, <ReportFormats />, <UserRoles />, <Profile />, <Profile />, <AdditionalCharges />, <Profile />, <Profile />, <Profile />];
+  const tabViews = [
+    <Profile />, //
+    <CompanyProfile />,
+    ...(TaxPermission.view ? [<Taxes />] : []),
+    <ReportFormats />,
+    ...(RolesPermission.view ? [<UserRoles />] : []),
+    ...(PrefixPermission.view ? [<Prefix />] : []),
+    ...(PaymentTermsPermission.view ? [<PaymentTerms />] : []),
+    ...(AdditionalChargesPermission.view ? [<AdditionalCharges />] : []),
+    ...(ConsumptionTypePermission.view ? [<ConsumptionType />] : []),
+  ];
 
   return (
     <>

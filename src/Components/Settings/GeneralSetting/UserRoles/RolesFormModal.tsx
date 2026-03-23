@@ -2,20 +2,14 @@ import { Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import type { FC } from "react";
 import { Mutations } from "../../../../Api";
-import { CommonButton, CommonValidationTextField, CommonValidationSwitch } from "../../../../Attribute";
+import { CommonButton, CommonValidationSwitch, CommonValidationTextField } from "../../../../Attribute";
 import { PAGE_TITLE } from "../../../../Constants";
 import type { RolesBase, RolesFormValues } from "../../../../Types";
 import { GetChangedFields, RemoveEmptyFields } from "../../../../Utils";
 import { RolesFormSchema } from "../../../../Utils/ValidationSchemas";
 import { CommonCard, CommonModal } from "../../../Common";
 
-interface RolesFormModalProps {
-  openModal: boolean;
-  setOpenModal: (value: boolean) => void;
-  isEdit: RolesBase;
-}
-
-const RolesFormModal: FC<RolesFormModalProps> = ({ openModal, setOpenModal, isEdit }) => {
+const RolesFormModal: FC<{ openModal: boolean; setOpenModal: (value: boolean) => void; isEdit: RolesBase }> = ({ openModal, setOpenModal, isEdit }) => {
   const { mutate: addRoles, isPending: isAddLoading } = Mutations.useAddRoles();
   const { mutate: editRoles, isPending: isEditLoading } = Mutations.useEditRoles();
 

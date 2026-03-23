@@ -1033,3 +1033,19 @@ export const SalesCreditNoteFormSchema = Yup.object({
     roundOff: Validation("number", "Round Off", { required: false }),
   }),
 });
+
+
+export const PrefixFormSchema = Yup.object({
+  name: Validation("string", "Prefix Name"),
+  percentage: Validation("number", "Percentage"),
+});
+
+export const PaymentTermsFormSchema = Yup.object({
+  name: Validation("string", "Payment Terms Name"),
+  percentage: Validation("number", "Percentage"),
+});
+
+export const ConsumptionTypeFormSchema = Yup.object({
+  name: Validation("string", "Consumption Type Name"),
+  percentage: Validation("number", "Percentage"),
+});

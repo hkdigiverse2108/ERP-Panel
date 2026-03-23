@@ -12,6 +12,9 @@ import type { MultiplePaymentType, PosProductDataModal } from "./POS";
 import type { PosCreditNoteBase } from "./PosCreditNote";
 import type { TaxBase } from "./Tax";
 import type { TermsConditionBase } from "./TermsAndCondition";
+import type { PrefixBase } from "./Prefix";
+import type { ConsumptionTypeBase } from "./ConsumptionType";
+import type { PaymentTermsBase } from "./PaymentTerms";
 
 export type GridType = number | object | "auto" | "grow";
 
@@ -233,7 +236,6 @@ export interface CommonObjectNameColumnOptions {
   minWidth?: number;
   type?: ColumnFormatType;
   isSummary?: boolean;
-  
 }
 
 export interface CommonActionColumnProps<T> {
@@ -502,29 +504,19 @@ export interface ModalStateSlice {
   isApplyCouponModal: boolean;
   isPayLaterModal: { open: boolean; data: MultiplePaymentType[] };
   isCashModal: boolean;
-  isAdditionalChargeModal: {
-    open: boolean;
-    data: AdditionalChargesBase | null;
-  };
+  isAdditionalChargeModal: { open: boolean; data: AdditionalChargesBase | null };
   isProductDetailsModal: { open: boolean; data: PosProductDataModal | null };
   isQtyCountModal: { open: boolean; data: PosProductDataModal | null };
-  isOrderRefundModal: {
-    open: boolean;
-    data: PosCreditNoteBase | null;
-    isSalesReturn?: boolean;
-  };
+  isOrderRefundModal: { open: boolean; data: PosCreditNoteBase | null; isSalesReturn?: boolean };
   isDiscardModal: boolean;
   isBankTransactionModal: { open: boolean; data: BankTransactionBase | null };
   isTaxModal: { open: boolean; data: TaxBase | null };
   selectedTermIds: string[];
-  isTermsAndConditionFormModal: {
-    open: boolean;
-    data: TermsConditionBase | null;
-  };
-  isTermsAndConditionSelectionModal: {
-    open: boolean;
-    alreadySelectedIds: string[];
-  };
+  isTermsAndConditionFormModal: { open: boolean; data: TermsConditionBase | null };
+  isTermsAndConditionSelectionModal: { open: boolean; alreadySelectedIds: string[] };
+  isPrefixModal: { open: boolean; data: PrefixBase | null };
+  isPaymentTermsModal: { open: boolean; data: PaymentTermsBase | null };
+  isConsumptionTypeModal: { open: boolean; data: ConsumptionTypeBase | null };
 }
 
 // ************ Modal End ***********

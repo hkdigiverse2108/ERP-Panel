@@ -92,6 +92,28 @@ export const URL_KEYS = {
     EDIT: "/role/edit",
   },
 
+  PREFIX: {
+    BASE: "/prefix",
+    DROPDOWN: "/prefix/dropdown",
+    ALL: "/prefix/all",
+    ADD: "/prefix/add",
+    EDIT: "/prefix/edit",
+  },
+  PAYMENT_TERMS: {
+    BASE: "/payment-terms",
+    DROPDOWN: "/payment-terms/dropdown",
+    ALL: "/payment-terms/all",
+    ADD: "/payment-terms/add",
+    EDIT: "/payment-terms/edit",
+  },
+  CONSUMPTION_TYPE: {
+    BASE: "/consumption-type",
+    DROPDOWN: "/consumption-type/dropdown",
+    ALL: "/consumption-type/all",
+    ADD: "/consumption-type/add",
+    EDIT: "/consumption-type/edit",
+  },
+
   ANNOUNCEMENT: {
     ALL: "/announcement/all",
   },
@@ -373,7 +395,7 @@ export const URL_KEYS = {
     DROPDOWN: "/sales-credit-note/dropdown",
     ADD_EDIT: "/sales-credit-note/add-edit",
   },
-  SALARY:{
+  SALARY: {
     BASE: "/salary",
     ALL: "/salary/all",
     ADD: "/salary/add",

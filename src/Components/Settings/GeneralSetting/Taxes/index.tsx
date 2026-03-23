@@ -10,17 +10,6 @@ import { CommonActionColumn, CommonCard, CommonDataGrid, CommonDeleteModal } fro
 import TaxForm from "./TaxForm";
 
 const Taxes = () => {
-  // const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, params } = useDataGrid();
-  // const { data: tax_data, isLoading: taxDataLoading, isFetching: taxDataFetching } = Queries.useGetTax(params);
-
-  // const allRows = tax_data?.data?.tax_data?.map((tax: TaxBase) => ({ ...tax, id: tax._id })) || [];
-  // const totalRows = tax_data?.data?.totalData || 0;
-
-  // const columns: AppGridColDef<TaxBase>[] = [
-  //     { field: "name", headerName: "Tax Name", flex: 1 },
-  //     { field: "percentage", headerName: "Percentage (%)", flex: 1 },
-  //     // { field: "isActive", headerName: "Status", width: 150, valueGetter: (_v, row) => (row.isActive ? "Active" : "Inactive") },
-  // ];
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
 
   const dispatch = useDispatch();
@@ -44,9 +33,8 @@ const Taxes = () => {
 
   const actionColumn = useMemo(() => {
     const baseCol = CommonActionColumn<TaxBase>({
-      active: (row) => editTax({ taxId: row?._id, isActive: !row.isActive }),
-      onEdit: { handleEdit: (row) => handleEdit(row) },
-      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
+      ...(permission?.edit && { active: (row) => editTax({ taxId: row?._id, isActive: !row.isActive }), onEdit: { handleEdit: (row) => handleEdit(row) } }),
+      ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
     });
     return {
       ...baseCol,
@@ -54,7 +42,11 @@ const Taxes = () => {
     };
   }, [editTax, handleEdit, setRowToDelete]);
 
-  const columns: AppGridColDef<TaxBase>[] = [{ field: "name", headerName: "Name", flex: 1, minWidth: 200 }, { field: "percentage", headerName: "Percentage", flex: 1, minWidth: 200 }, ...(permission?.edit || permission?.delete ? [actionColumn] : [])];
+  const columns: AppGridColDef<TaxBase>[] = [
+    { field: "name", headerName: "Name", flex: 1, minWidth: 200 }, //
+    { field: "percentage", headerName: "Percentage", flex: 1, minWidth: 200 },
+    ...(permission?.edit || permission?.delete ? [actionColumn] : []),
+  ];
 
   const CommonDataGridOption = {
     columns,
@@ -76,7 +68,7 @@ const Taxes = () => {
 
   return (
     <Box sx={{ display: "grid" }}>
-      <CommonCard title="Taxes">
+      <CommonCard title={PAGE_TITLE.SETTINGS.TAX.TITLE}>
         <CommonDataGrid {...CommonDataGridOption} />
       </CommonCard>
       <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
