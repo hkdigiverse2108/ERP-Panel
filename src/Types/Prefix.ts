@@ -2,9 +2,9 @@ import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
 
 export interface PrefixFormValues {
-  name?: string;
-  percentage?: number;
-  isActive?: boolean;
+  prefixType?: string;
+  prefix?: string;
+  sequenceNumber?: number;
 }
 
 export type AddPrefixPayload = PrefixFormValues;

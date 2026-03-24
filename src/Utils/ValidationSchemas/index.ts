@@ -1036,8 +1036,8 @@ export const SalesCreditNoteFormSchema = Yup.object({
 
 
 export const PrefixFormSchema = Yup.object({
-  name: Validation("string", "Prefix Name"),
-  percentage: Validation("number", "Percentage"),
+  prefix: Validation("string", "Prefix"),
+  sequenceNumber: Validation("number", "Sequence Number"),
 });
 
 export const PaymentTermsFormSchema = Yup.object({
