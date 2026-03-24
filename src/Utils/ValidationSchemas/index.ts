@@ -3,11 +3,7 @@ import { DISCOUNT_APPLY_TO_ENUM, DISCOUNT_MODE_ENUM, MINIMUM_REQUIREMENT_ENUM, P
 import type { Primitive } from "../../Types";
 import { Validation } from "./Validation";
 
-const RequiredWhenTrue = (
-  dependentField: string,
-  message: string,
-  baseSchema: Yup.AnySchema,
-) => {
+const RequiredWhenTrue = (dependentField: string, message: string, baseSchema: Yup.AnySchema) => {
   return baseSchema.when(dependentField, {
     is: true,
     then: (schema) => schema.required(`${message} is required`),
@@ -44,10 +40,7 @@ export const RequiredWhen = (dependentField: string, requiredValues: Primitive[]
 // ---------- Reusable helpers ----------
 
 // const ImageSchema = (label: string, required = true) => Validation("array", label, required ? { minItems: 1 } : { required: false });
-export const PhoneValidation = (
-  label = "Phone No",
-  options?: { requiredCountryCode?: boolean; requiredNumber?: boolean },
-) =>
+export const PhoneValidation = (label = "Phone No", options?: { requiredCountryCode?: boolean; requiredNumber?: boolean }) =>
   Yup.object({
     countryCode: Validation("string", "Country code", {
       required: options?.requiredCountryCode ?? true,
@@ -55,8 +48,7 @@ export const PhoneValidation = (
 
     phoneNo: Validation("string", label, {
       required: options?.requiredNumber ?? true,
-      extraRules: (s) =>
-        s.trim().matches(/^[0-9]{10}$/, "Phone number must be 10 digits"),
+      extraRules: (s) => s.trim().matches(/^[0-9]{10}$/, "Phone number must be 10 digits"),
     }),
   });
 
@@ -66,11 +58,7 @@ export const SigninSchema = Yup.object({
     extraRules: (s) => s.email("Invalid email address"),
   }),
   password: Validation("string", "Password", {
-    extraRules: (s) =>
-      s.matches(
-        /[!@#$%^&*()_+={}:;"'<>,.?/-]/,
-        "Password must include at least one special character",
-      ),
+    extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character"),
   }),
 });
 
@@ -88,15 +76,10 @@ export const EmployeeFormSchema = Yup.object({
   branchId: Validation("string", "Branch Name", { required: false }),
   panNumber: Validation("string", "PAN Number", {
     required: false,
-    extraRules: (s) =>
-      s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number"),
+    extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number"),
   }),
   password: Validation("string", "Password", {
-    extraRules: (s) =>
-      s.matches(
-        /[!@#$%^&*()_+={}:;"'<>,.?/-]/,
-        "Password must include at least one special character",
-      ),
+    extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character"),
   }),
   // role: Validation("string", "Role"),
   // ---------- ADDRESS ----------
@@ -182,21 +165,12 @@ export const CompanyFormSchemas = Yup.object({
   }),
   PanNo: Validation("string", "PanNo", {
     required: false,
-    extraRules: (s) =>
-      s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid Pan Number"),
+    extraRules: (s) => s.trim().matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid Pan Number"),
   }),
-  taxDeductionAndCollectionAccountNumber: Validation(
-    "string",
-    "taxDeductionAndCollectionAccountNumber",
-    { required: false },
-  ),
+  taxDeductionAndCollectionAccountNumber: Validation("string", "taxDeductionAndCollectionAccountNumber", { required: false }),
   webSite: Validation("string", "webSite", { required: false }),
   financialYear: Validation("string", "financialYear", { required: false }),
-  corporateIdentificationNumber: Validation(
-    "string",
-    "corporateIdentificationNumber",
-    { required: false },
-  ),
+  corporateIdentificationNumber: Validation("string", "corporateIdentificationNumber", { required: false }),
   letterOfUndertaking: Validation("string", "letterOfUndertaking", {
     required: false,
   }),
@@ -206,8 +180,7 @@ export const CompanyFormSchemas = Yup.object({
   outletSize: Validation("string", "outletSize", { required: false }),
   fssaiNo: Validation("string", "fssaiNo", {
     required: false,
-    extraRules: (s) =>
-      s.trim().matches(/^[0-9]{14}$/, "FSSAI number must be exactly 14 digits"),
+    extraRules: (s) => s.trim().matches(/^[0-9]{14}$/, "FSSAI number must be exactly 14 digits"),
   }),
   currency: Validation("string", "currency", { required: false }),
   printDateFormat: Validation("string", "printDateFormat", { required: false }),
@@ -263,47 +236,14 @@ export const MultiplePaySchema = Yup.object({
   payments: Yup.array()
     .of(
       Yup.object({
-        amount: Yup.number()
-          .typeError("Amount must be a number")
-          .positive("Amount must be greater than 0")
-          .required("Received Amount is required"),
+        amount: Yup.number().typeError("Amount must be a number").positive("Amount must be greater than 0").required("Received Amount is required"),
         paymentMode: Validation("string", "Payment Method"),
-        paymentAccount: Yup.string().when(
-          "paymentMode",
-          ([paymentMode], schema) =>
-            ["card", "upi", "bank", "cheque"].includes(paymentMode)
-              ? Validation("string", "Payment Account")
-              : schema.nullable(),
-        ),
-        cardHolderName: Yup.string().when(
-          "paymentMode",
-          ([paymentMode], schema) =>
-            paymentMode === "card"
-              ? Validation("string", "Card Holder Name")
-              : schema.nullable(),
-        ),
-        cardTxnNo: Yup.string().when("paymentMode", ([paymentMode], schema) =>
-          paymentMode === "card"
-            ? Validation("string", "Card Transaction No")
-            : schema.nullable(),
-        ),
-        upiId: Yup.string().when("paymentMode", ([paymentMode], schema) =>
-          paymentMode === "upi"
-            ? Validation("string", "UPI ID")
-            : schema.nullable(),
-        ),
-        bankAccountNo: Yup.string().when(
-          "paymentMode",
-          ([paymentMode], schema) =>
-            paymentMode === "bank"
-              ? Validation("string", "Bank Account No")
-              : schema.nullable(),
-        ),
-        chequeNo: Yup.string().when("paymentMode", ([paymentMode], schema) =>
-          paymentMode === "cheque"
-            ? Validation("string", "Cheque No")
-            : schema.nullable(),
-        ),
+        paymentAccount: Yup.string().when("paymentMode", ([paymentMode], schema) => (["card", "upi", "bank", "cheque"].includes(paymentMode) ? Validation("string", "Payment Account") : schema.nullable())),
+        cardHolderName: Yup.string().when("paymentMode", ([paymentMode], schema) => (paymentMode === "card" ? Validation("string", "Card Holder Name") : schema.nullable())),
+        cardTxnNo: Yup.string().when("paymentMode", ([paymentMode], schema) => (paymentMode === "card" ? Validation("string", "Card Transaction No") : schema.nullable())),
+        upiId: Yup.string().when("paymentMode", ([paymentMode], schema) => (paymentMode === "upi" ? Validation("string", "UPI ID") : schema.nullable())),
+        bankAccountNo: Yup.string().when("paymentMode", ([paymentMode], schema) => (paymentMode === "bank" ? Validation("string", "Bank Account No") : schema.nullable())),
+        chequeNo: Yup.string().when("paymentMode", ([paymentMode], schema) => (paymentMode === "cheque" ? Validation("string", "Cheque No") : schema.nullable())),
       }),
     )
     .min(1, "At least one payment is required"),
@@ -318,10 +258,7 @@ export const BankFormSchema = Yup.object().shape({
   swiftCode: Validation("string", "Swift Code", { required: false }),
   upiId: Validation("string", "UPI ID", {
     required: false,
-    extraRules: (s) =>
-      s
-        .trim()
-        .matches(/^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/, "Invalid UPI ID"),
+    extraRules: (s) => s.trim().matches(/^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/, "Invalid UPI ID"),
   }),
   openingBalance: Yup.object({
     creditBalance: Validation("number", "Credit Balance", {
@@ -361,9 +298,7 @@ export const RecipeFormSchema = Yup.object({
   rawProducts: Yup.array()
     .of(
       Yup.object({
-        productId: Validation("string", "Product").required(
-          "Product is required",
-        ),
+        productId: Validation("string", "Product").required("Product is required"),
         useQty: Validation("number", "Use Qty").required("Use Qty is required"),
         mrp: Validation("number", "MRP").nullable(),
       }),
@@ -373,9 +308,7 @@ export const RecipeFormSchema = Yup.object({
 
   finalProducts: Yup.object({
     productId: Validation("string", "Product").required("Product is required"),
-    qtyGenerate: Validation("number", "Qty Generate").required(
-      "Qty Generate is required",
-    ),
+    qtyGenerate: Validation("number", "Qty Generate").required("Qty Generate is required"),
     mrp: Validation("number", "MRP").nullable(),
   }).required("Final product is required"),
 });
@@ -431,8 +364,7 @@ const ContactBaseSchema = {
   }),
   panNo: Validation("string", "PAN No", {
     required: false,
-    extraRules: (s) =>
-      s.matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number"),
+    extraRules: (s) => s.matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN Number"),
   }),
   paymentMode: Validation("string", "Payment Mode"),
   paymentTerms: Validation("string", "Payment Terms", { required: false }),
@@ -477,12 +409,7 @@ export const getContactFormSchema = Yup.object({
   }),
   customerType: Validation("string", "Customer Type", { required: false }),
   supplierType: Validation("string", "Supplier Type", { required: false }),
-  transporterId: RequiredWhen(
-    "contactType",
-    ["transporter"],
-    "Transporter Id",
-    "string",
-  ),
+  transporterId: RequiredWhen("contactType", ["transporter"], "Transporter Id", "string"),
 });
 
 export const ProductFormSchema = Yup.object({
@@ -499,22 +426,10 @@ export const ProductFormSchema = Yup.object({
   manageMultipleBatch: Validation("boolean", "Multiple Batch", {
     required: false,
   }),
-  hasExpiry: RequiredWhenTrue(
-    "manageMultipleBatch",
-    "Has Expiry",
-    Yup.boolean(),
-  ),
+  hasExpiry: RequiredWhenTrue("manageMultipleBatch", "Has Expiry", Yup.boolean()),
   expiryDays: RequiredWhenTrue("hasExpiry", "Expiry Days", Yup.number()),
-  calculateExpiryOn: RequiredWhenTrue(
-    "hasExpiry",
-    "Expiry Calculation",
-    Yup.string(),
-  ),
-  expiryReferenceDate: RequiredWhenTrue(
-    "hasExpiry",
-    "Expiry Reference Date",
-    Yup.string(),
-  ),
+  calculateExpiryOn: RequiredWhenTrue("hasExpiry", "Expiry Calculation", Yup.string()),
+  expiryReferenceDate: RequiredWhenTrue("hasExpiry", "Expiry Reference Date", Yup.string()),
 
   isExpiryProductSaleable: Yup.boolean(),
   ingredients: Validation("array", "Ingredients", { required: false }),
@@ -539,24 +454,16 @@ export const ProductItemFormSchema = Yup.object({
   uomId: Validation("string", "UOM"),
   purchasePrice: Validation("number", "Purchase Price"),
   landingCost: Validation("number", "Landing Cost"),
-  mrp: Validation("number", "MRP").test(
-    "mrp-greater-than-landing",
-    "MRP must be greater than or equal to Landing Cost",
-    function (value) {
-      const { landingCost } = this.parent;
-      if (value == null || landingCost == null) return true;
-      return value >= landingCost;
-    },
-  ),
+  mrp: Validation("number", "MRP").test("mrp-greater-than-landing", "MRP must be greater than or equal to Landing Cost", function (value) {
+    const { landingCost } = this.parent;
+    if (value == null || landingCost == null) return true;
+    return value >= landingCost;
+  }),
   sellingDiscount: Validation("number", "Selling Discount", {
     required: false,
   }),
   sellingPrice: Validation("number", "Selling Price"),
-  sellingMargin: Validation("number", "Selling Margin").test(
-    "non-negative-margin",
-    "Selling Margin cannot be negative",
-    (value) => value == null || value >= 0,
-  ),
+  sellingMargin: Validation("number", "Selling Margin").test("non-negative-margin", "Selling Margin cannot be negative", (value) => value == null || value >= 0),
   qty: Validation("number", "Quantity"),
 });
 
@@ -586,18 +493,11 @@ export const PosPaymentFormSchema = Yup.object({
   paymentType: Validation("string", "Payment Type"),
   partyId: Validation("string", "Party Name"),
   posOrderId: Yup.string().when(["voucherType", "paymentType"], {
-    is: (voucherType: string, paymentType: string) =>
-      voucherType === VOUCHER_TYPE[0].value &&
-      paymentType === PAYMENT_TYPE[1].value,
+    is: (voucherType: string, paymentType: string) => voucherType === VOUCHER_TYPE[0].value && paymentType === PAYMENT_TYPE[1].value,
     then: (schema) => schema.required("Sales is required"),
     otherwise: (schema) => schema.notRequired(),
   }),
-  paymentMode: RequiredWhen(
-    "voucherType",
-    [VOUCHER_TYPE[0].value],
-    "Payment Mode",
-    "string",
-  ),
+  paymentMode: RequiredWhen("voucherType", [VOUCHER_TYPE[0].value], "Payment Mode", "string"),
   bankId: Validation("string", "Bank", { required: false }),
   totalAmount: Validation("number", "Total Payment", { required: false }),
   paidAmount: Validation("number", "Paid Amount", { required: false }),
@@ -718,46 +618,25 @@ export const DiscountFormSchema = Yup.object({
 export const PointSetupSchema = Yup.object({
   amount: Validation("string", "Amount", {
     required: true,
-    extraRules: (s) =>
-      s
-        .min(1, "Amount must be at least 1")
-        .max(5, "Amount must not be greater than 5"),
+    extraRules: (s) => s.min(1, "Amount must be at least 1").max(5, "Amount must not be greater than 5"),
   }),
 
   points: Validation("string", "Points", {
     required: true,
-    extraRules: (s) =>
-      s
-        .min(1, "Points must be at least 1")
-        .max(5, "Points must not be greater than 5"),
+    extraRules: (s) => s.min(1, "Points must be at least 1").max(5, "Points must not be greater than 5"),
   }),
 });
 
 export const CurrentRegisterSchema = Yup.object({
   bankAccountId: Validation("string", "Bank Account", { required: false }),
-  bankTransferAmount: Validation("string", "Bank Transfer").when(
-    "bankAccountId",
-    {
-      is: (val: string | undefined) => !!val && val.trim() !== "",
-      then: (schema) => schema.required("Bank Transfer is required"),
-      otherwise: (schema) => schema.notRequired(),
-    },
-  ),
-  cashFlow: Validation("string", "Cash Flow").test(
-    "is-positive",
-    "Cash Flow must be greater than or equal to 0",
-    (value) => !value || Number(value) >= 0,
-  ),
-  totalCashInDrawer: Validation("string", "Total Cash In Drawer").test(
-    "is-positive",
-    "Total Cash In Drawer must be greater than or equal to 0",
-    (value) => !value || Number(value) >= 0,
-  ),
-  physicalDrawerCash: Validation("string", "Physical Drawer").test(
-    "is-positive",
-    "Physical Drawer must be greater than or equal to 0",
-    (value) => !value || Number(value) >= 0,
-  ),
+  bankTransferAmount: Validation("string", "Bank Transfer").when("bankAccountId", {
+    is: (val: string | undefined) => !!val && val.trim() !== "",
+    then: (schema) => schema.required("Bank Transfer is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  cashFlow: Validation("string", "Cash Flow").test("is-positive", "Cash Flow must be greater than or equal to 0", (value) => !value || Number(value) >= 0),
+  totalCashInDrawer: Validation("string", "Total Cash In Drawer").test("is-positive", "Total Cash In Drawer must be greater than or equal to 0", (value) => !value || Number(value) >= 0),
+  physicalDrawerCash: Validation("string", "Physical Drawer").test("is-positive", "Physical Drawer must be greater than or equal to 0", (value) => !value || Number(value) >= 0),
   closingNote: Validation("string", "Closing Note", { required: false }),
 
   denominations: Yup.object().shape({
@@ -779,25 +658,13 @@ export const ChangePasswordSchema = Yup.object({
     extraRules: (s) => s.trim().email("Invalid email address"),
   }),
   oldPassword: Validation("string", "Old Password", {
-    extraRules: (s) =>
-      s.matches(
-        /[!@#$%^&*()_+={}:;"'<>,.?/-]/,
-        "Password must include at least one special character",
-      ),
+    extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character"),
   }),
   newPassword: Validation("string", "New Password", {
-    extraRules: (s) =>
-      s.matches(
-        /[!@#$%^&*()_+={}:;"'<>,.?/-]/,
-        "Password must include at least one special character",
-      ),
+    extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character"),
   }),
   confirmPassword: Validation("string", "Confirm Password", {
-    extraRules: (s) =>
-      s.matches(
-        /[!@#$%^&*()_+={}:;"'<>,.?/-]/,
-        "Password must include at least one special character",
-      ),
+    extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character"),
   }),
   loginSource: Validation("string", "Login Source", { required: false }),
 });
@@ -1034,7 +901,6 @@ export const SalesCreditNoteFormSchema = Yup.object({
   }),
 });
 
-
 export const PrefixFormSchema = Yup.object({
   name: Validation("string", "Prefix Name"),
   percentage: Validation("number", "Percentage"),
@@ -1042,7 +908,7 @@ export const PrefixFormSchema = Yup.object({
 
 export const PaymentTermsFormSchema = Yup.object({
   name: Validation("string", "Payment Terms Name"),
-  percentage: Validation("number", "Percentage"),
+  day: Validation("number", "Payment Terms Day", { extraRules: (s) => s.min(1, "Payment Terms Day must be at least 1") }),
 });
 
 export const ConsumptionTypeFormSchema = Yup.object({

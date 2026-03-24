@@ -19,7 +19,7 @@ const PaymentTerms = () => {
   const { mutate: deletePaymentTermsMutate } = Mutations.useDeletePaymentTerms();
   const { mutate: editPaymentTerms, isPending: isEditLoading } = Mutations.useEditPaymentTerms();
 
-  const allRows = useMemo(() => paymentTermsData?.data?.paymentTerms_data.map((item) => ({ ...item, id: item?._id })) || [], [paymentTermsData]);
+  const allRows = useMemo(() => paymentTermsData?.data?.paymentTerm_data.map((item) => ({ ...item, id: item?._id })) || [], [paymentTermsData]);
   const totalRows = paymentTermsData?.data?.totalData || 0;
 
   const handleDeleteBtn = () => {
@@ -32,14 +32,12 @@ const PaymentTerms = () => {
   const handleEdit = (row: PaymentTermsBase) => dispatch(setPaymentTermsModal({ open: true, data: row }));
 
   const columns: AppGridColDef<PaymentTermsBase>[] = [
-    { field: "type", headerName: "Payment Terms Type", flex: 1, minWidth: 200 }, //
-    { field: "PaymentTerms", headerName: "Payment Terms", flex: 1, minWidth: 200 },
-    { field: "sequenceNo", headerName: "Sequence No.", flex: 1, minWidth: 200 },
-    { field: "length", headerName: "Length", flex: 1, minWidth: 200 },
+    { field: "name", headerName: "Payment Term", flex: 1, minWidth: 200 },
+    { field: "day", headerName: "Payment Term Day", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<PaymentTermsBase>({
-            ...(permission?.edit && { active: (row) => editPaymentTerms({ paymentTermsId: row?._id, isActive: !row.isActive }), onEdit: { handleEdit: (row) => handleEdit(row) } }),
+            ...(permission?.edit && { active: (row) => editPaymentTerms({ paymentTermId: row?._id, isActive: !row.isActive }), onEdit: { handleEdit: (row) => handleEdit(row) } }),
             ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
           }),
         ]

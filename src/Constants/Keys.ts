@@ -96,11 +96,11 @@ export const KEYS = {
     EDIT: "prefix-edit",
     DELETE: "prefix-delete",
   },
-  PAYMENT_TERMS: {
-    BASE: "payment-terms",
-    ADD: "payment-terms-add",
-    EDIT: "payment-terms-edit",
-    DELETE: "payment-terms-delete",
+  PAYMENT_TERM: {
+    BASE: "payment-term",
+    ADD: "payment-term-add",
+    EDIT: "payment-term-edit",
+    DELETE: "payment-term-delete",
   },
   CONSUMPTION_TYPE: {
     BASE: "consumption-type",
