@@ -29,7 +29,7 @@ export const RemoveEmptyFields = <T extends Record<string, any>>(obj: T): Partia
 //       if (!value.phoneNo) return; // ⛔ do NOT keep partial phone
 //       result[key as keyof T] = value;
 //       return;
-//     }           
+//     }
 
 //     if (typeof value === "object" && !Array.isArray(value)) {
 //       const cleaned = RemoveEmptyFields(value);
@@ -78,8 +78,6 @@ export const GetChangedFields = (newVal: Record<string, any>, oldVal: Record<str
   return changed;
 };
 
-
-
 // export const GetChangedFields = <T extends Record<string, any>>(newVal: T, oldVal?: Partial<T>): Partial<T> => {
 //   const changed: Partial<T> = {};
 
@@ -117,3 +115,36 @@ export const GetChangedFields = (newVal: Record<string, any>, oldVal: Record<str
 
 //   return changed;
 // };
+
+export const SanitizePayload = (input: any): any => {
+  // 🛑 handle null / undefined
+  if (input === null || input === undefined) {
+    return input;
+  }
+
+  // 🟡 handle array
+  if (Array.isArray(input)) {
+    return input.map((item) => SanitizePayload(item));
+  }
+
+  // 🟢 handle object
+  if (typeof input === "object") {
+    return Object.entries(input || {}).reduce((acc: any, [key, value]) => {
+      let newValue = value;
+
+      // 🔥 "" → null
+      if (newValue === "") {
+        newValue = null;
+      }
+
+      // 🔁 recursion
+      newValue = SanitizePayload(newValue);
+
+      acc[key] = newValue;
+      return acc;
+    }, {});
+  }
+
+  // 🔹 primitive (string, number, boolean)
+  return input;
+};

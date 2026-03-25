@@ -1,3 +1,4 @@
+import { RealEstateAgent } from "@mui/icons-material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
@@ -14,15 +15,14 @@ import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setAdditionalChargeModal, setApplyCouponModal, setCardModal, setCashModal, setOrderRefundModal, setPayLaterModal, setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
 import { clearPosProduct, setBtnStatus, setFlatDiscountAmount, setMultiplePay, setPrintType, setRemarks, setReturnPosOrderId, setRoundOff, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
 import type { PosProductOrderDataResponse } from "../../../../../Types";
-import { RemoveEmptyFields } from "../../../../../Utils";
+import { RemoveEmptyFields, SanitizePayload } from "../../../../../Utils";
+import OrderRefund from "../PosSidebar/PosOptions/OrderRefund";
 import AdditionalCharge from "./AdditionalCharge";
 import ApplyCoupon from "./ApplyCoupon";
 import CardDetails from "./CardDetails";
 import Cash from "./Cash";
 import PayLater from "./PayLater";
 import RedeemCredit from "./RedeemCredit";
-import { RealEstateAgent } from "@mui/icons-material";
-import OrderRefund from "../PosSidebar/PosOptions/OrderRefund";
 
 const PosFooter = () => {
   const { PosProduct, isBtnStatus, isReturnPosOrder } = useAppSelector((state) => state.pos);
@@ -88,7 +88,7 @@ const PosFooter = () => {
     const onError = () => {
       dispatch(setBtnStatus(""));
     };
-    const changedFields = RemoveEmptyFields(payload);
+    const changedFields = SanitizePayload(payload);
     if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess, onError });
     else addPosOrder(RemoveEmptyFields(payload), { onSuccess, onError });
   };
@@ -118,7 +118,7 @@ const PosFooter = () => {
     const onError = () => {
       dispatch(setBtnStatus(""));
     };
-    const changedFields = RemoveEmptyFields(payload);
+    const changedFields = SanitizePayload(payload);
     if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess, onError });
     else addPosOrder(RemoveEmptyFields(payload), { onSuccess, onError });
   };

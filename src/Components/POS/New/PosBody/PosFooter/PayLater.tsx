@@ -5,7 +5,7 @@ import { PAYMENT_TERMS, POS_PAYMENT_METHOD, SEND_REMINDER } from "../../../../..
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setPayLaterModal } from "../../../../../Store/Slices/ModalSlice";
 import { clearPosProduct, setMultiplePay, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
-import { RemoveEmptyFields } from "../../../../../Utils";
+import { RemoveEmptyFields, SanitizePayload } from "../../../../../Utils";
 import { CommonModal } from "../../../../Common";
 import type { PosProductOrderDataResponse } from "../../../../../Types";
 
@@ -77,7 +77,7 @@ const PayLater = () => {
     const onError = () => {
       handleClose();
     };
-    const changedFields = RemoveEmptyFields(payload);
+    const changedFields = SanitizePayload(payload);
     if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess, onError });
     else addPayLater(RemoveEmptyFields(payload), { onSuccess, onError });
   };
