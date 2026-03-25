@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setPayLaterModal } from "../../../../../Store/Slices/ModalSlice";
 import { clearPosProduct, setMultiplePay, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
 import type { CommonTableColumn, MultiplePaymentType, PosProductDataModal, PosProductOrderDataResponse } from "../../../../../Types";
-import { GenerateOptions, RemoveEmptyFields } from "../../../../../Utils";
+import { GenerateOptions, RemoveEmptyFields, SanitizePayload } from "../../../../../Utils";
 import { MultiplePaySchema } from "../../../../../Utils/ValidationSchemas";
 import { CommonTable } from "../../../../Common";
 import PayLater from "./PayLater";
@@ -69,7 +69,7 @@ const MultiplePay = () => {
         dispatch(setMultiplePay());
         dispatch(setSelectedOrderId(res?.data?._id));
       };
-      const changedFields = RemoveEmptyFields(payload);
+      const changedFields = SanitizePayload(payload);
       if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess });
       else addPosOrder(RemoveEmptyFields(payload), { onSuccess });
     } else {
