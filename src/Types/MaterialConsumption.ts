@@ -34,6 +34,7 @@ export interface MaterialConsumptionBase extends Omit<MaterialConsumptionFormVal
   consumptionTypeId?: ConsumptionTypeBase;
   items: (Omit<MaterialConsumptionItem, "productId"> & {
     productId: ProductBase;
+    createdBy?: string;
   })[];
 }
 
