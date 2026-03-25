@@ -16,7 +16,7 @@ const ConsumptionType = () => {
   const permission = usePagePermission(PAGE_TITLE.SETTINGS.CONSUMPTION_TYPE.BASE);
 
   const { data: consumptionTypeData, isLoading: consumptionTypeDataLoading, isFetching: consumptionTypeDataFetching } = Queries.useGetConsumptionType(params);
-  const { mutate: deleteConsumptionTypeMutate } = Mutations.useDeleteConsumptionType();
+  const { mutate: deleteConsumptionTypeMutate, isPending: isDeleteLoading } = Mutations.useDeleteConsumptionType();
   const { mutate: editConsumptionType, isPending: isEditLoading } = Mutations.useEditConsumptionType();
 
   const allRows = useMemo(() => consumptionTypeData?.data?.consumptionType_data.map((item) => ({ ...item, id: item?._id })) || [], [consumptionTypeData]);
@@ -32,10 +32,7 @@ const ConsumptionType = () => {
   const handleEdit = (row: ConsumptionTypeBase) => dispatch(setConsumptionTypeModal({ open: true, data: row }));
 
   const columns: AppGridColDef<ConsumptionTypeBase>[] = [
-    { field: "type", headerName: "Payment Terms Type", flex: 1, minWidth: 200 }, //
-    { field: "ConsumptionType", headerName: "Consumption Type", flex: 1, minWidth: 200 },
-    { field: "sequenceNo", headerName: "Sequence No.", flex: 1, minWidth: 200 },
-    { field: "length", headerName: "Length", flex: 1, minWidth: 200 },
+    { field: "name", headerName: "Consumption Type", flex: 1, minWidth: 200 },
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<ConsumptionTypeBase>({
@@ -69,7 +66,7 @@ const ConsumptionType = () => {
       <CommonCard title={PAGE_TITLE.SETTINGS.CONSUMPTION_TYPE.BASE}>
         <CommonDataGrid {...CommonDataGridOption} />
       </CommonCard>
-      <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+      <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       <ConsumptionTypeForm />
     </Box>
   );

@@ -16,7 +16,7 @@ const Prefix = () => {
   const permission = usePagePermission(PAGE_TITLE.SETTINGS.PREFIX.BASE);
 
   const { data: prefixData, isLoading: prefixDataLoading, isFetching: prefixDataFetching } = Queries.useGetPrefix(params);
-  const { mutate: deletePrefixMutate } = Mutations.useDeletePrefix();
+  const { mutate: deletePrefixMutate, isPending: isDeleteLoading } = Mutations.useDeletePrefix();
   const { mutate: editPrefix, isPending: isEditLoading } = Mutations.useEditPrefix();
 
   const allRows = useMemo(() => prefixData?.data?.prefix_data.map((item) => ({ ...item, id: item?._id })) || [], [prefixData]);
@@ -69,7 +69,7 @@ const Prefix = () => {
       <CommonCard title={PAGE_TITLE.SETTINGS.PREFIX.BASE}>
         <CommonDataGrid {...CommonDataGridOption} />
       </CommonCard>
-      <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+      <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       <PrefixForm />
     </Box>
   );

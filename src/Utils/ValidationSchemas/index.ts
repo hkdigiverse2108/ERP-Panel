@@ -913,5 +913,4 @@ export const PaymentTermsFormSchema = Yup.object({
 
 export const ConsumptionTypeFormSchema = Yup.object({
   name: Validation("string", "Consumption Type Name"),
-  percentage: Validation("number", "Percentage"),
 });

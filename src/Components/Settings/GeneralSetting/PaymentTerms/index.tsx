@@ -16,7 +16,7 @@ const PaymentTerms = () => {
   const permission = usePagePermission(PAGE_TITLE.SETTINGS.PAYMENT_TERMS.BASE);
 
   const { data: paymentTermsData, isLoading: paymentTermsDataLoading, isFetching: paymentTermsDataFetching } = Queries.useGetPaymentTerms(params);
-  const { mutate: deletePaymentTermsMutate } = Mutations.useDeletePaymentTerms();
+  const { mutate: deletePaymentTermsMutate, isPending: isDeleteLoading } = Mutations.useDeletePaymentTerms();
   const { mutate: editPaymentTerms, isPending: isEditLoading } = Mutations.useEditPaymentTerms();
 
   const allRows = useMemo(() => paymentTermsData?.data?.paymentTerm_data.map((item) => ({ ...item, id: item?._id })) || [], [paymentTermsData]);
@@ -67,7 +67,7 @@ const PaymentTerms = () => {
       <CommonCard title={PAGE_TITLE.SETTINGS.PAYMENT_TERMS.BASE}>
         <CommonDataGrid {...CommonDataGridOption} />
       </CommonCard>
-      <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+      <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       <PaymentTermsForm />
     </Box>
   );

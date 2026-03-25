@@ -50,8 +50,6 @@ const ConsumptionTypeForm = () => {
           <Form noValidate>
             <Grid container spacing={2} sx={{ p: 1 }}>
               <CommonValidationTextField name="name" label="Payment Terms Name" required grid={{ xs: 12 }} />
-              <CommonValidationTextField name="percentage" label="percentage" type="number" required grid={{ xs: 12 }} />
-
               {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
               <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
                 <CommonButton variant="outlined" onClick={closeModal} title="Cancel" />

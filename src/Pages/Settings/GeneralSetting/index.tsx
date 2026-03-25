@@ -15,7 +15,7 @@ import { usePagePermission } from "../../../Utils/Hooks";
 
 const GeneralSetting = () => {
   const location = useLocation();
-  const [value, setValue] = useState<number>(() => (typeof location.state === "number" ? location.state : 6));
+  const [value, setValue] = useState<number>(() => (typeof location.state === "number" ? location.state : 0));
 
   const handleChange = (_: SyntheticEvent, newValue: number) => setValue(newValue);
   const TaxPermission = usePagePermission(PAGE_TITLE.SETTINGS.TAX.BASE);
