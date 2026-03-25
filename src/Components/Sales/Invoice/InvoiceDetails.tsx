@@ -194,7 +194,7 @@ const InvoiceDetails = ({ isEditing = false }: { isEditing?: boolean }) => {
        
         <CommonValidationDatePicker name="date" label="Invoice Date" required grid={{ xs: 12, md: 4 }} />
 
-        <CommonValidationSelect name="paymentTerms" label="Payment Term" options={GenerateOptions(paymentTermsData?.data)} isLoading={isPaymentTermsLoading || isPaymentTermsFetching} grid={{ xs: 12, md: 4 }} />
+        <CommonValidationSelect name="paymentTermsId" label="Payment Term" options={GenerateOptions(paymentTermsData?.data)} isLoading={isPaymentTermsLoading || isPaymentTermsFetching} grid={{ xs: 12, md: 4 }} />
 
         <CommonValidationDatePicker name="dueDate" label="Due Date" required grid={{ xs: 12, md: 4 }} />
 
