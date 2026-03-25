@@ -54,7 +54,7 @@ export interface PurchaseDebitNoteFormValues {
   debitNoteDate: string | Date;
   dueDate?: string | Date;
   shippingDate?: string | Date;
-  paymentTerm?: string;
+  paymentTermId?: string;
   purchaseId?: string;
   reverseCharge?: string | boolean;
   reason?: string;
