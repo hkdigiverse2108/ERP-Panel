@@ -192,7 +192,7 @@ export interface SupplierBillBase extends CommonDataType {
   referenceBillNo?: string;
   supplierBillDate?: string;
   purchaseOrderId?: string | null;
-  paymentTerm?: string;
+  paymentTermsId?: string;
   dueDate?: string;
   reverseCharge?: boolean;
   shippingDate?: string;

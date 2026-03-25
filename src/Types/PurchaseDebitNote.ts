@@ -84,7 +84,7 @@ export interface PurchaseDebitNoteBase extends CommonDataType {
   debitNoteDate?: string;
   dueDate?: string;
   shippingDate?: string;
-  paymentTerm?: string;
+  paymentTermsId?: string;
   purchaseId?: string;
   reverseCharge?: boolean;
   reason?: string;
