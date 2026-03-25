@@ -40,7 +40,7 @@ export interface ContactFormValues {
   panNo?: string;
   customerCategory?: string;
   paymentMode?: string;
-  paymentTerms?: string;
+  paymentTermsId?: string;
   tanNo?: string;
   openingBalance?: {
     creditBalance?: string;
