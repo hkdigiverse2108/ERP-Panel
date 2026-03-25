@@ -215,8 +215,8 @@ export const Queries = {
   useGetPrefixDropdown: (params?: Params, enabled?: boolean) => useQueries<PrefixDropdownApiResponse>([KEYS.PREFIX.BASE, params], () => Get(URL_KEYS.PREFIX.DROPDOWN, params), { enabled: enabled }),
 
   //*************** Payment Terms **************** */
-  useGetPaymentTerms: (params?: Params, enabled?: boolean) => useQueries<PaymentTermsApiResponse>([KEYS.PAYMENT_TERMS.BASE, params], () => Get(URL_KEYS.PAYMENT_TERMS.ALL, params), { enabled: enabled }),
-  useGetPaymentTermsDropdown: (params?: Params, enabled?: boolean) => useQueries<PaymentTermsDropdownApiResponse>([KEYS.PAYMENT_TERMS.BASE, params], () => Get(URL_KEYS.PAYMENT_TERMS.DROPDOWN, params), { enabled: enabled }),
+  useGetPaymentTerms: (params?: Params, enabled?: boolean) => useQueries<PaymentTermsApiResponse>([KEYS.PAYMENT_TERM.BASE, params], () => Get(URL_KEYS.PAYMENT_TERM.ALL, params), { enabled: enabled }),
+  useGetPaymentTermsDropdown: (params?: Params, enabled?: boolean) => useQueries<PaymentTermsDropdownApiResponse>([KEYS.PAYMENT_TERM.BASE, params], () => Get(URL_KEYS.PAYMENT_TERM.DROPDOWN, params), { enabled: enabled }),
 
   //*************** Consumption Type **************** */
   useGetConsumptionType: (params?: Params, enabled?: boolean) => useQueries<ConsumptionTypeApiResponse>([KEYS.CONSUMPTION_TYPE.BASE, params], () => Get(URL_KEYS.CONSUMPTION_TYPE.ALL, params), { enabled: enabled }),

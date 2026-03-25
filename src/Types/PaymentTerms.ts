@@ -3,18 +3,19 @@ import type { CompanyBase } from "./Company";
 
 export interface PaymentTermsFormValues {
   name?: string;
-  percentage?: number;
+  day?: number;
+  isDefault?: boolean;
   isActive?: boolean;
 }
 
 export type AddPaymentTermsPayload = PaymentTermsFormValues;
 
-export type EditPaymentTermsPayload = AddPaymentTermsPayload & { paymentTermsId?: string };
+export type EditPaymentTermsPayload = AddPaymentTermsPayload & { paymentTermId?: string };
 
 export type PaymentTermsBase = PaymentTermsFormValues & CommonDataType & { companyId: CompanyBase };
 
 export interface PaymentTermsDataResponse extends PageStatus {
-  paymentTerms_data: PaymentTermsBase[];
+  paymentTerm_data: PaymentTermsBase[];
 }
 
 export interface PaymentTermsApiResponse extends MessageStatus {

@@ -24,6 +24,7 @@ const PaymentTermsForm = () => {
 
   const initialValues: PaymentTermsFormValues = {
     name: isEdit?.name || "",
+    day: isEdit?.day,
     isActive: isEdit?.isActive ?? true,
   };
 
@@ -37,7 +38,7 @@ const PaymentTermsForm = () => {
 
     if (isEditing) {
       const changedFields = GetChangedFields(values, isEdit as Partial<PaymentTermsFormValues>);
-      editPaymentTerms({ ...changedFields, paymentTermsId: isEdit?._id }, { onSuccess: onSuccessHandler });
+      editPaymentTerms({ ...changedFields, paymentTermId: isEdit?._id }, { onSuccess: onSuccessHandler });
     } else {
       addPaymentTerms(RemoveEmptyFields(values), { onSuccess: onSuccessHandler });
     }
@@ -50,8 +51,7 @@ const PaymentTermsForm = () => {
           <Form noValidate>
             <Grid container spacing={2} sx={{ p: 1 }}>
               <CommonValidationTextField name="name" label="Payment Terms Name" required grid={{ xs: 12 }} />
-              <CommonValidationTextField name="percentage" label="percentage" type="number" required grid={{ xs: 12 }} />
-
+              <CommonValidationTextField name="day" label="Payment Terms Day" type="number" required grid={{ xs: 12 }} />
               {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
               <Grid sx={{ display: "flex", gap: 2, ml: "auto" }}>
                 <CommonButton variant="outlined" onClick={closeModal} title="Cancel" />

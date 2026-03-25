@@ -216,9 +216,9 @@ export const Mutations = {
   useDeletePrefix: () => useMutations<string, void>([KEYS.PREFIX.DELETE, KEYS.PREFIX.BASE], (id) => Delete(`${URL_KEYS.PREFIX.BASE}/${id}`)),
 
   //*************** Payment Terms **************** */
-  useAddPaymentTerms: () => useMutations<AddPaymentTermsPayload, void>([KEYS.PAYMENT_TERMS.ADD, KEYS.PAYMENT_TERMS.BASE], (input) => Post(URL_KEYS.PAYMENT_TERMS.ADD, input)),
-  useEditPaymentTerms: () => useMutations<EditPaymentTermsPayload, void>([KEYS.PAYMENT_TERMS.EDIT, KEYS.PAYMENT_TERMS.BASE], (input) => Put(URL_KEYS.PAYMENT_TERMS.EDIT, input)),
-  useDeletePaymentTerms: () => useMutations<string, void>([KEYS.PAYMENT_TERMS.DELETE, KEYS.PAYMENT_TERMS.BASE], (id) => Delete(`${URL_KEYS.PAYMENT_TERMS.BASE}/${id}`)),
+  useAddPaymentTerms: () => useMutations<AddPaymentTermsPayload, void>([KEYS.PAYMENT_TERM.ADD, KEYS.PAYMENT_TERM.BASE], (input) => Post(URL_KEYS.PAYMENT_TERM.ADD, input)),
+  useEditPaymentTerms: () => useMutations<EditPaymentTermsPayload, void>([KEYS.PAYMENT_TERM.EDIT, KEYS.PAYMENT_TERM.BASE], (input) => Put(URL_KEYS.PAYMENT_TERM.EDIT, input)),
+  useDeletePaymentTerms: () => useMutations<string, void>([KEYS.PAYMENT_TERM.DELETE, KEYS.PAYMENT_TERM.BASE], (id) => Delete(`${URL_KEYS.PAYMENT_TERM.BASE}/${id}`)),
 
   //*************** Consumption Type **************** */
   useAddConsumptionType: () => useMutations<AddConsumptionTypePayload, void>([KEYS.CONSUMPTION_TYPE.ADD, KEYS.CONSUMPTION_TYPE.BASE], (input) => Post(URL_KEYS.CONSUMPTION_TYPE.ADD, input)),

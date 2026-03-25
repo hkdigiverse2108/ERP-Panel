@@ -3,7 +3,6 @@ import type { CompanyBase } from "./Company";
 
 export interface ConsumptionTypeFormValues {
   name?: string;
-  percentage?: number;
   isActive?: boolean;
 }
 
