@@ -105,7 +105,7 @@ export interface MultiplePaymentType {
 export interface PayLaterType {
   dueDate: string;
   sendReminder: boolean;
-  paymentTerm: string;
+  paymentTermsId: string;
 }
 
 export interface PosProductOrderFormValues extends Omit<Partial<PosProductType>, "items"> {

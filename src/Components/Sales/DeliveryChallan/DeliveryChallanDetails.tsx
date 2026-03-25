@@ -15,7 +15,7 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
 
   const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer" });
   const { data: paymentTermsData, isLoading: isPaymentTermsLoading, isFetching: isPaymentTermsFetching } = Queries.useGetPaymentTermsDropdown();
-  
+
   const {
     data: salesOrderData,
     isLoading: isSalesOrderLoading,
