@@ -37,7 +37,7 @@ const SupplierBillDetails = () => {
   };
 
   const prevDateRef = useRef(values.supplierBillDate);
-  const prevPaymentTermsRef = useRef(values.paymentTermId);
+  const prevPaymentTermsRef = useRef(values.paymentTermsId);
 
   // Set default addresses when supplier is selected
   useEffect(() => {
@@ -75,10 +75,10 @@ const SupplierBillDetails = () => {
 
   useEffect(() => {
     const dateChanged = values.supplierBillDate !== prevDateRef.current;
-    const termsChanged = values.paymentTermId !== prevPaymentTermsRef.current;
+    const termsChanged = values.paymentTermsId !== prevPaymentTermsRef.current;
 
     if (dateChanged || termsChanged) {
-      const selectedTerm = paymentTermsData?.data?.find((t: any) => t._id === values.paymentTermId);
+      const selectedTerm = paymentTermsData?.data?.find((t: any) => t._id === values.paymentTermsId);
 
       if (selectedTerm && values.supplierBillDate) {
         const days = selectedTerm.day || 0;
@@ -94,8 +94,8 @@ const SupplierBillDetails = () => {
     }
 
     prevDateRef.current = values.supplierBillDate;
-    prevPaymentTermsRef.current = values.paymentTermId;
-  }, [values.paymentTermId, values.supplierBillDate, paymentTermsData]);
+    prevPaymentTermsRef.current = values.paymentTermsId;
+  }, [values.paymentTermsId, values.supplierBillDate, paymentTermsData]);
 
   return (
     <>
@@ -152,7 +152,7 @@ const SupplierBillDetails = () => {
         <Grid container spacing={2} size={{ xs: 12, md: 9 }}>
           <CommonValidationDatePicker name="supplierBillDate" label="Supplier Bill Date" required grid={{ xs: 12, md: 4, xl: 3 }} />
           <CommonValidationTextField name="referenceBillNo" label="Reference Bill No." grid={{ xs: 12, md: 4, xl: 3 }} />
-          <CommonValidationSelect name="paymentTermId" label="Payment Term" options={GenerateOptions(paymentTermsData?.data)} isLoading={isPaymentTermsLoading || isPaymentTermsFetching} grid={{ xs: 12, md: 4, xl: 3 }} />
+          <CommonValidationSelect name="paymentTermsId" label="Payment Term" options={GenerateOptions(paymentTermsData?.data)} isLoading={isPaymentTermsLoading || isPaymentTermsFetching} grid={{ xs: 12, md: 4, xl: 3 }} />
           <CommonValidationDatePicker name="dueDate" label="Due Date" required grid={{ xs: 12, md: 4, xl: 3 }} />
           <CommonValidationSelect name="reverseCharge" label="Reverse Charge" options={REVERSE_CHARGE} grid={{ xs: 12, md: 4, xl: 3 }} />
           <CommonValidationDatePicker name="shippingDate" label="Shipping Date" required grid={{ xs: 12, md: 4, xl: 3 }} />

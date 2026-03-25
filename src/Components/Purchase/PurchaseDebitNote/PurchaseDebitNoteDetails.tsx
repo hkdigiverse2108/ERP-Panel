@@ -62,14 +62,14 @@ const PurchaseDebitNoteDetails = () => {
 
   // Sync due date with date and payment terms
   const prevDateRef = useRef(values.debitNoteDate);
-  const prevPaymentTermRef = useRef(values.paymentTermId);
+  const prevPaymentTermsRef = useRef(values.paymentTermsId);
 
   useEffect(() => {
     const dateChanged = values.debitNoteDate !== prevDateRef.current;
-    const termChanged = values.paymentTermId !== prevPaymentTermRef.current;
+    const termChanged = values.paymentTermsId !== prevPaymentTermsRef.current;
 
     if (dateChanged || termChanged) {
-      const selectedTerm = paymentTermsData?.data?.find((t: any) => t._id === values.paymentTermId);
+      const selectedTerm = paymentTermsData?.data?.find((t: any) => t._id === values.paymentTermsId);
 
       if (selectedTerm && values.debitNoteDate) {
         const days = selectedTerm.day || 0;
@@ -81,8 +81,8 @@ const PurchaseDebitNoteDetails = () => {
     }
 
     prevDateRef.current = values.debitNoteDate;
-    prevPaymentTermRef.current = values.paymentTermId;
-  }, [values.paymentTermId, values.debitNoteDate, paymentTermsData]);
+    prevPaymentTermsRef.current = values.paymentTermsId;
+  }, [values.paymentTermsId, values.debitNoteDate, paymentTermsData]);
 
   return (
     <Grid container spacing={2} sx={{ p: 2 }}>
@@ -150,7 +150,7 @@ const PurchaseDebitNoteDetails = () => {
       <Grid size={{ xs: 12, md: 9 }} container spacing={2}>
         <CommonValidationDatePicker name="debitNoteDate" label="Debit Note Date" required grid={{ xs: 12, md: 4 }} />
 
-        <CommonValidationSelect name="paymentTermId" label="Payment Term" options={GenerateOptions(paymentTermsData?.data)} isLoading={isPaymentTermsLoading || isPaymentTermsFetching} grid={{ xs: 12, md: 4 }} />
+        <CommonValidationSelect name="paymentTermsId" label="Payment Term" options={GenerateOptions(paymentTermsData?.data)} isLoading={isPaymentTermsLoading || isPaymentTermsFetching} grid={{ xs: 12, md: 4 }} />
 
         <CommonValidationDatePicker name="dueDate" label="Due Date" grid={{ xs: 12, md: 4 }} />
 
