@@ -1,7 +1,7 @@
 import { Box, Grid, Typography, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { CommonValidationDatePicker, CommonValidationSelect } from "../../../Attribute";
-import { PAYMENT_TERMS_OPTIONS, REVERSE_CHARGE, TAX_TYPE } from "../../../Data";
+import { REVERSE_CHARGE, TAX_TYPE } from "../../../Data";
 import { useFormikContext } from "formik";
 import type { ContactAddressApi, EstimateFormValues } from "../../../Types";
 import { useState, useEffect, useRef } from "react";
@@ -13,6 +13,7 @@ const EstimateDetails = () => {
   const { values, setFieldValue } = useFormikContext<EstimateFormValues>();
   const [modalType, setModalType] = useState<"billing" | "shipping" | null>(null);
 
+  const { data: paymentTermsData, isLoading: isPaymentTermsLoading, isFetching: isPaymentTermsFetching } = Queries.useGetPaymentTermsDropdown();
 
   const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer" });
   const customers = customerData?.data || [];
@@ -67,28 +68,32 @@ const EstimateDetails = () => {
 
   // Sync due date with date and payment terms
   const prevDateRef = useRef(values.date);
-  const prevPaymentTermsRef = useRef(values.paymentTerms);
+  const prevPaymentTermsRef = useRef(values.paymentTermsId);
 
   useEffect(() => {
     const dateChanged = values.date !== prevDateRef.current;
-    const termsChanged = values.paymentTerms !== prevPaymentTermsRef.current;
+    const termsChanged = values.paymentTermsId !== prevPaymentTermsRef.current;
 
     if (dateChanged || termsChanged) {
-      if (values.paymentTerms && values.date) {
-        const days = parseInt(values.paymentTerms.split("_")[0]);
-        if (!isNaN(days)) {
-          const newDueDate = DateConfig(values.date).add(days, "day").toISOString();
+      const selectedTerm = paymentTermsData?.data?.find((t: any) => t._id === values.paymentTermsId);
+
+      if (selectedTerm && values.date) {
+        const days = selectedTerm.day || 0;
+
+        const newDueDate = DateConfig(values.date).add(days, "day").toISOString();
+
+        if (values.dueDate !== newDueDate) {
           setFieldValue("dueDate", newDueDate);
         }
       }
-      prevDateRef.current = values.date;
-      prevPaymentTermsRef.current = values.paymentTerms;
     }
-  }, [values.paymentTerms, values.date, setFieldValue]);
+
+    prevDateRef.current = values.date;
+    prevPaymentTermsRef.current = values.paymentTermsId;
+  }, [values.paymentTermsId, values.date, values.dueDate, paymentTermsData]);
 
   return (
     <Grid container spacing={2} sx={{ p: 2 }}>
-
       <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 2, md: 2 } }}>
         <CommonValidationSelect name="customerId" label="Select Customer" required options={GenerateOptions(customers)} isLoading={isCustomerLoading || isCustomerFetching} />
       </Grid>
@@ -98,7 +103,7 @@ const EstimateDetails = () => {
       </Grid>
 
       <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 4, md: 4 } }}>
-        <CommonValidationSelect name="paymentTerms" label="Payment Term" options={PAYMENT_TERMS_OPTIONS} />
+        <CommonValidationSelect name="paymentTermsId" label="Payment Term" options={GenerateOptions(paymentTermsData?.data)} isLoading={isPaymentTermsLoading || isPaymentTermsFetching} />
       </Grid>
 
       <Grid size={{ xs: 12, md: 3 }} sx={{ order: { xs: 5, md: 5 } }}>

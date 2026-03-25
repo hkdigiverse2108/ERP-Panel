@@ -35,7 +35,7 @@ export interface InvoiceBase extends CommonDataType {
   placeOfSupply?: string;
   billingAddress?: string | AddressApi;
   shippingAddress?: string | AddressApi;
-  paymentTerms?: string;
+  paymentTermsId?: string;
   createdFrom?: string;
   taxType?: string;
   reverseCharge?: boolean;

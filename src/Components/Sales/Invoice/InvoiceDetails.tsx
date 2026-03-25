@@ -1,7 +1,7 @@
 import { Box, Grid, Typography, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { CommonValidationDatePicker, CommonValidationSelect } from "../../../Attribute";
-import { INVOICE_CREATED_FROM_OPTIONS, PAYMENT_TERMS_OPTIONS, TAX_TYPE } from "../../../Data";
+import { INVOICE_CREATED_FROM_OPTIONS, TAX_TYPE } from "../../../Data";
 import { useFormikContext } from "formik";
 import type { ContactAddressApi, InvoiceFormValues } from "../../../Types";
 import { useState, useEffect, useRef, useMemo } from "react";
@@ -26,6 +26,8 @@ const InvoiceDetails = ({ isEditing = false }: { isEditing?: boolean }) => {
   }, !!values?.customerId);
 
   const { data: salesPersonData, isLoading: isSalesPersonLoading, isFetching: isSalesPersonFetching } = Queries.useGetUserDropdown({},!!values?.customerId);
+    const { data: paymentTermsData, isLoading: isPaymentTermsLoading, isFetching: isPaymentTermsFetching } = Queries.useGetPaymentTermsDropdown();
+
 
   const salesOrderOptions = useMemo(() => GenerateOptions(salesOrderData?.data || []), [salesOrderData]);
   const deliveryChallanOptions = useMemo(() => GenerateOptions(deliveryChallanData?.data || []), [deliveryChallanData]);
@@ -84,27 +86,30 @@ const InvoiceDetails = ({ isEditing = false }: { isEditing?: boolean }) => {
   }, [values.billingAddress, selectedCustomer, values.placeOfSupply, setFieldValue]);
 
   // Sync due date with date and payment terms
-  const prevDateRef = useRef(values.date);
-  const prevPaymentTermsRef = useRef(values.paymentTerms);
+   const prevDateRef = useRef(values.date);
+  const prevPaymentTermsRef = useRef(values.paymentTermsId);
 
   useEffect(() => {
     const dateChanged = values.date !== prevDateRef.current;
-    const termsChanged = values.paymentTerms !== prevPaymentTermsRef.current;
+    const termsChanged = values.paymentTermsId !== prevPaymentTermsRef.current;
 
     if (dateChanged || termsChanged) {
-      if (values.paymentTerms && values.date) {
-        const days = parseInt(values.paymentTerms.split("_")[0]);
-        if (!isNaN(days)) {
-          const newDueDate = DateConfig(values.date).add(days, "day").toISOString();
-          if (values.dueDate !== newDueDate) {
-            setFieldValue("dueDate", newDueDate);
-          }
+      const selectedTerm = paymentTermsData?.data?.find((t: any) => t._id === values.paymentTermsId);
+
+      if (selectedTerm && values.date) {
+        const days = selectedTerm.day || 0;
+
+        const newDueDate = DateConfig(values.date).add(days, "day").toISOString();
+
+        if (values.dueDate !== newDueDate) {
+          setFieldValue("dueDate", newDueDate);
         }
       }
-      prevDateRef.current = values.date;
-      prevPaymentTermsRef.current = values.paymentTerms;
     }
-  }, [values.paymentTerms, values.date, values.dueDate, setFieldValue]);
+
+    prevDateRef.current = values.date;
+    prevPaymentTermsRef.current = values.paymentTermsId;
+  }, [values.paymentTermsId, values.date, values.dueDate, paymentTermsData]);
 
   useEffect(() => {
     if (values.createdFrom === "") {
@@ -189,7 +194,7 @@ const InvoiceDetails = ({ isEditing = false }: { isEditing?: boolean }) => {
        
         <CommonValidationDatePicker name="date" label="Invoice Date" required grid={{ xs: 12, md: 4 }} />
 
-        <CommonValidationSelect name="paymentTerms" label="Payment Term" options={PAYMENT_TERMS_OPTIONS} grid={{ xs: 12, md: 4 }} />
+        <CommonValidationSelect name="paymentTerms" label="Payment Term" options={GenerateOptions(paymentTermsData?.data)} isLoading={isPaymentTermsLoading || isPaymentTermsFetching} grid={{ xs: 12, md: 4 }} />
 
         <CommonValidationDatePicker name="dueDate" label="Due Date" required grid={{ xs: 12, md: 4 }} />
 
