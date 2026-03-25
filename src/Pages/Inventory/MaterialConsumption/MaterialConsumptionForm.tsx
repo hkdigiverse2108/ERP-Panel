@@ -7,7 +7,7 @@ import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonSelect, CommonTextField, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { BREADCRUMBS, CONSUMPTION_TYPE } from "../../../Data";
+import { BREADCRUMBS } from "../../../Data";
 import type { MaterialConsumptionBase, MaterialConsumptionFormValues, MaterialConsumptionItem, MaterialConsumptionRow, ProductBase } from "../../../Types";
 import { DateConfig, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
@@ -21,6 +21,7 @@ const MaterialConsumptionForm = () => {
   const [productId, setProductId] = useState<string[]>([]);
   const [rows, setRows] = useState<MaterialConsumptionItem[]>([]);
 
+  const { data: consumptionData, isLoading: consumptionLoading } = Queries.useGetConsumptionTypeDropdown();
   const { data: branchData, isLoading: branchLoading } = Queries.useGetBranchDropdown();
   const { data: productData, isLoading: productLoading } = Queries.useGetProductDropdown();
 
@@ -35,7 +36,7 @@ const MaterialConsumptionForm = () => {
       branchId: data?.branchId?._id || "",
       number: data?.number || "",
       date: data?.date || DateConfig.utc().toISOString(),
-      type: data?.type || "",
+      consumptionTypeId: data?.consumptionTypeId?._id || "",
       remark: data?.remark || "",
       isActive: data?.isActive ?? true,
     }),
@@ -115,7 +116,7 @@ const MaterialConsumptionForm = () => {
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       {isEditing && <CommonValidationTextField name="number" label="Consumption No" grid={{ xs: 12, sm: 6, md: 4 }} disabled />}
                       <CommonValidationSelect name="branchId" label="Select branchId" options={GenerateOptions(branchData?.data)} isLoading={branchLoading} grid={{ xs: 12, sm: 6, md: 4 }} />
-                      <CommonValidationSelect name="type" label="Select Type" options={CONSUMPTION_TYPE} grid={{ xs: 12, sm: 6, md: 4 }} />
+                      <CommonValidationSelect name="consumptionTypeId" label="Select Type" options={GenerateOptions(consumptionData?.data)} isLoading={consumptionLoading} grid={{ xs: 12, sm: 6, md: 4 }} />
                       <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, sm: isEditing ? 6 : 12, md: isEditing ? 3 : 4 }} required />
                       <CommonValidationTextField name="remark" label="Remark" grid={{ xs: 12, md: isEditing ? 9 : 12 }} multiline />
                       {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}

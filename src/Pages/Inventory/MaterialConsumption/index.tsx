@@ -34,7 +34,7 @@ const MaterialConsumption = () => {
   const columns: AppGridColDef<MaterialConsumptionBase>[] = [
     { field: "number", headerName: "MC No.", width: 100 },
     CommonObjectPropertyColumn<MaterialConsumptionBase>("branchId", "branchId", ["name"], { headerName: "Branch", width: 200 }),
-    CommonObjectPropertyColumn<MaterialConsumptionBase>("type", "type", [], { headerName: "Type", width: 150, type: "format" }),
+    CommonObjectPropertyColumn<MaterialConsumptionBase>("consumptionTypeId", "consumptionTypeId", ["name"], { headerName: "Type", width: 150 }),
     { field: "totalQty", type: "number", headerName: "Total Qty", width: 150, isSummary: true },
     { field: "totalAmount", type: "number", headerName: "Total Amount", width: 150, isSummary: true },
     CommonObjectPropertyColumn<MaterialConsumptionBase>("date", "date", [], { headerName: "Date", width: 120, type: "date" }),
