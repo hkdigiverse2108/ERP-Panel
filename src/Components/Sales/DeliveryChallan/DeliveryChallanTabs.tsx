@@ -15,7 +15,7 @@ const DeliveryChallanTabs = ({ emptyRow }: { emptyRow: DeliveryChallanItem }) =>
   const { values, setFieldValue } = useFormikContext<DeliveryChallanFormValues>();
 
   const isCustomerSelected = !!values?.customerId;
-  const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown(    {}, !!values?.customerId);
+  const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown({}, !!values?.customerId);
 
   const calculateRowValues = (index: number) => {
     const row = values?.items?.[index];
@@ -194,7 +194,7 @@ const DeliveryChallanTabs = ({ emptyRow }: { emptyRow: DeliveryChallanItem }) =>
                       key: "discount1",
                       header: "Discount",
                       bodyClass: "min-w-28",
-                      render: (_, index) => <CommonValidationTextField name={`items.${index}.discount1`} type="number" />
+                      render: (_, index) => <CommonValidationTextField name={`items.${index}.discount1`} type="number" />,
                     },
                     {
                       key: "taxAmount",

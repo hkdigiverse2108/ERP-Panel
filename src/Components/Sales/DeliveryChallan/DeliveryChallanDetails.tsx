@@ -1,7 +1,7 @@
 import { Box, Grid, Typography, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { CommonValidationDatePicker, CommonValidationSelect } from "../../../Attribute";
-import { DELIVERY_CHALLAN_CREATED_FROM_OPTIONS, PAYMENT_TERMS_OPTIONS, TAX_TYPE } from "../../../Data";
+import { DELIVERY_CHALLAN_CREATED_FROM_OPTIONS, TAX_TYPE } from "../../../Data";
 import { useFormikContext } from "formik";
 import type { ContactAddressApi, DeliveryChallanFormValues } from "../../../Types";
 import { useState, useEffect, useRef, useMemo } from "react";
@@ -13,18 +13,32 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
   const { values, setFieldValue } = useFormikContext<DeliveryChallanFormValues>();
   const [modalType, setModalType] = useState<"billing" | "shipping" | null>(null);
 
+  const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer" });
+  const { data: paymentTermsData, isLoading: isPaymentTermsLoading, isFetching: isPaymentTermsFetching } = Queries.useGetPaymentTermsDropdown();
+  
+  const {
+    data: salesOrderData,
+    isLoading: isSalesOrderLoading,
+    isFetching: isSalesOrderFetching,
+  } = Queries.useGetSalesOrderDropdown(
+    {
+      customerFilter: values?.customerId,
+      ...(isEditing ? {} : { statusFilter: "pending" }),
+    },
+    !!values?.customerId,
+  );
 
-  const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer"}, );
-
-  const { data: salesOrderData, isLoading: isSalesOrderLoading, isFetching: isSalesOrderFetching } = Queries.useGetSalesOrderDropdown({ 
-    customerFilter: values?.customerId,
-    ...(isEditing ? {} : { statusFilter: "pending" })
-  }, !!values?.customerId);
-
-  const { data: invoiceData, isLoading: isInvoiceLoading, isFetching: isInvoiceFetching } = Queries.useGetInvoiceDropdown({ 
-    customerFilter: values?.customerId,
-    ...(isEditing ? {} : { statusFilter: "pending" })
-  }, !!values?.customerId);
+  const {
+    data: invoiceData,
+    isLoading: isInvoiceLoading,
+    isFetching: isInvoiceFetching,
+  } = Queries.useGetInvoiceDropdown(
+    {
+      customerFilter: values?.customerId,
+      ...(isEditing ? {} : { statusFilter: "pending" }),
+    },
+    !!values?.customerId,
+  );
 
   const salesOrderOptions = useMemo(() => GenerateOptions(salesOrderData?.data || []), [salesOrderData]);
   const invoiceOptions = useMemo(() => GenerateOptions(invoiceData?.data || []), [invoiceData]);
@@ -80,26 +94,29 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
   }, [values.billingAddress, selectedCustomer, values.placeOfSupply, setFieldValue]);
 
   const prevDateRef = useRef(values.date);
-  const prevPaymentTermsRef = useRef(values.paymentTerms);
+  const prevPaymentTermsRef = useRef(values.paymentTermsId);
 
   useEffect(() => {
     const dateChanged = values.date !== prevDateRef.current;
-    const termsChanged = values.paymentTerms !== prevPaymentTermsRef.current;
+    const termsChanged = values.paymentTermsId !== prevPaymentTermsRef.current;
 
     if (dateChanged || termsChanged) {
-      if (values.paymentTerms && values.date) {
-        const days = parseInt(values.paymentTerms.split("_")[0]);
-        if (!isNaN(days)) {
-          const newDueDate = DateConfig(values.date).add(days, "day").toISOString();
-          if (values.dueDate !== newDueDate) {
-            setFieldValue("dueDate", newDueDate);
-          }
+      const selectedTerm = paymentTermsData?.data?.find((t: any) => t._id === values.paymentTermsId);
+
+      if (selectedTerm && values.date) {
+        const days = selectedTerm.day || 0;
+
+        const newDueDate = DateConfig(values.date).add(days, "day").toISOString();
+
+        if (values.dueDate !== newDueDate) {
+          setFieldValue("dueDate", newDueDate);
         }
       }
-      prevDateRef.current = values.date;
-      prevPaymentTermsRef.current = values.paymentTerms;
     }
-  }, [values.paymentTerms, values.date, values.dueDate, setFieldValue]);
+
+    prevDateRef.current = values.date;
+    prevPaymentTermsRef.current = values.paymentTermsId;
+  }, [values.paymentTermsId, values.date, values.dueDate, paymentTermsData]);
 
   useEffect(() => {
     if (values.createdFrom === "") {
@@ -115,11 +132,16 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
   return (
     <Grid container spacing={2} sx={{ p: 2 }}>
       <Grid size={{ xs: 12, md: 3 }} container spacing={2}>
-         <CommonValidationSelect name="customerId" label="Select Customer" required options={GenerateOptions(customers)} isLoading={isCustomerLoading || isCustomerFetching} grid={{ xs: 12 }} />
-        <Grid size={{ xs: 12, md: 12 }} container spacing={2} sx={{
-          order: { xs: 10, md: 5 },
-          display: { xs: "none", md: "flex" },
-        }}>
+        <CommonValidationSelect name="customerId" label="Select Customer" required options={GenerateOptions(customers)} isLoading={isCustomerLoading || isCustomerFetching} grid={{ xs: 12 }} />
+        <Grid
+          size={{ xs: 12, md: 12 }}
+          container
+          spacing={2}
+          sx={{
+            order: { xs: 10, md: 5 },
+            display: { xs: "none", md: "flex" },
+          }}
+        >
           <Grid size={{ xs: 12, md: 12 }}>
             <Box display="flex" flexDirection="column" gap={0.5}>
               <Typography variant="caption" color="text.secondary" fontWeight={600}>
@@ -179,27 +201,18 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
       </Grid>
 
       <Grid size={{ xs: 12, md: 9 }} container spacing={2}>
-       
         <CommonValidationDatePicker name="date" label="Delivery Challan Date" required grid={{ xs: 12, md: 4 }} />
-
-        <CommonValidationSelect name="paymentTerms" label="Payment Term" options={PAYMENT_TERMS_OPTIONS} grid={{ xs: 12, md: 4 }} />
+        <CommonValidationSelect name="paymentTermsId" label="Payment Term" options={GenerateOptions(paymentTermsData?.data)} isLoading={isPaymentTermsLoading || isPaymentTermsFetching} grid={{ xs: 12, md: 4 }} />
 
         <CommonValidationDatePicker name="dueDate" label="Due Date" required grid={{ xs: 12, md: 4 }} />
-
         <CommonValidationSelect name="taxType" label="Tax Type" options={TAX_TYPE} grid={{ xs: 12, md: 4 }} />
-
         <CommonValidationSelect name="createdFrom" label="Created From" options={DELIVERY_CHALLAN_CREATED_FROM_OPTIONS} disabled={isEditing} grid={{ xs: 12, md: 4 }} />
-
-        {values.createdFrom === "sales-order" && (
-          <CommonValidationSelect name="selectedSalesOrderId" label="Reference Sales Order" options={salesOrderOptions} multiple disabled={isEditing ||  !values.customerId} isLoading={isSalesOrderLoading || isSalesOrderFetching} grid={{ xs: 12, md: 4 }} />
-        )}
-
-        {values.createdFrom === "invoice" && (
-          <CommonValidationSelect name="selectedInvoiceId" label="Reference Invoice" options={invoiceOptions} multiple disabled={isEditing ||  !values.customerId} isLoading={isInvoiceLoading || isInvoiceFetching} grid={{ xs: 12, md: 4 }} />
-        )}
+        {values.createdFrom === "sales-order" && <CommonValidationSelect name="selectedSalesOrderId" label="Reference Sales Order" options={salesOrderOptions} multiple disabled={isEditing || !values.customerId} isLoading={isSalesOrderLoading || isSalesOrderFetching} grid={{ xs: 12, md: 4 }} />}
+        {values.createdFrom === "invoice" && <CommonValidationSelect name="selectedInvoiceId" label="Reference Invoice" options={invoiceOptions} multiple disabled={isEditing || !values.customerId} isLoading={isInvoiceLoading || isInvoiceFetching} grid={{ xs: 12, md: 4 }} />}
       </Grid>
 
-      <Grid size={{ xs: 12, md: 12 }}
+      <Grid
+        size={{ xs: 12, md: 12 }}
         container
         spacing={2}
         sx={{
