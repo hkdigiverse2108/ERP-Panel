@@ -3,7 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { CommonValidationDatePicker, CommonValidationSelect } from "../../../Attribute";
 import { REVERSE_CHARGE, TAX_TYPE } from "../../../Data";
 import { useFormikContext } from "formik";
-import type { ContactAddressApi, EstimateFormValues } from "../../../Types";
+import type { ContactAddressApi, EstimateFormValues, PaymentTermsBase } from "../../../Types";
 import { useState, useEffect, useRef } from "react";
 import { AddressSelectionModal } from "../../Common";
 import { Queries } from "../../../Api";
@@ -75,7 +75,7 @@ const EstimateDetails = () => {
     const termsChanged = values.paymentTermsId !== prevPaymentTermsRef.current;
 
     if (dateChanged || termsChanged) {
-      const selectedTerm = paymentTermsData?.data?.find((t: any) => t._id === values.paymentTermsId);
+      const selectedTerm = paymentTermsData?.data?.find((t: PaymentTermsBase) => t._id === values.paymentTermsId);
 
       if (selectedTerm && values.date) {
         const days = selectedTerm.day || 0;

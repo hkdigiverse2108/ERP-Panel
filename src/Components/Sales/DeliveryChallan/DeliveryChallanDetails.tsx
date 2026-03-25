@@ -3,7 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { CommonValidationDatePicker, CommonValidationSelect } from "../../../Attribute";
 import { DELIVERY_CHALLAN_CREATED_FROM_OPTIONS, TAX_TYPE } from "../../../Data";
 import { useFormikContext } from "formik";
-import type { ContactAddressApi, DeliveryChallanFormValues } from "../../../Types";
+import type { ContactAddressApi, DeliveryChallanFormValues, PaymentTermsBase } from "../../../Types";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { AddressSelectionModal } from "../../Common";
 import { Queries } from "../../../Api";
@@ -101,7 +101,7 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
     const termsChanged = values.paymentTermsId !== prevPaymentTermsRef.current;
 
     if (dateChanged || termsChanged) {
-      const selectedTerm = paymentTermsData?.data?.find((t: any) => t._id === values.paymentTermsId);
+      const selectedTerm = paymentTermsData?.data?.find((t: PaymentTermsBase) => t._id === values.paymentTermsId);
 
       if (selectedTerm && values.date) {
         const days = selectedTerm.day || 0;

@@ -6,7 +6,7 @@ import { REVERSE_CHARGE, TAX_TYPE } from "../../../Data";
 import { DateConfig, GenerateOptions } from "../../../Utils";
 import { useState, useEffect, useRef, useMemo } from "react";
 import EditIcon from "@mui/icons-material/Edit";
-import type { ContactAddressApi, ContactBase, SupplierBillFormValues } from "../../../Types";
+import type { ContactAddressApi, ContactBase, PaymentTermsBase, SupplierBillFormValues } from "../../../Types";
 import { AddressSelectionModal } from "../../Common";
 
 const SupplierBillDetails = () => {
@@ -78,7 +78,7 @@ const SupplierBillDetails = () => {
     const termsChanged = values.paymentTermsId !== prevPaymentTermsRef.current;
 
     if (dateChanged || termsChanged) {
-      const selectedTerm = paymentTermsData?.data?.find((t: any) => t._id === values.paymentTermsId);
+      const selectedTerm = paymentTermsData?.data?.find((t: PaymentTermsBase) => t._id === values.paymentTermsId);
 
       if (selectedTerm && values.supplierBillDate) {
         const days = selectedTerm.day || 0;

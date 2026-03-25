@@ -3,7 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { CommonValidationDatePicker, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
 import { REVERSE_CHARGE } from "../../../Data";
 import { useFormikContext } from "formik";
-import type { ContactAddressApi, ContactBase, PurchaseDebitNoteFormValues } from "../../../Types";
+import type { ContactAddressApi, ContactBase, PaymentTermsBase, PurchaseDebitNoteFormValues } from "../../../Types";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { AddressSelectionModal } from "../../Common";
 import { Queries } from "../../../Api";
@@ -69,7 +69,7 @@ const PurchaseDebitNoteDetails = () => {
     const termChanged = values.paymentTermsId !== prevPaymentTermsRef.current;
 
     if (dateChanged || termChanged) {
-      const selectedTerm = paymentTermsData?.data?.find((t: any) => t._id === values.paymentTermsId);
+      const selectedTerm = paymentTermsData?.data?.find((t: PaymentTermsBase) => t._id === values.paymentTermsId);
 
       if (selectedTerm && values.debitNoteDate) {
         const days = selectedTerm.day || 0;
