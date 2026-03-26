@@ -37,7 +37,7 @@ const UserRoles = () => {
 
   const columns: AppGridColDef<RolesBase>[] = [
     { field: "name", headerName: "Roles Name", flex: 1 },
-    CommonObjectPropertyColumn<RolesBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<RolesBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
 
     ...(permission?.edit || permission?.delete
       ? [

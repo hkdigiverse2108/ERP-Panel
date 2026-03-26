@@ -227,7 +227,7 @@ export interface ExportToPDFProps<T extends GridValidRowModel> {
   email?: string;
 }
 
-export type ColumnFormatType = "default" | "phone" | "date" | "datetime" | "format" | "status";
+export type ColumnFormatType = "default" | "phone" | "date" | "datetime" | "format" | "status" | "createdBy";
 
 export interface CommonObjectNameColumnOptions {
   headerName?: string;

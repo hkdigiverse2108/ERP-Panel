@@ -46,8 +46,7 @@ const Taxes = () => {
   const columns: AppGridColDef<TaxBase>[] = [
     { field: "name", headerName: "Name", flex: 1, minWidth: 200 }, //
     { field: "percentage", headerName: "Percentage", flex: 1, minWidth: 200 },
-    CommonObjectPropertyColumn<TaxBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
-
+    CommonObjectPropertyColumn<TaxBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
     ...(permission?.edit || permission?.delete ? [actionColumn] : []),
   ];
 

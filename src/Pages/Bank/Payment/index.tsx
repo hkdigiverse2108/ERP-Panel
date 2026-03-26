@@ -43,7 +43,7 @@ const Payment = () => {
     CommonObjectPropertyColumn<PosPaymentBase>("date", "date", [], { headerName: "Payment Date", flex: 1, minWidth: 150, type: "date" }),
     { field: "amount", headerName: "Amount", flex: 1, minWidth: 150 },
     CommonObjectPropertyColumn<PosPaymentBase>("status", "status", [], { headerName: "Status", width: 150, type: "status" }),
-    CommonObjectPropertyColumn<PosPaymentBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<PosPaymentBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
 
     ...(permission?.edit || permission?.delete
       ? [

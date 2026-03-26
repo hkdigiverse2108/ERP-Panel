@@ -35,7 +35,7 @@ const PaymentTerms = () => {
   const columns: AppGridColDef<PaymentTermsBase>[] = [
     { field: "name", headerName: "Payment Term", flex: 1, minWidth: 200 },
     { field: "day", headerName: "Payment Term Day", flex: 1, minWidth: 200 },
-    CommonObjectPropertyColumn<PaymentTermsBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<PaymentTermsBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
 
     ...(permission?.edit || permission?.delete
       ? [

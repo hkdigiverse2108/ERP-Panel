@@ -38,7 +38,7 @@ const AdditionalCharges = () => {
     { field: "defaultValue", headerName: "Default Value", width: 200 },
     { field: "hsnSac", headerName: "HSN Code", width: 200 },
     CommonObjectPropertyColumn<AdditionalChargesBase>("taxId", "taxId", ["name"], { headerName: "Tax", flex: 1, minWidth: 150 }),
-    CommonObjectPropertyColumn<AdditionalChargesBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<AdditionalChargesBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
 
     ...(permission?.edit || permission?.delete
       ? [

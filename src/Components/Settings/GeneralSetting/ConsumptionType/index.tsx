@@ -34,7 +34,7 @@ const ConsumptionType = () => {
 
   const columns: AppGridColDef<ConsumptionTypeBase>[] = [
     { field: "name", headerName: "Consumption Type", flex: 1, minWidth: 200 },
-    CommonObjectPropertyColumn<ConsumptionTypeBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<ConsumptionTypeBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
 
     ...(permission?.edit || permission?.delete
       ? [

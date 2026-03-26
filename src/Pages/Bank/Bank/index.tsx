@@ -38,7 +38,7 @@ const Bank = () => {
     { field: "ifscCode", headerName: "IFSC Code", flex: 1, minWidth: 160 },
     { field: "bankAccountNumber", headerName: "Account No.", flex: 1, minWidth: 200 },
     { field: "addressLine1", headerName: "Address", flex: 1, minWidth: 200 },
-    CommonObjectPropertyColumn<BankBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<BankBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
 
     ...(permission?.edit || permission?.delete
       ? [
