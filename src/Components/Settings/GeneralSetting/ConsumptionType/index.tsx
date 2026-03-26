@@ -32,18 +32,27 @@ const ConsumptionType = () => {
 
   const handleEdit = (row: ConsumptionTypeBase) => dispatch(setConsumptionTypeModal({ open: true, data: row }));
 
-  const columns: AppGridColDef<ConsumptionTypeBase>[] = [
-    { field: "name", headerName: "Consumption Type", flex: 1, minWidth: 200 },
-    CommonObjectPropertyColumn<ConsumptionTypeBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
+  const actionColumn = useMemo(() => {
+    const baseCol = CommonActionColumn<ConsumptionTypeBase>({
+      ...(permission?.edit && { active: (row) => editConsumptionType({ consumptionTypeId: row?._id, isActive: !row.isActive }), onEdit: { handleEdit: (row) => handleEdit(row) } }),
+      ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+    });
+    return {
+      ...baseCol,
+      renderCell: (params: any) => {
+        const userType = params.row?.createdBy?.userType?.toLowerCase();
+        if (userType === "super-admin") {
+          return null;
+        }
+        return baseCol.renderCell!(params);
+      },
+    };
+  }, [editConsumptionType, handleEdit, setRowToDelete]);
 
-    ...(permission?.edit || permission?.delete
-      ? [
-          CommonActionColumn<ConsumptionTypeBase>({
-            ...(permission?.edit && { active: (row) => editConsumptionType({ consumptionTypeId: row?._id, isActive: !row.isActive }), onEdit: { handleEdit: (row) => handleEdit(row) } }),
-            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
-          }),
-        ]
-      : []),
+  const columns: AppGridColDef<ConsumptionTypeBase>[] = [
+    { field: "name", headerName: "Consumption Type", flex: 1, minWidth: 200 }, //
+    CommonObjectPropertyColumn<ConsumptionTypeBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
+    ...(permission?.edit || permission?.delete ? [actionColumn] : []),
   ];
 
   const CommonDataGridOption = {

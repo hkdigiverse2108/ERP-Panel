@@ -39,7 +39,13 @@ const Taxes = () => {
     });
     return {
       ...baseCol,
-      renderCell: (params: any) => (params.row?.companyId ? baseCol.renderCell!(params) : null),
+      renderCell: (params: any) => {
+        const userType = params.row?.createdBy?.userType?.toLowerCase();
+        if (userType === "super-admin") {
+          return null;
+        }
+        return baseCol.renderCell!(params);
+      },
     };
   }, [editTax, handleEdit, setRowToDelete]);
 
