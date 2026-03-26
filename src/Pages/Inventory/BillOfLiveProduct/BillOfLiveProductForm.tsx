@@ -70,15 +70,9 @@ const BillOfLiveProductForm = () => {
     no?: number;
   };
 
-  const { values } = useFormikContext<BillOfLiveProductFormValues>();
-
-  const { data: recipeData } = Queries.useGetRecipe(
-    {
-      activeFilter: true,
-      companyFilter: values.companyId,
-    },
-    !!values.companyId,
-  );
+  const { data: recipeData } = Queries.useGetRecipe({
+    activeFilter: true,
+  });
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE);
 
@@ -293,15 +287,15 @@ const BillOfLiveProductForm = () => {
         <CommonCard hideDivider>
           <Grid container spacing={2} sx={{ p: 2 }}>
             <Grid size={12}>
-              <Formik enableReinitialize={isEditing} innerRef={formikRef} initialValues={initialValues} onSubmit={handleSubmit}>
+              <Formik enableReinitialize innerRef={formikRef} initialValues={initialValues} onSubmit={handleSubmit}>
                 {() => (
                   <Form noValidate>
                     <RecipeWatcher onChange={syncRowsFromRecipeIds} />
                     <Grid container spacing={2}>
                       <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="text" label="BOLP" disabled grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 4 }} options={GenerateOptions(recipeData?.data?.recipe_data || [])} disabled={!values.companyId} />
+                       <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 4 }} options={GenerateOptions(recipeData?.data?.recipe_data || [])} />
                       <CommonValidationSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
                     </Grid>
                   </Form>
