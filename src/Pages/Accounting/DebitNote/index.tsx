@@ -38,6 +38,8 @@ const DebitNote = () => {
     CommonObjectPropertyColumn<DebitNoteBase>("bankName", "bankAccountId", ["name"], { headerName: "Bank name", width: 300 }),
     CommonObjectPropertyColumn<DebitNoteBase>("phoneNo", "phoneNo", ["countryCode", "phoneNo"], { headerName: "Phone No", width: 200, type: "phone" }),
     { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<DebitNoteBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<DebitNoteBase>({

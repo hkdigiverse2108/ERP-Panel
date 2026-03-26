@@ -42,6 +42,8 @@ const PurchaseDebitNote = () => {
     CommonObjectPropertyColumn<PurchaseDebitNoteBase>("summary.netAmount", "summary.netAmount", ["netAmount"], { headerName: "Debit Note Amount", flex: 1, minWidth: 150, isSummary: true }),
     CommonObjectPropertyColumn<PurchaseDebitNoteBase>("summary.taxAmount", "summary.taxAmount", ["taxAmount"], { headerName: "Tax Amount", flex: 1, minWidth: 120, isSummary: true }),
     { field: "notes", headerName: "Notes", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<PurchaseDebitNoteBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<PurchaseDebitNoteBase>({

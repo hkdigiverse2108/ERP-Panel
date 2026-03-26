@@ -7,6 +7,7 @@ import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS } from "../../Data";
 import type { AppGridColDef, EmployeeBase } from "../../Types";
 import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
+import { CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Employee = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -34,6 +35,8 @@ const Employee = () => {
     { field: "email", headerName: "Email", width: 200 },
     CommonPhoneColumns<EmployeeBase>("phoneNo", { headerName: "Phone No", width: 200 }),
     { field: "panNumber", headerName: "PAN Number", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<EmployeeBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<EmployeeBase>({

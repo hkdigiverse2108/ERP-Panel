@@ -39,6 +39,8 @@ const Coupon = () => {
     CommonObjectPropertyColumn<CouponBase>("endDate", "endDate", [], { headerName: "End Date", flex: 1, minWidth: 100, type: "date" }),
     CommonObjectPropertyColumn<CouponBase>("redemptionType", "redemptionType", [], { headerName: "Redemption Type", flex: 1, minWidth: 150, type: "format" }),
     CommonObjectPropertyColumn<CouponBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 100, type: "status" }),
+    CommonObjectPropertyColumn<CouponBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<CouponBase>({

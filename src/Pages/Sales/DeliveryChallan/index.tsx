@@ -44,6 +44,8 @@ const DeliveryChallan = () => {
     CommonObjectPropertyColumn<DeliveryChallanBase>("transactionSummary.netAmount", "transactionSummary.netAmount", ["netAmount"], { headerName: "Net Amount", flex: 1, minWidth: 200, isSummary: true }),
     CommonObjectPropertyColumn<DeliveryChallanBase>("transactionSummary.taxAmount", "transactionSummary.taxAmount", ["taxAmount"], { headerName: "Tax Amount", flex: 1, minWidth: 110, isSummary: true }),
     CommonObjectPropertyColumn<DeliveryChallanBase>("status", "status", [], { headerName: "Status", width: 150, type: "status" }),
+    CommonObjectPropertyColumn<DeliveryChallanBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     CommonActionColumn({
       active: (row) => editChallan({ deliveryChallanId: row?._id as string, isActive: !row.isActive }),
       editRoute: ROUTES.DELIVERY_CHALLAN.ADD_EDIT,

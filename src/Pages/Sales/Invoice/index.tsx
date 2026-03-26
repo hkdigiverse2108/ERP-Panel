@@ -55,6 +55,8 @@ const Invoice = () => {
     CommonObjectPropertyColumn<InvoiceBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 100, type: "status" }),
     CommonObjectPropertyColumn<InvoiceBase>("paymentStatus", "paymentStatus", [], { headerName: "Payment Status", flex: 1, minWidth: 100, type: "status" }),
     CommonObjectPropertyColumn<InvoiceBase>("transactionSummary.taxAmount", "transactionSummary.taxAmount", ["taxAmount"], { headerName: "Tax Amount", flex: 1, minWidth: 110, isSummary: true }),
+    CommonObjectPropertyColumn<InvoiceBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     CommonActionColumn({
       active: (row) => editInvoice({ invoiceId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.INVOICE.ADD_EDIT,

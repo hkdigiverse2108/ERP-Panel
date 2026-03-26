@@ -44,7 +44,8 @@ const PurchaseOrder = () => {
     CommonObjectPropertyColumn<PurchaseOrderBase>("orderDate", "orderDate", [], { headerName: "Order Date", flex: 1, minWidth: 150, type: "date" }),
     CommonObjectPropertyColumn<PurchaseOrderBase>("summary.netAmount", "summary.netAmount", ["netAmount"], { headerName: "Amount", flex: 1, minWidth: 110, isSummary: true }),
     CommonObjectPropertyColumn<PurchaseOrderBase>("status", "status", [], { headerName: "Status", width: 150, type: "status" }),
-    { field: "notes", headerName: "Notes", flex: 1, minWidth: 150 },
+    { field: "notes", headerName: "Notes", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<PurchaseOrderBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
     CommonActionColumn({
       active: (row) => editPurchaseOrder({ purchaseOrderId: row?._id, isActive: !row.isActive }),
       editRoute: ROUTES.PURCHASE_ORDER.ADD_EDIT,
