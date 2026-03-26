@@ -46,7 +46,7 @@ const Discount = () => {
     { field: "discountValue", headerName: "Discount", flex: 1, minWidth: 100 },
     CommonObjectPropertyColumn<DiscountBase>("discountType", "discountType", [], { headerName: "Discount Type", flex: 1, minWidth: 100, type: "format" }),
     CommonObjectPropertyColumn<DiscountBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 100, type: "status" }),
-    CommonObjectPropertyColumn<DiscountBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<DiscountBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
 
     ...(permission?.edit || permission?.delete
       ? [

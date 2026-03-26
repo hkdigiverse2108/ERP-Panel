@@ -92,7 +92,7 @@ const Product = () => {
     { field: "mrp", headerName: "MRP", width: 100 },
     { field: "sellingPrice", headerName: "Selling Price", width: 150 },
     { field: "qty", headerName: "Qty", flex: 1, minWidth: 100 },
-    CommonObjectPropertyColumn<ProductBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<ProductBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
   ];
 
   const CommonDataGridOption = {

@@ -45,7 +45,7 @@ const Estimate = () => {
     CommonObjectPropertyColumn<EstimateBase>("transactionSummary.netAmount", "transactionSummary.netAmount", ["netAmount"], { headerName: "Amount", flex: 1, minWidth: 110, isSummary: true }),
     CommonObjectPropertyColumn<EstimateBase>("status", "status", [], { headerName: "Status", width: 150, type: "status" }),
     CommonObjectPropertyColumn<EstimateBase>("transactionSummary.taxAmount", "transactionSummary.taxAmount", ["taxAmount"], { headerName: "Tax Amount", flex: 1, minWidth: 110, isSummary: true }),
-    CommonObjectPropertyColumn<EstimateBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<EstimateBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
 
     CommonActionColumn({
       active: (row) => editEstimate({ estimateId: row?._id, isActive: !row.isActive }),

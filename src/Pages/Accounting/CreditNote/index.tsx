@@ -38,7 +38,7 @@ const CreditNote = () => {
     CommonObjectPropertyColumn<CreditNoteBase>("bankName", "bankAccountId", ["name"], { headerName: "Bank name", width: 300 }),
     CommonObjectPropertyColumn<CreditNoteBase>("phoneNo", "phoneNo", [], { headerName: "Phone No", width: 200, type: "phone" }),
     { field: "description", headerName: "Description", flex: 1, minWidth: 200 },
-    CommonObjectPropertyColumn<CreditNoteBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<CreditNoteBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150 , type:"createdBy"}),
 
     ...(permission?.edit || permission?.delete
       ? [

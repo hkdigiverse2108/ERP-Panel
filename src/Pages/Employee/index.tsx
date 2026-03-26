@@ -35,7 +35,7 @@ const Employee = () => {
     { field: "email", headerName: "Email", width: 200 },
     CommonPhoneColumns<EmployeeBase>("phoneNo", { headerName: "Phone No", width: 200 }),
     { field: "panNumber", headerName: "PAN Number", flex: 1, minWidth: 200 },
-    CommonObjectPropertyColumn<EmployeeBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<EmployeeBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
 
     ...(permission?.edit || permission?.delete
       ? [

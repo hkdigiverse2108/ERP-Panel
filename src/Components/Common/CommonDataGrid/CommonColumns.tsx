@@ -78,9 +78,7 @@ const formatValues = (values: (string | number)[], type?: ColumnFormatType): str
     case "createdBy": {
       const [fullName, userType] = values;
 
-      if (userType?.toString().toLowerCase() === "super-admin") {
-        return "System Generated";
-      }
+      if (userType?.toString().toLowerCase() === "super-admin") return "System Generated";
 
       return fullName?.toString() || "-";
     }

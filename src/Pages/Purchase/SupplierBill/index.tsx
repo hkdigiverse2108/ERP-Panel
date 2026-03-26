@@ -61,7 +61,7 @@ const SupplierBill = () => {
     CommonObjectPropertyColumn<SupplierBillBase>("dueDate", "dueDate", [], { headerName: "Due Date", flex: 1, minWidth: 100, type: "date" }),
 
     { field: "notes", headerName: "Notes", flex: 1, minWidth: 200 },
-    CommonObjectPropertyColumn<SupplierBillBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<SupplierBillBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
 
     ...(permission?.edit || permission?.delete
       ? [

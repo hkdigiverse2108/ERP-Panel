@@ -75,7 +75,7 @@ const SalesRegister = () => {
     { field: "bankTransferAmount", headerName: "Cash Transfered To HO", width: 180 },
     { field: "physicalDrawerCash", headerName: "Closing Amount", width: 150, isSummary: true },
     { field: "shortExceed", headerName: "Short / Exceed", flex: 1, minWidth: 140, isSummary: true },
-    CommonObjectPropertyColumn<PosCashRegisterBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<PosCashRegisterBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
 
     CommonActionColumn<PosCashRegisterBase>({
       onPrint: { handlePrint: (row) => handlePrintBtn(row), isPermission: (row) => row.status !== "closed" },
