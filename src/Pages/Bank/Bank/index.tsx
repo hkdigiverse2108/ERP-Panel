@@ -7,6 +7,7 @@ import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, BankBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Bank = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -37,6 +38,8 @@ const Bank = () => {
     { field: "ifscCode", headerName: "IFSC Code", flex: 1, minWidth: 160 },
     { field: "bankAccountNumber", headerName: "Account No.", flex: 1, minWidth: 200 },
     { field: "addressLine1", headerName: "Address", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<BankBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<BankBase>({

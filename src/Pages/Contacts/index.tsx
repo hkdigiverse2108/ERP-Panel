@@ -40,22 +40,16 @@ const Contact = () => {
     { field: "firstName", headerName: "Name", flex: 1, minWidth: 200 },
     CommonPhoneColumns("phoneNo", { headerName: "Phone No", width: 150 }),
     CommonPhoneColumns("whatsappNo", { headerName: "WhatsApp No", width: 150 }),
-    // { field: "gstIn", headerName: "GSTIN", flex: 1, minWidth: 150 },
-    // { field: "gstType", headerName: "GST Type", flex: 1, minWidth: 150 },
-    // { field: "tanNo", headerName: "TAN No", flex: 1, minWidth: 150 },
-    // { field: "transporterId", headerName: "Transporter ID", flex: 1, minWidth: 240 },
-    // { field: "loyaltyPoints", headerName: "Loyalty Point", flex: 1, minWidth: 240 },
     { field: "panNo", headerName: "PAN No", flex: 1, minWidth: 120 },
     { field: "telephoneNo", headerName: "Telephone No", flex: 1, minWidth: 150 },
     CommonObjectPropertyColumn<ContactBase>("customerType", "customerType", [], { headerName: "Customer Type", flex: 1, minWidth: 150, type: "format" }),
     { field: "email", headerName: "Email", flex: 1, minWidth: 200 },
-    // { field: "companyName", headerName: "Company Name", flex: 1, minWidth: 220 },
-    // { field: "dob", headerName: "Date of Birth", flex: 1, minWidth: 160, valueGetter: (v) => FormatDate(v) },
-    // { field: "anniversaryDate", headerName: "Anniversary Date", flex: 1, minWidth: 180, valueGetter: (v) => FormatDate(v) },
     CommonObjectPropertyColumn<ContactBase>("bankName", "bankDetails", ["name"], { headerName: "Bank name", flex: 1, minWidth: 200 }),
     CommonObjectPropertyColumn<ContactBase>("ifscCode", "bankDetails", ["ifscCode"], { headerName: "IFSC Code", flex: 1, minWidth: 200 }),
     CommonObjectPropertyColumn<ContactBase>("branchName", "bankDetails", ["branch"], { headerName: "Branch Name", flex: 1, minWidth: 200 }),
     CommonObjectPropertyColumn<ContactBase>("accountNumber", "bankDetails", ["accountNumber"], { headerName: "Account Number", flex: 1, minWidth: 200 }),
+    CommonObjectPropertyColumn<ContactBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<ContactBase>({

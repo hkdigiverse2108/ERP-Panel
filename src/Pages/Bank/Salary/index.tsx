@@ -19,7 +19,7 @@ const Salary = () => {
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetSalary({}, false);
   const { mutate: deleteSalary, isPending: isDeleteLoading } = Mutations.useDeleteSalary();
   const { mutate: editSalary, isPending: isEditLoading } = Mutations.useEditSalary();
-  
+
   const rows = useMemo(() => data?.data?.salary_data.map((r) => ({ ...r, id: r?._id })) || [], [data]);
 
   const totalRows = data?.data?.totalData || 0;
@@ -41,6 +41,8 @@ const Salary = () => {
     CommonObjectPropertyColumn<SalaryBase>("type", "type", [], { headerName: "Expense Type", flex: 1, minWidth: 150, type: "format" }),
     CommonObjectPropertyColumn<SalaryBase>("incentive", "incentive", [], { headerName: "Incentive", flex: 1, minWidth: 150 }),
     CommonObjectPropertyColumn<SalaryBase>("total", "total", [], { headerName: "Total", flex: 1, minWidth: 200 }),
+    CommonObjectPropertyColumn<SalaryBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<SalaryBase>({
