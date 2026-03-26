@@ -7,6 +7,7 @@ import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, StockBase } from "../../../Types";
 import { useDataGrid } from "../../../Utils/Hooks";
 import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Stock = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
@@ -26,6 +27,7 @@ const Stock = () => {
     CommonObjectNameColumn("brandId", { headerName: "Brand Name", width: 230 }),
     CommonObjectNameColumn("subBrandId", { headerName: "Sub Brand Name", width: 230 }),
     { field: "availableQty", headerName: "Available Qty", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<StockBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
   ];
 
   const CommonDataGridOption = {

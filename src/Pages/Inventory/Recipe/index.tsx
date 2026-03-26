@@ -42,10 +42,12 @@ const Recipe = () => {
   };
 
   const columns: AppGridColDef<RecipeBase>[] = [
-    { field: "number", headerName: "Recipe No", width: 300 },
-    { field: "name", headerName: "Recipe Name", width: 300 },
-    CommonObjectPropertyColumn<RecipeBase>("date", "date", [], { headerName: "Recipe Date", width: 300, type: "date" }),
-    CommonObjectPropertyColumn<RecipeBase>("type", "type", [], { headerName: "Recipe Type", flex: 1, minWidth: 300, type: "format" }),
+    { field: "number", headerName: "Recipe No", width: 150 },
+    { field: "name", headerName: "Recipe Name", width: 150 },
+    CommonObjectPropertyColumn<RecipeBase>("date", "date", [], { headerName: "Recipe Date", width: 160, type: "date" }),
+    CommonObjectPropertyColumn<RecipeBase>("type", "type", [], { headerName: "Recipe Type", flex: 1, minWidth: 150, type: "format" }),
+    CommonObjectPropertyColumn<RecipeBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<RecipeBase>({

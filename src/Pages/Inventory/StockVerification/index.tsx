@@ -37,6 +37,7 @@ const StockVerification = () => {
     { field: "totalProducts", headerName: "Total Products", width: 230, isSummary: true },
     { field: "totalPhysicalQty", headerName: "Total Physical Qty", width: 230, isSummary: true },
     { field: "totalDifferenceAmount", headerName: "Difference Amount", width: 230, isSummary: true },
+    CommonObjectPropertyColumn<StockVerificationBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
     CommonObjectPropertyColumn<StockVerificationBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 150, type: "status" }),
     ...(permission?.edit || permission?.delete
       ? [

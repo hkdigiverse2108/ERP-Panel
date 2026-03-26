@@ -12,6 +12,7 @@ import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { Form, Formik } from "formik";
 import { ProductItemRemoveFormSchema } from "../../../Utils/ValidationSchemas";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 
 const Product = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
@@ -66,6 +67,7 @@ const Product = () => {
     CommonObjectNameColumn<ProductBase>("brandId", { headerName: "Brand", width: 150 }),
     CommonObjectNameColumn<ProductBase>("purchaseTaxId", { headerName: "Purchase Tax", width: 150 }),
     CommonObjectNameColumn<ProductBase>("salesTaxId", { headerName: "Sales Tax", width: 150 }),
+
     ...(isRemoveItem
       ? [
           {
@@ -90,6 +92,7 @@ const Product = () => {
     { field: "mrp", headerName: "MRP", width: 100 },
     { field: "sellingPrice", headerName: "Selling Price", width: 150 },
     { field: "qty", headerName: "Qty", flex: 1, minWidth: 100 },
+    CommonObjectPropertyColumn<ProductBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
   ];
 
   const CommonDataGridOption = {
@@ -158,7 +161,7 @@ const Product = () => {
           <Formik initialValues={{ type: "" }} enableReinitialize validationSchema={ProductItemRemoveFormSchema} onSubmit={handleRemoveItem}>
             <Form noValidate>
               <Grid sx={{ p: 1 }} container spacing={2}>
-                <CommonValidationSelect name="consumptionTypeId" label="Consumption Type" options={GenerateOptions(consumptionData?.data)} isLoading={consumptionLoading} grid={{ xs: 12 }} required/>
+                <CommonValidationSelect name="consumptionTypeId" label="Consumption Type" options={GenerateOptions(consumptionData?.data)} isLoading={consumptionLoading} grid={{ xs: 12 }} required />
                 <CommonButton type="submit" variant="contained" title="Save" size="medium" loading={isAddLoading} fullWidth grid={{ xs: 12 }} />
               </Grid>
             </Form>
