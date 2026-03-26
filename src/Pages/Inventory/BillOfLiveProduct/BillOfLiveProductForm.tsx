@@ -53,7 +53,6 @@ const RecipeWatcher = ({ onChange }: { onChange: (ids: string[]) => void }) => {
   return null;
 };
 
-
 const BOLP_PREFIX = "BOLP";
 const parseBimNumber = (value?: string) => {
   if (!value) return "";
@@ -71,8 +70,15 @@ const BillOfLiveProductForm = () => {
     no?: number;
   };
 
-  const { data: recipeData, isLoading: recipeLoading, isFetching: recipeFetching } = Queries.useGetRecipe({ activeFilter: true });
+  const { values } = useFormikContext<BillOfLiveProductFormValues>();
 
+  const { data: recipeData } = Queries.useGetRecipe(
+    {
+      activeFilter: true,
+      companyFilter: values.companyId,
+    },
+    !!values.companyId,
+  );
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE);
 
@@ -200,17 +206,17 @@ const BillOfLiveProductForm = () => {
       prev.map((row) =>
         row.id === rowId
           ? {
-            ...row,
-            rawProducts: row.rawProducts?.map((raw, i) =>
-              i === index
-                ? {
-                  ...raw,
-                  useQty: value,
-                  baseUseQty: value / row.qty,
-                }
-                : raw,
-            ),
-          }
+              ...row,
+              rawProducts: row.rawProducts?.map((raw, i) =>
+                i === index
+                  ? {
+                      ...raw,
+                      useQty: value,
+                      baseUseQty: value / row.qty,
+                    }
+                  : raw,
+              ),
+            }
           : row,
       ),
     );
@@ -295,7 +301,7 @@ const BillOfLiveProductForm = () => {
                       <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="text" label="BOLP" disabled grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 4 }} options={ GenerateOptions(recipeData?.data?.recipe_data || [])} isLoading={recipeLoading || recipeFetching} />
+                      <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 4 }} options={GenerateOptions(recipeData?.data?.recipe_data || [])} disabled={!values.companyId} />
                       <CommonValidationSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
                     </Grid>
                   </Form>
