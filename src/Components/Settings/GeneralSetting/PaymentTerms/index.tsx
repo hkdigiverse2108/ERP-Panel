@@ -8,6 +8,7 @@ import type { AppGridColDef, PaymentTermsBase } from "../../../../Types";
 import { useDataGrid, usePagePermission } from "../../../../Utils/Hooks";
 import { CommonActionColumn, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Common";
 import PaymentTermsForm from "./PaymentTermsForm";
+import { CommonObjectPropertyColumn } from "../../../Common/CommonDataGrid/CommonColumns";
 
 const PaymentTerms = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -34,6 +35,8 @@ const PaymentTerms = () => {
   const columns: AppGridColDef<PaymentTermsBase>[] = [
     { field: "name", headerName: "Payment Term", flex: 1, minWidth: 200 },
     { field: "day", headerName: "Payment Term Day", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<PaymentTermsBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<PaymentTermsBase>({

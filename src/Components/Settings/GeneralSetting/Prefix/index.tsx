@@ -8,6 +8,7 @@ import type { AppGridColDef, PrefixBase } from "../../../../Types";
 import { useDataGrid } from "../../../../Utils/Hooks";
 import { CommonActionColumn, CommonCard, CommonDataGrid } from "../../../Common";
 import PrefixForm from "./PrefixForm";
+import { CommonObjectPropertyColumn } from "../../../Common/CommonDataGrid/CommonColumns";
 
 const Prefix = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params } = useDataGrid();
@@ -25,6 +26,8 @@ const Prefix = () => {
     { field: "prefixType", headerName: "Prefix Type", flex: 1, minWidth: 200, valueGetter: (_value, row) => row.prefixType?.split("_").join(" ") },
     { field: "prefix", headerName: "Prefix", flex: 1, minWidth: 200 },
     { field: "sequenceNumber", headerName: "Sequence No.", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<PrefixBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     CommonActionColumn<PrefixBase>({
       onEdit: { handleEdit: (row) => handleEdit(row) },
     }),

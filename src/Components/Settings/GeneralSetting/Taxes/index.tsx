@@ -8,6 +8,7 @@ import type { AppGridColDef, TaxBase } from "../../../../Types";
 import { useDataGrid, usePagePermission } from "../../../../Utils/Hooks";
 import { CommonActionColumn, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Common";
 import TaxForm from "./TaxForm";
+import { CommonObjectPropertyColumn } from "../../../Common/CommonDataGrid/CommonColumns";
 
 const Taxes = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -45,6 +46,8 @@ const Taxes = () => {
   const columns: AppGridColDef<TaxBase>[] = [
     { field: "name", headerName: "Name", flex: 1, minWidth: 200 }, //
     { field: "percentage", headerName: "Percentage", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<TaxBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete ? [actionColumn] : []),
   ];
 

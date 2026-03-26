@@ -8,6 +8,7 @@ import type { AppGridColDef, ConsumptionTypeBase } from "../../../../Types";
 import { useDataGrid, usePagePermission } from "../../../../Utils/Hooks";
 import { CommonActionColumn, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Common";
 import ConsumptionTypeForm from "./ConsumptionTypeForm";
+import { CommonObjectPropertyColumn } from "../../../Common/CommonDataGrid/CommonColumns";
 
 const ConsumptionType = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
@@ -33,6 +34,8 @@ const ConsumptionType = () => {
 
   const columns: AppGridColDef<ConsumptionTypeBase>[] = [
     { field: "name", headerName: "Consumption Type", flex: 1, minWidth: 200 },
+    CommonObjectPropertyColumn<ConsumptionTypeBase>("createdBy", "createdBy", ["fullName"], { headerName: "Created By", flex: 1, minWidth: 150 }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<ConsumptionTypeBase>({
