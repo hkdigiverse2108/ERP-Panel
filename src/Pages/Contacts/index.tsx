@@ -35,19 +35,40 @@ const Contact = () => {
   const handleContactTypeChange = (value: string) => {
     updateAdvancedFilter("typeFilter", [value]);
   };
+  const selectedType = advancedFilter?.typeFilter?.[0];
+
+  const getVisibleFields = () => {
+    const common = ["companyId", "firstName", "phoneNo", "whatsappNo", "loyaltyPoints", "createdBy"];
+
+    if (selectedType === "customer") return [...common, "customerType"];
+    if (selectedType === "supplier") return [...common, "tanNo", "supplierType"];
+    if (selectedType === "transporter") return [...common, "transporterId"];
+
+    return common;
+  };
+  const visibleFields = getVisibleFields();
 
   const columns: AppGridColDef<ContactBase>[] = [
-    { field: "firstName", headerName: "Name", flex: 1, minWidth: 200 },
-    CommonPhoneColumns("phoneNo", { headerName: "Phone No", width: 150 }),
-    CommonPhoneColumns("whatsappNo", { headerName: "WhatsApp No", width: 150 }),
-    { field: "panNo", headerName: "PAN No", flex: 1, minWidth: 120 },
-    { field: "telephoneNo", headerName: "Telephone No", flex: 1, minWidth: 150 },
-    CommonObjectPropertyColumn<ContactBase>("customerType", "customerType", [], { headerName: "Customer Type", flex: 1, minWidth: 150, type: "format" }),
-    { field: "email", headerName: "Email", flex: 1, minWidth: 200 },
-    CommonObjectPropertyColumn<ContactBase>("bankName", "bankDetails", ["name"], { headerName: "Bank name", flex: 1, minWidth: 200 }),
-    CommonObjectPropertyColumn<ContactBase>("ifscCode", "bankDetails", ["ifscCode"], { headerName: "IFSC Code", flex: 1, minWidth: 200 }),
-    CommonObjectPropertyColumn<ContactBase>("branchName", "bankDetails", ["branch"], { headerName: "Branch Name", flex: 1, minWidth: 200 }),
-    CommonObjectPropertyColumn<ContactBase>("accountNumber", "bankDetails", ["accountNumber"], { headerName: "Account Number", flex: 1, minWidth: 200 }),
+    { field: "firstName", headerName: "Name", width: 240 },
+    CommonPhoneColumns("phoneNo", { headerName: "Phone No", width: 240 }),
+    CommonPhoneColumns("whatsappNo", { headerName: "WhatsApp No", width: 240 }),
+    { field: "gstIn", headerName: "GSTIN", width: 150 },
+    { field: "gstType", headerName: "GST Type", width: 150 },
+    { field: "tanNo", headerName: "TAN No", width: 150 },
+    { field: "transporterId", headerName: "Transporter ID", width: 240 },
+    { field: "loyaltyPoints", headerName: "Loyalty Point", flex: 1, minWidth: 240 },
+    { field: "panNo", headerName: "PAN No", width: 120 },
+    { field: "telephoneNo", headerName: "Telephone No", width: 150 },
+    { field: "customerType", headerName: "Customer Type", width: 150 },
+    { field: "supplierType", headerName: "Supplier Type", width: 150 },
+    { field: "email", headerName: "Email", width: 220 },
+    CommonObjectPropertyColumn<ContactBase>("dob", "dob", [], { headerName: "Date of Birth", flex: 1, minWidth: 150, type: "date" }),
+    CommonObjectPropertyColumn<ContactBase>("anniversaryDate", "anniversaryDate", [], { headerName: "Anniversary Date", flex: 1, minWidth: 150, type: "date" }),
+    CommonObjectPropertyColumn<ContactBase>("bankName", "bankDetails", ["name"], { headerName: "Bank name", width: 300 }),
+    CommonObjectPropertyColumn<ContactBase>("ifscCode", "bankDetails", ["ifscCode"], { headerName: "IFSC Code", width: 300 }),
+    CommonObjectPropertyColumn<ContactBase>("branchName", "bankDetails", ["branch"], { headerName: "Branch Name", width: 300 }),
+    CommonObjectPropertyColumn<ContactBase>("accountNumber", "bankDetails", ["accountNumber"], { headerName: "Account Number", width: 300 }),
+
     CommonObjectPropertyColumn<ContactBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
 
     ...(permission?.edit || permission?.delete
@@ -62,9 +83,12 @@ const Contact = () => {
         ]
       : []),
   ];
-
+  const filteredColumns = columns.filter((col) => {
+    if (!col.field || col.field === "actions") return true;
+    return visibleFields.includes(col.field);
+  });
   const CommonDataGridOption = {
-    columns,
+    columns: filteredColumns,
     rows: allContact,
     rowCount: totalRows,
     loading: contactDataLoading || contactDataFetching || isEditLoading,
