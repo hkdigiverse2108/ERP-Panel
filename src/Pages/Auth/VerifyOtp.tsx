@@ -7,7 +7,7 @@ import { CommonButton, CommonValidationTextField } from "../../Attribute";
 import { ImagePath, ROUTES, STORAGE_KEYS, ThemeTitle } from "../../Constants";
 import ThemeToggler from "../../Layout/ThemeToggler";
 import { useAppDispatch, useAppSelector } from "../../Store/hooks";
-import { setSignin } from "../../Store/Slices/AuthSlice";
+import { setSigninResponse } from "../../Store/Slices/AuthSlice";
 import { Storage, VerifyOtpSchema } from "../../Utils";
 
 const OTP_DURATION = 600;
@@ -28,8 +28,8 @@ const VerifyOtp = () => {
     };
     VerifyOtp(payload, {
       onSuccess: () => {
-        dispatch(setSignin(signinResponse));
-        navigate(ROUTES.DASHBOARD);
+        dispatch(setSigninResponse({ ...signinResponse, otp: values.otp }));
+        navigate(ROUTES.AUTH.RESET_PASSWORD);
         Storage.removeItem(STORAGE_KEYS.OTP_EXPIRY_KEY);
       },
     });

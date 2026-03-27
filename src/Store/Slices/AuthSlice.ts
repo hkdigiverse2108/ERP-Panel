@@ -9,7 +9,7 @@ const initialState = {
   token: StoredToken,
   user: StoredUser,
   isAuthenticated: !!StoredToken,
-  signinResponse: { email: "" },
+  signinResponse: { email: "", otp: "" },
 };
 
 const authSlice = createSlice({

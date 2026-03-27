@@ -4,7 +4,7 @@ import type { CommonDataType, MessageStatus } from "./Common";
 export interface LoginPayload {
   email: string;
   password: string;
-   loginSource: string;
+  loginSource: string;
 }
 
 export interface ChangePasswordPayload {
@@ -39,4 +39,14 @@ export interface VerifyOtpPayload {
 
 export interface ResendOtpPayload {
   email: string;
+}
+
+export interface UpdatePasswordPayload {
+  email: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+export interface ResetPasswordFormValues {
+  newPassword: string;
+  confirmPassword: string;
 }

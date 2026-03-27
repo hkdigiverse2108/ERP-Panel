@@ -65,6 +65,8 @@ import Expense from "../Pages/Bank/Expense";
 import ExpenseForm from "../Pages/Bank/Expense/ExpenseForm";
 import Salary from "../Pages/Bank/Salary";
 import SalaryForm from "../Pages/Bank/Salary/SalaryForm";
+import ResetPassword from "../Pages/Auth/ResetPassword";
+
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -168,4 +170,5 @@ export const AuthRoutes = [
   { path: ROUTES.AUTH.SIGNIN, name: PAGE_TITLE.AUTH.SIGNIN, element: <SignInForm /> },
   { path: ROUTES.FORGOT_PASSWORD.BASE, name: PAGE_TITLE.AUTH.FORGOT_PASSWORD, element: <ForgotPassword /> },
   { path: ROUTES.AUTH.VERIFY_OTP, name: PAGE_TITLE.AUTH.VERIFY_OTP, element: <VerifyOtp /> },
+  { path: ROUTES.AUTH.RESET_PASSWORD, name: PAGE_TITLE.AUTH.RESET_PASSWORD, element: <ResetPassword /> },
 ];

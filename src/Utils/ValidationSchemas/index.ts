@@ -681,6 +681,15 @@ export const VerifyOtpSchema = Yup.object({
   }),
 });
 
+export const ResetPasswordSchema = Yup.object({
+  newPassword: Validation("string", "New Password", {
+    extraRules: (s) => s.matches(/[!@#$%^&*()_+={}:;"'<>,.?/-]/, "Password must include at least one special character"),
+  }),
+  confirmPassword: Validation("string", "Confirm Password")
+    .oneOf([Yup.ref("newPassword")], "Passwords must match")
+    .required("Confirm Password is required"),
+});
+
 export const ReturnPosOrderFormSchema = Yup.object({
   refundViaCash: Validation("number", "Refund Via Cash"),
   bankAccountId: Validation("string", "Bank Account", { required: false }),

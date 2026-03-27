@@ -5,6 +5,7 @@ export const ROUTES = {
   AUTH: {
     SIGNIN: "/auth/signin",
     VERIFY_OTP: "/auth/verify-otp",
+    RESET_PASSWORD: "/auth/reset-password",
   },
   CONTACT: {
     BASE: "/contact",

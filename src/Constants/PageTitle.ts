@@ -43,6 +43,7 @@ export const PAGE_TITLE = {
     SIGNIN: "Sign In",
     FORGOT_PASSWORD: "Forgot Password",
     VERIFY_OTP: "Verify OTP",
+    RESET_PASSWORD: "Reset Password",
   },
   USER: {
     BASE: "User",
