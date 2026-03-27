@@ -4,6 +4,7 @@ export const ROUTES = {
   ACCESS_DENIED: "/access-denied",
   AUTH: {
     SIGNIN: "/auth/signin",
+    VERIFY_OTP: "/auth/verify-otp",
   },
   CONTACT: {
     BASE: "/contact",
@@ -155,4 +156,7 @@ export const ROUTES = {
     BASE: "/sales-credit-note",
     ADD_EDIT: "/sales-credit-note/add-edit",
   },
+  FORGOT_PASSWORD:{
+    BASE:"/forgot-password"
+  }
 } as const;

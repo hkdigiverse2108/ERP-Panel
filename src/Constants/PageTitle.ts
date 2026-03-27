@@ -39,6 +39,11 @@ export const PAGE_TITLE = {
       EDIT: "Edit Consumption Type",
     },
   },
+  AUTH: {
+    SIGNIN: "Sign In",
+    FORGOT_PASSWORD: "Forgot Password",
+    VERIFY_OTP: "Verify OTP",
+  },
   USER: {
     BASE: "User",
     LIST: "User List",

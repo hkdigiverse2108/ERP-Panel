@@ -1,31 +1,32 @@
 import { Grid } from "@mui/material";
 import { Form, Formik, type FormikHelpers } from "formik";
 import { CommonButton, CommonValidationTextField } from "../../Attribute";
-import { ImagePath, LoginSource, ROUTES, ThemeTitle } from "../../Constants";
+import { ImagePath, ROUTES, ThemeTitle } from "../../Constants";
 import ThemeToggler from "../../Layout/ThemeToggler";
-import { SigninSchema } from "../../Utils/ValidationSchemas";
+import { ForgotPasswordSchema } from "../../Utils/ValidationSchemas";
 import { Mutations } from "../../Api";
-import type { LoginPayload } from "../../Types";
-import { useAppDispatch } from "../../Store/hooks";
+import type { ForgotPasswordPayload } from "../../Types";
 import { useNavigate, Link } from "react-router-dom";
-import { setSignin } from "../../Store/Slices/AuthSlice";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import { useAppDispatch } from "../../Store/hooks";
+import { setSigninResponse } from "../../Store/Slices/AuthSlice";
 
-const SignInForm = () => {
-  const { mutate: Signin, isPending: isSigninPending } = Mutations.useSignin();
-  const dispatch = useAppDispatch();
+const ForgotPassword = () => {
+  const { mutate: forgotPassword, isPending: isForgotPasswordPending } = Mutations.useForgotPassword();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const handleSubmit = async (values: LoginPayload, { resetForm }: FormikHelpers<LoginPayload>) => {
-    Signin(
-      { ...values, email: values.email.toLowerCase(), loginSource: LoginSource },
-      {
-        onSuccess: (response) => {
-          dispatch(setSignin(response?.data));
-          navigate(ROUTES.DASHBOARD);
-          resetForm();
-        },
+  const handleSubmit = async (values: { email: string }, { resetForm }: FormikHelpers<{ email: string }>) => {
+    const payload: ForgotPasswordPayload = {
+      email: values.email.toLowerCase(),
+    };
+    forgotPassword(payload, {
+      onSuccess: () => {
+        dispatch(setSigninResponse({ email: values.email }));
+        resetForm();
+        navigate(ROUTES.AUTH.VERIFY_OTP);
       },
-    );
+    });
   };
 
   return (
@@ -35,20 +36,18 @@ const SignInForm = () => {
         <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto mt-10 lg:mt-0 gap-10">
           <div>
             <div className="mb-4 sm:mb-5">
-              <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">Sign In</h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Enter your email and password to sign in!</p>
+              <Link to={ROUTES.AUTH.SIGNIN} className="flex items-center text-sm font-medium text-brand-950 dark:text-white/90 hover:underline mb-6">
+                <ArrowBackIosIcon sx={{ fontSize: 14, mr: 1 }} />
+                Back to Sign In
+              </Link>
+              <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">Forgot Password</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Enter your email and we'll send you an OTP for varification!</p>
             </div>
-            <Formik initialValues={{ email: "", password: "", loginSource: LoginSource }} validationSchema={SigninSchema} onSubmit={handleSubmit}>
+            <Formik initialValues={{ email: "" }} validationSchema={ForgotPasswordSchema} onSubmit={handleSubmit}>
               <Form>
                 <Grid container spacing={2}>
                   <CommonValidationTextField name="email" label="Email ID" placeholder="Enter your email" required isFormLabel grid={{ xs: 12 }} />
-                  <CommonValidationTextField name="password" label="password" type="password" placeholder="Enter your password" required isFormLabel showPasswordToggle grid={{ xs: 12 }} />
-                  <div className="flex justify-end w-full">
-                    <Link to={ROUTES.FORGOT_PASSWORD.BASE} className="text-xs font-medium text-brand-950 dark:text-white/90 hover:underline">
-                      Forgot Password?
-                    </Link>
-                  </div>
-                  <CommonButton loading={isSigninPending} type="submit" variant="contained" title="Sign In" size="medium" fullWidth grid={{ xs: 12 }} />
+                  <CommonButton loading={isForgotPasswordPending} type="submit" variant="contained" title="Send Otp" size="medium" fullWidth grid={{ xs: 12 }} />
                 </Grid>
               </Form>
             </Formik>
@@ -79,4 +78,4 @@ const SignInForm = () => {
   );
 };
 
-export default SignInForm;
+export default ForgotPassword;

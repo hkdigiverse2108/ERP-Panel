@@ -2,6 +2,9 @@ export const URL_KEYS = {
   AUTH: {
     SIGNIN: "/auth/login",
     CHANGE_PASSWORD: "/auth/reset-password",
+    FORGOT_PASSWORD: "/auth/forgot-password",
+    VERIFY_OTP: "/auth/verify-otp",
+    RESEND_OTP: "/auth/resend-otp",
   },
   UPLOAD: {
     ADD: "/upload",

@@ -6,7 +6,9 @@ import CreditNoteForm from "../Pages/Accounting/CreditNote/CreditNoteForm";
 import DebitNote from "../Pages/Accounting/DebitNote";
 import DebitNoteForm from "../Pages/Accounting/DebitNote/DebitNoteForm";
 import ChangePassword from "../Pages/Auth/ChangePassword";
+import ForgotPassword from "../Pages/Auth/ForgotPassword";
 import SignInForm from "../Pages/Auth/SignInForm";
+import VerifyOtp from "../Pages/Auth/VerifyOtp";
 import Bank from "../Pages/Bank/Bank";
 import BankForm from "../Pages/Bank/Bank/BankForm";
 import BankTransaction from "../Pages/Bank/BankTransaction";
@@ -163,5 +165,7 @@ export const PageRoutes = [
 
 export const AuthRoutes = [
   { path: ROUTES.HOME, element: <Navigate to={ROUTES.AUTH.SIGNIN} replace /> },
-  { path: ROUTES.AUTH.SIGNIN, element: <SignInForm /> },
+  { path: ROUTES.AUTH.SIGNIN, name: PAGE_TITLE.AUTH.SIGNIN, element: <SignInForm /> },
+  { path: ROUTES.FORGOT_PASSWORD.BASE, name: PAGE_TITLE.AUTH.FORGOT_PASSWORD, element: <ForgotPassword /> },
+  { path: ROUTES.AUTH.VERIFY_OTP, name: PAGE_TITLE.AUTH.VERIFY_OTP, element: <VerifyOtp /> },
 ];

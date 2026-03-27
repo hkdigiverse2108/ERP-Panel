@@ -669,6 +669,18 @@ export const ChangePasswordSchema = Yup.object({
   loginSource: Validation("string", "Login Source", { required: false }),
 });
 
+export const ForgotPasswordSchema = Yup.object({
+  email: Validation("string", "Email", {
+    extraRules: (s) => s.email("Invalid email address"),
+  }),
+});
+
+export const VerifyOtpSchema = Yup.object({
+  otp: Validation("string", "OTP", {
+    extraRules: (s) => s.trim().length(6, "OTP must be 6 digits"),
+  }),
+});
+
 export const ReturnPosOrderFormSchema = Yup.object({
   refundViaCash: Validation("number", "Refund Via Cash"),
   bankAccountId: Validation("string", "Bank Account", { required: false }),
