@@ -46,7 +46,7 @@ export interface UpdatePasswordPayload {
   newPassword: string;
   confirmPassword: string;
 }
-export interface ResetPasswordFormValues {
+export interface UpdatePasswordFormValues {
   newPassword: string;
   confirmPassword: string;
 }

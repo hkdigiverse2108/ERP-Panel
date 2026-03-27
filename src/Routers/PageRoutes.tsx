@@ -65,7 +65,7 @@ import Expense from "../Pages/Bank/Expense";
 import ExpenseForm from "../Pages/Bank/Expense/ExpenseForm";
 import Salary from "../Pages/Bank/Salary";
 import SalaryForm from "../Pages/Bank/Salary/SalaryForm";
-import ResetPassword from "../Pages/Auth/ResetPassword";
+import ResetPassword from "../Pages/Auth/UpdatePassword";
 
 
 export const PageRoutes = [

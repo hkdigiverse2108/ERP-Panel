@@ -9,14 +9,14 @@ import ThemeToggler from "../../Layout/ThemeToggler";
 import { useAppSelector } from "../../Store/hooks";
 import { ResetPasswordSchema } from "../../Utils/ValidationSchemas";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import type { ResetPasswordFormValues, UpdatePasswordPayload } from "../../Types";
+import type { UpdatePasswordFormValues, UpdatePasswordPayload } from "../../Types";
 
-const ResetPassword = () => {
+const UpdatePassword = () => {
   const navigate = useNavigate();
   const { signinResponse } = useAppSelector((state) => state.auth);
   const { mutate: resetPassword, isPending: isLoading } = Mutations.useUpdatePassword();
 
-  const handleSubmit = async (values: ResetPasswordFormValues, { resetForm }: FormikHelpers<ResetPasswordFormValues>) => {
+  const handleSubmit = async (values: UpdatePasswordFormValues, { resetForm }: FormikHelpers<UpdatePasswordFormValues>) => {
     const payload: UpdatePasswordPayload = {
       email: signinResponse?.email || "",
       newPassword: values.newPassword,
@@ -82,4 +82,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default UpdatePassword;
