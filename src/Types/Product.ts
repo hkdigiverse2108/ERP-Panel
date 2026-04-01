@@ -99,3 +99,14 @@ export interface ProductDetectDataResponse extends PageStatus {
 export interface ProductDetectApiResponse extends MessageStatus {
   data: ProductDetectDataResponse;
 }
+export interface BulkAddProductError {
+  row: number;
+  error: string;
+}
+
+export interface BulkAddProductResponse extends MessageStatus {
+  error: {
+    errors?: BulkAddProductError[];
+  };
+  data: any[];
+}

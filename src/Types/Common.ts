@@ -517,6 +517,7 @@ export interface ModalStateSlice {
   isPrefixModal: { open: boolean; data: PrefixBase | null };
   isPaymentTermsModal: { open: boolean; data: PaymentTermsBase | null };
   isConsumptionTypeModal: { open: boolean; data: ConsumptionTypeBase | null };
+  isBulkAddModal: { open: boolean; title: string; type: string };
 }
 
 // ************ Modal End ***********
