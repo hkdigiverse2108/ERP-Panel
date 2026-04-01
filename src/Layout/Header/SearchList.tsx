@@ -4,10 +4,12 @@ import { useMemo, useState } from "react";
 import { CommonTextField } from "../../Attribute";
 import { CommonDrawer } from "../../Components/Common";
 import { NavItems } from "../../Data";
+import { useNavigate } from "react-router-dom";
 
 const SearchList = () => {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const navigate = useNavigate();
 
   const filteredItems = useMemo(() => {
     if (!query.trim()) return NavItems;
@@ -18,6 +20,11 @@ const SearchList = () => {
       return matchMain || matchSub;
     });
   }, [query]);
+  console.log(filteredItems);
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
   return (
     <>
       <div onClick={() => setOpen(!open)} className="flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full h-11 w-11 max-xsm:h-9 max-xsm:w-9 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white">
@@ -30,7 +37,7 @@ const SearchList = () => {
         <ul className="space-y-3 mt-4">
           {filteredItems.map((section, idx) => (
             <li key={idx}>
-              <div className="flex items-center gap-2 font-medium text-gray-900 dark:text-gray-200">
+              <div className="flex items-center gap-2 font-medium text-gray-900 dark:text-gray-200 cursor-pointer" onClick={() => (section?.path ? handleNavigate(section?.path || "") : null)}>
                 {/* Icon */}
                 <span className="text-gray-600 dark:text-gray-300">{section.icon}</span>
 
@@ -42,7 +49,7 @@ const SearchList = () => {
               {section.children && (
                 <ul className="ml-6 mt-2 space-y-1 border-l border-gray-300 pl-3 dark:border-gray-700">
                   {section.children.map((sub, subIdx) => (
-                    <li key={subIdx} className="text-sm text-gray-700 dark:text-gray-300 hover:text-brand-500 cursor-pointer">
+                    <li key={subIdx} className="text-sm text-gray-700 dark:text-gray-300 hover:text-brand-500 cursor-pointer" onClick={() => handleNavigate(sub?.path || "")}>
                       {sub.name}
                     </li>
                   ))}
