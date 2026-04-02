@@ -20,7 +20,6 @@ const SearchList = () => {
       return matchMain || matchSub;
     });
   }, [query]);
-  console.log(filteredItems);
 
   const handleNavigate = (path: string) => {
     navigate(path);
