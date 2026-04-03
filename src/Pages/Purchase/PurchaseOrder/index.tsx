@@ -23,7 +23,7 @@ const PurchaseOrder = () => {
   const navigate = useNavigate();
 
   const { data: purchaseOrderData, isLoading: purchaseOrderDataLoading, isFetching: purchaseOrderDataFetching } = Queries.useGetPurchaseOrder({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
-  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPurchaseOrder({}, false);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPurchaseOrder({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }, false);
   const { mutate: deletePurchaseOrderMutate, isPending: deletePurchaseOrderLoading } = Mutations.useDeletePurchaseOrder();
   const { mutate: editPurchaseOrder, isPending: isEditLoading } = Mutations.useEditPurchaseOrder();
 
@@ -61,7 +61,7 @@ const PurchaseOrder = () => {
   ];
 
   const accountingColumns: AppGridColDef<PurchaseOrderBase>[] = [
-    { field: "orderNo", headerName: "Invoice No", flex: 1, minWidth: 150 },
+    { field: "orderNo", headerName: "Order No", flex: 1, minWidth: 150 },
     {
       field: "items",
       headerName: "Product Name",
@@ -88,7 +88,7 @@ const PurchaseOrder = () => {
       },
     },
     // CommonObjectPropertyColumn<PurchaseOrderBase>("paymentMethod", "paymentMethod", [], { headerName: "Payment Mode", width: 120, type: "format" }),
-    CommonObjectPropertyColumn<PurchaseOrderBase>("created", "createdAt", [], { headerName: "Date", width: 120, type: "date" }), //
+    CommonObjectPropertyColumn<PurchaseOrderBase>("orderDate", "orderDate", [], { headerName: "Date", width: 120, type: "date" }), //
   ];
 
   const CommonDataGridOption = {
