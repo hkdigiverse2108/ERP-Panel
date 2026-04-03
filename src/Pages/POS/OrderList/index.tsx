@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-import { useEffect, useMemo, useRef } from "react";
+import { Box, Grid } from "@mui/material";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
 import { Queries } from "../../../Api";
@@ -11,21 +11,26 @@ import { BREADCRUMBS, ORDER_STATUS, POS_ORDER_STATUS } from "../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
 import { setEditPosOrder, setPrintType, setReturnPosOrder, setSalesInvoice, setSelectedOrderId } from "../../../Store/Slices/PosSlice";
 import type { AppGridColDef, PosOrderBase } from "../../../Types";
-import { CreateFilter } from "../../../Utils";
+import { CreateFilter, DateConfig } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import type { GridRenderCellParams } from "@mui/x-data-grid";
+import { CommonDateRangeSelector } from "../../../Attribute";
 
 const OrderList = () => {
   const dispatch = useAppDispatch();
   const contentRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
 
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params, advancedFilter, updateAdvancedFilter } = useDataGrid({});
   const permission = usePagePermission(PAGE_TITLE.POS.BASE); // Or order list permission specifically if available
 
   const { isSelectedOrderId, isPrintType } = useAppSelector((state) => state.pos);
 
-  const { data: orderData, isLoading: orderDataLoading, isFetching: orderDataFetching } = Queries.useGetPosOrder(params);
-  const { refetch: fetchAllOrders, isFetching: orderDataAllFetching, isLoading: orderDataAllLoading } = Queries.useGetPosOrder({}, false);
+  const { data: orderData, isLoading: orderDataLoading, isFetching: orderDataFetching } = Queries.useGetPosOrder({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
+  const { refetch: fetchAllOrders, isFetching: orderDataAllFetching, isLoading: orderDataAllLoading } = Queries.useGetPosOrder({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }, false);
   const { data: posOrderById, isLoading: posOrderByIdLoading, isFetching: posOrderByIdFetching } = Queries.useGetPosOrderById(isSelectedOrderId, Boolean(isSelectedOrderId));
 
   const allOrders = useMemo(() => orderData?.data?.posOrder_data?.map((order) => ({ ...order, id: order?._id })) || [], [orderData]);
@@ -108,6 +113,37 @@ const OrderList = () => {
       : []),
   ];
 
+  const accountingColumns: AppGridColDef<PosOrderBase>[] = [
+    { field: "orderNo", headerName: "Invoice No", flex: 1, minWidth: 150 },
+    {
+      field: "items",
+      headerName: "Product Name",
+      flex: 1,
+      minWidth: 150,
+      renderCell: (params: GridRenderCellParams<PosOrderBase>) => {
+        return <div>{params.row.items?.map((item) => item?.productId?.name).join(", ")}</div>;
+      },
+      exportFormatter: (_, row: PosOrderBase) => {
+        return row?.items?.map((item) => item?.productId?.name)?.join(", ") || "";
+      },
+    },
+    CommonObjectPropertyColumn<PosOrderBase>("customerId", "customerId", ["firstName", "lastName"], { headerName: "Customer Name", width: 150 }),
+    {
+      field: "state",
+      headerName: "State",
+      flex: 1,
+      minWidth: 150,
+      renderCell: (params: GridRenderCellParams<PosOrderBase>) => {
+        return <div>{params.row.customerId?.address?.[0].state?.name}</div>;
+      },
+      exportFormatter: (_, row: PosOrderBase) => {
+        return row?.customerId?.address?.[0].state?.name || "";
+      },
+    },
+    CommonObjectPropertyColumn<PosOrderBase>("paymentMethod", "paymentMethod", [], { headerName: "Payment Mode", width: 120, type: "format" }),
+    CommonObjectPropertyColumn<PosOrderBase>("created", "createdAt", [], { headerName: "Date", width: 120, type: "date" }), //
+  ];
+
   const CommonDataGridOption = {
     columns,
     rows: allOrders,
@@ -121,15 +157,22 @@ const OrderList = () => {
     onFilterModelChange: setFilterModel,
     fileName: PAGE_TITLE.POS.ORDER_LIST,
     onExportAll: { onExportAll: fetchAllOrders, isFetching: orderDataAllLoading || orderDataAllFetching },
+    onAccountingExportAll: { accountingColumns: accountingColumns, onAccountingExportAll: fetchAllOrders, isFetching: orderDataAllLoading || orderDataAllFetching },
   };
 
   const filter = [CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ORDER_STATUS, false, { xs: 12, sm: 6, md: 3 })];
-
+  const topContent = (
+    <>
+      <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+        <CommonDateRangeSelector value={range} onChange={setRange} />
+      </Grid>
+    </>
+  );
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.POS.ORDER_LIST} breadcrumbs={BREADCRUMBS.POS_ORDER_LIST.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <AdvancedSearch filter={filter} defaultExpanded={false} />
+        <AdvancedSearch filter={filter} defaultExpanded children={topContent} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

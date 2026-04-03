@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-import { useMemo } from "react";
+import { Box, Grid } from "@mui/material";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
@@ -7,16 +7,23 @@ import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDat
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, ORDER_STATUS } from "../../../Data";
 import type { AppGridColDef, PurchaseOrderBase } from "../../../Types";
-import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CreateFilter, DateConfig, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
+import { CommonDateRangeSelector } from "../../../Attribute";
+import { useAppSelector } from "../../../Store/hooks";
+import type { GridRenderCellParams } from "@mui/x-data-grid";
 
 const PurchaseOrder = () => {
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
+
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
 
   const navigate = useNavigate();
 
-  const { data: purchaseOrderData, isLoading: purchaseOrderDataLoading, isFetching: purchaseOrderDataFetching } = Queries.useGetPurchaseOrder(params);
-  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPurchaseOrder({}, false);
+  const { data: purchaseOrderData, isLoading: purchaseOrderDataLoading, isFetching: purchaseOrderDataFetching } = Queries.useGetPurchaseOrder({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPurchaseOrder({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }, false);
   const { mutate: deletePurchaseOrderMutate, isPending: deletePurchaseOrderLoading } = Mutations.useDeletePurchaseOrder();
   const { mutate: editPurchaseOrder, isPending: isEditLoading } = Mutations.useEditPurchaseOrder();
 
@@ -53,6 +60,37 @@ const PurchaseOrder = () => {
     }),
   ];
 
+  const accountingColumns: AppGridColDef<PurchaseOrderBase>[] = [
+    { field: "orderNo", headerName: "Order No", flex: 1, minWidth: 150 },
+    {
+      field: "items",
+      headerName: "Product Name",
+      flex: 1,
+      minWidth: 150,
+      renderCell: (params: GridRenderCellParams<PurchaseOrderBase>) => {
+        return <div>{params.row.items?.map((item) => item?.productId?.name).join(", ")}</div>;
+      },
+      exportFormatter: (_, row: PurchaseOrderBase) => {
+        return row?.items?.map((item) => item?.productId?.name)?.join(", ") || "";
+      },
+    },
+    CommonObjectPropertyColumn<PurchaseOrderBase>("supplierId", "supplierId", ["firstName", "lastName"], { headerName: "Supplier Name", width: 150 }),
+    {
+      field: "state",
+      headerName: "State",
+      flex: 1,
+      minWidth: 150,
+      renderCell: (params: GridRenderCellParams<PurchaseOrderBase>) => {
+        return <div>{params.row.supplierId?.address?.[0].state?.name}</div>;
+      },
+      exportFormatter: (_, row: PurchaseOrderBase) => {
+        return row?.supplierId?.address?.[0].state?.name || "";
+      },
+    },
+    // CommonObjectPropertyColumn<PurchaseOrderBase>("paymentMethod", "paymentMethod", [], { headerName: "Payment Mode", width: 120, type: "format" }),
+    CommonObjectPropertyColumn<PurchaseOrderBase>("orderDate", "orderDate", [], { headerName: "Date", width: 120, type: "date" }), //
+  ];
+
   const CommonDataGridOption = {
     columns,
     rows: allPurchaseOrder,
@@ -72,6 +110,7 @@ const PurchaseOrder = () => {
     },
     fileName: PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE,
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
+    onAccountingExportAll: { accountingColumns: accountingColumns, onAccountingExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   const filter = [CreateFilter("Select Supplier", "supplier", advancedFilter, updateAdvancedFilter, GenerateOptions(supplierData?.data), supplierDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ORDER_STATUS, false, { xs: 12, sm: 6, md: 3 })];
@@ -85,12 +124,19 @@ const PurchaseOrder = () => {
     { label: "Cancelled", value: summaryData?.cancelled || 0, color: "warning" },
   ];
 
+  const topContent = (
+    <>
+      <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+        <CommonDateRangeSelector value={range} onChange={setRange} />
+      </Grid>
+    </>
+  );
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.PURCHASE_ORDER.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 4, md: 2 }} />
-        <AdvancedSearch filter={filter} />
+        <AdvancedSearch filter={filter} defaultExpanded children={topContent} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

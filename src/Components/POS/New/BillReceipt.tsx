@@ -3,6 +3,7 @@ import React, { forwardRef } from "react";
 import { useAppSelector } from "../../../Store/hooks";
 import type { PosOrderBase } from "../../../Types";
 import { FormatDate, FormatDateTime, FormatPayment } from "../../../Utils";
+import { REDEEM_CREDIT_TYPE_ENUM } from "../../../Data";
 
 const BillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }, ref) => {
   const { company } = useAppSelector((state) => state.company);
@@ -137,6 +138,12 @@ const BillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }
         {bill.totalDiscount > 0 && (
           <div className="flex justify-end text-sm">
             <span className="text-right mr-2 capitalize">Discount</span>:<span className="w-20 text-right">{Number(bill.totalDiscount?.toFixed(2) || 0)}</span>
+          </div>
+        )}
+
+        {bill.redeemCreditAmount > 0 && (
+          <div className="flex justify-end text-sm">
+            <span className="text-right mr-2 capitalize">{bill.redeemCreditType === REDEEM_CREDIT_TYPE_ENUM?.CREDIT_NOTE ? "Credit Discount" : "Advance Payment"}</span>:<span className="w-20 text-right">{Number(bill.redeemCreditAmount?.toFixed(2) || 0)}</span>
           </div>
         )}
 

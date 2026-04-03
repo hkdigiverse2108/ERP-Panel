@@ -14,10 +14,14 @@ import { REDEEM_CREDIT_TYPE_ENUM } from "../../../../../Data";
 dayjs.extend(relativeTime);
 
 const InfoRow: FC<{ label: string; value?: ReactNode }> = ({ label, value }) => {
+  const hasValue = value !== null && value !== undefined && value !== "" && value !== "-";
+
+  if (!hasValue) return null;
+
   return (
     <div className="flex justify-between text-sm">
-      <span className="font-semibold text-gray-700 dark:text-gray-400">{label} :-</span>
-      <span className="font-normal text-gray-700 dark:text-gray-400">{value ?? "-"}</span>
+      <span className="font-semibold text-gray-700 dark:text-gray-400">{label}:</span>
+      <span className="font-normal text-gray-700 dark:text-gray-400 md:w-19 lg:w-19 xl:w-20 2xl:w-28 text-right">{value}</span>
     </div>
   );
 };
@@ -69,7 +73,7 @@ const PosSidebar = () => {
         <div className="space-y-1">
           <InfoRow label="Last Visited" value={render(customerData?.lastBill?.createdAt ? dayjs(customerData.lastBill.createdAt).fromNow() : "-")} />
           <InfoRow label="Last Bill Amount" value={render(`₹${customerData?.lastBill?.totalAmount ?? 0}`)} />
-          <InfoRow label="Most Purchased Item" value={render(customerData?.mostPurchasedProduct?.name ?? "-")} />
+          <InfoRow label="Most Purchased" value={render(customerData?.mostPurchasedProduct?.name ?? "-")} />
           <InfoRow label="Payment Mode" value={render(customerData?.lastBill?.paymentMethod ?? "-")} />
           <InfoRow label="Due Payment" value={render(`₹${customerData?.totalDueAmount ?? 0}`)} />
           <InfoRow label="Total Purchase" value={render(`₹${customerData?.totalPurchaseAmount ?? 0}`)} />

@@ -18,7 +18,7 @@ const normalizeExportValue = (value: unknown): string | number => {
 /* -------------------------------------------------------
    Export Function
 ------------------------------------------------------- */
-export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows, fileName = "data.pdf", title = "", user, email }: ExportToPDFProps<T>): void => {
+export const ExportDataGridToPDF = <T extends GridValidRowModel>({ isAccounting, columns, rows, fileName = "data.pdf", title = "", user, email }: ExportToPDFProps<T>): void => {
   const doc = new jsPDF("l", "pt", "a4");
   /* -----------------------------------------------
      Filter exportable columns
@@ -90,6 +90,12 @@ export const ExportDataGridToPDF = <T extends GridValidRowModel>({ columns, rows
     styles: { fontSize: 10 },
     headStyles: { fillColor: "#e0e0e0", fontSize: 10, fontStyle: "normal", textColor: "#000000" },
     footStyles: { fillColor: "#f5f5f5", textColor: "#000", fontStyle: "bold" },
+
+    ...(isAccounting && {
+      columnStyles: {
+        2: { cellWidth: 300 }, // 👈 Invoice column index (0-based)
+      },
+    }),
 
     didDrawPage: (data) => {
       const pageNumber = doc.getNumberOfPages();
