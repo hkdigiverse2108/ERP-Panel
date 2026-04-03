@@ -75,6 +75,8 @@ const PurchaseOrder = () => {
       },
     },
     CommonObjectPropertyColumn<PurchaseOrderBase>("supplierId", "supplierId", ["firstName", "lastName"], { headerName: "Supplier Name", width: 150 }),
+    CommonObjectPropertyColumn<PurchaseOrderBase>("summary.netAmount", "summary.netAmount", ["netAmount"], { headerName: "Amount", flex: 1, minWidth: 110, isSummary: true }),
+
     {
       field: "state",
       headerName: "State",

@@ -128,6 +128,8 @@ const OrderList = () => {
       },
     },
     CommonObjectPropertyColumn<PosOrderBase>("customerId", "customerId", ["firstName", "lastName"], { headerName: "Customer Name", width: 150 }),
+    { field: "totalAmount", headerName: "Total Amount", flex: 1, minWidth: 120 },
+
     {
       field: "state",
       headerName: "State",
