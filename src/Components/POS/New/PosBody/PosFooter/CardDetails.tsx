@@ -75,8 +75,8 @@ const CardDetails = () => {
           <Grid container spacing={2} py={1}>
             <CommonValidationSelect name="paymentAccountId" label="Payment Account" options={GenerateOptions(bankDropdown?.data)} disabled={bankDropdownLoading} grid={12} required />
             <CommonValidationTextField name="amount" label="Card Payment Amount" grid={12} required />
-            <CommonValidationTextField name="cardHolderName" label="Card Holder Name" grid={12} required />
-            <CommonValidationTextField name="cardTransactionNo" label="Card Transaction No." grid={12} required />
+            <CommonValidationTextField name="cardHolderName" label="Card Holder Name" grid={12} />
+            <CommonValidationTextField name="cardTransactionNo" label="Card Transaction No." grid={12} />
             <Grid size={12} sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
               <CommonButton type="submit" variant="contained" title="Finalize Payment" loading={addPosOrderLoading || editPosOrderLoading} />
             </Grid>

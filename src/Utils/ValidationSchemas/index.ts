@@ -484,8 +484,8 @@ export const MaterialConsumptionFormSchema = Yup.object({
 export const CardDetailsSchema = Yup.object({
   paymentAccountId: Validation("string", "Payment Account"),
   amount: Validation("number", "Card Payment Amount"),
-  cardHolderName: Validation("string", "Card Holder Name"),
-  cardTransactionNo: Validation("string", "Card Transaction No."),
+  cardHolderName: Validation("string", "Card Holder Name", { required: false }),
+  cardTransactionNo: Validation("string", "Card Transaction No.", { required: false }),
 });
 
 export const PosPaymentFormSchema = Yup.object({
