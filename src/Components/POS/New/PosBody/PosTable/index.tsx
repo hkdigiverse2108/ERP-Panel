@@ -101,6 +101,7 @@ const PosTable = () => {
 
           <span className="w-16 text-center cursor-pointer" onClick={() => dispatch(setQtyCountModal({ open: true, data: row }))}>
             {row.posQty}
+            {/* <CommonTextField type="number" value={row.posQty} onChange={(e) => updateRow(row._id, { posQty: Math.min(Number(e) || 0, row.posQty) })} /> */}
           </span>
 
           <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, { posQty: roundQty(row.posQty + qtyCount(row)) })} disabled={isDisabled(row)}>

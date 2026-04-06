@@ -22,7 +22,6 @@ const PayLater = () => {
   const { mutate: addPayLater, isPending: isAddPayLaterPending } = Mutations.useAddPosOrder();
   const { mutate: editPosOrder, isPending: editPosOrderLoading } = Mutations.useEditPosOrder();
   const { data: paymentTermsData } = Queries.useGetPaymentTermsDropdown();
-  console.log(paymentTermsData);
   
   const { isPayLaterModal } = useAppSelector((state) => state.modal);
   const { PosProduct } = useAppSelector((state) => state.pos);

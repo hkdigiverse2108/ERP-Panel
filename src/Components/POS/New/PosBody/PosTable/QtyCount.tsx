@@ -35,8 +35,9 @@ const QtyCount = () => {
   const handleQtyChange = (e: string) => {
     const value = e;
     if (!/^[\d.]*$/.test(value)) return;
-    const num = Number(value || 0);
-    setTendered(clampQty(num).toString());
+    // const num = Number(value || 0);
+    // setTendered(clampQty(num).toString());
+    setTendered(value);
   };
 
   // ⌨ Keypad handler
@@ -66,7 +67,7 @@ const QtyCount = () => {
 
     // DECIMAL
     if (key === ".") {
-      setTendered((prev) => (prev.includes(".") ? prev : prev === "0" ? "0." : prev + "."));
+      setTendered((prev) => (prev.includes(".") ? prev : prev === qtyCount ? "0." : prev + "."));
       return;
     }
 
@@ -92,7 +93,7 @@ const QtyCount = () => {
     <CommonModal isOpen={isQtyCountModal.open} onClose={handleClose} className="max-w-[400px]" showCloseButton={false}>
       <div className="space-y-4 p-1">
         <div className="flex flex-col gap-4">
-          <CommonTextField label="Qty" value={tendered} type="text" onChange={handleQtyChange} color="primary" focused />
+          <CommonTextField label="Qty" value={tendered} type="text" onChange={handleQtyChange} color="primary" />
           <div className="grid grid-cols-4 gap-2">
             {keypad.map((key) => (
               <button key={key} onClick={() => handleKeyPress(key)} className="border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded py-3 text-xs sm:text-base font-semibold hover:bg-gray-100 active:scale-95">

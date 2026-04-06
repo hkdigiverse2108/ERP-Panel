@@ -21,7 +21,7 @@ const ProductScan = () => {
           <FlipIcon sx={{ fontSize: { xs: 20, md: 22 } }} />
         </div>
       </Tooltip>
-      <CommonModal isOpen={isProductScan} title={`Upload `} onClose={handleClose} className="max-w-[900px] m-2 sm:m-5">
+      <CommonModal isOpen={isProductScan} title={`Product Scan`} onClose={handleClose} className="max-w-[900px] m-2 sm:m-5">
         <div className="flex flex-col gap-5">
           <FileGallery />
           {/* <Dropzone /> */}

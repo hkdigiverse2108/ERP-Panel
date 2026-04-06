@@ -185,7 +185,7 @@ const FileGallery = () => {
       <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
         <CommonButton onClick={handleClear} title="Clear" />
 
-        <CommonButton loading={isPending} title="Insert Media" variant="contained" disabled={files.length === 0} onClick={handleUpload} />
+        <CommonButton loading={isPending} title="Scan Product" variant="contained" disabled={files.length === 0} onClick={handleUpload} />
       </div>
     </div>
   );
