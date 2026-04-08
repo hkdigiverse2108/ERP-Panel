@@ -52,6 +52,7 @@ export const URL_KEYS = {
     ALL: "/contacts/all",
     ADD: "/contacts/add",
     EDIT: "/contacts/edit",
+    BULK_ADD: "/contacts/bulk-add",
   },
 
   BRANCH: {
@@ -129,6 +130,7 @@ export const URL_KEYS = {
     ALL: "/product/all",
     EDIT: "/product/edit",
     DETECT: "/product/detect",
+    BULK_ADD: "/product/bulk-add",
   },
 
   STOCK: {

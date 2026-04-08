@@ -13,6 +13,10 @@ import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { Form, Formik } from "formik";
 import { ProductItemRemoveFormSchema } from "../../../Utils/ValidationSchemas";
 import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
+import { useAppDispatch } from "../../../Store/hooks";
+import { setBulkAddModal } from "../../../Store/Slices/ModalSlice";
+import BulkAddModal from "../../../Components/Common/BulkAddModal";
+import { UploadFile } from "@mui/icons-material";
 
 const Product = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
@@ -21,6 +25,7 @@ const Product = () => {
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.PRODUCT.BASE);
   const permissionItem = usePagePermission(PAGE_TITLE.INVENTORY.STOCK.BASE);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const { data: consumptionData, isLoading: consumptionLoading } = Queries.useGetConsumptionTypeDropdown();
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
@@ -34,6 +39,7 @@ const Product = () => {
   const { data: subCategoryData, isLoading: subCategoryDataLoading } = Queries.useGetCategoryDropdown({ parentCategoryFilter: subCategoryId }, Boolean(subCategoryId));
 
   const { mutate: addStockBulkAdjustment, isPending: isAddLoading } = Mutations.useAddStockBulkAdjustment();
+  const { mutate: bulkAddProduct, isPending: isBulkAddLoading } = Mutations.useBulkAddProduct();
 
   const allProduct = useMemo<ProductWithRemoveQty[]>(() => productData?.data?.product_data.map((emp) => ({ ...emp, id: emp?._id, removeQty: null })) || [], [productData]);
   const totalRows = productData?.data?.totalData || 0;
@@ -56,6 +62,16 @@ const Product = () => {
       onSuccess: () => {
         setRemoveItem(!isRemoveItem);
         setOpenModal(!openModal);
+      },
+    });
+  };
+
+  const handleBulkAdd = (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    bulkAddProduct(formData, {
+      onSuccess: () => {
+        dispatch(setBulkAddModal({ open: false, title: "", type: "" }));
       },
     });
   };
@@ -127,6 +143,11 @@ const Product = () => {
   const topContent = (
     <Grid size={"auto"}>
       <Grid container spacing={1}>
+        {permission?.add && (
+          <Grid size={"auto"}>
+            <CommonButton variant="contained" startIcon={<UploadFile />} title="Import" size="medium" onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Products", type: "product" }))} />
+          </Grid>
+        )}
         {permissionItem?.add && (
           <Grid size={"auto"}>
             <CommonButton variant="contained" title="Add Item" size="medium" onClick={handleAddItem} />
@@ -168,6 +189,8 @@ const Product = () => {
           </Formik>
         </CommonModal>
       </Box>
+
+      <BulkAddModal type="product" onUpload={handleBulkAdd} loading={isBulkAddLoading} />
     </>
   );
 };

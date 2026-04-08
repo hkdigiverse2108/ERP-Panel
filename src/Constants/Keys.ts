@@ -55,6 +55,7 @@ export const KEYS = {
     ADD: "contact-add",
     EDIT: "contact-edit",
     DELETE: "contact-delete",
+    BULK_ADD: "contact-bulk-add",
   },
 
   BRANCH: {
@@ -123,6 +124,7 @@ export const KEYS = {
     EDIT: "product-edit",
     DELETE: "product-delete",
     DETECT: "product-detect",
+    BULK_ADD: "product-bulk-add",
   },
   STOCK: {
     BASE: "stock",
