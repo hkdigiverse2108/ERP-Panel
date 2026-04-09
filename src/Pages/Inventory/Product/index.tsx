@@ -53,10 +53,10 @@ const Product = () => {
 
   const data = gridRows.filter((r) => r.removeQty != null).map(({ removeQty, _id }) => ({ qty: removeQty, productId: _id }));
 
-  const handleRemoveItem = async (values: { type: string }) => {
+  const handleRemoveItem = async (values: { consumptionTypeId: string }) => {
     const obj = {
       items: data,
-      type: values.type,
+      consumptionTypeId: values.consumptionTypeId,
     };
     await addStockBulkAdjustment(obj, {
       onSuccess: () => {
@@ -179,7 +179,7 @@ const Product = () => {
           )}
         </CommonCard>
         <CommonModal title="Remove Item" isOpen={openModal} onClose={() => setOpenModal(!openModal)} className="max-w-125 m-2 sm:m-5">
-          <Formik initialValues={{ type: "" }} enableReinitialize validationSchema={ProductItemRemoveFormSchema} onSubmit={handleRemoveItem}>
+          <Formik initialValues={{ consumptionTypeId: "" }} enableReinitialize validationSchema={ProductItemRemoveFormSchema} onSubmit={handleRemoveItem}>
             <Form noValidate>
               <Grid sx={{ p: 1 }} container spacing={2}>
                 <CommonValidationSelect name="consumptionTypeId" label="Consumption Type" options={GenerateOptions(consumptionData?.data)} isLoading={consumptionLoading} grid={{ xs: 12 }} required />

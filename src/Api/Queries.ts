@@ -22,7 +22,8 @@ export const Queries = {
   useGetSingleCompany: (id?: string) => useQueries<CompanyApiResponse>([KEYS.COMPANY.BASE, id], () => Get(`${URL_KEYS.COMPANY.BASE}/${id}`), { enabled: !!id }),
 
   // ************ Employee ***********
-  useGetEmployee: (params?: Params) => useBaseQuery<EmployeeApiResponse>([KEYS.USERS.BASE, params], URL_KEYS.USERS.ALL, params),
+  // useGetEmployee: (params?: Params) => useBaseQuery<EmployeeApiResponse>([KEYS.USERS.BASE, params], URL_KEYS.USERS.ALL, params),
+  useGetEmployee: (params?: Params) => useQueries<EmployeeApiResponse>([KEYS.USERS.BASE, params], () => Get(URL_KEYS.USERS.ALL, params)),
 
   // ************ Contact ***********
   useGetContact: (params?: Params, enabled?: boolean) => useBaseQuery<ContactApiResponse>([KEYS.CONTACT.BASE, params], URL_KEYS.CONTACT.ALL, params, enabled),
@@ -52,7 +53,8 @@ export const Queries = {
   useGetRolesDropdown: (params?: Params) => useQueries<RolesDropdownApiResponse>([KEYS.ROLES.BASE, params], () => Get(URL_KEYS.ROLES.DROPDOWN, params)),
 
   // ************ Announcement ***********
-  useGetAnnouncement: () => useBaseQuery<AnnouncementApiResponse>([KEYS.ANNOUNCEMENT.BASE], URL_KEYS.ANNOUNCEMENT.ALL),
+  // useGetAnnouncement: () => useBaseQuery<AnnouncementApiResponse>([KEYS.ANNOUNCEMENT.BASE], URL_KEYS.ANNOUNCEMENT.ALL),
+  useGetAnnouncement: () => useQueries<AnnouncementApiResponse>([KEYS.ANNOUNCEMENT.BASE], () => Get(URL_KEYS.ANNOUNCEMENT.ALL)),
 
   //***************product**************** */
   useGetProduct: (params?: Params, enabled?: boolean) => useBaseQuery<ProductApiResponse>([KEYS.PRODUCT.BASE, params], URL_KEYS.PRODUCT.ALL, params, enabled),
@@ -79,6 +81,7 @@ export const Queries = {
 
   //*************** stock **************** */
   useGetStock: (params?: Params, enabled?: boolean) => useBaseQuery<StockApiResponse>([KEYS.STOCK.BASE, params], URL_KEYS.STOCK.ALL, params, enabled),
+  // useGetStock: (params?: Params, enabled?: boolean) => useQueries<StockApiResponse>([KEYS.STOCK.BASE, params], () => Get(URL_KEYS.STOCK.ALL, params), { enabled: enabled }),
 
   //*************** stock verification **************** */
   useGetStockVerification: (params?: Params, enabled?: boolean) => useBaseQuery<StockVerificationApiResponse>([KEYS.STOCK_VERIFICATION.BASE, params], URL_KEYS.STOCK_VERIFICATION.ALL, params, enabled),
