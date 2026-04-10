@@ -37,9 +37,9 @@ const ContactForm = () => {
     contactEmail: "",
     addressLine1: "",
     addressLine2: "",
-    country: "",
-    state: "",
-    city: "",
+    country: null,
+    state: null,
+    city: null,
     pinCode: "",
     contactCompanyName: "",
     contactNo: {
@@ -56,9 +56,9 @@ const ContactForm = () => {
     contactEmail: addr?.contactEmail || "",
     addressLine1: addr?.addressLine1 || "",
     addressLine2: addr?.addressLine2 || "",
-    country: addr?.country?._id || "",
-    state: addr?.state?._id || "",
-    city: addr?.city?._id || "",
+    country: addr?.country?._id || null,
+    state: addr?.state?._id || null,
+    city: addr?.city?._id || null,
     pinCode: addr?.pinCode || "",
     contactCompanyName: addr?.contactCompanyName || "",
 
@@ -238,9 +238,9 @@ const ContactForm = () => {
 
                                 <DependentSelect name={`address.${index}.country`} label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} required={isCustomer} />
 
-                                <DependentSelect params={values?.address?.[index]?.country} name={`address.${index}.state`} label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.address?.[index]?.country} required={isCustomer} />
+                                <DependentSelect params={values?.address?.[index]?.country || ""} name={`address.${index}.state`} label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.address?.[index]?.country} required={isCustomer} />
 
-                                <DependentSelect params={values?.address?.[index]?.state} name={`address.${index}.city`} label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.address?.[index]?.state} required={isCustomer} />
+                                <DependentSelect params={values?.address?.[index]?.state || ""} name={`address.${index}.city`} label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.address?.[index]?.state} required={isCustomer} />
 
                                 <CommonTextField name={`address.${index}.pinCode`} label="Pin Code" grid={{ xs: 12, md: 4 }} />
 

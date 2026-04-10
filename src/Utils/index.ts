@@ -34,7 +34,12 @@ export const GenerateOptions = (data?: { _id: string; name?: string; firstName?:
 
     return {
       value: item._id,
-      label,
+      label:
+        label
+          ?.toLowerCase()
+          .split(" ")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ") || "",
     };
   });
 };

@@ -9,9 +9,9 @@ export interface Address {
   contactEmail?: string;
   addressLine1?: string;
   addressLine2?: string;
-  country?: string;
-  state?: string;
-  city?: string;
+  country?: string | null;
+  state?: string | null;
+  city?: string | null;
   pinCode?: string;
   contactCompanyName?: string;
 }
