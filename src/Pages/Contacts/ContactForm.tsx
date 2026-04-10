@@ -120,6 +120,7 @@ const ContactForm = () => {
 
     const payload: AddContactPayload = {
       ...rest,
+      ...(rest.customerType === CONTACT_TYPE[0].value || rest.customerType === CONTACT_TYPE[1].value ? { supplierType: rest.supplierType } : {}),
       companyId: company!._id,
     };
 

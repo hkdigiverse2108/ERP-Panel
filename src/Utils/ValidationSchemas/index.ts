@@ -408,7 +408,8 @@ export const getContactFormSchema = Yup.object({
     required: false,
   }),
   customerType: Validation("string", "Customer Type", { required: false }),
-  supplierType: Validation("string", "Supplier Type"),
+  // supplierType: Validation("string", "Supplier Type"),
+  supplierType: RequiredWhen("contactType", ["supplier", "customer"], "Supplier Type", "string"),
   transporterId: RequiredWhen("contactType", ["transporter"], "Transporter Id", "string"),
 });
 

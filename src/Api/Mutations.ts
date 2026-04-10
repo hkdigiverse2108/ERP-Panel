@@ -175,9 +175,9 @@ export const Mutations = {
   useDeleteSalary: () => useMutations<string, void>([KEYS.SALARY.DELETE, KEYS.SALARY.BASE, KEYS.EXPENSE.BASE], (id) => Delete(`${URL_KEYS.SALARY.BASE}/${id}`)),
 
   //************* bank transaction **************/
-  useAddBankTransaction: () => useMutations<AddBankTransactionPayload, void>([KEYS.BANK_TRANSACTION.ADD], (input) => Post(URL_KEYS.BANK_TRANSACTION.ADD, input)),
+  useAddBankTransaction: () => useMutations<AddBankTransactionPayload, void>([KEYS.BANK_TRANSACTION.ADD, KEYS.BANK_TRANSACTION.BASE], (input) => Post(URL_KEYS.BANK_TRANSACTION.ADD, input)),
   useEditBankTransaction: () => useMutations<EditBankTransactionPayload, void>([KEYS.BANK_TRANSACTION.EDIT, KEYS.BANK_TRANSACTION.BASE], (input) => Put(URL_KEYS.BANK_TRANSACTION.EDIT, input)),
-  useDeleteBankTransaction: () => useMutations<string, void>([KEYS.BANK_TRANSACTION.DELETE], (id) => Delete(`${URL_KEYS.BANK_TRANSACTION.BASE}/${id}`)),
+  useDeleteBankTransaction: () => useMutations<string, void>([KEYS.BANK_TRANSACTION.DELETE, KEYS.BANK_TRANSACTION.BASE], (id) => Delete(`${URL_KEYS.BANK_TRANSACTION.BASE}/${id}`)),
   // ************ Tax ***********
   useAddTax: () => useMutations<AddTaxPayload, void>([KEYS.TAX.ADD, KEYS.TAX.BASE], (input) => Post(URL_KEYS.TAX.ADD, input)),
   useEditTax: () => useMutations<EditTaxPayload, void>([KEYS.TAX.EDIT, KEYS.TAX.BASE], (input) => Put(URL_KEYS.TAX.EDIT, input)),
