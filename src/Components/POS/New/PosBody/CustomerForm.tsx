@@ -31,11 +31,11 @@ const CustomerForm = () => {
     dob: customerData?.dob || "",
     email: customerData?.email || "",
     address: {
-      addressLine1: customerData?.address?.[0]?.addressLine1,
-      country: customerData?.address?.[0]?.country?._id,
-      state: customerData?.address?.[0]?.state?._id,
-      city: customerData?.address?.[0]?.city?._id,
-      pinCode: customerData?.address?.[0]?.pinCode,
+      addressLine1: customerData?.address?.[0]?.addressLine1 || "",
+      country: customerData?.address?.[0]?.country?._id || null,
+      state: customerData?.address?.[0]?.state?._id || null,
+      city: customerData?.address?.[0]?.city?._id || null,
+      pinCode: customerData?.address?.[0]?.pinCode || "",
     },
     contactType: "customer",
     customerType: "retailer",
@@ -67,9 +67,9 @@ const CustomerForm = () => {
           ? [
               {
                 ...customerData?.address?.[0],
-                country: customerData?.address?.[0].country?._id,
-                state: customerData?.address?.[0].state?._id,
-                city: customerData?.address?.[0].city?._id,
+                country: customerData?.address?.[0].country?._id || null,
+                state: customerData?.address?.[0].state?._id || null,
+                city: customerData?.address?.[0].city?._id || null,
               },
             ]
           : [],
@@ -98,8 +98,8 @@ const CustomerForm = () => {
                 <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />
                 <CommonValidationTextField name="address.addressLine1" label="Address" grid={{ xs: 12, md: 4 }} />
                 <DependentSelect name="address.country" label="Country" grid={{ xs: 12, md: 4 }} query={Queries.useGetCountryLocation} />
-                <DependentSelect params={values?.address?.country} name="address.state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.address?.country} />
-                <DependentSelect params={values?.address?.state} name="address.city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.address?.state} />
+                <DependentSelect params={values?.address?.country || ""} name="address.state" label="State" grid={{ xs: 12, md: 4 }} query={Queries.useGetStateLocation} disabled={!values?.address?.country} />
+                <DependentSelect params={values?.address?.state || ""} name="address.city" label="City" grid={{ xs: 12, md: 4 }} query={Queries.useGetCityLocation} disabled={!values?.address?.state} />
                 <CommonValidationTextField name="address.pinCode" label="Pin Code" grid={{ xs: 12, md: 4 }} />
                 <Grid size={12} sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
                   <CommonButton variant="outlined" onClick={() => handleClose()} title="Cancel" />
