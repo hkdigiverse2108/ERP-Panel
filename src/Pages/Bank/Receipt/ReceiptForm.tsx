@@ -17,7 +17,7 @@ const ReceiptForm = () => {
   const { data } = location.state || {};
   const permission = usePagePermission(PAGE_TITLE.RECEIPT.BASE);
 
-  const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown();
+  const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown({ typeFilter: "customer" });
   const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown();
 
   const { mutate: addPayment, isPending: isAddLoading } = Mutations.useAddPosPayment();

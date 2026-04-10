@@ -17,7 +17,7 @@ const PaymentForm = () => {
   const { data } = location.state || {};
   const permission = usePagePermission(PAGE_TITLE.PAYMENT.BASE);
 
-  const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown();
+  const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown({ typeFilter: "customer" });
   const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown();
 
   const { mutate: addPayment, isPending: isAddLoading } = Mutations.useAddPosPayment();
@@ -52,7 +52,7 @@ const PaymentForm = () => {
 
     return null;
   };
-  
+
   const [partyId, setPartyId] = useState(initialValues.partyId);
   const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: partyId, duePaymentFilter: true }, Boolean(partyId));
 

@@ -111,7 +111,7 @@ export const Queries = {
   useGetPosOrder: (params?: Params, enabled?: boolean) => useBaseQuery<PosOrderApiResponse>([KEYS.POS_ORDER.BASE, params], URL_KEYS.POS_ORDER.ALL, params, enabled),
   useGetPosOrderById: (id?: string, enabled?: boolean) => useQueries<PosOrderByIdResponse>([KEYS.POS_ORDER.BY_ID, id], () => Get(`${URL_KEYS.POS_ORDER.BASE}/${id}`), { enabled: enabled, staleTime: 0, refetchOnWindowFocus: false, retry: 1 }),
   useGetLastPosOrder: (params?: Params, enabled?: boolean) => useQueries<PosOrderApiResponse>([KEYS.POS_ORDER.BASE, params], () => Get(URL_KEYS.POS_ORDER.ALL, params), { enabled: enabled }),
-  useGetPosOrderDropdown: (params?: Params, enabled?: boolean) => useQueries<PosOrderDropdownApiResponse>([KEYS.POS_ORDER.DROPDOWN, KEYS.POS_ORDER.BASE, params], () => Get(URL_KEYS.POS_ORDER.DROPDOWN, params), { enabled: enabled }),
+  useGetPosOrderDropdown: (params?: Params, enabled?: boolean) => useQueries<PosOrderDropdownApiResponse>([KEYS.POS_ORDER.DROPDOWN, KEYS.POS_ORDER.BASE, params], () => Get(URL_KEYS.POS_ORDER.DROPDOWN, params), { enabled: enabled, staleTime: 0, refetchOnWindowFocus: false, retry: 1 }),
 
   //*************** POS Customer Detail **************** */
   useGetPosCustomerDetail: (id?: string, enabled?: boolean) => useQueries<PosCustomerDetailApiResponse>([KEYS.POS.CUSTOMER_DETAIL, id], () => Get(`${URL_KEYS.POS.CUSTOMER_DETAIL}/${id}`), { enabled: enabled }),
@@ -183,14 +183,12 @@ export const Queries = {
   useGetDashboardLoginLog: (params?: Params) => useQueries<LoginLogApiResponse>([KEYS.DASHBOARD.LOGIN_LOG, params], () => Get(URL_KEYS.DASHBOARD.LOGIN_LOG, params)),
   useGetDashboardTransaction: (params?: Params) => useQueries<TransactionsApiResponse>([KEYS.DASHBOARD.TRANSACTION, params], () => Get(URL_KEYS.DASHBOARD.TRANSACTION, params)),
 
-  
   //*************** Purchase Debit Note **************** */
   useGetPurchaseDebitNote: (params?: Params, enabled?: boolean) => useQueries<PurchaseDebitNoteApiResponse>([KEYS.PURCHASE_DEBIT_NOTE.BASE, params], () => Get(URL_KEYS.PURCHASE_DEBIT_NOTE.ALL, params), { enabled: enabled }),
   useGetSinglePurchaseDebitNote: (id?: string) => useQueries<SinglePurchaseDebitNoteApiResponse>([KEYS.PURCHASE_DEBIT_NOTE.BASE, id], () => Get(`${URL_KEYS.PURCHASE_DEBIT_NOTE.BASE}/${id}`), { enabled: !!id }),
   useGetPurchaseDebitNoteDropdown: (params?: Params, enabled?: boolean) => useQueries<PurchaseDebitNoteDropdownApiResponse>([KEYS.PURCHASE_DEBIT_NOTE.DROPDOWN, params], () => Get(URL_KEYS.PURCHASE_DEBIT_NOTE.DROPDOWN, params), { enabled: enabled }),
 
-
-    //*************** Estimate **************** */
+  //*************** Estimate **************** */
   useGetEstimate: (params?: Params, enabled?: boolean) => useQueries<EstimateApiResponse>([KEYS.ESTIMATE.BASE, params], () => Get(URL_KEYS.ESTIMATE.ALL, params), { enabled: enabled }),
   useGetEstimateDropdown: (params?: Params, enabled?: boolean) => useQueries<EstimateDropdownApiResponse>([KEYS.ESTIMATE.BASE, params], () => Get(URL_KEYS.ESTIMATE.DROPDOWN, params), { enabled: enabled }),
 
@@ -202,12 +200,12 @@ export const Queries = {
   useGetInvoice: (params?: Params, enabled?: boolean) => useQueries<InvoiceApiResponse>([KEYS.INVOICE.BASE, params], () => Get(URL_KEYS.INVOICE.ALL, params), { enabled: enabled }),
   useGetSingleInvoice: (id?: string) => useQueries<SingleInvoiceApiResponse>([KEYS.INVOICE.BASE, id], () => Get(`${URL_KEYS.INVOICE.BASE}/${id}`), { enabled: !!id }),
   useGetInvoiceDropdown: (params?: Params, enabled?: boolean) => useQueries<InvoiceDropdownApiResponse>([KEYS.INVOICE.DROPDOWN, params], () => Get(URL_KEYS.INVOICE.DROPDOWN, params), { enabled: enabled }),
-  
+
   //*************** Delivery Challan **************** */
   useGetDeliveryChallan: (params?: Params, enabled?: boolean) => useQueries<DeliveryChallanApiResponse>([KEYS.DELIVERY_CHALLAN.BASE, params], () => Get(URL_KEYS.DELIVERY_CHALLAN.ALL, params), { enabled: enabled }),
   useGetSingleDeliveryChallan: (id?: string) => useQueries<SingleDeliveryChallanApiResponse>([KEYS.DELIVERY_CHALLAN.BASE, id], () => Get(`${URL_KEYS.DELIVERY_CHALLAN.BASE}/${id}`), { enabled: !!id }),
   useGetDeliveryChallanDropdown: (params?: Params, enabled?: boolean) => useQueries<DeliveryChallanDropdownApiResponse>([KEYS.DELIVERY_CHALLAN.DROPDOWN, params], () => Get(URL_KEYS.DELIVERY_CHALLAN.DROPDOWN, params), { enabled: enabled }),
- 
+
   //*************** Sales Credit Note **************** */
   useGetSalesCreditNote: (params?: Params, enabled?: boolean) => useQueries<SalesCreditNoteApiResponse>([KEYS.SALES_CREDIT_NOTE.BASE, params], () => Get(URL_KEYS.SALES_CREDIT_NOTE.ALL, params), { enabled: enabled }),
   useGetSingleSalesCreditNote: (id?: string) => useQueries<SingleSalesCreditNoteApiResponse>([KEYS.SALES_CREDIT_NOTE.BASE, id], () => Get(`${URL_KEYS.SALES_CREDIT_NOTE.BASE}/${id}`), { enabled: !!id }),
@@ -225,4 +223,3 @@ export const Queries = {
   useGetConsumptionType: (params?: Params, enabled?: boolean) => useQueries<ConsumptionTypeApiResponse>([KEYS.CONSUMPTION_TYPE.BASE, params], () => Get(URL_KEYS.CONSUMPTION_TYPE.ALL, params), { enabled: enabled }),
   useGetConsumptionTypeDropdown: (params?: Params, enabled?: boolean) => useQueries<ConsumptionTypeDropdownApiResponse>([KEYS.CONSUMPTION_TYPE.BASE, params], () => Get(URL_KEYS.CONSUMPTION_TYPE.DROPDOWN, params), { enabled: enabled }),
 };
-

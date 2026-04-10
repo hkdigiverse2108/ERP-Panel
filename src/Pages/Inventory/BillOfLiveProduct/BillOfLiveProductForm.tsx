@@ -53,16 +53,6 @@ const RecipeWatcher = ({ onChange }: { onChange: (ids: string[]) => void }) => {
   return null;
 };
 
-const BOLP_PREFIX = "BOLP";
-const parseBimNumber = (value?: string) => {
-  if (!value) return "";
-  const match = value.match(/\d+/);
-  return match ? match[0] : "";
-};
-const formatBimNumber = (num?: string | number) => {
-  if (!num) return "";
-  return `${BOLP_PREFIX} ${num}`;
-};
 const BillOfLiveProductForm = () => {
   const location = useLocation();
   const { data, no } = location.state as {
@@ -81,8 +71,6 @@ const BillOfLiveProductForm = () => {
   const [rows, setRows] = useState<BomRow[]>([]);
 
   const pageMode = isEditing ? "EDIT" : "ADD";
-
-  const bomNumber = isEditing ? data?.number : String((Number(no) || 0) + 1);
 
   const { mutate: addBOM, isPending: isAddLoading } = Mutations.useAddBillOfLiveProduct();
 
@@ -233,12 +221,12 @@ const BillOfLiveProductForm = () => {
 
   const initialValues: BillOfLiveProductFormValues = useMemo(
     () => ({
-      number: isEditing ? parseBimNumber(data?.number) : bomNumber,
+      number: isEditing ? data?.number : "",
       date: isEditing ? data?.date : DateConfig.utc().toISOString(),
       allowReverseCalculation: data?.allowReverseCalculation ?? false,
       recipeId: data?.recipeId?.map((b: RecipeBase) => b._id) ?? [],
     }),
-    [isEditing, bomNumber, data?.number, data?.date, data?.allowReverseCalculation, data?.recipeId],
+    [isEditing, data?.number, data?.date, data?.allowReverseCalculation, data?.recipeId],
   );
 
   const syncRowsFromRecipeIds = useCallback(
@@ -251,6 +239,7 @@ const BillOfLiveProductForm = () => {
   /* ---------------- SUBMIT ---------------- */
 
   const handleSubmit = (values: BillOfLiveProductFormValues) => {
+    delete values.number;
     const productDetails: BillOfLiveProductDetail[] = rows.map((r) => ({
       productId: r.id,
       qty: r.qty,
@@ -271,9 +260,9 @@ const BillOfLiveProductForm = () => {
     }));
 
     if (isEditing) {
-      editBOM({ billOfLiveProductId: data!._id, recipeId: values.recipeId, productDetails, number: formatBimNumber(values.number) }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
+      editBOM({ billOfLiveProductId: data!._id, recipeId: values.recipeId, productDetails }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
     } else {
-      addBOM({ number: formatBimNumber(values.number), date: values.date, allowReverseCalculation: values.allowReverseCalculation, recipeId: values.recipeId, productDetails }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
+      addBOM({ date: values.date, allowReverseCalculation: values.allowReverseCalculation, recipeId: values.recipeId, productDetails }, { onSuccess: () => navigate(ROUTES.BILL_OF_LIVE_PRODUCT.BASE) });
     }
   };
   useEffect(() => {
@@ -292,9 +281,8 @@ const BillOfLiveProductForm = () => {
                   <Form noValidate>
                     <RecipeWatcher onChange={syncRowsFromRecipeIds} />
                     <Grid container spacing={2}>
+                      {isEditing && <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 4 }} />}
                       <CommonValidationDatePicker name="date" label="Date" grid={{ xs: 12, md: 4 }} />
-                      <CommonValidationTextField name="text" label="BOLP" disabled grid={{ xs: 12, md: 4 }} />
-                       <CommonValidationTextField name="number" label="No" disabled grid={{ xs: 12, md: 4 }} />
                       <CommonValidationSelect name="recipeId" label="Recipe" multiple limitTags={1} grid={{ xs: 12, md: 4 }} options={GenerateOptions(recipeData?.data?.recipe_data || [])} />
                       <CommonValidationSwitch name="allowReverseCalculation" label="Allow Reverse Calculation" />
                     </Grid>

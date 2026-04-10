@@ -23,7 +23,7 @@ const ExpenseForm = () => {
   const [activeImageKey, setActiveImageKey] = useState<"image" | null>(null);
   const dispatch = useAppDispatch();
 
-  const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown();
+  const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown({ typeFilter: "customer" });
 
   const { mutate: addExpense, isPending: isAddLoading } = Mutations.useAddExpense();
   const { mutate: editExpense, isPending: isEditLoading } = Mutations.useEditExpense();
