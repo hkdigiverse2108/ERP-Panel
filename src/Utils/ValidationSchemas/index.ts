@@ -284,7 +284,10 @@ export const BankTransactionFormSchema = Yup.object({
   transactionDate: Validation("string", "Transaction Date"),
   transactionType: Validation("string", "Transaction Type"),
   fromAccount: Validation("string", "From Account"),
-  toAccount: Validation("string", "To Account"),
+  toAccount: Validation("string", "To Account").test("not-same-account", "From Account and To Account cannot be same", function (value) {
+    const { fromAccount } = this.parent;
+    return !value || value !== fromAccount;
+  }),
   amount: Validation("number", "Amount"),
   description: Validation("string", "Description", { required: false }),
 });
