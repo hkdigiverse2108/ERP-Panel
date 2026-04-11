@@ -957,8 +957,8 @@ export const StockTransferFormSchema = Yup.object({
         price: Validation("number", "Price", { required: false, extraRules: (s) => s.min(0, "Price must be positive") }),
         requestedQty: Validation("number", "Requested Qty", {
           extraRules: (s) =>
-            s.min(0, "Quantity cannot be negative").test("max-available", "Exceeds available stock", function (value) {
-              return (value || 0) <= (this.parent.qty || 0);
+            s.min(1, "Minimum 1 quantity is required").test("max-available", "Exceeds available stock", function (value) {
+              return (value || 1) <= (this.parent.qty || 1);
             }),
         }),
       }),

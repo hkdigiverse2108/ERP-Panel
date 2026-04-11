@@ -23,11 +23,9 @@ const StockTransferForm = () => {
   const updateData = location.state?.data;
   const id = urlId || updateData?._id;
 
-  const { data: stockTransferData, isLoading: stockTransferLoading } = Queries.useGetSingleStockTransfer(id);
+  const { data: stockTransferData } = Queries.useGetSingleStockTransfer(id);
   const { mutate: addStockTransfer, isPending: isAddLoading } = Mutations.useAddStockTransfer();
   const { mutate: editStockTransfer, isPending: isEditLoading } = Mutations.useEditStockTransfer();
-
-  // const { data: companyData, isLoading: companyLoading } = Queries.useGetCompanyDropdown();
 
   const initialValues = useMemo(() => {
     const data = updateData || stockTransferData?.data;
@@ -64,7 +62,7 @@ const StockTransferForm = () => {
 
   const emptyRow = { productId: "", requestedQty: 0, price: 0, qty: 0 };
 
-  if (id && stockTransferLoading) return null; // Or a proper loader
+  // if (id && stockTransferLoading) return null;
 
   return (
     <>
@@ -81,19 +79,6 @@ const StockTransferForm = () => {
                   <Box sx={{ display: "grid", gap: 3, width: "100%" }}>
                     <CommonCard title="Stock Transfer Details">
                       <Grid container spacing={2} sx={{ p: 2 }}>
-                        {/* <CommonValidationSelect
-                          name="companyId"
-                          label="Select Company"
-                          // options={GenerateOptions(companyData?.data)}
-                          // isLoading={companyLoading}
-                          required
-                          grid={{ xs: 12, sm: 6, md: 4 }}
-                          onChange={() => {
-                            setFieldValue("branchId", "");
-                            setFieldValue("requestedToBranchId", "");
-                          }}
-                        /> */}
-                        {/* <CommonValidationSelect name="branchId" label="From Branch" options={GenerateOptions(fromBranchData?.data)} isLoading={fromBranchLoading} required disabled={!values.companyId} grid={{ xs: 12, sm: 6, md: 4 }} /> */}
                         <CommonValidationSelect name="requestedToBranchId" label="To Branch" options={GenerateOptions(filteredBranchData)} isLoading={toBranchLoading} required grid={{ xs: 12, sm: 6, md: 4 }} onChange={() => setFieldValue("items", [emptyRow])} />
                         <CommonValidationTextField name="requestNote" label="Request Note" placeholder="Enter request note" grid={{ xs: 12, sm: 6, md: 8 }} />
                         <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12, sm: 6, md: 4 }} />
