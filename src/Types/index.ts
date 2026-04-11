@@ -53,3 +53,4 @@ export * from "./BankTransaction";
 export * from "./Prefix";
 export * from "./PaymentTerms";
 export * from "./ConsumptionType";
+export * from "./StockTransfer";

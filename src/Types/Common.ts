@@ -87,6 +87,7 @@ export interface CommonSelectProps {
 
 export interface CommonValidationSelectProps extends Omit<CommonSelectProps, "onChange" | "value"> {
   name: string;
+  onChange?: (value: any) => void | Promise<any>;
 }
 
 export interface CommonValidationCreatableSelectProps {
@@ -243,6 +244,7 @@ export interface CommonObjectNameColumnOptions {
 
 export interface CommonActionColumnProps<T> {
   editRoute?: string;
+  viewRoute?: string;
   permissionRoute?: string;
   onEdit?: { handleEdit: (row: T) => void; isPermission?: (row: T) => boolean };
   onDelete?: (row: T) => void;
