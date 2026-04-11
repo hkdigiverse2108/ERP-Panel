@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-import { useMemo } from "react";
+import { Box, Grid } from "@mui/material";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
@@ -7,15 +7,20 @@ import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDat
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, PURCHASE_DEBIT_NOTE_STATUS_OPTIONS } from "../../../Data";
 import type { AppGridColDef, PurchaseDebitNoteBase } from "../../../Types";
-import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CreateFilter, DateConfig, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import { useAppSelector } from "../../../Store/hooks";
+import { CommonDateRangeSelector } from "../../../Attribute";
 
 const PurchaseDebitNote = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.PURCHASE.PURCHASE_DEBIT_NOTE.BASE);
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
 
-  const { data: purchaseDebitNote, isLoading, isFetching } = Queries.useGetPurchaseDebitNote(params);
+  const { data: purchaseDebitNote, isLoading, isFetching } = Queries.useGetPurchaseDebitNote({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPurchaseDebitNote({}, false);
   const { mutate: editPurchaseDebitNote, isPending: isEditLoading } = Mutations.useEditPurchaseDebitNote();
   const { mutate: deletePurchaseDebitNote, isPending: deletePurchaseDebitNoteLoading } = Mutations.useDeletePurchaseDebitNote();
@@ -70,13 +75,19 @@ const PurchaseDebitNote = () => {
     },
   ];
 
+  const children = (
+    <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+      <CommonDateRangeSelector value={range} onChange={setRange} active="This Financial Year" />
+    </Grid>
+  );
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.PURCHASE_DEBIT_NOTE.BASE} breadcrumbs={BREADCRUMBS.PURCHASE_DEBIT_NOTE.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonStatsCard stats={stats} grid={{ xs: 12 }} />
 
-        <AdvancedSearch filter={filter} />
+        <AdvancedSearch filter={filter} children={children} />
 
         <CommonCard hideDivider>
           <Box sx={{ width: "100%", overflow: "hidden" }}>

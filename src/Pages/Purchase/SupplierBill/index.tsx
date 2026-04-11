@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-import { useMemo } from "react";
+import { Box, Grid } from "@mui/material";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
@@ -7,8 +7,10 @@ import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDat
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, PAYMENT_STATUS_OPTIONS } from "../../../Data";
 import type { AppGridColDef, SupplierBillBase } from "../../../Types";
-import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CreateFilter, DateConfig, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import { useAppSelector } from "../../../Store/hooks";
+import { CommonDateRangeSelector } from "../../../Attribute";
 
 const SupplierBill = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
@@ -17,8 +19,11 @@ const SupplierBill = () => {
   const permission = usePagePermission(PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE);
   // Filter Data Queries
   const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier" });
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
 
-  const { data, isLoading, isFetching } = Queries.useGetSupplierBillDetails(params);
+  const { data, isLoading, isFetching } = Queries.useGetSupplierBillDetails({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetSupplierBillDetails({}, false);
   const { mutate: deleteSupplierBill, isPending: deleteSupplierBillLoading } = Mutations.useDeleteSupplierBill();
   const { mutate: editSupplierBill } = Mutations.useEditSupplierBill();
@@ -93,12 +98,17 @@ const SupplierBill = () => {
     fileName: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE,
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
+  const children = (
+    <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+      <CommonDateRangeSelector value={range} onChange={setRange} active="This Financial Year" />
+    </Grid>
+  );
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE} breadcrumbs={BREADCRUMBS.SUPPLIER_BILL.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 4 }} />
-        <AdvancedSearch filter={filter} />
+        <AdvancedSearch filter={filter} children={children} />
         <CommonCard hideDivider>
           <CommonDataGrid {...gridOptions} />
         </CommonCard>

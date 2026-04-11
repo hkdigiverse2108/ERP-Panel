@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-import { useMemo } from "react";
+import { Box, Grid } from "@mui/material";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
@@ -7,14 +7,19 @@ import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDat
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, ESTIMATE_STATUS } from "../../../Data";
 import type { AppGridColDef, EstimateBase } from "../../../Types";
-import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CreateFilter, DateConfig, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
+import { useAppSelector } from "../../../Store/hooks";
+import { CommonDateRangeSelector } from "../../../Attribute";
 
 const Estimate = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
 
-  const { data: estimate, isLoading: estimateLoading, isFetching: estimateFetching } = Queries.useGetEstimate(params);
+  const { data: estimate, isLoading: estimateLoading, isFetching: estimateFetching } = Queries.useGetEstimate({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetEstimate({}, false);
   const { mutate: deleteEstimateMutate } = Mutations.useDeleteEstimate();
   const { mutate: editEstimate, isPending: isEditLoading } = Mutations.useEditEstimate();
@@ -76,6 +81,11 @@ const Estimate = () => {
 
   const filter = [CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, ESTIMATE_STATUS, false, { xs: 12, sm: 6, md: 3 })];
 
+  const children = (
+    <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+      <CommonDateRangeSelector value={range} onChange={setRange} active="This Financial Year" />
+    </Grid>
+  );
   const stats = [
     { label: "All Orders", value: summaryData?.allEstimates || 0, color: "primary" },
     { label: "Pending", value: summaryData?.pending || 0, color: "success" },
@@ -88,7 +98,7 @@ const Estimate = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.SALES.ESTIMATE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.ESTIMATE.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonStatsCard stats={stats} grid={{ xs: 6, md: 3 }} />
-        <AdvancedSearch filter={filter} />
+        <AdvancedSearch filter={filter} children={children} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

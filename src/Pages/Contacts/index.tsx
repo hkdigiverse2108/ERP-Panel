@@ -1,17 +1,19 @@
 import { Box, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../Api";
-import { CommonButton, CommonRadio } from "../../Attribute";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonPhoneColumns } from "../../Components/Common";
+import { CommonButton, CommonDateRangeSelector, CommonRadio } from "../../Attribute";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonPhoneColumns } from "../../Components/Common";
 import { CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../Constants";
 import { BREADCRUMBS, CONTACT_TYPE } from "../../Data";
 import type { AppGridColDef, ContactBase } from "../../Types";
 import { useDataGrid, usePagePermission } from "../../Utils/Hooks";
-import { useAppDispatch } from "../../Store/hooks";
+import { useAppDispatch, useAppSelector } from "../../Store/hooks";
 import { setBulkAddModal } from "../../Store/Slices/ModalSlice";
 import BulkAddModal from "../../Components/Common/BulkAddModal";
 import { UploadFile } from "@mui/icons-material";
+import { useState } from "react";
+import { DateConfig } from "../../Utils";
 
 const Contact = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, updateAdvancedFilter, advancedFilter, params } = useDataGrid({ defaultFilterKey: { typeFilter: [CONTACT_TYPE[0].value] } });
@@ -19,8 +21,11 @@ const Contact = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const permission = usePagePermission(PAGE_TITLE.CONTACT.BASE);
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
 
-  const { data: contactData, isLoading: contactDataLoading, isFetching: contactDataFetching } = Queries.useGetContact(params);
+  const { data: contactData, isLoading: contactDataLoading, isFetching: contactDataFetching } = Queries.useGetContact({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetContact({ typeFilter: advancedFilter?.contactType?.[0] }, false);
   const { mutate: deleteContactMutate, isPending: isDeleteLoading } = Mutations.useDeleteContact();
   const { mutate: editContact, isPending: isEditLoading } = Mutations.useEditContact();
@@ -125,7 +130,7 @@ const Contact = () => {
     <>
       <Grid size="auto">
         <CommonRadio value={advancedFilter?.contactType?.[0]} onChange={handleContactTypeChange} options={CONTACT_TYPE} />
-      </Grid> 
+      </Grid>
       {permission?.add && (
         <Grid size="auto" sx={{ ml: "auto" }}>
           <CommonButton variant="contained" startIcon={<UploadFile />} title="Import" size="small" onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Contacts", type: "contact" }))} />
@@ -133,12 +138,18 @@ const Contact = () => {
       )}
     </>
   );
+  const filter = (
+    <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+      <CommonDateRangeSelector value={range} onChange={setRange} active="This Financial Year" />
+    </Grid>
+  );
 
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.CONTACT.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.CONTACT.BASE} />
 
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch children={filter} />
         <CommonCard topContent={topContent}>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

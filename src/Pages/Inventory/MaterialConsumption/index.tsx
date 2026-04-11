@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-import { useMemo } from "react";
+import { Box, Grid } from "@mui/material";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal } from "../../../Components/Common";
@@ -7,15 +7,20 @@ import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDat
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, MaterialConsumptionBase } from "../../../Types";
-import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CreateFilter, DateConfig, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import { useAppSelector } from "../../../Store/hooks";
+import { CommonDateRangeSelector } from "../../../Attribute";
 
 const MaterialConsumption = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE);
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
 
-  const { data: materialConsumptionData, isLoading: materialConsumptionDataLoading, isFetching: materialConsumptionDataFetching } = Queries.useGetMaterialConsumption(params);
+  const { data: materialConsumptionData, isLoading: materialConsumptionDataLoading, isFetching: materialConsumptionDataFetching } = Queries.useGetMaterialConsumption({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetMaterialConsumption({}, false);
   const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown();
   const { mutate: deleteMaterialConsumptionMutate, isPending: isDeleteLoading } = Mutations.useDeleteMaterialConsumption();
@@ -82,11 +87,17 @@ const MaterialConsumption = () => {
     CreateFilter("Select Branch", "branchFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BranchData?.data), BranchDataLoading, { xs: 12, sm: 6, md: 3 }), // branchFilter
   ];
 
+  const children = (
+    <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+      <CommonDateRangeSelector value={range} onChange={setRange} active="This Financial Year" />
+    </Grid>
+  );
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.MATERIAL_CONSUMPTION.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <AdvancedSearch filter={filter} />
+        <AdvancedSearch filter={filter} children={children} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

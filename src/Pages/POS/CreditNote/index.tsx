@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-import { useEffect, useMemo, useRef } from "react";
+import { Box, Grid } from "@mui/material";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
@@ -13,7 +13,8 @@ import { setOrderRefundModal } from "../../../Store/Slices/ModalSlice";
 import { setPrintType, setReturnPosOrderId } from "../../../Store/Slices/PosSlice";
 import type { AppGridColDef, PosCreditNoteBase } from "../../../Types";
 import { useDataGrid } from "../../../Utils/Hooks";
-import { CreateFilter } from "../../../Utils";
+import { CreateFilter, DateConfig } from "../../../Utils";
+import { CommonDateRangeSelector } from "../../../Attribute";
 
 const CreditNoteList = () => {
   const dispatch = useAppDispatch();
@@ -21,9 +22,12 @@ const CreditNoteList = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, params, advancedFilter, updateAdvancedFilter } = useDataGrid({ active: false });
   const { mutate: deletePosCreditNoteMutate, isPending: isDeleteLoading } = Mutations.useDeletePosCreditNote();
   const contentRef = useRef<HTMLDivElement>(null);
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
 
   const { data: returnPosOrder, isLoading: returnPosOrderLoading, isFetching: returnPosOrderFetching } = Queries.useGetReturnPosOrderById(isReturnPosOrderId, Boolean(isReturnPosOrderId));
-  const { data: posCreditNoteData, isLoading: posCreditNoteDataLoading, isFetching: posCreditNoteDataFetching } = Queries.useGetPosCreditNote(params, true);
+  const { data: posCreditNoteData, isLoading: posCreditNoteDataLoading, isFetching: posCreditNoteDataFetching } = Queries.useGetPosCreditNote({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() }, true);
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPosCreditNote({}, false);
   const allPosCreditNote = useMemo(() => posCreditNoteData?.data?.posCreditNote_data.map((item) => ({ ...item, id: item?._id })) || [], [posCreditNoteData]);
   const totalRows = posCreditNoteData?.data?.totalData || 0;
@@ -104,11 +108,17 @@ const CreditNoteList = () => {
   };
   const filter = [CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, CREDIT_NOTE_STATUS, false, { xs: 12, sm: 6, md: 3 })];
 
+  const children = (
+    <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+      <CommonDateRangeSelector value={range} onChange={setRange} active="This Financial Year" />
+    </Grid>
+  );
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.POS.CREDIT_NOTE} breadcrumbs={BREADCRUMBS.POS_CREDIT_NOTE.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <AdvancedSearch filter={filter} />
+        <AdvancedSearch filter={filter} children={children} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

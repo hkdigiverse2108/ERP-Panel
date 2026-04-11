@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-import { useMemo } from "react";
+import { Box, Grid } from "@mui/material";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
@@ -9,12 +9,18 @@ import { BREADCRUMBS, SALES_ORDER_STATUS_OPTIONS } from "../../../Data";
 import type { AppGridColDef, SalesOrderBase } from "../../../Types";
 import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
+import { useAppSelector } from "../../../Store/hooks";
+import { CommonDateRangeSelector } from "../../../Attribute";
+import { DateConfig } from "../../../Utils/DateConfig";
 
 const SalesOrder = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
 
-  const { data: salesOrder, isLoading: salesOrderLoading, isFetching: salesOrderFetching } = Queries.useGetSalesOrder(params);
+  const { data: salesOrder, isLoading: salesOrderLoading, isFetching: salesOrderFetching } = Queries.useGetSalesOrder({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetSalesOrder({}, false);
   const { mutate: deleteSalesOrderMutate } = Mutations.useDeleteSalesOrder();
   const { mutate: editSalesOrder, isPending: isEditLoading } = Mutations.useEditSalesOrder();
@@ -77,6 +83,11 @@ const SalesOrder = () => {
 
   const filter = [CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, SALES_ORDER_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
 
+  const children = (
+    <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+      <CommonDateRangeSelector value={range} onChange={setRange} active="This Financial Year" />
+    </Grid>
+  );
   const stats = [
     { label: "All", value: summaryData?.allSalesOrders || 0, color: "primary" },
     { label: "Pending", value: summaryData?.pending || 0, color: "success" },
@@ -90,7 +101,7 @@ const SalesOrder = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.SALES.SALES_ORDER.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.SALES_ORDER.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 2, xl: 2.3 }} />
-        <AdvancedSearch filter={filter} />
+        <AdvancedSearch filter={filter} children={children} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-import { useMemo } from "react";
+import { Box, Grid } from "@mui/material";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
@@ -7,14 +7,19 @@ import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDat
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, INVOICE_STATUS } from "../../../Data";
 import type { AppGridColDef, InvoiceBase } from "../../../Types";
-import { CreateFilter, GenerateOptions } from "../../../Utils";
+import { CreateFilter, DateConfig, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
+import { useAppSelector } from "../../../Store/hooks";
+import { CommonDateRangeSelector } from "../../../Attribute";
 
 const Invoice = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
 
-  const { data: invoice, isLoading: invoiceLoading, isFetching: invoiceFetching } = Queries.useGetInvoice(params);
+  const { data: invoice, isLoading: invoiceLoading, isFetching: invoiceFetching } = Queries.useGetInvoice({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetInvoice({}, false);
   const { mutate: deleteInvoiceMutate } = Mutations.useDeleteInvoice();
   const { mutate: editInvoice, isPending: isEditLoading } = Mutations.useEditInvoice();
@@ -87,6 +92,12 @@ const Invoice = () => {
 
   const filter = [CreateFilter("Select Customer", "customerFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(customerData?.data), customerDataLoading, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, INVOICE_STATUS, false, { xs: 12, sm: 6, md: 3 })];
 
+  const children = (
+    <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+      <CommonDateRangeSelector value={range} onChange={setRange} active="This Financial Year" />
+    </Grid>
+  );
+
   const stats = [
     { label: "All", value: summaryData?.allInvoices || 0, color: "primary" },
     { label: "Invoiced", value: summaryData?.invoiced || 0, color: "primary" },
@@ -102,7 +113,7 @@ const Invoice = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.SALES.INVOICE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.INVOICE.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
         <CommonStatsCard stats={stats} grid={{ xs: 6, sm: 2, md: 2, xl: 1.7 }} />
-        <AdvancedSearch filter={filter} />
+        <AdvancedSearch filter={filter} children={children} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

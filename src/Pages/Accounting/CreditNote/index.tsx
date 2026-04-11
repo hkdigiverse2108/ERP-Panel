@@ -1,21 +1,27 @@
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
 import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { CreditNoteBase } from "../../../Types";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import { useAppSelector } from "../../../Store/hooks";
+import { DateConfig } from "../../../Utils";
+import { CommonDateRangeSelector } from "../../../Attribute";
 
 const CreditNote = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.BASE);
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
 
-  const { data: creditNote_data, isLoading: creditNoteDataLoading, isFetching: creditNoteDataFetching } = Queries.useGetCreditNote(params);
+  const { data: creditNote_data, isLoading: creditNoteDataLoading, isFetching: creditNoteDataFetching } = Queries.useGetCreditNote({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetCreditNote({}, false);
 
   const { mutate: deleteCreditNoteMutate } = Mutations.useDeleteCreditNote();
@@ -71,10 +77,17 @@ const CreditNote = () => {
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
+  const children = (
+    <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+      <CommonDateRangeSelector value={range} onChange={setRange} active="This Financial Year" />
+    </Grid>
+  );
+
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.CREDIT_NOTE.BASE} />
-      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid" }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch children={children} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
