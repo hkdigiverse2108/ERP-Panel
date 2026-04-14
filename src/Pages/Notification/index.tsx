@@ -28,7 +28,7 @@ const Notification = () => {
   const totalRows = notificationData?.data?.totalData || 0;
 
   const columns: AppGridColDef<NotificationBase>[] = [
-    { field: "title", headerName: "Title", flex: 1, minWidth: 150 },
+    { field: "title", headerName: "Title", flex: 1, minWidth: 200 },
     { field: "message", headerName: "Message", flex: 2, minWidth: 250 },
     CommonObjectPropertyColumn<NotificationBase>("meta.type", "meta", ["type"], { headerName: "Type", width: 120 }),
     CommonObjectPropertyColumn<NotificationBase>("meta.action", "meta", ["action"], { headerName: "Action", width: 120 }),
