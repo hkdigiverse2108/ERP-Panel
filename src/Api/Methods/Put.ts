@@ -3,7 +3,7 @@ import { getToken } from "../../Utils";
 import { HTTP_STATUS } from "../../Constants";
 import { ShowNotification } from "../../Attribute";
 
-export async function Put<TInput, TResponse>(url: string, data?: TInput, isToken: boolean = true): Promise<TResponse> {
+export async function Put<TInput, TResponse>(url: string, data?: TInput, isToken: boolean = true, isToast: boolean = true): Promise<TResponse> {
   const authToken = getToken();
   const isFormData = data instanceof FormData;
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -17,13 +17,12 @@ export async function Put<TInput, TResponse>(url: string, data?: TInput, isToken
     },
     data,
   };
-
   try {
     const response = await axios(config);
     const resData = response.data;
 
     if (response.status === HTTP_STATUS.OK) {
-      ShowNotification(resData.message, "success");
+      isToast && ShowNotification(resData.message, "success");
       return resData;
     } else {
       return null as TResponse;

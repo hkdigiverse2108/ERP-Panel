@@ -238,4 +238,6 @@ export const Mutations = {
   useApproveStockTransfer: () => useMutations<ApproveStockTransferPayload, void>([KEYS.STOCK_TRANSFER.APPROVE, KEYS.STOCK_TRANSFER.BASE], (input) => Post(URL_KEYS.STOCK_TRANSFER.APPROVE, input)),
   useRejectStockTransfer: () => useMutations<RejectStockTransferPayload, void>([KEYS.STOCK_TRANSFER.REJECT, KEYS.STOCK_TRANSFER.BASE], (input) => Post(URL_KEYS.STOCK_TRANSFER.REJECT, input)),
   useConfirmReceiptStockTransfer: () => useMutations<ConfirmReceiptStockTransferPayload, void>([KEYS.STOCK_TRANSFER.CONFIRM_RECEIPT, KEYS.STOCK_TRANSFER.BASE], (input) => Post(URL_KEYS.STOCK_TRANSFER.CONFIRM_RECEIPT, input)),
+
+  useReadNotification: () => useMutations<string, void>([KEYS.NOTIFICATION.READ, KEYS.NOTIFICATION.BASE], (id) => Put(`${URL_KEYS.NOTIFICATION.READ}/${id}`, undefined, true, false)),
 };

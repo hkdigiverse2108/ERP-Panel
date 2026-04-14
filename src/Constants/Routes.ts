@@ -165,4 +165,7 @@ export const ROUTES = {
     ADD_EDIT: "/stock-transfer/add-edit",
     VIEW: "/stock-transfer/view",
   },
+  NOTIFICATION: {
+    BASE: "/notification",
+  },
 } as const;

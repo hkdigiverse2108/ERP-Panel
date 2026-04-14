@@ -229,4 +229,5 @@ export const PAGE_TITLE = {
       EDIT: "Edit Sales Credit Note",
     },
   },
+  NOTIFICATION: "Notification",
 } as const;

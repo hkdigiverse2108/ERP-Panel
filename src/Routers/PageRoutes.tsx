@@ -69,6 +69,7 @@ import ResetPassword from "../Pages/Auth/UpdatePassword";
 import StockTransfer from "../Pages/Inventory/StockTransfer";
 import StockTransferForm from "../Pages/Inventory/StockTransfer/StockTransferForm";
 import StockTransferDetails from "../Pages/Inventory/StockTransfer/StockTransferDetails";
+import Notification from "../Pages/Notification";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -168,6 +169,7 @@ export const PageRoutes = [
   { path: ROUTES.STOCK_TRANSFER.BASE, name: PAGE_TITLE.INVENTORY.STOCK_TRANSFER.BASE, element: <StockTransfer /> },
   { path: ROUTES.STOCK_TRANSFER.ADD_EDIT, name: PAGE_TITLE.INVENTORY.STOCK_TRANSFER.BASE, element: <StockTransferForm /> },
   { path: ROUTES.STOCK_TRANSFER.VIEW, name: PAGE_TITLE.INVENTORY.STOCK_TRANSFER.BASE, element: <StockTransferDetails /> },
+  { path: ROUTES.NOTIFICATION.BASE, name: PAGE_TITLE.NOTIFICATION, element: <Notification /> },
 ];
 
 export const AuthRoutes = [

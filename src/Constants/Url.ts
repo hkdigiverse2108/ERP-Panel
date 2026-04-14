@@ -425,4 +425,13 @@ export const URL_KEYS = {
     REJECT: "/stock-transfer/reject",
     CONFIRM_RECEIPT: "/stock-transfer/confirm-receipt",
   },
+
+  NOTIFICATION: {
+    BASE: "/notification",
+    ALL: "/notification/all",
+    READ: "/notification/read",
+    READ_ALL: "/notification/read-all",
+    DELETE: "/notification/delete",
+  },
+
 } as const;

@@ -15,6 +15,7 @@ import { useCompanyFinancialYears } from "../Utils/Hooks";
 import { ROUTES } from "../Constants";
 import CommonTermsAndConditionFormModal from "../Components/Common/TermsAndConditions/CommonTermsAndConditionFormModal";
 import CommonTermsAndConditionSelectModal from "../Components/Common/TermsAndConditions/CommonTermsAndConditionSelectModal";
+import { disconnectSocket, initSocket } from "../Utils";
 
 const Layout = () => {
   const { isExpanded, isMobileOpen, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
@@ -69,6 +70,13 @@ const Layout = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [dispatch]);
+
+  useEffect(() => {
+    if (user?._id) {
+      initSocket(user);
+    }
+    return () => disconnectSocket();
+  }, [user?._id]);
 
   return (
     <>
