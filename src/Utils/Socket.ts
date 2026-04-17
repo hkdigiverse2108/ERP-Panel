@@ -1,10 +1,10 @@
 import { io, Socket } from "socket.io-client";
-import { SOCKET_EVENTS } from "../Constants";
+import { KEYS, SOCKET_EVENTS } from "../Constants";
 import { ShowNotification } from "../Attribute";
 
 let socket: Socket | null = null;
 
-export const initSocket = (user: any) => {
+export const initSocket = (user: any, queryClient: any) => {
   if (socket) return socket; // Prevent multiple connections
 
   socket = io(import.meta.env.VITE_API_BASE_URL);
@@ -18,8 +18,9 @@ export const initSocket = (user: any) => {
 
   // Central Notification Listener
   const handleNotification = (payload: any) => {
-    ShowNotification(payload.title, "info");
-    console.log("Notification received", payload, payload.title);
+    ShowNotification(payload.message, "info");
+    console.log("Notification received", payload);
+    queryClient.invalidateQueries({ queryKey: [KEYS.NOTIFICATION.BASE] });
   };
 
   // Register all events from Constants
