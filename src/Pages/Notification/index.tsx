@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Queries } from "../../Api";
-import { CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../Components/Common";
+import { CommonBreadcrumbs, CommonCard, CommonDataGrid } from "../../Components/Common";
 import { PAGE_TITLE } from "../../Constants";
 import type { AppGridColDef } from "../../Types";
 import { BREADCRUMBS } from "../../Data";
@@ -10,7 +10,7 @@ import { CommonObjectPropertyColumn } from "../../Components/Common/CommonDataGr
 import type { NotificationBase } from "../../Types/Notification";
 
 const Notification = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, params } = useDataGrid();
 
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetNotification({}, false);
   const { data: notificationData, isLoading: notificationLoading, isFetching: notificationFetching } = Queries.useGetNotification(params);
