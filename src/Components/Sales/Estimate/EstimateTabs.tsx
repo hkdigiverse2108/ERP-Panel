@@ -9,6 +9,13 @@ import { GenerateOptions } from "../../../Utils";
 import { FieldArray, useFormikContext } from "formik";
 import type { EstimateItem, EstimateFormValues } from "../../../Types/Estimate";
 import type { CommonTableColumn, ProductBase } from "../../../Types";
+import { useAppDispatch } from "../../../Store/hooks";
+import { setBulkAddModal } from "../../../Store/Slices/ModalSlice";
+import { extractExcelData } from "../../../Utils/ExcelParser";
+import { mapExcelToFormItems } from "../../../Utils/MapExcelData";
+import BulkAddModal from "../../Common/BulkAddModal";
+import { UploadFile } from "@mui/icons-material";
+import { BULK_IMPORT_TYPES } from "../../../Constants";
 
 const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
   const [tabValue, setTabValue] = useState(0);
@@ -16,6 +23,24 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
 
   const isCustomerSelected = !!values?.customerId;
   const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown({}, !!values?.customerId);
+  const dispatch = useAppDispatch();
+
+  const handleBulkAdd = async (file: File) => {
+    try {
+      const rawData = await extractExcelData(file);
+      const mappedItems = mapExcelToFormItems(rawData, BULK_IMPORT_TYPES.ESTIMATE, productsData?.data || [], emptyRow);
+      
+      const updatedItems = [
+        ...(values.items ?? []).filter((i: EstimateItem) => i.productId),
+        ...mappedItems
+      ];
+      setFieldValue("items", updatedItems);
+      dispatch(setBulkAddModal({ open: false, title: "", type: "" }));
+    } catch (err) {
+      console.error("Error processing Excel:", err);
+    }
+  };
+
   const calculateRowValues = (index: number) => {
     const row = values?.items?.[index];
     const product = productsData?.data?.find((p: ProductBase) => p._id === row?.productId);
@@ -115,12 +140,22 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
   return (
     <>
       <Box sx={{ width: "100%" }}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Tabs value={tabValue} onChange={(_, v) => setTabValue(v)}>
             <Tab label="Item Details" />
             <Tab label="Terms & Conditions" />
             <Tab label="Shipping Details" />
           </Tabs>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, p: 1 }}>
+            <CommonButton
+              variant="contained"
+              startIcon={<UploadFile />}
+              title="Upload Products"
+              size="small"
+              disabled={!isCustomerSelected}
+              onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Estimate", type: BULK_IMPORT_TYPES.ESTIMATE }))}
+            />
+          </Box>
         </Box>
 
         <CommonTabPanel value={tabValue} index={0}>
@@ -253,6 +288,7 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
           </Box>
         </CommonTabPanel>
       </Box>
+      <BulkAddModal type={BULK_IMPORT_TYPES.ESTIMATE} onUpload={handleBulkAdd} />
     </>
   );
 };

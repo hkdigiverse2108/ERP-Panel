@@ -879,7 +879,7 @@ export const SalesOrderFormSchema = Yup.object({
 export const InvoiceFormSchema = Yup.object({
   customerId: Validation("string", "Customer"),
   date: Validation("string", "Date"),
-  dueDate: Validation("string", "Due Date", { required: false }),
+  dueDate: Validation("string", "Due Date"),
   items: Yup.array()
     .of(
       Yup.object({

@@ -9,6 +9,13 @@ import { GenerateOptions } from "../../../Utils";
 import { FieldArray, useFormikContext } from "formik";
 import type { DeliveryChallanItem, DeliveryChallanFormValues } from "../../../Types";
 import type { CommonTableColumn, ProductBase } from "../../../Types";
+import { useAppDispatch } from "../../../Store/hooks";
+import { setBulkAddModal } from "../../../Store/Slices/ModalSlice";
+import { extractExcelData } from "../../../Utils/ExcelParser";
+import { mapExcelToFormItems } from "../../../Utils/MapExcelData";
+import BulkAddModal from "../../Common/BulkAddModal";
+import { UploadFile } from "@mui/icons-material";
+import { BULK_IMPORT_TYPES } from "../../../Constants";
 
 const DeliveryChallanTabs = ({ emptyRow }: { emptyRow: DeliveryChallanItem }) => {
   const [tabValue, setTabValue] = useState(0);
@@ -16,6 +23,23 @@ const DeliveryChallanTabs = ({ emptyRow }: { emptyRow: DeliveryChallanItem }) =>
 
   const isCustomerSelected = !!values?.customerId;
   const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown({}, !!values?.customerId);
+  const dispatch = useAppDispatch();
+
+  const handleBulkAdd = async (file: File) => {
+    try {
+      const rawData = await extractExcelData(file);
+      const mappedItems = mapExcelToFormItems(rawData, BULK_IMPORT_TYPES.DELIVERY_CHALLAN, productsData?.data || [], emptyRow);
+      
+      const updatedItems = [
+        ...(values.items ?? []).filter((i: DeliveryChallanItem) => i.productId),
+        ...mappedItems
+      ];
+      setFieldValue("items", updatedItems);
+      dispatch(setBulkAddModal({ open: false, title: "", type: "" }));
+    } catch (err) {
+      console.error("Error processing Excel:", err);
+    }
+  };
 
   const calculateRowValues = (index: number) => {
     const row = values?.items?.[index];
@@ -118,12 +142,22 @@ const DeliveryChallanTabs = ({ emptyRow }: { emptyRow: DeliveryChallanItem }) =>
   return (
     <>
       <Box sx={{ width: "100%" }}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Tabs value={tabValue} onChange={(_, v) => setTabValue(v)}>
             <Tab label="Item Details" />
             <Tab label="Terms & Conditions" />
             <Tab label="Shipping Details" />
           </Tabs>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, p: 1 }}>
+            <CommonButton
+              variant="contained"
+              startIcon={<UploadFile />}
+              title="Upload Products"
+              size="small"
+              disabled={!isCustomerSelected}
+              onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Delivery Challan", type: BULK_IMPORT_TYPES.DELIVERY_CHALLAN }))}
+            />
+          </Box>
         </Box>
 
         <CommonTabPanel value={tabValue} index={0}>
@@ -249,6 +283,7 @@ const DeliveryChallanTabs = ({ emptyRow }: { emptyRow: DeliveryChallanItem }) =>
           </Box>
         </CommonTabPanel>
       </Box>
+      <BulkAddModal type={BULK_IMPORT_TYPES.DELIVERY_CHALLAN} onUpload={handleBulkAdd} />
     </>
   );
 };

@@ -145,7 +145,7 @@ const Product = () => {
       <Grid container spacing={1}>
         {permission?.add && (
           <Grid size={"auto"}>
-            <CommonButton variant="contained" startIcon={<UploadFile />} title="Import" size="medium" onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Products", type: "product" }))} />
+            <CommonButton variant="contained" startIcon={<UploadFile />} title="Import" size="medium" onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Products", type: "PRODUCT" }))} />
           </Grid>
         )}
         {permissionItem?.add && (
@@ -190,7 +190,7 @@ const Product = () => {
         </CommonModal>
       </Box>
 
-      <BulkAddModal type="product" onUpload={handleBulkAdd} loading={isBulkAddLoading} />
+      <BulkAddModal type="PRODUCT" onUpload={handleBulkAdd} loading={isBulkAddLoading} />
     </>
   );
 };

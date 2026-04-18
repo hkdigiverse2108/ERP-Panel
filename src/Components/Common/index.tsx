@@ -25,4 +25,3 @@ import CommonAdditionalChargeSection from "./CommonAdditionalChargeSection";
 import CommonShippingDetails from "./CommonShippingDetails";
 
 export { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonDrawer, CommonImageBox, CommonModal, CommonObjectNameColumn, CommonPhoneColumns, CommonProfileAvatar, CommonStatsCard, CommonTabPanel, CommonTable, CommonUpload, DependentSelect, AddressSelectionModal, CommonSummarySection, CommonSummaryWatcher, CommonTermsAndCondition, CommonTermsAndConditionSelectModal, CommonTermsAndConditionFormModal, CommonAdditionalChargeSection, CommonShippingDetails };
-

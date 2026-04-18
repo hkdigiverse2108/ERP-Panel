@@ -8,6 +8,13 @@ import { CommonButton, CommonValidationSelect, CommonValidationTextField } from 
 import { CommonTabPanel, CommonTable, CommonTermsAndCondition } from "../../Common";
 import { GenerateOptions } from "../../../Utils";
 import type { CommonTableColumn, ProductBase, SupplierBillProductItem, SupplierBillReturnProductItem, TaxBase } from "../../../Types";
+import { useAppDispatch } from "../../../Store/hooks";
+import { setBulkAddModal } from "../../../Store/Slices/ModalSlice";
+import { extractExcelData } from "../../../Utils/ExcelParser";
+import { mapExcelToFormItems } from "../../../Utils/MapExcelData";
+import BulkAddModal from "../../Common/BulkAddModal";
+import { UploadFile } from "@mui/icons-material";
+import { BULK_IMPORT_TYPES } from "../../../Constants";
 
 interface SupplierBillTabsProps {
     emptyRow: SupplierBillProductItem;
@@ -22,6 +29,23 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
 
     const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown();
     const { data: taxData } = Queries.useGetTaxDropdown();
+    const dispatch = useAppDispatch();
+
+    const handleBulkAdd = async (file: File) => {
+        try {
+            const rawData = await extractExcelData(file);
+            const mappedItems = mapExcelToFormItems(rawData, BULK_IMPORT_TYPES.SUPPLIER_BILL, productsData?.data || [], emptyRow);
+
+            const updatedItems = [
+                ...(values.productDetails ?? []).filter((i: SupplierBillProductItem) => i.productId),
+                ...mappedItems
+            ];
+            setFieldValue("productDetails", updatedItems);
+            dispatch(setBulkAddModal({ open: false, title: "", type: "" }));
+        } catch (err) {
+            console.error("Error processing Excel:", err);
+        }
+    };
 
     const calculateRowValues = (index: number, isReturn: boolean = false) => {
         const row = isReturn ? values?.returnProductDetails?.item?.[index] : values?.productDetails?.[index];
@@ -239,12 +263,22 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
     return (
         <>
             <Box sx={{ width: "100%" }}>
-                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Box sx={{ borderBottom: 1, borderColor: "divider", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <Tabs value={tabValue} onChange={(_, v) => setTabValue(v)}>
                         <Tab label="Product Details" />
                         <Tab label="Terms &amp; Conditions" />
                         <Tab label="Return Product Details" />
                     </Tabs>
+                    <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, p: 1 }}>
+                        <CommonButton
+                            variant="contained"
+                            startIcon={<UploadFile />}
+                            title="Upload Products"
+                            size="small"
+                            disabled={!isSupplierSelected}
+                            onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Supplier Bill", type: BULK_IMPORT_TYPES.SUPPLIER_BILL }))}
+                        />
+                    </Box>
                 </Box>
 
                 {/* ================= TAB 1 : PRODUCT DETAILS ================= */}
@@ -524,6 +558,7 @@ const SupplierBillTabs = ({ emptyRow, emptyReturnRow }: SupplierBillTabsProps) =
                     </Box>
                 </CommonTabPanel>
             </Box>
+            <BulkAddModal type={BULK_IMPORT_TYPES.SUPPLIER_BILL} onUpload={handleBulkAdd} />
         </>
     );
 };

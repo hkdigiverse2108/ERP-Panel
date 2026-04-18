@@ -133,7 +133,7 @@ const Contact = () => {
       </Grid>
       {permission?.add && (
         <Grid size="auto" sx={{ ml: "auto" }}>
-          <CommonButton variant="contained" startIcon={<UploadFile />} title="Import" size="small" onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Contacts", type: "contact" }))} />
+          <CommonButton variant="contained" startIcon={<UploadFile />} title="Import" size="small" onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Contacts", type: "CONTACT" }))} />
         </Grid>
       )}
     </>
@@ -157,7 +157,7 @@ const Contact = () => {
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
       </Box>
 
-      <BulkAddModal type="contact" onUpload={handleBulkAdd} loading={isBulkAddLoading} />
+      <BulkAddModal type="CONTACT" onUpload={handleBulkAdd} loading={isBulkAddLoading} />
     </>
   );
 };
