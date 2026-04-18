@@ -1,23 +1,28 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { type GridRenderCellParams } from "@mui/x-data-grid";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import type { AppGridColDef, StockTransferBase } from "../../../Types";
-import { CreateFilter } from "../../../Utils";
+import { CreateFilter, DateConfig } from "../../../Utils";
 import { BREADCRUMBS, STOCK_TRANSFER_STATUS, STOCK_TRANSFER_STATUS_OPTIONS, STOCK_TRANSFER_TYPE_OPTIONS } from "../../../Data";
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
+import { useAppSelector } from "../../../Store/hooks";
+import { CommonDateRangeSelector } from "../../../Attribute";
 
 const StockTransfer = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK_TRANSFER.BASE);
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
 
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetStockTransfer({}, false);
-  const { data: stockTransferData, isLoading: stockTransferLoading, isFetching: stockTransferFetching } = Queries.useGetStockTransfer(params);
+  const { data: stockTransferData, isLoading: stockTransferLoading, isFetching: stockTransferFetching } = Queries.useGetStockTransfer({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
   const { mutate: deleteStockTransferMutate } = Mutations.useDeleteStockTransfer();
   const { mutate: editStockTransfer } = Mutations.useEditStockTransfer();
 
@@ -106,12 +111,17 @@ const StockTransfer = () => {
   };
 
   const filter = [CreateFilter("Select Type", "typeFilter", advancedFilter, updateAdvancedFilter, STOCK_TRANSFER_TYPE_OPTIONS, false, { xs: 12, sm: 6, md: 3 }), CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, STOCK_TRANSFER_STATUS_OPTIONS, false, { xs: 12, sm: 6, md: 3 })];
+  const children = (
+    <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+      <CommonDateRangeSelector value={range} onChange={setRange} active="This Financial Year" />
+    </Grid>
+  );
 
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.STOCK_TRANSFER.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.STOCK_TRANSFER.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-        <AdvancedSearch filter={filter} />
+        <AdvancedSearch children={children} filter={filter} />
         <CommonCard hideDivider>
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>

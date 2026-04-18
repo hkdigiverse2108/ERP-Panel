@@ -17,7 +17,7 @@ import type { ConsumptionTypeBase } from "./ConsumptionType";
 import type { PaymentTermsBase } from "./PaymentTerms";
 
 export type GridType = number | object | "auto" | "grow";
-
+export type FilterKeyType = "financial-years" | "branch";
 export interface CommonProfileAvatarProps {
   fullName?: string;
   profileImage?: string;

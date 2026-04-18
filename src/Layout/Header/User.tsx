@@ -1,19 +1,58 @@
 import { Box } from "@mui/material";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { CommonProfileAvatar } from "../../Components/Common";
+import { ROUTES } from "../../Constants";
 import { setSignOut } from "../../Store/Slices/AuthSlice";
 import { useAppDispatch, useAppSelector } from "../../Store/hooks";
-import { ROUTES } from "../../Constants";
-import { CommonProfileAvatar } from "../../Components/Common";
+import { useClickOutside } from "../../Utils/Hooks";
 
 const User = () => {
   const dispatch = useAppDispatch();
+  const { open, setOpen, wrapperRef } = useClickOutside();
 
   const { user } = useAppSelector((state) => state.auth);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    if (open && window.innerWidth < 1024) {
+      document.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [open]);
   return (
-    <Box className="relative group">
-      <CommonProfileAvatar fullName={user?.fullName} profileImage={user?.profileImage} className="max-xsm:text-sm h-11 w-11 max-xsm:h-9 max-xsm:w-9" />
-      <div className="fixed lg:absolute max-lg:left-1 max-lg:right-1 lg:right-0 mt-3 flex min-w-[285px] max-w-[330px] flex-col rounded-xl border border-gray-50 bg-white shadow-tooltip dark:border-gray-800 dark:bg-gray-dark z-50 opacity-0 invisible scale-95 translate-y-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:visible group-hover:scale-100 group-hover:translate-y-0 ">
+    <Box
+      ref={wrapperRef}
+      className="relative group"
+      onMouseEnter={() => {
+        if (window.innerWidth >= 1024) setOpen(true);
+      }}
+      onMouseLeave={() => {
+        if (window.innerWidth >= 1024) setOpen(false);
+      }}
+    >
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          if (window.innerWidth < 1024) {
+            setOpen((prev) => !prev);
+          }
+        }}
+      >
+        <CommonProfileAvatar fullName={user?.fullName} profileImage={user?.profileImage} className="max-xsm:text-sm h-11 w-11 max-xsm:h-9 max-xsm:w-9" />
+      </div>
+      <div
+        className={`fixed lg:absolute max-lg:left-1 max-lg:right-1 lg:right-0 mt-3 flex min-w-[285px] max-w-[330px] flex-col rounded-xl border border-gray-50 bg-white shadow-tooltip dark:border-gray-800 dark:bg-gray-dark z-50 transition-all duration-200 ease-out
+        ${open ? "opacity-100 visible scale-100 translate-y-0" : "opacity-0 invisible scale-95 translate-y-2"}`}
+      >
         <div className="p-3">
           <div className="flex items-center gap-3">
             <CommonProfileAvatar fullName={user?.fullName} profileImage={user?.profileImage} className="h-11 w-11" />

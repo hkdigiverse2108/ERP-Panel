@@ -29,28 +29,28 @@ const getRange = (label: RangeLabel): DateRange<Dayjs> => {
       return [today.startOf("month"), today.endOf("month")];
 
     case "Last 15 Days":
-      return [today.subtract(15, "day"), today];
+      return [today.subtract(15, "day").startOf("day"), today.endOf("day")];
 
     case "Last 30 Days":
-      return [today.subtract(30, "day"), today];
+      return [today.subtract(30, "day").startOf("day"), today.endOf("day")];
 
     case "This Quarter":
-      if (month < 3) return [DateConfig.utc(`${year}-01-01`), DateConfig.utc(`${year}-03-31`)];
-      if (month < 6) return [DateConfig.utc(`${year}-04-01`), DateConfig.utc(`${year}-06-30`)];
-      if (month < 9) return [DateConfig.utc(`${year}-07-01`), DateConfig.utc(`${year}-09-30`)];
-      return [DateConfig.utc(`${year}-10-01`), DateConfig.utc(`${year}-12-31`)];
+      if (month < 3) return [DateConfig.utc(`${year}-01-01`).startOf("day"), DateConfig.utc(`${year}-03-31`).endOf("day")];
+      if (month < 6) return [DateConfig.utc(`${year}-04-01`).startOf("day"), DateConfig.utc(`${year}-06-30`).endOf("day")];
+      if (month < 9) return [DateConfig.utc(`${year}-07-01`).startOf("day"), DateConfig.utc(`${year}-09-30`).endOf("day")];
+      return [DateConfig.utc(`${year}-10-01`).startOf("day"), DateConfig.utc(`${year}-12-31`).endOf("day")];
 
     case "Last Quarter":
-      if (month < 3) return [DateConfig.utc(`${year - 1}-10-01`), DateConfig.utc(`${year - 1}-12-31`)];
-      if (month < 6) return [DateConfig.utc(`${year}-01-01`), DateConfig.utc(`${year}-03-31`)];
-      if (month < 9) return [DateConfig.utc(`${year}-04-01`), DateConfig.utc(`${year}-06-30`)];
-      return [DateConfig.utc(`${year}-07-01`), DateConfig.utc(`${year}-09-30`)];
+      if (month < 3) return [DateConfig.utc(`${year - 1}-10-01`).startOf("day"), DateConfig.utc(`${year - 1}-12-31`).endOf("day")];
+      if (month < 6) return [DateConfig.utc(`${year}-01-01`).startOf("day"), DateConfig.utc(`${year}-03-31`).endOf("day")];
+      if (month < 9) return [DateConfig.utc(`${year}-04-01`).startOf("day"), DateConfig.utc(`${year}-06-30`).endOf("day")];
+      return [DateConfig.utc(`${year}-07-01`).startOf("day"), DateConfig.utc(`${year}-09-30`).endOf("day")];
 
     case "This Financial Year":
-      return [DateConfig.utc(`${year}-04-01`), DateConfig.utc(`${year + 1}-03-31`)];
+      return [DateConfig.utc(`${year}-04-01`).startOf("day"), DateConfig.utc(`${year + 1}-03-31`).endOf("day")];
 
     case "Last Financial Year":
-      return [DateConfig.utc(`${year - 1}-04-01`), DateConfig.utc(`${year}-03-31`)];
+      return [DateConfig.utc(`${year - 1}-04-01`).startOf("day"), DateConfig.utc(`${year}-03-31`).endOf("day")];
 
     default:
       return [today, today];

@@ -476,9 +476,8 @@ export const ProductItemRemoveFormSchema = Yup.object({
 });
 
 export const MaterialConsumptionFormSchema = Yup.object({
-  branchId: Validation("string", "Branch", { required: false }),
   date: Validation("string", "Date"),
-  type: Validation("string", "Type", { required: false }),
+  consumptionTypeId: Validation("string", "Consumption Type"),
   remark: Validation("string", "Remark", {
     required: false,
     extraRules: (s) => s?.trim().max(200, "Maximum 200 characters allowed"),
