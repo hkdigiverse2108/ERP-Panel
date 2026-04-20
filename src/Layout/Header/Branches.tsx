@@ -6,19 +6,21 @@ import { useAppDispatch, useAppSelector } from "../../Store/hooks";
 import { setIsBranch } from "../../Store/Slices/CompanySlice";
 import { setBranchFilter } from "../../Store/Slices/DashboardSlice";
 import { useClickOutside } from "../../Utils/Hooks";
+import { STORAGE_KEYS } from "../../Constants";
+import { Storage } from "../../Utils";
 
 const Branches = () => {
   const { isBranch } = useAppSelector((state) => state.company);
   const { data: branches, isLoading: isBranchesLoading } = Queries.useGetBranchDropdown();
+  const StoredUser = JSON.parse(Storage.getItem(STORAGE_KEYS.USER) || "null");
 
   const dispatch = useAppDispatch();
 
   const { open, setOpen, wrapperRef } = useClickOutside();
 
-  const branchData = branches?.data?.find((item) => item._id === isBranch);
+  const branchData = branches?.data?.find((item) => item._id === (isBranch || StoredUser?.branchId?._id));
 
   const handleOnSubmit = (id: string) => {
-    
     dispatch(setIsBranch(id));
     dispatch(setBranchFilter([id]));
     setOpen(false); // close after select

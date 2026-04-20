@@ -3,13 +3,11 @@ import { Storage, Stringify } from "../../Utils";
 import { STORAGE_KEYS } from "../../Constants";
 
 const StoredCompany = JSON.parse(Storage.getItem(STORAGE_KEYS.COMPANY) || "null");
-const StoredUser = JSON.parse(Storage.getItem(STORAGE_KEYS.USER) || "null");
-const defaultBranchId = StoredUser?.branchId?._id ?? StoredUser?.branchId ?? null;
 
 const initialState = {
   company: StoredCompany,
   financialYear: [{ label: "", value: "" }],
-  isBranch: defaultBranchId ? String(defaultBranchId) : "",
+  isBranch: "",
   isCompanyLoading: false,
 };
 
