@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setPayLaterModal } from "../../../../../Store/Slices/ModalSlice";
 import { clearPosProduct, setMultiplePay, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
 import type { CommonTableColumn, MultiplePaymentType, PosProductDataModal, PosProductOrderDataResponse } from "../../../../../Types";
-import { GenerateOptions, RemoveEmptyFields } from "../../../../../Utils";
+import { GenerateOptions, RemoveEmptyFields, SanitizePayload } from "../../../../../Utils";
 import { MultiplePaySchema } from "../../../../../Utils/ValidationSchemas";
 import { CommonTable } from "../../../../Common";
 import PayLater from "./PayLater";
@@ -25,6 +25,8 @@ const MultiplePay = () => {
   const { mutate: editPosOrder, isPending: editPosOrderLoading } = Mutations.useEditPosOrder();
 
   const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown();
+  const { data: customerDropdown } = Queries.useGetContactDropdown({ typeFilter: "customer" });
+  const customerData = customerDropdown?.data?.find((item) => item._id === PosProduct?.customerId);
 
   const initialValues: { multiplePayments: MultiplePaymentType[] } = {
     multiplePayments: [
@@ -67,7 +69,7 @@ const MultiplePay = () => {
         dispatch(setMultiplePay());
         dispatch(setSelectedOrderId(res?.data?._id));
       };
-      const changedFields = RemoveEmptyFields(payload);
+      const changedFields = SanitizePayload(payload);
       if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess });
       else addPosOrder(RemoveEmptyFields(payload), { onSuccess });
     } else {
@@ -99,7 +101,7 @@ const MultiplePay = () => {
               <h3 className="text-3xl font-medium mb-1 text-gray-600 dark:text-gray-300">Sale Summary</h3>
               <div>
                 <span className="text-sm text-gray-600 dark:text-gray-300">Customer : </span>
-                <span className="text-sm text-brand-500">Walk in Customer</span>
+                <span className="text-sm text-brand-500">{customerData?.firstName + " " + customerData?.lastName}</span>
               </div>
               <div className="border border-gray-200 dark:border-gray-600 rounded-md overflow-hidden my-3">
                 <div className="max-h-120 overflow-y-auto custom-scrollbar">

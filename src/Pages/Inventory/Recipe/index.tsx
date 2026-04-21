@@ -1,21 +1,28 @@
-import { Box } from "@mui/material";
-import { useMemo } from "react";
+import { Box, Grid } from "@mui/material";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, RecipeBase } from "../../../Types";
-import { FormatDate } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import { useAppSelector } from "../../../Store/hooks";
+import { DateConfig } from "../../../Utils";
+import { CommonDateRangeSelector } from "../../../Attribute";
 
 const Recipe = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
 
   const navigate = useNavigate();
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.RECIPE.BASE);
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
 
-  const { data, isLoading, isFetching } = Queries.useGetRecipe(params);
+  const { data, isLoading, isFetching } = Queries.useGetRecipe({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetRecipe({}, false);
   const { mutate: deleteRecipe, isPending: isDeleteLoading } = Mutations.useDeleteRecipe();
   const { mutate: editRecipe, isPending: isEditLoading } = Mutations.useEditRecipe();
   const rows = useMemo(() => {
@@ -41,10 +48,12 @@ const Recipe = () => {
   };
 
   const columns: AppGridColDef<RecipeBase>[] = [
-    { field: "number", headerName: "Recipe No", width: 200 },
-    { field: "name", headerName: "Recipe Name", width: 270 },
-    { field: "date", headerName: "Recipe Date", width: 220, valueGetter: (v) => FormatDate(v) },
-    { field: "type", headerName: "Recipe Type", minWidth: 150, flex: 1 },
+    { field: "number", headerName: "Recipe No", width: 150 },
+    { field: "name", headerName: "Recipe Name", width: 150 },
+    CommonObjectPropertyColumn<RecipeBase>("date", "date", [], { headerName: "Recipe Date", width: 160, type: "date" }),
+    CommonObjectPropertyColumn<RecipeBase>("type", "type", [], { headerName: "Recipe Type", flex: 1, minWidth: 150, type: "format" }),
+    CommonObjectPropertyColumn<RecipeBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<RecipeBase>({
@@ -72,8 +81,14 @@ const Recipe = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.INVENTORY.RECIPE.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
-
+  const filter = (
+    <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+      <CommonDateRangeSelector value={range} onChange={setRange} active="This Financial Year" />
+    </Grid>
+  );
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.RECIPE.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.RECIPE.BASE} />
@@ -82,6 +97,7 @@ const Recipe = () => {
         {/* <Grid item xs={12} sm={4}>
             <CommonSelect label="Recipe Type" value={value} options={RECIPE_TYPE_OPTIONS} multiple />
           </Grid> */}
+        <AdvancedSearch children={filter} />
 
         <CommonCard hideDivider>
           <CommonDataGrid {...gridOptions} />

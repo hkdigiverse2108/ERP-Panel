@@ -45,12 +45,12 @@ const ProductForm = () => {
       brandId: data?.brandId?._id || "",
       subBrandId: data?.subBrandId?._id || "",
       cessPercentage: data?.cessPercentage || null,
-      manageMultipleBatch: data?.manageMultipleBatch || true,
-      hasExpiry: data?.hasExpiry || true,
+      manageMultipleBatch: data?.manageMultipleBatch ?? true,
+      hasExpiry: data?.hasExpiry ?? true,
       expiryDays: data?.expiryDays || null,
       calculateExpiryOn: data?.calculateExpiryOn || "",
       expiryReferenceDate: data?.expiryReferenceDate || DateConfig.utc().toISOString(),
-      isExpiryProductSaleable: data?.isExpiryProductSaleable || true,
+      isExpiryProductSaleable: data?.isExpiryProductSaleable ?? true,
       ingredients: data?.ingredients || [],
       shortDescription: data?.shortDescription || "",
       description: data?.description || "",
@@ -58,7 +58,7 @@ const ProductForm = () => {
       netWeight: data?.netWeight || null,
       masterQty: data?.masterQty || null,
       images: data?.images || [],
-      isActive: data?.isActive || true,
+      isActive: data?.isActive ?? true,
     }),
     [data],
   );
@@ -152,7 +152,7 @@ const ProductForm = () => {
                           <CommonValidationSwitch name="isExpiryProductSaleable" label="Expiry Product Saleable" grid={{ xs: 12, sm: 6, xl: 3 }} />
                         </>
                       )}
-                      <CommonValidationCreatableSelect name="ingredients" label="Ingredients" options={[]} grid={{ xs: 12, sm: 6 }} required />
+                      <CommonValidationCreatableSelect name="ingredients" label="Ingredients" options={[]} grid={{ xs: 12, sm: 6 }} />
                       <CommonValidationTextField name="shortDescription" label="short Description" multiline grid={{ xs: 12, sm: 6 }} />
                       <CommonValidationQuillInput name="description" label="Description" grid={{ xs: 12 }} />
                       <Grid size={12}>

@@ -55,11 +55,11 @@ const CurrentRegister = () => {
 
   const Sales = [
     { label: "Opening Cash", value: summary?.openingCash },
-    { label: "Cash Payment", value: summary?.cashPayment },
+    { label: "Cash Receive", value: summary?.cashPayment },//Cash Payment
     { label: "Cheque Payment", value: summary?.chequePayment },
     { label: "Card Payment", value: summary?.cardPayment },
     { label: "Bank Payment", value: summary?.bankPayment },
-    { label: "UPI Payment", value: summary?.upiPayment },
+    { label: "UPI Receive", value: summary?.upiPayment },//UPI Payment
     { label: "Sales Return", value: summary?.salesReturn },
     { label: "Cash Refund", value: summary?.cashRefund },
     { label: "Bank Refund", value: summary?.bankRefund },

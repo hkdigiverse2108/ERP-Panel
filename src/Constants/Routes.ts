@@ -4,6 +4,8 @@ export const ROUTES = {
   ACCESS_DENIED: "/access-denied",
   AUTH: {
     SIGNIN: "/auth/signin",
+    VERIFY_OTP: "/auth/verify-otp",
+    RESET_PASSWORD: "/auth/reset-password",
   },
   CONTACT: {
     BASE: "/contact",
@@ -63,13 +65,25 @@ export const ROUTES = {
     BASE: "/bank",
     ADD_EDIT: "/bank/add-edit",
   },
-  TRANSACTION: {
-    BASE: "/transaction",
-    ADD_EDIT: "/transaction/add-edit",
+  BANK_TRANSACTION: {
+    BASE: "/bank-transaction",
+    ADD_EDIT: "/bank-transaction/add-edit",
   },
   PAYMENT: {
     BASE: "/payment",
     ADD_EDIT: "/payment/add-edit",
+  },
+  RECEIPT: {
+    BASE: "/receipt",
+    ADD_EDIT: "/receipt/add-edit",
+  },
+  EXPENSE: {
+    BASE: "/expense",
+    ADD_EDIT: "/expense/add-edit",
+  },
+  SALARY: {
+    BASE: "/salary",
+    ADD_EDIT: "/salary/add-edit",
   },
   POS: {
     BASE: "/pos",
@@ -94,18 +108,19 @@ export const ROUTES = {
     BASE: "/loyalty",
     ADD_EDIT: "/loyalty/add-edit",
   },
+  DISCOUNT: {
+    BASE: "/discount",
+    ADD_EDIT: "/discount/add-edit",
+  },
   PURCHASE_ORDER: {
     BASE: "/purchase-order",
     ADD_EDIT: "/purchase-order/add-edit",
   },
+  PURCHASE_DEBIT_NOTE: {
+    BASE: "/purchase-debit-note",
+    ADD_EDIT: "/purchase-debit-note/add-edit",
+  },
   ACCOUNTING: {
-    ACCOUNT_GROUP: {
-      BASE: "/accounting/account-group",
-      TREE: "/accounting/account-group/tree",
-    },
-    ACCOUNT: {
-      BASE: "/accounting/account",
-    },
     CREDIT_NOTE: {
       BASE: "/accounting/credit-note",
       ADD_EDIT: "/accounting/credit-note/add-edit",
@@ -114,13 +129,43 @@ export const ROUTES = {
       BASE: "/accounting/debit-note",
       ADD_EDIT: "/accounting/debit-note/add-edit",
     },
-    JOURNAL_VOUCHER: {
-      BASE: "/accounting/journal-voucher",
-      ADD_EDIT: "/accounting/journal-voucher/add-edit",
-    },
   },
   SALES_REGISTER: {
     BASE: "/sales-register",
     EDIT: "/sales-register/edit",
+  },
+
+  ESTIMATE: {
+    BASE: "/estimate",
+    ADD_EDIT: "/estimate/add-edit",
+  },
+
+  SALES_ORDER: {
+    BASE: "/sales-order",
+    ADD_EDIT: "/sales-order/add-edit",
+  },
+
+  INVOICE: {
+    BASE: "/invoice",
+    ADD_EDIT: "/invoice/add-edit",
+  },
+  DELIVERY_CHALLAN: {
+    BASE: "/delivery-challan",
+    ADD_EDIT: "/delivery-challan/add-edit",
+  },
+  SALES_CREDIT_NOTE: {
+    BASE: "/sales-credit-note",
+    ADD_EDIT: "/sales-credit-note/add-edit",
+  },
+  FORGOT_PASSWORD:{
+    BASE:"/forgot-password"
+  },
+  STOCK_TRANSFER: {
+    BASE: "/stock-transfer",
+    ADD_EDIT: "/stock-transfer/add-edit",
+    VIEW: "/stock-transfer/view",
+  },
+  NOTIFICATION: {
+    BASE: "/notification",
   },
 } as const;

@@ -2,96 +2,52 @@ import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { ProductBase } from "./Product";
 import type { RecipeBase } from "./Recipe";
 
-/* ================= UI MODELS ================= */
+/* ================= INGREDIENT ================= */
 
-export interface IngredientUI {
-  productId: ProductBase;
-  batch?: string;
-  availableQty?: number;
+export interface BillOfLiveProductIngredient {
+  productId: ProductBase | string;
+  availableQty: number;
   useQty: number;
 }
 
-export interface BillOfLiveProductDetailUI {
-  productId: ProductBase;
+/* ================= DETAIL ================= */
+
+export interface BillOfLiveProductDetail {
+  productId: ProductBase | string;
   qty: number;
-  recipe?: RecipeBase;
-
-  purchasePrice?: number;
-  landingCost?: number;
-  mrp?: number;
-  sellingPrice?: number;
-
+  purchasePrice: number;
+  landingCost: number;
+  mrp: number;
+  sellingPrice: number;
   mfgDate?: string;
-  expiryDays?: number;
+  expiryDays: number;
   expiryDate?: string;
-
-  batchNo?: string;
-
-  ingredients?: IngredientUI[];
+  ingredients?: BillOfLiveProductIngredient[];
 }
 
 /* ================= FORM ================= */
 
 export interface BillOfLiveProductFormValues {
+  companyId?: string;
   date?: string;
   number?: string;
   recipeId?: string[];
   allowReverseCalculation?: boolean;
-  productDetails?: BillOfLiveProductDetailUI[];
   isActive?: boolean;
   _submitAction?: string;
+  productDetails?: BillOfLiveProductDetail[];
 }
 
-/* ================= PAYLOAD ================= */
+export type AddBillOfLiveProductPayload = BillOfLiveProductFormValues;
 
-export interface IngredientPayload {
-  productId: string;
-  batch?: string;
-  availableQty?: number;
-  useQty: number;
-}
-
-export interface BillOfLiveProductDetailPayload {
-  productId: string;
-  qty: number;
-
-  purchasePrice?: number;
-  landingCost?: number;
-  mrp?: number;
-  sellingPrice?: number;
-
-  mfgDate?: string;
-  expiryDays?: number;
-  expiryDate?: string;
-
-  batchNo?: string;
-
-  ingredients?: IngredientPayload[];
-}
-
-export type AddBillOfLiveProductPayload = {
-  number?: string;
-  date?: string;
-  recipeId?: string[];
-  allowReverseCalculation?: boolean;
-  productDetails?: BillOfLiveProductDetailPayload[];
-  companyId?: string;
-};
-
-export type EditBillOfLiveProductPayload = AddBillOfLiveProductPayload & {
-  billOfLiveProductId: string;
-  isActive?: boolean;
-};
+export type EditBillOfLiveProductPayload = AddBillOfLiveProductPayload & { billOfLiveProductId?: string };
 
 /* ================= BASE ================= */
 
-export interface BillOfLiveProductBase extends CommonDataType {
-  number?: string;
-  date?: string;
+export interface BillOfLiveProductBase extends Omit<BillOfLiveProductFormValues, "recipeId" | "productId" | "productDetails">, CommonDataType {
   recipeId?: RecipeBase[];
-  allowReverseCalculation?: boolean;
-  productDetails?: BillOfLiveProductDetailUI[];
-  isActive?: boolean;
+  productId: ProductBase;
+  productDetails?: BillOfLiveProductDetail[];
 }
 
 /* ================= API RESPONSE ================= */

@@ -2,6 +2,10 @@ export const KEYS = {
   AUTH: {
     SIGNIN: "admin-signin",
     CHANGE_PASSWORD: "change-password",
+    FORGOT_PASSWORD: "forgot-password",
+    VERIFY_OTP: "verify-otp",
+    RESEND_OTP: "resend-otp",
+    UPDATE_PASSWORD: "update-password",
   },
 
   DASHBOARD: {
@@ -51,6 +55,7 @@ export const KEYS = {
     ADD: "contact-add",
     EDIT: "contact-edit",
     DELETE: "contact-delete",
+    BULK_ADD: "contact-bulk-add",
   },
 
   BRANCH: {
@@ -76,6 +81,9 @@ export const KEYS = {
 
   TAX: {
     BASE: "tax",
+    ADD: "tax-add",
+    EDIT: "tax-edit",
+    DELETE: "tax-delete",
   },
   UOM: {
     BASE: "/uom",
@@ -87,6 +95,24 @@ export const KEYS = {
     EDIT: "role-edit",
     DELETE: "role-delete",
   },
+  PREFIX: {
+    BASE: "prefix",
+    ADD: "prefix-add",
+    EDIT: "prefix-edit",
+    DELETE: "prefix-delete",
+  },
+  PAYMENT_TERM: {
+    BASE: "payment-term",
+    ADD: "payment-term-add",
+    EDIT: "payment-term-edit",
+    DELETE: "payment-term-delete",
+  },
+  CONSUMPTION_TYPE: {
+    BASE: "consumption-type",
+    ADD: "consumption-type-add",
+    EDIT: "consumption-type-edit",
+    DELETE: "consumption-type-delete",
+  },
 
   ANNOUNCEMENT: {
     BASE: "announcement",
@@ -97,6 +123,8 @@ export const KEYS = {
     ADD: "product-add",
     EDIT: "product-edit",
     DELETE: "product-delete",
+    DETECT: "product-detect",
+    BULK_ADD: "product-bulk-add",
   },
   STOCK: {
     BASE: "stock",
@@ -197,15 +225,6 @@ export const KEYS = {
     EDIT: "additional-charge-edit",
     DELETE: "additional-charge-delete",
   },
-  ACCOUNT: {
-    BASE: "account",
-    ADD: "account-add",
-    EDIT: "account-edit",
-    DELETE: "account-delete",
-  },
-  ACCOUNT_GROUP: {
-    BASE: "account-group",
-  },
   TERMS_CONDITION: {
     BASE: "terms-condition",
     ADD: "terms-condition-add",
@@ -233,6 +252,14 @@ export const KEYS = {
     DELETE: "loyalty-delete",
     POINTS: "loyalty-points",
     POINTS_ADD: "loyalty-points-add",
+  },
+  DISCOUNT: {
+    BASE: "discount",
+    DROPDOWN: "discount-dropdown",
+    ADD: "discount-add",
+    EDIT: "discount-edit",
+    DELETE: "discount-delete",
+    VERIFY: "discount-verify",
   },
   CASH_CONTROL: {
     BASE: "cash-control",
@@ -265,16 +292,94 @@ export const KEYS = {
     EDIT: "debit-note-edit",
     DELETE: "debit-note-delete",
   },
-  JOURNAL_VOUCHER: {
-    BASE: "journal-voucher",
-    ADD: "journal-voucher-add",
-    EDIT: "journal-voucher-edit",
-    DELETE: "journal-voucher-delete",
-  },
   RETURN_POS_ORDER: {
     BASE: "return-pos-order",
     ADD: "return-pos-order-add",
     EDIT: "return-pos-order-edit",
     DELETE: "return-pos-order-delete",
+  },
+  PURCHASE_DEBIT_NOTE: {
+    BASE: "purchase-debit-note",
+    ADD: "purchase-debit-note-add",
+    EDIT: "purchase-debit-note-edit",
+    DELETE: "purchase-debit-note-delete",
+    DROPDOWN: "purchase-debit-note-dropdown",
+  },
+  EXPENSE: {
+    BASE: "expense",
+    ADD: "expense-add",
+    EDIT: "expense-edit",
+    DELETE: "expense-delete",
+  },
+
+  //*************** Estimate **************** */
+  ESTIMATE: {
+    BASE: "estimate",
+    ADD: "estimate-add",
+    EDIT: "estimate-edit",
+    DELETE: "estimate-delete",
+    DROPDOWN: "estimate-dropdown",
+  },
+
+  //*************** Sales Order **************** */
+  SALES_ORDER: {
+    BASE: "sales-order",
+    ADD: "sales-order-add",
+    EDIT: "sales-order-edit",
+    DELETE: "sales-order-delete",
+    DROPDOWN: "sales-order-dropdown",
+  },
+
+  //*************** Invoice **************** */
+  INVOICE: {
+    BASE: "invoice",
+    ADD: "invoice-add",
+    EDIT: "invoice-edit",
+    DELETE: "invoice-delete",
+    DROPDOWN: "invoice-dropdown",
+  },
+  //*************** Delivery Challan **************** */
+  DELIVERY_CHALLAN: {
+    BASE: "delivery-challan",
+    ADD: "delivery-challan-add",
+    EDIT: "delivery-challan-edit",
+    DELETE: "delivery-challan-delete",
+    DROPDOWN: "delivery-challan-dropdown",
+  },
+  SALES_CREDIT_NOTE: {
+    BASE: "sales-credit-note",
+    ADD: "sales-credit-note-add",
+    EDIT: "sales-credit-note-edit",
+    DELETE: "sales-credit-note-delete",
+    DROPDOWN: "sales-credit-note-dropdown",
+  },
+  SALARY: {
+    BASE: "salary",
+    ADD: "salary-add",
+    EDIT: "salary-edit",
+    DELETE: "salary-delete",
+  },
+  BANK_TRANSACTION: {
+    BASE: "bank-transaction",
+    ADD: "bank-transaction-add",
+    EDIT: "bank-transaction-edit",
+    DELETE: "bank-transaction-delete",
+  },
+  STOCK_TRANSFER: {
+    BASE: "stock-transfer",
+    ALL: "stock-transfer-all",
+    REQUEST: "stock-transfer-request",
+    EDIT: "stock-transfer-edit",
+    DELETE: "stock-transfer-delete",
+    APPROVE: "stock-transfer-approve",
+    REJECT: "stock-transfer-reject",
+    CONFIRM_RECEIPT: "stock-transfer-confirm-receipt",
+  },
+  NOTIFICATION: {
+    BASE: "notification",
+    ALL: "notification-all",
+    READ: "notification-read",
+    READ_ALL: "notification-read-all",
+    DELETE: "notification-delete",
   },
 };

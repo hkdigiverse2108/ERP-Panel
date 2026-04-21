@@ -3,10 +3,10 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal, CommonTabPanel } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS, LOYALTY_TYPE } from "../../../Data";
+import { BREADCRUMBS } from "../../../Data";
 import type { AppGridColDef, LoyaltyBase } from "../../../Types";
-import { FormatDate } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import PointSetup from "./PointSetup";
 
@@ -31,15 +31,17 @@ const Loyalty = () => {
   const handleAdd = () => navigate(ROUTES.LOYALTY.ADD_EDIT);
 
   const columns: AppGridColDef<LoyaltyBase>[] = [
-    { field: "name", headerName: "Campaign Name", width: 170 },
-    { field: "discountValue", headerName: "Discount Value", width: 120 },
-    { field: "minimumPurchaseAmount", headerName: "Minimum Purchase Amount", width: 150 },
-    { field: "redemptionPoints", headerName: "Redemption Points", width: 150 },
-    { field: "type", headerName: "Type", width: 100, renderCell: (params) => LOYALTY_TYPE.find((item) => item.value === params.row.type)?.label },
-    { field: "usageLimit", headerName: "Usage Limit", width: 100 },
-    { field: "usedCount", headerName: "Used Count", width: 100 },
-    { field: "campaignExpiryDate", headerName: "Expiry Date", width: 100, renderCell: (params) => FormatDate(params.row.campaignExpiryDate) },
-    { field: "campaignLaunchDate", headerName: "Launch Date", flex: 1, minWidth: 100, renderCell: (params) => FormatDate(params.row.campaignLaunchDate) },
+    { field: "name", headerName: "Campaign Name", flex: 1, minWidth: 170 },
+    { field: "discountValue", headerName: "Discount Value", flex: 1, minWidth: 120 },
+    { field: "minimumPurchaseAmount", headerName: "Minimum Purchase Amount", flex: 1, minWidth: 150 },
+    { field: "redemptionPoints", headerName: "Redemption Points", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<LoyaltyBase>("type", "type", [], { headerName: "Type", flex: 1, minWidth: 100, type: "format" }),
+    { field: "usageLimit", headerName: "Usage Limit", flex: 1, minWidth: 100 },
+    { field: "usedCount", headerName: "Used Count", flex: 1, minWidth: 100 },
+    CommonObjectPropertyColumn<LoyaltyBase>("campaignExpiryDate", "campaignExpiryDate", [], { headerName: "Expiry Date", flex: 1, minWidth: 100, type: "date" }),
+    CommonObjectPropertyColumn<LoyaltyBase>("campaignLaunchDate", "campaignLaunchDate", [], { headerName: "Launch Date", flex: 1, minWidth: 100, type: "date" }),
+    CommonObjectPropertyColumn<LoyaltyBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
+
     ...(permission?.edit || permission?.delete
       ? [
           CommonActionColumn<LoyaltyBase>({
@@ -67,7 +69,7 @@ const Loyalty = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
-    isExport: false,
+    fileName: PAGE_TITLE.CRM.LOYALTY.BASE,
   };
 
   return (

@@ -1,19 +1,24 @@
-import { useEffect, type RefObject } from "react";
+import { useEffect, useRef, useState } from "react";
 
-export const useClickOutside = (ref: RefObject<HTMLElement | null>, open: boolean, onClose: () => void) => {
+export const useClickOutside = () => {
+  const [open, setOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        onClose();
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setOpen(false);
       }
     };
 
-    if (open) {
+    if (open && window.innerWidth < 1024) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [open, ref, onClose]);
+  }, [open]);
+
+  return { open, setOpen, wrapperRef };
 };

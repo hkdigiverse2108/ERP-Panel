@@ -1,14 +1,17 @@
-import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { Queries } from "../../Api/Queries";
 import type { AppGridColDef, PayableBase } from "../../Types";
+import { DateConfig } from "../../Utils";
 import { useDataGrid } from "../../Utils/Hooks";
 import { CommonCard, CommonDataGrid } from "../Common";
+import { useAppSelector } from "../../Store/hooks";
 
 const TodayPayable = () => {
-  const [range] = useState({ start: dayjs().startOf("day"), end: dayjs().endOf("day") });
+  const [range] = useState({ start: DateConfig.utc().startOf("day"), end: DateConfig.utc().endOf("day") });
+  const { branchFilter } = useAppSelector((state) => state.dashboard);
+  const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString(), branchFilter: branchFilter[0] }), [range, branchFilter]);
 
-  const { data, isLoading, isFetching } = Queries.useGetDashboardPayable({ startDate: range.start, endDate: range.end });
+  const { data, isLoading, isFetching } = Queries.useGetDashboardPayable(queryParams);
 
   const allRowData = useMemo(() => data?.data?.map((item) => ({ ...item, id: item?._id })) || [], [data]);
   const totalRows = data?.data?.length || 0;
@@ -34,6 +37,7 @@ const TodayPayable = () => {
     pagination: false,
     isToolbar: false,
     isExport: false,
+    fileName: "Today's Payable",
   };
 
   return (

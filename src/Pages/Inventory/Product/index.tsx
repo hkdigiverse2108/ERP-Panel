@@ -6,12 +6,17 @@ import { Mutations, Queries } from "../../../Api";
 import { CommonButton, CommonTextField, CommonValidationSelect } from "../../../Attribute";
 import { AdvancedSearch, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonModal, CommonObjectNameColumn } from "../../../Components/Common";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
-import { BREADCRUMBS, CONSUMPTION_TYPE, PRODUCT_TYPE_OPTIONS } from "../../../Data";
+import { BREADCRUMBS, PRODUCT_TYPE_OPTIONS } from "../../../Data";
 import type { AppGridColDef, ProductBase, ProductWithRemoveQty } from "../../../Types";
 import { CreateFilter, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { Form, Formik } from "formik";
 import { ProductItemRemoveFormSchema } from "../../../Utils/ValidationSchemas";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
+import { useAppDispatch } from "../../../Store/hooks";
+import { setBulkAddModal } from "../../../Store/Slices/ModalSlice";
+import BulkAddModal from "../../../Components/Common/BulkAddModal";
+import { UploadFile } from "@mui/icons-material";
 
 const Product = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
@@ -20,8 +25,11 @@ const Product = () => {
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.PRODUCT.BASE);
   const permissionItem = usePagePermission(PAGE_TITLE.INVENTORY.STOCK.BASE);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
+  const { data: consumptionData, isLoading: consumptionLoading } = Queries.useGetConsumptionTypeDropdown();
   const { data: productData, isLoading: productDataLoading, isFetching: productDataFetching } = Queries.useGetProduct(params);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetProduct({}, false);
   const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
   const brandId = advancedFilter?.brandFilter?.[0] || "";
   const { data: subBrandData, isLoading: subBrandDataLoading } = Queries.useGetBrandDropdown({ parentBrandFilter: brandId }, Boolean(brandId));
@@ -31,6 +39,7 @@ const Product = () => {
   const { data: subCategoryData, isLoading: subCategoryDataLoading } = Queries.useGetCategoryDropdown({ parentCategoryFilter: subCategoryId }, Boolean(subCategoryId));
 
   const { mutate: addStockBulkAdjustment, isPending: isAddLoading } = Mutations.useAddStockBulkAdjustment();
+  const { mutate: bulkAddProduct, isPending: isBulkAddLoading } = Mutations.useBulkAddProduct();
 
   const allProduct = useMemo<ProductWithRemoveQty[]>(() => productData?.data?.product_data.map((emp) => ({ ...emp, id: emp?._id, removeQty: null })) || [], [productData]);
   const totalRows = productData?.data?.totalData || 0;
@@ -44,10 +53,10 @@ const Product = () => {
 
   const data = gridRows.filter((r) => r.removeQty != null).map(({ removeQty, _id }) => ({ qty: removeQty, productId: _id }));
 
-  const handleRemoveItem = async (values: { type: string }) => {
+  const handleRemoveItem = async (values: { consumptionTypeId: string }) => {
     const obj = {
       items: data,
-      type: values.type,
+      consumptionTypeId: values.consumptionTypeId,
     };
     await addStockBulkAdjustment(obj, {
       onSuccess: () => {
@@ -57,13 +66,24 @@ const Product = () => {
     });
   };
 
+  const handleBulkAdd = (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    bulkAddProduct(formData, {
+      onSuccess: () => {
+        dispatch(setBulkAddModal({ open: false, title: "", type: "" }));
+      },
+    });
+  };
+
   const columns: AppGridColDef<ProductBase>[] = [
     { field: "name", headerName: "Name", width: 200 },
-    { field: "printName", headerName: "Print Name", width: 150 },
+    { field: "printName", headerName: "Print Name", width: 200 },
     CommonObjectNameColumn<ProductBase>("categoryId", { headerName: "Category", width: 150 }),
     CommonObjectNameColumn<ProductBase>("brandId", { headerName: "Brand", width: 150 }),
     CommonObjectNameColumn<ProductBase>("purchaseTaxId", { headerName: "Purchase Tax", width: 150 }),
     CommonObjectNameColumn<ProductBase>("salesTaxId", { headerName: "Sales Tax", width: 150 }),
+
     ...(isRemoveItem
       ? [
           {
@@ -88,6 +108,7 @@ const Product = () => {
     { field: "mrp", headerName: "MRP", width: 100 },
     { field: "sellingPrice", headerName: "Selling Price", width: 150 },
     { field: "qty", headerName: "Qty", flex: 1, minWidth: 100 },
+    CommonObjectPropertyColumn<ProductBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
   ];
 
   const CommonDataGridOption = {
@@ -104,6 +125,9 @@ const Product = () => {
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.INVENTORY.PRODUCT.BASE,
+    isExport: !isRemoveItem,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
 
   const filter = [
@@ -119,6 +143,11 @@ const Product = () => {
   const topContent = (
     <Grid size={"auto"}>
       <Grid container spacing={1}>
+        {permission?.add && (
+          <Grid size={"auto"}>
+            <CommonButton variant="contained" startIcon={<UploadFile />} title="Import" size="medium" onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Products", type: "product" }))} />
+          </Grid>
+        )}
         {permissionItem?.add && (
           <Grid size={"auto"}>
             <CommonButton variant="contained" title="Add Item" size="medium" onClick={handleAddItem} />
@@ -150,16 +179,18 @@ const Product = () => {
           )}
         </CommonCard>
         <CommonModal title="Remove Item" isOpen={openModal} onClose={() => setOpenModal(!openModal)} className="max-w-125 m-2 sm:m-5">
-          <Formik initialValues={{ type: "" }} enableReinitialize validationSchema={ProductItemRemoveFormSchema} onSubmit={handleRemoveItem}>
+          <Formik initialValues={{ consumptionTypeId: "" }} enableReinitialize validationSchema={ProductItemRemoveFormSchema} onSubmit={handleRemoveItem}>
             <Form noValidate>
               <Grid sx={{ p: 1 }} container spacing={2}>
-                <CommonValidationSelect name="type" label="Consumption Type" options={CONSUMPTION_TYPE} grid={{ xs: 12 }} required />
+                <CommonValidationSelect name="consumptionTypeId" label="Consumption Type" options={GenerateOptions(consumptionData?.data)} isLoading={consumptionLoading} grid={{ xs: 12 }} required />
                 <CommonButton type="submit" variant="contained" title="Save" size="medium" loading={isAddLoading} fullWidth grid={{ xs: 12 }} />
               </Grid>
             </Form>
           </Formik>
         </CommonModal>
       </Box>
+
+      <BulkAddModal type="product" onUpload={handleBulkAdd} loading={isBulkAddLoading} />
     </>
   );
 };

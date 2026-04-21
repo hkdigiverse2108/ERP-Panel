@@ -12,6 +12,7 @@ const initialState: PosSliceState = {
   isReturnPosOrderId: "",
   isSalesInvoice: "",
   isEditPosOrder: false,
+  isProductScan: false,
   PosProduct: {
     items: [],
     customerId: "",
@@ -35,6 +36,10 @@ const initialState: PosSliceState = {
     redeemCreditId: "",
     redeemCreditAmount: 0,
     redeemCreditType: "",
+    discountId: "",
+    discountAmount: 0,
+    discountMode: "",
+    freeProducts: [],
   },
 };
 
@@ -54,24 +59,33 @@ const PosSlice = createSlice({
   reducers: {
     setHandleDiscount: (state, action) => {
       if (action.payload === "coupon") {
-        if (state.PosProduct.loyaltyId || state.PosProduct.redeemCreditId) {
-          const restoredAmount = Number(state.PosProduct.totalAmount) + Number(state.PosProduct.loyaltyDiscount || 0) + Number(state.PosProduct.redeemCreditAmount || 0);
-          const restoredDiscount = Number(state.PosProduct.totalDiscount || 0) - Number(state.PosProduct.loyaltyDiscount || 0);
+        if (state.PosProduct.loyaltyId || state.PosProduct.redeemCreditId || state.PosProduct.discountId) {
+          const restoredAmount = Number(state.PosProduct.totalAmount) + Number(state.PosProduct.loyaltyDiscount || 0) + Number(state.PosProduct.redeemCreditAmount || 0) + Number(state.PosProduct.discountAmount || 0);
+          const restoredDiscount = Number(state.PosProduct.totalDiscount || 0) - Number(state.PosProduct.loyaltyDiscount || 0) - Number(state.PosProduct.discountAmount || 0);
           state.PosProduct.totalAmount = restoredAmount;
           state.PosProduct.totalDiscount = Number(restoredDiscount).toFixed(2);
         }
       }
       if (action.payload === "loyalty") {
-        if (state.PosProduct.couponId || state.PosProduct.redeemCreditId) {
-          const restoredAmount = Number(state.PosProduct.totalAmount) + Number(state.PosProduct.couponDiscount || 0) + Number(state.PosProduct.redeemCreditAmount || 0);
-          const restoredDiscount = Number(state.PosProduct.totalDiscount || 0) - Number(state.PosProduct.couponDiscount || 0);
+        if (state.PosProduct.couponId || state.PosProduct.redeemCreditId || state.PosProduct.discountId) {
+          const restoredAmount = Number(state.PosProduct.totalAmount) + Number(state.PosProduct.couponDiscount || 0) + Number(state.PosProduct.redeemCreditAmount || 0) + Number(state.PosProduct.discountAmount || 0);
+          const restoredDiscount = Number(state.PosProduct.totalDiscount || 0) - Number(state.PosProduct.couponDiscount || 0) - Number(state.PosProduct.discountAmount || 0);
           state.PosProduct.totalAmount = restoredAmount;
           state.PosProduct.totalDiscount = Number(restoredDiscount).toFixed(2);
         }
       }
       if (action.payload === "redeemCredit") {
-        if (state.PosProduct.couponId || state.PosProduct.loyaltyId) {
-          const restoredAmount = Number(state.PosProduct.totalAmount) + Number(state.PosProduct.couponDiscount || 0) + Number(state.PosProduct.loyaltyDiscount || 0);
+        if (state.PosProduct.couponId || state.PosProduct.loyaltyId || state.PosProduct.discountId) {
+          const restoredAmount = Number(state.PosProduct.totalAmount) + Number(state.PosProduct.couponDiscount || 0) + Number(state.PosProduct.loyaltyDiscount || 0) + Number(state.PosProduct.discountAmount || 0);
+          const restoredDiscount = Number(state.PosProduct.totalDiscount || 0) - Number(state.PosProduct.couponDiscount || 0) - Number(state.PosProduct.loyaltyDiscount || 0) - Number(state.PosProduct.discountAmount || 0);
+          const payable = restoredAmount >= 0 ? restoredAmount?.toFixed(2) : "0.00";
+          state.PosProduct.totalDiscount = Number(restoredDiscount).toFixed(2);
+          state.PosProduct.totalAmount = Number(payable);
+        }
+      }
+      if (action.payload === "discount") {
+        if (state.PosProduct.couponId || state.PosProduct.loyaltyId || state.PosProduct.redeemCreditId) {
+          const restoredAmount = Number(state.PosProduct.totalAmount) + Number(state.PosProduct.couponDiscount || 0) + Number(state.PosProduct.loyaltyDiscount || 0) + Number(state.PosProduct.redeemCreditAmount || 0);
           const restoredDiscount = Number(state.PosProduct.totalDiscount || 0) - Number(state.PosProduct.couponDiscount || 0) - Number(state.PosProduct.loyaltyDiscount || 0);
           const payable = restoredAmount >= 0 ? restoredAmount?.toFixed(2) : "0.00";
           state.PosProduct.totalDiscount = Number(restoredDiscount).toFixed(2);
@@ -95,7 +109,6 @@ const PosSlice = createSlice({
     setPosProduct: (state, action) => {
       state.PosProduct = action.payload;
     },
-
     addOrUpdateProduct: (state, action) => {
       if (!action.payload || !action.payload._id) return;
 
@@ -118,6 +131,31 @@ const PosSlice = createSlice({
         calculateAmounts(newRow);
         state.PosProduct.items.push(newRow);
       }
+    },
+    setPosProductItems: (state, action) => {
+      if (!action.payload) return;
+
+      action.payload.forEach((item: PosProductDataModal) => {
+        const existingProduct = state.PosProduct.items.find((p) => p._id === item._id);
+
+        if (existingProduct) {
+          existingProduct.posQty += item.detect_qty || 1;
+          calculateAmounts(existingProduct);
+        } else {
+          const newRow = {
+            ...item,
+            posQty: item.detect_qty || 1,
+            discount: item.sellingDiscount || 0,
+            additionalDiscount: 0,
+            unitCost: 0,
+            netAmount: 0,
+          };
+
+          calculateAmounts(newRow);
+
+          state.PosProduct.items.unshift(newRow);
+        }
+      });
     },
     updateProduct: (state, action) => {
       const row = state.PosProduct.items.find((item) => item._id === action.payload._id);
@@ -166,6 +204,10 @@ const PosSlice = createSlice({
         redeemCreditId: "",
         redeemCreditAmount: 0,
         redeemCreditType: "",
+        discountId: "",
+        discountAmount: 0,
+        discountMode: "",
+        freeProducts: [],
       };
     },
 
@@ -242,8 +284,17 @@ const PosSlice = createSlice({
     setReturnPosOrderId: (state, action) => {
       state.isReturnPosOrderId = action.payload;
     },
+    setIsProductScan: (state) => {
+      state.isProductScan = !state.isProductScan;
+    },
+    setDiscount: (state, action) => {
+      state.PosProduct.discountId = action.payload.discountId;
+      state.PosProduct.discountAmount = action.payload.discountAmount;
+      state.PosProduct.discountMode = action.payload.discountMode;
+      state.PosProduct.freeProducts = action.payload.freeProducts;
+    },
   },
 });
 
-export const { setReturnPosOrderId, setSalesInvoice, setPrintType, setSelectedOrderId, setRedeemCredit, setLoyalty, setCoupon, setBtnStatus, setPosLoading, setPosProduct, setIsSelectProduct, setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesManId, setTotalMrp, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType, clearPosProduct, setHandleDiscount, setReturnPosOrder, setEditPosOrder } = PosSlice.actions;
+export const { setDiscount, setPosProductItems, setReturnPosOrderId, setSalesInvoice, setPrintType, setSelectedOrderId, setRedeemCredit, setLoyalty, setCoupon, setBtnStatus, setPosLoading, setPosProduct, setIsSelectProduct, setAdditionalCharges, setTotalAdditionalCharge, setMultiplePay, updateProduct, removeProduct, clearProductDataModal, addOrUpdateProduct, setCustomerId, setSalesManId, setTotalMrp, setTotalDiscount, setTotalTaxAmount, setFlatDiscountAmount, setRoundOff, setTotalAmount, setTotalQty, setRemarks, setOrderType, clearPosProduct, setHandleDiscount, setReturnPosOrder, setEditPosOrder, setIsProductScan } = PosSlice.actions;
 export default PosSlice.reducer;

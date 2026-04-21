@@ -1,109 +1,90 @@
-import { Grid, IconButton, Button } from "@mui/material";
-import { useMemo, useState } from "react";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { CommonCard, CommonDataGrid, CommonDeleteModal, CommonBreadcrumbs } from "../../../Components/Common";
-import { useDataGrid } from "../../../Utils/Hooks";
+import { Box } from "@mui/material";
+import { useMemo } from "react";
+import { useDispatch } from "react-redux";
+import { Mutations, Queries } from "../../../Api";
+import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
 import { PAGE_TITLE } from "../../../Constants";
-import type { GridSortModel, GridFilterModel } from "@mui/x-data-grid";
-import AddTransactionDialog from "./TransactionModel";
+import { BREADCRUMBS } from "../../../Data";
+import { setBankTransactionModal } from "../../../Store/Slices/ModalSlice";
+import type { AppGridColDef, BankTransactionBase } from "../../../Types";
+import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
+import BankTransactionForm from "./BankTransactionForm";
 
 const BankTransaction = () => {
-  const { paginationModel, setPaginationModel } = useDataGrid({
-    page: 0,
-    pageSize: 10,
-  });
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
+  const dispatch = useDispatch();
+  const permission = usePagePermission(PAGE_TITLE.BANK_TRANSACTION.BASE);
 
-  const [openDialog, setOpenDialog] = useState(false);
-  const [rowToDelete, setRowToDelete] = useState<any>(null);
-  const [sortModel, setSortModel] = useState<GridSortModel>([]);
-  const [filterModel, setFilterModel] = useState<GridFilterModel>({ items: [] });
+  const { data: bankTransaction_data, isLoading: bankTransactionDataLoading, isFetching: bankTransactionDataFetching } = Queries.useGetBankTransaction(params);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetBankTransaction({}, false);
+  const { mutate: deleteBankTransactionMutate } = Mutations.useDeleteBankTransaction();
+  const { mutate: editBankTransaction, isPending: isEditLoading } = Mutations.useEditBankTransaction();
 
-  const rows = useMemo(
-    () =>
-      Array.from({ length: 10 }).map((_, i) => ({
-        id: i + 1,
-        voucherNo: `VCH-00${i + 1}`,
-        transactionDate: "2025-01-10",
-        fromAccount: "HDFC Bank",
-        toAccount: "ICICI Bank",
-        amount: 15000,
-        createdBy: "Admin",
-        location: "Mumbai",
-      })),
-    []
-  );
+  const allBankTransactions = useMemo(() => bankTransaction_data?.data?.bankTransaction_data?.map((transaction: BankTransactionBase) => ({ ...transaction, id: transaction?._id })) || [], [bankTransaction_data]);
+  const totalRows = bankTransaction_data?.data?.totalData || 0;
 
-  const columns = [
-    {
-      field: "srNo",
-      headerName: "Sr No",
-      width: 80,
-      renderCell: (params: any) => paginationModel.page * paginationModel.pageSize + params.api.getRowIndexRelativeToVisibleRows(params.id) + 1,
-    },
-    { field: "voucherNo", headerName: "Voucher No", flex: 1 },
-    { field: "transactionDate", headerName: "Transaction Date", flex: 1 },
-    { field: "fromAccount", headerName: "From Account", flex: 1 },
-    { field: "toAccount", headerName: "To Account", flex: 1 },
-    {
-      field: "amount",
-      headerName: "Amount",
-      flex: 1,
-      renderCell: (params: any) => `₹ ${params.value}`,
-    },
-    { field: "createdBy", headerName: "Created By", flex: 1 },
-    { field: "location", headerName: "Location", flex: 1 },
-    {
-      field: "actions",
-      headerName: "Actions",
-      width: 120,
-      sortable: false,
-      renderCell: (params: any) => (
-        <Grid container spacing={1}>
-          <Grid size="auto">
-            <IconButton color="primary" size="small" onClick={() => setOpenDialog(true)}>
-              <EditIcon />
-            </IconButton>
-          </Grid>
-          <Grid size="auto">
-            <IconButton color="error" size="small" onClick={() => setRowToDelete(params.row)}>
-              <DeleteIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-      ),
-    },
+  const handleDeleteBtn = () => {
+    if (!rowToDelete) return;
+    deleteBankTransactionMutate(rowToDelete?._id as string, { onSuccess: () => setRowToDelete(null) });
+  };
+
+  const handleAdd = () => dispatch(setBankTransactionModal({ open: true, data: null }));
+
+  const handleEdit = (row: BankTransactionBase) => dispatch(setBankTransactionModal({ open: true, data: row }));
+
+  const columns: AppGridColDef<BankTransactionBase>[] = [
+    { field: "voucherNo", headerName: "Voucher No", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<BankTransactionBase>("transactionDate", "transactionDate", [], { headerName: "Transaction Date", flex: 1, minWidth: 150, type: "date" }),
+    CommonObjectPropertyColumn<BankTransactionBase>("transactionType", "transactionType", [], { headerName: "Transaction Type", flex: 1, minWidth: 150, type: "format" }),
+    CommonObjectPropertyColumn<BankTransactionBase>("fromAccount", "fromAccount", ["name"], { headerName: "From Account", flex: 1, minWidth: 150 }),
+    CommonObjectPropertyColumn<BankTransactionBase>("toAccount", "toAccount", ["name"], { headerName: "To Account", flex: 1, minWidth: 150 }),
+    { field: "amount", headerName: "Amount", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<BankTransactionBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
+
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<BankTransactionBase>({
+            ...(permission?.edit && {
+              active: (row) => editBankTransaction({ bankTransactionId: row?._id, isActive: !row.isActive }),
+              onEdit: { handleEdit: (row) => handleEdit(row) },
+            }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherNo || row?.transactionType }) }),
+          }),
+        ]
+      : []),
   ];
 
-  const topContent = (
-    <Button variant="contained" size="large" onClick={() => setOpenDialog(true)}>
-      ADD
-    </Button>
-  );
-
-  function handleDeleteBtn(): void {
-    throw new Error("Function not implemented.");
-  }
+  const CommonDataGridOption = {
+    columns,
+    rows: allBankTransactions,
+    rowCount: totalRows,
+    loading: bankTransactionDataLoading || bankTransactionDataFetching || isEditLoading,
+    isActive,
+    setActive,
+    ...(permission?.add && { handleAdd }),
+    paginationModel,
+    onPaginationModelChange: setPaginationModel,
+    sortModel,
+    onSortModelChange: setSortModel,
+    filterModel,
+    onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.BANK_TRANSACTION.BASE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
+  };
 
   return (
     <>
-      <CommonBreadcrumbs title={PAGE_TITLE.TRANSACTION.BASE || "Bank Transactions"} maxItems={1} />
-
-      <div className="m-4 md:m-6">
-        <CommonCard title="Bank Transactions" topContent={topContent}>
-          <CommonDataGrid columns={columns} rows={rows} rowCount={rows.length} paginationModel={paginationModel} onPaginationModelChange={setPaginationModel} 
-          pageSizeOptions={[5, 10, 25]} sortModel={sortModel} onSortModelChange={setSortModel} filterModel={filterModel} onFilterModelChange={setFilterModel}/>
+      <CommonBreadcrumbs title={PAGE_TITLE.BANK_TRANSACTION.BASE} maxItems={1} breadcrumbs={BREADCRUMBS.BANK_TRANSACTION.BASE} />
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <CommonCard hideDivider>
+          <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
-      </div>
-
-      {/* ================= Add Transaction Dialog ================= */}
-      <AddTransactionDialog open={openDialog} onClose={() => setOpenDialog(false)} />
-
-      {/* ================= Delete Confirmation ================= */}
-       <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
+        <BankTransactionForm />
+      </Box>
     </>
   );
 };
-
 
 export default BankTransaction;

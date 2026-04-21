@@ -32,6 +32,7 @@ const LoginLog = () => {
     pagination: false,
     isToolbar: false,
     isExport: false,
+    fileName: "Login Log",
   };
 
   return (

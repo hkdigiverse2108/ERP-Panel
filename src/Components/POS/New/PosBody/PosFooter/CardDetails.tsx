@@ -6,7 +6,7 @@ import { POS_PAYMENT_METHOD } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setCardModal } from "../../../../../Store/Slices/ModalSlice";
 import { clearPosProduct, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
-import { GenerateOptions, RemoveEmptyFields } from "../../../../../Utils";
+import { GenerateOptions, RemoveEmptyFields, SanitizePayload } from "../../../../../Utils";
 import { CardDetailsSchema } from "../../../../../Utils/ValidationSchemas";
 import { CommonModal } from "../../../../Common";
 import type { PosProductOrderDataResponse } from "../../../../../Types";
@@ -63,7 +63,7 @@ const CardDetails = () => {
     const onError = () => {
       handleClose();
     };
-    const changedFields = RemoveEmptyFields(payload);
+    const changedFields = SanitizePayload(payload);
     if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess, onError });
     else addPosOrder(RemoveEmptyFields(payload), { onSuccess, onError });
   };
@@ -75,8 +75,8 @@ const CardDetails = () => {
           <Grid container spacing={2} py={1}>
             <CommonValidationSelect name="paymentAccountId" label="Payment Account" options={GenerateOptions(bankDropdown?.data)} disabled={bankDropdownLoading} grid={12} required />
             <CommonValidationTextField name="amount" label="Card Payment Amount" grid={12} required />
-            <CommonValidationTextField name="cardHolderName" label="Card Holder Name" grid={12} required />
-            <CommonValidationTextField name="cardTransactionNo" label="Card Transaction No." grid={12} required />
+            <CommonValidationTextField name="cardHolderName" label="Card Holder Name" grid={12} />
+            <CommonValidationTextField name="cardTransactionNo" label="Card Transaction No." grid={12} />
             <Grid size={12} sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
               <CommonButton type="submit" variant="contained" title="Finalize Payment" loading={addPosOrderLoading || editPosOrderLoading} />
             </Grid>

@@ -1,14 +1,16 @@
-import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { Queries } from "../../Api/Queries";
 import type { AppGridColDef, ReceivableBase } from "../../Types";
+import { DateConfig } from "../../Utils";
 import { useDataGrid } from "../../Utils/Hooks";
 import { CommonCard, CommonDataGrid } from "../Common";
+import { useAppSelector } from "../../Store/hooks";
 
 const TodayReceivable = () => {
-  const [range] = useState({ start: dayjs().startOf("day"), end: dayjs().endOf("day") });
-
-  const { data, isLoading, isFetching } = Queries.useGetDashboardReceivable({ startDate: range.start, endDate: range.end });
+  const [range] = useState({ start: DateConfig.utc().startOf("day"), end: DateConfig.utc().endOf("day") });
+  const { branchFilter } = useAppSelector((state) => state.dashboard);
+  const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString(), branchFilter: branchFilter[0] }), [range, branchFilter]);
+  const { data, isLoading, isFetching } = Queries.useGetDashboardReceivable(queryParams);
 
   const allRowData = useMemo(() => data?.data?.map((item) => ({ ...item, id: item?._id })) || [], [data]);
   const totalRows = data?.data?.length || 0;
@@ -34,6 +36,7 @@ const TodayReceivable = () => {
     pagination: false,
     isToolbar: false,
     isExport: false,
+    fileName: "Today's Receivable",
   };
 
   return (

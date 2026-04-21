@@ -1,5 +1,6 @@
 import type { GridValidRowModel } from "@mui/x-data-grid";
-import type { AppGridColDef, CommonObjectNameColumnOptions, PhoneNumberType } from "../../../Types";
+import type { AppGridColDef, ColumnFormatType, CommonObjectNameColumnOptions, PhoneNumberType } from "../../../Types";
+import { FormatCountryCode, FormatDate, FormatDateTime, FormatPayment } from "../../../Utils";
 
 // Common Object Name Column
 export const CommonObjectNameColumn = <T extends GridValidRowModel>(field: string, options?: CommonObjectNameColumnOptions): AppGridColDef<T> => ({
@@ -31,7 +32,7 @@ export const CommonPhoneColumns = <T extends GridValidRowModel, K extends keyof 
 
       if (!phone || typeof phone !== "object") return "-";
 
-      return phone.countryCode && phone.phoneNo ? `+${phone.countryCode} ${phone.phoneNo}` : "-";
+      return phone.countryCode && phone.phoneNo ? `${FormatCountryCode(phone.countryCode)} ${phone.phoneNo}` : "-";
     },
 
     // ✅ Export safe
@@ -40,30 +41,97 @@ export const CommonPhoneColumns = <T extends GridValidRowModel, K extends keyof 
 
       if (!phone || typeof phone !== "object") return "-";
 
-      return phone.countryCode && phone.phoneNo ? `+${phone.countryCode} ${phone.phoneNo}` : "-";
+      return phone.countryCode && phone.phoneNo ? `${FormatCountryCode(phone.countryCode)} ${phone.phoneNo}` : "-";
     },
   };
 };
 
-export const CommonObjectPropertyColumn = <T extends GridValidRowModel>(field: string, sourceField: string, property: string, options?: CommonObjectNameColumnOptions): AppGridColDef<T> => ({
+// ✅ Utility: get nested value like "a.b.c"
+const getNestedValue = (obj: any, path: string) => {
+  return path.split(".").reduce((acc, key) => acc?.[key], obj);
+};
+
+// ✅ Formatter
+const formatValues = (values: (string | number)[], type?: ColumnFormatType): string => {
+  if (!values.length) return "-";
+
+  const value = values[0]; // for date types we use first value
+
+  switch (type) {
+    case "phone": {
+      const [code, number] = values;
+      if (!code || !number) return "-";
+      return `${FormatCountryCode(code.toString())} ${number}`;
+    }
+
+    case "date":
+      return value ? FormatDate(value) : "-";
+
+    case "datetime":
+      return value ? FormatDateTime(value) : "-";
+
+    case "format":
+      return value ? FormatPayment(value.toString()) : "-";
+
+    case "status":
+      return value ? FormatPayment(value.toString()) : "-";
+    case "createdBy": {
+      const [fullName, userType] = values;
+
+      if (userType?.toString().toLowerCase() === "super-admin") return "System Generated";
+
+      return fullName?.toString() || "-";
+    }
+    default:
+      return values.join(" ");
+  }
+};
+
+// ✅ Main helper
+export const CommonObjectPropertyColumn = <T extends GridValidRowModel>(field: string, sourceField: string, properties: string[], options?: CommonObjectNameColumnOptions): AppGridColDef<T> => ({
   field,
   headerName: options?.headerName ?? field,
   width: options?.width,
   flex: options?.flex,
   minWidth: options?.minWidth,
+  isSummary: options?.isSummary,
 
-  valueGetter: (_value, row: any): string | number => {
-    const obj = row?.[sourceField];
-    const val = typeof obj === "object" && obj !== null ? obj?.[property] : "-";
-    return typeof val === "string" || typeof val === "number" ? val : "-";
+  valueGetter: (_value, row: any): string => {
+    const obj = getNestedValue(row, sourceField);
+
+    // ✅ HANDLE direct value (string/date)
+    if (typeof obj === "string" || typeof obj === "number") {
+      return formatValues([obj], options?.type);
+    }
+
+    if (typeof obj !== "object" || obj === null) return "-";
+
+    const values = properties.map((prop) => obj?.[prop]).filter((val) => typeof val === "string" || typeof val === "number");
+
+    return formatValues(values, options?.type);
   },
 
-  renderCell: ({ value }) => String(value ?? "-"),
+  renderCell: ({ value }) => {
+    if (options?.type === "status") {
+      const formatted = value?.toString().toLowerCase().replace(/\s+/g, "_") || "";
+      return <span className={`status-${formatted}`}>{value}</span>;
+    }
 
-  // ✅ THIS IS THE IMPORTANT PART
+    return String(value ?? "-");
+  },
+
   exportFormatter: (_value, row: any) => {
-    const obj = row?.[sourceField];
-    const val = typeof obj === "object" && obj !== null ? obj?.[property] : "-";
-    return typeof val === "string" || typeof val === "number" ? val : "-";
+    const obj = getNestedValue(row, sourceField);
+
+    // ✅ HANDLE direct value
+    if (typeof obj === "string" || typeof obj === "number") {
+      return formatValues([obj], options?.type);
+    }
+
+    if (typeof obj !== "object" || obj === null) return "-";
+
+    const values = properties.map((prop) => obj?.[prop]).filter((val) => typeof val === "string" || typeof val === "number");
+
+    return formatValues(values, options?.type);
   },
 });

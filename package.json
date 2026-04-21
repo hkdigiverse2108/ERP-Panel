@@ -36,7 +36,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.9.6",
     "react-to-print": "^3.2.0",
-    "reactflow": "^11.11.4",
+    "socket.io-client": "^4.8.3",
     "tailwindcss": "^4.1.17",
     "xlsx-js-style": "^1.2.0",
     "yup": "^1.7.1"
@@ -46,7 +46,8 @@
     "@types/node": "^24.10.2",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react-swc": "^4.2.2",
+    "@vite-pwa/assets-generator": "^1.0.2",
+    "@vitejs/plugin-react": "^5.0.4",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
@@ -54,6 +55,13 @@
     "ts-node": "^10.9.2",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
+    "vite-plugin-pwa": "^1.2.0",
+    "workbox-core": "^7.3.0",
+    "workbox-window": "^7.4.0"
+  },
+  "overrides": {
+    "sharp": "^0.33.5",
+    "sharp-ico": "^0.1.5"
   }
 }

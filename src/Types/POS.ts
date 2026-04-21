@@ -24,20 +24,19 @@ export interface PosProductDataModal extends Omit<ProductBase, "sellingPrice" | 
   netAmount: number;
   variant?: string;
   originalQty: number;
+  detect_qty: number;
 }
 
 export interface AdditionalChargeType {
   chargeId: string;
   value: number;
   taxId: string;
-  accountGroupId: string;
   totalAmount: number;
 }
 
-export interface AdditionalChargeRowType extends Omit<AdditionalChargeType, "chargeId" | "taxId" | "accountGroupId"> {
+export interface AdditionalChargeRowType extends Omit<AdditionalChargeType, "chargeId" | "taxId"> {
   chargeId: string;
   taxId: string;
-  accountGroupId: string;
 }
 
 export interface PosProductType {
@@ -63,6 +62,10 @@ export interface PosProductType {
   redeemCreditId: string;
   redeemCreditAmount: number;
   redeemCreditType: string;
+  discountId: string;
+  discountAmount: number;
+  discountMode: string;
+  freeProducts: PosProductDataModal[];
 }
 
 export interface PosSliceState {
@@ -76,7 +79,8 @@ export interface PosSliceState {
   isReturnPosOrder: boolean;
   isSalesInvoice: string;
   isEditPosOrder: boolean;
-  isReturnPosOrderId:string
+  isReturnPosOrderId: string;
+  isProductScan: boolean;
 }
 export interface PosProductOrderItem {
   qty: number;
@@ -101,7 +105,7 @@ export interface MultiplePaymentType {
 export interface PayLaterType {
   dueDate: string;
   sendReminder: boolean;
-  paymentTerm: string;
+  paymentTermsId: string;
 }
 
 export interface PosProductOrderFormValues extends Omit<Partial<PosProductType>, "items"> {

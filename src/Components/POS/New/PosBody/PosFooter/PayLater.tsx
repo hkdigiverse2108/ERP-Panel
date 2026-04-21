@@ -1,19 +1,18 @@
-import { useState } from "react";
-import { Mutations } from "../../../../../Api";
+import { useEffect, useState } from "react";
+import { Mutations, Queries } from "../../../../../Api";
 import { CommonButton, CommonDatePicker, CommonRadio, CommonSelect } from "../../../../../Attribute";
-import { PAYMENT_TERMS, POS_PAYMENT_METHOD, SEND_REMINDER } from "../../../../../Data";
+import { POS_PAYMENT_METHOD, SEND_REMINDER } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setPayLaterModal } from "../../../../../Store/Slices/ModalSlice";
 import { clearPosProduct, setMultiplePay, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
-import { RemoveEmptyFields } from "../../../../../Utils";
+import { GenerateOptions, RemoveEmptyFields, SanitizePayload } from "../../../../../Utils";
 import { CommonModal } from "../../../../Common";
 import type { PosProductOrderDataResponse } from "../../../../../Types";
 
-const DEFAULT_DAYS = 7;
 
-const calculateDueDate = (days: number): Date => {
+const calculateDueDate = (day: number): Date => {
   const date = new Date();
-  date.setDate(date.getDate() + days);
+  date.setDate(date.getDate() + day);
   return date;
 };
 
@@ -22,23 +21,36 @@ const PayLater = () => {
 
   const { mutate: addPayLater, isPending: isAddPayLaterPending } = Mutations.useAddPosOrder();
   const { mutate: editPosOrder, isPending: editPosOrderLoading } = Mutations.useEditPosOrder();
-
+  const { data: paymentTermsData } = Queries.useGetPaymentTermsDropdown();
+  
   const { isPayLaterModal } = useAppSelector((state) => state.modal);
   const { PosProduct } = useAppSelector((state) => state.pos);
   const multiplePayments = isPayLaterModal?.data;
   const totalAmount = multiplePayments?.reduce((total, pay) => total + (pay.amount ? Number(pay.amount) : 0), 0);
   const balanceAmount = PosProduct.totalAmount - totalAmount;
 
-  const [paymentTerms, setPaymentTerms] = useState<string[]>(["7_days"]);
+  const [paymentTerms, setPaymentTerms] = useState<string[]>([]);
+  const [dueDate, setDueDate] = useState<Date | null>(null);
   const [sendReminder, setSendReminder] = useState<string>("yes");
-  const [dueDate, setDueDate] = useState<Date>(() => calculateDueDate(DEFAULT_DAYS));
+
+  useEffect(() => {
+    if (paymentTermsData?.data?.length) {
+      const first = paymentTermsData.data[0];
+      setPaymentTerms([first._id]);
+      if (first?.day) {
+        setDueDate(calculateDueDate(first.day));
+      }
+    }
+  }, [paymentTermsData]);
 
   const handlePaymentTermsChange = (v: string[]) => {
-    setPaymentTerms(v);
+    const id = v?.[0] || "";
+    setPaymentTerms([id]);
 
-    if (v?.length) {
-      const days = Number(v[0].split("_")[0]);
-      setDueDate(calculateDueDate(days));
+    const selected = paymentTermsData?.data?.find((item: any) => item._id === id);
+
+    if (selected?.day) {
+      setDueDate(calculateDueDate(selected.day));
     }
   };
 
@@ -63,9 +75,9 @@ const PayLater = () => {
       paymentMethod: multiplePayments?.length ? POS_PAYMENT_METHOD.MULTI_PAY : POS_PAYMENT_METHOD.PAY_LATER,
       ...(multiplePayments?.length && { multiplePayments: multiplePayments?.length ? multiplePayments : [] }),
       payLater: {
-        dueDate: dueDate.toISOString(),
+        dueDate: dueDate?.toISOString(),
         sendReminder: sendReminder === "yes",
-        paymentTerm: paymentTerms[0],
+        paymentTermsId: paymentTerms[0],
       },
     };
     const onSuccess = (res: PosProductOrderDataResponse) => {
@@ -77,7 +89,7 @@ const PayLater = () => {
     const onError = () => {
       handleClose();
     };
-    const changedFields = RemoveEmptyFields(payload);
+    const changedFields = SanitizePayload(payload);
     if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess, onError });
     else addPayLater(RemoveEmptyFields(payload), { onSuccess, onError });
   };
@@ -90,7 +102,7 @@ const PayLater = () => {
         </div>
         {/* Payment Terms */}
         <div>
-          <CommonSelect label="Payment Terms" options={PAYMENT_TERMS} value={paymentTerms} limitTags={1} onChange={handlePaymentTermsChange} />{" "}
+          <CommonSelect label="Payment Terms" options={GenerateOptions(paymentTermsData?.data)} value={paymentTerms} limitTags={1} onChange={handlePaymentTermsChange} />{" "}
         </div>
 
         {/* Due Date */}

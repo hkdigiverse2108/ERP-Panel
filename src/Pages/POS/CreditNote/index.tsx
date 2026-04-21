@@ -1,96 +1,133 @@
-import { Box } from "@mui/material";
-import { useMemo } from "react";
+import { Box, Grid } from "@mui/material";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useReactToPrint } from "react-to-print";
 import { Mutations, Queries } from "../../../Api";
-import { CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
+import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
+import BillReceipt from "../../../Components/POS/New/BillReceipt";
 import OrderRefund from "../../../Components/POS/New/PosBody/PosSidebar/PosOptions/OrderRefund";
 import { PAGE_TITLE } from "../../../Constants";
-import { BREADCRUMBS } from "../../../Data";
-import { useAppDispatch } from "../../../Store/hooks";
+import { BREADCRUMBS, CREDIT_NOTE_STATUS } from "../../../Data";
+import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
 import { setOrderRefundModal } from "../../../Store/Slices/ModalSlice";
-import type { PosCreditNoteBase, AppGridColDef } from "../../../Types";
-import { FormatDate } from "../../../Utils";
+import { setPrintType, setReturnPosOrderId } from "../../../Store/Slices/PosSlice";
+import type { AppGridColDef, PosCreditNoteBase } from "../../../Types";
 import { useDataGrid } from "../../../Utils/Hooks";
+import { CreateFilter, DateConfig } from "../../../Utils";
+import { CommonDateRangeSelector } from "../../../Attribute";
 
 const CreditNoteList = () => {
-    const dispatch = useAppDispatch();
-    const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, params } = useDataGrid({ active: false });
-    const { mutate: deletePosCreditNoteMutate, isPending: isDeleteLoading } = Mutations.useDeletePosCreditNote();
+  const dispatch = useAppDispatch();
+  const { isReturnPosOrderId, isPrintType } = useAppSelector((state) => state.pos);
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, params, advancedFilter, updateAdvancedFilter } = useDataGrid({ active: false });
+  const { mutate: deletePosCreditNoteMutate, isPending: isDeleteLoading } = Mutations.useDeletePosCreditNote();
+  const contentRef = useRef<HTMLDivElement>(null);
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
 
-    const { data: branchData, isLoading: branchDataLoading, isFetching: branchDataFetching } = Queries.useGetPosCreditNote(params, true);
-    const allBranches = useMemo(() => branchData?.data?.posCreditNote_data.map((branch) => ({ ...branch, id: branch?._id })) || [], [branchData]);
-    const totalRows = branchData?.data?.totalData || 0;
+  const { data: returnPosOrder, isLoading: returnPosOrderLoading, isFetching: returnPosOrderFetching } = Queries.useGetReturnPosOrderById(isReturnPosOrderId, Boolean(isReturnPosOrderId));
+  const { data: posCreditNoteData, isLoading: posCreditNoteDataLoading, isFetching: posCreditNoteDataFetching } = Queries.useGetPosCreditNote({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() }, true);
+  const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetPosCreditNote({}, false);
+  const allPosCreditNote = useMemo(() => posCreditNoteData?.data?.posCreditNote_data.map((item) => ({ ...item, id: item?._id })) || [], [posCreditNoteData]);
+  const totalRows = posCreditNoteData?.data?.totalData || 0;
 
-    const handleDeleteBtn = () => {
-        if (!rowToDelete) return;
-        deletePosCreditNoteMutate(rowToDelete?._id as string, {
-            onSuccess: () => setRowToDelete(null),
-        });
-    };
+  const PrintBill = returnPosOrder?.data;
+  const PrintBillReady = !returnPosOrderLoading && !returnPosOrderFetching;
 
-    const handleRefundBtn = (row: PosCreditNoteBase) => {
-        dispatch(setOrderRefundModal({ open: true, data: row }));
-    };
+  const handleLastBillPrint = useReactToPrint({
+    contentRef,
+    onAfterPrint: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      dispatch(setPrintType(""));
+      dispatch(setReturnPosOrderId(""));
+    },
+    onPrintError: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      dispatch(setPrintType(""));
+      dispatch(setReturnPosOrderId(""));
+    },
+  });
 
-    const columns: AppGridColDef<PosCreditNoteBase>[] = [
-        { field: "creditNoteNo", headerName: "Credit Note No.", flex: 1, minWidth: 150 },
-        { field: "customerId", headerName: "Customer Name", flex: 1, minWidth: 150, renderCell: (params) => params.row.customerId ? `${params.row.customerId.firstName || ""} ${params.row.customerId.lastName || ""}`.trim() : "-" },
-        { field: "createdAt", headerName: "Date", flex: 1, minWidth: 120, renderCell: (params) => FormatDate(params.row.createdAt) },
-        { field: "totalAmount", headerName: "Total Amount", flex: 1, minWidth: 120 },
-        { field: "creditsUsed", headerName: "Credits Used", flex: 1, minWidth: 120 },
-        { field: "creditsRemaining", headerName: "Credits Remaining", flex: 1, minWidth: 150 },
-        {
-            field: "status",
-            headerName: "Status",
-            flex: 1,
-            minWidth: 130,
-            renderCell: (params) => {
-                const status = params.row.status || "Open";
-                let colorClass = "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"; // default open
+  const handleDeleteBtn = () => {
+    if (!rowToDelete) return;
+    deletePosCreditNoteMutate(rowToDelete?._id as string, {
+      onSuccess: () => setRowToDelete(null),
+    });
+  };
 
-                if (status.toLowerCase().includes("partial")) {
-                    colorClass = "bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300";
-                } else if (status.toLowerCase().includes("closed") || status.toLowerCase().includes("fully")) {
-                    colorClass = "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300";
-                }
+  const handleRefundBtn = (row: PosCreditNoteBase) => {
+    dispatch(setOrderRefundModal({ open: true, data: row }));
+  };
 
-                return (
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${colorClass}`}>
-                        {status}
-                    </span>
-                );
-            }
-        },
-        CommonActionColumn<PosCreditNoteBase>({
-            onRefund: (row) => (row.creditsRemaining > 0 ? handleRefundBtn(row) : undefined),
-            onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.creditNoteNo }),
-        }),
-    ];
+  const handlePrintBtn = (row: PosCreditNoteBase) => {
+    dispatch(setPrintType("print"));
+    dispatch(setReturnPosOrderId(row?.returnPosOrderId?._id));
+  };
 
-    const CommonDataGridOption = {
-        columns,
-        rows: allBranches,
-        rowCount: totalRows,
-        loading: branchDataLoading || branchDataFetching,
-        paginationModel,
-        onPaginationModelChange: setPaginationModel,
-        sortModel,
-        onSortModelChange: setSortModel,
-        filterModel,
-        onFilterModelChange: setFilterModel,
-    };
+  useEffect(() => {
+    if (!PrintBill || isPrintType !== "print") return;
 
-    return (
-        <>
-            <CommonBreadcrumbs title={PAGE_TITLE.POS.CREDIT_NOTE} breadcrumbs={BREADCRUMBS.POS_CREDIT_NOTE.BASE} />
-            <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
-                <CommonCard hideDivider>
-                    <CommonDataGrid {...CommonDataGridOption} />
-                </CommonCard>
-                <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
-            </Box>
-            <OrderRefund />
-        </>
-    );
+    const isReturnOrder = PrintBill?._id === isReturnPosOrderId;
+
+    if (isReturnOrder) {
+      handleLastBillPrint();
+    }
+  }, [PrintBill, isPrintType, isReturnPosOrderId]);
+
+  const columns: AppGridColDef<PosCreditNoteBase>[] = [
+    { field: "creditNoteNo", headerName: "Credit Note No.", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<PosCreditNoteBase>("customerId", "customerId", ["firstName", "lastName"], { headerName: "Customer Name", width: 150 }),
+    CommonObjectPropertyColumn<PosCreditNoteBase>("created", "createdAt", [], { headerName: "Date", width: 120, type: "date" }),
+    { field: "totalAmount", headerName: "Total Amount", flex: 1, minWidth: 120 },
+    { field: "creditsUsed", headerName: "Credits Used", flex: 1, minWidth: 120 },
+    { field: "refundedAmount", headerName: "Refunded Amount", flex: 1, minWidth: 150 },
+    { field: "creditsRemaining", headerName: "Credits Remaining", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<PosCreditNoteBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 150, type: "status" }),
+    CommonObjectPropertyColumn<PosCreditNoteBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
+    CommonActionColumn<PosCreditNoteBase>({
+      onRefund: (row) => (row.creditsRemaining > 0 ? handleRefundBtn(row) : undefined),
+      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.creditNoteNo }),
+      onPrint: { handlePrint: (row) => handlePrintBtn(row) },
+    }),
+  ];
+
+  const CommonDataGridOption = {
+    columns,
+    rows: allPosCreditNote,
+    rowCount: totalRows,
+    loading: posCreditNoteDataLoading || posCreditNoteDataFetching,
+    paginationModel,
+    onPaginationModelChange: setPaginationModel,
+    sortModel,
+    onSortModelChange: setSortModel,
+    filterModel,
+    onFilterModelChange: setFilterModel,
+    fileName: PAGE_TITLE.POS.CREDIT_NOTE,
+    onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
+  };
+  const filter = [CreateFilter("Select Status", "statusFilter", advancedFilter, updateAdvancedFilter, CREDIT_NOTE_STATUS, false, { xs: 12, sm: 6, md: 3 })];
+
+  const children = (
+    <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
+      <CommonDateRangeSelector value={range} onChange={setRange} active="This Financial Year" />
+    </Grid>
+  );
+
+  return (
+    <>
+      <CommonBreadcrumbs title={PAGE_TITLE.POS.CREDIT_NOTE} breadcrumbs={BREADCRUMBS.POS_CREDIT_NOTE.BASE} />
+      <Box sx={{ p: { xs: 2, md: 3 }, display: "grid", gap: 2 }}>
+        <AdvancedSearch filter={filter} children={children} />
+        <CommonCard hideDivider>
+          <CommonDataGrid {...CommonDataGridOption} />
+        </CommonCard>
+        <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} />
+      </Box>
+      <OrderRefund />
+      <div className="print-only hidden">{PrintBill && PrintBillReady && <BillReceipt ref={contentRef} bill={PrintBill} />}</div>
+    </>
+  );
 };
 
 export default CreditNoteList;

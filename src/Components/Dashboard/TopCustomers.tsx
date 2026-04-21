@@ -1,15 +1,20 @@
 import { Grid } from "@mui/material";
-import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { Queries } from "../../Api/Queries";
 import { CommonDateRangeSelector } from "../../Attribute";
 import type { AppGridColDef, TopCustomersBase } from "../../Types";
+import { DateConfig } from "../../Utils";
 import { useDataGrid } from "../../Utils/Hooks";
 import { CommonCard, CommonDataGrid, CommonObjectNameColumn } from "../Common";
+import { useAppSelector } from "../../Store/hooks";
 
 const TopCustomers = () => {
-  const [range, setRange] = useState({ start: dayjs(), end: dayjs() });
-  const { data, isLoading, isFetching } = Queries.useGetDashboardTopCustomers({ startDate: range.start, endDate: range.end });
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
+  const { branchFilter } = useAppSelector((state) => state.dashboard);
+  const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString(), branchFilter: branchFilter[0] }), [range, branchFilter]);
+  const { data, isLoading, isFetching } = Queries.useGetDashboardTopCustomers(queryParams);
 
   const allRowData = useMemo(() => data?.data?.map((item, index) => ({ ...item, id: index + 1 })) || [], [data]);
   const totalRows = data?.data?.length || 0;
@@ -35,11 +40,12 @@ const TopCustomers = () => {
     pagination: false,
     isToolbar: false,
     isExport: false,
+    fileName: "Top Customers",
   };
 
   const topContent = (
     <Grid size={{ xs: 12, sm: 5, md: 4 }}>
-      <CommonDateRangeSelector value={range} onChange={setRange} active="This Month" />
+      <CommonDateRangeSelector value={range} onChange={setRange} />
     </Grid>
   );
   return (

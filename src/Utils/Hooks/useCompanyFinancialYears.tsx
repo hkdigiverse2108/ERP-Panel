@@ -8,22 +8,16 @@ export const useCompanyFinancialYears = (isoDate?: string) => {
 
   const getFYStartYear = (date: Date) => {
     const year = date.getFullYear();
-    const month = date.getMonth(); // Jan = 0, Apr = 3
+    const month = date.getMonth();
     return month < 3 ? year - 1 : year;
   };
 
-  // FY where company was created
   const creationFY = getFYStartYear(createdDate);
-
-  // Start from ONE year before creation FY
-  const startFY = creationFY - 1;
-
-  // Current running FY
   const currentFY = getFYStartYear(today);
 
   const buildRange = (startYear: number) => {
-    const start = new Date(Date.UTC(startYear, 3, 1)); // 1 April
-    const end = new Date(Date.UTC(startYear + 1, 2, 31, 23, 59, 59, 999)); // 31 March
+    const start = new Date(Date.UTC(startYear, 3, 1));
+    const end = new Date(Date.UTC(startYear + 1, 2, 31, 23, 59, 59, 999));
 
     return {
       label: `${startYear} - ${startYear + 1}`,
@@ -32,6 +26,15 @@ export const useCompanyFinancialYears = (isoDate?: string) => {
   };
 
   const years = [];
+
+  // 🔥 CONDITION
+  if (creationFY >= currentFY) {
+    // 👉 Only current FY
+    return [buildRange(currentFY)];
+  }
+
+  // 👉 Show full range (one year before creation)
+  const startFY = creationFY - 1;
 
   for (let fy = startFY; fy <= currentFY; fy++) {
     years.push(buildRange(fy));
@@ -47,8 +50,18 @@ export const useFinancialYearsFilter = (params?: Params) => {
   const startDate = company?.financialYear.split(" - ")[0];
   const endDate = company?.financialYear.split(" - ")[1];
   return {
-    ...(params || {}),
+    // ...(params || {}),
     startDate: params?.startDate || startDate,
     endDate: params?.endDate || endDate,
+  };
+};
+
+export const useBranchFilter = (params?: Params) => {
+  const { isBranch } = useAppSelector((state) => state.company);
+
+  if (!isBranch) return params;
+  return {
+    // ...(params || {}),
+    branchFilter: isBranch,
   };
 };

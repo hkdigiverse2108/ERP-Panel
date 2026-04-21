@@ -1,17 +1,23 @@
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { CommonCard } from "../Common";
 import { Box, CircularProgress, Grid } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { CommonDateRangeSelector, CommonSelect } from "../../Attribute";
 import { Queries } from "../../Api";
 import { OPTION_TYPE } from "../../Data";
+import { DateConfig } from "../../Utils";
+import { useAppSelector } from "../../Store/hooks";
 
 const Transaction = () => {
-  const [range, setRange] = useState({ start: dayjs(), end: dayjs() });
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
   const [values, setValues] = useState<string[]>([OPTION_TYPE[1].value]);
+  const { branchFilter } = useAppSelector((state) => state.dashboard);
+  const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString(), branchFilter: branchFilter[0] }), [range, branchFilter]);
 
-  const { data: transactionData, isLoading: isTransactionLoading, isFetching: isTransactionFetching } = Queries.useGetDashboardTransactionGraph({ startDate: range.start, endDate: range.end, typeFilter: values[0] });
+  const { data: transactionData, isLoading: isTransactionLoading, isFetching: isTransactionFetching } = Queries.useGetDashboardTransactionGraph({ ...queryParams, typeFilter: values[0] });
 
   const chartData = transactionData?.data || [];
   const isLoading = isTransactionLoading || isTransactionFetching;
@@ -30,7 +36,7 @@ const Transaction = () => {
         <CommonSelect label="Select Transaction" options={OPTION_TYPE} value={values} onChange={(v) => setValues(v)} limitTags={1} />
       </Grid>
       <Grid size={{ xs: 12, sm: 4, xl: 4 }}>
-        <CommonDateRangeSelector value={range} onChange={setRange} active="This Month" />
+        <CommonDateRangeSelector value={range} onChange={setRange}/>
       </Grid>
     </>
   );

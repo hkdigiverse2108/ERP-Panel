@@ -1,6 +1,7 @@
 import type { BrandBase } from "./Brand";
 import type { CategoryBase } from "./Category";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { ConsumptionTypeBase } from "./ConsumptionType";
 import type { TaxBase } from "./Tax";
 import type { UomBase } from "./Uom";
 
@@ -65,7 +66,7 @@ export type AddProductPayload = ProductFormValues;
 
 export type EditProductPayload = AddProductPayload & { productId: string };
 
-export interface ProductBase extends Omit<ProductFormValues, "categoryId" | "subCategoryId" | "brandId" | "subBrandId" | "salesTaxId" | "purchaseTaxId">, CommonDataType {
+export interface ProductBase extends Omit<ProductFormValues, "categoryId" | "subCategoryId" | "brandId" | "subBrandId" | "salesTaxId" | "purchaseTaxId" | "uomId" | "consumptionTypeId">, CommonDataType {
   categoryId?: CategoryBase;
   subCategoryId?: CategoryBase;
   brandId?: BrandBase;
@@ -73,6 +74,8 @@ export interface ProductBase extends Omit<ProductFormValues, "categoryId" | "sub
   salesTaxId?: TaxBase;
   purchaseTaxId?: TaxBase;
   uomId?: UomBase;
+  detect_qty?: number;
+  consumptionTypeId?: ConsumptionTypeBase;
 }
 
 export interface ProductDataResponse extends PageStatus {
@@ -90,3 +93,20 @@ export interface ProductSingleApiResponse extends MessageStatus {
   data: ProductBase;
 }
 
+export interface ProductDetectDataResponse extends PageStatus {
+  sku_matches_details: ProductBase[];
+}
+export interface ProductDetectApiResponse extends MessageStatus {
+  data: ProductDetectDataResponse;
+}
+export interface BulkAddProductError {
+  row: number;
+  error: string;
+}
+
+export interface BulkAddProductResponse extends MessageStatus {
+  error: {
+    errors?: BulkAddProductError[];
+  };
+  data: any[];
+}

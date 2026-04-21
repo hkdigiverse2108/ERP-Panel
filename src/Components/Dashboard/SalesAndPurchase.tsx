@@ -1,15 +1,21 @@
 import { Box, CircularProgress, Grid } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Queries } from "../../Api";
 import { CommonDateRangeSelector } from "../../Attribute";
 import { CommonCard } from "../Common";
+import { DateConfig } from "../../Utils";
+import { useAppSelector } from "../../Store/hooks";
 
 const SalesAndPurchase = () => {
-  const [range, setRange] = useState({ start: dayjs(), end: dayjs() });
+  const { company } = useAppSelector((state) => state.company);
+  const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
+  const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
+  const { branchFilter } = useAppSelector((state) => state.dashboard);
+  const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString(), branchFilter: branchFilter[0] }), [range, branchFilter]);
 
-  const { data: salesAndPurchaseData, isLoading: isSalesAndPurchaseLoading, isFetching: isSalesAndPurchaseFetching } = Queries.useGetDashboardSalesAndPurchaseGraph({ startDate: range.start, endDate: range.end });
+  const { data: salesAndPurchaseData, isLoading: isSalesAndPurchaseLoading, isFetching: isSalesAndPurchaseFetching } = Queries.useGetDashboardSalesAndPurchaseGraph(queryParams);
 
   const chartData = salesAndPurchaseData?.data || [];
   const isLoading = isSalesAndPurchaseLoading || isSalesAndPurchaseFetching;
@@ -22,7 +28,7 @@ const SalesAndPurchase = () => {
 
   const topContent = (
     <Grid size={{ xs: 12, sm: 5, md: 4 }}>
-      <CommonDateRangeSelector value={range} onChange={setRange} active="This Week" />
+      <CommonDateRangeSelector value={range} onChange={setRange} />
     </Grid>
   );
 

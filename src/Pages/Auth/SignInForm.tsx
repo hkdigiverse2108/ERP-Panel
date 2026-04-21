@@ -7,7 +7,7 @@ import { SigninSchema } from "../../Utils/ValidationSchemas";
 import { Mutations } from "../../Api";
 import type { LoginPayload } from "../../Types";
 import { useAppDispatch } from "../../Store/hooks";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { setSignin } from "../../Store/Slices/AuthSlice";
 
 const SignInForm = () => {
@@ -43,6 +43,11 @@ const SignInForm = () => {
                 <Grid container spacing={2}>
                   <CommonValidationTextField name="email" label="Email ID" placeholder="Enter your email" required isFormLabel grid={{ xs: 12 }} />
                   <CommonValidationTextField name="password" label="password" type="password" placeholder="Enter your password" required isFormLabel showPasswordToggle grid={{ xs: 12 }} />
+                  <div className="flex justify-end w-full">
+                    <Link to={ROUTES.FORGOT_PASSWORD.BASE} className="text-xs font-medium text-brand-950 dark:text-white/90 hover:underline">
+                      Forgot Password?
+                    </Link>
+                  </div>
                   <CommonButton loading={isSigninPending} type="submit" variant="contained" title="Sign In" size="medium" fullWidth grid={{ xs: 12 }} />
                 </Grid>
               </Form>

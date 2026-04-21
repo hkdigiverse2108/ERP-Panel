@@ -17,6 +17,33 @@ export const PAGE_TITLE = {
       ADD: "Add Additional Charge",
       EDIT: "Edit Additional Charge",
     },
+    TAX: {
+      BASE: "Tax",
+      TITLE: "Taxes",
+      ADD: "Add Tax",
+      EDIT: "Edit Tax",
+    },
+    PREFIX: {
+      BASE: "Prefix",
+      ADD: "Add Prefix",
+      EDIT: "Edit Prefix",
+    },
+    PAYMENT_TERMS: {
+      BASE: "Payment Terms",
+      ADD: "Add Payment Terms",
+      EDIT: "Edit Payment Terms",
+    },
+    CONSUMPTION_TYPE: {
+      BASE: "Consumption Type",
+      ADD: "Add Consumption Type",
+      EDIT: "Edit Consumption Type",
+    },
+  },
+  AUTH: {
+    SIGNIN: "Sign In",
+    FORGOT_PASSWORD: "Forgot Password",
+    VERIFY_OTP: "Verify OTP",
+    RESET_PASSWORD: "Reset Password",
   },
   USER: {
     BASE: "User",
@@ -26,7 +53,8 @@ export const PAGE_TITLE = {
     PERMISSION: "User Permission",
   },
   ROLES: {
-    BASE: "User Roles",
+    BASE: "role",
+    TITLE: "User Roles",
     ADD: "Add Roles",
     EDIT: "Edit Roles",
   },
@@ -72,6 +100,11 @@ export const PAGE_TITLE = {
       ADD: "Add Material Consumption",
       EDIT: "Edit Material Consumption",
     },
+    STOCK_TRANSFER: {
+      BASE: "Stock Transfer",
+      ADD: "Add Stock Transfer",
+      EDIT: "Edit Stock Transfer",
+    },
   },
   CUSTOMER: {
     BASE: "Customer",
@@ -86,19 +119,37 @@ export const PAGE_TITLE = {
     ADD: "Add Bank",
     EDIT: "Edit Bank",
   },
-  TRANSACTION: {
-    BASE: "Transaction",
+  BANK_TRANSACTION: {
+    BASE: "Bank Transaction",
+    ADD: "Add Bank Transaction",
+    EDIT: "Edit Bank Transaction",
   },
   PAYMENT: {
     BASE: "Payment",
     EDIT: "Edit Payment",
     ADD: "Add Payment",
   },
+  RECEIPT: {
+    BASE: "Receipt",
+    ADD: "Add Receipt",
+    EDIT: "Edit Receipt",
+  },
+  EXPENSE: {
+    BASE: "Expense",
+    ADD: "Add Expense",
+    EDIT: "Edit Expense",
+  },
+  SALARY: {
+    BASE: "Salary",
+    ADD: "Add Salary",
+    EDIT: "Edit Salary",
+  },
+
   POS: {
     BASE: "POS",
     NEW: "New POS",
     ORDER_LIST: "Order List",
-    CREDIT_NOTE: "pos Credit Note",
+    CREDIT_NOTE: "Credit Note",
     SALES_REGISTER: "sales Register",
   },
   CRM: {
@@ -113,6 +164,11 @@ export const PAGE_TITLE = {
       ADD: "Add Loyalty",
       EDIT: "Edit Loyalty",
     },
+    DISCOUNT: {
+      BASE: "Discount",
+      ADD: "Add Discount",
+      EDIT: "Edit Discount",
+    },
   },
   PURCHASE: {
     BASE: "Purchase",
@@ -126,16 +182,14 @@ export const PAGE_TITLE = {
       ADD: "Add Purchase Order",
       EDIT: "Edit Purchase Order",
     },
+    PURCHASE_DEBIT_NOTE: {
+      BASE: "Purchase Debit Note",
+      ADD: "Add Purchase Debit Note",
+      EDIT: "Edit Purchase Debit Note",
+    },
   },
   ACCOUNTING: {
     BASE: "Accounting",
-    ACCOUNT_GROUP: {
-      BASE: "Account Group",
-      TREE: "Account Group Tree",
-    },
-    ACCOUNT: {
-      BASE: "Account",
-    },
     CREDIT_NOTE: {
       BASE: "Credit Note",
       ADD: "Add Credit Note",
@@ -146,10 +200,34 @@ export const PAGE_TITLE = {
       ADD: "Add Debit Note",
       EDIT: "Edit Debit Note",
     },
-    JOURNAL_VOUCHER: {
-      BASE: "Journal Voucher",
-      ADD: "Add Journal Voucher",
-      EDIT: "Edit Journal Voucher",
+  },
+  SALES: {
+    BASE: "Sales",
+    ESTIMATE: {
+      BASE: "Estimate",
+      ADD: "Add Estimate",
+      EDIT: "Edit Estimate",
+    },
+    SALES_ORDER: {
+      BASE: "Sales Order",
+      ADD: "Add Sales Order",
+      EDIT: "Edit Sales Order",
+    },
+    INVOICE: {
+      BASE: "Invoice",
+      ADD: "Add Invoice",
+      EDIT: "Edit Invoice",
+    },
+    DELIVERY_CHALLAN: {
+      BASE: "Delivery Challan",
+      ADD: "Add Delivery Challan",
+      EDIT: "Edit Delivery Challan",
+    },
+    SALES_CREDIT_NOTE: {
+      BASE: "Sales Credit Note",
+      ADD: "Add Sales Credit Note",
+      EDIT: "Edit Sales Credit Note",
     },
   },
+  NOTIFICATION: "Notification",
 } as const;

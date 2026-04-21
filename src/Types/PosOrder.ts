@@ -1,4 +1,3 @@
-import type { AccountGroupBase } from "./AccountGroup";
 import type { AdditionalChargesBase } from "./AdditionalCharges";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { CompanyBase } from "./Company";
@@ -30,7 +29,6 @@ export interface PosOrderFormValues {
     chargeId: AdditionalChargesBase;
     value: number;
     taxId: TaxBase;
-    accountGroupId: AccountGroupBase;
     totalAmount: number;
   }[];
   multiplePayments: MultiplePaymentType[];
@@ -47,6 +45,9 @@ export interface PosOrderFormValues {
   redeemCreditId: string;
   redeemCreditAmount: number;
   redeemCreditType: string;
+  discountId: string;
+  discountAmount: number;
+  discountMode: string;
 }
 
 export type AddPosOrderPayload = PosOrderFormValues;

@@ -1,3 +1,4 @@
+import { RealEstateAgent } from "@mui/icons-material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
@@ -6,23 +7,22 @@ import PauseIcon from "@mui/icons-material/Pause";
 import RedeemIcon from "@mui/icons-material/Redeem";
 import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
 import { Grid } from "@mui/material";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Mutations } from "../../../../../Api";
 import { CommonButton, CommonTextField, ShowNotification } from "../../../../../Attribute";
 import { POS_PAYMENT_METHOD, RETURN_POS_ORDER_TYPE } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
-import { setAdditionalChargeModal, setApplyCouponModal, setCardModal, setCashModal, setOrderRefundModal, setPayLaterModal, setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
-import { clearPosProduct, setBtnStatus, setFlatDiscountAmount, setMultiplePay, setPrintType, setRemarks, setReturnPosOrderId, setRoundOff, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
+import { setAdditionalChargeModal, setApplyCouponModal, setCardModal, setCashModal, setCustomerModal, setOrderRefundModal, setPayLaterModal, setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
+import { clearPosProduct, setBtnStatus, setFlatDiscountAmount, setIsProductScan, setMultiplePay, setPrintType, setRemarks, setReturnPosOrderId, setRoundOff, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
 import type { PosProductOrderDataResponse } from "../../../../../Types";
-import { RemoveEmptyFields } from "../../../../../Utils";
+import { RemoveEmptyFields, SanitizePayload } from "../../../../../Utils";
+import OrderRefund from "../PosSidebar/PosOptions/OrderRefund";
 import AdditionalCharge from "./AdditionalCharge";
 import ApplyCoupon from "./ApplyCoupon";
 import CardDetails from "./CardDetails";
 import Cash from "./Cash";
 import PayLater from "./PayLater";
 import RedeemCredit from "./RedeemCredit";
-import { RealEstateAgent } from "@mui/icons-material";
-import OrderRefund from "../PosSidebar/PosOptions/OrderRefund";
 
 const PosFooter = () => {
   const { PosProduct, isBtnStatus, isReturnPosOrder } = useAppSelector((state) => state.pos);
@@ -88,7 +88,7 @@ const PosFooter = () => {
     const onError = () => {
       dispatch(setBtnStatus(""));
     };
-    const changedFields = RemoveEmptyFields(payload);
+    const changedFields = SanitizePayload(payload);
     if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess, onError });
     else addPosOrder(RemoveEmptyFields(payload), { onSuccess, onError });
   };
@@ -118,7 +118,7 @@ const PosFooter = () => {
     const onError = () => {
       dispatch(setBtnStatus(""));
     };
-    const changedFields = RemoveEmptyFields(payload);
+    const changedFields = SanitizePayload(payload);
     if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess, onError });
     else addPosOrder(RemoveEmptyFields(payload), { onSuccess, onError });
   };
@@ -180,6 +180,41 @@ const PosFooter = () => {
       },
     });
   };
+  const handleNewCustomer = () => {
+    dispatch(setCustomerModal({ open: true, data: null }));
+  };
+
+  const handleProductScan = () => dispatch(setIsProductScan());
+
+  const keyMap: Record<string, () => void> = {
+    F1: () => handleNewCustomer(),
+    F2: () => handleProductScan(),
+    F3: () => handleCard(""),
+    F4: () => handleCash(""),
+    F5: () => handleUpi(""),
+    F6: () => handleHoldBill(""),
+    F7: () => handleHoldBill("print"),
+    F8: () => handleCash("print"),
+    F9: () => handleCard("print"),
+    F10: () => handleUpi("print"),
+    F11: () => handlePayLater("print"),
+    F12: () => handleMultiplePay("print"),
+  };
+
+  useEffect(() => {
+    const listener = (e: KeyboardEvent) => {
+      if (keyMap[e.key]) {
+        e.preventDefault();
+        keyMap[e.key]();
+      }
+    };
+
+    window.addEventListener("keydown", listener);
+
+    return () => {
+      window.removeEventListener("keydown", listener);
+    };
+  }, [keyMap]);
 
   const handleRefund = () => {
     const payload = {
@@ -227,18 +262,18 @@ const PosFooter = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2 p-2">
-            <CommonButton title="Multiple Pay" variant="contained" startIcon={<VerticalSplitIcon />} onClick={() => handleMultiplePay("print")} />
+            <CommonButton title="Multiple Pay(F12)" variant="contained" startIcon={<VerticalSplitIcon />} onClick={() => handleMultiplePay("print")} />
             <CommonButton title="Redeem Credit" variant="contained" startIcon={<RedeemIcon />} onClick={handleRedeemCredit} />
-            <CommonButton title="Hold" variant="contained" startIcon={<PauseIcon />} onClick={() => handleHoldBill("")} loading={isBtnStatus === "hold"} />
-            <CommonButton title="UPI" variant="contained" startIcon={<FastForwardIcon />} onClick={() => handleUpi("")} loading={isBtnStatus === "upi"} />
-            <CommonButton title="Card" variant="contained" startIcon={<CreditCardIcon />} onClick={() => handleCard("")} />
-            <CommonButton title="Cash" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => handleCash("")} />
+            <CommonButton title="Hold(F6)" variant="contained" startIcon={<PauseIcon />} onClick={() => handleHoldBill("")} loading={isBtnStatus === "hold"} />
+            <CommonButton title="UPI(F5)" variant="contained" startIcon={<FastForwardIcon />} onClick={() => handleUpi("")} loading={isBtnStatus === "upi"} />
+            <CommonButton title="Card(F3)" variant="contained" startIcon={<CreditCardIcon />} onClick={() => handleCard("")} />
+            <CommonButton title="Cash(F4)" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => handleCash("")} />
             <CommonButton title="Apply Coupon" variant="contained" startIcon={<RedeemIcon />} onClick={handleApplyCoupon} />
-            <CommonButton title="Pay Later" variant="contained" startIcon={<CalendarMonthIcon />} onClick={() => handlePayLater("print")} />
-            <CommonButton title="Hold & Print" variant="contained" startIcon={<PauseIcon />} onClick={() => handleHoldBill("print")} loading={isBtnStatus === "hold-print"} />
-            <CommonButton title="UPI & Print" variant="contained" startIcon={<FastForwardIcon />} onClick={() => handleUpi("print")} loading={isBtnStatus === "upi-print"} />
-            <CommonButton title="Card & Print" variant="contained" startIcon={<CreditCardIcon />} onClick={() => handleCard("print")} />
-            <CommonButton title="Cash & Print" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => handleCash("print")} />
+            <CommonButton title="Pay Later(F11)" variant="contained" startIcon={<CalendarMonthIcon />} onClick={() => handlePayLater("print")} />
+            <CommonButton title="Hold & Print(F7)" variant="contained" startIcon={<PauseIcon />} onClick={() => handleHoldBill("print")} loading={isBtnStatus === "hold-print"} />
+            <CommonButton title="UPI & Print(F10)" variant="contained" startIcon={<FastForwardIcon />} onClick={() => handleUpi("print")} loading={isBtnStatus === "upi-print"} />
+            <CommonButton title="Card & Print(F9)" variant="contained" startIcon={<CreditCardIcon />} onClick={() => handleCard("print")} />
+            <CommonButton title="Cash & Print(F8)" variant="contained" startIcon={<CurrencyRupeeIcon />} onClick={() => handleCash("print")} />
           </div>
         )}
       </div>

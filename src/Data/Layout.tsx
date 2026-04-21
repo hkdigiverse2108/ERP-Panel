@@ -1,4 +1,4 @@
-import { AccountBalance,  GridViewRounded, People, PersonRounded, PointOfSale, ReceiptLong, Redeem, Settings } from "@mui/icons-material";
+import { AccountBalance, GridViewRounded, People, PersonRounded, PointOfSale, ReceiptLong, Redeem, Settings, ShoppingCart, Work } from "@mui/icons-material";
 import { PAGE_TITLE, ROUTES } from "../Constants";
 import type { NavItem } from "../Types";
 
@@ -16,6 +16,7 @@ export const NavItems: NavItem[] = [
       { name: PAGE_TITLE.INVENTORY.STOCK_VERIFICATION.BASE, path: ROUTES.STOCK_VERIFICATION.BASE },
       { name: PAGE_TITLE.INVENTORY.BILL_OF_LIVE_PRODUCT.BASE, path: ROUTES.BILL_OF_LIVE_PRODUCT.BASE },
       { name: PAGE_TITLE.INVENTORY.MATERIAL_CONSUMPTION.BASE, path: ROUTES.MATERIAL_CONSUMPTION.BASE },
+      { name: PAGE_TITLE.INVENTORY.STOCK_TRANSFER.BASE, path: ROUTES.STOCK_TRANSFER.BASE },
     ],
   },
   {
@@ -23,8 +24,11 @@ export const NavItems: NavItem[] = [
     icon: <AccountBalance />,
     children: [
       { name: PAGE_TITLE.BANK.BASE, path: ROUTES.BANK.BASE },
-      { name: PAGE_TITLE.TRANSACTION.BASE, path: ROUTES.TRANSACTION.BASE },
+      { name: PAGE_TITLE.BANK_TRANSACTION.BASE, path: ROUTES.BANK_TRANSACTION.BASE },
       { name: PAGE_TITLE.PAYMENT.BASE, path: ROUTES.PAYMENT.BASE },
+      { name: PAGE_TITLE.RECEIPT.BASE, path: ROUTES.RECEIPT.BASE },
+      { name: PAGE_TITLE.EXPENSE.BASE, path: ROUTES.EXPENSE.BASE },
+      { name: PAGE_TITLE.SALARY.BASE, path: ROUTES.SALARY.BASE },
     ],
   },
   {
@@ -43,14 +47,27 @@ export const NavItems: NavItem[] = [
     children: [
       { name: PAGE_TITLE.CRM.COUPON.BASE, path: ROUTES.COUPON.BASE },
       { name: PAGE_TITLE.CRM.LOYALTY.BASE, path: ROUTES.LOYALTY.BASE },
+      { name: PAGE_TITLE.CRM.DISCOUNT.BASE, path: ROUTES.DISCOUNT.BASE },
     ],
   },
   {
     name: PAGE_TITLE.PURCHASE.BASE,
-    icon: <Settings />,
+    icon: <Work />,
     children: [
       { name: PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE, path: ROUTES.SUPPLIER_BILL.BASE },
       { name: PAGE_TITLE.PURCHASE.PURCHASE_ORDER.BASE, path: ROUTES.PURCHASE_ORDER.BASE },
+      { name: PAGE_TITLE.PURCHASE.PURCHASE_DEBIT_NOTE.BASE, path: ROUTES.PURCHASE_DEBIT_NOTE.BASE },
+    ],
+  },
+  {
+    name: PAGE_TITLE.SALES.BASE,
+    icon: <ShoppingCart />,
+    children: [
+      { name: PAGE_TITLE.SALES.ESTIMATE.BASE, path: ROUTES.ESTIMATE.BASE },
+      { name: PAGE_TITLE.SALES.SALES_ORDER.BASE, path: ROUTES.SALES_ORDER.BASE },
+      { name: PAGE_TITLE.SALES.INVOICE.BASE, path: ROUTES.INVOICE.BASE },
+      { name: PAGE_TITLE.SALES.DELIVERY_CHALLAN.BASE, path: ROUTES.DELIVERY_CHALLAN.BASE },
+      { name: PAGE_TITLE.SALES.SALES_CREDIT_NOTE.BASE, path: ROUTES.SALES_CREDIT_NOTE.BASE },
     ],
   },
   {
@@ -62,11 +79,8 @@ export const NavItems: NavItem[] = [
     name: PAGE_TITLE.ACCOUNTING.BASE,
     icon: <ReceiptLong />,
     children: [
-      { name: PAGE_TITLE.ACCOUNTING.ACCOUNT_GROUP.BASE, path: ROUTES.ACCOUNTING.ACCOUNT_GROUP.BASE },
-      { name: PAGE_TITLE.ACCOUNTING.ACCOUNT.BASE, path: ROUTES.ACCOUNTING.ACCOUNT.BASE },
       { name: PAGE_TITLE.ACCOUNTING.CREDIT_NOTE.BASE, path: ROUTES.ACCOUNTING.CREDIT_NOTE.BASE },
       { name: PAGE_TITLE.ACCOUNTING.DEBIT_NOTE.BASE, path: ROUTES.ACCOUNTING.DEBIT_NOTE.BASE },
-      { name: PAGE_TITLE.ACCOUNTING.JOURNAL_VOUCHER.BASE, path: ROUTES.ACCOUNTING.JOURNAL_VOUCHER.BASE },
     ],
   },
 ];

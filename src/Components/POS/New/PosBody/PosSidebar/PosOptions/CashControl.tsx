@@ -8,9 +8,9 @@ import { CASH_CONTROL_TYPE } from "../../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setCashControlModal } from "../../../../../../Store/Slices/ModalSlice";
 import type { CashControlBase, CashControlFormValues } from "../../../../../../Types";
-import { FormatDateTime } from "../../../../../../Utils";
 import { useDataGrid } from "../../../../../../Utils/Hooks";
 import { CommonCard, CommonDataGrid, CommonModal } from "../../../../../Common";
+import { CommonObjectPropertyColumn } from "../../../../../Common/CommonDataGrid/CommonColumns";
 
 const CashControl = () => {
   const { isCashControlModal } = useAppSelector((state) => state.modal);
@@ -30,8 +30,8 @@ const CashControl = () => {
 
   const columns: GridColDef<CashControlBase>[] = [
     { field: "amount", headerName: "Opening Amount", width: 200 },
-    { field: "createdAt", headerName: "Created At", width: 150, renderCell: (params) => FormatDateTime(params?.row?.createdAt) },
-    { field: "updatedAt", headerName: "Updated At", width: 150, renderCell: (params) => FormatDateTime(params?.row?.updatedAt) },
+    CommonObjectPropertyColumn<CashControlBase>("createdAt", "createdAt", [], { headerName: "Created At", flex: 1, minWidth: 150, type: "date" }),
+    CommonObjectPropertyColumn<CashControlBase>("updatedAt", "updatedAt", [], { headerName: "Updated At", flex: 1, minWidth: 150, type: "date" }),
     { field: "remark", headerName: "Remark", flex: 1, minWidth: 200 },
   ];
   const CommonDataGridOption = {
@@ -46,6 +46,7 @@ const CashControl = () => {
     filterModel,
     onFilterModelChange: setFilterModel,
     isExport: false,
+    fileName: "Cash Control",
   };
 
   return (

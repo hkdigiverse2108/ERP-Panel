@@ -3,7 +3,7 @@ import type { CompanyBase } from "./Company";
 import type { ContactBase } from "./Contacts";
 import type { PosOrderBase } from "./PosOrder";
 
-export interface PosCreditNoteFormValues {
+export interface PosCreditNoteFormValues extends CommonDataType {
   creditsRemaining: number;
   creditsUsed: number;
   isActive: true;
@@ -39,7 +39,7 @@ export type AddPosCreditNotePayload = PosCreditNoteFormValues;
 
 export type EditPosCreditNotePayload = PosCreditNoteFormValues & { creditNoteId?: string };
 
-export interface PosCreditNoteBase extends PosCreditNoteFormValues, CommonDataType {
+export interface PosCreditNoteBase extends PosCreditNoteFormValues  {
   creditNoteNo: string;
   companyId: CompanyBase;
   customerId: ContactBase;

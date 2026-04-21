@@ -80,8 +80,8 @@ const CompanyProfile = () => {
     { label: "Authorised Signature", src: company?.authorizedSignature, alt: "authorizedSignature" },
   ];
 
-  const companyStrength = getStrength(CompanyDetails)
-  setCompanyStrength(companyStrength)
+  const companyStrength = getStrength(CompanyDetails);
+  setCompanyStrength(companyStrength);
 
   const topContent = (
     <Grid size="auto">

@@ -103,6 +103,7 @@ const CompanyForm = () => {
         onSuccess: (response) => {
           dispatch(setCompany(response?.data));
           navigate(ROUTES.SETTINGS.GENERAL, { state: 1 });
+          window.location.reload();
         },
       },
     );

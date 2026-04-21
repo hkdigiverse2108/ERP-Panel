@@ -1,24 +1,25 @@
-import type { AccountBase } from "./Account";
-import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { BankBase } from "./Bank";
+import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
 
 export interface CreditNoteFormValues {
-  voucherNumber?: string;
+  type?: string;
   date?: string;
-  fromAccountId?: string;
-  toAccountId?: string;
+  bankAccountId?: string;
   amount?: string;
   description?: string;
   isActive?: boolean;
+  image?: string | File | null;
   _submitAction?: string;
+  phoneNo?: PhoneNumberType;
+  personName?: string;
 }
 
 export type AddCreditNotePayload = CreditNoteFormValues;
 
 export type EditCreditNotePayload = CreditNoteFormValues & { creditNoteId: string };
 
-export interface CreditNoteBase extends Omit<CreditNoteFormValues, "fromAccountId" | "toAccountId">, CommonDataType {
-  fromAccountId: AccountBase;
-  toAccountId: AccountBase;
+export interface CreditNoteBase extends Omit<CreditNoteFormValues, "bankAccountId">, CommonDataType {
+  bankAccountId: BankBase;
 }
 
 export interface CreditNoteDataResponse extends PageStatus {

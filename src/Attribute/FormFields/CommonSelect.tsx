@@ -3,7 +3,7 @@ import { useField, useFormikContext } from "formik";
 import { type FC } from "react";
 import type { CommonSelectProps, CommonValidationSelectProps, SelectOptionType } from "../../Types";
 
-export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, label, required, options, multiple = false, limitTags, size = "small", grid, disabled, readOnly, syncFieldName, isLoading, placeholder, ...props }) => {
+export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, label, required, options, multiple = false, limitTags, size = "small", grid, disabled, readOnly, syncFieldName, isLoading, placeholder, onChange, ...props }) => {
   const [field, meta, helpers] = useField<any>({ name });
   const { setFieldValue } = useFormikContext<any>();
   // Normalize value
@@ -28,10 +28,12 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
           const values = (newValues as SelectOptionType[]).map((o) => o.value);
           helpers.setValue(values);
           if (syncFieldName) setFieldValue(syncFieldName, values);
+          if (onChange) onChange(values);
         } else {
           const value = (newValues as SelectOptionType | null)?.value ?? "";
           helpers.setValue(value);
           if (syncFieldName) setFieldValue(syncFieldName, value);
+          if (onChange) onChange(value ? [value] : []);
         }
       }}
       onBlur={() => helpers.setTouched(true)}

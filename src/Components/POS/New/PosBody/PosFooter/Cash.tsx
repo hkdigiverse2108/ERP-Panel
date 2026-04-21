@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setCashModal } from "../../../../../Store/Slices/ModalSlice";
 import { clearPosProduct, setSelectedOrderId } from "../../../../../Store/Slices/PosSlice";
 import type { PosProductOrderDataResponse } from "../../../../../Types";
-import { RemoveEmptyFields } from "../../../../../Utils";
+import { RemoveEmptyFields, SanitizePayload } from "../../../../../Utils";
 import { CommonModal } from "../../../../Common";
 
 const keypad = ["1", "2", "3", "+5", "+100", "4", "5", "6", "+10", "+500", "7", "8", "9", "+20", "+2000", "C", "0", ".", "+50", "⌫"];
@@ -101,7 +101,7 @@ const Cash = () => {
     const onError = () => {
       dispatch(setCashModal());
     };
-    const changedFields = RemoveEmptyFields(payload);
+    const changedFields = SanitizePayload(payload);
     if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess, onError });
     else addPosOrder(RemoveEmptyFields(payload), { onSuccess, onError });
   };

@@ -17,6 +17,7 @@ export interface EmployeeFormValues {
   username?: string;
   designation?: string;
   phoneNo?: PhoneNumberType;
+  profileImage?: string | null;
   email?: string;
   branchId?: string;
   panNumber?: string;

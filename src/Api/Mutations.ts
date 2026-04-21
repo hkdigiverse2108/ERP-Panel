@@ -1,5 +1,5 @@
 import { KEYS, URL_KEYS } from "../Constants";
-import type { AddAdditionalChargesPayload, AddBankPayload, AddBillOfLiveProductPayload, AddCashControlPayload, AddContactPayload, AddCouponPayload, AddCreditNotePayload, AddDebitNotePayload, AddEmployeePayload, AddJournalVoucherPayload, AddLoyaltyPayload, AddMaterialConsumptionPayload, AddPosCashRegisterPayload, AddPosCreditNotePayload, AddPosPaymentPayload, AddPosProductOrderPayload, AddProductPayload, AddPurchaseOrderPayload, AddRecipePayload, AddReturnPosOrderPayload, AddRolesPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddStockVerificationPayload, AddSupplierBillPayload, AddTermsConditionPayload, CallRequestFormValues, ChangePasswordPayload, CompanyApiResponse, EditAdditionalChargesPayload, EditBankPayload, EditBillOfLiveProductPayload, EditCompanyPayload, EditContactPayload, EditCouponPayload, EditCreditNotePayload, EditDebitNotePayload, EditEmployeePayload, EditJournalVoucherPayload, EditLoyaltyPayload, EditLoyaltyPointPayload, EditMaterialConsumptionPayload, EditPermissionPayload, EditPosCashRegisterPayload, EditPosCreditNotePayload, EditPosPaymentPayload, EditPosProductOrderPayload, EditProductPayload, EditPurchaseOrderPayload, EditRecipePayload, EditReturnPosOrderPayload, EditRolesPayload, EditStockVerificationPayload, EditSupplierBillPayload, EditTermsConditionPayload, EmployeeApiResponse, LoginPayload, LoginResponse, PosCreditNoteRedeemFormValues, PosCreditNoteRedeemResponse, PosCreditNoteRefundFormValues, PosCreditNoteRefundResponse, PosProductOrderDataResponse, RedeemLoyaltyApiResponse, RedeemLoyaltyPayload, ReturnPosOrderResponse, UploadResponse, VerifyCouponApiResponse, VerifyCouponPayload } from "../Types";
+import type { AddAdditionalChargesPayload, AddBankPayload, AddBankTransactionPayload, AddBillOfLiveProductPayload, AddCashControlPayload, AddConsumptionTypePayload, AddContactPayload, AddCouponPayload, AddCreditNotePayload, AddDebitNotePayload, AddDeliveryChallanPayload, AddDiscountPayload, AddEmployeePayload, AddEstimatePayload, AddExpensePayload, AddInvoicePayload, AddLoyaltyPayload, AddMaterialConsumptionPayload, AddPaymentTermsPayload, AddPosCashRegisterPayload, AddPosCreditNotePayload, AddPosPaymentPayload, AddPosProductOrderPayload, AddPrefixPayload, AddProductPayload, AddPurchaseDebitNotePayload, AddPurchaseOrderPayload, AddRecipePayload, AddReturnPosOrderPayload, AddRolesPayload, AddSalaryPayload, AddSalesCreditNotePayload, AddSalesOrderPayload, AddStockBulkAdjustmentPayload, AddStockPayload, AddStockTransferPayload, AddStockVerificationPayload, AddSupplierBillPayload, AddTaxPayload, AddTermsConditionPayload, ApproveStockTransferPayload, BulkAddProductResponse, CallRequestFormValues, ChangePasswordPayload, CompanyApiResponse, ConfirmReceiptStockTransferPayload, EditAdditionalChargesPayload, EditBankPayload, EditBankTransactionPayload, EditBillOfLiveProductPayload, EditCompanyPayload, EditConsumptionTypePayload, EditContactPayload, EditCouponPayload, EditCreditNotePayload, EditDebitNotePayload, EditDeliveryChallanPayload, EditDiscountPayload, EditEmployeePayload, EditEstimatePayload, EditExpensePayload, EditInvoicePayload, EditLoyaltyPayload, EditLoyaltyPointPayload, EditMaterialConsumptionPayload, EditPaymentTermsPayload, EditPermissionPayload, EditPosCashRegisterPayload, EditPosCreditNotePayload, EditPosPaymentPayload, EditPosProductOrderPayload, EditPrefixPayload, EditProductPayload, EditPurchaseDebitNotePayload, EditPurchaseOrderPayload, EditRecipePayload, EditReturnPosOrderPayload, EditRolesPayload, EditSalaryPayload, EditSalesCreditNotePayload, EditSalesOrderPayload, EditStockTransferPayload, EditStockVerificationPayload, EditSupplierBillPayload, EditTaxPayload, EditTermsConditionPayload, EmployeeApiResponse, ForgotPasswordPayload, LoginPayload, LoginResponse, PosCreditNoteRedeemFormValues, PosCreditNoteRedeemResponse, PosCreditNoteRefundFormValues, PosCreditNoteRefundResponse, PosProductOrderDataResponse, ProductDetectApiResponse, RedeemLoyaltyApiResponse, RedeemLoyaltyPayload, RejectStockTransferPayload, ResendOtpPayload, ReturnPosOrderResponse, UpdatePasswordPayload, UploadResponse, VerifyCouponApiResponse, VerifyCouponPayload, VerifyDiscountPayload, VerifyOtpPayload } from "../Types";
 import { Delete, Post, Put } from "./Methods";
 import { useMutations } from "./ReactQuery";
 
@@ -7,6 +7,10 @@ export const Mutations = {
   // ************ Auth ***********
   useSignin: () => useMutations<LoginPayload, LoginResponse>([KEYS.AUTH.SIGNIN], (input) => Post(URL_KEYS.AUTH.SIGNIN, input, false)),
   useChangePassword: () => useMutations<ChangePasswordPayload, void>([KEYS.AUTH.CHANGE_PASSWORD], (input) => Post(URL_KEYS.AUTH.CHANGE_PASSWORD, input)),
+  useForgotPassword: () => useMutations<ForgotPasswordPayload, void>([KEYS.AUTH.FORGOT_PASSWORD], (input) => Post(URL_KEYS.AUTH.FORGOT_PASSWORD, input, false)),
+  useVerifyOtp: () => useMutations<VerifyOtpPayload, LoginResponse>([KEYS.AUTH.VERIFY_OTP], (input) => Post(URL_KEYS.AUTH.VERIFY_OTP, input, false)),
+  useResendOtp: () => useMutations<ResendOtpPayload, void>([KEYS.AUTH.RESEND_OTP], (input) => Post(URL_KEYS.AUTH.RESEND_OTP, input, false)),
+  useUpdatePassword: () => useMutations<UpdatePasswordPayload, void>([KEYS.AUTH.UPDATE_PASSWORD], (input) => Post(URL_KEYS.AUTH.UPDATE_PASSWORD, input, false)),
 
   // ************ Upload ***********
   useUpload: () => useMutations<FormData, UploadResponse>([KEYS.UPLOAD.ADD, KEYS.UPLOAD.ALL_IMAGE, KEYS.UPLOAD.ALL_PDF], (input) => Post(URL_KEYS.UPLOAD.ADD, input)),
@@ -27,6 +31,7 @@ export const Mutations = {
   useAddContact: () => useMutations<AddContactPayload, void>([KEYS.CONTACT.ADD, KEYS.CONTACT.BASE], (input) => Post(URL_KEYS.CONTACT.ADD, input)),
   useEditContact: () => useMutations<EditContactPayload, void>([KEYS.CONTACT.EDIT, KEYS.CONTACT.BASE], (input) => Put(URL_KEYS.CONTACT.EDIT, input)),
   useDeleteContact: () => useMutations<string, void>([KEYS.CONTACT.DELETE, KEYS.CONTACT.BASE], (id) => Delete(`${URL_KEYS.CONTACT.BASE}/${id}`)),
+  useBulkAddContact: () => useMutations<FormData, BulkAddProductResponse>([KEYS.CONTACT.BULK_ADD, KEYS.CONTACT.BASE], (input) => Post(URL_KEYS.CONTACT.BULK_ADD, input)),
 
   // ************ Roles ***********
   useAddRoles: () => useMutations<AddRolesPayload, void>([KEYS.ROLES.ADD, KEYS.ROLES.BASE], (input) => Post(URL_KEYS.ROLES.ADD, input)),
@@ -37,10 +42,12 @@ export const Mutations = {
   useAddProduct: () => useMutations<AddProductPayload, void>([KEYS.PRODUCT.ADD, KEYS.PRODUCT.BASE], (input) => Post(URL_KEYS.PRODUCT.ADD, input)),
   useEditProduct: () => useMutations<EditProductPayload, void>([KEYS.PRODUCT.EDIT, KEYS.PRODUCT.BASE], (input) => Put(URL_KEYS.PRODUCT.EDIT, input)),
   useDeleteProduct: () => useMutations<string, void>([KEYS.PRODUCT.DELETE, KEYS.PRODUCT.BASE], (id) => Delete(`${URL_KEYS.PRODUCT.BASE}/${id}`)),
+  useDetectProduct: () => useMutations<FormData, ProductDetectApiResponse>([KEYS.PRODUCT.DETECT, KEYS.PRODUCT.BASE], (input) => Post(URL_KEYS.PRODUCT.DETECT, input)),
+  useBulkAddProduct: () => useMutations<FormData, BulkAddProductResponse>([KEYS.PRODUCT.BULK_ADD, KEYS.PRODUCT.BASE], (input) => Post(URL_KEYS.PRODUCT.BULK_ADD, input)),
 
   // ************ Stock ***********
   useAddStock: () => useMutations<AddStockPayload, void>([KEYS.STOCK.ADD, KEYS.STOCK.BASE], (input) => Post(URL_KEYS.STOCK.ADD, input)),
-  useAddStockBulkAdjustment: () => useMutations<AddStockBulkAdjustmentPayload, void>([KEYS.STOCK.BULK_ADJUSTMENT, KEYS.STOCK.BASE], (input) => Put(URL_KEYS.STOCK.BULK_ADJUSTMENT, input)),
+  useAddStockBulkAdjustment: () => useMutations<AddStockBulkAdjustmentPayload, void>([KEYS.STOCK.BULK_ADJUSTMENT, KEYS.STOCK.BASE, KEYS.PRODUCT.BASE], (input) => Put(URL_KEYS.STOCK.BULK_ADJUSTMENT, input)),
 
   // ************ Stock Verification ***********
   useAddStockVerification: () => useMutations<AddStockVerificationPayload, void>([KEYS.STOCK_VERIFICATION.ADD, KEYS.STOCK_VERIFICATION.BASE], (input) => Post(URL_KEYS.STOCK_VERIFICATION.ADD, input)),
@@ -71,7 +78,7 @@ export const Mutations = {
   useDeleteBillOfLiveProduct: () => useMutations<string, void>([KEYS.BILL_OF_LIVE_PRODUCT.DELETE, KEYS.BILL_OF_LIVE_PRODUCT.BASE], (id) => Delete(`${URL_KEYS.BILL_OF_LIVE_PRODUCT.BASE}/${id}`)),
 
   //*************** Permission **************** */
-  useEditUserPermission: () => useMutations<EditPermissionPayload, void>([KEYS.PERMISSION.DETAILS], (input) => Put(URL_KEYS.PERMISSION.EDIT, input)),
+  useEditUserPermission: () => useMutations<EditPermissionPayload, void>([KEYS.PERMISSION.EDIT, KEYS.PERMISSION.DETAILS], (input) => Put(URL_KEYS.PERMISSION.EDIT, input)),
 
   //************** supplier bill **************** *//
   useAddSupplierBill: () => useMutations<AddSupplierBillPayload, void>([KEYS.SUPPLIER_BILL.ADD, KEYS.SUPPLIER_BILL.BASE], (input) => Post(URL_KEYS.SUPPLIER_BILL.ADD, input)),
@@ -119,6 +126,12 @@ export const Mutations = {
   useDeleteCoupon: () => useMutations<string, void>([KEYS.COUPON.DELETE, KEYS.COUPON.BASE], (id) => Delete(`${URL_KEYS.COUPON.BASE}/${id}`)),
   useVerifyCoupon: () => useMutations<VerifyCouponPayload, VerifyCouponApiResponse>([KEYS.COUPON.VERIFY], (input) => Post(URL_KEYS.COUPON.VERIFY, input)),
 
+  //*************** Discount **************** */
+  useAddDiscount: () => useMutations<AddDiscountPayload, void>([KEYS.DISCOUNT.ADD, KEYS.DISCOUNT.BASE], (input) => Post(URL_KEYS.DISCOUNT.ADD, input)),
+  useEditDiscount: () => useMutations<EditDiscountPayload, void>([KEYS.DISCOUNT.EDIT, KEYS.DISCOUNT.BASE], (input) => Put(URL_KEYS.DISCOUNT.EDIT, input)),
+  useDeleteDiscount: () => useMutations<string, void>([KEYS.DISCOUNT.DELETE, KEYS.DISCOUNT.BASE], (id) => Delete(`${URL_KEYS.DISCOUNT.BASE}/${id}`)),
+  useVerifyDiscount: () => useMutations<VerifyDiscountPayload, VerifyCouponApiResponse>([KEYS.DISCOUNT.VERIFY], (input) => Post(URL_KEYS.DISCOUNT.VERIFY, input)),
+
   //*************** Loyalty **************** */
   useAddLoyalty: () => useMutations<AddLoyaltyPayload, void>([KEYS.LOYALTY.ADD, KEYS.LOYALTY.BASE], (input) => Post(URL_KEYS.LOYALTY.ADD, input)),
   useEditLoyalty: () => useMutations<EditLoyaltyPayload, void>([KEYS.LOYALTY.EDIT, KEYS.LOYALTY.BASE], (input) => Put(URL_KEYS.LOYALTY.EDIT, input)),
@@ -146,13 +159,85 @@ export const Mutations = {
   useEditDebitNote: () => useMutations<EditDebitNotePayload, void>([KEYS.DEBIT_NOTE.EDIT, KEYS.DEBIT_NOTE.BASE], (input) => Put(URL_KEYS.DEBIT_NOTE.EDIT, input)),
   useDeleteDebitNote: () => useMutations<string, void>([KEYS.DEBIT_NOTE.DELETE, KEYS.DEBIT_NOTE.BASE], (id) => Delete(`${URL_KEYS.DEBIT_NOTE.BASE}/${id}`)),
 
-  //*************** Journal Voucher *********
-  useAddJournalVoucher: () => useMutations<AddJournalVoucherPayload, void>([KEYS.JOURNAL_VOUCHER.ADD, KEYS.JOURNAL_VOUCHER.BASE], (input) => Post(URL_KEYS.JOURNAL_VOUCHER.ADD, input)),
-  useEditJournalVoucher: () => useMutations<EditJournalVoucherPayload, void>([KEYS.JOURNAL_VOUCHER.EDIT, KEYS.JOURNAL_VOUCHER.BASE], (input) => Put(URL_KEYS.JOURNAL_VOUCHER.EDIT, input)),
-  useDeleteJournalVoucher: () => useMutations<string, void>([KEYS.JOURNAL_VOUCHER.DELETE, KEYS.JOURNAL_VOUCHER.BASE], (id) => Delete(`${URL_KEYS.JOURNAL_VOUCHER.BASE}/${id}`)),
-
   //*************** POS Return Order *********
   useAddReturnPosOrder: () => useMutations<AddReturnPosOrderPayload, ReturnPosOrderResponse>([KEYS.RETURN_POS_ORDER.ADD, KEYS.RETURN_POS_ORDER.BASE, KEYS.POS_CREDIT_NOTE.BASE, KEYS.POS_ORDER.BASE, KEYS.POS_ORDER.DROPDOWN], (input) => Post(URL_KEYS.RETURN_POS_ORDER.ADD, input)),
   useEditReturnPosOrder: () => useMutations<EditReturnPosOrderPayload, ReturnPosOrderResponse>([KEYS.RETURN_POS_ORDER.EDIT, KEYS.RETURN_POS_ORDER.BASE, KEYS.POS_CREDIT_NOTE.BASE], (input) => Put(URL_KEYS.RETURN_POS_ORDER.EDIT, input)),
   useDeleteReturnPosOrder: () => useMutations<string, void>([KEYS.RETURN_POS_ORDER.DELETE, KEYS.RETURN_POS_ORDER.BASE, KEYS.POS_CREDIT_NOTE.BASE], (id) => Delete(`${URL_KEYS.RETURN_POS_ORDER.BASE}/${id}`)),
+
+  //*************** Expense *********
+  useAddExpense: () => useMutations<AddExpensePayload, void>([KEYS.EXPENSE.ADD, KEYS.EXPENSE.BASE], (input) => Post(URL_KEYS.EXPENSE.ADD, input)),
+  useEditExpense: () => useMutations<EditExpensePayload, void>([KEYS.EXPENSE.EDIT, KEYS.EXPENSE.BASE], (input) => Put(URL_KEYS.EXPENSE.EDIT, input)),
+  useDeleteExpense: () => useMutations<string, void>([KEYS.EXPENSE.DELETE, KEYS.EXPENSE.BASE], (id) => Delete(`${URL_KEYS.EXPENSE.BASE}/${id}`)),
+
+  //*************** Salary **************** */
+  useAddSalary: () => useMutations<AddSalaryPayload, void>([KEYS.SALARY.ADD, KEYS.SALARY.BASE, KEYS.EXPENSE.BASE], (input) => Post(URL_KEYS.SALARY.ADD, input)),
+  useEditSalary: () => useMutations<EditSalaryPayload, void>([KEYS.SALARY.EDIT, KEYS.SALARY.BASE, KEYS.EXPENSE.BASE], (input) => Put(URL_KEYS.SALARY.EDIT, input)),
+  useDeleteSalary: () => useMutations<string, void>([KEYS.SALARY.DELETE, KEYS.SALARY.BASE, KEYS.EXPENSE.BASE], (id) => Delete(`${URL_KEYS.SALARY.BASE}/${id}`)),
+
+  //************* bank transaction **************/
+  useAddBankTransaction: () => useMutations<AddBankTransactionPayload, void>([KEYS.BANK_TRANSACTION.ADD, KEYS.BANK_TRANSACTION.BASE], (input) => Post(URL_KEYS.BANK_TRANSACTION.ADD, input)),
+  useEditBankTransaction: () => useMutations<EditBankTransactionPayload, void>([KEYS.BANK_TRANSACTION.EDIT, KEYS.BANK_TRANSACTION.BASE], (input) => Put(URL_KEYS.BANK_TRANSACTION.EDIT, input)),
+  useDeleteBankTransaction: () => useMutations<string, void>([KEYS.BANK_TRANSACTION.DELETE, KEYS.BANK_TRANSACTION.BASE], (id) => Delete(`${URL_KEYS.BANK_TRANSACTION.BASE}/${id}`)),
+  // ************ Tax ***********
+  useAddTax: () => useMutations<AddTaxPayload, void>([KEYS.TAX.ADD, KEYS.TAX.BASE], (input) => Post(URL_KEYS.TAX.ADD, input)),
+  useEditTax: () => useMutations<EditTaxPayload, void>([KEYS.TAX.EDIT, KEYS.TAX.BASE], (input) => Put(URL_KEYS.TAX.EDIT, input)),
+  useDeleteTax: () => useMutations<string, void>([KEYS.TAX.DELETE, KEYS.TAX.BASE], (id) => Delete(`${URL_KEYS.TAX.BASE}/${id}`)),
+
+  //*************** Purchase Debit Note **************** */
+  useAddPurchaseDebitNote: () => useMutations<AddPurchaseDebitNotePayload, void>([KEYS.PURCHASE_DEBIT_NOTE.ADD, KEYS.PURCHASE_DEBIT_NOTE.BASE], (input) => Post(URL_KEYS.PURCHASE_DEBIT_NOTE.ADD, input)),
+  useEditPurchaseDebitNote: () => useMutations<EditPurchaseDebitNotePayload, void>([KEYS.PURCHASE_DEBIT_NOTE.EDIT, KEYS.PURCHASE_DEBIT_NOTE.BASE], (input) => Put(URL_KEYS.PURCHASE_DEBIT_NOTE.EDIT, input)),
+  useDeletePurchaseDebitNote: () => useMutations<string, void>([KEYS.PURCHASE_DEBIT_NOTE.DELETE, KEYS.PURCHASE_DEBIT_NOTE.BASE], (id) => Delete(`${URL_KEYS.PURCHASE_DEBIT_NOTE.BASE}/${id}`)),
+
+  //*************** Estimate **************** */
+  useAddEstimate: () => useMutations<AddEstimatePayload, void>([KEYS.ESTIMATE.ADD, KEYS.ESTIMATE.BASE], (input) => Post(URL_KEYS.ESTIMATE.ADD, input)),
+  useEditEstimate: () => useMutations<EditEstimatePayload, void>([KEYS.ESTIMATE.EDIT, KEYS.ESTIMATE.BASE], (input) => Put(URL_KEYS.ESTIMATE.EDIT, input)),
+  useDeleteEstimate: () => useMutations<string, void>([KEYS.ESTIMATE.DELETE, KEYS.ESTIMATE.BASE], (id) => Delete(`${URL_KEYS.ESTIMATE.BASE}/${id}`)),
+
+  //*************** Sales Order **************** */
+
+  useAddSalesOrder: () => useMutations<AddSalesOrderPayload, void>([KEYS.SALES_ORDER.ADD, KEYS.SALES_ORDER.BASE], (input) => Post(URL_KEYS.SALES_ORDER.ADD, input)),
+  useEditSalesOrder: () => useMutations<EditSalesOrderPayload, void>([KEYS.SALES_ORDER.EDIT, KEYS.SALES_ORDER.BASE], (input) => Put(URL_KEYS.SALES_ORDER.EDIT, input)),
+  useDeleteSalesOrder: () => useMutations<string, void>([KEYS.SALES_ORDER.DELETE, KEYS.SALES_ORDER.BASE], (id) => Delete(`${URL_KEYS.SALES_ORDER.BASE}/${id}`)),
+
+  //*************** Invoice **************** */
+
+  useAddInvoice: () => useMutations<AddInvoicePayload, void>([KEYS.INVOICE.ADD, KEYS.INVOICE.BASE], (input) => Post(URL_KEYS.INVOICE.ADD, input)),
+  useEditInvoice: () => useMutations<EditInvoicePayload, void>([KEYS.INVOICE.EDIT, KEYS.INVOICE.BASE], (input) => Put(URL_KEYS.INVOICE.EDIT, input)),
+  useDeleteInvoice: () => useMutations<string, void>([KEYS.INVOICE.DELETE, KEYS.INVOICE.BASE], (id) => Delete(`${URL_KEYS.INVOICE.BASE}/${id}`)),
+
+  //*************** Delivery Challan **************** */
+
+  useAddDeliveryChallan: () => useMutations<AddDeliveryChallanPayload, void>([KEYS.DELIVERY_CHALLAN.ADD, KEYS.DELIVERY_CHALLAN.BASE], (input) => Post(URL_KEYS.DELIVERY_CHALLAN.ADD, input)),
+  useEditDeliveryChallan: () => useMutations<EditDeliveryChallanPayload, void>([KEYS.DELIVERY_CHALLAN.EDIT, KEYS.DELIVERY_CHALLAN.BASE], (input) => Put(URL_KEYS.DELIVERY_CHALLAN.EDIT, input)),
+  useDeleteDeliveryChallan: () => useMutations<string, void>([KEYS.DELIVERY_CHALLAN.DELETE, KEYS.DELIVERY_CHALLAN.BASE], (id) => Delete(`${URL_KEYS.DELIVERY_CHALLAN.BASE}/${id}`)),
+
+  //*************** Sales Credit Note **************** */
+  useAddSalesCreditNote: () => useMutations<AddSalesCreditNotePayload, void>([KEYS.SALES_CREDIT_NOTE.ADD, KEYS.SALES_CREDIT_NOTE.BASE], (input) => Post(URL_KEYS.SALES_CREDIT_NOTE.ADD, input)),
+  useEditSalesCreditNote: () => useMutations<EditSalesCreditNotePayload, void>([KEYS.SALES_CREDIT_NOTE.EDIT, KEYS.SALES_CREDIT_NOTE.BASE], (input) => Put(URL_KEYS.SALES_CREDIT_NOTE.EDIT, input)),
+  useDeleteSalesCreditNote: () => useMutations<string, void>([KEYS.SALES_CREDIT_NOTE.DELETE, KEYS.SALES_CREDIT_NOTE.BASE], (id) => Delete(`${URL_KEYS.SALES_CREDIT_NOTE.BASE}/${id}`)),
+
+  //*************** Prefix **************** */
+  useAddPrefix: () => useMutations<AddPrefixPayload, void>([KEYS.PREFIX.ADD, KEYS.PREFIX.BASE], (input) => Post(URL_KEYS.PREFIX.ADD, input)),
+  useEditPrefix: () => useMutations<EditPrefixPayload, void>([KEYS.PREFIX.EDIT, KEYS.PREFIX.BASE], (input) => Put(URL_KEYS.PREFIX.EDIT, input)),
+  useDeletePrefix: () => useMutations<string, void>([KEYS.PREFIX.DELETE, KEYS.PREFIX.BASE], (id) => Delete(`${URL_KEYS.PREFIX.BASE}/${id}`)),
+
+  //*************** Payment Terms **************** */
+  useAddPaymentTerms: () => useMutations<AddPaymentTermsPayload, void>([KEYS.PAYMENT_TERM.ADD, KEYS.PAYMENT_TERM.BASE], (input) => Post(URL_KEYS.PAYMENT_TERM.ADD, input)),
+  useEditPaymentTerms: () => useMutations<EditPaymentTermsPayload, void>([KEYS.PAYMENT_TERM.EDIT, KEYS.PAYMENT_TERM.BASE], (input) => Put(URL_KEYS.PAYMENT_TERM.EDIT, input)),
+  useDeletePaymentTerms: () => useMutations<string, void>([KEYS.PAYMENT_TERM.DELETE, KEYS.PAYMENT_TERM.BASE], (id) => Delete(`${URL_KEYS.PAYMENT_TERM.BASE}/${id}`)),
+
+  //*************** Consumption Type **************** */
+  useAddConsumptionType: () => useMutations<AddConsumptionTypePayload, void>([KEYS.CONSUMPTION_TYPE.ADD, KEYS.CONSUMPTION_TYPE.BASE], (input) => Post(URL_KEYS.CONSUMPTION_TYPE.ADD, input)),
+  useEditConsumptionType: () => useMutations<EditConsumptionTypePayload, void>([KEYS.CONSUMPTION_TYPE.EDIT, KEYS.CONSUMPTION_TYPE.BASE], (input) => Put(URL_KEYS.CONSUMPTION_TYPE.EDIT, input)),
+  useDeleteConsumptionType: () => useMutations<string, void>([KEYS.CONSUMPTION_TYPE.DELETE, KEYS.CONSUMPTION_TYPE.BASE], (id) => Delete(`${URL_KEYS.CONSUMPTION_TYPE.BASE}/${id}`)),
+
+  //*************** Stock Transfer **************** */
+  useAddStockTransfer: () => useMutations<AddStockTransferPayload, void>([KEYS.STOCK_TRANSFER.REQUEST, KEYS.STOCK_TRANSFER.BASE], (input) => Post(URL_KEYS.STOCK_TRANSFER.REQUEST, input)),
+  useEditStockTransfer: () => useMutations<EditStockTransferPayload, void>([KEYS.STOCK_TRANSFER.EDIT, KEYS.STOCK_TRANSFER.BASE], (input) => Put(URL_KEYS.STOCK_TRANSFER.EDIT, input)),
+  useDeleteStockTransfer: () => useMutations<string, void>([KEYS.STOCK_TRANSFER.DELETE, KEYS.STOCK_TRANSFER.BASE], (id) => Delete(`${URL_KEYS.STOCK_TRANSFER.BASE}/${id}`)),
+  useApproveStockTransfer: () => useMutations<ApproveStockTransferPayload, void>([KEYS.STOCK_TRANSFER.APPROVE, KEYS.STOCK_TRANSFER.BASE], (input) => Post(URL_KEYS.STOCK_TRANSFER.APPROVE, input)),
+  useRejectStockTransfer: () => useMutations<RejectStockTransferPayload, void>([KEYS.STOCK_TRANSFER.REJECT, KEYS.STOCK_TRANSFER.BASE], (input) => Post(URL_KEYS.STOCK_TRANSFER.REJECT, input)),
+  useConfirmReceiptStockTransfer: () => useMutations<ConfirmReceiptStockTransferPayload, void>([KEYS.STOCK_TRANSFER.CONFIRM_RECEIPT, KEYS.STOCK_TRANSFER.BASE], (input) => Post(URL_KEYS.STOCK_TRANSFER.CONFIRM_RECEIPT, input)),
+
+  useReadNotification: () => useMutations<string, void>([KEYS.NOTIFICATION.READ, KEYS.NOTIFICATION.BASE], (id) => Put(`${URL_KEYS.NOTIFICATION.READ}/${id}`, undefined, true, false)),
 };

@@ -4,9 +4,12 @@ import type { AppGridColDef, PayableBase } from "../../Types";
 import { useDataGrid } from "../../Utils/Hooks";
 import { CommonCard, CommonDataGrid } from "../Common";
 import { FormatDateTime } from "../../Utils";
+import { useAppSelector } from "../../Store/hooks";
 
 const ToPay = () => {
-  const { data, isLoading, isFetching } = Queries.useGetDashboardPayable();
+  const { branchFilter } = useAppSelector((state) => state.dashboard);
+  const queryParams = useMemo(() => ({ branchFilter: branchFilter[0] }), [branchFilter]);
+  const { data, isLoading, isFetching } = Queries.useGetDashboardPayable(queryParams);
 
   const allRowData = useMemo(() => data?.data?.map((item) => ({ ...item, id: item?._id })) || [], [data]);
   const totalRows = data?.data?.length || 0;
@@ -33,6 +36,7 @@ const ToPay = () => {
     pagination: false,
     isToolbar: false,
     isExport: false,
+    fileName: "To Pay",
   };
 
   return (

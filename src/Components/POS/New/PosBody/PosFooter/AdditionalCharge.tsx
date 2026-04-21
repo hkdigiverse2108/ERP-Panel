@@ -1,5 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Queries } from "../../../../../Api";
 import { CommonButton, CommonSelect, CommonTextField } from "../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
@@ -18,13 +18,19 @@ const AdditionalCharge = () => {
   const [rows, setRows] = useState<AdditionalChargeRowType[]>(useMemo(() => PosProduct?.additionalCharges ?? [], [PosProduct?.additionalCharges]));
 
   const { data: TaxData, isLoading: TaxDataLoading } = Queries.useGetTaxDropdown({}, isModalOpen);
-  const { data: AdditionalChargeData, isLoading: AdditionalChargeDataLoading } = Queries.useGetAdditionalChargeDropdown({ typeFilter: "sales" }, isModalOpen);
-  const { data: AccountGroupData, isLoading: AccountGroupDataLoading } = Queries.useGetAccountGroupDropdown({ natureFilter: "sales" }, isModalOpen);
+  const { data: AdditionalChargeData, isLoading: AdditionalChargeDataLoading } = Queries.useGetAdditionalChargesDropdown({ typeFilter: "sales" }, isModalOpen);
 
   const calculateTotal = (value: number, tax: string) => {
     const rate = TaxData?.data?.find((item) => item._id === tax)?.percentage ?? 0;
     return value + (value * Number(rate)) / 100;
   };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setRows(PosProduct?.additionalCharges ?? []);
+    }
+  }, [isModalOpen]);
 
   const updateRow = (index: number, key: keyof AdditionalChargeRowType, val: string[] | number) => {
     setRows((prev) =>
@@ -40,7 +46,6 @@ const AdditionalCharge = () => {
           const data = AdditionalChargeData?.data?.find((item) => item._id === updatedRow.chargeId[0]);
           updatedRow.value = data?.defaultValue ?? 0;
           updatedRow.taxId = data?.taxId?._id ? data.taxId._id : "";
-          updatedRow.accountGroupId = data?.accountGroupId?._id ? data.accountGroupId._id : "";
         }
 
         updatedRow.totalAmount = calculateTotal(updatedRow.value, updatedRow.taxId);
@@ -50,7 +55,7 @@ const AdditionalCharge = () => {
     );
   };
 
-  const addRow = () => setRows((p) => [...p, { chargeId: "", value: 0, taxId: "", accountGroupId: "", totalAmount: 0 }]);
+  const addRow = () => setRows((p) => [...p, { chargeId: "", value: 0, taxId: "", totalAmount: 0 }]);
 
   const removeRow = (i: number) => setRows((p) => p.filter((_, idx) => idx !== i));
 
@@ -66,7 +71,6 @@ const AdditionalCharge = () => {
         chargeId: getSingleValue(row.chargeId),
         value: row.value,
         taxId: getSingleValue(row.taxId),
-        accountGroupId: getSingleValue(row.accountGroupId),
         totalAmount: row.totalAmount,
       })),
     };
@@ -74,13 +78,13 @@ const AdditionalCharge = () => {
     dispatch(setTotalAdditionalCharge(grandTotal.toFixed(2)));
     dispatch(setAdditionalChargeModal({ open: false, data: null }));
   };
-
+  const toArray = (val?: string | string[]) => (Array.isArray(val) ? val : val ? [val] : []);
   const columns: CommonTableColumn<AdditionalChargeRowType>[] = [
     {
       key: "additionalCharge",
       header: "Additional Charge",
-      bodyClass: "min-w-32 w-60",
-      render: (row, index) => <CommonSelect label="Select Additional Charge" value={[row.chargeId]} options={GenerateOptions(AdditionalChargeData?.data)} isLoading={AdditionalChargeDataLoading} onChange={(val) => updateRow(index, "chargeId", val)} />,
+      bodyClass: "min-w-40 w-80",
+      render: (row, index) => <CommonSelect label="Select Additional Charge" value={toArray(row.chargeId)} options={GenerateOptions(AdditionalChargeData?.data)} isLoading={AdditionalChargeDataLoading} onChange={(val) => updateRow(index, "chargeId", val)} />,
       footer: () => <CommonButton variant="outlined" size="small" onClick={addRow} title="+ Additional Charge" />,
     },
     {
@@ -94,12 +98,6 @@ const AdditionalCharge = () => {
       header: "Tax",
       bodyClass: "min-w-32 w-45",
       render: (row, index) => <CommonSelect label="Select Tax" value={[row.taxId]} options={GenerateOptions(TaxData?.data)} isLoading={TaxDataLoading} onChange={(val) => updateRow(index, "taxId", val)} />,
-    },
-    {
-      key: "group",
-      header: "Group",
-      bodyClass: "min-w-32 w-55",
-      render: (row, index) => <CommonSelect label="Select Group" value={[row.accountGroupId]} options={GenerateOptions(AccountGroupData?.data)} isLoading={AccountGroupDataLoading} onChange={(val) => updateRow(index, "accountGroupId", val)} disabled />,
     },
     {
       key: "total",

@@ -6,11 +6,11 @@ import { useWindowWidth } from "../../Utils/Hooks";
 import FinancialYear from "./FinancialYear";
 import ImportantAnnouncement from "./ImportantAnnouncement";
 import POS from "./POS";
-import QuickActionMenu from "./QuickActionMenu";
 import SearchList from "./SearchList";
 import SupportDesk from "./SupportDesk";
 import ThemeToggleButton from "./ThemeToggleButton";
 import User from "./User";
+import Branches from "./Branches";
 
 const Header = () => {
   const { isMobileOpen, isExpanded, isHovered, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
@@ -75,7 +75,7 @@ const Header = () => {
             <img className="hidden dark:block" src={`${ImagePath}logo/logo-dark.png`} alt="Logo" />
           </Link>
           <div className="flex">
-            <QuickActionMenu />
+            {/* <QuickActionMenu /> */}
             <button onClick={() => dispatch(setApplicationMenuOpen())} className="flex items-center justify-center w-10 h-10 text-gray-700 rounded-lg z-99999 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 lg:hidden">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fillRule="evenodd" clipRule="evenodd" d="M5.99902 10.4951C6.82745 10.4951 7.49902 11.1667 7.49902 11.9951V12.0051C7.49902 12.8335 6.82745 13.5051 5.99902 13.5051C5.1706 13.5051 4.49902 12.8335 4.49902 12.0051V11.9951C4.49902 11.1667 5.1706 10.4951 5.99902 10.4951ZM17.999 10.4951C18.8275 10.4951 19.499 11.1667 19.499 11.9951V12.0051C19.499 12.8335 18.8275 13.5051 17.999 13.5051C17.1706 13.5051 16.499 12.8335 16.499 12.0051V11.9951C16.499 11.1667 17.1706 10.4951 17.999 10.4951ZM13.499 11.9951C13.499 11.1667 12.8275 10.4951 11.999 10.4951C11.1706 10.4951 10.499 11.1667 10.499 11.9951V12.0051C10.499 12.8335 11.1706 13.5051 11.999 13.5051C12.8275 13.5051 13.499 12.8335 13.499 12.0051V11.9951Z" fill="currentColor" />
@@ -100,13 +100,14 @@ const Header = () => {
             </form>
           </div> */}
         </div>
-        <div className={`${isApplicationMenuOpen ? "flex" : "hidden"} items-center justify-between max-lg:w-full gap-4 max-xsm:p-2 px-5 py-4 lg:flex max-lg:shadow-theme-md max-lg:dark:shadow-theme-dark-md lg:justify-end lg:px-0`}>
-          <div className="flex max-xsm:justify-between items-center gap-1 xsm:gap-3 w-full">
+        <div className={`${isApplicationMenuOpen ? "flex" : "hidden"} max-lg:overflow-x-auto max-lg:overflow-y-hidden max-lg:custom-scrollbar items-center justify-between max-lg:w-full gap-4 max-xsm:p-2 px-5 py-4 lg:flex max-lg:shadow-theme-md max-lg:dark:shadow-theme-dark-md lg:justify-end lg:px-0`}>
+          <div className="flex min-w-max max-xsm:justify-between items-center gap-1 xsm:gap-3 w-full">
             <SupportDesk />
             <SearchList />
             <ThemeToggleButton />
             <ImportantAnnouncement />
             <POS />
+            <Branches />
             <FinancialYear />
             <User />
           </div>

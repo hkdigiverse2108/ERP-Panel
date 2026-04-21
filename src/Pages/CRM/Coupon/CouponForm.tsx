@@ -28,7 +28,7 @@ const AutoCalculator = () => {
     const isDaysChanged = expiryDays !== prev.expiryDays;
 
     const start = startDate ? DateConfig.utc(startDate).startOf("day") : null;
-    const rawDays = expiryDays as any;
+    const rawDays = expiryDays as number | undefined | null | string;
 
     if (!start) {
       prevValues.current = values;
@@ -53,14 +53,15 @@ const AutoCalculator = () => {
     } else if (isStartChanged && rawDays !== null && rawDays !== "") {
       const newEndDate = start.add(Math.max(0, Number(rawDays)), "day").toISOString();
       if (newEndDate !== endDate) update({ endDate: newEndDate });
-
     } else if ((isStartChanged && endDate) || (isEndChanged && startDate && (rawDays === null || rawDays === ""))) {
       const end = DateConfig.utc(endDate).startOf("day");
       const diff = Math.max(0, end.diff(start, "day"));
       if (diff !== rawDays) update({ expiryDays: diff });
-
     } else if (isEndChanged && endDate && rawDays !== null && rawDays !== "") {
-      const newStartDate = DateConfig.utc(endDate).startOf("day").subtract(Math.max(0, Number(rawDays)), "day").toISOString();
+      const newStartDate = DateConfig.utc(endDate)
+        .startOf("day")
+        .subtract(Math.max(0, Number(rawDays)), "day")
+        .toISOString();
       if (newStartDate !== startDate) update({ startDate: newStartDate });
     } else {
       prevValues.current = values;
@@ -69,7 +70,6 @@ const AutoCalculator = () => {
 
   return null;
 };
-
 
 const CouponForm = () => {
   const location = useLocation();

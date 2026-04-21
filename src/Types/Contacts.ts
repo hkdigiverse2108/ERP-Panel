@@ -9,9 +9,9 @@ export interface Address {
   contactEmail?: string;
   addressLine1?: string;
   addressLine2?: string;
-  country?: string;
-  state?: string;
-  city?: string;
+  country?: string | null;
+  state?: string | null;
+  city?: string | null;
   pinCode?: string;
   contactCompanyName?: string;
 }
@@ -20,6 +20,7 @@ export interface ContactAddressApi extends Omit<Address, "country" | "state" | "
   country?: LocationBase;
   state?: LocationBase;
   city?: LocationBase;
+  _id?: string;
 }
 
 export interface ContactBankDetails {
@@ -39,7 +40,7 @@ export interface ContactFormValues {
   panNo?: string;
   customerCategory?: string;
   paymentMode?: string;
-  paymentTerms?: string;
+  paymentTermsId?: string;
   tanNo?: string;
   openingBalance?: {
     creditBalance?: string;

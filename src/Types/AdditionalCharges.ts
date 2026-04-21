@@ -1,4 +1,3 @@
-import type { AccountGroupBase } from "./AccountGroup";
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { TaxBase } from "./Tax";
 
@@ -8,7 +7,6 @@ export interface AdditionalChargesFormValues {
   name?: string;
   defaultValue?: number;
   taxId?: string | null;
-  accountGroupId?: string | null;
   hsnSac?: string;
   isActive?: boolean;
   isTaxIncluding?: boolean;
@@ -22,9 +20,8 @@ export type EditAdditionalChargesPayload = AddAdditionalChargesPayload & { addit
 
 /* ===================== BASE MODEL ===================== */
 
-export interface AdditionalChargesBase extends Omit<AdditionalChargesFormValues, "taxId" | "accountGroupId">, CommonDataType {
+export interface AdditionalChargesBase extends Omit<AdditionalChargesFormValues, "taxId">, CommonDataType {
   taxId?: TaxBase;
-  accountGroupId?: AccountGroupBase;
 }
 
 /* ===================== API RESPONSES ===================== */

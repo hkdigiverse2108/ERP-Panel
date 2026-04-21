@@ -1,16 +1,17 @@
-import type { GridColDef } from "@mui/x-data-grid";
 import { useMemo, useState } from "react";
 import { Mutations, Queries } from "../../../../Api";
 import { PAGE_TITLE } from "../../../../Constants";
-import type { RolesBase } from "../../../../Types";
-import { useDataGrid } from "../../../../Utils/Hooks";
+import type { AppGridColDef, RolesBase } from "../../../../Types";
+import { useDataGrid, usePagePermission } from "../../../../Utils/Hooks";
 import { CommonActionColumn, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Common";
 import RolesFormModal from "./RolesFormModal";
+import { CommonObjectPropertyColumn } from "../../../Common/CommonDataGrid/CommonColumns";
 
 const UserRoles = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params } = useDataGrid();
   const [openModal, setOpenModal] = useState(false);
   const [isEdit, setEdit] = useState<RolesBase>({} as RolesBase);
+  const permission = usePagePermission(PAGE_TITLE.ROLES.BASE);
 
   const { data: rolesData, isLoading: rolesDataLoading, isFetching: rolesDataFetching } = Queries.useGetRoles(params);
   const { mutate: deleteRolesMutate, isPending: isDeleteLoading } = Mutations.useDeleteRoles();
@@ -34,13 +35,18 @@ const UserRoles = () => {
     setOpenModal(!openModal);
   };
 
-  const columns: GridColDef<RolesBase>[] = [
+  const columns: AppGridColDef<RolesBase>[] = [
     { field: "name", headerName: "Roles Name", flex: 1 },
-    CommonActionColumn({
-      active: (row) => editRoles({ roleId: row?._id, isActive: !row.isActive }),
-      onEdit: { handleEdit: (row) => handleEdit(row) },
-      onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }),
-    }),
+    CommonObjectPropertyColumn<RolesBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),
+
+    ...(permission?.edit || permission?.delete
+      ? [
+          CommonActionColumn<RolesBase>({
+            ...(permission?.edit && { active: (row) => editRoles({ roleId: row?._id, isActive: !row.isActive }), onEdit: { handleEdit: (row) => handleEdit(row) } }),
+            ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.name }) }),
+          }),
+        ]
+      : []),
   ];
 
   const CommonDataGridOption = {
@@ -50,18 +56,20 @@ const UserRoles = () => {
     loading: rolesDataLoading || rolesDataFetching || isEditLoading,
     isActive,
     setActive,
-    handleAdd,
+    ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,
     onSortModelChange: setSortModel,
     filterModel,
     onFilterModelChange: setFilterModel,
+    isExport: false,
+    fileName: PAGE_TITLE.ROLES.TITLE,
   };
 
   return (
     <>
-      <CommonCard title={PAGE_TITLE.ROLES.BASE}>
+      <CommonCard title={PAGE_TITLE.ROLES.TITLE}>
         <CommonDataGrid {...CommonDataGridOption} />
       </CommonCard>
       <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />

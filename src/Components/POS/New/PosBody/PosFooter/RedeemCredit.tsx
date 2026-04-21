@@ -2,7 +2,7 @@ import { CircularProgress } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { Mutations, Queries } from "../../../../../Api";
 import { CommonButton, CommonRadio, CommonSelect, CommonTextField } from "../../../../../Attribute";
-import { REDEEM_CREDIT_TYPE } from "../../../../../Data";
+import { REDEEM_CREDIT_TYPE, REDEEM_CREDIT_TYPE_ENUM } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setRedeemCreditModal } from "../../../../../Store/Slices/ModalSlice";
 import { setHandleDiscount, setRedeemCredit, setTotalAmount } from "../../../../../Store/Slices/PosSlice";
@@ -14,9 +14,9 @@ const RedeemCredit = () => {
   const { isRedeemCreditModal } = useAppSelector((state) => state.modal);
   const { PosProduct, isReturnPosOrder } = useAppSelector((state) => state.pos);
 
-  const [type, setType] = useState<string>("credit_note");
+  const [type, setType] = useState<string>(REDEEM_CREDIT_TYPE_ENUM?.CREDIT_NOTE);
   const [creditNoteId, setCreditNoteId] = useState<string>("");
-  const totalAmount = Number(PosProduct?.totalAmount) + Number(PosProduct?.loyaltyDiscount || 0) + Number(PosProduct?.couponDiscount || 0);
+  const totalAmount = Number(PosProduct?.totalAmount) + Number(PosProduct?.loyaltyDiscount || 0) + Number(PosProduct?.couponDiscount || 0) + Number(PosProduct?.discountAmount || 0);
   const [isDetails, setDetails] = useState({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: totalAmount?.toString() });
 
   const { data: posCreditNoteDropdown, isLoading: isPosCreditNoteDropdownLoading, isFetching: isPosCreditNoteDropdownFetching } = Queries.useGetPosCreditNoteRedeemDropdown({ typeFilter: type, customerFilter: PosProduct?.customerId }, Boolean(PosProduct?.customerId));
@@ -34,10 +34,11 @@ const RedeemCredit = () => {
     const currentAmount = Number(PosProduct.totalAmount || 0);
     const isEditMode = Boolean(PosProduct.posOrderId);
     if (isReturnPosOrder) return;
-
-    if (prevTotalAmountRef.current === 0) {
-      prevTotalAmountRef.current = currentAmount;
-      return;
+    if (!PosProduct.redeemCreditId) {
+      if (prevTotalAmountRef.current === 0) {
+        prevTotalAmountRef.current = currentAmount;
+        return;
+      }
     }
 
     if (isEditMode) {
@@ -63,7 +64,7 @@ const RedeemCredit = () => {
     prevTotalAmountRef.current = currentAmount;
   }, [PosProduct?.totalAmount, PosProduct.posOrderId, dispatch]);
 
-  const isCredit = type === "credit_note";
+  const isCredit = type === REDEEM_CREDIT_TYPE_ENUM?.CREDIT_NOTE;
   const creditDetails = [
     { label: `${isCredit ? "Credit Note" : "Adv Payment"} Date`, value: FormatDate(isDetails.date) || "N/A" }, //
     { label: `${isCredit ? "Credit " : "Adv Payment"} Amount`, value: isDetails.amount },
@@ -92,7 +93,7 @@ const RedeemCredit = () => {
           const redeemableAmount = data?.data?.redeemableAmount?.toFixed(2);
           const payableAmount = Number(totalAmount) - Number(redeemableAmount);
           const payable = payableAmount >= 0 ? payableAmount?.toFixed(2) : "0.00";
-          setDetails((prev) => ({ ...prev, id: data?.data?.id, date: data?.data?.date, amount: redeemableTotalAmount, available: redeemableAmount, apply: redeemableAmount, payable: payable }));
+          setDetails((prev) => ({ ...prev, id: data?.data?.id, date: data?.data?.date, amount: redeemableTotalAmount, available: redeemableAmount, apply: totalAmount.toFixed(2), payable: payable }));
         },
       });
     } else {
@@ -105,7 +106,7 @@ const RedeemCredit = () => {
   };
 
   const handleApplyCredit = () => {
-    if (PosProduct.loyaltyId || PosProduct.couponId) dispatch(setHandleDiscount("redeemCredit"));
+    if (PosProduct.loyaltyId || PosProduct.couponId || PosProduct.discountId) dispatch(setHandleDiscount("redeemCredit"));
 
     dispatch(setRedeemCredit({ redeemCreditId: isDetails.id, redeemCreditAmount: Number(isDetails.apply), redeemCreditType: type }));
     const payableAmount = totalAmount - Number(isDetails.apply);
@@ -123,12 +124,38 @@ const RedeemCredit = () => {
     setDetails({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: (Number(totalAmount) + Number(isDetails.apply))?.toFixed(2) });
   };
 
+  useEffect(() => {
+    if (PosProduct?.redeemCreditId) {
+      setCreditNoteId(PosProduct?.redeemCreditId);
+      const code = posCreditNoteDropdown?.data?.find((item) => item.id === PosProduct?.redeemCreditId);
+      if (code) {
+        const payload = {
+          code: code?.no,
+          type: type,
+          customerId: PosProduct?.customerId,
+        };
+        redeemCreditNote(payload, {
+          onSuccess: (data) => {
+            const redeemableTotalAmount = data?.data?.totalAmount?.toFixed(2);
+            const redeemableAmount = data?.data?.redeemableAmount?.toFixed(2);
+            const payableAmount = Number(totalAmount);
+            const payable = payableAmount >= 0 ? payableAmount?.toFixed(2) : "0.00";
+            const available = (Number(redeemableAmount) + Number(PosProduct?.redeemCreditAmount))?.toFixed(2);
+            setDetails((prev) => ({ ...prev, id: data?.data?.id, date: data?.data?.date, amount: redeemableTotalAmount, available: available, apply: PosProduct?.redeemCreditAmount?.toFixed(2), payable: payable }));
+          },
+        });
+      } else {
+        setDetails({ id: "", date: "N/A", amount: "0.00", available: "0.00", apply: "0.00", payable: totalAmount?.toString() });
+      }
+    }
+  }, [PosProduct?.redeemCreditId, posCreditNoteDropdown]);
+
   return (
     <CommonModal title="Redeem Credit" isOpen={isRedeemCreditModal} onClose={handleClose} className="max-w-[400px]">
       <div className="space-y-3">
         {/* Type Selection */}
         <div className="flex justify-center">
-          <CommonRadio value={type} onChange={handleTypeChange} options={REDEEM_CREDIT_TYPE} />
+          <CommonRadio value={type} onChange={handleTypeChange} options={REDEEM_CREDIT_TYPE} disabled={!!PosProduct?.redeemCreditId} />
         </div>
 
         {/* Invoice Balance */}

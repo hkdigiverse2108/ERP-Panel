@@ -1,4 +1,5 @@
 import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { PosProductDataModal} from "./POS";
 
 export interface CouponFormValues {
   couponPrice?: number;
@@ -42,9 +43,16 @@ export interface VerifyCouponPayload {
   customerId: string;
 }
 export interface VerifyCouponDataResponse {
+  discountApplicable: string;
+  discountCode: string;
+  discountId: string;
+  qualifyingItemCount: number;
+  title: string;
   couponId: string;
   discountAmount: number;
+  discountMode: string;
   finalAmount: number;
+  freeProducts: PosProductDataModal[];
   name: string;
   redeemValue: number;
   redemptionType: string;

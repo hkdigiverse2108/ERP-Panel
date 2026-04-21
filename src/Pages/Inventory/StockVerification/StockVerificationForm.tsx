@@ -72,7 +72,12 @@ const StockVerificationForm = () => {
 
   useEffect(() => {
     if (productListData?.data?.length) {
-      setRows((prev) => [...prev, ...(productListData?.data?.map((item) => createRowFromProduct(item)) ?? [])]);
+      setRows((prev) => [
+        ...prev,
+        ...productListData.data
+          .filter((item) => !prev.some((r) => r.productId === item._id)) // 👈 skip duplicates
+          .map((item) => createRowFromProduct(item)),
+      ]);
     }
   }, [productListData]);
 

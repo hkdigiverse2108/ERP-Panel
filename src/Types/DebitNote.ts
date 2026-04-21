@@ -1,24 +1,25 @@
-import type { AccountBase } from "./Account";
-import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
+import type { BankBase } from "./Bank";
+import type { CommonDataType, MessageStatus, PageStatus, PhoneNumberType } from "./Common";
 
 export interface DebitNoteFormValues {
-  voucherNumber?: string;
+  type?: string;
+  bankAccountId?: string;
   date?: string;
-  fromAccountId?: string;
-  toAccountId?: string;
   amount?: string;
+  phoneNo?: PhoneNumberType;
   description?: string;
   isActive?: boolean;
+  image?: string | File | null;
   _submitAction?: string;
+  personName?: string;
 }
 
 export type AddDebitNotePayload = DebitNoteFormValues;
 
 export type EditDebitNotePayload = DebitNoteFormValues & { debitNoteId: string };
 
-export interface DebitNoteBase extends Omit<DebitNoteFormValues, "fromAccountId" | "toAccountId">, CommonDataType {
-  fromAccountId: AccountBase;
-  toAccountId: AccountBase;
+export interface DebitNoteBase extends Omit<DebitNoteFormValues, "bankAccountId">, CommonDataType {
+  bankAccountId: BankBase;
 }
 
 export interface DebitNoteDataResponse extends PageStatus {

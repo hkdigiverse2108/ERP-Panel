@@ -27,7 +27,7 @@ export type AddStockBulkAdjustmentPayload = {
     qty: number | null;
     productId: string;
   }[];
-  type: string;
+  consumptionTypeId: string;
 };
 
 export type StockBase = StockFormValues & CommonDataType;

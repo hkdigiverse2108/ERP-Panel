@@ -1,7 +1,9 @@
-import type { CommonDataType, MessageStatus, PageStatus, SelectOptionType } from "./Common";
+import type { AdditionalChargeItem, CommonDataType, MessageStatus, PageStatus, SelectOptionType } from "./Common";
 import type { ProductBase } from "./Product";
 import type { TermsConditionBase } from "./TermsAndCondition";
 import type { Supplier } from "./PurchaseOrder";
+import type { UomBase } from "./Uom";
+import type { TaxBase } from "./Tax";
 
 /* ===================== SUPPLIER ===================== */
 
@@ -10,26 +12,25 @@ import type { Supplier } from "./PurchaseOrder";
 /* ===================== PRODUCT (FORM) ===================== */
 
 export interface SupplierBillProductItem {
-  productId?: string;
+  productId?: ProductBase | string;
+  _prevProductId?: string;
   qty?: number;
   freeQty?: number;
   mrp?: number;
+  uomId?: string | UomBase;
+  unit?: string;
   sellingPrice?: number;
+  unitCost?: number;
+  discount1?: number;
+  taxable?: number;
+  taxableAmount?: number;
+  taxId?: string | TaxBase;
+  tax?: number | string;
+  taxAmount?: number;
   landingCost?: number;
   margin?: number;
-  discount1?: number;
-  discount2?: number;
-  taxAmount?: number;
   total?: number;
-  mfgDate?: string;
-  expiryDate?: string;
-  unitCost?: number;
-  uomId?: string;
-  unit?: string;
-  itemCode?: string;
-  taxId?: string;
 }
-
 export interface SupplierBillProductDetails {
   item?: SupplierBillProductItem[];
   totalQty?: number;
@@ -40,12 +41,20 @@ export interface SupplierBillProductDetails {
 /* ===================== RETURN PRODUCT ===================== */
 
 export interface SupplierBillReturnProductItem {
-  productId?: string;
+  productId?: ProductBase | string;
+  _prevProductId?: string;
   qty?: number;
+  uomId?: string | UomBase;
+  unit?: string;
+  unitCost?: number;
   discount1?: number;
-  discount2?: number;
+  taxable?: number;
+  taxableAmount?: number;
+  taxId?: string | TaxBase;
+  tax?: number | string;
   taxAmount?: number;
   landingCost?: number;
+  margin?: number;
   total?: number;
 }
 
@@ -61,21 +70,6 @@ export interface SupplierBillReturnProductDetails {
   totalQty?: number;
   total?: number;
   summary?: SupplierBillReturnProductSummary;
-}
-
-/* ===================== ADDITIONAL CHARGES ===================== */
-
-export interface AdditionalChargeItem {
-  chargeId?: string;
-  amount?: number;
-  taxAmount?: number;
-  taxId?: string;
-  totalAmount?: number;
-}
-
-export interface AdditionalChargeDetails {
-  item?: AdditionalChargeItem[];
-  total?: number;
 }
 
 /* ===================== SUMMARY ===================== */
@@ -107,27 +101,29 @@ export interface SupplierBillFormValues {
   supplierBillNo?: string;
   referenceBillNo?: string;
   supplierBillDate: string | Date;
-  paymentTerm?: string;
+  placeOfSupply?: string;
+  gstIn?: string;
+  billingAddress?: string;
+  paymentTermsId?: string;
   dueDate?: string | Date;
-  reverseCharge?: boolean;
+  reverseCharge?: boolean | string;
   shippingDate?: string | Date;
   taxType?: string;
   invoiceAmount?: string;
-  productDetails?: SupplierBillProductDetails;
+  productDetails?: SupplierBillProductItem[];
   returnProductDetails?: SupplierBillReturnProductDetails;
-  additionalCharges?: AdditionalChargeDetails;
+  additionalCharges?: AdditionalChargeItem[];
   termsAndConditionIds?: string[];
   notes?: string;
   summary?: SupplierBillSummary;
+  billAmount?: number;
   paidAmount?: number;
   balanceAmount?: number;
   paymentStatus?: "paid" | "unpaid" | "partial";
   status?: "active" | "cancelled";
-  companyId?: string;
   isActive?: boolean;
   _submitAction?: string;
 }
-
 /* ===================== UI ROW TYPES ===================== */
 
 export interface ProductRow {
@@ -196,7 +192,7 @@ export interface SupplierBillBase extends CommonDataType {
   referenceBillNo?: string;
   supplierBillDate?: string;
   purchaseOrderId?: string | null;
-  paymentTerm?: string;
+  paymentTermsId?: string;
   dueDate?: string;
   reverseCharge?: boolean;
   shippingDate?: string;
@@ -236,11 +232,6 @@ export interface SupplierBillBase extends CommonDataType {
   paymentStatus?: "paid" | "unpaid" | "partial";
   status?: "active" | "cancelled";
 
-  companyId?: {
-    _id: string;
-    name?: string;
-  };
-
   isActive?: boolean;
 }
 
@@ -253,10 +244,14 @@ export type EditSupplierBillPayload = Partial<SupplierBillFormValues> & {
 };
 
 /* ===================== API RESPONSES ===================== */
-
 export interface SupplierBillDataResponse extends PageStatus {
   supplierBill_data: SupplierBillBase[];
   totalData: number;
+  summary: {
+    paidAmount: number;
+    totalPurchase: number;
+    unpaidAmount: number;
+  };
 }
 
 export interface SupplierBillApiResponse extends MessageStatus {

@@ -4,17 +4,19 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { Box, Grid } from "@mui/material";
 import { Form, Formik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Mutations } from "../../Api";
 import { CommonButton, CommonPhoneNumber, CommonValidationTextField } from "../../Attribute";
 import { CommonModal } from "../../Components/Common";
 import { useAppSelector } from "../../Store/hooks";
 import type { CallRequestFormValues } from "../../Types";
+import { useClickOutside } from "../../Utils/Hooks";
 import { CallRequestFormSchema } from "../../Utils/ValidationSchemas";
 
 const SupportDesk = () => {
-  const [open, setOpen] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
   const { adminSetting } = useAppSelector((state) => state.layout);
+  const { open, setOpen, wrapperRef } = useClickOutside();
 
   const { mutate: callRequestMutate, isPending: isCallRequestLoading } = Mutations.useAddCallRequest();
 
@@ -25,7 +27,7 @@ const SupportDesk = () => {
     note: "",
   };
 
-  const handleSubmit = (values: CallRequestFormValues) => callRequestMutate(values, { onSuccess: () => setOpen(false) });
+  const handleSubmit = (values: CallRequestFormValues) => callRequestMutate(values, { onSuccess: () => setFormOpen(false) });
   const formatTime = (time?: string) => {
     if (!time) return "";
 
@@ -38,13 +40,46 @@ const SupportDesk = () => {
 
     return `${hour}:${minute} ${ampm}`;
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    if (open && window.innerWidth < 1024) {
+      document.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [open]);
   return (
     <>
-      <Box className="relative group">
-        <div className="flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full h-11 w-11 max-xsm:h-9 max-xsm:w-9 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white cursor-pointer">
+      <Box
+        ref={wrapperRef}
+        className="relative group"
+        onMouseEnter={() => {
+          if (window.innerWidth >= 1024) setOpen(true);
+        }}
+        onMouseLeave={() => {
+          if (window.innerWidth >= 1024) setOpen(false);
+        }}
+      >
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            if (window.innerWidth < 1024) {
+              setOpen((prev) => !prev);
+            }
+          }}
+          className="flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full h-11 w-11 max-xsm:h-9 max-xsm:w-9 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white cursor-pointer"
+        >
           <SupportAgentIcon sx={{ fontSize: { xs: 20, md: 22 } }} />
         </div>
-        <div className="absolute lg:right-0 mt-3 flex min-w-[285px] max-w-[330px] flex-col rounded-xl border border-gray-50 bg-white shadow-tooltip dark:border-gray-800 dark:bg-gray-dark z-50 opacity-0 invisible scale-95 translate-y-2 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:visible group-hover:scale-100 group-hover:translate-y-0 ">
+        <div className={`fixed lg:absolute lg:right-0 mt-3 flex min-w-[285px] max-w-[330px] flex-col rounded-xl border border-gray-50 bg-white shadow-tooltip dark:border-gray-800 dark:bg-gray-dark z-50 transition-all duration-200 ease-out ${open ? "opacity-100 visible scale-100 translate-y-0" : "opacity-0 invisible scale-95 translate-y-2"}`}>
           <div className="flex justify-center items-center p-3 mb-3 border-b border-gray-300 dark:border-gray-700">
             <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Support Desk</h5>
           </div>
@@ -63,13 +98,13 @@ const SupportDesk = () => {
                 <span className="text-gray-800 dark:text-gray-300">{formatTime(adminSetting?.workingHours?.startTime) + " - " + formatTime(adminSetting?.workingHours?.endTime)}</span>
               </li>
             </ul>
-            <button onClick={() => setOpen(!open)} className="mt-4 w-full py-2 text-center text-white font-medium bg-brand-500 rounded-lg hover:bg-brand-600">
+            <button onClick={() => setFormOpen(!formOpen)} className="mt-4 w-full py-2 text-center text-white font-medium bg-brand-500 rounded-lg hover:bg-brand-600">
               Request A Callback
             </button>
           </div>
         </div>
       </Box>
-      <CommonModal isOpen={open} title="Talk To Our Expert" subTitle="Fill In Your Info - We'll Reach Out Shortly" onClose={() => setOpen(!open)} className="max-w-[500px] m-2 sm:m-5">
+      <CommonModal isOpen={formOpen} title="Talk To Our Expert" subTitle="Fill In Your Info - We'll Reach Out Shortly" onClose={() => setFormOpen(!formOpen)} className="max-w-[500px] m-2 sm:m-5">
         <div className="flex flex-col gap-5">
           <Formik<CallRequestFormValues> initialValues={initialValues} validationSchema={CallRequestFormSchema} enableReinitialize onSubmit={handleSubmit}>
             <Form noValidate>
