@@ -15,11 +15,15 @@ import { useCompanyFinancialYears } from "../Utils/Hooks";
 import { ROUTES } from "../Constants";
 import CommonTermsAndConditionFormModal from "../Components/Common/TermsAndConditions/CommonTermsAndConditionFormModal";
 import CommonTermsAndConditionSelectModal from "../Components/Common/TermsAndConditions/CommonTermsAndConditionSelectModal";
+import { disconnectSocket, initSocket } from "../Utils";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Layout = () => {
   const { isExpanded, isMobileOpen, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
   const dispatch = useDispatch();
   const location = useLocation();
+
+  const queryClient = useQueryClient();
 
   const { user } = useAppSelector((state) => state.auth);
   const { data: userData, isLoading: userLoading } = Queries.useGetSingleUser(user?._id);
@@ -69,6 +73,13 @@ const Layout = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [dispatch]);
+
+  useEffect(() => {
+    if (user?._id) {
+      initSocket(user, queryClient);
+    }
+    return () => disconnectSocket();
+  }, [user?._id]);
 
   return (
     <>

@@ -14,7 +14,8 @@ const Transaction = () => {
   const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
   const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
   const [values, setValues] = useState<string[]>([OPTION_TYPE[1].value]);
-  const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }), [range]);
+  const { branchFilter } = useAppSelector((state) => state.dashboard);
+  const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString(), branchFilter: branchFilter[0] }), [range, branchFilter]);
 
   const { data: transactionData, isLoading: isTransactionLoading, isFetching: isTransactionFetching } = Queries.useGetDashboardTransactionGraph({ ...queryParams, typeFilter: values[0] });
 

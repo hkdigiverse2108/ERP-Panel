@@ -3,7 +3,7 @@ import { useAppSelector } from "../Store/hooks";
 import { PageRoutes } from "./PageRoutes";
 import { PAGE_TITLE, ROUTES } from "../Constants";
 
-const isAddEditRoute = (path: string) => path.includes("add") || path.includes("edit") || path.includes("add-edit");
+const isAddEditRoute = (path: string) => path.includes("add") || path.includes("edit") || path.includes("add-edit") || path.includes("view");
 
 const normalizeTabName = (name: string) => name.toLowerCase().replace(/\s+/g, "");
 const PrivateRoutes = () => {

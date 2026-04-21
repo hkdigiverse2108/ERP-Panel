@@ -2,7 +2,9 @@ export * from "./DateConfig";
 export * from "./DateFormatted";
 export * from "./FormHelpers";
 export * from "./ValidationSchemas";
+export * from "./Socket";
 import { STORAGE_KEYS } from "../Constants";
+
 import type { CompanyDetails, GridType, Params, SelectOptionType } from "../Types";
 
 export const Stringify = (value: object): string => {
@@ -26,7 +28,7 @@ export const CleanParams = (params?: Params): Params | undefined => {
   return Object.fromEntries(Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== ""));
 };
 
-export const GenerateOptions = (data?: { _id: string; name?: string; firstName?: string; lastName?: string; title?: string; fullName?: string; orderNo?: string |null; estimateNo?: string |null}[]) => {
+export const GenerateOptions = (data?: { _id: string; name?: string; firstName?: string; lastName?: string; title?: string; fullName?: string; orderNo?: string | null; estimateNo?: string | null }[]) => {
   if (!data || !Array.isArray(data)) return [];
 
   return data.map((item) => {

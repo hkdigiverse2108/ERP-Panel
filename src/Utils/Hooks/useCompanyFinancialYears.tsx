@@ -50,8 +50,18 @@ export const useFinancialYearsFilter = (params?: Params) => {
   const startDate = company?.financialYear.split(" - ")[0];
   const endDate = company?.financialYear.split(" - ")[1];
   return {
-    ...(params || {}),
+    // ...(params || {}),
     startDate: params?.startDate || startDate,
     endDate: params?.endDate || endDate,
+  };
+};
+
+export const useBranchFilter = (params?: Params) => {
+  const { isBranch } = useAppSelector((state) => state.company);
+
+  if (!isBranch) return params;
+  return {
+    // ...(params || {}),
+    branchFilter: isBranch,
   };
 };

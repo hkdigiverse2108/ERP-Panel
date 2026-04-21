@@ -4,10 +4,12 @@ import type { AppGridColDef, PayableBase } from "../../Types";
 import { DateConfig } from "../../Utils";
 import { useDataGrid } from "../../Utils/Hooks";
 import { CommonCard, CommonDataGrid } from "../Common";
+import { useAppSelector } from "../../Store/hooks";
 
 const TodayPayable = () => {
   const [range] = useState({ start: DateConfig.utc().startOf("day"), end: DateConfig.utc().endOf("day") });
-  const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }), [range]);
+  const { branchFilter } = useAppSelector((state) => state.dashboard);
+  const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString(), branchFilter: branchFilter[0] }), [range, branchFilter]);
 
   const { data, isLoading, isFetching } = Queries.useGetDashboardPayable(queryParams);
 

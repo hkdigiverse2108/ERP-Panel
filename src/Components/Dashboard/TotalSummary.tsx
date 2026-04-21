@@ -1,18 +1,22 @@
 import { CircularProgress, Grid, Paper, Typography } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useMemo, useState } from "react"; // useState kept for range
 import { Queries } from "../../Api";
 import { CommonDateRangeSelector, CommonSelect } from "../../Attribute";
-import { DateConfig } from "../../Utils";
+import { DateConfig, GenerateOptions } from "../../Utils";
 import { CommonCard } from "../Common";
-import { useAppSelector } from "../../Store/hooks";
+import { useAppSelector, useAppDispatch } from "../../Store/hooks";
+import { setBranchFilter } from "../../Store/Slices/DashboardSlice";
 
 const TotalSummary = () => {
-  const [values, setValues] = useState<string[]>([]);
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.auth);
+  const { branchFilter } = useAppSelector((state) => state.dashboard);
   const { company } = useAppSelector((state) => state.company);
   const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
   const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
-  const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }), [range]);
+  const queryParams = useMemo(() => ({ startDate: range.start.toISOString(), endDate: range.end.toISOString(), branchFilter: branchFilter[0] }), [range, branchFilter]);
   const { data, isLoading, isFetching } = Queries.useGetDashboardTransaction(queryParams);
+  const { data: branchData } = Queries.useGetBranchDropdown();
 
   const stats = [
     { type: "totalSales", label: "Total Sales", value: "₹0", color: "bg-brand-100! dark:bg-brand-800!" },
@@ -43,10 +47,13 @@ const TotalSummary = () => {
     { type: "avgBillsCount", label: "Avg. Bills (Nos.)", value: "0", color: "bg-rose-100!  dark:bg-rose-800!" },
     { type: "bankAccountsBalance", label: "Bank Accounts", value: "-32260", color: "bg-rose-100!  dark:bg-rose-800!" },
   ];
-  const gstOptions = [
+
+  // console.log("branchData", branchData?.data);
+  let branchOptions = GenerateOptions(branchData?.data);
+  // console.log("options", branchOptions);
+  branchOptions = [
     { label: "ALL", value: "all" },
-    { label: "Online", value: "online" },
-    { label: "Offline", value: "offline" },
+    ...branchOptions,
   ];
 
   const formatValue = (key: string, value: number) => {
@@ -64,14 +71,16 @@ const TotalSummary = () => {
       <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
         <CommonDateRangeSelector value={range} onChange={setRange} />
       </Grid>
-      <Grid size={{ xs: 12, xsm: 6, sm: 4, xxl: 3 }}>
-        <CommonSelect label="Select Channel" options={gstOptions} value={values} onChange={(v) => setValues(v)} limitTags={1} />
-      </Grid>
+      {user?.branchId?.isHeadBranch && (
+        <Grid size={{ xs: 12, xsm: 6, sm: 4, xxl: 3 }}>
+          <CommonSelect label="Select Location" options={branchOptions} value={branchFilter} onChange={(v) => dispatch(setBranchFilter(v))} limitTags={1} />
+        </Grid>
+      )}
     </>
   );
 
   return (
-    <CommonCard grid={{ xs: 12 }} topContent={topContent}>
+    <CommonCard grid={{ xs: 12, md: 8 }} topContent={topContent}>
       <Grid container spacing={1.5} p={1.5}>
         {stats.map((item, index) => (
           <Grid size={{ xs: 6, sm: 4, lg: 3, xl: 2 }} key={index}>

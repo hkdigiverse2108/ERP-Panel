@@ -66,7 +66,10 @@ import ExpenseForm from "../Pages/Bank/Expense/ExpenseForm";
 import Salary from "../Pages/Bank/Salary";
 import SalaryForm from "../Pages/Bank/Salary/SalaryForm";
 import ResetPassword from "../Pages/Auth/UpdatePassword";
-
+import StockTransfer from "../Pages/Inventory/StockTransfer";
+import StockTransferForm from "../Pages/Inventory/StockTransfer/StockTransferForm";
+import StockTransferDetails from "../Pages/Inventory/StockTransfer/StockTransferDetails";
+import Notification from "../Pages/Notification";
 
 export const PageRoutes = [
   { path: ROUTES.HOME, name: PAGE_TITLE.DASHBOARD, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -153,7 +156,7 @@ export const PageRoutes = [
 
   { path: ROUTES.SALES_ORDER.BASE, name: PAGE_TITLE.SALES.SALES_ORDER.BASE, element: <SalesOrder /> },
   { path: ROUTES.SALES_ORDER.ADD_EDIT, name: PAGE_TITLE.SALES.SALES_ORDER.BASE, element: <SalesOrderForm /> },
-  
+
   { path: ROUTES.INVOICE.BASE, name: PAGE_TITLE.SALES.INVOICE.BASE, element: <Invoice /> },
   { path: ROUTES.INVOICE.ADD_EDIT, name: PAGE_TITLE.SALES.INVOICE.BASE, element: <InvoiceForm /> },
 
@@ -163,6 +166,10 @@ export const PageRoutes = [
   { path: ROUTES.SALES_CREDIT_NOTE.BASE, name: PAGE_TITLE.SALES.SALES_CREDIT_NOTE.BASE, element: <SalesCreditNote /> },
   { path: ROUTES.SALES_CREDIT_NOTE.ADD_EDIT, name: PAGE_TITLE.SALES.SALES_CREDIT_NOTE.BASE, element: <SalesCreditNoteForm /> },
 
+  { path: ROUTES.STOCK_TRANSFER.BASE, name: PAGE_TITLE.INVENTORY.STOCK_TRANSFER.BASE, element: <StockTransfer /> },
+  { path: ROUTES.STOCK_TRANSFER.ADD_EDIT, name: PAGE_TITLE.INVENTORY.STOCK_TRANSFER.BASE, element: <StockTransferForm /> },
+  { path: ROUTES.STOCK_TRANSFER.VIEW, name: PAGE_TITLE.INVENTORY.STOCK_TRANSFER.BASE, element: <StockTransferDetails /> },
+  { path: ROUTES.NOTIFICATION.BASE, name: PAGE_TITLE.NOTIFICATION, element: <Notification /> },
 ];
 
 export const AuthRoutes = [

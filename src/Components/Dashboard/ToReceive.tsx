@@ -4,9 +4,12 @@ import type { AppGridColDef, ReceivableBase } from "../../Types";
 import { FormatDateTime } from "../../Utils";
 import { useDataGrid } from "../../Utils/Hooks";
 import { CommonCard, CommonDataGrid } from "../Common";
+import { useAppSelector } from "../../Store/hooks";
 
 const ToReceive = () => {
-  const { data, isLoading, isFetching } = Queries.useGetDashboardReceivable();
+  const { branchFilter } = useAppSelector((state) => state.dashboard);
+  const queryParams = useMemo(() => ({ branchFilter: branchFilter[0] }), [branchFilter]);
+  const { data, isLoading, isFetching } = Queries.useGetDashboardReceivable(queryParams);
 
   const allRowData = useMemo(() => data?.data?.map((item) => ({ ...item, id: item?._id })) || [], [data]);
   const totalRows = data?.data?.length || 0;

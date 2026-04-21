@@ -6,6 +6,7 @@ export * from "./PageTitle";
 export * from "./Keys";
 export * from "./DemoFilesUrl";
 export * from "./Import";
+export * from "./SocketEvents";
 
 export const Href: string = "#Javascript";
 export const ImagePath: string = "/assets/images/";

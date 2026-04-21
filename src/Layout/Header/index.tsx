@@ -10,6 +10,7 @@ import SearchList from "./SearchList";
 import SupportDesk from "./SupportDesk";
 import ThemeToggleButton from "./ThemeToggleButton";
 import User from "./User";
+import Branches from "./Branches";
 
 const Header = () => {
   const { isMobileOpen, isExpanded, isHovered, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
@@ -99,13 +100,14 @@ const Header = () => {
             </form>
           </div> */}
         </div>
-        <div className={`${isApplicationMenuOpen ? "flex" : "hidden"} items-center justify-between max-lg:w-full gap-4 max-xsm:p-2 px-5 py-4 lg:flex max-lg:shadow-theme-md max-lg:dark:shadow-theme-dark-md lg:justify-end lg:px-0`}>
-          <div className="flex max-xsm:justify-between items-center gap-1 xsm:gap-3 w-full">
+        <div className={`${isApplicationMenuOpen ? "flex" : "hidden"} max-lg:overflow-x-auto max-lg:overflow-y-hidden max-lg:custom-scrollbar items-center justify-between max-lg:w-full gap-4 max-xsm:p-2 px-5 py-4 lg:flex max-lg:shadow-theme-md max-lg:dark:shadow-theme-dark-md lg:justify-end lg:px-0`}>
+          <div className="flex min-w-max max-xsm:justify-between items-center gap-1 xsm:gap-3 w-full">
             <SupportDesk />
             <SearchList />
             <ThemeToggleButton />
             <ImportantAnnouncement />
             <POS />
+            <Branches />
             <FinancialYear />
             <User />
           </div>

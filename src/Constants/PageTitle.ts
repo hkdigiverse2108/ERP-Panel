@@ -100,6 +100,11 @@ export const PAGE_TITLE = {
       ADD: "Add Material Consumption",
       EDIT: "Edit Material Consumption",
     },
+    STOCK_TRANSFER: {
+      BASE: "Stock Transfer",
+      ADD: "Add Stock Transfer",
+      EDIT: "Edit Stock Transfer",
+    },
   },
   CUSTOMER: {
     BASE: "Customer",
@@ -224,4 +229,5 @@ export const PAGE_TITLE = {
       EDIT: "Edit Sales Credit Note",
     },
   },
+  NOTIFICATION: "Notification",
 } as const;

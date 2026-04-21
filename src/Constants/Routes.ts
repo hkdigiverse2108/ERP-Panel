@@ -159,5 +159,13 @@ export const ROUTES = {
   },
   FORGOT_PASSWORD:{
     BASE:"/forgot-password"
-  }
+  },
+  STOCK_TRANSFER: {
+    BASE: "/stock-transfer",
+    ADD_EDIT: "/stock-transfer/add-edit",
+    VIEW: "/stock-transfer/view",
+  },
+  NOTIFICATION: {
+    BASE: "/notification",
+  },
 } as const;

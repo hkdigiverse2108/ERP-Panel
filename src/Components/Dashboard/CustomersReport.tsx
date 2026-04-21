@@ -3,11 +3,15 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import StarIcon from "@mui/icons-material/Star";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
+import { useMemo } from "react";
 import { CommonCard } from "../Common";
 import { Queries } from "../../Api";
+import { useAppSelector } from "../../Store/hooks";
 
 const CustomersReport = () => {
-  const { data, isLoading } = Queries.useGetDashboardCategoryWiseCustomersCount();
+  const { branchFilter } = useAppSelector((state) => state.dashboard);
+  const queryParams = useMemo(() => ({ branchFilter: branchFilter[0] }), [branchFilter]);
+  const { data, isLoading } = Queries.useGetDashboardCategoryWiseCustomersCount(queryParams);
   const stats = [
     {
       title: "VIP Customers",

@@ -5,6 +5,7 @@ import ModalSlice from "./Slices/ModalSlice";
 import CompanySlice from "./Slices/CompanySlice";
 import DrawerSlice from "./Slices/DrawerSlice";
 import PosSlice from "./Slices/PosSlice";
+import DashboardSlice from "./Slices/DashboardSlice";
 
 const Store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ const Store = configureStore({
     company: CompanySlice,
     drawer: DrawerSlice,
     pos: PosSlice,
+    dashboard: DashboardSlice,
   },
 });
 

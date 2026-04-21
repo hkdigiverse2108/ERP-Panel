@@ -415,4 +415,23 @@ export const URL_KEYS = {
     ALL: "/bank-transaction/all",
     DROPDOWN: "/bank-transaction/dropdown",
   },
+  STOCK_TRANSFER: {
+    BASE: "/stock-transfer",
+    ALL: "/stock-transfer/all",
+    REQUEST: "/stock-transfer/request",
+    EDIT: "/stock-transfer/edit",
+    DELETE: "/stock-transfer/delete",
+    APPROVE: "/stock-transfer/approve",
+    REJECT: "/stock-transfer/reject",
+    CONFIRM_RECEIPT: "/stock-transfer/confirm-receipt",
+  },
+
+  NOTIFICATION: {
+    BASE: "/notification",
+    ALL: "/notification/all",
+    READ: "/notification/read",
+    READ_ALL: "/notification/read-all",
+    DELETE: "/notification/delete",
+  },
+
 } as const;
