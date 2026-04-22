@@ -58,10 +58,10 @@ export const useFinancialYearsFilter = (params?: Params) => {
 
 export const useBranchFilter = (params?: Params) => {
   const { isBranch } = useAppSelector((state) => state.company);
+  const { user } = useAppSelector((state) => state.auth);
 
-  if (!isBranch) return params;
+  if (!isBranch || !user?.branchId?.isHeadBranch) return params;
   return {
-    // ...(params || {}),
     branchFilter: isBranch,
   };
 };
