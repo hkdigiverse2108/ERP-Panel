@@ -19,8 +19,12 @@ const Stock = () => {
 
   const { data: stockData, isLoading: stockDataLoading, isFetching: stockDataFetching } = Queries.useGetStock({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetStock({}, false);
-  const { data: brandData, isLoading: brandDataLoading } = Queries.useGetBrandDropdown();
-  const { data: categoryData, isLoading: categoryDataLoading } = Queries.useGetCategoryDropdown();
+  const { data: BrandsData, isLoading: BrandsDataLoading } = Queries.useGetBrandDropdown({ onlyBrandFilter: true });
+  const brandId = advancedFilter?.brandFilter?.[0] || "";
+  const { data: subBrandData, isLoading: subBrandDataLoading } = Queries.useGetBrandDropdown({ parentBrandFilter: brandId }, Boolean(brandId));
+  const { data: CategoryData, isLoading: CategoryDataLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true });
+  const subCategoryId = advancedFilter?.categoryFilter?.[0] || "";
+  const { data: subCategoryData, isLoading: subCategoryDataLoading } = Queries.useGetCategoryDropdown({ parentCategoryFilter: subCategoryId }, Boolean(subCategoryId));
 
   const allStock = useMemo(() => stockData?.data?.stock_data.map((emp) => ({ ...emp, id: emp?._id })) || [], [stockData]);
   const totalRows = stockData?.data?.totalData || 0;
@@ -52,10 +56,10 @@ const Stock = () => {
     onExportAll: { onExportAll: fetchAll, isFetching: AllLoading || AllFetching },
   };
   const filter = [
-    CreateFilter("Select Brand", "brandFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(brandData?.data), brandDataLoading, { xs: 12, sm: 6, md: 3 }), //
-    CreateFilter("Select Sub Brand", "subBrandFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(brandData?.data), brandDataLoading, { xs: 12, sm: 6, md: 3 }), //
-    CreateFilter("Select Category", "categoryFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(categoryData?.data), categoryDataLoading, { xs: 12, sm: 6, md: 3 }), //
-    CreateFilter("Select Sub Category", "subCategoryFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(categoryData?.data), categoryDataLoading, { xs: 12, sm: 6, md: 3 }), //
+    CreateFilter("Select Category", "categoryFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(CategoryData?.data), CategoryDataLoading, { xs: 12, sm: 6, md: 3 }), // categoryFilter
+    CreateFilter("Select Sub Category", "subCategoryFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(subCategoryData?.data), subCategoryDataLoading, { xs: 12, sm: 6, md: 3 }), // subCategoryFilter
+    CreateFilter("Select Brand", "brandFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(BrandsData?.data), BrandsDataLoading, { xs: 12, sm: 6, md: 3 }), // brandFilter
+    CreateFilter("Select Sub Brand", "subBrandFilter", advancedFilter, updateAdvancedFilter, GenerateOptions(subBrandData?.data), subBrandDataLoading, { xs: 12, sm: 6, md: 3 }), // subBrandFilter
   ];
   const children = (
     <Grid size={{ xs: 12, sm: 4, xxl: 3 }}>
