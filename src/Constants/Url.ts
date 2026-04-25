@@ -301,6 +301,13 @@ export const URL_KEYS = {
     ALL: "/settings/all",
     UPDATE: "/settings/update",
   },
+
+  REPORT_FORMAT: {
+    BASE: "/settings/report-format",
+    ALL: "/settings/report-format/all",
+    ADD: "/settings/report-format/add",
+    EDIT: "/settings/report-format/edit",
+  },
   POS_CREDIT_NOTE: {
     BASE: "/pos-credit-note",
     ALL: "/pos-credit-note/all",
@@ -433,5 +440,4 @@ export const URL_KEYS = {
     READ_ALL: "/notification/read-all",
     DELETE: "/notification/delete",
   },
-
 } as const;

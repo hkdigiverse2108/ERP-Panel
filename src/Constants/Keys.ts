@@ -382,4 +382,10 @@ export const KEYS = {
     READ_ALL: "notification-read-all",
     DELETE: "notification-delete",
   },
+  REPORT_FORMAT: {
+    BASE: "report-format",
+    ADD: "report-format-add",
+    EDIT: "report-format-edit",
+    DELETE: "report-format-delete",
+  },
 };

@@ -54,3 +54,4 @@ export * from "./Prefix";
 export * from "./PaymentTerms";
 export * from "./ConsumptionType";
 export * from "./StockTransfer";
+export * from "./ReportFormat";

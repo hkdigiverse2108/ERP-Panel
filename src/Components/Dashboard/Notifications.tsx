@@ -10,7 +10,7 @@ const Notifications = () => {
   const { data: notificationData, isLoading: isNotificationLoading, isFetching } = Queries.useGetNotification({ readFilter: "false" });
   const { mutate: readNotification } = Mutations.useReadNotification();
   const notifications = notificationData?.data?.notification_data || [];
-  const unreadCount = notificationData?.data?.unreadCount;
+  const unreadCount = notificationData?.data?.unreadCount ?? 0;
   const handleRead = (id: string) => {
     readNotification(id);
   };
@@ -29,8 +29,7 @@ const Notifications = () => {
   const isLoading = isNotificationLoading || isFetching;
 
   return (
-    <CommonCard title="Notifications : " grid={{ xs: 12, md: 4 }} paperProps={{ className: "relative" }}>
-      <span className="absolute top-6 left-30 text-theme-sm text-gray-800 dark:text-gray-200">{unreadCount}</span>
+    <CommonCard title={"Notifications : " + unreadCount} grid={{ xs: 12, md: 4 }} paperProps={{ className: "relative" }}>
       <Link to={ROUTES.NOTIFICATION.BASE} className="absolute top-6 right-3 text-theme-sm text-gray-800 dark:text-gray-200">
         View All
       </Link>
