@@ -14,6 +14,7 @@ import Branches from "./Branches";
 
 const Header = () => {
   const { isMobileOpen, isExpanded, isHovered, isApplicationMenuOpen } = useAppSelector((state) => state.layout);
+  const { user } = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
   const width = useWindowWidth();
@@ -107,7 +108,7 @@ const Header = () => {
             <ThemeToggleButton />
             <ImportantAnnouncement />
             <POS />
-            <Branches />
+            {user?.branchId?.isHeadBranch && <Branches />}
             <FinancialYear />
             <User />
           </div>
