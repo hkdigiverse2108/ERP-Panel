@@ -1,9 +1,8 @@
-import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
-import type { CategoryBase } from "./Category";
 import type { BrandBase } from "./Brand";
-import type { ProductBase } from "./Product";
-import type { BranchBase } from "./Branch";
+import type { CategoryBase } from "./Category";
+import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { PosProductOrderItem } from "./POS";
+import type { ProductBase } from "./Product";
 
 
 /* ---------------- SUB TYPES ---------------- */
@@ -58,7 +57,6 @@ export interface DiscountFormValues {
   startDateTime?: string;
   hasEndDate?: boolean;
   endDateTime?: string;
-  branchIds?: string[];
   status?: string;
   isActive?: boolean;
   _submitAction?: string;
@@ -72,8 +70,7 @@ export type EditDiscountPayload = AddDiscountPayload & { discountId: string };
 
 /* ---------------- BASE TYPE ---------------- */
 
-export interface DiscountBase extends Omit<DiscountFormValues, "categoryIds" | "brandIds" | "productIds" | "excludedProductIds" | "branchIds" | "buyXGetY" | "productAtFixAmount">, CommonDataType {
-  branchIds?: BranchBase[];
+export interface DiscountBase extends Omit<DiscountFormValues, "categoryIds" | "brandIds" | "productIds" | "excludedProductIds" | "buyXGetY" | "productAtFixAmount">, CommonDataType {
   categoryIds?: CategoryBase[];
   brandIds?: BrandBase[];
   productIds?: ProductBase[];

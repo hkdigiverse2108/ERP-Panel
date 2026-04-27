@@ -569,7 +569,6 @@ export const LoyaltyFormSchema = Yup.object({
 });
 
 export const DiscountFormSchema = Yup.object({
-  branchIds: Validation("array", "Branch", { minItems: 1 }),
   title: Validation("string", "Title"),
   discountCode: Validation("string", "Discount Code"),
   autoApply: Validation("boolean", "Auto Apply"),
