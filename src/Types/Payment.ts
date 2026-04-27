@@ -10,7 +10,7 @@ export interface PaymentFormValues {
   bankMode?: BankMode;
 
   party?: string;
-  paymentDate?: string;
+  date?: string;
   transactionDate?: string;
   transactionNo?: string;
   amount?: number | null;

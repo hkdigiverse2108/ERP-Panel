@@ -34,7 +34,7 @@ const PaymentForm = () => {
     bankId: data?.bankId?._id || data?.bankId || "",
     posOrderId: data?.posOrderId?._id || data?.posOrderId || "",
     paymentMode: data?.paymentMode || "cash",
-    date: data?.paymentDate || null,
+    date: data?.date || null,
     amount: data?.amount || 0,
     totalAmount: data?.totalAmount || 0,
     paidAmount: data?.paidAmount || 0,
