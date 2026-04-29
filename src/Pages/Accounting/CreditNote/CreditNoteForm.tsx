@@ -1,6 +1,6 @@
 import { Box, Grid } from "@mui/material";
 import { Form, Formik, useFormikContext, type FormikHelpers, type FormikValues } from "formik";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { CommonPhoneNumber, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
@@ -28,7 +28,8 @@ const CreditNoteForm = () => {
   const isEditing = Boolean(data?._id);
   const pageMode = isEditing ? "EDIT" : "ADD";
 
-  const initialValues: CreditNoteFormValues = {
+  const initialValues: CreditNoteFormValues = useMemo(
+      () => ({
     type: data?.type || "payin",
     personName: data?.personName || "",
     date: data?.date || DateConfig.utc().toISOString(),
@@ -39,8 +40,11 @@ const CreditNoteForm = () => {
       countryCode: data?.phoneNo?.countryCode || "",
       phoneNo: data?.phoneNo?.phoneNo || "",
     },
+    image: data?.image || "",
     isActive: data?.isActive ?? true,
-  };
+  }),
+    [data],
+  );
 
   const FormikImageSync = <T extends FormikValues>({ activeKey, clearActiveKey }: ImageSyncProps) => {
     const { selectedFiles } = useAppSelector((state) => state.modal);

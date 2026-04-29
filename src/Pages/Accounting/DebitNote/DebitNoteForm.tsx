@@ -42,6 +42,7 @@ const DebitNoteForm = () => {
         countryCode: data?.phoneNo?.countryCode || "",
         phoneNo: data?.phoneNo?.phoneNo || "",
       },
+      image: data?.image || "",
       isActive: data?.isActive ?? true,
     }),
     [data],
