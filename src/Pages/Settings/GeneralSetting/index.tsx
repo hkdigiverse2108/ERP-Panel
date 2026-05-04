@@ -37,19 +37,6 @@ const GeneralSetting = () => {
     ...(ConsumptionTypePermission.view ? [{ label: PAGE_TITLE.SETTINGS.CONSUMPTION_TYPE.BASE, value: 8, icon: <BarChart /> }] : []),
   ];
 
-  // Map tab index → component
-  const tabViews = [
-    <Profile />, //
-    <CompanyProfile />,
-    ...(TaxPermission.view ? [<Taxes />] : []),
-    <ReportFormats />,
-    ...(RolesPermission.view ? [<UserRoles />] : []),
-    ...(PrefixPermission.view ? [<Prefix />] : []),
-    ...(PaymentTermsPermission.view ? [<PaymentTerms />] : []),
-    ...(AdditionalChargesPermission.view ? [<AdditionalCharges />] : []),
-    ...(ConsumptionTypePermission.view ? [<ConsumptionType />] : []),
-  ];
-
   return (
     <>
       <CommonBreadcrumbs title={PAGE_TITLE.SETTINGS.GENERAL} maxItems={1} breadcrumbs={BREADCRUMBS.GENERAL_SETTING.BASE} />
@@ -65,7 +52,15 @@ const GeneralSetting = () => {
             </Box>
           </Grid>
           <Grid size={{ xs: 12, md: 9, lg: 9, xl: 10 }} className="rounded-lg p-4 bg-white dark:bg-gray-dark! border border-gray-200 dark:border-gray-800">
-            {tabViews[value]}
+            {value === 0 && <Profile />}
+            {value === 1 && <CompanyProfile />}
+            {value === 2 && TaxPermission.view && <Taxes />}
+            {value === 3 && <ReportFormats />}
+            {value === 4 && RolesPermission.view && <UserRoles />}
+            {value === 5 && PrefixPermission.view && <Prefix />}
+            {value === 6 && PaymentTermsPermission.view && <PaymentTerms />}
+            {value === 7 && AdditionalChargesPermission.view && <AdditionalCharges />}
+            {value === 8 && ConsumptionTypePermission.view && <ConsumptionType />}
           </Grid>
         </Grid>
       </div>
