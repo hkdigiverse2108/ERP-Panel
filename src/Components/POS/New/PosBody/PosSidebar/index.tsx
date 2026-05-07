@@ -50,7 +50,6 @@ const PosSidebar = () => {
       // window.location.reload();
     },
   });
-  console.log("lastBill", lastBill);
   const getCompanyAddress = () => {
     const addr = company?.address;
     if (!addr) return null;
