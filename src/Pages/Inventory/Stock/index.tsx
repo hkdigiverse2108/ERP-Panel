@@ -12,7 +12,7 @@ import { CommonDateRangeSelector } from "../../../Attribute";
 import { useAppSelector } from "../../../Store/hooks";
 
 const Stock = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const { company } = useAppSelector((state) => state.company);
   const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
   const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
@@ -44,8 +44,6 @@ const Stock = () => {
     rows: allStock,
     rowCount: totalRows,
     loading: stockDataLoading || stockDataFetching,
-    isActive,
-    setActive,
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,
