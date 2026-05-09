@@ -96,8 +96,8 @@ export const Mutations = {
   useDeletePosOrder: () => useMutations<string, void>([KEYS.POS.DELETE, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER, KEYS.POS_ORDER.DROPDOWN], (id) => Delete(`${URL_KEYS.POS.BASE}/${id}`)),
 
   // ************ POS Payment ************
-  useAddPosPayment: () => useMutations<AddPosPaymentPayload, void>([KEYS.POS_PAYMENT.ADD, KEYS.POS_PAYMENT.BASE, KEYS.POS_ORDER.DROPDOWN], (input) => Post(URL_KEYS.POS_PAYMENT.ADD, input)),
-  useEditPosPayment: () => useMutations<EditPosPaymentPayload, void>([KEYS.POS_PAYMENT.EDIT, KEYS.POS_PAYMENT.BASE, KEYS.POS_ORDER.DROPDOWN], (input) => Put(URL_KEYS.POS_PAYMENT.EDIT, input)),
+  useAddPosPayment: () => useMutations<AddPosPaymentPayload, void>([KEYS.POS_PAYMENT.ADD, KEYS.POS_PAYMENT.BASE, KEYS.POS_ORDER.DROPDOWN, KEYS.POS_CREDIT_NOTE.DROPDOWN, KEYS.SUPPLIER_BILL.DROPDOWN], (input) => Post(URL_KEYS.POS_PAYMENT.ADD, input)),
+  useEditPosPayment: () => useMutations<EditPosPaymentPayload, void>([KEYS.POS_PAYMENT.EDIT, KEYS.POS_PAYMENT.BASE, KEYS.POS_ORDER.DROPDOWN, KEYS.POS_CREDIT_NOTE.DROPDOWN, KEYS.SUPPLIER_BILL.DROPDOWN], (input) => Put(URL_KEYS.POS_PAYMENT.EDIT, input)),
   useDeletePosPayment: () => useMutations<string, void>([KEYS.POS_PAYMENT.DELETE, KEYS.POS_PAYMENT.BASE, KEYS.POS_ORDER.DROPDOWN], (id) => Delete(`${URL_KEYS.POS_PAYMENT.BASE}/${id}`)),
 
   // ************ POS Cash Register ************

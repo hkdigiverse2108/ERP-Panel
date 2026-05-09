@@ -10,6 +10,8 @@ export interface PosPaymentFormValues {
   partyId?: string;
   bankId?: string;
   posOrderId?: string;
+  posCreditNoteId?: string;
+  purchaseBillId?: string;
   paymentMode?: string;
   date?: string | Date | null;
   totalAmount?: number;
@@ -22,7 +24,6 @@ export interface PosPaymentFormValues {
   companyId?: string;
   remark?: string;
   status?: string;
-  voucherDetails?: VoucherRow[];
   _submitAction?: string;
   posCashRegisterId?: string;
   discountAmount?: number;
@@ -57,17 +58,4 @@ export interface PosPaymentDataResponse extends PageStatus {
 
 export interface PosPaymentApiResponse extends MessageStatus {
   data: PosPaymentDataResponse;
-}
-
-export interface VoucherRow {
-  id: string;
-  posOrderId?: string;
-  paymentMode?: string;
-  bankId?: string;
-  netAmount: number;
-  paidAmount: number;
-  pendingAmount: number;
-  kasarAmount: number;
-  amount: number;
-  paymentAmount: number;
 }

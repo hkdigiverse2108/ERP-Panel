@@ -189,6 +189,7 @@ export const KEYS = {
     ADD: "supplier-bill-add",
     EDIT: "supplier-bill-edit",
     DELETE: "supplier-bill-delete",
+    DROPDOWN: "supplier-bill-dropdown",
   },
   POS: {
     BASE: "pos",

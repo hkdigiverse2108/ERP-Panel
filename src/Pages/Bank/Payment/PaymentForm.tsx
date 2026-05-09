@@ -6,8 +6,8 @@ import { Mutations, Queries } from "../../../Api";
 import { CommonSelect, CommonTextField, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonStatsCard, CommonTable } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { BREADCRUMBS, PAYMENT_MODE } from "../../../Data";
-import type { CommonTableColumn, PosOrderBase, PosPaymentFormValues } from "../../../Types";
+import { BREADCRUMBS, PAYMENT_MODE, POS_PAYMENT_METHOD, REDEEM_CREDIT_TYPE_ENUM } from "../../../Data";
+import type { CommonTableColumn, PosPaymentFormValues } from "../../../Types";
 import { GenerateOptions, GetChangedFields, PaymentFormSchema, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
 
@@ -17,7 +17,7 @@ const PaymentForm = () => {
   const { data } = location.state || {};
   const permission = usePagePermission(PAGE_TITLE.PAYMENT.BASE);
 
-  const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown({ typeFilter: "customer" });
+  const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown({ typeFilter: "customer,supplier" });
   const { data: bankDropdown, isLoading: bankDropdownLoading } = Queries.useGetBankDropdown();
 
   const { mutate: addPayment, isPending: isAddLoading } = Mutations.useAddPosPayment();
@@ -32,18 +32,18 @@ const PaymentForm = () => {
     paymentType: data?.paymentType || "advance",
     partyId: data?.partyId?._id || "",
     bankId: data?.bankId?._id || data?.bankId || "",
-    posOrderId: data?.posOrderId?._id || data?.posOrderId || "",
+    isActive: data?.isActive ?? true,
+    remark: data?.remark || "",
     paymentMode: data?.paymentMode || "cash",
     date: data?.date || null,
     amount: data?.amount || 0,
+    posOrderId: data?.posOrderId?._id || data?.posOrderId || "",
+    purchaseBillId: data?.purchaseBillId?._id || data?.purchaseBillId || "",
+    posCreditNoteId: data?.posCreditNoteId?._id || data?.posCreditNoteId || "",
     totalAmount: data?.totalAmount || 0,
     paidAmount: data?.paidAmount || 0,
     pendingAmount: data?.pendingAmount || 0,
     kasar: data?.kasar || 0,
-    isNonGST: data?.isNonGST || false,
-    isActive: data?.isActive ?? true,
-
-    remark: data?.remark || "",
   };
   const PartySync = ({ partyId, setPartyId }: { partyId?: string; setPartyId: (id?: string) => void }) => {
     useEffect(() => {
@@ -54,21 +54,18 @@ const PaymentForm = () => {
   };
 
   const [partyId, setPartyId] = useState(initialValues.partyId);
-  const { data: posOrderDropdown, isLoading: posOrderDropdownLoading } = Queries.useGetPosOrderDropdown({ customerFilter: partyId, duePaymentFilter: true }, Boolean(partyId));
+  const isCustomer = contactData?.data?.find((item) => item._id === partyId)?.contactType?.includes("customer") ?? false;
+  const { data: posCreditNoteDropdown, isLoading: isPosCreditNoteDropdownLoading, isFetching: isPosCreditNoteDropdownFetching } = Queries.useGetPosCreditNoteDropdown({ typeFilter: REDEEM_CREDIT_TYPE_ENUM.CREDIT_NOTE, customerFilter: partyId, includeId: data?.posCreditNoteId?._id }, Boolean(partyId && isCustomer));
+  const { data: posSupplierBillDropdown, isLoading: isPosSupplierBillDropdownLoading, isFetching: isPosSupplierBillDropdownFetching } = Queries.useGetSupplierBillDropdown({ paymentStatus: "unpaid,partial", supplierId: partyId, includeId: data?.purchaseBillId?._id }, Boolean(partyId && !isCustomer));
 
   const handleSubmit = async (values: PosPaymentFormValues, { resetForm }: FormikHelpers<PosPaymentFormValues>) => {
-    const { _submitAction, voucherDetails, ...rest } = values;
+    const { _submitAction, ...rest } = values;
     const payload = { ...rest };
-    if (values.paymentMode?.toLowerCase() === "cash") {
-      delete payload.bankId;
-    }
+    if (values.paymentMode?.toLowerCase() === "cash") delete payload.bankId;
 
     const handleSuccess = () => {
-      if (_submitAction === "saveAndNew") {
-        resetForm();
-      } else {
-        navigate(-1);
-      }
+      if (_submitAction === "saveAndNew") resetForm();
+      else navigate(-1);
     };
 
     if (isEditing) {
@@ -91,36 +88,49 @@ const PaymentForm = () => {
         <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={PaymentFormSchema} enableReinitialize>
           {({ resetForm, setFieldValue, dirty, values }) => {
             const handleTableChange = (key: string, value: string | number | undefined) => {
-              let newValues = { ...values, [key]: value };
-              if (key === "posOrderId") {
-                const selectedOrder = posOrderDropdown?.data?.find((item: PosOrderBase) => item._id === value);
+              const newValues = { ...values, [key]: value };
+              if (key === "purchaseBillId") {
+                const selectedOrder = posSupplierBillDropdown?.data?.find((item) => item._id === value);
                 if (selectedOrder) {
-                  newValues.totalAmount = selectedOrder.totalAmount ?? 0;
-                  newValues.paidAmount = selectedOrder.paidAmount ?? 0;
-                  newValues.pendingAmount = selectedOrder.dueAmount ?? 0;
-                  newValues.amount = selectedOrder.dueAmount ?? 0;
+                  newValues.totalAmount = selectedOrder.netAmount ?? 0;
+                  newValues.paidAmount = selectedOrder.netAmount - (selectedOrder.balanceAmount ?? 0);
+                  newValues.pendingAmount = selectedOrder.balanceAmount ?? 0;
+                  newValues.amount = selectedOrder.balanceAmount ?? 0;
                   newValues.kasar = 0;
+                } else {
+                  Object.assign(newValues, { totalAmount: 0, paidAmount: 0, pendingAmount: 0, amount: 0, kasar: 0 });
+                }
+              } else if (key === "posCreditNoteId") {
+                const selectedOrder = posCreditNoteDropdown?.data?.find((item) => item._id === value);
+                if (selectedOrder) {
+                  newValues.totalAmount = selectedOrder.amount ?? 0;
+                  newValues.paidAmount = selectedOrder.amount - selectedOrder.creditsRemaining;
+                  newValues.pendingAmount = selectedOrder.creditsRemaining ?? 0;
+                  newValues.amount = selectedOrder.creditsRemaining ?? 0;
+                } else {
+                  Object.assign(newValues, { totalAmount: 0, paidAmount: 0, pendingAmount: 0, amount: 0 });
                 }
               }
 
-              if (key === "paymentMode") {
-                if (typeof value === "string" && value.toLowerCase() === "cash") {
-                  newValues.bankId = "";
-                }
-              }
-
-              if (key === "amount" || key === "kasar" || key === "posOrderId") {
+              if (["amount", "kasar", "purchaseBillId", "posCreditNoteId"].includes(key)) {
                 const pending = Number(newValues.pendingAmount ?? 0);
+
                 let kasar = Number(newValues.kasar ?? 0);
                 let amount = Number(newValues.amount ?? 0);
 
                 if (kasar + amount > pending) {
-                  amount = pending - kasar;
-                  if (amount < 0) {
-                    amount = 0;
-                    kasar = pending;
-                  }
+                  if (key === "kasar") amount = pending - kasar;
+                  else if (key === "amount") kasar = pending - amount;
                 }
+
+                if (amount < 0) amount = 0;
+                if (kasar < 0) kasar = 0;
+
+                if (key === "kasar") {
+                  amount = pending - kasar;
+                  if (amount < 0) amount = 0;
+                }
+
                 newValues.amount = amount;
                 newValues.kasar = kasar;
               }
@@ -132,25 +142,22 @@ const PaymentForm = () => {
               });
             };
 
-            const voucherColumns: CommonTableColumn<PosPaymentFormValues>[] = [
+            const creditNoteColumns: CommonTableColumn<PosPaymentFormValues>[] = [
               { key: "sr", header: "#", render: () => 1, bodyClass: "w-10" },
-              { key: "posOrderId", header: "Sales", bodyClass: "min-w-40", render: (r) => <CommonSelect options={GenerateOptions(posOrderDropdown?.data?.map((item) => ({ ...item, name: item.orderNo })))} isLoading={posOrderDropdownLoading} placeholder="Select Sales" value={r.posOrderId ? [r.posOrderId] : []} onChange={(v) => handleTableChange("posOrderId", v[0] || "")} disabled={!r.partyId} /> },
-              { key: "paymentMode", header: "Payment Mode", bodyClass: "min-w-40", render: (r) => <CommonSelect options={PAYMENT_MODE} placeholder="Payment Mode" value={r.paymentMode ? [r.paymentMode] : []} onChange={(v) => handleTableChange("paymentMode", v[0] || "")} /> },
-              ...(values.paymentMode?.toLowerCase() !== "cash"
-                ? [
-                    {
-                      key: "bankId",
-                      header: "Bank",
-                      bodyClass: "min-w-40",
-                      render: (r) => <CommonSelect options={GenerateOptions(bankDropdown?.data)} isLoading={bankDropdownLoading} placeholder="Select Bank" value={r.bankId ? [r.bankId] : []} onChange={(v) => handleTableChange("bankId", v[0] || "")} />,
-                    } as CommonTableColumn<PosPaymentFormValues>,
-                  ]
-                : []),
-              { key: "totalAmount", header: "Total Payment", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.totalAmount || 0} disabled /> },
+              { key: "posCreditNoteId", header: "Voucher No.", bodyClass: "min-w-40", render: (r) => <CommonSelect options={GenerateOptions(posCreditNoteDropdown?.data)} isLoading={isPosCreditNoteDropdownLoading || isPosCreditNoteDropdownFetching} placeholder="Select Bill" value={r.posCreditNoteId ? [r.posCreditNoteId] : []} onChange={(v) => handleTableChange("posCreditNoteId", v[0] || "")} disabled={!r.partyId} /> },
+              { key: "totalAmount", header: "Net Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.totalAmount || 0} disabled /> },
+              { key: "paidAmount", header: "Used Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.paidAmount || 0} disabled /> },
+              { key: "pendingAmount", header: "Remaining Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.pendingAmount || 0} disabled /> },
+              { key: "amount", header: "Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.amount || 0} onChange={(v) => handleTableChange("amount", Number(v))} /> },
+            ];
+            const supplierColumns: CommonTableColumn<PosPaymentFormValues>[] = [
+              { key: "sr", header: "#", render: () => 1, bodyClass: "w-10" },
+              { key: "purchaseBillId", header: "Bill No.", bodyClass: "min-w-40", render: (r) => <CommonSelect options={GenerateOptions(posSupplierBillDropdown?.data)} isLoading={isPosSupplierBillDropdownLoading || isPosSupplierBillDropdownFetching} placeholder="Select Bill" value={r.purchaseBillId ? [r.purchaseBillId] : []} onChange={(v) => handleTableChange("purchaseBillId", v[0] || "")} disabled={!r.partyId} /> },
+              { key: "totalAmount", header: "Net Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.totalAmount || 0} disabled /> },
               { key: "paidAmount", header: "Paid Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.paidAmount || 0} disabled /> },
               { key: "pendingAmount", header: "Pending Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.pendingAmount || 0} disabled /> },
-              { key: "amount", header: "Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.amount || 0} onChange={(v) => handleTableChange("amount", Number(v))} /> },
               { key: "kasar", header: "Kasar Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.kasar || 0} onChange={(v) => handleTableChange("kasar", Number(v))} /> },
+              { key: "amount", header: "Amount", bodyClass: "min-w-30", render: (r) => <CommonTextField type="number" value={r.amount || 0} onChange={(v) => handleTableChange("amount", Number(v))} /> },
             ];
 
             return (
@@ -161,6 +168,8 @@ const PaymentForm = () => {
                     <Grid container spacing={2} sx={{ p: 2 }}>
                       <CommonValidationSelect name="partyId" label="Party" required isLoading={contactDataLoading} options={GenerateOptions(contactData?.data)} grid={{ xs: 12, md: 4 }} />
                       <CommonValidationDatePicker name="date" label="Payment Date" required grid={{ xs: 12, md: 4 }} />
+                      <CommonValidationSelect name="paymentMode" label="Payment Mode" required options={PAYMENT_MODE} grid={{ xs: 12, md: 4 }} />
+                      {values.paymentMode !== POS_PAYMENT_METHOD.CASH && <CommonValidationSelect name="bankId" label="Bank" required isLoading={bankDropdownLoading} options={GenerateOptions(bankDropdown?.data)} grid={{ xs: 12, md: 4 }} />}
                       <Grid size={{ xs: 12 }}>
                         <CommonStatsCard
                           variant="radio"
@@ -177,7 +186,7 @@ const PaymentForm = () => {
                         <Grid size={{ xs: 12 }}>
                           <CommonCard hideDivider>
                             <Box sx={{ overflowX: "auto" }} className="custom-scrollbar">
-                              <CommonTable data={[values]} columns={voucherColumns} rowKey={() => "1"} />
+                              <CommonTable data={[values]} columns={isCustomer ? creditNoteColumns : supplierColumns} rowKey={() => "1"} />
                             </Box>
                           </CommonCard>
                         </Grid>
@@ -185,20 +194,7 @@ const PaymentForm = () => {
                       {!isEditing && <CommonValidationSwitch name="isActive" label="Is Active" grid={{ xs: 12 }} />}
                     </Grid>
                   </CommonCard>
-
-                  <CommonBottomActionBar
-                    save={isEditing}
-                    clear={!isEditing}
-                    disabled={!dirty}
-                    isLoading={isAddLoading || isEditLoading}
-                    onClear={() => resetForm({ values: initialValues })}
-                    onSave={() => {
-                      setFieldValue("_submitAction", "save");
-                    }}
-                    onSaveAndNew={() => {
-                      setFieldValue("_submitAction", "saveAndNew");
-                    }}
-                  />
+                  <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isAddLoading || isEditLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
                 </Grid>
               </Form>
             );

@@ -203,6 +203,7 @@ export const URL_KEYS = {
     ALL: "/supplier-bill/all",
     ADD: "/supplier-bill/add",
     EDIT: "/supplier-bill/edit",
+    DROPDOWN: "/supplier-bill/dropdown",
   },
   POS: {
     BASE: "/pos-order",
@@ -310,6 +311,7 @@ export const URL_KEYS = {
     REFUND: "/pos-credit-note/refund",
     REDEEM: "/pos-credit-note/redeem",
     REDEEM_DROPDOWN: "/pos-credit-note/redeem-dropdown",
+    DROPDOWN: "/pos-credit-note/dropdown",
   },
   CREDIT_NOTE: {
     BASE: "/credit-note",
@@ -433,5 +435,4 @@ export const URL_KEYS = {
     READ_ALL: "/notification/read-all",
     DELETE: "/notification/delete",
   },
-
 } as const;

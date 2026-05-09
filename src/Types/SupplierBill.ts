@@ -257,6 +257,10 @@ export interface SupplierBillDataResponse extends PageStatus {
 export interface SupplierBillApiResponse extends MessageStatus {
   data: SupplierBillDataResponse;
 }
+
+export interface SupplierBillDropdownApiResponse extends MessageStatus {
+  data: (SupplierBillBase & { name: string; netAmount: number })[];
+}
 export interface SupplierBillTabsProps {
   tabValue: number;
   setTabValue: (value: number) => void;
