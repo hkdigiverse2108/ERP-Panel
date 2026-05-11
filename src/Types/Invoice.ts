@@ -1,6 +1,5 @@
 import type { AdditionalChargeItem, AddressApi, CommonDataType, MessageStatus, PageStatus, ShippingDetails, TransactionSummary } from "./Common";
 import type { ContactBase } from "./Contacts";
-import type { DeliveryChallanBase } from "./DeliveryChallan";
 import type { EmployeeBase } from "./Employee";
 import type { ProductBase } from "./Product";
 import type { SalesOrderBase } from "./SalesOrder";
