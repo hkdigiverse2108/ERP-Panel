@@ -16,29 +16,9 @@ const DeliveryChallanDetails = ({ isEditing = false }: { isEditing?: boolean }) 
   const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer" });
   const { data: paymentTermsData, isLoading: isPaymentTermsLoading, isFetching: isPaymentTermsFetching } = Queries.useGetPaymentTermsDropdown();
 
-  const {
-    data: salesOrderData,
-    isLoading: isSalesOrderLoading,
-    isFetching: isSalesOrderFetching,
-  } = Queries.useGetSalesOrderDropdown(
-    {
-      customerFilter: values?.customerId,
-      ...(isEditing ? {} : { statusFilter: "pending" }),
-    },
-    !!values?.customerId,
-  );
+  const { data: salesOrderData, isLoading: isSalesOrderLoading, isFetching: isSalesOrderFetching } = Queries.useGetSalesOrderDropdown({ customerId: values?.customerId, includeId: values?.selectedSalesOrderId?.join(","), statusFilter: "pending" }, !!values?.customerId);
 
-  const {
-    data: invoiceData,
-    isLoading: isInvoiceLoading,
-    isFetching: isInvoiceFetching,
-  } = Queries.useGetInvoiceDropdown(
-    {
-      customerFilter: values?.customerId,
-      ...(isEditing ? {} : { statusFilter: "pending" }),
-    },
-    !!values?.customerId,
-  );
+  const { data: invoiceData, isLoading: isInvoiceLoading, isFetching: isInvoiceFetching } = Queries.useGetInvoiceDropdown({ customerId: values?.customerId, includeId: values?.selectedInvoiceId?.join(","), statusFilter: "invoiced" }, !!values?.customerId);
 
   const salesOrderOptions = useMemo(() => GenerateOptions(salesOrderData?.data || []), [salesOrderData]);
   const invoiceOptions = useMemo(() => GenerateOptions(invoiceData?.data || []), [invoiceData]);

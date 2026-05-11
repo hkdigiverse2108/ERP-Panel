@@ -173,11 +173,11 @@ const SalesOrderForm = () => {
               <Grid container spacing={2}>
                 <Box sx={{ display: "grid", gap: 2, width: "100%" }}>
                   <CommonCard title="Sales Order Details" grid={{ xs: 12 }}>
-                    <SalesOrderDetails />
+                    <SalesOrderDetails isEditing={isEditing} />
                   </CommonCard>
 
                   <CommonCard hideDivider grid={{ xs: 12 }}>
-                    <SalesOrderTabs emptyRow={emptyRow} />
+                    <SalesOrderTabs emptyRow={emptyRow} isEditing={isEditing} />
                   </CommonCard>
 
                   <CommonCard grid={{ xs: 12 }} hideDivider>
