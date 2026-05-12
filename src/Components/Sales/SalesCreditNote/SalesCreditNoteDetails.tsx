@@ -15,7 +15,7 @@ const SalesCreditNoteDetails = ({ isEditing }: { isEditing: boolean }) => {
 
   const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer" });
 
-  const { data: invoiceData, isLoading: isInvoiceLoading, isFetching: isInvoiceFetching } = Queries.useGetInvoiceDropdown({ customerId: values?.customerId, includeId: values?.salesId, statusFilter: "invoiced" }, !!values?.customerId);
+  const { data: invoiceData, isLoading: isInvoiceLoading, isFetching: isInvoiceFetching } = Queries.useGetInvoiceDropdown({ customerId: values?.customerId, includeId: values?.salesId, statusFilter: "invoiced", isCreditNoteCreated: true }, !!values?.customerId);
 
   const { data: salesPersonData, isLoading: isSalesPersonLoading, isFetching: isSalesPersonFetching } = Queries.useGetUserDropdown();
 
