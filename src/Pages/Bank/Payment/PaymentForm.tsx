@@ -6,7 +6,7 @@ import { Mutations, Queries } from "../../../Api";
 import { CommonSelect, CommonTextField, CommonValidationDatePicker, CommonValidationSelect, CommonValidationSwitch, CommonValidationTextField } from "../../../Attribute";
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard, CommonStatsCard, CommonTable } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
-import { BREADCRUMBS, PAYMENT_MODE, POS_PAYMENT_METHOD, REDEEM_CREDIT_TYPE_ENUM } from "../../../Data";
+import { BREADCRUMBS, PAYMENT_MODE, POS_PAYMENT_METHOD } from "../../../Data";
 import type { CommonTableColumn, PosPaymentFormValues } from "../../../Types";
 import { GenerateOptions, GetChangedFields, PaymentFormSchema, RemoveEmptyFields } from "../../../Utils";
 import { usePagePermission } from "../../../Utils/Hooks";
