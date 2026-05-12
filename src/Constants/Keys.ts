@@ -212,6 +212,8 @@ export const KEYS = {
     ADD: "pos-payment-add",
     EDIT: "pos-payment-edit",
     DELETE: "pos-payment-delete",
+    PENDING_PAYMENT_DROPDOWN: "pos-payment-pending-dropdown",
+    PENDING_CREDIT_DROPDOWN: "pos-credit-pending-dropdown",
   },
   POS_CASH_REGISTER: {
     BASE: "pos-cash-register",

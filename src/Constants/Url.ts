@@ -227,6 +227,8 @@ export const URL_KEYS = {
     ADD: "/pos-payment/add",
     EDIT: "/pos-payment/edit",
     DELETE: "/pos-payment/delete",
+    PENDING_PAYMENT_DROPDOWN: "/pos-payment/pending-payment/dropdown",
+    PENDING_CREDIT_DROPDOWN: "/pos-payment/pending-credit/dropdown",
   },
   POS_CASH_REGISTER: {
     BASE: "/pos-cash-register",

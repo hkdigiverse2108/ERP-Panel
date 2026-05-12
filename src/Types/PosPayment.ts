@@ -31,6 +31,7 @@ export interface PosPaymentFormValues {
   //Expense
   fromDate?: string;
   image?: string;
+  docType?: string;
 }
 
 export type AddPosPaymentPayload = PosPaymentFormValues & {
@@ -58,4 +59,27 @@ export interface PosPaymentDataResponse extends PageStatus {
 
 export interface PosPaymentApiResponse extends MessageStatus {
   data: PosPaymentDataResponse;
+}
+
+export interface PosPendingPaymentDropdownApiResponse extends MessageStatus {
+  data: {
+    _id: string;
+    balanceAmount: number;
+    customerId: string;
+    docNo: string;
+    docType: string;
+    name: string;
+    paidAmount: number;
+  }[];
+}
+export interface PosPendingCreditDropdownApiResponse extends MessageStatus {
+  data: {
+    balanceAmount: number;
+    customerId: string;
+    docNo: string;
+    docType: string;
+    name: string;
+    totalAmount: number;
+    _id: string;
+  }[];
 }
