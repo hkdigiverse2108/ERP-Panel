@@ -1,10 +1,11 @@
 import React, { useState, type SyntheticEvent } from "react";
 // import { CommonSelect } from "../../../../Attribute";
 import { Box, CircularProgress, FormControlLabel, Grid, Radio, RadioGroup, Tab, Tabs } from "@mui/material";
-import { CommonModal } from "../../../Common";
 import { Queries } from "../../../../Api";
-import { Thermal_80mmOfflineData, Thermal_80mmOffline1Data, Thermal_80mm1JasperData, A5_2JasperData } from "../../../ReportFormats/Data";
-import { A4_14_1Jasper, A4_14Jasper, A4_1Jasper, A4_2Html, A4_7Jasper, A5_1Jasper, A5_2Jasper, Estimate_A4_1Jasper, Grn_Bill_ThermalJasper, Invoice_A4_1Jasper, Invoice_A4_4html, Invoice_A4EInvoiceJasper, Invoice_A4Jasper, Invoice_A5_1Jasper, Invoice_A5Jasper, Purchase1Jasper, Purchase2Jasper, Purchase3Jasper, PurchaseOrder1Jasper, PurchaseOrder2Jasper, PurchaseOrder3Jasper, PurchaseThermalHtml, Thermal_58mm1Jasper, Thermal_80mm11Jasper, Thermal_80mm17Jasper, Thermal_80mm18Jasper, Thermal_80mm1Jasper, Thermal_80mm2_1Jasper, Thermal_80mm3Jasper, Thermal_80mm4Jasper, Thermal_80mmOffline, thermal_80mmOffline1 } from "../../../ReportFormats";
+import { CommonModal } from "../../../Common";
+import { A4_14_1Jasper, A4_14Jasper, A4_1Jasper, A4_2Html, A4_7Jasper, A5_1Jasper, A5_2Jasper, Deliverychallan_1Jasper, Estimate_A4_1Jasper, Grn_Bill_ThermalJasper, Invoice_A4_1Jasper, Invoice_A4_4html, Invoice_A4EInvoiceJasper, Invoice_A4Jasper, Invoice_A5_1Jasper, Invoice_A5Jasper, Purchase1Jasper, Purchase2Jasper, Purchase3Jasper, PurchaseOrder1Jasper, PurchaseOrder2Jasper, PurchaseOrder3Jasper, PurchaseThermalHtml, StockTransfer_A4_1Jasper, StockTransfer_A4_2Jasper, Thermal_58mm1Jasper, Thermal_80mm11Jasper, Thermal_80mm17Jasper, Thermal_80mm18Jasper, Thermal_80mm1Jasper, Thermal_80mm2_1Jasper, Thermal_80mm3Jasper, Thermal_80mm4Jasper, Thermal_80mmOffline, thermal_80mmOffline1 } from "../../../ReportFormats";
+import { A5_2JasperData, Thermal_80mm1JasperData, Thermal_80mmOffline1Data, Thermal_80mmOfflineData } from "../../../ReportFormats/Data";
+import { ReceiptJasper, Thermal_80mm_Receipt_1Jasper } from "../../../ReportFormats/Receipt";
 
 export interface ISelectOption {
   label: string;
@@ -66,6 +67,17 @@ const FORMAT_COMPONENTS_MAP: Record<string, Record<string, any>> = {
   },
   Estimate: {
     "Estimate_A4-1(jasper)": { Component: Estimate_A4_1Jasper, mockData: Thermal_80mm1JasperData },
+  },
+  "Delivery Challan": {
+    "deliverychallan-1(jasper)": { Component: Deliverychallan_1Jasper, mockData: Thermal_80mm1JasperData },
+  },
+  "Stock Transfer": {
+    "Stock_Transfer_A4-1(jasper)": { Component: StockTransfer_A4_1Jasper, mockData: Thermal_80mm1JasperData },
+    "Stock_Transfer_A4-2(jasper)": { Component: StockTransfer_A4_2Jasper, mockData: Thermal_80mm1JasperData },
+  },
+  Receipt: {
+    "receipt(jasper)": { Component: ReceiptJasper, mockData: Thermal_80mm1JasperData },
+    "Thermal_80mm_Receipt-1(jasper)": { Component: Thermal_80mm_Receipt_1Jasper, mockData: Thermal_80mm1JasperData },
   },
 };
 
