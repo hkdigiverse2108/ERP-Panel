@@ -71,8 +71,8 @@ const StockTransferForm = () => {
         <Formik initialValues={initialValues} validationSchema={StockTransferFormSchema} onSubmit={handleSubmit} enableReinitialize validateOnMount>
           {({ values, setFieldValue, dirty, isValid }) => {
             const { data: toBranchData, isLoading: toBranchLoading } = Queries.useGetBranchDropdown();
-            const { data: productsData, isLoading: productsLoading } = Queries.useGetProductDropdown();
-            const filteredBranchData = toBranchData?.data?.filter((branch: any) => branch._id !== user?.branchId?._id);
+            const { data: productsData, isLoading: productsLoading } = Queries.useGetProductDropdown({ branchFilter: values.requestedToBranchId }, !!values.requestedToBranchId);
+            const filteredBranchData = toBranchData?.data?.filter((branch) => branch._id !== user?.branchId?._id);
             return (
               <Form noValidate>
                 <Grid container spacing={2}>
@@ -97,12 +97,12 @@ const StockTransferForm = () => {
                                 render: (_, index) => (
                                   <Box sx={{ display: "flex", gap: 1, justifyContent: "center" }}>
                                     {index === values.items.length - 1 && (
-                                      <CommonButton size="small" variant="outlined" onClick={() => push(emptyRow)} disabled={!values.requestedToBranchId}>
+                                      <CommonButton size="small" variant="outlined" sx={{ minWidth: 40 }} onClick={() => push(emptyRow)} disabled={!values.requestedToBranchId}>
                                         <AddIcon fontSize="small" />
                                       </CommonButton>
                                     )}
                                     {values.items.length > 1 && (
-                                      <CommonButton size="small" color="error" variant="outlined" onClick={() => remove(index)}>
+                                      <CommonButton size="small" color="error" variant="outlined" sx={{ minWidth: 40 }} onClick={() => remove(index)}>
                                         <ClearIcon fontSize="small" />
                                       </CommonButton>
                                     )}
@@ -122,7 +122,7 @@ const StockTransferForm = () => {
                                     required
                                     disabled={!values.requestedToBranchId}
                                     onChange={(val) => {
-                                      const product = productsData?.data?.find((p: any) => p._id === val[0]);
+                                      const product = productsData?.data?.find((p) => p._id === val[0]);
                                       if (product) {
                                         setFieldValue(`items.${index}.price`, product.landingCost || 0);
                                         setFieldValue(`items.${index}.qty`, product.qty || 0);
@@ -130,7 +130,7 @@ const StockTransferForm = () => {
                                     }}
                                   />
                                 ),
-                                bodyClass: "w-80",
+                                bodyClass: "min-w-50 w-100",
                               },
                               {
                                 key: "qty",
@@ -140,19 +140,19 @@ const StockTransferForm = () => {
                                     {values.items[index]?.qty || 0}
                                   </Typography>
                                 ),
-                                bodyClass: "w-30",
+                                bodyClass: "min-w-20 w-50",
                               },
                               {
                                 key: "requestedQty",
                                 header: "Requested Qty",
                                 render: (_, index) => <CommonValidationTextField name={`items.${index}.requestedQty`} type="number" required maxDigits={5} />,
-                                bodyClass: "w-80",
+                                bodyClass: "min-w-30 w-80",
                               },
                               {
                                 key: "price",
                                 header: "Price",
                                 render: (_, index) => <CommonValidationTextField name={`items.${index}.price`} type="number" required maxDigits={5} />,
-                                bodyClass: "w-80",
+                                bodyClass: "min-w-30 w-80",
                               },
                             ];
 

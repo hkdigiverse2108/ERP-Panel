@@ -428,6 +428,7 @@ export const URL_KEYS = {
     APPROVE: "/stock-transfer/approve",
     REJECT: "/stock-transfer/reject",
     CONFIRM_RECEIPT: "/stock-transfer/confirm-receipt",
+    DISPATCH: "/stock-transfer/dispatch",
   },
 
   NOTIFICATION: {
