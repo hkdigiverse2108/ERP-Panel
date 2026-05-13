@@ -6,23 +6,32 @@ import { CommonRadio } from "../../../../../../Attribute";
 import { VOUCHER_TYPE } from "../../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../../Store/hooks";
 import { setPaymentListModal } from "../../../../../../Store/Slices/ModalSlice";
-import type { AppGridColDef, PosPaymentBase } from "../../../../../../Types";
+import type { AppGridColDef, ExpenseBase, PosPaymentBase } from "../../../../../../Types";
 import { useDataGrid } from "../../../../../../Utils/Hooks";
 import { CommonActionColumn, CommonCard, CommonDataGrid, CommonModal } from "../../../../../Common";
 import { CommonObjectPropertyColumn } from "../../../../../Common/CommonDataGrid/CommonColumns";
 import PaymentListBill from "./PaymentListBill";
 
 const PaymentList = () => {
+  const [activeTab, setActiveTab] = useState(VOUCHER_TYPE[0].value);
   const { isPaymentListModal } = useAppSelector((state) => state.modal);
   const dispatch = useAppDispatch();
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, advancedFilter, updateAdvancedFilter, params } = useDataGrid({ pageSize: 5, active: true, defaultFilterKey: { voucherTypeFilter: [VOUCHER_TYPE[0].value] } });
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, params } = useDataGrid({ pageSize: 5, active: true });
   const contentRef = useRef<HTMLDivElement>(null);
   const [printData, setPrintData] = useState<PosPaymentBase | null>(null);
 
-  const { data: paymentData, isLoading: paymentDataLoading, isFetching: paymentDataFetching } = Queries.useGetPosPayment(params, isPaymentListModal);
+  const { data: paymentData, isLoading: paymentDataLoading, isFetching: paymentDataFetching } = Queries.useGetPosPayment({ ...params, voucherTypeFilter: [VOUCHER_TYPE[0].value] }, isPaymentListModal);
+  const { data: expenseData, isLoading: expenseDataLoading, isFetching: expenseDataFetching } = Queries.useGetExpense({ ...params, avoidSalary: false }, isPaymentListModal);
 
   const allPayments = useMemo(() => paymentData?.data?.posPayment_data.map((payment) => ({ ...payment, id: payment?._id })) || [], [paymentData]);
-  const totalRows = paymentData?.data?.totalData || 0;
+  const allExpenses = useMemo(() => expenseData?.data?.expense_data.map((expense) => ({ ...expense, id: expense?._id })) || [], [expenseData]);
+  const totalRows = useMemo(() => {
+    if (activeTab === VOUCHER_TYPE[0].value) {
+      return paymentData?.data?.totalData || 0;
+    } else {
+      return expenseData?.data?.totalData || 0;
+    }
+  }, [paymentData, expenseData, activeTab]);
 
   const handlePrint = useReactToPrint({
     contentRef,
@@ -37,6 +46,14 @@ const PaymentList = () => {
     }
   }, [printData, handlePrint]);
 
+  const ExpensesColumns: AppGridColDef<ExpenseBase>[] = [
+    CommonObjectPropertyColumn<ExpenseBase>("partyId", "partyId", ["fullName"], { headerName: "Customer Name", flex: 1, minWidth: 150 }), //
+    CommonObjectPropertyColumn<ExpenseBase>("fromDate", "fromDate", [], { headerName: "Expense Date", flex: 1, minWidth: 150, type: "date" }),
+    { field: "amount", headerName: "Amount", flex: 1, minWidth: 150 },
+    CommonObjectPropertyColumn<ExpenseBase>("type", "type", [], { headerName: "Expense Type", flex: 1, minWidth: 150, type: "format" }),
+    CommonObjectPropertyColumn<ExpenseBase>("createdAt", "createdAt", [], { headerName: "Date", flex: 1, minWidth: 150, type: "datetime" }),
+  ];
+
   const columns: AppGridColDef<PosPaymentBase>[] = [
     { field: "paymentNo", headerName: "Payment No", width: 100 },
     CommonObjectPropertyColumn<PosPaymentBase>("partyId", "partyId", ["firstName", "lastName"], { headerName: "Customer Name", flex: 1, minWidth: 150 }),
@@ -50,10 +67,10 @@ const PaymentList = () => {
   ];
 
   const CommonDataGridOption = {
-    columns,
-    rows: allPayments,
+    columns: activeTab === VOUCHER_TYPE[0].value ? columns : ExpensesColumns,
+    rows: activeTab === VOUCHER_TYPE[0].value ? allPayments : allExpenses,
     rowCount: totalRows,
-    loading: paymentDataLoading || paymentDataFetching,
+    loading: activeTab === VOUCHER_TYPE[0].value ? paymentDataLoading || paymentDataFetching : expenseDataLoading || expenseDataFetching,
     paginationModel,
     onPaginationModelChange: setPaginationModel,
     sortModel,
@@ -67,7 +84,7 @@ const PaymentList = () => {
   const topContent = (
     <Grid container spacing={2} alignItems="center">
       <Grid size="auto">
-        <CommonRadio value={advancedFilter?.voucherTypeFilter?.[0] || ""} options={VOUCHER_TYPE} onChange={(e) => updateAdvancedFilter("voucherTypeFilter", [e])} />
+        <CommonRadio value={activeTab} options={VOUCHER_TYPE} onChange={(e) => setActiveTab(e)} />
       </Grid>
     </Grid>
   );

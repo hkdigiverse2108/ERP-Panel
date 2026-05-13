@@ -91,9 +91,19 @@ const RedeemCredit = () => {
         onSuccess: (data) => {
           const redeemableTotalAmount = data?.data?.totalAmount?.toFixed(2);
           const redeemableAmount = data?.data?.redeemableAmount?.toFixed(2);
-          const payableAmount = Number(totalAmount) - Number(redeemableAmount);
+          // const payableAmount = Number(totalAmount) - Number(redeemableAmount);
+          // const applyAmount = Number(totalAmount) - Number(payableAmount);
+          // ✅ Apply only possible amount
+          const applyAmount = Math.min(Number(totalAmount), Number(redeemableAmount));
+
+          // ✅ Remaining payable
+          const payableAmount = Number(totalAmount) - applyAmount;
+          console.log("totalAmount", totalAmount);
+          console.log("redeemableAmount", redeemableAmount);
+          console.log("payableAmount", payableAmount);
+
           const payable = payableAmount >= 0 ? payableAmount?.toFixed(2) : "0.00";
-          setDetails((prev) => ({ ...prev, id: data?.data?.id, date: data?.data?.date, amount: redeemableTotalAmount, available: redeemableAmount, apply: totalAmount.toFixed(2), payable: payable }));
+          setDetails((prev) => ({ ...prev, id: data?.data?.id, date: data?.data?.date, amount: redeemableTotalAmount, available: redeemableAmount, apply: applyAmount.toFixed(2), payable: payable }));
         },
       });
     } else {
@@ -140,7 +150,8 @@ const RedeemCredit = () => {
             const redeemableAmount = data?.data?.redeemableAmount?.toFixed(2);
             const payableAmount = Number(totalAmount);
             const payable = payableAmount >= 0 ? payableAmount?.toFixed(2) : "0.00";
-            const available = (Number(redeemableAmount) + Number(PosProduct?.redeemCreditAmount))?.toFixed(2);
+            // const available = (Number(redeemableAmount) + Number(PosProduct?.redeemCreditAmount))?.toFixed(2);
+            const available = redeemableAmount;
             setDetails((prev) => ({ ...prev, id: data?.data?.id, date: data?.data?.date, amount: redeemableTotalAmount, available: available, apply: PosProduct?.redeemCreditAmount?.toFixed(2), payable: payable }));
           },
         });

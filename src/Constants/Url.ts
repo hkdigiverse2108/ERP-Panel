@@ -203,6 +203,7 @@ export const URL_KEYS = {
     ALL: "/supplier-bill/all",
     ADD: "/supplier-bill/add",
     EDIT: "/supplier-bill/edit",
+    DROPDOWN: "/supplier-bill/dropdown",
   },
   POS: {
     BASE: "/pos-order",
@@ -226,6 +227,8 @@ export const URL_KEYS = {
     ADD: "/pos-payment/add",
     EDIT: "/pos-payment/edit",
     DELETE: "/pos-payment/delete",
+    PENDING_PAYMENT_DROPDOWN: "/pos-payment/pending-payment/dropdown",
+    PENDING_CREDIT_DROPDOWN: "/pos-payment/pending-credit/dropdown",
   },
   POS_CASH_REGISTER: {
     BASE: "/pos-cash-register",
@@ -317,6 +320,7 @@ export const URL_KEYS = {
     REFUND: "/pos-credit-note/refund",
     REDEEM: "/pos-credit-note/redeem",
     REDEEM_DROPDOWN: "/pos-credit-note/redeem-dropdown",
+    DROPDOWN: "/pos-credit-note/dropdown",
   },
   CREDIT_NOTE: {
     BASE: "/credit-note",
@@ -431,6 +435,7 @@ export const URL_KEYS = {
     APPROVE: "/stock-transfer/approve",
     REJECT: "/stock-transfer/reject",
     CONFIRM_RECEIPT: "/stock-transfer/confirm-receipt",
+    DISPATCH: "/stock-transfer/dispatch",
   },
 
   NOTIFICATION: {

@@ -16,12 +16,12 @@ import BulkAddModal from "../../Common/BulkAddModal";
 import { UploadFile } from "@mui/icons-material";
 import { BULK_IMPORT_TYPES } from "../../../Constants";
 
-const SalesOrderTabs = ({ emptyRow }: { emptyRow: SalesOrderItem }) => {
+const SalesOrderTabs = ({ emptyRow, isEditing }: { emptyRow: SalesOrderItem; isEditing: boolean }) => {
   const [tabValue, setTabValue] = useState(0);
   const { values, setFieldValue } = useFormikContext<SalesOrderFormValues>();
 
   const isCustomerSelected = !!values?.customerId;
-  
+
   const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown();
   const dispatch = useAppDispatch();
 
@@ -29,18 +29,50 @@ const SalesOrderTabs = ({ emptyRow }: { emptyRow: SalesOrderItem }) => {
     try {
       const rawData = await extractExcelData(file);
       const mappedItems = mapExcelToFormItems(rawData, BULK_IMPORT_TYPES.SALES_ORDER, productsData?.data || [], emptyRow);
-      
-      const updatedItems = [
-        ...(values.items ?? []).filter((i: SalesOrderItem) => i.productId),
-        ...mappedItems
-      ];
+
+      const updatedItems = [...(values.items ?? []).filter((i: SalesOrderItem) => i.productId), ...mappedItems];
       setFieldValue("items", updatedItems);
       dispatch(setBulkAddModal({ open: false, title: "", type: "" }));
     } catch (err) {
       console.error("Error processing Excel:", err);
     }
   };
+  const { data: singleEstimate, isLoading: isSingleEstimateLoading, isFetching: isSingleEstimateFetching } = Queries.useGetSingleEstimate(values?.selectedEstimateId, !!values?.selectedEstimateId && !isEditing);
 
+  useEffect(() => {
+    if (!values?.selectedEstimateId) return;
+    if (isEditing) return;
+    if (isSingleEstimateFetching) return;
+
+    const estimateItems = singleEstimate?.data?.items || [];
+
+    if (!estimateItems.length) return;
+
+    const mappedItems = estimateItems.map((item: any) => ({
+      productId: item?.productId?._id || item?.productId || "",
+      qty: item?.qty || 1,
+      freeQty: item?.freeQty || 0,
+      price: item?.price || 0,
+      discount1: item?.discount1 || 0,
+      tax: item?.tax || 0,
+      taxId: item?.taxId?._id || item?.taxId || "",
+      taxableAmount: item?.taxableAmount || 0,
+      totalAmount: item?.totalAmount || 0,
+      uomId: item?.uomId?._id || item?.uomId || "",
+      unit: item?.unit || "",
+    }));
+
+    // Remove empty row
+    const existingItems = (values?.items || []).filter((item) => item?.productId);
+
+    // Merge old + new
+    const finalItems = [...existingItems, ...mappedItems];
+
+    // Remove duplicate products
+    // const uniqueItems = finalItems.filter((item, index, self) => index === self.findIndex((i) => i.productId === item.productId));
+
+    setFieldValue("items", finalItems);
+  }, [singleEstimate?.data?.items]);
   const calculateRowValues = (index: number) => {
     const row = values?.items?.[index];
     const product = productsData?.data?.find((p: ProductBase) => p._id === row?.productId);
@@ -123,7 +155,7 @@ const SalesOrderTabs = ({ emptyRow }: { emptyRow: SalesOrderItem }) => {
       if (item.uomId !== product?.uomId?._id) setFieldValue(`items.${index}.uomId`, product?.uomId?._id || "");
       if (item.unit !== uomName) setFieldValue(`items.${index}.unit`, uomName);
       if (item.taxId !== product?.salesTaxId?._id) setFieldValue(`items.${index}.taxId`, product?.salesTaxId?._id || "");
-      
+
       if (Math.abs((Number(item.tax) || 0) - taxAmount) > 0.01) setFieldValue(`items.${index}.tax`, taxAmount);
       if (Math.abs((Number(item.taxableAmount) || 0) - taxableAmount) > 0.01) setFieldValue(`items.${index}.taxableAmount`, taxableAmount);
       if (Math.abs((Number(item.totalAmount) || 0) - totalAmount) > 0.01) setFieldValue(`items.${index}.totalAmount`, totalAmount);
@@ -150,14 +182,7 @@ const SalesOrderTabs = ({ emptyRow }: { emptyRow: SalesOrderItem }) => {
             <Tab label="Shipping Details" />
           </Tabs>
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, p: 1 }}>
-            <CommonButton
-              variant="contained"
-              startIcon={<UploadFile />}
-              title="Upload Products"
-              size="small"
-              disabled={!isCustomerSelected}
-              onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Sales Order", type: BULK_IMPORT_TYPES.SALES_ORDER }))}
-            />
+            <CommonButton variant="contained" startIcon={<UploadFile />} title="Upload Products" size="small" disabled={!isCustomerSelected} onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Sales Order", type: BULK_IMPORT_TYPES.SALES_ORDER }))} />
           </Box>
         </Box>
 
@@ -274,7 +299,7 @@ const SalesOrderTabs = ({ emptyRow }: { emptyRow: SalesOrderItem }) => {
                     },
                   ];
 
-                  return <CommonTable showFooter data={values.items || []} columns={columns} rowKey={(_row, index) => index.toString()} getRowClass={() => "align-top"} />;
+                  return <CommonTable isLoading={isSingleEstimateLoading || isSingleEstimateFetching} showFooter data={values.items || []} columns={columns} rowKey={(_row, index) => index.toString()} getRowClass={() => "align-top"} />;
                 }}
               </FieldArray>
             </Box>

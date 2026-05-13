@@ -1,6 +1,5 @@
 import type { AdditionalChargeItem, AddressApi, CommonDataType, MessageStatus, PageStatus, ShippingDetails, TransactionSummary } from "./Common";
 import type { ContactBase } from "./Contacts";
-import type { DeliveryChallanBase } from "./DeliveryChallan";
 import type { EmployeeBase } from "./Employee";
 import type { ProductBase } from "./Product";
 import type { SalesOrderBase } from "./SalesOrder";
@@ -30,8 +29,8 @@ export interface InvoiceBase extends CommonDataType {
   date: string;
   dueDate: string;
   customerId: string | ContactBase;
-  salesOrderIds?: string[];
-  deliveryChallanIds?: string[];
+  salesOrderIds?: string[] | SalesOrderBase[];
+  deliveryChallanIds?: string[] | SalesOrderBase[];
   placeOfSupply?: string;
   billingAddress?: string | AddressApi;
   shippingAddress?: string | AddressApi;
@@ -60,8 +59,8 @@ export interface InvoiceFormValues extends Omit<InvoiceBase, keyof CommonDataTyp
   items: InvoiceItem[];
   billingAddress?: string;
   shippingAddress?: string;
-  selectedSalesOrderId?: string | SalesOrderBase;
-  selectedDeliveryChallanId?: string | DeliveryChallanBase;
+  selectedSalesOrderId?: string[];
+  selectedDeliveryChallanId?: string[];
   reverseCharge?: string;
   _submitAction?: string;
 }

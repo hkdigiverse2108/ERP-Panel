@@ -15,7 +15,6 @@ import CommonAdditionalChargeSection from "../../../Components/Common/CommonAddi
 
 import { Queries } from "../../../Api";
 
-
 const EstimateForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -35,18 +34,22 @@ const EstimateForm = () => {
     taxType: data?.taxType || "default",
     reverseCharge: data?.reverseCharge !== undefined ? String(data.reverseCharge) : "false",
     termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
-    items: data?.items?.length ? data.items.map((i: EstimateItem) => ({
-      ...emptyRow,
-      ...i,
-      productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
-      uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
-      taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
-    })) : [emptyRow],
-    additionalCharges: data?.additionalCharges?.length ? data.additionalCharges.map((r: AdditionalChargeItem) => ({
-      ...r,
-      chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
-      taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
-    })) : [],
+    items: data?.items?.length
+      ? data.items.map((i: EstimateItem) => ({
+          ...emptyRow,
+          ...i,
+          productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
+          uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
+          taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
+        }))
+      : [emptyRow],
+    additionalCharges: data?.additionalCharges?.length
+      ? data.additionalCharges.map((r: AdditionalChargeItem) => ({
+          ...r,
+          chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
+          taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
+        }))
+      : [],
     shippingDetails: {
       shippingType: data?.shippingDetails?.shippingType || "delivery",
       shippingDate: data?.shippingDetails?.shippingDate || "",
@@ -134,16 +137,18 @@ const EstimateForm = () => {
     const { _submitAction, ...rest } = values;
     const payload: AddEstimatePayload = {
       ...rest,
-      items: values.items?.filter((i: EstimateItem) => i.productId).map((i: EstimateItem) => ({
-        ...i,
-        qty: Number(i.qty || 0),
-        freeQty: Number(i.freeQty || 0),
-        price: Number(i.price || 0),
-        discount1: Number(i.discount1 || 0),
-        taxableAmount: Number(i.taxableAmount || 0),
-        tax: Number(i.tax || 0),
-        totalAmount: Number(i.totalAmount || 0),
-      })),
+      items: values.items
+        ?.filter((i: EstimateItem) => i.productId)
+        .map((i: EstimateItem) => ({
+          ...i,
+          qty: Number(i.qty || 0),
+          freeQty: Number(i.freeQty || 0),
+          price: Number(i.price || 0),
+          discount1: Number(i.discount1 || 0),
+          taxableAmount: Number(i.taxableAmount || 0),
+          tax: Number(i.tax || 0),
+          totalAmount: Number(i.totalAmount || 0),
+        })),
       additionalCharges: values.additionalCharges?.filter((r) => r.chargeId).map((r) => ({ chargeId: r.chargeId, taxId: r.taxId, amount: Number(r.amount), totalAmount: Number(r.totalAmount) })),
       transactionSummary: getCalculatedSummary(values, taxData),
     };
@@ -169,7 +174,7 @@ const EstimateForm = () => {
       <CommonBreadcrumbs title={PAGE_TITLE.SALES.ESTIMATE[pageMode]} maxItems={3} breadcrumbs={BREADCRUMBS.ESTIMATE[pageMode]} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: 8 }}>
         <Formik<EstimateFormValues> initialValues={initialValues} validationSchema={EstimateFormSchema} onSubmit={handleSubmit} enableReinitialize={isEditing} validateOnMount>
-          {({ setFieldValue, dirty, isValid, resetForm }) => (
+          {({ setFieldValue, dirty, resetForm }) => (
             <Form noValidate>
               <CommonSummaryWatcher summaryKey="transactionSummary" priceKey="price" hasAdditionalCharges />
               <Grid container spacing={2}>
@@ -187,7 +192,7 @@ const EstimateForm = () => {
                   </CommonCard>
                 </Box>
 
-                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty || !isValid} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
+                <CommonBottomActionBar save={isEditing} clear={!isEditing} disabled={!dirty} isLoading={isEditLoading || isAddLoading} onClear={() => resetForm({ values: initialValues })} onSave={() => setFieldValue("_submitAction", "save")} onSaveAndNew={() => setFieldValue("_submitAction", "saveAndNew")} />
               </Grid>
             </Form>
           )}

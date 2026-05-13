@@ -15,19 +15,12 @@ const InvoiceDetails = ({ isEditing = false }: { isEditing?: boolean }) => {
 
   const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer" }, true);
 
-  const { data: salesOrderData, isLoading: isSalesOrderLoading, isFetching: isSalesOrderFetching } = Queries.useGetSalesOrderDropdown({ 
-    customerFilter: values?.customerId,
-    ...(isEditing ? {} : { statusFilter: "pending" })
-  }, !!values?.customerId);
+  const { data: salesOrderData, isLoading: isSalesOrderLoading, isFetching: isSalesOrderFetching } = Queries.useGetSalesOrderDropdown({ customerId: values?.customerId, includeId: values?.selectedSalesOrderId?.join(","), statusFilter: "pending" }, !!values?.customerId);
 
-  const { data: deliveryChallanData, isLoading: isDeliveryChallanLoading, isFetching: isDeliveryChallanFetching } = Queries.useGetDeliveryChallanDropdown({ 
-    customerFilter: values?.customerId,
-    ...(isEditing ? {} : { statusFilter: "pending" })
-  }, !!values?.customerId);
+  const { data: deliveryChallanData, isLoading: isDeliveryChallanLoading, isFetching: isDeliveryChallanFetching } = Queries.useGetDeliveryChallanDropdown({ customerFilter: values?.customerId, includeId: values?.selectedDeliveryChallanId?.join(","), statusFilter: "delivered" }, !!values?.customerId);
 
-  const { data: salesPersonData, isLoading: isSalesPersonLoading, isFetching: isSalesPersonFetching } = Queries.useGetUserDropdown({},!!values?.customerId);
-    const { data: paymentTermsData, isLoading: isPaymentTermsLoading, isFetching: isPaymentTermsFetching } = Queries.useGetPaymentTermsDropdown();
-
+  const { data: salesPersonData, isLoading: isSalesPersonLoading, isFetching: isSalesPersonFetching } = Queries.useGetUserDropdown({}, !!values?.customerId);
+  const { data: paymentTermsData, isLoading: isPaymentTermsLoading, isFetching: isPaymentTermsFetching } = Queries.useGetPaymentTermsDropdown();
 
   const salesOrderOptions = useMemo(() => GenerateOptions(salesOrderData?.data || []), [salesOrderData]);
   const deliveryChallanOptions = useMemo(() => GenerateOptions(deliveryChallanData?.data || []), [deliveryChallanData]);
@@ -86,7 +79,7 @@ const InvoiceDetails = ({ isEditing = false }: { isEditing?: boolean }) => {
   }, [values.billingAddress, selectedCustomer, values.placeOfSupply, setFieldValue]);
 
   // Sync due date with date and payment terms
-   const prevDateRef = useRef(values.date);
+  const prevDateRef = useRef(values.date);
   const prevPaymentTermsRef = useRef(values.paymentTermsId);
 
   useEffect(() => {
@@ -113,25 +106,29 @@ const InvoiceDetails = ({ isEditing = false }: { isEditing?: boolean }) => {
 
   useEffect(() => {
     if (values.createdFrom === "") {
-      setFieldValue("selectedSalesOrderId", "");
-      setFieldValue("selectedDeliveryChallanId", "");
+      setFieldValue("selectedSalesOrderId", []);
+      setFieldValue("selectedDeliveryChallanId", []);
     } else if (values.createdFrom === "sales-order") {
-      setFieldValue("selectedDeliveryChallanId", "");
+      setFieldValue("selectedDeliveryChallanId", []);
     } else if (values.createdFrom === "delivery-challan") {
-      setFieldValue("selectedSalesOrderId", "");
+      setFieldValue("selectedSalesOrderId", []);
     }
   }, [values.createdFrom, setFieldValue]);
 
   return (
     <Grid container spacing={2} sx={{ p: 2 }}>
       <Grid size={{ xs: 12, md: 3 }} container spacing={2}>
-         <CommonValidationSelect name="customerId" label="Select Customer" required options={GenerateOptions(customers)}  isLoading={isCustomerLoading || isCustomerFetching} grid={{ xs: 12 }} />
+        <CommonValidationSelect name="customerId" label="Select Customer" required options={GenerateOptions(customers)} isLoading={isCustomerLoading || isCustomerFetching} grid={{ xs: 12 }} />
 
-     
-        <Grid size={{ xs: 12, md: 12 }} container spacing={2} sx={{
-          order: { xs: 10, md: 5 },
-          display: { xs: "none", md: "flex" },
-        }}>
+        <Grid
+          size={{ xs: 12, md: 12 }}
+          container
+          spacing={2}
+          sx={{
+            order: { xs: 10, md: 5 },
+            display: { xs: "none", md: "flex" },
+          }}
+        >
           <Grid size={{ xs: 12, md: 12 }}>
             <Box display="flex" flexDirection="column" gap={0.5}>
               <Typography variant="caption" color="text.secondary" fontWeight={600}>
@@ -191,7 +188,6 @@ const InvoiceDetails = ({ isEditing = false }: { isEditing?: boolean }) => {
       </Grid>
 
       <Grid size={{ xs: 12, md: 9 }} container spacing={2}>
-       
         <CommonValidationDatePicker name="date" label="Invoice Date" required grid={{ xs: 12, md: 4 }} />
 
         <CommonValidationSelect name="paymentTermsId" label="Payment Term" options={GenerateOptions(paymentTermsData?.data)} isLoading={isPaymentTermsLoading || isPaymentTermsFetching} grid={{ xs: 12, md: 4 }} />
@@ -204,17 +200,13 @@ const InvoiceDetails = ({ isEditing = false }: { isEditing?: boolean }) => {
 
         <CommonValidationSelect name="createdFrom" label="Created From" options={INVOICE_CREATED_FROM_OPTIONS} disabled={isEditing} grid={{ xs: 12, md: 4 }} />
 
-        {values.createdFrom === "sales-order" && (
-          <CommonValidationSelect name="selectedSalesOrderId" label="Reference Sales Order" options={salesOrderOptions} multiple={true} disabled={isEditing || !values.customerId || !values.customerId} isLoading={isSalesOrderLoading || isSalesOrderFetching} grid={{ xs: 12, md: 4 }} />
-        )}
+        {values.createdFrom === "sales-order" && <CommonValidationSelect name="selectedSalesOrderId" label="Reference Sales Order" options={salesOrderOptions} multiple={true} disabled={isEditing || !values.customerId || !values.customerId} isLoading={isSalesOrderLoading || isSalesOrderFetching} grid={{ xs: 12, md: 4 }} />}
 
-        {values.createdFrom === "delivery-challan" && (
-          <CommonValidationSelect name="selectedDeliveryChallanId" label="Reference Delivery Challan" options={deliveryChallanOptions} multiple={true} disabled={isEditing || !values.customerId || !values.customerId} isLoading={isDeliveryChallanLoading || isDeliveryChallanFetching} grid={{ xs: 12, md: 4 }} />
-        )}
-
+        {values.createdFrom === "delivery-challan" && <CommonValidationSelect name="selectedDeliveryChallanId" label="Reference Delivery Challan" options={deliveryChallanOptions} multiple={true} disabled={isEditing || !values.customerId || !values.customerId} isLoading={isDeliveryChallanLoading || isDeliveryChallanFetching} grid={{ xs: 12, md: 4 }} />}
       </Grid>
 
-      <Grid size={{ xs: 12, md: 12 }}
+      <Grid
+        size={{ xs: 12, md: 12 }}
         container
         spacing={2}
         sx={{

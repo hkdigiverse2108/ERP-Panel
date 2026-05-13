@@ -57,7 +57,7 @@ const Invoice = () => {
     CommonObjectPropertyColumn<InvoiceBase>("transactionSummary.netAmount", "transactionSummary.netAmount", ["netAmount"], { headerName: "Net Amount", flex: 1, minWidth: 110, isSummary: true }),
     { field: "paidAmount", headerName: "Paid Amount", flex: 1, minWidth: 110, isSummary: true },
     { field: "dueAmount", headerName: "Due Amount", width: 110, isSummary: true },
-    CommonObjectPropertyColumn<InvoiceBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 100, type: "status" }),
+    CommonObjectPropertyColumn<InvoiceBase>("status", "status", [], { headerName: "Status", flex: 1, minWidth: 200, type: "status" }),
     CommonObjectPropertyColumn<InvoiceBase>("paymentStatus", "paymentStatus", [], { headerName: "Payment Status", flex: 1, minWidth: 100, type: "status" }),
     CommonObjectPropertyColumn<InvoiceBase>("transactionSummary.taxAmount", "transactionSummary.taxAmount", ["taxAmount"], { headerName: "Tax Amount", flex: 1, minWidth: 110, isSummary: true }),
     CommonObjectPropertyColumn<InvoiceBase>("createdBy", "createdBy", ["fullName", "userType"], { headerName: "Created By", flex: 1, minWidth: 150, type: "createdBy" }),

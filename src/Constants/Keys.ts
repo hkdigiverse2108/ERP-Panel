@@ -189,6 +189,7 @@ export const KEYS = {
     ADD: "supplier-bill-add",
     EDIT: "supplier-bill-edit",
     DELETE: "supplier-bill-delete",
+    DROPDOWN: "supplier-bill-dropdown",
   },
   POS: {
     BASE: "pos",
@@ -211,6 +212,8 @@ export const KEYS = {
     ADD: "pos-payment-add",
     EDIT: "pos-payment-edit",
     DELETE: "pos-payment-delete",
+    PENDING_PAYMENT_DROPDOWN: "pos-payment-pending-dropdown",
+    PENDING_CREDIT_DROPDOWN: "pos-credit-pending-dropdown",
   },
   POS_CASH_REGISTER: {
     BASE: "pos-cash-register",
@@ -374,6 +377,7 @@ export const KEYS = {
     APPROVE: "stock-transfer-approve",
     REJECT: "stock-transfer-reject",
     CONFIRM_RECEIPT: "stock-transfer-confirm-receipt",
+    DISPATCH: "stock-transfer-dispatch",
   },
   NOTIFICATION: {
     BASE: "notification",

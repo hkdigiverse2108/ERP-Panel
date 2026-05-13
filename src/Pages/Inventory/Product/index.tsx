@@ -19,7 +19,7 @@ import BulkAddModal from "../../../Components/Common/BulkAddModal";
 import { UploadFile } from "@mui/icons-material";
 
 const Product = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
   const [isRemoveItem, setRemoveItem] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.PRODUCT.BASE);
@@ -116,8 +116,6 @@ const Product = () => {
     rows: gridRows,
     rowCount: totalRows,
     loading: productDataLoading || productDataFetching,
-    isActive,
-    setActive,
     ...(permission?.add && { handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,

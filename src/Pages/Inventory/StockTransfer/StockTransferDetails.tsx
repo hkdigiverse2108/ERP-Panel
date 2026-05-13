@@ -1,7 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
-import { Queries } from "../../../Api";
+import { Mutations, Queries } from "../../../Api";
 import { CommonBreadcrumbs, CommonCard, CommonBottomActionBar } from "../../../Components/Common";
 import { CommonButton } from "../../../Attribute";
 import { BREADCRUMBS, STOCK_TRANSFER_STATUS } from "../../../Data";
@@ -18,13 +18,16 @@ const StockTransferDetails = () => {
   const { data: response, refetch } = Queries.useGetSingleStockTransfer(id);
   const data = response?.data;
 
+  const { mutate: dispatchMutate, isPending } = Mutations.useDispatchStockTransfer();
+
   const effectiveBranchId = user?.branchId?._id;
   const isSender = data?.requestedToBranchId?._id === effectiveBranchId;
   const isReceiver = data?.requestedByBranchId?._id === effectiveBranchId;
 
   const canApprove = data?.status === STOCK_TRANSFER_STATUS.PENDING && isSender;
-  const canConfirm = (data?.status === STOCK_TRANSFER_STATUS.APPROVED || data?.status === STOCK_TRANSFER_STATUS.PARTIALLY_APPROVED) && isReceiver;
-  const showAction = canApprove || canConfirm;
+  const canConfirm = data?.status === STOCK_TRANSFER_STATUS.DISPATCHED && isReceiver;
+  const canDispatched = (data?.status === STOCK_TRANSFER_STATUS.APPROVED || data?.status === STOCK_TRANSFER_STATUS.PARTIALLY_APPROVED) && isSender;
+  const showAction = canApprove || canConfirm || canDispatched;
 
   const infoItems = [
     { label: "Transfer No", value: data?.transferNo },
@@ -42,7 +45,6 @@ const StockTransferDetails = () => {
     <>
       <CommonBreadcrumbs title="Stock Transfer Details" maxItems={1} breadcrumbs={BREADCRUMBS.STOCK_TRANSFER.BASE} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: showAction ? 10 : 0, display: "grid", gap: 3 }}>
-
         <CommonCard title="Information">
           <Grid container spacing={3} sx={{ p: 2 }}>
             {infoItems.map((item, index) => (
@@ -106,8 +108,13 @@ const StockTransferDetails = () => {
                 </>
               )}
               {canConfirm && (
-                <CommonButton onClick={() => setActiveModal("confirm")} color="success">
+                <CommonButton onClick={() => setActiveModal("confirm")} color="success" variant="contained">
                   Confirm Receipt
+                </CommonButton>
+              )}
+              {canDispatched && (
+                <CommonButton loading={isPending} onClick={() => dispatchMutate({ stockTransferId: data._id || "" }, { onSuccess: () => refetch() })} color="secondary" variant="contained">
+                  Dispatched
                 </CommonButton>
               )}
             </Box>

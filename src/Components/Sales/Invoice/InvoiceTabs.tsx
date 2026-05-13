@@ -1,13 +1,10 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Tab, Tabs } from "@mui/material";
 import { ClearIcon } from "@mui/x-date-pickers-pro";
-import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
-import { CommonTable, CommonTabPanel, CommonShippingDetails, CommonTermsAndCondition } from "../../Common";
-import { useEffect, useState, useRef } from "react";
-import { Queries } from "../../../Api";
-import { GenerateOptions } from "../../../Utils";
 import { FieldArray, useFormikContext } from "formik";
-import type { InvoiceItem, InvoiceFormValues } from "../../../Types/Invoice";
+import { useEffect, useRef, useState } from "react";
+import { Queries } from "../../../Api";
+import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../Attribute";
 import type { CommonTableColumn, ProductBase } from "../../../Types";
 import { useAppDispatch } from "../../../Store/hooks";
 import { setBulkAddModal } from "../../../Store/Slices/ModalSlice";
@@ -16,30 +13,67 @@ import { mapExcelToFormItems } from "../../../Utils/MapExcelData";
 import BulkAddModal from "../../Common/BulkAddModal";
 import { UploadFile } from "@mui/icons-material";
 import { BULK_IMPORT_TYPES } from "../../../Constants";
+import type { InvoiceFormValues, InvoiceItem } from "../../../Types/Invoice";
+import { GenerateOptions } from "../../../Utils";
+import { CommonShippingDetails, CommonTable, CommonTabPanel, CommonTermsAndCondition } from "../../Common";
 
-const InvoiceTabs = ({ emptyRow }: { emptyRow: InvoiceItem }) => {
+const InvoiceTabs = ({ emptyRow, isEditing }: { emptyRow: InvoiceItem; isEditing: boolean }) => {
   const [tabValue, setTabValue] = useState(0);
   const { values, setFieldValue } = useFormikContext<InvoiceFormValues>();
 
   const isCustomerSelected = !!values?.customerId;
-  const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown({ }, !!values?.customerId);
   const dispatch = useAppDispatch();
 
   const handleBulkAdd = async (file: File) => {
     try {
       const rawData = await extractExcelData(file);
       const mappedItems = mapExcelToFormItems(rawData, BULK_IMPORT_TYPES.INVOICE, productsData?.data || [], emptyRow);
-      
-      const updatedItems = [
-        ...(values.items ?? []).filter((i: InvoiceItem) => i.productId),
-        ...mappedItems
-      ];
+
+      const updatedItems = [...(values.items ?? []).filter((i: InvoiceItem) => i.productId), ...mappedItems];
       setFieldValue("items", updatedItems);
       dispatch(setBulkAddModal({ open: false, title: "", type: "" }));
     } catch (err) {
       console.error("Error processing Excel:", err);
     }
   };
+  const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown({}, !!values?.customerId);
+
+  const salesOrderId = values?.selectedSalesOrderId?.[values?.selectedSalesOrderId?.length - 1] || "";
+  const deliveryChallanId = values?.selectedDeliveryChallanId?.[values?.selectedDeliveryChallanId?.length - 1] || "";
+
+  const { data: singleSalesOrder, isLoading: isSingleSalesOrderLoading, isFetching: isSingleSalesOrderFetching } = Queries.useGetSingleSalesOrder(salesOrderId, Boolean(salesOrderId) && !isEditing);
+  const { data: singleDeliveryChallan, isLoading: isSingleDeliveryChallanLoading, isFetching: isSingleDeliveryChallanFetching } = Queries.useGetSingleDeliveryChallan(deliveryChallanId, Boolean(deliveryChallanId) && !isEditing);
+
+  const mapItems = (items: any[] = []) =>
+    items.map((item) => ({
+      productId: item?.productId?._id || item?.productId || "",
+      qty: item?.qty || 1,
+      freeQty: item?.freeQty || 0,
+      price: item?.price || 0,
+      discount1: item?.discount1 || 0,
+      tax: item?.tax || 0,
+      taxId: item?.taxId?._id || item?.taxId || "",
+      taxableAmount: item?.taxableAmount || 0,
+      totalAmount: item?.totalAmount || 0,
+      uomId: item?.uomId?._id || item?.uomId || "",
+      unit: item?.uomId?.name || item?.unit || "",
+    }));
+
+  useEffect(() => {
+    if ((!salesOrderId && !deliveryChallanId) || isEditing) return;
+
+    if (salesOrderId && singleSalesOrder?.data) {
+      const existingItems = (values?.items || []).filter((item) => item?.productId);
+      const finalItems = [...existingItems, ...mapItems(singleSalesOrder?.data?.items)];
+      setFieldValue("items", finalItems);
+    }
+
+    if (deliveryChallanId && singleDeliveryChallan?.data) {
+      const existingItems = (values?.items || []).filter((item) => item?.productId);
+      const finalItems = [...existingItems, ...mapItems(singleDeliveryChallan?.data?.items)];
+      setFieldValue("items", finalItems);
+    }
+  }, [singleSalesOrder, singleDeliveryChallan]);
 
   const calculateRowValues = (index: number) => {
     const row = values?.items?.[index];
@@ -152,14 +186,7 @@ const InvoiceTabs = ({ emptyRow }: { emptyRow: InvoiceItem }) => {
             <Tab label="Shipping Details" />
           </Tabs>
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, p: 1 }}>
-            <CommonButton
-              variant="contained"
-              startIcon={<UploadFile />}
-              title="Upload Products"
-              size="small"
-              disabled={!isCustomerSelected}
-              onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Invoice", type: BULK_IMPORT_TYPES.INVOICE }))}
-            />
+            <CommonButton variant="contained" startIcon={<UploadFile />} title="Upload Products" size="small" disabled={!isCustomerSelected} onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Invoice", type: BULK_IMPORT_TYPES.INVOICE }))} />
           </Box>
         </Box>
 
@@ -231,7 +258,7 @@ const InvoiceTabs = ({ emptyRow }: { emptyRow: InvoiceItem }) => {
                       key: "discount1",
                       header: "Discount",
                       bodyClass: "min-w-28",
-                      render: (_, index) => <CommonValidationTextField name={`items.${index}.discount1`} type="number" />
+                      render: (_, index) => <CommonValidationTextField name={`items.${index}.discount1`} type="number" />,
                     },
                     {
                       key: "taxAmount",
@@ -269,7 +296,7 @@ const InvoiceTabs = ({ emptyRow }: { emptyRow: InvoiceItem }) => {
                     },
                   ];
 
-                  return <CommonTable showFooter data={values.items || []} columns={columns} rowKey={(_row, index) => index.toString()} getRowClass={() => "align-top"} />;
+                  return <CommonTable isLoading={isSingleSalesOrderLoading || isSingleSalesOrderFetching || isSingleDeliveryChallanLoading || isSingleDeliveryChallanFetching} showFooter data={values.items || []} columns={columns} rowKey={(_row, index) => index.toString()} getRowClass={() => "align-top"} />;
                 }}
               </FieldArray>
             </Box>

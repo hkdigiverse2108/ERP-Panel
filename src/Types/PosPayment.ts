@@ -10,6 +10,8 @@ export interface PosPaymentFormValues {
   partyId?: string;
   bankId?: string;
   posOrderId?: string;
+  posCreditNoteId?: string;
+  purchaseBillId?: string;
   paymentMode?: string;
   date?: string | Date | null;
   totalAmount?: number;
@@ -22,7 +24,6 @@ export interface PosPaymentFormValues {
   companyId?: string;
   remark?: string;
   status?: string;
-  voucherDetails?: VoucherRow[];
   _submitAction?: string;
   posCashRegisterId?: string;
   discountAmount?: number;
@@ -30,6 +31,7 @@ export interface PosPaymentFormValues {
   //Expense
   fromDate?: string;
   image?: string;
+  docType?: string;
 }
 
 export type AddPosPaymentPayload = PosPaymentFormValues & {
@@ -59,15 +61,25 @@ export interface PosPaymentApiResponse extends MessageStatus {
   data: PosPaymentDataResponse;
 }
 
-export interface VoucherRow {
-  id: string;
-  posOrderId?: string;
-  paymentMode?: string;
-  bankId?: string;
-  netAmount: number;
-  paidAmount: number;
-  pendingAmount: number;
-  kasarAmount: number;
-  amount: number;
-  paymentAmount: number;
+export interface PosPendingPaymentDropdownApiResponse extends MessageStatus {
+  data: {
+    _id: string;
+    balanceAmount: number;
+    customerId: string;
+    docNo: string;
+    docType: string;
+    name: string;
+    paidAmount: number;
+  }[];
+}
+export interface PosPendingCreditDropdownApiResponse extends MessageStatus {
+  data: {
+    balanceAmount: number;
+    customerId: string;
+    docNo: string;
+    docType: string;
+    name: string;
+    totalAmount: number;
+    _id: string;
+  }[];
 }

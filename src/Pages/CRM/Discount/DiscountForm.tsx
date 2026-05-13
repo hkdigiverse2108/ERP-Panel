@@ -7,7 +7,7 @@ import { CommonButton, CommonValidationCheckbox, CommonValidationDatePicker, Com
 import { CommonBottomActionBar, CommonBreadcrumbs, CommonCard } from "../../../Components/Common";
 import { PAGE_TITLE } from "../../../Constants";
 import { BOOLEAN_OPTIONS, BREADCRUMBS, DISCOUNT_APPLICABLE, DISCOUNT_APPLICABLE_ENUM, DISCOUNT_APPLY_TO, DISCOUNT_APPLY_TO_ENUM, DISCOUNT_MODE, DISCOUNT_MODE_ENUM, DISCOUNT_VALUE_TYPE, MINIMUM_REQUIREMENT, MINIMUM_REQUIREMENT_ENUM } from "../../../Data";
-import type { BranchBase, BrandBase, CategoryBase, DiscountFormValues, ProductBase } from "../../../Types";
+import type { BrandBase, CategoryBase, DiscountFormValues, ProductBase } from "../../../Types";
 import { DiscountFormSchema, GenerateOptions, GetChangedFields, RemoveEmptyFields } from "../../../Utils";
 
 const DiscountForm = () => {
@@ -21,12 +21,10 @@ const DiscountForm = () => {
   const { mutate: addDiscount, isPending: isAddLoading } = Mutations.useAddDiscount();
   const { mutate: editDiscount, isPending: isEditLoading } = Mutations.useEditDiscount();
 
-  const { data: BranchData, isLoading: BranchDataLoading } = Queries.useGetBranchDropdown();
   const { data: CategoryData, isLoading: CategoryLoading } = Queries.useGetCategoryDropdown();
   const { data: ProductData, isLoading: ProductLoading } = Queries.useGetProductDropdown();
   const { data: BrandData, isLoading: BrandLoading } = Queries.useGetBrandDropdown();
 
-  const branchIds = data?.branchIds?.map((branch: BranchBase) => branch?._id) || [];
   const categoryIds = data?.categoryIds?.map((category: CategoryBase) => category?._id) || [];
   const brandIds = data?.brandIds?.map((brand: BrandBase) => brand?._id) || [];
   const productIds = data?.productIds?.map((product: ProductBase) => product?._id) || [];
@@ -38,7 +36,6 @@ const DiscountForm = () => {
 
   // ✅ INITIAL VALUES
   const initialValues: DiscountFormValues = {
-    branchIds: data?.branchIds?.length ? branchIds : [],
     title: data?.title || "",
     discountCode: data?.discountCode || "",
     autoApply: data?.autoApply ?? false,
@@ -91,7 +88,6 @@ const DiscountForm = () => {
     };
 
     const payload = {
-      branchIds: rest.branchIds,
       title: rest?.title,
       discountCode: rest?.discountCode,
       autoApply: rest?.autoApply,
@@ -219,7 +215,6 @@ const DiscountForm = () => {
                 <Box sx={{ display: "grid", gap: 2 }}>
                   <CommonCard hideDivider>
                     <Grid container spacing={2} sx={{ p: 2 }}>
-                      <CommonValidationSelect name="branchIds" label="Branch" multiple required isLoading={BranchDataLoading} options={GenerateOptions(BranchData?.data)} grid={{ xs: 12, md: 4 }} />
                       <CommonValidationTextField name="title" label="Title" grid={{ xs: 12, md: 3 }} required />
                       <CommonValidationTextField name="discountCode" label="Discount Code" grid={{ xs: 12, md: 3 }} required />
                       <CommonValidationRadio name="autoApply" label="Discount Auto Apply" options={BOOLEAN_OPTIONS} row grid={{ xs: 12, md: 3 }} required />

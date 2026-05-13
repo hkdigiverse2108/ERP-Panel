@@ -82,6 +82,10 @@ export interface EstimateDropdownApiResponse extends MessageStatus {
   data: EstimateBase[];
 }
 
+export interface SingleEstimateApiResponse extends MessageStatus {
+  data: EstimateBase;
+}
+
 /* ===================== NEW UI TYPES ===================== */
 
 export interface EstimateDetailsProps {

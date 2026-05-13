@@ -39,7 +39,7 @@ export type AddPosCreditNotePayload = PosCreditNoteFormValues;
 
 export type EditPosCreditNotePayload = PosCreditNoteFormValues & { creditNoteId?: string };
 
-export interface PosCreditNoteBase extends PosCreditNoteFormValues  {
+export interface PosCreditNoteBase extends PosCreditNoteFormValues {
   creditNoteNo: string;
   companyId: CompanyBase;
   customerId: ContactBase;
@@ -55,6 +55,9 @@ export interface PosCreditNoteApiResponse extends MessageStatus {
 
 export interface PosCreditNoteRedeemDropdownApiResponse extends MessageStatus {
   data: { customerId: string; id: string; no: string }[];
+}
+export interface PosCreditNoteDropdownApiResponse extends MessageStatus {
+  data: (PosCreditNoteBase & { amount: number })[];
 }
 export interface PosCreditNoteRefundResponse {
   data: {
