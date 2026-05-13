@@ -16,7 +16,7 @@ const SalesOrderDetails = ({ isEditing }: { isEditing: boolean }) => {
   const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer" });
   const { data: paymentTermsData, isLoading: isPaymentTermsLoading, isFetching: isPaymentTermsFetching } = Queries.useGetPaymentTermsDropdown();
 
-  const { data: estimateData, isLoading: isEstimateLoading, isFetching: isEstimateFetching } = Queries.useGetEstimateDropdown({ customerId: values?.customerId, includeId: values?.selectedEstimateId }, !!values?.customerId);
+  const { data: estimateData, isLoading: isEstimateLoading, isFetching: isEstimateFetching } = Queries.useGetEstimateDropdown({ customerId: values?.customerId, ...(isEditing && { includeId: values?.selectedEstimateId }) }, !!values?.customerId);
 
   const { data: salesPersonData, isLoading: isSalesPersonLoading, isFetching: isSalesPersonFetching } = Queries.useGetUserDropdown();
 

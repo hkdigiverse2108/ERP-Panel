@@ -15,9 +15,9 @@ const InvoiceDetails = ({ isEditing = false }: { isEditing?: boolean }) => {
 
   const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer" }, true);
 
-  const { data: salesOrderData, isLoading: isSalesOrderLoading, isFetching: isSalesOrderFetching } = Queries.useGetSalesOrderDropdown({ customerId: values?.customerId, includeId: values?.selectedSalesOrderId?.join(","), statusFilter: "pending" }, !!values?.customerId);
+  const { data: salesOrderData, isLoading: isSalesOrderLoading, isFetching: isSalesOrderFetching } = Queries.useGetSalesOrderDropdown({ customerId: values?.customerId, ...(isEditing && { includeId: values?.selectedSalesOrderId?.join(",") }), statusFilter: "pending" }, !!values?.customerId);
 
-  const { data: deliveryChallanData, isLoading: isDeliveryChallanLoading, isFetching: isDeliveryChallanFetching } = Queries.useGetDeliveryChallanDropdown({ customerFilter: values?.customerId, includeId: values?.selectedDeliveryChallanId?.join(","), statusFilter: "delivered" }, !!values?.customerId);
+  const { data: deliveryChallanData, isLoading: isDeliveryChallanLoading, isFetching: isDeliveryChallanFetching } = Queries.useGetDeliveryChallanDropdown({ customerFilter: values?.customerId, ...(isEditing && { includeId: values?.selectedDeliveryChallanId?.join(",") }), statusFilter: "delivered" }, !!values?.customerId);
 
   const { data: salesPersonData, isLoading: isSalesPersonLoading, isFetching: isSalesPersonFetching } = Queries.useGetUserDropdown({}, !!values?.customerId);
   const { data: paymentTermsData, isLoading: isPaymentTermsLoading, isFetching: isPaymentTermsFetching } = Queries.useGetPaymentTermsDropdown();

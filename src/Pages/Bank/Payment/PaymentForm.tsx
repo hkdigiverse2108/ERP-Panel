@@ -55,8 +55,8 @@ const PaymentForm = () => {
 
   const [partyId, setPartyId] = useState(initialValues.partyId);
   const isCustomer = contactData?.data?.find((item) => item._id === partyId)?.contactType?.includes("customer") ?? false;
-  const { data: posSupplierBillDropdown, isLoading: isPosSupplierBillDropdownLoading, isFetching: isPosSupplierBillDropdownFetching } = Queries.useGetSupplierBillDropdown({ paymentStatus: "unpaid,partial", supplierId: partyId, includeId: initialValues?.purchaseBillId }, Boolean(partyId && !isCustomer));
-  const { data: pendingCreditData, isLoading: pendingCreditLoading, isFetching: pendingCreditFetching } = Queries.useGetPendingCreditDropdown({ customerId: partyId, includeId: initialValues.posCreditNoteId }, Boolean(partyId && isCustomer));
+  const { data: posSupplierBillDropdown, isLoading: isPosSupplierBillDropdownLoading, isFetching: isPosSupplierBillDropdownFetching } = Queries.useGetSupplierBillDropdown({ paymentStatus: "unpaid,partial", supplierId: partyId, ...(isEditing && { includeId: initialValues?.purchaseBillId }) }, Boolean(partyId && !isCustomer));
+  const { data: pendingCreditData, isLoading: pendingCreditLoading, isFetching: pendingCreditFetching } = Queries.useGetPendingCreditDropdown({ customerId: partyId, ...(isEditing && { includeId: initialValues.posCreditNoteId }) }, Boolean(partyId && isCustomer));
 
   const handleSubmit = async (values: PosPaymentFormValues, { resetForm }: FormikHelpers<PosPaymentFormValues>) => {
     const { _submitAction, ...rest } = values;
