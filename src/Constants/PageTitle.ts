@@ -38,6 +38,9 @@ export const PAGE_TITLE = {
       ADD: "Add Consumption Type",
       EDIT: "Edit Consumption Type",
     },
+    REPORT_FORMATS: {
+      BASE: "Report Format",
+    },
   },
   AUTH: {
     SIGNIN: "Sign In",
