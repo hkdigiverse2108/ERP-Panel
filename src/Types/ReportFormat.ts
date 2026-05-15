@@ -4,6 +4,7 @@ export interface ReportFormat {
   name: string;
   isSelected: boolean;
   isActive: boolean;
+  _id: string;
 }
 
 export interface ReportFormatFormValues {

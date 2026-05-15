@@ -2,6 +2,7 @@ import React, { useState, type SyntheticEvent } from "react";
 // import { CommonSelect } from "../../../../Attribute";
 import { Box, CircularProgress, FormControlLabel, Grid, Radio, RadioGroup, Tab, Tabs } from "@mui/material";
 import { Queries } from "../../../../Api";
+import type { ReportFormat } from "../../../../Types";
 import { CommonModal } from "../../../Common";
 import { A4_14_1Jasper, A4_14Jasper, A4_1Jasper, A4_2Html, A4_7Jasper, A5_1Jasper, A5_2Jasper, Deliverychallan_1Jasper, Estimate_A4_1Jasper, Grn_Bill_ThermalJasper, Invoice_A4_1Jasper, Invoice_A4_4html, Invoice_A4EInvoiceJasper, Invoice_A4Jasper, Invoice_A5_1Jasper, Invoice_A5Jasper, Purchase1Jasper, Purchase2Jasper, Purchase3Jasper, PurchaseOrder1Jasper, PurchaseOrder2Jasper, PurchaseOrder3Jasper, PurchaseThermalHtml, StockTransfer_A4_1Jasper, StockTransfer_A4_2Jasper, Thermal_58mm1Jasper, Thermal_80mm11Jasper, Thermal_80mm17Jasper, Thermal_80mm18Jasper, Thermal_80mm1Jasper, Thermal_80mm2_1Jasper, Thermal_80mm3Jasper, Thermal_80mm4Jasper, Thermal_80mmOffline, thermal_80mmOffline1 } from "../../../ReportFormats";
 import { A5_2JasperData, Thermal_80mm1JasperData, Thermal_80mmOffline1Data, Thermal_80mmOfflineData } from "../../../ReportFormats/Data";
@@ -89,7 +90,6 @@ const ReportFormats = () => {
   const [value, setValue] = useState("");
 
   const { data: reportFormatData, isLoading: isLoadingReportFormatData } = Queries.useGetReportFormat({ activeFilter: true });
-
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue((event.target as HTMLInputElement).value);
   };
@@ -97,10 +97,10 @@ const ReportFormats = () => {
   const handleChange = (_: SyntheticEvent, newValue: number) => setTab(newValue);
 
   // Dynamic Array Parsing from Backend Response
-  const rawApiData: any[] = (Array.isArray(reportFormatData?.data) ? reportFormatData.data : []).map((item) => ({
+  const rawApiData = (Array.isArray(reportFormatData?.data) ? reportFormatData.data : []).map((item) => ({
     ...item,
     type: item.type?.trim() || "",
-    formats: (item.formats || []).map((format: any) => ({
+    formats: (item.formats || []).map((format) => ({
       ...format,
       name: format.name?.trim() || "",
     })),
@@ -114,19 +114,20 @@ const ReportFormats = () => {
   const activeTabDetails = rawApiData[tab];
 
   // Dynamic Items Extraction
-  const items = (activeTabDetails?.formats || []).map((formatObj: any) => {
-    // formatObj has keys: {name, isSelected, isActive, _id}
-    const formatName = formatObj?.name || "";
-    const formatConfig = FORMAT_COMPONENTS_MAP[activeTabDetails.type]?.[formatName];
-    const Component = formatConfig?.Component || FallbackPreview;
-    const MockData = formatConfig?.mockData || {};
-    return {
-      value: formatObj?._id || formatName,
-      label: formatName,
-      PreviewComponent: Component,
-      MockData: MockData,
-    };
-  });
+  const items = (activeTabDetails?.formats || [])
+    .filter((format: ReportFormat) => format.isActive)
+    .map((formatObj: ReportFormat) => {
+      const formatName = formatObj?.name || "";
+      const formatConfig = FORMAT_COMPONENTS_MAP[activeTabDetails.type]?.[formatName];
+      const Component = formatConfig?.Component || FallbackPreview;
+      const MockData = formatConfig?.mockData || {};
+      return {
+        value: formatObj?._id || formatName,
+        label: formatName,
+        PreviewComponent: Component,
+        MockData: MockData,
+      };
+    });
 
   return (
     <Grid container spacing={2}>
@@ -153,15 +154,15 @@ const ReportFormats = () => {
           {items.length === 0 && generalSettingTabs.length > 0 ? (
             <div className="p-4 w-full text-center text-gray-500">No formats found for this type</div>
           ) : (
-            <Grid container spacing={2} sx={{ width: "100%" }}>
+            <>
               <RadioGroup name="formats" value={value} onChange={handleRadioChange} style={{ width: "100%" }}>
                 <Grid container spacing={2}>
                   {items.map((item: any, index: number) => {
                     const { PreviewComponent, MockData } = item;
                     return (
-                      <Grid key={index} size={{ xs: 12, sm: 6, md: 4 }}>
+                      <Grid key={index} size={{ xs: 12, sm: 6, xl: 4, xxl: 3 }}>
                         <Box className="rounded-lg bg-white dark:bg-gray-dark! border border-gray-200 dark:border-gray-800 overflow-hidden w-full!">
-                          <FormControlLabel value={item.value} control={<Radio />} label={item.label} className="text-nowrap px-4 py-2" />
+                          <FormControlLabel value={item.value} control={<Radio />} label={item.label} className="text-nowrap px-4 py-2 w-[200px]  text-ellipsis whitespace-nowrap" />
 
                           {/* Scaled Thumbnail Wrapper */}
                           <div
@@ -194,7 +195,7 @@ const ReportFormats = () => {
                   </div>
                 )}
               </CommonModal>
-            </Grid>
+            </>
           )}
         </>
       )}
