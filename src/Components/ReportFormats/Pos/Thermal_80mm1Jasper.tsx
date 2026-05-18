@@ -1,32 +1,48 @@
-import { forwardRef } from "react";
+import { forwardRef, Fragment } from "react";
 import type { PosOrderBase } from "../../../Types";
+import { useAppSelector } from "../../../Store/hooks";
+import { POS_ORDER_STATUS, RETURN_POS_ORDER_TYPE } from "../../../Data";
 
 const Thermal_80mm1Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }, ref) => {
+  const { company } = useAppSelector((state) => state.company);
   if (!bill) return null;
 
-  const item = bill.items?.[0];
+  // const item = bill.items?.[0];
 
-  const companyName = bill.companyId?.name || "Company Name";
+  const companyName = bill.companyId?.name || company?.name;
   const customerName = `${bill.customerId?.firstName || ""} ${bill.customerId?.lastName || ""}`.trim() || "Walk in Customer";
   const customerPhone = bill.customerId?.phoneNo?.phoneNo ? `${bill.customerId.phoneNo.countryCode || ""} ${bill.customerId.phoneNo.phoneNo}` : "";
   const customerAddress = bill.customerId?.address?.[0]?.addressLine1 || "";
   const createdDate = bill.createdAt ? new Date(bill.createdAt).toLocaleDateString() : "";
+  const getCompanyAddress = () => {
+    const addr = company?.address;
+    if (!addr) return null;
 
+    const parts = [addr.address, addr.city?.name, addr.state?.name, addr.country?.name].filter(Boolean);
+
+    let addressStr = parts.join(", ");
+    if (addr.pinCode) {
+      addressStr += ` - ${addr.pinCode}`;
+    }
+
+    return addressStr;
+  };
+
+  const getTaxPercent = (item: PosOrderBase["items"][number]) => {
+    return item?.productId?.salesTaxId?.percentage || 0;
+  };
   return (
     <div ref={ref} className="w-[80mm] mx-auto bg-white text-black font-mono text-[11px] p-3 leading-tight">
       {/* Logo */}
       <div className="flex justify-center mb-1">
-        <img src={(bill.companyId as any)?.logo || "/logo.png"} alt="logo" className="w-14 h-14 object-contain" />
+        <img src={company?.reportFormatLogo || "/logo.png"} alt="reportFormatLogo" className="w-14 h-14 object-contain" />
       </div>
 
       {/* Company Info */}
       <div className="text-center">
         <div className="font-bold">{companyName}</div>
-        <div className="text-[10px]">SHOP NO-114, UPPER GROUND FLOOR VYARA</div>
-        <div className="text-[10px]">MARK, OPP. CENTRAL BANK</div>
-        <div className="text-[10px]">Adajan, Gujarat, India</div>
-
-        <div className="mt-2 font-bold">Tax Invoice</div>
+        <div className="text-[10px] w-50 mx-auto">{getCompanyAddress()}</div>
+        <div className="mt-2 font-bold">{[RETURN_POS_ORDER_TYPE.REFUND, RETURN_POS_ORDER_TYPE.SALES_RETURN, POS_ORDER_STATUS.RETURNED, POS_ORDER_STATUS.PARTIALLY_RETURNED].includes(bill?.status) ? "Return Invoice" : [POS_ORDER_STATUS.HOLD].includes(bill?.status) ? "Hold BIll" : "Tax Invoice"}</div>
       </div>
 
       {/* Meta Info */}
@@ -41,33 +57,49 @@ const Thermal_80mm1Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>((
         </div>
       </div>
 
-      {/* Divider */}
-      <div className="border-t border-dashed my-2" />
+      <table className="w-full text-xs border-t border-dashed my-1">
+        <thead>
+          <tr className="border-b border-dashed">
+            <th className="text-left py-1 w-[5%]">#</th>
+            <th className="text-left w-[40%]">Item</th>
+            <th className="text-center w-[10%]">Qty</th>
+            <th className="text-center w-[15%]">MRP</th>
+            <th className="text-center w-[10%]">GST</th>
+            <th className="text-right w-[20%]">Net Amt.</th>
+          </tr>
+        </thead>
 
-      {/* Table Header */}
-      <div className="flex justify-between font-bold text-[10px]">
-        <span># Item</span>
-        <span>Qty</span>
-        <span>MRP</span>
-        <span>Net Amt.</span>
-      </div>
+        <tbody>
+          {bill?.items?.map((item, index) => {
+            const taxPercent = getTaxPercent(item);
+            const discAmt = (item.discountAmount || 0) + (item.additionalDiscountAmount || 0);
 
-      {/* Item */}
-      <div className="mt-1 text-[10px]">
-        <div className="font-bold">{item?.productId?.name || "Product Name"}</div>
-        <div className="italic text-[9px]">
-          HSN: {item?.productId?.hsnCode || "N/A"} | GST {item?.productId?.salesTaxId?.percentage || 0}%
-        </div>
-
-        <div className="flex justify-between mt-1">
-          <span>1</span>
-          <span>{Number(item?.qty || 0).toFixed(3)}</span>
-          <span>{Number(item?.mrp || 0).toFixed(2)}</span>
-          <span>{Number(item?.netAmount || 0).toFixed(2)}</span>
-        </div>
-        <div className="italic text-[9px] mt-1">Description : The product is available in the store</div>
-        {/* {item?.description && <div className="italic text-[9px] mt-1">Description : {item.description}</div>} */}
-      </div>
+            // const totalDiscAmt = (item.qty || 0) * (item.discountAmount || 0);
+            const net = ((item.mrp || 0) - discAmt) * (item.qty || 0);
+            const taxAmount = item.productId?.isSalesTaxIncluding ? 0 : (net * taxPercent) / 100;
+            return (
+              <Fragment key={index}>
+                <tr className="align-top">
+                  <td className="py-1">{index + 1}</td>
+                  <td className="py-1">
+                    <div className="font-semibold">{item.productId?.name}</div>
+                    {item.productId?.variant && <div className="text-xs">{item.productId.variant}</div>}
+                  </td>
+                  <td className="text-center py-1">{Number(item.qty || 0)}</td>
+                  <td className="text-center py-1">{Number(item.mrp || 0)}</td>
+                  <td className="text-center py-1">{Number(taxAmount.toFixed(2))}</td>
+                  <td className="text-right py-1">{Number(item.netAmount || 0)}</td>
+                </tr>
+                <tr>
+                  <td colSpan={5} className="pl-2 text-[8px] italic font-normal pb-1">
+                    HSN: {item?.productId?.hsnCode || "N/A"} || GST {taxPercent}%{discAmt > 0 && `||  Discount: ${Number(discAmt.toFixed(2))}`}
+                  </td>
+                </tr>
+              </Fragment>
+            );
+          })}
+        </tbody>
+      </table>
 
       {/* Divider */}
       <div className="border-t border-dashed my-2" />
@@ -99,37 +131,10 @@ const Thermal_80mm1Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>((
 
       {/* Summary */}
       <div className="text-center font-bold text-[10px]">
-        <div>PIECES PURCHASED : {Number(item?.qty || 0).toFixed(2)}</div>
-        <div>DISCOUNT ITEMS : {item?.discountAmount ? "1.00" : "0.00"}</div>
+        <div>PIECES PURCHASED : {Number(bill?.totalQty || 0).toFixed(2)}</div>
+        <div>DISCOUNT ITEMS : {Number(bill.totalDiscount || 0).toFixed(2)}</div>
         <div>TOTAL SAVINGS : {Number(bill.totalDiscount || 0).toFixed(2)}</div>
       </div>
-
-      {/* Divider */}
-      <div className="border-t border-dashed my-2" />
-
-      {/* Tax Summary */}
-      <div className="text-center font-bold text-[10px] mb-1">TAX SUMMARY</div>
-
-      <table className="w-full text-[9px] border border-black text-center">
-        <thead>
-          <tr className="border-b border-black">
-            <th className="border-r border-black p-1">TAXABLE VALUE</th>
-            <th className="border-r border-black p-1">CGST</th>
-            <th className="border-r border-black p-1">SGST</th>
-            <th className="border-r border-black p-1">Cess</th>
-            <th className="p-1">IGST</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="border-r border-black p-1">200.50</td>
-            <td className="border-r border-black p-1">89.32</td>
-            <td className="border-r border-black p-1">89.32</td>
-            <td className="border-r border-black p-1">N/A</td>
-            <td className="p-1">N/A</td>
-          </tr>
-        </tbody>
-      </table>
 
       {/* Divider */}
       <div className="border-t border-dashed my-2" />

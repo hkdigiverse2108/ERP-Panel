@@ -6,3 +6,4 @@ export * from "./Bill";
 export * from "./Estimate";
 export * from "./Deliverychallan";
 export * from "./StockTransfer";
+export * from "./Print";

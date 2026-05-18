@@ -69,3 +69,10 @@ export interface BranchApiResponse extends MessageStatus {
 export interface BranchDropdownApiResponse extends MessageStatus {
   data: BranchBase[];
 }
+export interface EditBranchReportConfigPayload {
+  branchId?: string;
+  reportConfig?: {
+    type?: string;
+    formatName?: string;
+  };
+}

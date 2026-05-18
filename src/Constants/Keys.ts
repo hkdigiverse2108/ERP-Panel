@@ -63,6 +63,7 @@ export const KEYS = {
     ADD: "branch-add",
     EDIT: "branch-edit",
     DELETE: "branch-delete",
+    REPORT_FORMAT: "report-format-branch",
   },
 
   BRAND: {

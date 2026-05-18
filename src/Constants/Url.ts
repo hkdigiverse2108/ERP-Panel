@@ -61,6 +61,7 @@ export const URL_KEYS = {
     ALL: "/branch/all",
     ADD: "/branch/add",
     EDIT: "/branch/edit",
+    REPORT_FORMAT: "/branch/report-config",
   },
   BRAND: {
     BASE: "/brand",
@@ -306,10 +307,10 @@ export const URL_KEYS = {
   },
 
   REPORT_FORMAT: {
-    BASE: "/settings/report-format",
-    ALL: "/settings/report-format/all",
-    ADD: "/settings/report-format/add",
-    EDIT: "/settings/report-format/edit",
+    BASE: "/report-format",
+    ALL: "/report-format/all",
+    ADD: "/report-format/add",
+    EDIT: "/report-format/edit",
   },
   POS_CREDIT_NOTE: {
     BASE: "/pos-credit-note",

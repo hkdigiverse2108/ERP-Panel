@@ -85,8 +85,8 @@ const CurrentRegister = () => {
     const totalCash = totalCashInDrawer - Number(values.bankTransferAmount || 0);
 
     useEffect(() => {
-      const physicalCash = (totalAmount || 0).toFixed(2);
-      const calculatedCash = Math.max(0, totalCash || 0).toFixed(2);
+      const physicalCash = (totalAmount || 0)?.toFixed(2);
+      const calculatedCash = Math.max(0, totalCash || 0)?.toFixed(2);
 
       setFieldValue("physicalDrawerCash", physicalCash);
       setFieldValue("totalCashInDrawer", calculatedCash);
@@ -201,7 +201,7 @@ const CurrentRegister = () => {
                             <th className="px-3 py-2 text-start" colSpan={2}>
                               Total
                             </th>
-                            <td className="px-3 py-2 text-right">{(Number(totalAmount) || 0).toFixed(2)}</td>
+                            <td className="px-3 py-2 text-right">{(Number(totalAmount) || 0)?.toFixed(2)}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -214,7 +214,7 @@ const CurrentRegister = () => {
                         <CommonValidationTextField name="totalCashInDrawer" label="Total Cash Left In Drawer" grid={{ xs: 12 }} disabled />
                         <CommonValidationTextField name="physicalDrawerCash" label="Physical Drawer" type="number" grid={{ xs: 12 }} required />
                         <Grid size={{ xs: 12 }} className="flex justify-start">
-                          {totalCashInDrawer > 0 ? <p className="text-red-500 text-base">Short : {totalCashInDrawer.toFixed(2)} ₹</p> : <p className="text-green-500 text-base">Extra : {cashFlow.toFixed(2)} ₹</p>}
+                          {totalCashInDrawer > 0 ? <p className="text-red-500 text-base">Short : {totalCashInDrawer?.toFixed(2)} ₹</p> : <p className="text-green-500 text-base">Extra : {cashFlow?.toFixed(2)} ₹</p>}
                         </Grid>
                         <CommonValidationTextField name="closingNote" label="Closing Note" grid={{ xs: 12 }} rows={3} multiline />
                       </Grid>

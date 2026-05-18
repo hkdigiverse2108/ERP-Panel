@@ -1,11 +1,13 @@
 import { Box, Grid } from "@mui/material";
+import type { GridRenderCellParams } from "@mui/x-data-grid";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
 import { Queries } from "../../../Api";
+import { CommonDateRangeSelector } from "../../../Attribute";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid } from "../../../Components/Common";
 import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
-import BillReceipt from "../../../Components/POS/New/BillReceipt";
+import Print from "../../../Components/ReportFormats/Print";
 import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { BREADCRUMBS, ORDER_STATUS, POS_ORDER_STATUS } from "../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
@@ -13,8 +15,6 @@ import { setEditPosOrder, setPrintType, setReturnPosOrder, setSalesInvoice, setS
 import type { AppGridColDef, PosOrderBase } from "../../../Types";
 import { CreateFilter, DateConfig } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
-import type { GridRenderCellParams } from "@mui/x-data-grid";
-import { CommonDateRangeSelector } from "../../../Attribute";
 
 const OrderList = () => {
   const dispatch = useAppDispatch();
@@ -31,16 +31,21 @@ const OrderList = () => {
 
   const { data: orderData, isLoading: orderDataLoading, isFetching: orderDataFetching } = Queries.useGetPosOrder({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
   const { refetch: fetchAllOrders, isFetching: orderDataAllFetching, isLoading: orderDataAllLoading } = Queries.useGetPosOrder({ startDate: range.start.toISOString(), endDate: range.end.toISOString() }, false);
-  const { data: posOrderById, isLoading: posOrderByIdLoading, isFetching: posOrderByIdFetching } = Queries.useGetPosOrderById(isSelectedOrderId, Boolean(isSelectedOrderId));
+  const { data: posOrderById } = Queries.useGetPosOrderById(isSelectedOrderId, Boolean(isSelectedOrderId));
 
   const allOrders = useMemo(() => orderData?.data?.posOrder_data?.map((order) => ({ ...order, id: order?._id })) || [], [orderData]);
   const totalRows = orderData?.data?.totalData || 0;
 
   const PrintBill = posOrderById?.data;
-  const PrintBillReady = !posOrderByIdLoading && !posOrderByIdFetching;
+  // const PrintBillReady = !posOrderByIdLoading && !posOrderByIdFetching;
+  // console.log(PrintBillReady);
 
   const handleLastBillPrint = useReactToPrint({
     contentRef,
+    documentTitle: () => `${PAGE_TITLE.POS.ORDER_LIST}_${new Date().toISOString().split("T")[0]}`,
+    onBeforePrint: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    },
     onAfterPrint: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       dispatch(setPrintType(""));
@@ -179,7 +184,7 @@ const OrderList = () => {
           <CommonDataGrid {...CommonDataGridOption} />
         </CommonCard>
       </Box>
-      <div className="print-only hidden">{PrintBill && PrintBillReady && <BillReceipt ref={contentRef} bill={PrintBill} />}</div>
+      <div className="hidden">{<Print type="POS(B2C)" ref={contentRef} bill={PrintBill} />}</div>
     </>
   );
 };
