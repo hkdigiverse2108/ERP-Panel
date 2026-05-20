@@ -7,8 +7,6 @@ const Thermal_80mm1Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>((
   const { company } = useAppSelector((state) => state.company);
   if (!bill) return null;
 
-  // const item = bill.items?.[0];
-
   const companyName = bill.companyId?.name || company?.name;
   const customerName = `${bill.customerId?.firstName || ""} ${bill.customerId?.lastName || ""}`.trim() || "Walk in Customer";
   const customerPhone = bill.customerId?.phoneNo?.phoneNo ? `${bill.customerId.phoneNo.countryCode || ""} ${bill.customerId.phoneNo.phoneNo}` : "";
@@ -157,11 +155,6 @@ const Thermal_80mm1Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>((
 
       {/* Footer */}
       <div className="text-center text-[10px] mt-2">Thank You For Shopping At {companyName}</div>
-
-      {/* Barcode */}
-      {/* <div className="flex justify-center mt-2">
-        <div className="h-10 w-[70%] bg-black" />
-      </div> */}
 
       {/* Bottom */}
       <div className="flex justify-between text-[9px] mt-2">

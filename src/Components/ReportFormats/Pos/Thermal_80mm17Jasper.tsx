@@ -1,43 +1,59 @@
 import { forwardRef } from "react";
 import type { PosOrderBase } from "../../../Types";
+import { useAppSelector } from "../../../Store/hooks";
 
 const Thermal_80mm17Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }, ref) => {
+  const { company } = useAppSelector((state) => state.company);
   if (!bill) return null;
+
+  const companyName = bill.companyId?.name || company?.name;
+  const companyPhone = bill.companyId?.phoneNo?.phoneNo || `${company?.phoneNo?.countryCode || ""} ${company?.phoneNo?.phoneNo}`;
+  const createdDate = bill.createdAt ? new Date(bill.createdAt).toLocaleDateString() : "";
+  const customerName = `${bill.customerId?.firstName || ""} ${bill.customerId?.lastName || ""}`.trim() || "Walk in Customer";
+  const customerPhone = bill.customerId?.phoneNo?.phoneNo ? `${bill.customerId.phoneNo.countryCode || ""} ${bill.customerId.phoneNo.phoneNo}` : "";
+  const getCompanyAddress = () => {
+    const addr = company?.address;
+    if (!addr) return null;
+
+    const parts = [addr.address, addr.city?.name, addr.state?.name, addr.country?.name].filter(Boolean);
+
+    let addressStr = parts.join(", ");
+    if (addr.pinCode) {
+      addressStr += ` - ${addr.pinCode}`;
+    }
+
+    return addressStr;
+  };
 
   return (
     <div ref={ref} className="w-[80mm] mx-auto bg-white text-black font-mono text-[11px] p-3 leading-tight">
-      {/* Duplicate */}
-      <div className="text-right font-bold">(Duplicate)</div>
-
       {/* Header */}
       <div className="text-center">
-        <div className="font-bold text-[16px]">AI Setu ERP</div>
-        <div className="text-[10px]">Information Technology Park Ltd, Pioneer</div>
-        <div className="text-[10px]">Building, Whitefield Road, Bengaluru, Mahe,</div>
-        <div className="text-[10px]">Puducherry-673310</div>
-        <div className="text-[10px]">Ph:+91-3433453454</div>
-        <div className="text-[10px] font-bold">GST No:34AACCC1596Q002</div>
+        <div className="font-bold text-[16px]">{companyName}</div>
+        <div className="text-[10px] w-50 mx-auto">{getCompanyAddress()}</div>
+        <div className="text-[10px]">Ph: {companyPhone}</div>
+        <div className="text-[10px] font-bold">GST No:{company?.GSTIdentificationNumber || "N/A"}</div>
 
         <div className="mt-2 font-bold underline">Invoice</div>
       </div>
 
       {/* Meta */}
       <div className="mt-2 text-[11px]">
-        <div className="flex justify-between">
+        <div className="flex">
           <span>Invoice No</span>
-          <span>: V2-POS523</span>
+          <span>: {bill.orderNo}</span>
         </div>
-        <div className="flex justify-between">
-          <span>Invoice Dt</span>
-          <span>: 31-01-2025 10:45:04 AM</span>
+        <div className="flex">
+          <span>Invoice Date</span>
+          <span>: {createdDate}</span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex">
           <span>Name</span>
-          <span>: adityapatel</span>
+          <span>: {customerName}</span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex">
           <span>Phone No</span>
-          <span>: +91-8511865214</span>
+          <span>: {customerPhone}</span>
         </div>
       </div>
 
@@ -45,39 +61,23 @@ const Thermal_80mm17Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(
       <div className="border-t border-black my-2" />
 
       {/* Table Header */}
-      <div className="grid grid-cols-5 font-bold text-[11px]">
+      <div className="grid grid-cols-4 font-bold text-[11px]">
         <span>Product</span>
         <span className="text-center">Qty</span>
         <span className="text-center">Price</span>
-        <span className="text-center">Disc</span>
         <span className="text-right">Amount</span>
       </div>
 
       {/* Items */}
       <div className="mt-1 text-[11px]">
-        <div className="grid grid-cols-5">
-          <span>Luggage bag 2</span>
-          <span className="text-center">1</span>
-          <span className="text-center">0</span>
-          <span className="text-center">0.00</span>
-          <span className="text-right">0.00</span>
-        </div>
-
-        <div className="grid grid-cols-5">
-          <span>KINDER JOY CHOCOLATE</span>
-          <span className="text-center">1</span>
-          <span className="text-center">500</span>
-          <span className="text-center">0.00</span>
-          <span className="text-right">500.00</span>
-        </div>
-
-        <div className="grid grid-cols-5">
-          <span>testing123</span>
-          <span className="text-center">1</span>
-          <span className="text-center">1770</span>
-          <span className="text-center">17.70</span>
-          <span className="text-right">1752.30</span>
-        </div>
+        {bill.items.map((item, i) => (
+          <div key={i} className="grid grid-cols-4">
+            <span>{item.productId?.name || "Product Name"}</span>
+            <span className="text-center">{Number(item?.qty || 0).toFixed(2)}</span>
+            <span className="text-center">{Number(item?.mrp || 0).toFixed(2)}</span>
+            <span className="text-right">{Number(item?.netAmount || 0).toFixed(2)}</span>
+          </div>
+        ))}
       </div>
 
       {/* Divider */}
@@ -87,15 +87,15 @@ const Thermal_80mm17Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(
       <div className="text-[11px]">
         <div className="flex justify-between">
           <span>Round off :</span>
-          <span>-0.30</span>
+          <span>{Number(bill.roundOff || 0).toFixed(2)}</span>
         </div>
         <div className="flex justify-between font-bold">
           <span>Bill Amount :</span>
-          <span>2,370.00</span>
+          <span>{Number(bill.totalAmount || 0).toFixed(2)}</span>
         </div>
         <div className="flex justify-between">
           <span>Additional Charge :</span>
-          <span>118.00</span>
+          <span>{Number(bill.additionalCharges || 0).toFixed(2)}</span>
         </div>
       </div>
 
@@ -105,19 +105,16 @@ const Thermal_80mm17Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(
       {/* Payment Details */}
       <div className="text-[11px]">
         <div className="font-bold">Payment Details:</div>
-
         <div className="flex justify-between">
-          <span>Credits Applied :</span>
-          <span>1,500.00</span>
+          <span>Discount</span>
+          <span>{Number(bill.totalDiscount || 0).toFixed(2)}</span>
         </div>
-        <div className="flex justify-between">
-          <span>Cash :</span>
-          <span>870.00</span>
-        </div>
-        <div className="flex justify-between">
-          <span>Change :</span>
-          <span>130.00</span>
-        </div>
+        {bill.multiplePayments?.map((payment, i) => (
+          <div key={i} className="flex justify-between">
+            <span>BY {payment.method.toUpperCase()}</span>
+            <span>{Number(payment.amount || 0).toFixed(2)}</span>
+          </div>
+        ))}
       </div>
 
       {/* Divider */}
@@ -125,21 +122,11 @@ const Thermal_80mm17Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(
 
       {/* Summary */}
       <div className="text-center text-[11px]">
-        <div>No. of Products: 3</div>
-        <div>You Saved: 17.70</div>
-
-        <div className="mt-2">No Return</div>
-        <div>No Exchange</div>
-        <div>(Bill Amt Inclusive of Taxes)</div>
+        <div>No. of Products: {Number(bill?.totalQty || 0).toFixed(2)}</div>
+        <div>You Saved: {Number(bill.totalDiscount || 0).toFixed(2)}</div>
 
         <div className="mt-2 font-bold">Thank You, Visit Again!</div>
       </div>
-
-      {/* Barcode */}
-      {/* <div className="flex flex-col items-center mt-2">
-        <div className="h-10 w-[70%] bg-black" />
-        <div className="text-[10px] mt-1">V2-POS523</div>
-      </div> */}
     </div>
   );
 });

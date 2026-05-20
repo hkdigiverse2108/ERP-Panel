@@ -42,7 +42,7 @@ const CompanyProfile = () => {
       items: [
         { label: "Bank Name", value: company?.bankId?.name },
         { label: "Bank IFSC", value: company?.bankId?.ifscCode },
-        { label: "UPI", value: company?.bankId?.upi },
+        { label: "UPI ID", value: company?.bankId?.upiId },
         { label: "Branch Name", value: company?.bankId?.branchName },
         { label: "Account Holder Name", value: company?.bankId?.accountHolderName },
         { label: "Bank Account No.", value: company?.bankId?.bankAccountNumber },
