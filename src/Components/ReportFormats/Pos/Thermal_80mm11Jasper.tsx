@@ -1,37 +1,42 @@
 import { forwardRef } from "react";
 import type { PosOrderBase } from "../../../Types";
+import { useAppSelector } from "../../../Store/hooks";
 
 const Thermal_80mm11Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }, ref) => {
+  const { company } = useAppSelector((state) => state.company);
+
   if (!bill) return null;
 
-  const companyName = bill.companyId?.name || "AI Setu";
-  const companyAddress = (bill.companyId?.address as any)?.[0]?.addressLine1 || "Synthesis The First, Corporate House, THE FIRST,\nA5, Nyay Marg, near Ltc Narmada, I I M, Vastrapur,";
-  const companyCity = (bill.companyId?.address as any)?.[0]?.city?.name || "Ahmedabad";
-  const companyState = (bill.companyId?.address as any)?.[0]?.state?.name || "Gujarat";
-  const companyCountry = (bill.companyId?.address as any)?.[0]?.country?.name || "India";
-  const companyZip = (bill.companyId?.address as any)?.[0]?.pincode || "380054";
+  const companyName = bill.companyId?.name || company?.name;
 
   const servedBy = `${(bill as any).createdById?.firstName || "Variety Dry Fruit"} ${(bill as any).createdById?.lastName || "Stores"}`.trim();
 
   const createdDate = bill.createdAt ? new Date(bill.createdAt).toLocaleDateString() : "02/05/2023";
-  const createdTime = bill.createdAt ? new Date(bill.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "05:44 PM";
+  const createdTime = bill.createdAt ? new Date(bill.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "05:44 PM";
 
-  const totalItems = bill.items?.reduce((acc: number, curr: any) => acc + (Number(curr.qty) || 0), 0) || 1;
+  const getCompanyAddress = () => {
+    const addr = company?.address;
+    if (!addr) return null;
 
+    const parts = [addr.address, addr.city?.name, addr.state?.name, addr.country?.name].filter(Boolean);
+
+    let addressStr = parts.join(", ");
+    if (addr.pinCode) {
+      addressStr += ` - ${addr.pinCode}`;
+    }
+
+    return addressStr;
+  };
   return (
     <div ref={ref} className="w-[80mm] mx-auto bg-white text-black font-mono text-[11px] p-3 leading-tight">
       {/* Logo */}
       <div className="flex flex-col items-center justify-center mb-2">
-        <img src={(bill.companyId as any)?.logo || "/logo.png"} alt="logo" className="w-14 h-14 object-contain mb-1" />
-        {/* <div className="text-[26px] font-extrabold tracking-wide">
-          <span className="">{companyName}</span>
-        </div> */}
+        <img src={company?.reportFormatLogo || "/logo.png"} alt="reportFormatLogo" className="w-16 h-16 object-contain" />
       </div>
 
       {/* Address */}
       <div className="text-center text-[10px] leading-snug">
-        <div className="whitespace-pre-wrap">{companyAddress}</div>
-        <div>{`${companyCity} , ${companyState} , ${companyCountry} , ${companyZip}`}</div>
+        <div className="text-[10px] w-50 mx-auto">{getCompanyAddress()}</div>
       </div>
 
       {/* Divider */}
@@ -52,18 +57,12 @@ const Thermal_80mm11Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(
       {bill.items?.map((item: any, i: number) => (
         <div key={i} className="mt-1">
           <div className="grid grid-cols-4">
-            <span className="font-bold">{item?.productId?.sku || "RC50024"}</span>
-            <span className="text-center">{Number(item?.qty || 1).toFixed(3)}</span>
-            <span className="text-center">{Number(item?.mrp || 241.935).toFixed(3)}</span>
-            <span className="text-right">{Number(item?.netAmount || 200).toFixed(3)}</span>
+            {/* <span className="font-bold">{item?.productId?.sku || "RC50024"}</span> */}
+            <div className="font-bold">{item?.productId?.name || "Product name"}</div>
+            <span className="text-center">{Number(item?.qty || 0).toFixed(3)}</span>
+            <span className="text-center">{Number(item?.mrp || 0).toFixed(3)}</span>
+            <span className="text-right">{Number(item?.netAmount || 0).toFixed(3)}</span>
           </div>
-
-          <div className="mt-1 font-bold">{item?.productId?.name || "Product name"}</div>
-          <div className="text-[10px]">{i + 1}</div>
-
-          {item?.description && (
-            <div className="text-[10px] mt-1 leading-snug">Description: {item.description}</div>
-          )}
         </div>
       )) || (
         <div className="mt-1">
@@ -87,7 +86,7 @@ const Thermal_80mm11Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(
       {/* Total Items */}
       <div className="flex justify-between font-bold">
         <span>Total item sold :</span>
-        <span>{totalItems.toFixed(3)}</span>
+        <span>{bill?.totalQty?.toFixed(2)}</span>
       </div>
 
       {/* Divider */}
@@ -97,13 +96,22 @@ const Thermal_80mm11Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(
       <div className="flex justify-between font-bold">
         <span>Net Amount</span>
         <span>INR</span>
-        <span>{Number(bill.totalAmount || 200).toFixed(3)}</span>
+        <span>{Number(bill.totalAmount || 0).toFixed(3)}</span>
       </div>
-
-      <div className="flex justify-between mt-1">
-        <span>Change</span>
-        <span>{Number(bill.roundOff || 0).toFixed(3)}</span>
+      <div className="flex justify-between">
+        <span>Discount</span>
+        <span>{Number(bill.totalDiscount || 0).toFixed(2)}</span>
       </div>
+      <div className="flex justify-between">
+        <span>Round Off</span>
+        <span>{Number(bill.roundOff || 0).toFixed(2)}</span>
+      </div>
+      {bill.multiplePayments?.map((payment, i) => (
+        <div key={i} className="flex justify-between">
+          <span>By {payment.method.toUpperCase()}</span>
+          <span>{Number(payment.amount || 0).toFixed(2)}</span>
+        </div>
+      ))}
 
       {/* Divider Stars */}
       <div className="text-center my-1">***</div>
@@ -124,7 +132,7 @@ const Thermal_80mm11Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(
       <div className="grid grid-cols-3 text-[10px]">
         <span>{createdDate}</span>
         <span className="text-center">{createdTime}</span>
-        <span className="text-right">{bill.orderNo || "POS3617"}</span>
+        <span className="text-right">{bill.orderNo || "-"}</span>
       </div>
 
       {/* Divider */}

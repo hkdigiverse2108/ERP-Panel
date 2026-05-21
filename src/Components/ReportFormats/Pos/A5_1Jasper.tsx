@@ -1,31 +1,45 @@
 import { forwardRef } from "react";
 import type { PosOrderBase } from "../../../Types";
+import { useAppSelector } from "../../../Store/hooks";
 
 const A5_1Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }, ref) => {
+  const { company } = useAppSelector((state) => state.company);
   if (!bill) return null;
 
-  const companyName = bill.companyId?.name || "BACHAT MALL";
-  const companyAddress = (bill.companyId?.address as any)?.[0]?.addressLine1 || "6 MG ROAD MAHARASHTRA CAMP PUNE-411001";
-  const companyCity = (bill.companyId?.address as any)?.[0]?.city?.name || "Amravati Nagpur";
-  const companyState = (bill.companyId?.address as any)?.[0]?.state?.name || "Maharashtra";
-  const companyCountry = (bill.companyId?.address as any)?.[0]?.country?.name || "India";
-  const companyGst = (bill.companyId as any)?.gstNo || "34AACCC1596Q002";
-  const companyEmail = bill.companyId?.email || "ritulkhokhar1@vasyerp.com";
-  const companyPhone = bill.companyId?.phoneNo?.phoneNo || "+91-6354158555";
+  const companyName = bill.companyId?.name || company?.name;
+  const getCompanyAddress = () => {
+    const addr = company?.address;
+    if (!addr) return null;
+
+    const parts = [addr.address, addr.city?.name, addr.state?.name, addr.country?.name].filter(Boolean);
+
+    let addressStr = parts.join(", ");
+    if (addr.pinCode) {
+      addressStr += ` - ${addr.pinCode}`;
+    }
+
+    return addressStr;
+  };
+  const companyGst = (bill.companyId as any)?.gstNo || company?.GSTIdentificationNumber;
+  const companyEmail = bill.companyId?.email || company?.email;
+  const companyPhone = company.phoneNo?.phoneNo ? `${company.phoneNo.countryCode || ""} ${company.phoneNo.phoneNo}` : "";
 
   const customerName = `${bill.customerId?.firstName || ""} ${bill.customerId?.lastName || ""}`.trim() || "Demo Company For testing char";
   const customerAddress = (bill.customerId?.address as any)?.[0]?.addressLine1 || "Kurumbapet";
   const placeOfSupply = (bill.customerId?.address as any)?.[0]?.city?.name || "Puducherry";
 
-  const orderNo = bill.orderNo || "POT00141";
+  const orderNo = bill.orderNo || "-";
   const createdDate = bill.createdAt ? new Date(bill.createdAt).toLocaleDateString() : "19/11/2025";
 
-  const totalQty = bill.items?.reduce((acc: number, item: any) => acc + (Number(item.qty) || 0), 0) || 1;
-  const subTotal = bill.items?.reduce((acc: number, item: any) => acc + (Number(item.mrp) * Number(item.qty) || 0), 0) || 1400;
-  const totalTax = bill.items?.reduce((acc: number, item: any) => acc + (Number(item.taxAmount) || 0), 0) || 16.07;
-  const totalNet = bill.totalAmount || 150.00;
-  const roundOff = bill.roundOff || 0.00;
-  const addDiscount = bill.totalDiscount || 1116.07;
+  const subTotal = bill?.totalAmount + bill?.totalDiscount;
+  const totalTax = bill?.items?.reduce((acc, item) => {
+    const net = item.netAmount || 0;
+    const taxRate = item?.productId?.salesTaxId?.percentage || 0;
+    const mrp = Number(item.mrp) - Number(item.discountAmount) - Number(item.additionalDiscountAmount);
+    const taxable = item?.productId?.isSalesTaxIncluding ? mrp - (mrp * taxRate) / 100 : mrp - (mrp * taxRate) / 100;
+    const taxAmount = net - taxable;
+    return acc + (Number(taxAmount) || 0);
+  }, 0);
 
   return (
     <div ref={ref} className="w-[210mm] mx-auto bg-white text-black p-6 text-[12px] font-serif">
@@ -33,15 +47,13 @@ const A5_1Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill },
       <div className="flex justify-between items-start border-b pb-2">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <img
-            src={(bill.companyId as any)?.logo || "/logo.png"}
-            className="w-16 h-16 object-contain"
-            alt="logo"
-          />
+          <img src={company?.reportFormatLogo || "/logo.png"} alt="reportFormatLogo" className="w-16 h-16 object-contain" />
           <div>
             <div className="font-bold text-[20px]">{companyName}</div>
-            <div className="text-[11px] leading-tight">{companyAddress} {companyCity}, {companyState}, {companyCountry}</div>
-            <div className="text-[11px]">GSTIN NO : {companyGst} | Email : {companyEmail} | Customer Care : {companyPhone}</div>
+            <div className="text-[11px] leading-tight">{getCompanyAddress()}</div>
+            <div className="text-[11px]">
+              GSTIN NO : {companyGst} | Email : {companyEmail} | Customer Care : {companyPhone}
+            </div>
           </div>
         </div>
       </div>
@@ -76,7 +88,6 @@ const A5_1Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill },
             <th className="border p-1">UOM</th>
             <th className="border p-1">Unit Price</th>
             <th className="border p-1">Discount</th>
-            <th className="border p-1">Discount2</th>
             <th className="border p-1">Rate</th>
             <th className="border p-1">Taxable Value</th>
             <th className="border p-1">Tax(%)</th>
@@ -87,26 +98,27 @@ const A5_1Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill },
 
         <tbody>
           {bill.items?.map((item: any, i: number) => {
-            const taxPct = item.taxAmount ? ((item.taxAmount / item.mrp) * 100).toFixed(1) : "12.0";
-            const taxable = (item.netAmount || 150) - (item.taxAmount || 0);
-
+            const net = item.netAmount || 0;
+            const taxRate = item?.productId?.salesTaxId?.percentage || 0;
+            const mrp = Number(item.mrp) - Number(item.discountAmount) - Number(item.additionalDiscountAmount);
+            const taxable = item?.productId?.isSalesTaxIncluding ? mrp - (mrp * taxRate) / 100 : mrp - (mrp * taxRate) / 100;
+            const taxAmount = net - taxable;
             return (
               <tr key={i}>
                 <td className="border p-1 text-center">{i + 1}</td>
                 <td className="border p-1">
                   {item.productId?.name || "FGHG78"} <br />
-                  <span className="text-[10px]">Item Code : {item.productId?.sku || "AAAADLD404"}</span>
+                  {item.productId?.sku && <span className="text-[10px]">Item Code : {item.productId?.sku}</span>}
                 </td>
-                <td className="border p-1 text-center">{Number(item.qty || 1).toFixed(1)}</td>
-                <td className="border p-1 text-center">{item.productId?.unit?.name || "g"}</td>
-                <td className="border p-1 text-right">{Number(item.mrp || 1400).toFixed(2)}</td>
-                <td className="border p-1 text-right">{Number(item.discountAmount || 150).toFixed(2)}</td>
-                <td className="border p-1 text-right">0.00</td>
-                <td className="border p-1 text-right">{Number(item.mrp || 1400).toFixed(2)}</td>
-                <td className="border p-1 text-right">{Number(taxable || 133.93).toFixed(2)}</td>
-                <td className="border p-1 text-center">{taxPct}</td>
-                <td className="border p-1 text-right">{Number(item.taxAmount || 16.07).toFixed(2)}</td>
-                <td className="border p-1 text-right">{Number(item.netAmount || 150).toFixed(2)}</td>
+                <td className="border p-1 text-center">{Number(item.qty || 0).toFixed(1)}</td>
+                <td className="border p-1 text-center">{item.productId?.uomId?.name || "-"}</td>
+                <td className="border p-1 text-right">{Number(item.mrp || 0).toFixed(2)}</td>
+                <td className="border p-1 text-right">{Number(item.discountAmount || 0).toFixed(2)}</td>
+                <td className="border p-1 text-right">{Number(mrp || 0).toFixed(2)}</td>
+                <td className="border p-1 text-right">{Number(taxable || 0).toFixed(2)}</td>
+                <td className="border p-1 text-center">{item?.productId?.salesTaxId?.percentage}%</td>
+                <td className="border p-1 text-right">{Number(taxAmount || 0).toFixed(2)}</td>
+                <td className="border p-1 text-right">{Number(net || 0).toFixed(2)}</td>
               </tr>
             );
           }) || (
@@ -129,47 +141,32 @@ const A5_1Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill },
             </tr>
           )}
         </tbody>
+
+        <tfoot>
+          <tr>
+            <td colSpan={2} className="border p-1 text-">
+              Total Items
+            </td>
+            <td className="border p-1 text-center">{Number(bill?.items.reduce((acc, item) => acc + Number(item.qty || 0), 0).toFixed(2))}</td>
+            <td colSpan={9}></td>
+          </tr>
+        </tfoot>
       </table>
 
-      {/* Total Row */}
-      <div className="border border-t-0 p-1 text-right font-bold">Total : {totalQty.toFixed(2)}</div>
-
       {/* Tax Summary + Totals */}
-      <div className="grid grid-cols-2 mt-3 gap-4">
-        {/* Tax Summary */}
-        <div>
-          <div className="font-bold border p-1 text-center">Tax Summary</div>
-
-          <table className="w-full border text-[11px]">
-            <thead>
-              <tr>
-                <th className="border p-1">TAXABLE VALUE</th>
-                <th className="border p-1">CGST</th>
-                <th className="border p-1">SGST</th>
-                <th className="border p-1">CESS</th>
-                <th className="border p-1">IGST</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border p-1 text-center">133.93</td>
-                <td className="border p-1 text-center">8.04</td>
-                <td className="border p-1 text-center">8.04</td>
-                <td className="border p-1 text-center">N/A</td>
-                <td className="border p-1 text-center">N/A</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* Totals */}
+      <div className="flex justify-end mt-3 gap-4">
         <div className="text-right text-[12px]">
-          <div>Sub Total : {subTotal.toFixed(2)}</div>
-          <div>Tax Amount : {totalTax.toFixed(2)}</div>
-          <div>Additional Discount : {addDiscount.toFixed(2)}</div>
-          <div>BY CASH : {totalNet.toFixed(2)}</div>
-          <div>Round Off : {roundOff.toFixed(2)}</div>
-          <div>Due Amount : 0.00</div>
+          <div>Sub Total : {subTotal?.toFixed(2)}</div>
+          <div>Tax Amount : {totalTax?.toFixed(2)}</div>
+          <div>Additional Discount : {bill?.totalDiscount?.toFixed(2)}</div>
+          <div>Round Off : {bill?.roundOff?.toFixed(2)}</div>
+          {bill.multiplePayments?.map((payment, i) => (
+            <div key={i}>
+              <span>
+                By {payment.method.toUpperCase()} : {Number(payment.amount || 0).toFixed(2)}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -193,13 +190,6 @@ const A5_1Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill },
       <div className="mt-10 text-right">
         <div className="border-t w-48 ml-auto" />
         <div>Authorised Signatory</div>
-      </div>
-
-      {/* Footer */}
-      <div className="flex justify-between mt-6 text-[10px] border-t pt-1">
-        <span>This is computer generated Invoice.</span>
-        <span>Page 1 of 1</span>
-        <span>Next &gt;&gt;</span>
       </div>
     </div>
   );
