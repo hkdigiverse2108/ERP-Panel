@@ -4,7 +4,7 @@ import { Grn_Bill_ThermalJasper, Purchase1Jasper, Purchase2Jasper, Purchase3Jasp
 import { Deliverychallan_1Jasper } from "./Deliverychallan";
 import { Estimate_A4_1Jasper } from "./Estimate";
 import { PurchaseOrder1Jasper, PurchaseOrder2Jasper, PurchaseOrder3Jasper, PurchaseThermalHtml } from "./Order";
-import { A4_14_1Jasper, A4_14Jasper, A4_1Jasper, A4_2Html, A4_7Jasper, A5_1Jasper, A5_2Jasper, Thermal_58mm1Jasper, Thermal_80mm11Jasper, Thermal_80mm17Jasper, Thermal_80mm18Jasper, Thermal_80mm1Jasper, Thermal_80mm2_1Jasper, Thermal_80mm3Jasper, Thermal_80mm4Jasper, Thermal_80mmOffline, thermal_80mmOffline1 } from "./Pos";
+import { A4_2Html, A5_1Jasper, A5_2Jasper, Thermal_58mm1Jasper, Thermal_80mm11Jasper, Thermal_80mm17Jasper, Thermal_80mm18Jasper, Thermal_80mm1Jasper, Thermal_80mm2_1Jasper, Thermal_80mm3Jasper, Thermal_80mm4Jasper, Thermal_80mmOffline, thermal_80mmOffline1 } from "./Pos";
 import { ReceiptJasper, Thermal_80mm_Receipt_1Jasper } from "./Receipt";
 import { Invoice_A4_1Jasper, Invoice_A4_4html, Invoice_A4EInvoiceJasper, Invoice_A4Jasper, Invoice_A5_1Jasper, Invoice_A5Jasper } from "./Sales";
 import { StockTransfer_A4_1Jasper, StockTransfer_A4_2Jasper } from "./StockTransfer";
@@ -23,13 +23,13 @@ const FORMAT_COMPONENTS_MAP: Record<string, Record<string, any>> = {
     "Thermal_58mm-1": Thermal_58mm1Jasper,
     "Thermal_80mm-4": Thermal_80mm4Jasper,
     "A5-1": A5_1Jasper,
-    "A4-14-1": A4_14_1Jasper,
+    // "A4-14-1": A4_14_1Jasper,
     "Thermal_80mm-2-1": Thermal_80mm2_1Jasper,
-    "A4-1": A4_1Jasper,
+    // "A4-1": A4_1Jasper,
     "Thermal_80mm-3": Thermal_80mm3Jasper,
-    "A4-7": A4_7Jasper,
+    // "A4-7": A4_7Jasper,
     "A4-2": A4_2Html,
-    "A4-14": A4_14Jasper,
+    // "A4-14": A4_14Jasper,
     "Thermal_80mm-18": Thermal_80mm18Jasper,
   },
 

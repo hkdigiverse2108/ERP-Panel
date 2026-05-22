@@ -26,7 +26,7 @@ const Thermal_80mm2_1Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>
   const roundOff = bill.roundOff || 0.00;
 
   return (
-    <div ref={ref} className="w-[80mm] mx-auto bg-white text-black font-mono text-[11px] p-3 leading-tight">
+    <div ref={ref} className="w-[80mm] mx-auto text-black font-mono text-[11px] p-3 leading-tight">
       {/* Header */}
       <div className="text-center font-bold uppercase">{companyName}</div>
 

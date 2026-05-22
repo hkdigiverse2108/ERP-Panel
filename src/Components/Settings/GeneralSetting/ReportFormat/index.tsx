@@ -4,7 +4,7 @@ import { Box, CircularProgress, FormControlLabel, Grid, Radio, RadioGroup, Tab, 
 import { Mutations, Queries } from "../../../../Api";
 import type { ReportFormat } from "../../../../Types";
 import { CommonModal } from "../../../Common";
-import { A4_14_1Jasper, A4_14Jasper, A4_1Jasper, A4_2Html, A4_7Jasper, A5_1Jasper, A5_2Jasper, Deliverychallan_1Jasper, Estimate_A4_1Jasper, Grn_Bill_ThermalJasper, Invoice_A4_1Jasper, Invoice_A4_4html, Invoice_A4EInvoiceJasper, Invoice_A4Jasper, Invoice_A5_1Jasper, Invoice_A5Jasper, Purchase1Jasper, Purchase2Jasper, Purchase3Jasper, PurchaseOrder1Jasper, PurchaseOrder2Jasper, PurchaseOrder3Jasper, PurchaseThermalHtml, StockTransfer_A4_1Jasper, StockTransfer_A4_2Jasper, Thermal_58mm1Jasper, Thermal_80mm11Jasper, Thermal_80mm17Jasper, Thermal_80mm18Jasper, Thermal_80mm1Jasper, Thermal_80mm2_1Jasper, Thermal_80mm3Jasper, Thermal_80mm4Jasper, Thermal_80mmOffline, thermal_80mmOffline1 } from "../../../ReportFormats";
+import { A4_2Html, A5_1Jasper, A5_2Jasper, Deliverychallan_1Jasper, Estimate_A4_1Jasper, Grn_Bill_ThermalJasper, Invoice_A4_1Jasper, Invoice_A4_4html, Invoice_A4EInvoiceJasper, Invoice_A4Jasper, Invoice_A5_1Jasper, Invoice_A5Jasper, Purchase1Jasper, Purchase2Jasper, Purchase3Jasper, PurchaseOrder1Jasper, PurchaseOrder2Jasper, PurchaseOrder3Jasper, PurchaseThermalHtml, StockTransfer_A4_1Jasper, StockTransfer_A4_2Jasper, Thermal_58mm1Jasper, Thermal_80mm11Jasper, Thermal_80mm17Jasper, Thermal_80mm18Jasper, Thermal_80mm1Jasper, Thermal_80mm2_1Jasper, Thermal_80mm3Jasper, Thermal_80mm4Jasper, Thermal_80mmOffline, thermal_80mmOffline1 } from "../../../ReportFormats";
 import { A5_2JasperData, Thermal_80mm1JasperData, Thermal_80mmOffline1Data, Thermal_80mmOfflineData } from "../../../ReportFormats/Data";
 import { ReceiptJasper, Thermal_80mm_Receipt_1Jasper } from "../../../ReportFormats/Receipt";
 
@@ -30,13 +30,13 @@ const FORMAT_COMPONENTS_MAP: Record<string, Record<string, any>> = {
     "Thermal_58mm-1": { Component: Thermal_58mm1Jasper, mockData: Thermal_80mm1JasperData },
     "Thermal_80mm-4": { Component: Thermal_80mm4Jasper, mockData: Thermal_80mm1JasperData },
     "A5-1": { Component: A5_1Jasper, mockData: Thermal_80mm1JasperData },
-    "A4-14-1": { Component: A4_14_1Jasper, mockData: Thermal_80mm1JasperData },
+    // "A4-14-1": { Component: A4_14_1Jasper, mockData: Thermal_80mm1JasperData },
     "Thermal_80mm-2-1": { Component: Thermal_80mm2_1Jasper, mockData: Thermal_80mm1JasperData },
-    "A4-1": { Component: A4_1Jasper, mockData: Thermal_80mm1JasperData },
+    // "A4-1": { Component: A4_1Jasper, mockData: Thermal_80mm1JasperData },
     "Thermal_80mm-3": { Component: Thermal_80mm3Jasper, mockData: Thermal_80mm1JasperData },
-    "A4-7": { Component: A4_7Jasper, mockData: Thermal_80mm1JasperData },
+    // "A4-7": { Component: A4_7Jasper, mockData: Thermal_80mm1JasperData },
     "A4-2": { Component: A4_2Html, mockData: Thermal_80mm1JasperData },
-    "A4-14": { Component: A4_14Jasper, mockData: Thermal_80mm1JasperData },
+    // "A4-14": { Component: A4_14Jasper, mockData: Thermal_80mm1JasperData },
     "Thermal_80mm-18": { Component: Thermal_80mm18Jasper, mockData: Thermal_80mm1JasperData },
   },
   "Sales(B2B)": {
