@@ -1,38 +1,44 @@
 import { forwardRef } from "react";
 import type { PosOrderBase } from "../../../Types";
+import { useAppSelector } from "../../../Store/hooks";
+import { FormatDateTime } from "../../../Utils";
 
-const Thermal_80mm18Jasper = forwardRef<HTMLDivElement, { bill?: PosOrderBase | any }>(({ bill }, ref) => {
-  const companyAddress = (bill?.companyId?.address as any)?.[0]?.addressLine1 || "Rajapath Rangaoli Road Kurumbapet-605001";
-  const companyFssai = (bill?.companyId as any)?.fssaiNo || "12345678910234";
-  const companyGst = (bill?.companyId as any)?.gstNo || "34AACCC1596Q002";
-  const companyEmail = bill?.companyId?.email || "circleastar009@gmail.com";
-  const companyPhone = bill?.companyId?.phoneNo?.phoneNo || "9723455646";
-  const logo = (bill?.companyId as any)?.logo || "/logo.png";
-  const placeOfSupply = (bill?.customerId?.address as any)?.[0]?.city?.name || "Puducherry";
+const Thermal_80mm18Jasper = forwardRef<HTMLDivElement, { bill?: PosOrderBase }>(({ bill }, ref) => {
+  const { company } = useAppSelector((state) => state.company);
+  if (!bill) return null;
 
-  const customerName = `${bill?.customerId?.firstName || ""} ${bill?.customerId?.lastName || ""}`.trim() || "Cash Sales";
-  const customerPhone = bill?.customerId?.phoneNo?.phoneNo || "";
-  const customerAddress = (bill?.customerId?.address as any)?.[0]?.addressLine1 || "Kurumbapet";
+  const companyAddress = (bill?.companyId?.address as any)?.[0]?.addressLine1 || company.address?.address;
+  const companyFssai = (bill?.companyId as any)?.fssaiNo || company.fssaiNo;
+  const companyGst = (bill?.companyId as any)?.gstNo || company.GSTIdentificationNumber;
+  const companyEmail = bill?.companyId?.email || company.email;
+  const companyPhone = bill?.companyId?.phoneNo?.phoneNo || `${company.phoneNo?.countryCode || " "} ${company.phoneNo?.phoneNo || ""}`.trim() || company.phoneNo?.phoneNo;
+  const placeOfSupply = (bill?.customerId?.address as any)?.[0]?.city?.name || company.address?.city?.name;
 
-  const orderNo = bill?.orderNo || "POS3353";
+  const customerName = `${bill?.customerId?.firstName || ""} ${bill?.customerId?.lastName || ""}`.trim();
+  const customerPhone = bill?.customerId?.phoneNo?.phoneNo;
+  const customerAddress = (bill?.customerId?.address as any)?.[0]?.addressLine1;
+
+  const orderNo = bill?.orderNo;
   const invoiceDate = bill?.createdAt ? new Date(bill.createdAt).toLocaleDateString("en-GB") : "05/01/2024";
-  const invoiceTime = bill?.createdAt ? new Date(bill.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "11:20";
-  
-  const totalQty = bill?.items?.reduce((acc: number, item: any) => acc + (Number(item.qty) || 0), 0) || 2;
-  const totalAmount = bill?.totalAmount || 210.200;
-  const roundOff = bill?.roundOff || -0.200;
-  const tendered = bill?.multiplePayments?.[0]?.amount || 210.000;
-  const change = bill?.changeAmount || 0.000;
+  const invoiceTime = bill?.createdAt ? new Date(bill.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "11:20";
+
+  const totalQty = bill?.totalQty;
+  const totalAmount = bill?.totalAmount;
+  const roundOff = bill?.roundOff;
+  const tendered = bill?.multiplePayments?.[0]?.amount;
+  const change = bill?.totalAdditionalCharge;
   const discountItemsCount = bill?.items?.filter((i: any) => Number(i.discountAmount) > 0).length || 2;
-  const totalDiscount = bill?.totalDiscount || 15.000;
-  const paymentMode = bill?.multiplePayments?.[0]?.method || "CASH";
+  const totalDiscount = bill?.totalDiscount;
 
   return (
     <div ref={ref} className="w-[80mm] mx-auto bg-white text-black font-mono text-[11px] p-3 leading-tight">
       {/* Logo */}
-      <div className="text-center mb-2">
-        <img src={logo} alt="logo" className="h-12 object-contain mx-auto" />
-      </div>
+
+      {company?.reportFormatLogo && (
+        <div className="text-center mb-2">
+          <img src={company?.reportFormatLogo} alt="reportFormatLogo" className="w-12 h-12 object-contain mx-auto" />
+        </div>
+      )}
 
       {/* Invoice No */}
       <div className="text-center font-bold text-[13px]">Invoice No.</div>
@@ -71,7 +77,7 @@ const Thermal_80mm18Jasper = forwardRef<HTMLDivElement, { bill?: PosOrderBase | 
       <div className="border-t border-dashed my-2" />
 
       {/* Table Header */}
-      <div className="grid grid-cols-5 font-bold text-[10px]">
+      <div className="grid grid-cols-[20px_1fr_50px_50px_50px] font-bold text-[10px]">
         <span>#</span>
         <span>Item</span>
         <span className="text-center">MRP</span>
@@ -82,44 +88,19 @@ const Thermal_80mm18Jasper = forwardRef<HTMLDivElement, { bill?: PosOrderBase | 
       {/* Items */}
       <div className="mt-1 text-[10px]">
         {bill?.items?.map((item: any, i: number) => {
-          const taxPct = item.taxAmount ? ((item.taxAmount / item.mrp) * 100).toFixed(0) : 0;
           return (
-            <div className="grid grid-cols-5 mt-1" key={i}>
+            <div className="grid grid-cols-[20px_1fr_50px_50px_50px] mt-1" key={i}>
               <span>{i + 1}</span>
               <span>
                 {item.productId?.name || "Product"} <br />
-                <span className="text-[9px]">MRP {item.mrp || 0} GST {taxPct}%</span>
+                <span className="text-[9px]">GST {(item?.productId?.isSalesTaxIncluding ? "INC" : "EXC") + item?.productId?.salesTaxId?.percentage}%</span>
               </span>
               <span className="text-center">{Number(item.mrp || 0).toFixed(3)}</span>
               <span className="text-center">{Number(item.discountAmount || 0).toFixed(2)}</span>
               <span className="text-right">{Number(item.netAmount || 0).toFixed(3)}</span>
             </div>
           );
-        }) || (
-          <>
-            <div className="grid grid-cols-5">
-              <span>1</span>
-              <span>
-                Aay <br />
-                <span className="text-[9px]">GST 18%</span>
-              </span>
-              <span className="text-center">150.000</span>
-              <span className="text-center">10.00</span>
-              <span className="text-right">165.200</span>
-            </div>
-
-            <div className="grid grid-cols-5 mt-1">
-              <span>2</span>
-              <span>
-                SYS SAWAI ADAI <br />
-                <span className="text-[9px]">MRP 300g GST 12%</span>
-              </span>
-              <span className="text-center">50.000</span>
-              <span className="text-center">10.0%</span>
-              <span className="text-right">45.000</span>
-            </div>
-          </>
-        )}
+        })}
       </div>
 
       {/* Divider */}
@@ -127,26 +108,32 @@ const Thermal_80mm18Jasper = forwardRef<HTMLDivElement, { bill?: PosOrderBase | 
 
       {/* Totals */}
       <div className="text-[11px]">
-        <div className="flex justify-between font-bold">
-          <span>TOTAL</span>
-          <span>{Number(totalAmount).toFixed(3)}</span>
-        </div>
         <div className="flex justify-between">
           <span>ROUND OFF</span>
-          <span>{Number(roundOff).toFixed(3)}</span>
+          <span>{Number(roundOff).toFixed(2)}</span>
         </div>
-        <div className="flex justify-between uppercase">
-          <span>BY {paymentMode}</span>
-          <span>{Number(tendered).toFixed(3)}</span>
+        <div className="flex justify-between font-bold">
+          <span>TOTAL</span>
+          <span>{Number(totalAmount).toFixed(2)}</span>
         </div>
+        {bill.multiplePayments?.map((payment, i) => (
+          <div key={i} className="flex justify-between uppercase">
+            <span>By {payment.method.toUpperCase()}</span>
+            <span>{Number(payment.amount || 0).toFixed(2)}</span>
+          </div>
+        ))}
       </div>
 
       {/* Divider */}
       <div className="border-t border-dashed my-2" />
 
       {/* Summary */}
-      <div className="text-center font-bold text-[10px]">NO OF QTY : {Number(totalQty).toFixed(0)} | DISCOUNT ITEMS : {discountItemsCount}</div>
-      <div className="text-center text-[10px]">TENDERED : {Number(tendered).toFixed(3)} | CHANGE : {Number(change).toFixed(3)}</div>
+      <div className="text-center font-bold text-[10px]">
+        NO OF QTY : {Number(totalQty).toFixed(0)} | DISCOUNT ITEMS : {discountItemsCount}
+      </div>
+      <div className="text-center text-[10px]">
+        TENDERED : {Number(tendered).toFixed(2)} | CHANGE : {Number(change).toFixed(2)}
+      </div>
 
       {/* Highlight Savings */}
       <div className="text-center font-bold text-[16px] mt-2">You Saved Rs : {Number(totalDiscount).toFixed(3)}</div>
@@ -162,7 +149,7 @@ const Thermal_80mm18Jasper = forwardRef<HTMLDivElement, { bill?: PosOrderBase | 
       <div className="border-t border-dashed my-2" />
 
       {/* Tax Summary */}
-      <div className="text-center font-bold text-[10px] mb-1">TAX SUMMARY</div>
+      {/* <div className="text-center font-bold text-[10px] mb-1">TAX SUMMARY</div>
 
       <table className="w-full text-[9px] border border-black text-center">
         <thead>
@@ -211,7 +198,7 @@ const Thermal_80mm18Jasper = forwardRef<HTMLDivElement, { bill?: PosOrderBase | 
             </>
           )}
         </tbody>
-      </table>
+      </table> */}
 
       {/* Customer */}
       <div className="mt-2 text-[10px]">
@@ -234,7 +221,7 @@ const Thermal_80mm18Jasper = forwardRef<HTMLDivElement, { bill?: PosOrderBase | 
 
       {/* Bottom */}
       <div className="flex justify-between text-[9px] mt-2 border-t border-dashed pt-1">
-        <span>Printed On: {new Date().toLocaleDateString("en-GB")} {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        <span>Printed On: {FormatDateTime(new Date())}</span>
         <span>E & O.E</span>
       </div>
     </div>

@@ -1,42 +1,57 @@
 import { forwardRef } from "react";
 import type { PosOrderBase } from "../../../Types";
+import { useAppSelector } from "../../../Store/hooks";
 
-const A4_2Html = forwardRef<HTMLDivElement, { bill?: PosOrderBase | any }>(({ bill }, ref) => {
+const A4_2Html = forwardRef<HTMLDivElement, { bill?: PosOrderBase }>(({ bill }, ref) => {
+  const { company } = useAppSelector((state) => state.company);
+  if (!bill) return null;
+
   // Extract values with fallbacks to original dummy data
-  const companyName = bill?.companyId?.name || "VasyERP";
-  const companyAddress = (bill?.companyId?.address as any)?.[0]?.addressLine1 || "Synthesis The First, Corporate House, THE FIRST, A5, Nyay Marg, near Itc Narmada, I I M, Vastrapur";
-  const companyCity = (bill?.companyId?.address as any)?.[0]?.city?.name || "Ahmedabad";
-  const companyPincode = (bill?.companyId?.address as any)?.[0]?.pincode || "380054";
-  const companyPhone = bill?.companyId?.phoneNo?.phoneNo || "1234567899";
-  const companyEmail = bill?.companyId?.email || "email.vasyerp@gmail.com";
-  const companyState = (bill?.companyId?.address as any)?.[0]?.state?.name || "Gujarat";
-  const companyGst = (bill?.companyId as any)?.gstNo || "07AAGFF2194N1Z1";
-  const companyFssai = (bill?.companyId as any)?.fssaiNo || "12345678901234";
-  const companyWebsite = (bill?.companyId as any)?.website || "www.vasyerp.com";
-  const logo = (bill?.companyId as any)?.logo || "/logo.png";
+  const companyName = bill?.companyId?.name || company.name;
+  const companyAddress = (bill?.companyId?.address as any)?.[0]?.addressLine1 || company.address?.address;
+  const companyCity = (bill?.companyId?.address as any)?.[0]?.city?.name || company.address?.city?.name;
+  const companyPincode = (bill?.companyId?.address as any)?.[0]?.pincode || company.address?.pinCode;
+  const companyPhone = bill?.companyId?.phoneNo?.phoneNo || `${company.phoneNo?.countryCode || " "} ${company.phoneNo?.phoneNo || ""}`.trim() || company.phoneNo?.phoneNo;
+  const companyEmail = bill?.companyId?.email || company.email;
+  const companyState = (bill?.companyId?.address as any)?.[0]?.state?.name || company.address?.state?.name;
+  const companyGst = (bill?.companyId as any)?.gstNo || company.GSTIdentificationNumber;
+  const companyFssai = (bill?.companyId as any)?.fssaiNo || company.fssaiNo;
+  const companyWebsite = (bill?.companyId as any)?.website || company.website;
 
-  const customerName = `${bill?.customerId?.firstName || ""} ${bill?.customerId?.lastName || ""}`.trim() || "c_first name c_last name";
-  const customerAddress = (bill?.customerId?.address as any)?.[0]?.addressLine1 || "Address Other - 123456";
-  const customerCity = (bill?.customerId?.address as any)?.[0]?.city?.name || "Other";
-  const customerCountry = (bill?.customerId?.address as any)?.[0]?.country?.name || "India";
-  const customerState = (bill?.customerId?.address as any)?.[0]?.state?.name || "37-Other";
-  const customerPhone = bill?.customerId?.phoneNo?.phoneNo || "12345678900";
-  
-  const placeOfSupply = (bill?.customerId?.address as any)?.[0]?.city?.name || "37-Other";
-  const orderNo = bill?.orderNo || "POS3644";
-  const orderDate = bill?.createdAt ? new Date(bill.createdAt).toLocaleDateString("en-GB").replace(/\//g, "-") : "28-06-2023";
+  const customerName = `${bill?.customerId?.firstName || ""} ${bill?.customerId?.lastName || ""}`.trim();
+  const customerAddress = (bill?.customerId?.address as any)?.[0]?.addressLine1 || "";
+  const customerCity = (bill?.customerId?.address as any)?.[0]?.city?.name || "";
+  const customerCountry = (bill?.customerId?.address as any)?.[0]?.country?.name || "";
+  const customerState = (bill?.customerId?.address as any)?.[0]?.state?.name || "";
+  const customerPhone = bill?.customerId?.phoneNo?.phoneNo || "";
 
-  const totalQty = bill?.items?.reduce((acc: number, item: any) => acc + (Number(item.qty) || 0), 0) || 1.00;
-  const subTotal = bill?.items?.reduce((acc: number, item: any) => acc + (Number(item.mrp) * Number(item.qty) || 0), 0) || 341.94;
-  const totalTaxAmount = bill?.items?.reduce((acc: number, item: any) => acc + (Number(item.taxAmount) || 0), 0) || 41.37;
-  const totalDiscount = bill?.totalDiscount || 0.01;
-  const totalNet = bill?.totalAmount || 385.00;
-  const paymentMode = bill?.multiplePayments?.[0]?.method || "Cash";
+  const placeOfSupply = (bill?.customerId?.address as any)?.[0]?.city?.name;
+  const orderNo = bill?.orderNo;
+  const orderDate = new Date(bill.createdAt).toLocaleDateString("en-GB").replace(/\//g, "-");
+
+  const totalQty = bill?.totalQty;
+  const totalTaxableValue = bill?.items?.reduce((acc: number, item: any) => {
+    const taxRate = item?.productId?.salesTaxId?.percentage || 0;
+    const mrp = Number(item.mrp) - Number(item.discountAmount) - Number(item.additionalDiscountAmount);
+    const taxable = item?.productId?.isSalesTaxIncluding ? mrp - (mrp * taxRate) / 100 : mrp - (mrp * taxRate) / 100;
+    return acc + taxable;
+  }, 0);
+  const totalTaxAmount = bill?.items?.reduce((acc: number, item: any) => {
+    const net = item.netAmount || 0;
+    const taxRate = item?.productId?.salesTaxId?.percentage || 0;
+    const mrp = Number(item.mrp) - Number(item.discountAmount) - Number(item.additionalDiscountAmount);
+    const taxable = item?.productId?.isSalesTaxIncluding ? mrp - (mrp * taxRate) / 100 : mrp - (mrp * taxRate) / 100;
+    const taxAmount = net - taxable;
+    return acc + taxAmount;
+  }, 0);
+  const subTotal = totalTaxableValue + totalTaxAmount + Number(bill?.totalDiscount);
+  const totalDiscount = bill?.totalDiscount;
+  const totalNet = bill?.totalAmount;
 
   return (
     <div ref={ref} className="w-[210mm] mx-auto bg-white text-black p-6 text-[13px]">
       {/* Top Checkboxes */}
-      <div className="flex justify-end gap-6 text-[12px]">
+      {/* <div className="flex justify-end gap-6 text-[12px]">
         <label>
           <input type="checkbox" /> Original
         </label>
@@ -46,7 +61,7 @@ const A4_2Html = forwardRef<HTMLDivElement, { bill?: PosOrderBase | any }>(({ bi
         <label>
           <input type="checkbox" /> Triplicate
         </label>
-      </div>
+      </div> */}
 
       {/* Header */}
       <div className="flex justify-between mt-2">
@@ -54,7 +69,9 @@ const A4_2Html = forwardRef<HTMLDivElement, { bill?: PosOrderBase | any }>(({ bi
         <div className="text-[12px] leading-tight">
           <div className="font-bold text-[16px]">{companyName}</div>
           <div>{companyAddress}</div>
-          <div>{companyCity} - {companyPincode}</div>
+          <div>
+            {companyCity} - {companyPincode}
+          </div>
           <div>Phone no.: {companyPhone}</div>
           <div>Email: {companyEmail}</div>
           <div>State: {companyState}</div>
@@ -64,9 +81,11 @@ const A4_2Html = forwardRef<HTMLDivElement, { bill?: PosOrderBase | any }>(({ bi
         </div>
 
         {/* Logo */}
-        <div className="text-right">
-          <img src={logo} className="w-32 object-contain" alt="logo" />
-        </div>
+        {company?.reportFormatLogo && (
+          <div className="text-right">
+            <img src={company?.reportFormatLogo} alt="reportFormatLogo" className="w-20 h-20 object-contain" />
+          </div>
+        )}
       </div>
 
       {/* Title */}
@@ -78,7 +97,9 @@ const A4_2Html = forwardRef<HTMLDivElement, { bill?: PosOrderBase | any }>(({ bi
         <div className="text-[12px]">
           <div className="font-bold">Bill To:</div>
           <div>{customerName}</div>
-          <div>{customerAddress} {customerCity} {customerCountry}</div>
+          <div>
+            {customerAddress} {customerCity} {customerCountry}
+          </div>
           <div>Contact No: {customerPhone}</div>
           <div>State: {customerState}</div>
         </div>
@@ -105,7 +126,7 @@ const A4_2Html = forwardRef<HTMLDivElement, { bill?: PosOrderBase | any }>(({ bi
             <th className="p-2 text-center">Quantity</th>
             <th className="p-2 text-right">Price/ Unit</th>
             <th className="p-2 text-right">Discount</th>
-            <th className="p-2 text-right">Discount2</th>
+            <th className="p-2 text-right">Taxable Value</th>
             <th className="p-2 text-right">GST</th>
             <th className="p-2 text-right">Amount</th>
           </tr>
@@ -113,33 +134,27 @@ const A4_2Html = forwardRef<HTMLDivElement, { bill?: PosOrderBase | any }>(({ bi
 
         <tbody>
           {bill?.items?.map((item: any, i: number) => {
-            const taxPct = item.taxAmount ? ((item.taxAmount / item.mrp) * 100).toFixed(0) : "0";
+            const net = item.netAmount || 0;
+            const taxRate = item?.productId?.salesTaxId?.percentage || 0;
+            const mrp = Number(item.mrp) - Number(item.discountAmount) - Number(item.additionalDiscountAmount);
+            const taxable = item?.productId?.isSalesTaxIncluding ? mrp - (mrp * taxRate) / 100 : mrp - (mrp * taxRate) / 100;
+            const taxAmount = net - taxable;
             return (
               <tr key={i} className="border-t">
                 <td className="p-2">{i + 1}</td>
-                <td className="p-2 font-bold">{item.productId?.name || "Product Name"}</td>
-                <td className="p-2">{item.productId?.hsnCode || ""}</td>
-                <td className="p-2 text-center">{Number(item.qty || 1).toFixed(2)}</td>
-                <td className="p-2 text-right">{Number(item.mrp || 0).toFixed(2)}</td>
-                <td className="p-2 text-right">{Number(item.discountAmount || 0).toFixed(2)}</td>
-                <td className="p-2 text-right">0.00</td>
-                <td className="p-2 text-right">{Number(item.taxAmount || 0).toFixed(2)} ({taxPct}%)</td>
-                <td className="p-2 text-right">{Number(item.netAmount || 0).toFixed(2)}</td>
+                <td className="p-2 font-bold">{item.productId?.name}</td>
+                <td className="p-2">{item.productId?.hsnCode}</td>
+                <td className="p-2 text-center">{Number(item.qty).toFixed(2)}</td>
+                <td className="p-2 text-right">{Number(item.mrp).toFixed(2)}</td>
+                <td className="p-2 text-right">{Number(item.discountAmount).toFixed(2)}</td>
+                <td className="p-2 text-right">{Number(taxable).toFixed(2)}</td>
+                <td className="p-2 text-right">
+                  {Number(taxAmount).toFixed(2)} ({item?.productId?.salesTaxId?.percentage}%)
+                </td>
+                <td className="p-2 text-right">{Number(net).toFixed(2)}</td>
               </tr>
             );
-          }) || (
-            <tr className="border-t">
-              <td className="p-2">1</td>
-              <td className="p-2 font-bold">Product name Blue / I</td>
-              <td className="p-2"></td>
-              <td className="p-2 text-center">1.00</td>
-              <td className="p-2 text-right">241.94</td>
-              <td className="p-2 text-right">0.01</td>
-              <td className="p-2 text-right">0.00</td>
-              <td className="p-2 text-right">41.37 (18%)</td>
-              <td className="p-2 text-right">285.00</td>
-            </tr>
-          )}
+          })}
 
           <tr className="border-t font-bold">
             <td></td>
@@ -148,9 +163,9 @@ const A4_2Html = forwardRef<HTMLDivElement, { bill?: PosOrderBase | any }>(({ bi
             <td className="p-2 text-center">{Number(totalQty).toFixed(2)}</td>
             <td></td>
             <td className="p-2 text-right">{Number(totalDiscount).toFixed(2)}</td>
-            <td className="p-2 text-right">0.00</td>
+            <td className="p-2 text-right">{Number(totalTaxableValue).toFixed(2)}</td>
             <td className="p-2 text-right">{Number(totalTaxAmount).toFixed(2)}</td>
-            <td className="p-2 text-right">{Number(totalNet).toFixed(2)}</td>
+            <td className="p-2 text-right">{Number(totalTaxableValue + totalTaxAmount).toFixed(2)}</td>
           </tr>
         </tbody>
       </table>
@@ -162,7 +177,7 @@ const A4_2Html = forwardRef<HTMLDivElement, { bill?: PosOrderBase | any }>(({ bi
           <div className="font-bold text-gray-600">INVOICE AMOUNT IN WORDS</div>
           <div className="bg-gray-100 p-2 mt-1">Rupees Three Hundred and Eighty Five Only</div>
 
-          <div className="mt-3 font-bold">TERMS AND CONDITIONS</div>
+          {/* <div className="mt-3 font-bold">TERMS AND CONDITIONS</div>
           <div className="text-[12px] mt-1">
             NO RETURN / NO EXCHANGE <br />
             Please check items before leave store <br />
@@ -171,7 +186,8 @@ const A4_2Html = forwardRef<HTMLDivElement, { bill?: PosOrderBase | any }>(({ bi
             T&C 5 <br />
             wertyuion <br />
             zxcvbnm
-          </div>
+          </div> */}
+          <div className="text-[12px] mt-1">{bill.remark && <div>Remark: {bill.remark}</div>}</div>
         </div>
 
         {/* Right Totals */}
@@ -184,33 +200,33 @@ const A4_2Html = forwardRef<HTMLDivElement, { bill?: PosOrderBase | any }>(({ bi
             <span>Discount</span>
             <span>{Number(totalDiscount).toFixed(2)}</span>
           </div>
-
+          <div className="flex justify-between">
+            <span>Additional Charges</span>
+            <span>{Number(bill?.totalAdditionalCharge).toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Round Off</span>
+            <span>{bill?.roundOff?.toFixed(2)}</span>
+          </div>
           <div className="flex justify-between bg-brand-500 text-white px-2 py-1 font-bold">
             <span>Total</span>
             <span>{Number(totalNet).toFixed(2)}</span>
           </div>
-
           <div className="flex justify-between mt-1">
             <span>Received</span>
             <span>{Number(totalNet).toFixed(2)}</span>
           </div>
-          <div className="flex justify-between">
-            <span>Balance</span>
-            <span>0.00</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Payment Mode</span>
-            <span><span className="capitalize">{paymentMode}</span></span>
-          </div>
-          <div className="flex justify-between">
-            <span>Previous Balance</span>
-            <span>0.00</span>
-          </div>
+          {bill.multiplePayments?.map((payment, i) => (
+            <div key={i} className="flex justify-between">
+              <span>By {payment.method.toUpperCase()}</span>
+              <span>{Number(payment.amount || 0).toFixed(2)}</span>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Tax Summary */}
-      <div className="mt-6">
+      {/* <div className="mt-6">
         <div className="text-center font-bold mb-2">Tax Summary</div>
 
         <table className="w-full border text-center">
@@ -244,29 +260,10 @@ const A4_2Html = forwardRef<HTMLDivElement, { bill?: PosOrderBase | any }>(({ bi
                   <td className="border p-2">0.00</td>
                 </tr>
               );
-            }) || (
-              <>
-                <tr>
-                  <td className="border p-2">0%</td>
-                  <td className="border p-2">100.00</td>
-                  <td className="border p-2">0.00</td>
-                  <td className="border p-2">0.00</td>
-                  <td className="border p-2">0.00</td>
-                  <td className="border p-2">0.00</td>
-                </tr>
-                <tr>
-                  <td className="border p-2">18%</td>
-                  <td className="border p-2">241.94</td>
-                  <td className="border p-2">0.00</td>
-                  <td className="border p-2">0.00</td>
-                  <td className="border p-2">41.37</td>
-                  <td className="border p-2">13.79</td>
-                </tr>
-              </>
-            )}
+            })}
           </tbody>
         </table>
-      </div>
+      </div> */}
     </div>
   );
 });

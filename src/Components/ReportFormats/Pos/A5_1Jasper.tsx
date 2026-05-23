@@ -107,8 +107,8 @@ const A5_1Jasper = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill },
               <tr key={i}>
                 <td className="border p-1 text-center">{i + 1}</td>
                 <td className="border p-1">
-                  {item.productId?.name || "FGHG78"} <br />
-                  {item.productId?.sku && <span className="text-[10px]">Item Code : {item.productId?.sku}</span>}
+                  {item.productId?.name || ""} <br />
+                  {item.productId?.hsnCode && <span className="text-[10px]">Item HSN : {item.productId?.hsnCode}</span>}
                 </td>
                 <td className="border p-1 text-center">{Number(item.qty || 0).toFixed(1)}</td>
                 <td className="border p-1 text-center">{item.productId?.uomId?.name || "-"}</td>
