@@ -1,5 +1,5 @@
 import { Box, Grid } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
@@ -11,13 +11,17 @@ import { CreateFilter, DateConfig, GenerateOptions } from "../../../Utils";
 import { useDataGrid } from "../../../Utils/Hooks";
 import { useAppSelector } from "../../../Store/hooks";
 import { CommonDateRangeSelector } from "../../../Attribute";
+import { useReactToPrint } from "react-to-print";
+import Print from "../../../Components/ReportFormats/Print";
 
 const DeliveryChallan = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
+  const contentRef = useRef<HTMLDivElement>(null);
   const { company } = useAppSelector((state) => state.company);
   const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
   const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
+  const [printData, setPrintData] = useState<DeliveryChallanBase | null>(null);
 
   const { data: deliveryChallan, isLoading: challanLoading, isFetching: challanFetching } = Queries.useGetDeliveryChallan({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetDeliveryChallan({}, false);
@@ -31,6 +35,29 @@ const DeliveryChallan = () => {
 
   const totalRows = deliveryChallan?.data?.totalData || 0;
   const summaryData = deliveryChallan?.data?.summary;
+
+  const handlePrint = useReactToPrint({
+    contentRef,
+    documentTitle: () => `${PAGE_TITLE.SALES.DELIVERY_CHALLAN.BASE}_${new Date().toISOString().split("T")[0]}`,
+    onBeforePrint: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setPrintData(null);
+    },
+    onAfterPrint: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setPrintData(null);
+    },
+    onPrintError: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setPrintData(null);
+    },
+  });
+
+  useEffect(() => {
+    if (printData && contentRef.current) {
+      handlePrint();
+    }
+  }, [printData, handlePrint]);
 
   const summary = useMemo(() => CalculateGridSummary(allChallan, ["transactionSummary.netAmount", "transactionSummary.taxAmount"]), [allChallan]);
 
@@ -54,6 +81,7 @@ const DeliveryChallan = () => {
     CommonActionColumn({
       active: (row) => editChallan({ deliveryChallanId: row?._id as string, isActive: !row.isActive }),
       editRoute: ROUTES.DELIVERY_CHALLAN.ADD_EDIT,
+      onPrint: { handlePrint: (row) => setPrintData(row) },
       onDelete: (row) => setRowToDelete({ _id: row?._id }),
     }),
   ];
@@ -105,6 +133,7 @@ const DeliveryChallan = () => {
         </CommonCard>
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       </Box>
+      <div className="hidden">{<Print type="Delivery Challan" ref={contentRef} bill={printData} />}</div>
     </>
   );
 };

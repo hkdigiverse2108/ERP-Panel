@@ -1,5 +1,5 @@
 import { Box, Grid } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDeleteModal } from "../../../Components/Common";
@@ -11,15 +11,19 @@ import { CreateFilter, DateConfig, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { useAppSelector } from "../../../Store/hooks";
 import { CommonDateRangeSelector } from "../../../Attribute";
+import { useReactToPrint } from "react-to-print";
+import Print from "../../../Components/ReportFormats/Print";
 
 const Receipt = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
 
   const navigate = useNavigate();
+  const contentRef = useRef<HTMLDivElement>(null);
   const permission = usePagePermission(PAGE_TITLE.RECEIPT.BASE);
   const { company } = useAppSelector((state) => state.company);
   const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
   const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
+  const [printData, setPrintData] = useState<PosPaymentBase | null>(null);
 
   const { data: contactData, isLoading: contactDataLoading } = Queries.useGetContactDropdown({ typeFilter: "customer" });
   const { data, isLoading, isFetching } = Queries.useGetPosPayment({ ...params, voucherTypeFilter: "sales", startDate: range.start.toISOString(), endDate: range.end.toISOString() });
@@ -30,6 +34,29 @@ const Receipt = () => {
   const rows = useMemo(() => data?.data?.posPayment_data.map((r) => ({ ...r, id: r?._id })) || [], [data]);
 
   const totalRows = data?.data?.totalData || 0;
+
+  const handlePrint = useReactToPrint({
+    contentRef,
+    documentTitle: () => `${PAGE_TITLE.RECEIPT.BASE}_${new Date().toISOString().split("T")[0]}`,
+    onBeforePrint: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setPrintData(null);
+    },
+    onAfterPrint: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setPrintData(null);
+    },
+    onPrintError: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setPrintData(null);
+    },
+  });
+
+  useEffect(() => {
+    if (printData && contentRef.current) {
+      handlePrint();
+    }
+  }, [printData, handlePrint]);
 
   const handleAdd = () => navigate(ROUTES.RECEIPT.ADD_EDIT);
 
@@ -56,6 +83,7 @@ const Receipt = () => {
             ...(permission?.edit && {
               active: (row) => editPayment({ posPaymentId: row?._id, isActive: !row.isActive }),
               editRoute: ROUTES.RECEIPT.ADD_EDIT,
+              onPrint: { handlePrint: (row) => setPrintData(row) },
             }),
             ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.voucherType }) }),
           }),
@@ -101,6 +129,7 @@ const Receipt = () => {
 
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} loading={isDeleteLoading} onClose={() => setRowToDelete(null)} onConfirm={handleDelete} />
       </Box>
+      <div className="hidden">{<Print type="Receipt" ref={contentRef} bill={printData} />}</div>
     </>
   );
 };

@@ -17,7 +17,7 @@ const CommonActionColumn = <T extends { _id?: string; isActive?: boolean; credit
   headerName: "Actions",
   headerAlign: "center",
   align: "center",
-  width: permissionRoute ? 240 : 180,
+  width: permissionRoute || onPrint ? 240 : 180,
   minWidth: 100,
   sortable: false,
   filterable: false,

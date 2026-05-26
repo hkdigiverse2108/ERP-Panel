@@ -3,6 +3,7 @@ export * from "./DateFormatted";
 export * from "./FormHelpers";
 export * from "./ValidationSchemas";
 export * from "./Socket";
+export * from "./NumberToWords"
 import { STORAGE_KEYS } from "../Constants";
 
 import type { CompanyDetails, GridType, Params, SelectOptionType } from "../Types";

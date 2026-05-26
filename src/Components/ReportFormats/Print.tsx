@@ -91,7 +91,7 @@ const Print = forwardRef<HTMLDivElement, { type: string; bill: any }>(({ type, b
   const PreviewComponent = formatMap?.[1];
 
   return (
-    <div ref={ref} >
+    <div ref={ref}>
       {isLoading ? ( //
         <div className="flex items-center justify-center w-full h-[80vh]!">Loading...</div>
       ) : PreviewComponent ? (

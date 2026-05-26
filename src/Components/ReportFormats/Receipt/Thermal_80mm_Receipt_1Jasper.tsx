@@ -1,39 +1,48 @@
 import { forwardRef } from "react";
 import type { EstimateBase } from "../../../Types";
+import { useAppSelector } from "../../../Store/hooks";
+import { FormatDate, FormatDateTime, FormatPayment, NumberToWords } from "../../../Utils";
 
 const Thermal_80mm_Receipt_1Jasper = forwardRef<HTMLDivElement, { bill?: EstimateBase | any }>(({ bill }, ref) => {
-  const companyLogo = bill?.companyId?.logo || "/logo.png";
-  const companyName = bill?.companyId?.name || "ADRIRAJA PRIVATE LIMITED";
-  const companyAddressObj = (bill?.companyId?.address as any)?.[0];
-  const companyAddressLine = companyAddressObj ? `${companyAddressObj.addressLine1 || ""}, ${companyAddressObj.city?.name || ""}, ${companyAddressObj.state?.name || ""}` : "5, Shiv Chhaya Colony, Amravati - 444606, Kurumbapet, Puducherry, India";
-  const companyEmail = bill?.companyId?.email || "accountsgawadegreenpower@gmail.com";
-  const companyContact = bill?.companyId?.mobile || "9926483416";
-  const companyGST = bill?.companyId?.gstin || "34AACCC1596Q0O2";
-  const companyFssai = bill?.companyId?.fssai || "11522051000075";
+  const { company } = useAppSelector((state) => state.company);
+  if (!bill) return null;
+  const companyLogo = company?.reportFormatLogo;
+  const companyName = company?.name;
+  const getCompanyAddress = () => {
+    const addr = company?.address;
+    if (!addr) return null;
+    const parts = [addr.address, addr.city?.name, addr.state?.name, addr.country?.name].filter(Boolean);
+    let addressStr = parts.join(", ");
+    if (addr.pinCode) addressStr += ` - ${addr.pinCode}`;
+    return addressStr;
+  };
+  const companyEmail = company?.email;
+  const companyContact = company?.phoneNo?.phoneNo ? `${company.phoneNo.countryCode || ""} ${company.phoneNo.phoneNo}` : "";
+  const companyGST = company?.GSTIdentificationNumber;
+  const companyFssai = company?.fssaiNo;
 
-  const customerName = `${bill?.customerId?.firstName || ""} ${bill?.customerId?.lastName || ""}`.trim() || "EZEKIEL MBURU";
+  const customerName = `${bill?.partyId?.firstName || ""} ${bill?.partyId?.lastName || ""}`.trim();
 
-  const receiptNo = bill?.receiptNo || bill?.voucherNo || "PAY5217";
-  const cashierName = bill?.cashierName || companyName;
-  const dateTime = bill?.date ? new Date(bill.date).toLocaleString("en-GB", { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "02-September-2025, 01:40 PM";
+  const receiptNo = bill?.paymentNo;
+  const cashierName = bill?.createdBy?.fullName || companyName;
+  const dateTime = FormatDateTime(bill?.createdAt);
+
+  const posOrderId = bill?.posOrderId?.orderNo || bill?.invoiceId?.invoiceNo;
 
   const voucherNo = receiptNo;
-  const voucherDate = bill?.date ? new Date(bill.date).toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" }) : "02-September-2025";
-  const paymentType = bill?.paymentType || "Advance Payment";
-  const paymentMode = bill?.paymentMode || "cash";
-  const totalAmount = bill?.amount || 1000.0;
-  const amountInWords = "Rupees One Thousand Only";
-  const availableAmount = bill?.availableAmount || 0.0;
-
-  const associatedBills = bill?.associatedBills || [{ date: "02/09/2025", billNo: "PosORD00152", amount: 1000.0, kasar: 0.0, payment: 1000.0 }];
+  const voucherDate = FormatDate(bill?.createdAt);
+  const paymentType = bill?.paymentType === "against_bill" ? "Against Bill" : "Advance Payment";
+  const paymentMode = FormatPayment(bill?.paymentMode);
+  const totalAmount = bill?.amount;
+  const amountInWords = `Rupees ${NumberToWords(Number(totalAmount))} Only`;
 
   return (
     <div ref={ref} className="w-[80mm] mx-auto bg-white text-black p-2 font-sans text-[10px] leading-tight">
       {/* Header */}
       <div className="flex flex-col items-center text-center mb-2">
-        <img src={companyLogo} alt="Logo" className="w-16 h-auto object-contain mb-1" />
+        <img src={companyLogo} alt="Logo" className="w-20 h-auto object-contain mb-3" />
         <h1 className="text-[14px] font-black uppercase">{companyName}</h1>
-        <p className="w-full mt-1 font-bold">{companyAddressLine}</p>
+        <p className="w-full mt-1 font-bold">{getCompanyAddress()}</p>
         <p className="mt-1 font-bold">Contact No.: {companyContact}</p>
         <p className="font-bold">Email ID:</p>
         <p className="font-bold break-all">{companyEmail}</p>
@@ -66,72 +75,62 @@ const Thermal_80mm_Receipt_1Jasper = forwardRef<HTMLDivElement, { bill?: Estimat
       {/* Voucher Details */}
       <div className="flex flex-col items-center text-center space-y-1 font-bold">
         <div className="flex w-full justify-center">
-          <span className="w-32">Voucher Number</span>
-          <span>: {voucherNo}</span>
+          <span className="w-32">Voucher Number: {voucherNo}</span>
         </div>
         <div className="flex w-full justify-center">
-          <span className="w-32">Voucher Date</span>
-          <span>: {voucherDate}</span>
+          <span className="w-32">Voucher Date: {voucherDate}</span>
         </div>
         <div className="flex w-full justify-center">
-          <span className="w-32">Type</span>
-          <span>: {paymentType}</span>
+          <span className="w-32">Type: {paymentType}</span>
         </div>
         <div className="flex w-full justify-center">
-          <span className="w-32">Payment Mode</span>
-          <span>: {paymentMode}</span>
-        </div>
-        <div className="flex w-full justify-center">
-          <span className="w-32">Description</span>
-          <span>: Receipt - {voucherNo}</span>
+          <span className="w-32">Payment Mode: {paymentMode}</span>
         </div>
         <div className="flex w-full justify-center text-[11px]">
-          <span className="w-32">Amount</span>
-          <span>: {totalAmount.toFixed(1)}</span>
+          <span className="w-32">Amount: {totalAmount?.toFixed(1)}</span>
         </div>
       </div>
 
       {/* Table */}
-      <div className="mt-4 overflow-hidden">
-        <table className="w-full border-collapse border border-black">
-          <thead>
-            <tr className="border-b border-black font-bold text-center text-[9px]">
-              <th className="border-r border-black w-6">Sr.</th>
-              <th className="border-r border-black">Bill Date</th>
-              <th className="border-r border-black">Bill No.</th>
-              <th className="border-r border-black">Bill Amount</th>
-              <th className="border-r border-black">KASAR Amount</th>
-              <th>Payment Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {associatedBills.map((item: any, i: number) => (
-              <tr key={i} className="text-center text-[9px]">
-                <td className="border-r border-black py-0.5">{i + 1}</td>
-                <td className="border-r border-black">{item.date}</td>
-                <td className="border-r border-black text-[7px] truncate max-w-[40px]">{item.billNo}</td>
-                <td className="border-r border-black text-right px-1">{item.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
-                <td className="border-r border-black text-right px-1">{item.kasar.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
-                <td className="text-right px-1">{item.payment.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
+      {posOrderId && (
+        <div className="mt-4 overflow-hidden">
+          <table className="w-full border-collapse border border-black">
+            <thead>
+              <tr className="border-b border-black font-bold text-center text-[9px]">
+                <th className="border-r border-black w-4">Sr.</th>
+                <th className="border-r border-black">Bill Date</th>
+                <th className="border-r border-black">Bill No.</th>
+                <th className="border-r border-black">Bill Amount</th>
+                <th className="border-r border-black">KASAR Amount</th>
+                <th>Payment Amount</th>
               </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr className="border-t border-black font-bold text-[9px]">
-              <td colSpan={3} className="text-right px-1">
-                Total :
-              </td>
-              <td className="border-r border-black text-right px-1">{totalAmount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
-              <td className="border-r border-black"></td>
-              <td className="text-right px-1">{totalAmount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-
+            </thead>
+            <tbody>
+              <tr className="text-center text-[9px]">
+                <td className="border-r border-black py-0.5">{1}</td>
+                <td className="border-r border-black">{FormatDate(bill?.createdAt)}</td>
+                <td className="border-r border-black text-[7px] truncate max-w-[40px]">{posOrderId}</td>
+                <td className="border-r border-black text-right px-1">{bill?.totalAmount ?? 0}</td>
+                <td className="border-r border-black text-right px-1">{bill?.kasar ?? 0}</td>
+                <td className="text-right px-1">{bill?.amount ?? 0}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr className="border-t border-black font-bold text-[9px]">
+                <td colSpan={3} className="text-right px-1">
+                  Total :
+                </td>
+                <td className="border-r border-black text-right px-1">{totalAmount?.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
+                <td className="border-r border-black"></td>
+                <td className="text-right px-1">{totalAmount?.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      )}
       {/* Summary */}
       <div className="mt-2 text-center font-bold">
-        <p>Available Amount: {availableAmount.toFixed(1)}</p>
+        {posOrderId && <p>Available Amount: {totalAmount?.toFixed(1)}</p>}
         <p className="mt-1">In words: {amountInWords}</p>
       </div>
 
