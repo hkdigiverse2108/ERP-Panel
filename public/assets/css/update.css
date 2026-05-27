@@ -181,6 +181,7 @@ input[type="number"] {
   @apply text-white capitalize text-center w-full bg-yellow-500 dark:bg-yellow-600 h-6 leading-6 rounded-sm;
 }
 
+.status-dispatched,
 .status-hold,
 .status-invoiced,
 .status-invoice_created,

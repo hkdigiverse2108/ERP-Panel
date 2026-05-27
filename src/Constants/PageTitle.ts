@@ -105,6 +105,7 @@ export const PAGE_TITLE = {
     },
     STOCK_TRANSFER: {
       BASE: "Stock Transfer",
+      DETAIL: "Stock Transfer Detail",
       ADD: "Add Stock Transfer",
       EDIT: "Edit Stock Transfer",
     },

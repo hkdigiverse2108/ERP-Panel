@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { type GridRenderCellParams } from "@mui/x-data-grid";
 import { Mutations, Queries } from "../../../Api";
@@ -10,26 +10,69 @@ import { BREADCRUMBS, STOCK_TRANSFER_STATUS, STOCK_TRANSFER_STATUS_OPTIONS, STOC
 import { Box, Grid } from "@mui/material";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { CommonObjectPropertyColumn } from "../../../Components/Common/CommonDataGrid/CommonColumns";
-import { useAppSelector } from "../../../Store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../Store/hooks";
 import { CommonDateRangeSelector } from "../../../Attribute";
+import { useReactToPrint } from "react-to-print";
+import Print from "../../../Components/ReportFormats/Print";
+import { setPrintType, setSelectedOrderId } from "../../../Store/Slices/PosSlice";
 
 const StockTransfer = () => {
-  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
+  const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, params, advancedFilter, updateAdvancedFilter } = useDataGrid();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const contentRef = useRef<HTMLDivElement>(null);
   const permission = usePagePermission(PAGE_TITLE.INVENTORY.STOCK_TRANSFER.BASE);
   const { company } = useAppSelector((state) => state.company);
   const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
   const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
+  const { isSelectedOrderId, isPrintType } = useAppSelector((state) => state.pos);
 
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetStockTransfer({}, false);
   const { data: stockTransferData, isLoading: stockTransferLoading, isFetching: stockTransferFetching } = Queries.useGetStockTransfer({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
   const { mutate: deleteStockTransferMutate } = Mutations.useDeleteStockTransfer();
-  const { mutate: editStockTransfer } = Mutations.useEditStockTransfer();
+  const { data } = Queries.useGetSingleStockTransfer(isSelectedOrderId, Boolean(isSelectedOrderId));
+  const PrintBill = data?.data;
+  // const { mutate: editStockTransfer } = Mutations.useEditStockTransfer();
 
   // Filter Data Queries
   // const { data: companyData, isLoading: companyDataLoading } = Queries.useGetCompanyDropdown();
   // const companyId = advancedFilter?.companyFilter?.[0];
   // const { data: branchData, isLoading: branchDataLoading } = Queries.useGetBranchDropdown({ companyFilter: companyId }, !!companyId);
+
+  const handlePrint = useReactToPrint({
+    contentRef,
+    documentTitle: () => `${PAGE_TITLE.SALES.ESTIMATE.BASE}_${new Date().toISOString().split("T")[0]}`,
+    onBeforePrint: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      dispatch(setPrintType(""));
+      dispatch(setSelectedOrderId(""));
+    },
+    onAfterPrint: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      dispatch(setPrintType(""));
+      dispatch(setSelectedOrderId(""));
+    },
+    onPrintError: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      dispatch(setPrintType(""));
+      dispatch(setSelectedOrderId(""));
+    },
+  });
+
+  const handlePrintBtn = (row: StockTransferBase) => {
+    dispatch(setPrintType("print"));
+    dispatch(setSelectedOrderId(row?._id));
+  };
+
+  useEffect(() => {
+    if (!PrintBill || isPrintType !== "print") return;
+
+    const isNormalOrder = PrintBill?._id === isSelectedOrderId;
+
+    if (isNormalOrder) {
+      handlePrint();
+    }
+  }, [PrintBill, isPrintType, isSelectedOrderId]);
 
   const allStockTransfers = useMemo(
     () =>
@@ -70,9 +113,10 @@ const StockTransfer = () => {
           {
             ...CommonActionColumn<StockTransferBase>({
               ...(permission?.edit && {
-                active: (row) => editStockTransfer({ stockTransferId: row?._id, isActive: !row.isActive }),
+                // active: (row) => editStockTransfer({ stockTransferId: row?._id, isActive: !row.isActive }),
                 editRoute: ROUTES.STOCK_TRANSFER.ADD_EDIT,
                 viewRoute: ROUTES.STOCK_TRANSFER.VIEW,
+                onPrint: { handlePrint: (row) => handlePrintBtn(row) },
               }),
               ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.transferNo }) }),
             }),
@@ -80,13 +124,14 @@ const StockTransfer = () => {
               params.row.status === STOCK_TRANSFER_STATUS.PENDING
                 ? CommonActionColumn<StockTransferBase>({
                     ...(permission?.edit && {
-                      active: (row) => editStockTransfer({ stockTransferId: row?._id, isActive: !row.isActive }),
+                      // active: (row) => editStockTransfer({ stockTransferId: row?._id, isActive: !row.isActive }),
                       editRoute: ROUTES.STOCK_TRANSFER.ADD_EDIT,
                       viewRoute: ROUTES.STOCK_TRANSFER.VIEW,
+                      // onPrint: { handlePrint: (row) => handlePrintBtn(row) },
                     }),
                     ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.transferNo }) }),
                   }).renderCell?.(params)
-                : CommonActionColumn<StockTransferBase>({ viewRoute: ROUTES.STOCK_TRANSFER.VIEW }).renderCell?.(params),
+                : CommonActionColumn<StockTransferBase>({ viewRoute: ROUTES.STOCK_TRANSFER.VIEW, onPrint: { handlePrint: (row) => handlePrintBtn(row) } }).renderCell?.(params),
           },
         ]
       : []),
@@ -97,8 +142,8 @@ const StockTransfer = () => {
     rows: allStockTransfers,
     rowCount: totalRows,
     loading: stockTransferLoading || stockTransferFetching,
-    isActive,
-    setActive,
+    // isActive,
+    // setActive,
     ...(permission?.add && { handleAdd: handleAdd }),
     paginationModel,
     onPaginationModelChange: setPaginationModel,
@@ -127,6 +172,7 @@ const StockTransfer = () => {
         </CommonCard>
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={() => handleDeleteBtn()} />
       </Box>
+      <div className="hidden">{<Print type="Stock Transfer" ref={contentRef} bill={PrintBill} />}</div>
     </>
   );
 };

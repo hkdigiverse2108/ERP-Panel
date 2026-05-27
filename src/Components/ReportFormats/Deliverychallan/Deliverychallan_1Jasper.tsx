@@ -48,9 +48,11 @@ const Deliverychallan_1Jasper = forwardRef<HTMLDivElement, { bill?: EstimateBase
     <div ref={ref} className="w-[210mm] mx-auto bg-white text-black p-4 font-sans text-[10px] leading-tight border border-gray-400">
       {/* Header */}
       <div className="flex justify-between items-start mb-2">
-        <div className="w-1/4">
-          <img src={companyLogo} alt="Logo" className="w-32 h-auto object-contain" />
-        </div>
+        {companyLogo && (
+          <div className="w-1/4">
+            <img src={companyLogo} alt="Logo" className="w-32 h-auto object-contain" />
+          </div>
+        )}
         <div className="w-2/4 text-center">
           <h1 className="text-[16px] font-bold uppercase">{companyName}</h1>
           <p className="font-semibold">{companyAddress1}</p>

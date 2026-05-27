@@ -8,6 +8,7 @@ import { BREADCRUMBS, STOCK_TRANSFER_STATUS } from "../../../Data";
 import { useAppSelector } from "../../../Store/hooks";
 import type { StockTransferItem } from "../../../Types";
 import { ApproveModal, RejectModal, ConfirmReceiptModal } from "./modals/ActionModals";
+import { PAGE_TITLE } from "../../../Constants";
 
 const StockTransferDetails = () => {
   const location = useLocation();
@@ -43,7 +44,7 @@ const StockTransferDetails = () => {
 
   return (
     <>
-      <CommonBreadcrumbs title="Stock Transfer Details" maxItems={1} breadcrumbs={BREADCRUMBS.STOCK_TRANSFER.BASE} />
+      <CommonBreadcrumbs title={PAGE_TITLE.INVENTORY.STOCK_TRANSFER.DETAIL} maxItems={1} breadcrumbs={BREADCRUMBS.STOCK_TRANSFER.DETAIL} />
       <Box sx={{ p: { xs: 2, md: 3 }, mb: showAction ? 10 : 0, display: "grid", gap: 3 }}>
         <CommonCard title="Information">
           <Grid container spacing={3} sx={{ p: 2 }}>

@@ -23,7 +23,7 @@ const StockTransferForm = () => {
   const updateData = location.state?.data;
   const id = urlId || updateData?._id;
 
-  const { data: stockTransferData } = Queries.useGetSingleStockTransfer(id);
+  const { data: stockTransferData } = Queries.useGetSingleStockTransfer(id, !!id);
   const { mutate: addStockTransfer, isPending: isAddLoading } = Mutations.useAddStockTransfer();
   const { mutate: editStockTransfer, isPending: isEditLoading } = Mutations.useEditStockTransfer();
 

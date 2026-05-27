@@ -238,7 +238,7 @@ export const Queries = {
 
   //*************** Stock Transfer **************** */
   useGetStockTransfer: (params?: Params, enabled?: boolean) => useFilterQuery<StockTransferApiResponse>([KEYS.STOCK_TRANSFER.BASE, params], URL_KEYS.STOCK_TRANSFER.ALL, params, enabled, ["financial-years", "branch"]),
-  useGetSingleStockTransfer: (id?: string) => useQueries<SingleStockTransferApiResponse>([KEYS.STOCK_TRANSFER.BASE, id], () => Get(`${URL_KEYS.STOCK_TRANSFER.BASE}/${id}`), { enabled: !!id }),
+  useGetSingleStockTransfer: (id?: string, enabled?: boolean) => useQueries<SingleStockTransferApiResponse>([KEYS.STOCK_TRANSFER.BASE, id], () => Get(`${URL_KEYS.STOCK_TRANSFER.BASE}/${id}`), { enabled: enabled }),
 
   //*************** Notification **************** */
   useGetNotification: (params?: Params, enabled?: boolean) => useQueries<NotificationApiResponse>([KEYS.NOTIFICATION.BASE, params], () => Get(URL_KEYS.NOTIFICATION.ALL, params), { enabled: enabled }),
