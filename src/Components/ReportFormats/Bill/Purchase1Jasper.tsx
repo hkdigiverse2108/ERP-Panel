@@ -1,17 +1,19 @@
 import { forwardRef } from "react";
 import type { SupplierBillBase } from "../../../Types";
+import { useAppSelector } from "../../../Store/hooks";
 
 const Purchase1Jasper = forwardRef<HTMLDivElement, { bill?: SupplierBillBase | any }>(({ bill }, ref) => {
+  const { company } = useAppSelector((state) => state.company);
+  if (!bill) return null;
+
   // Extract values with fallbacks to original dummy data
-  const companyName = bill?.companyId?.name || "DISPLAY - AI SETU ERP";
-  const companyAddressObj = (bill?.companyId?.address as any)?.[0];
-  const companyAddress = companyAddressObj 
-    ? `${companyAddressObj.addressLine1 || ""}, ${companyAddressObj.city?.name || ""}, ${companyAddressObj.state?.name || ""}`.replace(/^,\s*|,\s*$/g, "")
-    : "TIMCON SHOP NO.14, NR KATARIA PETROL PUMP ADARSH ROAD BHAVNAGAR-605001";
-  const companyEmail = bill?.companyId?.email || "karanmerchant@gmail.com";
-  const companyPhone = bill?.companyId?.phoneNo?.phoneNo || "+91-9515047679";
-  const companyGst = (bill?.companyId as any)?.gstNo || "34AACCC1596Q002";
-  const companyState = (bill?.companyId?.address as any)?.[0]?.state?.name || "Gujarat(24)";
+  const companyName = company?.name;
+  const companyAddressObj = company?.address;
+  const companyAddress = companyAddressObj ? `${companyAddressObj.address || ""}, ${companyAddressObj.city?.name || ""}, ${companyAddressObj.state?.name || ""}` : "";
+  const companyEmail = company?.email;
+  const companyPhone = company?.phoneNo?.phoneNo ? `${company.phoneNo.countryCode || ""} ${company.phoneNo.phoneNo}` : "";
+  const companyGst = company?.GSTIdentificationNumber;
+  const companyState = company?.address?.state?.name;
 
   const supplierName = `${bill?.supplierId?.firstName || ""} ${bill?.supplierId?.lastName || ""}`.trim() || "karva enterprise";
   const supplierAddressObj = (bill?.supplierId?.address as any)?.[0];
@@ -31,32 +33,29 @@ const Purchase1Jasper = forwardRef<HTMLDivElement, { bill?: SupplierBillBase | a
   const items = bill?.productDetails?.item || bill?.items;
   const hasItems = items && items.length > 0;
 
-//   const totalQty = bill?.productDetails?.totalQty || 1.0;
+  //   const totalQty = bill?.productDetails?.totalQty || 1.0;
   const summaryTaxableAmount = bill?.summary?.taxableAmount || 150.0;
   const summaryTaxAmount = bill?.summary?.taxAmount || 7.5;
   const summaryRoundOff = bill?.summary?.roundOff || 0.5;
   const summaryNetAmount = bill?.summary?.netAmount || 158.0;
 
   return (
-    <div
-      ref={ref}
-      className="w-[210mm] mx-auto bg-white text-black p-3 font-serif text-[10.5px] border"
-    >
+    <div ref={ref} className="w-[210mm] mx-auto bg-white text-black p-3 font-serif text-[10.5px] border">
       {/* Header */}
       <div className="text-center border-b pb-2">
         <div className="font-bold text-[18px]">{companyName}</div>
+        <div>{companyAddress}</div>
         <div>
-          {companyAddress}
+          Email : {companyEmail} | Contact No : {companyPhone}
         </div>
-        <div>Email : {companyEmail} | Contact No : {companyPhone}</div>
-        <div>GSTIN/UIN : {companyGst} State : {companyState}</div>
+        <div>
+          GSTIN : {companyGst} State : {companyState}
+        </div>
       </div>
 
       {/* Title */}
       <div className="flex justify-center border-b py-2">
-        <div className="border px-10 py-1 font-bold text-[14px]">
-          Purchase Bill
-        </div>
+        <div className="border px-10 py-1 font-bold text-[14px]">Purchase Bill</div>
       </div>
 
       {/* Top Section */}
@@ -67,7 +66,9 @@ const Purchase1Jasper = forwardRef<HTMLDivElement, { bill?: SupplierBillBase | a
           <div className="font-bold">{supplierName}</div>
           <div>{supplierAddress}</div>
           <div>{supplierCity}</div>
-          <div>{supplierState}({supplierState}), {supplierCountry}</div>
+          <div>
+            {supplierState}({supplierState}), {supplierCountry}
+          </div>
           <div>GSTIN : {supplierGst}</div>
         </div>
 
@@ -183,17 +184,13 @@ const Purchase1Jasper = forwardRef<HTMLDivElement, { bill?: SupplierBillBase | a
           <div>Taxable Amount : {Number(summaryTaxableAmount).toFixed(2)}</div>
           <div>Tax : {Number(summaryTaxAmount).toFixed(2)}</div>
           <div>Round Off : {Number(summaryRoundOff).toFixed(2)}</div>
-          <div className="font-bold text-[12px]">
-            Net Amount : {Number(summaryNetAmount).toFixed(2)}
-          </div>
+          <div className="font-bold text-[12px]">Net Amount : {Number(summaryNetAmount).toFixed(2)}</div>
         </div>
       </div>
 
       {/* Tax Summary */}
-      <div className="border mt-2">
-        <div className="text-center font-bold border-b p-1">
-          TAX SUMMARY
-        </div>
+      {/* <div className="border mt-2">
+        <div className="text-center font-bold border-b p-1">TAX SUMMARY</div>
 
         <table className="w-full text-[9.5px] text-center">
           <thead>
@@ -245,12 +242,10 @@ const Purchase1Jasper = forwardRef<HTMLDivElement, { bill?: SupplierBillBase | a
             )}
           </tbody>
         </table>
-      </div>
+      </div> */}
 
       {/* Amount Words */}
-      <div className="mt-2">
-        Rupees One Hundred and Fifty Eight Only
-      </div>
+      <div className="mt-2">Rupees One Hundred and Fifty Eight Only</div>
 
       {/* Terms */}
       <div className="mt-2">
@@ -268,9 +263,8 @@ const Purchase1Jasper = forwardRef<HTMLDivElement, { bill?: SupplierBillBase | a
       </div>
 
       {/* Footer */}
-      <div className="flex justify-between mt-3 text-[10px] border-t pt-1">
+      <div className="flex justify-between mt-3 text-[10px] pt-1">
         <span>This is computer generated bill.</span>
-        <span>Page 1 of 1</span>
         <span>E.O.E.</span>
       </div>
     </div>

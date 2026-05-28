@@ -18,18 +18,15 @@ const StockTransfer_A4_1Jasper = forwardRef<HTMLDivElement, { bill?: EstimateBas
   const companyState = companyAddressObj?.state?.name;
   const companyStateCode = companyAddressObj?.state?.code;
 
-  const customerAddressObj = (bill?.customerId?.address as any)?.[0] || (bill?.shippingAddress as any);
-  const customerAddress1 = customerAddressObj?.addressLine1 || "vastrapur";
-  const customerAddress2 = customerAddressObj ? `${customerAddressObj.city?.name || "Ahmedabad"}, ${customerAddressObj.state?.name || "Gujarat"}(${customerAddressObj.state?.code || "24"}), India`.replace(/^[,\s]+|[,\s]+$/g, "") : "Ahmedabad, Gujarat(24), India";
-  const customerGSTIN = bill?.shippingAddress?.gstin || bill?.customerId?.gstin || "13245692565";
-
   const fromName = bill?.requestedByBranchId?.name;
-  const fromAddress = companyAddress1;
-  const fromState = `${companyState}(${companyStateCode}), India`;
-  const fromMobile = companyContact;
-  const fromGSTIN = companyGSTIN;
+  const fromAddress = bill?.requestedByBranchId?.address?.address;
+  const fromState = `${bill?.requestedByBranchId?.address?.city?.name},${bill?.requestedByBranchId?.address?.state?.name}(${bill?.requestedByBranchId?.address?.pinCode}), ${bill?.requestedByBranchId?.address?.country?.name}`;
+  const fromMobile = bill?.requestedByBranchId?.phoneNo?.phoneNo ? `${bill?.requestedByBranchId?.phoneNo?.countryCode || ""} ${bill?.requestedByBranchId?.phoneNo?.phoneNo}` : "";
 
   const toName = bill?.requestedToBranchId?.name;
+  const toAddress = bill?.requestedToBranchId?.address?.address;
+  const toState = `${bill?.requestedToBranchId?.address?.city?.name},${bill?.requestedToBranchId?.address?.state?.name}(${bill?.requestedToBranchId?.address?.pinCode}), ${bill?.requestedToBranchId?.address?.country?.name}`;
+  const toMobile = bill?.requestedToBranchId?.phoneNo?.phoneNo ? `${bill?.requestedToBranchId?.phoneNo?.countryCode || ""} ${bill?.requestedToBranchId?.phoneNo?.phoneNo}` : "";
 
   const transferDate = FormatDate(bill?.createdAt);
   const transferNo = bill?.transferNo;
@@ -57,7 +54,7 @@ const StockTransfer_A4_1Jasper = forwardRef<HTMLDivElement, { bill?: EstimateBas
   });
 
   return (
-    <div ref={ref} className="w-[210mm] mx-auto bg-white text-black p-4 font-sans text-[9px] leading-tight border border-gray-400">
+    <div ref={ref} className="w-[210mm] mx-auto bg-white text-black p-4 font-sans text-[9px] leading-tight">
       {/* Header */}
       <div className="flex justify-between items-start mb-2">
         {companyLogo && (
@@ -98,8 +95,6 @@ const StockTransfer_A4_1Jasper = forwardRef<HTMLDivElement, { bill?: EstimateBas
             {fromState}
             <br />
             Mo. : {fromMobile}
-            <br />
-            Company GSTIN :{fromGSTIN}
           </p>
         </div>
 
@@ -108,11 +103,11 @@ const StockTransfer_A4_1Jasper = forwardRef<HTMLDivElement, { bill?: EstimateBas
           <h2 className="font-bold text-[12px] mb-1">To</h2>
           <p className="font-black text-[11px]">{toName}</p>
           <p className="leading-3">
-            {customerAddress1}
+            {toAddress}
             <br />
-            {customerAddress2}
+            {toState}
             <br />
-            Consignee GSTIN :{customerGSTIN}
+            Mo. : {toMobile}
           </p>
         </div>
 
@@ -155,9 +150,7 @@ const StockTransfer_A4_1Jasper = forwardRef<HTMLDivElement, { bill?: EstimateBas
               return (
                 <tr key={i} className="align-top">
                   <td className="border-r border-black text-center py-1">{i + 1}</td>
-                  <td className="border-r border-black px-1 py-1 font-semibold">
-                    {product.name} {product.variantName}
-                  </td>
+                  <td className="border-r border-black px-1 py-1 font-semibold">{product.name}</td>
                   <td className="border-r border-black text-right px-1 py-1">{Number(item.requestedQty).toFixed(2)}</td>
                   <td className="border-r border-black text-right px-1 py-1">{Number(item.approvedQty).toFixed(2)}</td>
                   <td className="border-r border-black text-right px-1 py-1">{Number(item.receivedQty).toFixed(2)}</td>

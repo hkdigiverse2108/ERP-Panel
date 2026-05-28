@@ -1,5 +1,5 @@
 import { Box, Grid } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutations, Queries } from "../../../Api";
 import { AdvancedSearch, CalculateGridSummary, CommonActionColumn, CommonBreadcrumbs, CommonCard, CommonDataGrid, CommonDataGridSummaryFooter, CommonDeleteModal, CommonStatsCard } from "../../../Components/Common";
@@ -11,23 +11,50 @@ import { CreateFilter, DateConfig, GenerateOptions } from "../../../Utils";
 import { useDataGrid, usePagePermission } from "../../../Utils/Hooks";
 import { useAppSelector } from "../../../Store/hooks";
 import { CommonDateRangeSelector } from "../../../Attribute";
+import { useReactToPrint } from "react-to-print";
+import Print from "../../../Components/ReportFormats/Print";
 
 const SupplierBill = () => {
   const { paginationModel, setPaginationModel, sortModel, setSortModel, filterModel, setFilterModel, rowToDelete, setRowToDelete, isActive, setActive, advancedFilter, updateAdvancedFilter, params } = useDataGrid();
 
   const navigate = useNavigate();
+  const contentRef = useRef<HTMLDivElement>(null);
   const permission = usePagePermission(PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE);
   // Filter Data Queries
   const { data: supplierData, isLoading: supplierDataLoading } = Queries.useGetContactDropdown({ typeFilter: "supplier" });
   const { company } = useAppSelector((state) => state.company);
   const [fyStart, fyEnd] = company?.financialYear ? company.financialYear.split(" - ") : [];
   const [range, setRange] = useState({ start: DateConfig.utc(fyStart) ?? DateConfig.utc().startOf("day"), end: DateConfig.utc(fyEnd) ?? DateConfig.utc().endOf("day") });
+  const [printData, setPrintData] = useState<SupplierBillBase | null>(null);
 
   const { data, isLoading, isFetching } = Queries.useGetSupplierBillDetails({ ...params, startDate: range.start.toISOString(), endDate: range.end.toISOString() });
   const { refetch: fetchAll, isFetching: AllFetching, isLoading: AllLoading } = Queries.useGetSupplierBillDetails({}, false);
   const { mutate: deleteSupplierBill, isPending: deleteSupplierBillLoading } = Mutations.useDeleteSupplierBill();
   const { mutate: editSupplierBill } = Mutations.useEditSupplierBill();
   const summaryData = data?.data?.summary;
+
+  const handlePrint = useReactToPrint({
+    contentRef,
+    documentTitle: () => `${PAGE_TITLE.RECEIPT.BASE}_${new Date().toISOString().split("T")[0]}`,
+    onBeforePrint: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setPrintData(null);
+    },
+    onAfterPrint: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setPrintData(null);
+    },
+    onPrintError: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setPrintData(null);
+    },
+  });
+
+  useEffect(() => {
+    if (printData && contentRef.current) {
+      handlePrint();
+    }
+  }, [printData, handlePrint]);
 
   const handleDeleteBtn = () => {
     if (!rowToDelete) return;
@@ -73,6 +100,7 @@ const SupplierBill = () => {
           CommonActionColumn<SupplierBillBase>({
             ...(permission?.edit && { active: (row) => editSupplierBill({ supplierBillId: row?._id, isActive: !row.isActive }), editRoute: ROUTES.SUPPLIER_BILL.ADD_EDIT }),
             ...(permission?.delete && { onDelete: (row) => setRowToDelete({ _id: row?._id, title: row?.supplierBillNo }) }),
+            onPrint: { handlePrint: (row) => setPrintData(row) },
           }),
         ]
       : []),
@@ -114,6 +142,7 @@ const SupplierBill = () => {
         </CommonCard>
         <CommonDeleteModal open={Boolean(rowToDelete)} itemName={rowToDelete?.title} onClose={() => setRowToDelete(null)} onConfirm={handleDeleteBtn} loading={deleteSupplierBillLoading} />
       </Box>
+      <div className="hidden">{<Print type="Bill" ref={contentRef} bill={printData} />}</div>
     </>
   );
 };

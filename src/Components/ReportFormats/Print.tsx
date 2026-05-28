@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import { Queries } from "../../Api";
-import { Grn_Bill_ThermalJasper, Purchase1Jasper, Purchase2Jasper, Purchase3Jasper } from "./Bill";
+import { Grn_Bill_ThermalJasper, Purchase1Jasper } from "./Bill";
 import { Deliverychallan_1Jasper } from "./Deliverychallan";
 import { Estimate_A4_1Jasper } from "./Estimate";
 import { PurchaseOrder1Jasper, PurchaseOrder2Jasper, PurchaseOrder3Jasper, PurchaseThermalHtml } from "./Order";
@@ -50,9 +50,7 @@ const FORMAT_COMPONENTS_MAP: Record<string, Record<string, any>> = {
   },
 
   Bill: {
-    "Purchase-2": Purchase2Jasper,
     "Purchase-1": Purchase1Jasper,
-    "purchase-3": Purchase3Jasper,
     grn_bill_thermal: Grn_Bill_ThermalJasper,
   },
 
