@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PosProductDataModal, PosSliceState } from "../../Types";
+import { ShowNotification } from "../../Attribute";
 
 const initialState: PosSliceState = {
   isMultiplePay: false,
@@ -134,10 +135,14 @@ const PosSlice = createSlice({
     },
     setPosProductItems: (state, action) => {
       if (!action.payload) return;
+      const outOfStockProducts: string[] = [];
 
       action.payload.forEach((item: PosProductDataModal) => {
         const existingProduct = state.PosProduct.items.find((p) => p._id === item._id);
-
+        if (item.qty === 0) {
+          outOfStockProducts.push(item?.name || "");
+          return;
+        }
         if (existingProduct) {
           existingProduct.posQty += item.detect_qty || 1;
           calculateAmounts(existingProduct);
@@ -156,6 +161,7 @@ const PosSlice = createSlice({
           state.PosProduct.items.unshift(newRow);
         }
       });
+      if (outOfStockProducts.length > 0) ShowNotification(`${outOfStockProducts.join(", ")} are out of stock`, "info");
     },
     updateProduct: (state, action) => {
       const row = state.PosProduct.items.find((item) => item._id === action.payload._id);
