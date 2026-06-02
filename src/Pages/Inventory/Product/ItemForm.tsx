@@ -68,6 +68,7 @@ const ItemForm = () => {
 
   const initialValues: StockFormValues = {
     productId: "",
+    variantId: "",
     uomId: "",
     purchaseTaxId: "",
     salesTaxId: "",
@@ -110,7 +111,7 @@ const ItemForm = () => {
                   {/* ---------- GENERAL DETAILS ---------- */}
                   <CommonCard hideDivider>
                     <Grid container spacing={2} sx={{ p: 2 }}>
-                      <CommonValidationSelect name="productId" label="Select Product" options={GenerateOptions(ProductData?.data)} isLoading={ProductDataLoading} grid={{ xs: 12, sm: 6, xl: 4 }} required />
+                      <CommonValidationSelect name="productId" syncName="variantId" label="Select Product" options={GenerateOptions(ProductData?.data)} isLoading={ProductDataLoading} grid={{ xs: 12, sm: 6, xl: 4 }} required />
                       <CommonValidationSelect name="uomId" label="Select UOM" options={GenerateOptions(UOMData?.data)} isLoading={UOMDataLoading} grid={{ xs: 12, sm: 6, xl: 4 }} required />
                       <CommonValidationTextField name="qty" label="Qty" type="number" grid={{ xs: 12, sm: 6, xl: 4 }} required />
                       <CommonValidationSelect name="purchaseTaxId" label="Purchase Tax" isLoading={TaxDataLoading} syncFieldName="salesTaxId" options={GenerateOptions(TaxData?.data)} grid={{ xs: 12, sm: 6, xl: 4 }} required />

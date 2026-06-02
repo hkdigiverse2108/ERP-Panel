@@ -21,7 +21,7 @@ const EstimateForm = () => {
   const permission = usePagePermission(PAGE_TITLE.SALES.ESTIMATE.BASE);
   const { data } = location.state || {};
 
-  const emptyRow = { productId: "", qty: 1, freeQty: 0, uomId: "", price: 0, discount1: 0, taxId: "", taxableAmount: 0, totalAmount: 0 };
+  const emptyRow = { productId: "", variantId: "", qty: 1, freeQty: 0, uomId: "", price: 0, discount1: 0, taxId: "", taxableAmount: 0, totalAmount: 0 };
 
   const initialValues: EstimateFormValues = {
     date: data?.date || DateConfig.utc().toISOString(),
@@ -141,6 +141,7 @@ const EstimateForm = () => {
         ?.filter((i: EstimateItem) => i.productId)
         .map((i: EstimateItem) => ({
           ...i,
+          variantId: i?.variantId || null,
           qty: Number(i.qty || 0),
           freeQty: Number(i.freeQty || 0),
           price: Number(i.price || 0),

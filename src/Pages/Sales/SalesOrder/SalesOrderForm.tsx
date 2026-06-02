@@ -18,7 +18,7 @@ const SalesOrderForm = () => {
   const permission = usePagePermission(PAGE_TITLE.SALES.SALES_ORDER.BASE);
   const { data } = location.state || {};
 
-  const emptyRow: SalesOrderItem = { productId: "", qty: 1, freeQty: 0, uomId: "", price: 0, discount1: 0, taxId: "", taxableAmount: 0, totalAmount: 0 };
+  const emptyRow: SalesOrderItem = { productId: "", variantId: "", qty: 1, freeQty: 0, uomId: "", price: 0, discount1: 0, taxId: "", taxableAmount: 0, totalAmount: 0 };
 
   const initialValues: SalesOrderFormValues = {
     date: data?.date || DateConfig.utc().toISOString(),
@@ -126,6 +126,7 @@ const SalesOrderForm = () => {
         ?.filter((i: SalesOrderItem) => i.productId)
         .map((i: SalesOrderItem) => ({
           productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
+          variantId: i.variantId || null,
           qty: Number(i.qty || 0),
           freeQty: Number(i.freeQty || 0),
           price: Number(i.price || 0),

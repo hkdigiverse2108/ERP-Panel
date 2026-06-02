@@ -29,11 +29,8 @@ const DeliveryChallanTabs = ({ emptyRow, isEditing }: { emptyRow: DeliveryChalla
     try {
       const rawData = await extractExcelData(file);
       const mappedItems = mapExcelToFormItems(rawData, BULK_IMPORT_TYPES.DELIVERY_CHALLAN, productsData?.data || [], emptyRow);
-      
-      const updatedItems = [
-        ...(values.items ?? []).filter((i: DeliveryChallanItem) => i.productId),
-        ...mappedItems
-      ];
+
+      const updatedItems = [...(values.items ?? []).filter((i: DeliveryChallanItem) => i.productId), ...mappedItems];
       setFieldValue("items", updatedItems);
       dispatch(setBulkAddModal({ open: false, title: "", type: "" }));
     } catch (err) {
@@ -80,7 +77,7 @@ const DeliveryChallanTabs = ({ emptyRow, isEditing }: { emptyRow: DeliveryChalla
 
   const calculateRowValues = (index: number) => {
     const row = values?.items?.[index];
-    const product = productsData?.data?.find((p: ProductBase) => p._id === row?.productId);
+    const product = productsData?.data?.find((p: ProductBase) => (row?.variantId ? p.variantId === row?.variantId : p._id === row?.productId));
     if (!product) return { taxableAmount: 0, totalAmount: 0, taxAmount: 0, discountAmount: 0 };
 
     const qty = Number(row?.qty || 0);
@@ -127,7 +124,7 @@ const DeliveryChallanTabs = ({ emptyRow, isEditing }: { emptyRow: DeliveryChalla
 
     values?.items?.forEach((item, index) => {
       if (!item?.productId) return;
-      const product = productsData?.data?.find((p: ProductBase) => p._id === item.productId);
+      const product = productsData?.data?.find((p: ProductBase) => (item?.variantId ? p.variantId === item?.variantId : p._id === item.productId));
       if (!product) return;
 
       const { taxableAmount, totalAmount, taxAmount, discountAmount } = calculateRowValues(index);
@@ -186,14 +183,7 @@ const DeliveryChallanTabs = ({ emptyRow, isEditing }: { emptyRow: DeliveryChalla
             <Tab label="Shipping Details" />
           </Tabs>
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, p: 1 }}>
-            <CommonButton
-              variant="contained"
-              startIcon={<UploadFile />}
-              title="Upload Products"
-              size="small"
-              disabled={!isCustomerSelected}
-              onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Delivery Challan", type: BULK_IMPORT_TYPES.DELIVERY_CHALLAN }))}
-            />
+            <CommonButton variant="contained" startIcon={<UploadFile />} title="Upload Products" size="small" disabled={!isCustomerSelected} onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Delivery Challan", type: BULK_IMPORT_TYPES.DELIVERY_CHALLAN }))} />
           </Box>
         </Box>
 
@@ -229,7 +219,7 @@ const DeliveryChallanTabs = ({ emptyRow, isEditing }: { emptyRow: DeliveryChalla
                       key: "productId",
                       header: "Product",
                       bodyClass: " min-w-[250px]",
-                      render: (_, index) => <CommonValidationSelect name={`items.${index}.productId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isCustomerSelected} />,
+                      render: (_, index) => <CommonValidationSelect name={`items.${index}.productId`} syncName={`items.${index}.variantId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isCustomerSelected} />,
                     },
                     {
                       key: "qty",
@@ -251,7 +241,8 @@ const DeliveryChallanTabs = ({ emptyRow, isEditing }: { emptyRow: DeliveryChalla
                       bodyClass: "min-w-28 align-middle",
                       render: (_, index) => {
                         const productId = values?.items?.[index]?.productId;
-                        const product = productsData?.data?.find((p: ProductBase) => p._id === productId);
+                        const variantId = values?.items?.[index]?.variantId;
+                        const product = productsData?.data?.find((p: ProductBase) => (variantId ? p.variantId === variantId : p._id === productId));
                         return <span>{product?.uomId?.name || ""}</span>;
                       },
                     },
@@ -273,7 +264,8 @@ const DeliveryChallanTabs = ({ emptyRow, isEditing }: { emptyRow: DeliveryChalla
                       bodyClass: "min-w-28 align-middle",
                       render: (_, index) => {
                         const productId = values?.items?.[index]?.productId;
-                        const product = productsData?.data?.find((p: ProductBase) => p._id === productId);
+                        const variantId = values?.items?.[index]?.variantId;
+                        const product = productsData?.data?.find((p: ProductBase) => (variantId ? p.variantId === variantId : p._id === productId));
                         if (!product) return null;
 
                         const isOutOfScope = values?.taxType === "out_of_scope";

@@ -28,7 +28,7 @@ export const CleanParams = (params?: Params): Params | undefined => {
   return Object.fromEntries(Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== ""));
 };
 
-export const GenerateOptions = (data?: { _id: string; name?: string; firstName?: string; lastName?: string; title?: string; fullName?: string; orderNo?: string | null; estimateNo?: string | null }[]) => {
+export const GenerateOptions = (data?: { _id: string; name?: string; firstName?: string; lastName?: string; title?: string; fullName?: string; orderNo?: string | null; estimateNo?: string | null; variantId?: string }[]) => {
   if (!data || !Array.isArray(data)) return [];
 
   return data.map((item) => {
@@ -42,6 +42,7 @@ export const GenerateOptions = (data?: { _id: string; name?: string; firstName?:
           .split(" ")
           .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
           .join(" ") || "",
+      variantId: item.variantId || "",
     };
   });
 };

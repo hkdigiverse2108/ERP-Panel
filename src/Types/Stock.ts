@@ -2,6 +2,7 @@ import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 
 export interface StockFormValues {
   productId?: string;
+  variantId?: string;
   uomId?: string;
   purchaseTaxId?: string;
   isPurchaseTaxIncluding?: boolean;

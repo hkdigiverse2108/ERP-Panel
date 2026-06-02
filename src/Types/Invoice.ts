@@ -7,6 +7,7 @@ import type { TaxBase } from "./Tax";
 
 export interface InvoiceItem {
   productId: string | ProductBase;
+  variantId: string | null;
   qty: number;
   freeQty: number;
   mrp?: number;

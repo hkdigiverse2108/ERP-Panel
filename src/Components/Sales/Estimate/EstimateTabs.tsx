@@ -29,11 +29,8 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
     try {
       const rawData = await extractExcelData(file);
       const mappedItems = mapExcelToFormItems(rawData, BULK_IMPORT_TYPES.ESTIMATE, productsData?.data || [], emptyRow);
-      
-      const updatedItems = [
-        ...(values.items ?? []).filter((i: EstimateItem) => i.productId),
-        ...mappedItems
-      ];
+
+      const updatedItems = [...(values.items ?? []).filter((i: EstimateItem) => i.productId), ...mappedItems];
       setFieldValue("items", updatedItems);
       dispatch(setBulkAddModal({ open: false, title: "", type: "" }));
     } catch (err) {
@@ -43,7 +40,7 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
 
   const calculateRowValues = (index: number) => {
     const row = values?.items?.[index];
-    const product = productsData?.data?.find((p: ProductBase) => p._id === row?.productId);
+    const product = productsData?.data?.find((p: ProductBase) => (row?.variantId ? p.variantId === row.variantId : p._id === row?.productId));
     if (!product) return { taxableAmount: 0, totalAmount: 0 };
 
     const qty = Number(row?.qty || 0);
@@ -86,7 +83,7 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
 
     values?.items?.forEach((item, index) => {
       if (!item?.productId) return;
-      const product = productsData?.data?.find((p: ProductBase) => p._id === item.productId);
+      const product = productsData?.data?.find((p: ProductBase) => (item.variantId ? p.variantId === item.variantId : p._id === item.productId));
       if (!product) return;
 
       const { taxableAmount, totalAmount } = calculateRowValues(index);
@@ -147,14 +144,7 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
             <Tab label="Shipping Details" />
           </Tabs>
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, p: 1 }}>
-            <CommonButton
-              variant="contained"
-              startIcon={<UploadFile />}
-              title="Upload Products"
-              size="small"
-              disabled={!isCustomerSelected}
-              onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Estimate", type: BULK_IMPORT_TYPES.ESTIMATE }))}
-            />
+            <CommonButton variant="contained" startIcon={<UploadFile />} title="Upload Products" size="small" disabled={!isCustomerSelected} onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Estimate", type: BULK_IMPORT_TYPES.ESTIMATE }))} />
           </Box>
         </Box>
 
@@ -190,7 +180,7 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
                       key: "productId",
                       header: "Product",
                       bodyClass: " min-w-[250px]",
-                      render: (_, index) => <CommonValidationSelect name={`items.${index}.productId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isCustomerSelected} />,
+                      render: (_, index) => <CommonValidationSelect name={`items.${index}.productId`} syncName={`items.${index}.variantId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isCustomerSelected} />,
                     },
                     {
                       key: "qty",
@@ -212,7 +202,8 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
                       bodyClass: "min-w-28 align-middle",
                       render: (_, index) => {
                         const productId = values?.items?.[index]?.productId;
-                        const product = productsData?.data?.find((p: ProductBase) => p._id === productId);
+                        const variantId = values?.items?.[index]?.variantId;
+                        const product = productsData?.data?.find((p: ProductBase) => (variantId ? p.variantId === variantId : p._id === productId));
                         return <span>{product?.uomId?.name || ""}</span>;
                       },
                     },
@@ -223,7 +214,7 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
                       render: (_, index) => {
                         return (
                           <div className="flex flex-col gap-1">
-                            <CommonValidationTextField name={`items.${index}.price`} type="number"   />
+                            <CommonValidationTextField name={`items.${index}.price`} type="number" />
                           </div>
                         );
                       },
@@ -240,7 +231,8 @@ const EstimateTabs = ({ emptyRow }: { emptyRow: EstimateItem }) => {
                       bodyClass: "min-w-28 align-middle",
                       render: (_, index) => {
                         const productId = values?.items?.[index]?.productId;
-                        const product = productsData?.data?.find((p: ProductBase) => p._id === productId);
+                        const variantId = values?.items?.[index]?.variantId;
+                        const product = productsData?.data?.find((p: ProductBase) => (variantId ? p.variantId === variantId : p._id === productId));
                         if (!product) return null;
 
                         const isOutOfScope = values?.taxType === "out_of_scope";

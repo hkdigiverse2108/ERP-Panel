@@ -64,6 +64,7 @@ export type SelectOptionType = {
   label: string;
   value: string;
   [key: string]: any;
+  variantId?: string;
 };
 
 export interface CommonSelectProps {
@@ -88,6 +89,7 @@ export interface CommonSelectProps {
 export interface CommonValidationSelectProps extends Omit<CommonSelectProps, "onChange" | "value"> {
   name: string;
   onChange?: (value: any) => void | Promise<any>;
+  syncName?: string;
 }
 
 export interface CommonValidationCreatableSelectProps {

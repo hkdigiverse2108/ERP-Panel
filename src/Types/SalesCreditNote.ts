@@ -29,6 +29,7 @@ export type SalesCreditNoteProductType = (typeof SALES_CREDIT_NOTE_PRODUCT_TYPE)
 
 export interface SalesCreditNoteItem {
   productId: string | ProductBase;
+  variantId?: string | null;
   qty: number;
   freeQty: number;
   uomId?: string | UomBase;
