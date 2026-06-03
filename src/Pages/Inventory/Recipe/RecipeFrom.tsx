@@ -37,19 +37,34 @@ const RecipeForm = () => {
     rawProducts: data?.rawProducts?.length
       ? data.rawProducts.map((item: RawRecipeProduct) => ({
           productId: typeof item.productId === "string" ? item.productId : item.productId?._id || "",
+          variantId: item.variantId || null,
           mrp: item.mrp ?? "",
           useQty: item.useQty ?? "",
         }))
-      : [{ productId: "", mrp: "", useQty: "" }],
+      : [{ productId: "", variantId: null, mrp: "", useQty: "" }],
     finalProducts: {
       productId: data?.finalProducts?.productId?._id || "",
+      variantId: data?.finalProducts?.variantId || null,
       mrp: data?.finalProducts?.mrp ?? "",
       qtyGenerate: data?.finalProducts?.qtyGenerate ?? "",
     },
   };
   const handleSubmit = async (values: RecipeFormValues, { resetForm }: FormikHelpers<RecipeFormValues>) => {
     const { _submitAction, ...rest } = values;
-    const payload = { ...rest, companyId: company!._id };
+    const payload = {
+      ...rest,
+      rawProducts: rest.rawProducts
+        ?.filter((i: RawRecipeProduct) => i.productId)
+        .map((i: RawRecipeProduct) => ({
+          ...i,
+          variantId: i?.variantId || null,
+        })),
+      finalProducts: {
+        ...rest.finalProducts,
+        variantId: rest.finalProducts?.variantId || null,
+      },
+      companyId: company!._id,
+    };
     const handleSuccess = () => {
       if (_submitAction === "saveAndNew") resetForm();
       else navigate(-1);
@@ -89,7 +104,7 @@ const RecipeForm = () => {
                           const rawProducts = values.rawProducts || [];
                           return (
                             <Box key={index} display="flex" flexWrap="wrap" gap={2} sx={{ mb: 2 }}>
-                              <CommonValidationSelect name={`rawProducts.${index}.productId`} label="Product" options={GenerateOptions(productData?.data)} isLoading={productDataLoading} required grid={{ xs: 12, md: 4 }} />
+                              <CommonValidationSelect name={`rawProducts.${index}.productId`} syncName={`rawProducts.${index}.variantId`} label="Product" options={GenerateOptions(productData?.data)} isLoading={productDataLoading} required grid={{ xs: 12, md: 4 }} />
                               <CommonValidationTextField name={`rawProducts.${index}.useQty`} label="Use Qty" type="number" required grid={{ xs: 12, md: 3 }} />
                               <CommonValidationTextField name={`rawProducts.${index}.mrp`} label="MRP" type="number" grid={{ xs: 12, md: 3 }} />
                               <Grid size={{ xs: 12, md: 2 }}>
@@ -100,7 +115,7 @@ const RecipeForm = () => {
                                     </CommonButton>
                                   )}
                                   {index === rawProducts.length - 1 && (
-                                    <CommonButton size="small" variant="outlined" onClick={() => push({ productId: "", mrp: "", useQty: "" })}>
+                                    <CommonButton size="small" variant="outlined" onClick={() => push({ productId: "", variantId: null, mrp: "", useQty: "" })}>
                                       <AddIcon />
                                     </CommonButton>
                                   )}
@@ -117,7 +132,7 @@ const RecipeForm = () => {
                 {/* FINAL PRODUCTS */}
                 <CommonCard title="Final Products">
                   <Box p={2} display="flex" flexWrap="wrap" gap={2}>
-                    <CommonValidationSelect name="finalProducts.productId" label="Product" options={GenerateOptions(productDataNew?.data)} isLoading={productDataNewLoading} required grid={{ xs: 12, md: 4 }} />
+                    <CommonValidationSelect name="finalProducts.productId" syncName={`finalProducts.variantId`} label="Product" options={GenerateOptions(productDataNew?.data)} isLoading={productDataNewLoading} required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="finalProducts.qtyGenerate" label="Qty Generate" type="number" required grid={{ xs: 12, md: 4 }} />
                     <CommonValidationTextField name="finalProducts.mrp" label="MRP" type="number" grid={{ xs: 12, md: 4 }} />
                   </Box>

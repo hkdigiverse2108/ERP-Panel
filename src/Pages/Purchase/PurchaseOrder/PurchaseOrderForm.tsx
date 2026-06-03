@@ -20,10 +20,9 @@ const PurchaseOrderForm = () => {
   const { mutate: editPurchaseOrder, isPending: editLoading } = Mutations.useEditPurchaseOrder();
 
   const pageMode = isEditing ? "EDIT" : "ADD";
-  const emptyRow = { productId: "", qty: 1, uomId: "", unit: "", unitCost: 0, taxId: "", tax: "0", landingCost: "0", margin: "0", total: 0 };
+  const emptyRow = { productId: "", variantId: "", qty: 1, uomId: "", unit: "", unitCost: 0, taxId: "", tax: "0", landingCost: "0", margin: "0", total: 0 };
 
   const initialValues: PurchaseOrderFormValues = {
-
     supplierId: typeof data?.supplierId === "object" ? data.supplierId?._id : data?.supplierId || "",
     orderDate: data?.orderDate || data?.date || "",
     shippingDate: data?.shippingDate || data?.date || data?.orderDate || "",
@@ -34,17 +33,19 @@ const PurchaseOrderForm = () => {
     gstIn: data?.gstIn || "",
     taxType: data?.taxType || "default",
 
-    items: data?.items?.length ? data.items.map((i: PurchaseOrderItem) => {
-      const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
-      return {
-        ...emptyRow,
-        ...i,
-        productId: pId,
-        _prevProductId: pId,
-        uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
-        taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
-      };
-    }) : [emptyRow],
+    items: data?.items?.length
+      ? data.items.map((i: PurchaseOrderItem) => {
+          const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
+          return {
+            ...emptyRow,
+            ...i,
+            productId: pId,
+            _prevProductId: pId,
+            uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
+            taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
+          };
+        })
+      : [emptyRow],
     termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
     notes: data?.notes || "",
 
@@ -68,6 +69,7 @@ const PurchaseOrderForm = () => {
       ...rest,
       items: rest.items?.map((item: PurchaseOrderItem) => ({
         productId: typeof item.productId === "object" ? item.productId?._id : item.productId,
+        variantId: item?.variantId || null,
         qty: Number(item.qty || 0),
         uomId: typeof item.uomId === "object" ? item.uomId?._id : item.uomId,
         unit: String(item.unit || ""),
@@ -80,14 +82,14 @@ const PurchaseOrderForm = () => {
       })),
       summary: rest.summary
         ? {
-          flatDiscount: Number(rest.summary.flatDiscount || 0),
-          grossAmount: Number(rest.summary.grossAmount || 0),
-          discountAmount: Number(rest.summary.discountAmount || 0),
-          taxableAmount: Number(rest.summary.taxableAmount || 0),
-          taxAmount: Number(rest.summary.taxAmount || 0),
-          roundOff: Number(rest.summary.roundOff || 0),
-          netAmount: Number(rest.summary.netAmount || 0),
-        }
+            flatDiscount: Number(rest.summary.flatDiscount || 0),
+            grossAmount: Number(rest.summary.grossAmount || 0),
+            discountAmount: Number(rest.summary.discountAmount || 0),
+            taxableAmount: Number(rest.summary.taxableAmount || 0),
+            taxAmount: Number(rest.summary.taxAmount || 0),
+            roundOff: Number(rest.summary.roundOff || 0),
+            netAmount: Number(rest.summary.netAmount || 0),
+          }
         : undefined,
     };
 

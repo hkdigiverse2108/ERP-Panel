@@ -84,6 +84,7 @@ const Cash = () => {
         additionalDiscountAmount: item?.additionalDiscount,
         unitCost: item?.unitCost,
         netAmount: item?.netAmount,
+        ...(item.variantId && { variantId: item.variantId }),
       })),
       paymentMethod: POS_PAYMENT_METHOD.CASH,
       multiplePayments: [

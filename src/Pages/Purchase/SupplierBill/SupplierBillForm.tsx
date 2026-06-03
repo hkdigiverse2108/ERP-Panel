@@ -6,15 +6,14 @@ import { PAGE_TITLE, ROUTES } from "../../../Constants";
 import { DateConfig, GetChangedFields, RemoveEmptyFields, SupplierBillFormSchema } from "../../../Utils";
 import { BREADCRUMBS } from "../../../Data";
 import { Mutations } from "../../../Api";
-import { useEffect, } from "react";
-import type { SupplierBillFormValues, SupplierBillProductItem, SupplierBillReturnProductItem,AdditionalChargeItem } from "../../../Types";
+import { useEffect } from "react";
+import type { SupplierBillFormValues, SupplierBillProductItem, SupplierBillReturnProductItem, AdditionalChargeItem } from "../../../Types";
 import { usePagePermission } from "../../../Utils/Hooks";
 import { CommonSummaryWatcher } from "../../../Components/Common/CommonSummarySection";
 import SupplierBillDetails from "../../../Components/Purchase/SupplierBill/SupplierBillDetails";
 import SupplierBillTabs from "../../../Components/Purchase/SupplierBill/SupplierBillTabs";
 
 const SupplierBillForm = () => {
-
   const navigate = useNavigate();
   const location = useLocation();
   const permission = usePagePermission(PAGE_TITLE.PURCHASE.SUPPLIER_BILL.BASE);
@@ -32,8 +31,8 @@ const SupplierBillForm = () => {
     if (!hasAccess) navigate(-1);
   }, [isEditing, permission, navigate]);
 
-  const emptyRow = { productId: "", _prevProductId: "", qty: 1, freeQty: 0, mrp: 0, uomId: "", unit: "", sellingPrice: 0, unitCost: 0, discount1: 0, taxable: 0, taxableAmount: 0, taxId: "", tax: 0, taxAmount: 0, landingCost: 0, margin: 0, total: 0 };
-  const emptyReturnRow = { productId: "", _prevProductId: "", qty: 1, uomId: "", unit: "", unitCost: 0, discount1: 0, taxable: 0, taxableAmount: 0, taxId: "", tax: 0, taxAmount: 0, landingCost: 0, margin: 0, total: 0 };
+  const emptyRow = { productId: "", variantId: "", _prevProductId: "", qty: 1, freeQty: 0, mrp: 0, uomId: "", unit: "", sellingPrice: 0, unitCost: 0, discount1: 0, taxable: 0, taxableAmount: 0, taxId: "", tax: 0, taxAmount: 0, landingCost: 0, margin: 0, total: 0 };
+  const emptyReturnRow = { productId: "", variantId: "", _prevProductId: "", qty: 1, uomId: "", unit: "", unitCost: 0, discount1: 0, taxable: 0, taxableAmount: 0, taxId: "", tax: 0, taxAmount: 0, landingCost: 0, margin: 0, total: 0 };
 
   const initialValues: SupplierBillFormValues = {
     supplierId: typeof data?.supplierId === "object" ? data.supplierId?._id : data?.supplierId || "",
@@ -52,23 +51,9 @@ const SupplierBillForm = () => {
 
     productDetails: (data?.productDetails || [])?.length
       ? (data?.productDetails || []).map((i: SupplierBillProductItem) => {
-        const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
-        return {
-          ...emptyRow,
-          ...i,
-          productId: pId,
-          _prevProductId: pId,
-          uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
-          taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
-        };
-      })
-      : [emptyRow],
-    returnProductDetails: {
-      item: (data?.returnProductDetails?.item || [])?.length
-        ? (data?.returnProductDetails?.item || []).map((i: SupplierBillReturnProductItem) => {
           const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
           return {
-            ...emptyReturnRow,
+            ...emptyRow,
             ...i,
             productId: pId,
             _prevProductId: pId,
@@ -76,6 +61,20 @@ const SupplierBillForm = () => {
             taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
           };
         })
+      : [emptyRow],
+    returnProductDetails: {
+      item: (data?.returnProductDetails?.item || [])?.length
+        ? (data?.returnProductDetails?.item || []).map((i: SupplierBillReturnProductItem) => {
+            const pId = typeof i.productId === "object" ? i.productId?._id : i.productId;
+            return {
+              ...emptyReturnRow,
+              ...i,
+              productId: pId,
+              _prevProductId: pId,
+              uomId: typeof i.uomId === "object" ? i.uomId?._id : i.uomId,
+              taxId: typeof i.taxId === "object" ? i.taxId?._id : i.taxId,
+            };
+          })
         : [emptyReturnRow],
       summary: {
         roundOff: data?.returnProductDetails?.summary?.roundOff || data?.returnProductDetails?.roundOff || 0,
@@ -83,10 +82,10 @@ const SupplierBillForm = () => {
     },
     additionalCharges: (data?.additionalCharges || [])?.length
       ? (data?.additionalCharges || []).map((r: AdditionalChargeItem) => ({
-        ...r,
-        chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
-        taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
-      }))
+          ...r,
+          chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
+          taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
+        }))
       : [],
     termsAndConditionIds: data?.termsAndConditionIds?.map((t: string | { _id: string }) => (typeof t === "string" ? t : t._id)) || [],
     notes: data?.notes || "",
@@ -114,6 +113,7 @@ const SupplierBillForm = () => {
       ...rest,
       productDetails: rest.productDetails?.map((item: SupplierBillProductItem) => ({
         productId: typeof item.productId === "object" ? item.productId?._id : item.productId,
+        variantId: item.variantId || null,
         qty: Number(item.qty || 0),
         freeQty: Number(item.freeQty || 0),
         mrp: Number(item.mrp || 0),
@@ -134,6 +134,7 @@ const SupplierBillForm = () => {
           ?.filter((i) => i.productId)
           .map((item: SupplierBillReturnProductItem) => ({
             productId: typeof item.productId === "object" ? item.productId?._id : item.productId,
+            variantId: item.variantId || null,
             qty: Number(item.qty || 0),
             uomId: typeof item.uomId === "object" ? item.uomId?._id : item.uomId,
             unit: String(item.unit || ""),
@@ -154,24 +155,24 @@ const SupplierBillForm = () => {
       },
       additionalCharges: Array.isArray(rest.additionalCharges)
         ? rest.additionalCharges
-          ?.filter((r: AdditionalChargeItem) => r.chargeId)
-          .map((r: AdditionalChargeItem) => ({
-            chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
-            taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
-            amount: Number(r.amount || 0),
-            totalAmount: Number(r.totalAmount || 0),
-          }))
+            ?.filter((r: AdditionalChargeItem) => r.chargeId)
+            .map((r: AdditionalChargeItem) => ({
+              chargeId: typeof r.chargeId === "object" ? r.chargeId?._id : r.chargeId,
+              taxId: typeof r.taxId === "object" ? r.taxId?._id : r.taxId,
+              amount: Number(r.amount || 0),
+              totalAmount: Number(r.totalAmount || 0),
+            }))
         : [],
       summary: rest.summary
         ? {
-          flatDiscount: Number(rest.summary.flatDiscount || 0),
-          grossAmount: Number(rest.summary.grossAmount || 0),
-          discountAmount: Number(rest.summary.discountAmount || 0),
-          taxableAmount: Number(rest.summary.taxableAmount || 0),
-          taxAmount: Number(rest.summary.taxAmount || 0),
-          roundOff: Number(rest.summary.roundOff || 0),
-          netAmount: Number(rest.summary.netAmount || 0),
-        }
+            flatDiscount: Number(rest.summary.flatDiscount || 0),
+            grossAmount: Number(rest.summary.grossAmount || 0),
+            discountAmount: Number(rest.summary.discountAmount || 0),
+            taxableAmount: Number(rest.summary.taxableAmount || 0),
+            taxAmount: Number(rest.summary.taxAmount || 0),
+            roundOff: Number(rest.summary.roundOff || 0),
+            netAmount: Number(rest.summary.netAmount || 0),
+          }
         : undefined,
     };
 
@@ -219,6 +220,5 @@ const SupplierBillForm = () => {
       </Box>
     </>
   );
-
 };
 export default SupplierBillForm;

@@ -1,7 +1,7 @@
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import EditSquareIcon from "@mui/icons-material/EditSquare";
 import { Grid } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Queries } from "../../../../Api";
 import { CommonButton, CommonSelect } from "../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
@@ -12,12 +12,13 @@ import CustomerForm from "./CustomerForm";
 
 const PosFilter = () => {
   const { isSelectProduct, PosProduct, isSalesInvoice, isReturnPosOrder } = useAppSelector((state) => state.pos);
+  const [isProductVariantId, setIsProductVariantId] = useState<string>("");
 
   const dispatch = useAppDispatch();
 
   const { data: productDropdown, isLoading: productDropdownLoading } = Queries.useGetProductDropdown({ stockFilter: true });
   const id = isSelectProduct || "";
-  const { data: productById, isLoading: productByIdLoading, isFetching: productByIdFetching } = Queries.useGetProductById(id);
+  const { data: productById, isLoading: productByIdLoading, isFetching: productByIdFetching } = Queries.useGetProductById(id, { variantId: isProductVariantId });
   const { data: posOrderDropdown, isLoading: posOrderDropdownLoading, isFetching: posOrderDropdownFetching } = Queries.useGetPosOrderDropdown({ customerId: PosProduct?.customerId, returnableFilter: true }, !!PosProduct?.customerId);
   const { data: customerDropdown, isLoading: customerDropdownLoading } = Queries.useGetContactDropdown({ typeFilter: "customer" });
 
@@ -61,7 +62,19 @@ const PosFilter = () => {
   return (
     <>
       <Grid container spacing={2} className="flex justify-between items-center w-full bg-white dark:bg-gray-dark p-2">
-        <CommonSelect label="Select Product" options={GenerateOptions(productDropdown?.data)} isLoading={productDropdownLoading} disabled={productByIdLoading || productByIdFetching || isReturnPosOrder} value={[isSelectProduct]} onChange={(e) => dispatch(setIsSelectProduct(e[0]))} limitTags={1} grid={{ xs: 12, xsm: 6, sm: 4 }} />
+        <CommonSelect
+          label="Select Product"
+          options={GenerateOptions(productDropdown?.data)}
+          isLoading={productDropdownLoading}
+          disabled={productByIdLoading || productByIdFetching || isReturnPosOrder}
+          value={[isSelectProduct]}
+          onChange={(e, item) => {
+            dispatch(setIsSelectProduct(e[0]));
+            setIsProductVariantId(item?.variantId || "");
+          }}
+          limitTags={1}
+          grid={{ xs: 12, xsm: 6, sm: 4 }}
+        />
         <Grid size={{ xs: 12, xsm: 6, sm: 4 }} className="flex justify-end">
           <Grid container className="flex justify-center items-center w-full">
             <CommonSelect label="Select Customer" options={customerOptions || []} isLoading={customerDropdownLoading} value={[PosProduct?.customerId]} onChange={handleCustomerChange} limitTags={1} disabled={isReturnPosOrder} searchKeys={["label", "phone"]} grid={{ xs: 10 }} />

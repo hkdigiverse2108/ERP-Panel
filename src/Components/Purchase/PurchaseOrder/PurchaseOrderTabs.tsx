@@ -31,11 +31,8 @@ const PurchaseOrderTabs = ({ emptyRow }: { emptyRow: PurchaseOrderItem }) => {
     try {
       const rawData = await extractExcelData(file);
       const mappedItems = mapExcelToFormItems(rawData, BULK_IMPORT_TYPES.PURCHASE_ORDER, productsData?.data || [], emptyRow);
-      
-      const updatedItems = [
-        ...(values.items ?? []).filter((i: PurchaseOrderItem) => i.productId),
-        ...mappedItems
-      ];
+
+      const updatedItems = [...(values.items ?? []).filter((i: PurchaseOrderItem) => i.productId), ...mappedItems];
       setFieldValue("items", updatedItems);
       dispatch(setBulkAddModal({ open: false, title: "", type: "" }));
     } catch (err) {
@@ -43,10 +40,9 @@ const PurchaseOrderTabs = ({ emptyRow }: { emptyRow: PurchaseOrderItem }) => {
     }
   };
 
-
   const calculateRowValues = (index: number) => {
     const row = values?.items?.[index];
-    const product = productsData?.data?.find((p: ProductBase) => p._id === row?.productId);
+    const product = productsData?.data?.find((p: ProductBase) => (row?.variantId ? p.variantId === row.variantId : p._id === row?.productId));
     if (!product) return { taxableAmount: 0, totalAmount: 0, taxAmount: 0, landingCost: 0, margin: 0, sellingPrice: 0 };
 
     const qty = Number(row?.qty || 0);
@@ -104,7 +100,7 @@ const PurchaseOrderTabs = ({ emptyRow }: { emptyRow: PurchaseOrderItem }) => {
 
     values?.items?.forEach((item, index) => {
       if (!item?.productId) return;
-      const product = productsData?.data?.find((p: ProductBase) => p._id === item.productId);
+      const product = productsData?.data?.find((p: ProductBase) => (item?.variantId ? p.variantId === item.variantId : p._id === item.productId));
       if (!product) return;
 
       // Handle taxId initialization from product
@@ -194,14 +190,7 @@ const PurchaseOrderTabs = ({ emptyRow }: { emptyRow: PurchaseOrderItem }) => {
             <Tab label="Terms & Conditions" />
           </Tabs>
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, p: 1 }}>
-            <CommonButton
-              variant="contained"
-              startIcon={<UploadFile />}
-              title="Upload Products"
-              size="small"
-              disabled={!isSupplierSelected}
-              onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Purchase Order", type: BULK_IMPORT_TYPES.PURCHASE_ORDER }))}
-            />
+            <CommonButton variant="contained" startIcon={<UploadFile />} title="Upload Products" size="small" disabled={!isSupplierSelected} onClick={() => dispatch(setBulkAddModal({ open: true, title: "Import Purchase Order", type: BULK_IMPORT_TYPES.PURCHASE_ORDER }))} />
           </Box>
         </Box>
 
@@ -237,7 +226,7 @@ const PurchaseOrderTabs = ({ emptyRow }: { emptyRow: PurchaseOrderItem }) => {
                       key: "productId",
                       header: "Product",
                       bodyClass: "min-w-[250px]",
-                      render: (_, index) => <CommonValidationSelect name={`items.${index}.productId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isSupplierSelected} />,
+                      render: (_, index) => <CommonValidationSelect name={`items.${index}.productId`} variantName={`items.${index}.variantId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isSupplierSelected} />,
                     },
                     {
                       key: "qty",
@@ -252,7 +241,8 @@ const PurchaseOrderTabs = ({ emptyRow }: { emptyRow: PurchaseOrderItem }) => {
                       bodyClass: "min-w-28 align-middle",
                       render: (_, index) => {
                         const productId = values?.items?.[index]?.productId;
-                        const product = productsData?.data?.find((p: ProductBase) => p._id === productId);
+                        const variantId = values?.items?.[index]?.variantId;
+                        const product = productsData?.data?.find((p: ProductBase) => (variantId ? p.variantId === variantId : p._id === productId));
                         return <span>{product?.uomId?.name || ""}</span>;
                       },
                     },

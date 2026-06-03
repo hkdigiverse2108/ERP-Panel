@@ -14,7 +14,7 @@ export interface PosOrderFormValues {
   customerId: ContactBase;
   orderType: string;
   salesManId: EmployeeBase;
-  items: (Partial<PosProductOrderItem> & { productId?: PosProductDataModal })[];
+  items: (Partial<PosProductOrderItem> & { productId?: PosProductDataModal; variantId?: string })[];
   posCashRegisterId: PosCashRegisterBase;
   remark: string;
   totalQty: number;

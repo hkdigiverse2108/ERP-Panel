@@ -5,6 +5,7 @@ import type { ProductBase } from "./Product";
 
 export interface MaterialConsumptionRow {
   productId: string;
+  variantId: string | null;
   qty: number;
   price: number;
   totalPrice: number;

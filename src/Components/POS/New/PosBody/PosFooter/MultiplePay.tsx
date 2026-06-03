@@ -59,6 +59,7 @@ const MultiplePay = () => {
         additionalDiscountAmount: item?.additionalDiscount,
         unitCost: item?.unitCost,
         netAmount: item?.netAmount,
+        ...(item.variantId && { variantId: item.variantId }),
       })),
       paymentMethod: POS_PAYMENT_METHOD.MULTI_PAY,
       multiplePayments: multiplePayments,

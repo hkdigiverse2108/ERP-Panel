@@ -13,6 +13,7 @@ const ProductList = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<string[]>([]);
   const [productValue, setProductValue] = useState<string>("");
+  const [isProductVariantId, setIsProductVariantId] = useState<string>("");
   const dispatch = useAppDispatch();
 
   const { isReturnPosOrder } = useAppSelector((state) => state.pos);
@@ -20,12 +21,13 @@ const ProductList = () => {
   const { data: category, isLoading: categoryLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true }, open);
   const id = value[0] || "";
   const { data: productDropdown, isLoading: productDropdownLoading } = Queries.useGetProductDropdown(id ? { categoryFilter: id } : {}, open);
-  const { data: productById } = Queries.useGetProductById(productValue);
+  const { data: productById } = Queries.useGetProductById(productValue, { variantId: isProductVariantId });
 
   const handleAddProduct = (product: ProductBase) => {
     if (!isReturnPosOrder) {
       if (Number(product.qty) <= 0) return;
       setProductValue(product._id);
+      setIsProductVariantId(product.variantId || "");
     }
   };
 

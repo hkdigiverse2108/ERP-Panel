@@ -27,6 +27,7 @@ export type Supplier = ContactBase;
 
 export interface PurchaseOrderItem {
   productId: string | ProductBase;
+  variantId: string | null;
   qty: number;
   freeQty?: number;
   mrp?: number | string;

@@ -66,7 +66,7 @@ export const Queries = {
   //***************product**************** */
   useGetProduct: (params?: Params, enabled?: boolean) => useFilterQuery<ProductApiResponse>([KEYS.PRODUCT.BASE, params], URL_KEYS.PRODUCT.ALL, params, enabled, ["branch"]),
   useGetProductDropdown: (params?: Params, enabled?: boolean) => useQueries<ProductDropDownApiResponse>([KEYS.PRODUCT.BASE, params], () => Get(URL_KEYS.PRODUCT.DROPDOWN, params), { enabled: enabled }),
-  useGetProductById: (id?: string) => useQueries<ProductSingleApiResponse>([KEYS.PRODUCT.BASE, id], () => Get(`${URL_KEYS.PRODUCT.BASE}/${id}`), { enabled: !!id, staleTime: 0, refetchOnWindowFocus: true, retry: 1 }),
+  useGetProductById: (id?: string, params?: Params) => useQueries<ProductSingleApiResponse>([KEYS.PRODUCT.BASE, id, params], () => Get(`${URL_KEYS.PRODUCT.BASE}/${id}`, params), { enabled: !!id, staleTime: 0, refetchOnWindowFocus: true, retry: 1 }),
 
   //************ bank ********/
   useGetBank: (params?: Params, enabled?: boolean) => useQueries<BankApiResponse>([KEYS.BANK.BASE, params], () => Get(URL_KEYS.BANK.ALL, params), { enabled: enabled }),

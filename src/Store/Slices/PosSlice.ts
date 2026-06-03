@@ -112,8 +112,9 @@ const PosSlice = createSlice({
     },
     addOrUpdateProduct: (state, action) => {
       if (!action.payload || !action.payload._id) return;
+      console.log(action.payload, "action.payload");
 
-      const existingProduct = state.PosProduct.items.find((item) => item._id === action.payload._id);
+      const existingProduct = state.PosProduct.items.find((item) => (action.payload.variantId ? item.variantId === action.payload.variantId : item._id === action.payload._id));
 
       if (existingProduct) {
         if (existingProduct.posQty >= action.payload.qty) return;
@@ -138,7 +139,7 @@ const PosSlice = createSlice({
       const outOfStockProducts: string[] = [];
 
       action.payload.forEach((item: PosProductDataModal) => {
-        const existingProduct = state.PosProduct.items.find((p) => p._id === item._id);
+        const existingProduct = state.PosProduct.items.find((p) => (item.variantId ? p.variantId === item.variantId : p._id === item._id));
         if (item.qty === 0) {
           outOfStockProducts.push(item?.name || "");
           return;
@@ -164,14 +165,14 @@ const PosSlice = createSlice({
       if (outOfStockProducts.length > 0) ShowNotification(`${outOfStockProducts.join(", ")} are out of stock`, "info");
     },
     updateProduct: (state, action) => {
-      const row = state.PosProduct.items.find((item) => item._id === action.payload._id);
+      const row = state.PosProduct.items.find((item) => (action.payload.variantId ? item.variantId === action.payload.variantId : item._id === action.payload._id));
       if (!row) return;
       Object.assign(row, action.payload.data);
       calculateAmounts(row);
     },
 
     removeProduct: (state, action) => {
-      state.PosProduct.items = state.PosProduct.items.filter((item) => item._id !== action.payload);
+      state.PosProduct.items = state.PosProduct.items.filter((item) => (action.payload.variantId ? item.variantId !== action.payload.variantId : item._id !== action.payload._id));
     },
     clearProductDataModal: (state) => {
       state.PosProduct.items = [];

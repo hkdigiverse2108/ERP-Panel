@@ -15,11 +15,11 @@ const PurchaseDebitNoteTabs = ({ emptyRow }: { emptyRow: PurchaseDebitNoteProduc
 
   const isSupplierSelected = !!values?.supplierId;
 
-  const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown({ }, !!values?.supplierId);
+  const { data: productsData, isLoading: isProductLoading } = Queries.useGetProductDropdown({}, !!values?.supplierId);
 
   const calculateRowValues = (index: number) => {
     const row = values?.productDetails?.[index];
-    const product = productsData?.data?.find((p: ProductBase) => p._id === row?.productId);
+    const product = productsData?.data?.find((p: ProductBase) => (row?.variantId ? p.variantId === row.variantId : p._id === row?.productId));
     if (!product) return { tax: 0, taxableAmount: 0, total: 0, landingCost: 0, margin: 0 };
 
     const qty = Number(row?.qty || 0);
@@ -28,7 +28,7 @@ const PurchaseDebitNoteTabs = ({ emptyRow }: { emptyRow: PurchaseDebitNoteProduc
     const sellingPrice = Number(row?.sellingPrice || 0);
 
     const taxRate = Number(product?.purchaseTaxId?.percentage || 0);
-    let taxIncluded = typeof product?.isPurchaseTaxIncluding === "boolean" ? product.isPurchaseTaxIncluding : false;
+    const taxIncluded = typeof product?.isPurchaseTaxIncluding === "boolean" ? product.isPurchaseTaxIncluding : false;
 
     const amount = qty * unitCost;
     let taxableAmount = amount - discount1;
@@ -59,7 +59,7 @@ const PurchaseDebitNoteTabs = ({ emptyRow }: { emptyRow: PurchaseDebitNoteProduc
 
     values?.productDetails?.forEach((item, index) => {
       if (!item?.productId) return;
-      const product = productsData?.data?.find((p: ProductBase) => p._id === item.productId);
+      const product = productsData?.data?.find((p: ProductBase) => (item?.variantId ? p.variantId === item.variantId : p._id === item?.productId));
       if (!product) return;
 
       const { tax, taxableAmount, total, landingCost, margin } = calculateRowValues(index);
@@ -132,7 +132,7 @@ const PurchaseDebitNoteTabs = ({ emptyRow }: { emptyRow: PurchaseDebitNoteProduc
                     key: "productId",
                     header: "Product",
                     bodyClass: " min-w-[250px]",
-                    render: (_, index) => <CommonValidationSelect name={`productDetails.${index}.productId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isSupplierSelected} />,
+                    render: (_, index) => <CommonValidationSelect name={`productDetails.${index}.productId`} syncName={`productDetails.${index}.variantId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isSupplierSelected} />,
                   },
                   {
                     key: "qty",
@@ -147,7 +147,8 @@ const PurchaseDebitNoteTabs = ({ emptyRow }: { emptyRow: PurchaseDebitNoteProduc
                     bodyClass: "min-w-28 align-middle",
                     render: (_, index) => {
                       const productId = values?.productDetails?.[index]?.productId;
-                      const product = productsData?.data?.find((p: ProductBase) => p._id === productId);
+                      const variantId = values?.productDetails?.[index]?.variantId;
+                      const product = productsData?.data?.find((p: ProductBase) => (variantId ? p.variantId === variantId : p._id === productId));
                       return <span>{product?.uomId?.name || ""}</span>;
                     },
                   },
@@ -196,7 +197,8 @@ const PurchaseDebitNoteTabs = ({ emptyRow }: { emptyRow: PurchaseDebitNoteProduc
                     bodyClass: "min-w-28 align-middle",
                     render: (_, index) => {
                       const productId = values?.productDetails?.[index]?.productId;
-                      const product = productsData?.data?.find((p: ProductBase) => p._id === productId);
+                      const variantId = values?.productDetails?.[index]?.variantId;
+                      const product = productsData?.data?.find((p: ProductBase) => (variantId ? p.variantId === variantId : p._id === productId));
                       if (!product) return null;
 
                       const taxName = product?.purchaseTaxId?.name || "";

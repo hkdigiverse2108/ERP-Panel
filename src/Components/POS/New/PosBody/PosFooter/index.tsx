@@ -54,6 +54,7 @@ const PosFooter = () => {
         additionalDiscountAmount: item?.additionalDiscount,
         unitCost: item?.unitCost,
         netAmount: item?.netAmount,
+        ...(item.variantId && { variantId: item.variantId }),
       })),
     [PosProduct.items],
   );

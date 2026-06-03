@@ -24,7 +24,7 @@ const PurchaseDebitNoteForm = () => {
   const { data: singleData, isLoading: isSingleLoading } = Queries.useGetSinglePurchaseDebitNote(routeData?._id);
   const data = useMemo(() => singleData?.data || routeData, [singleData, routeData]);
 
-  const emptyRow: PurchaseDebitNoteProductItem = { productId: "", qty: 1, unitCost: 0, discount1: 0, taxId: "", tax: 0, total: 0 };
+  const emptyRow: PurchaseDebitNoteProductItem = { productId: "", variantId: "", qty: 1, unitCost: 0, discount1: 0, taxId: "", tax: 0, total: 0 };
 
   const initialValues: PurchaseDebitNoteFormValues = useMemo(() => {
     return {
@@ -97,6 +97,7 @@ const PurchaseDebitNoteForm = () => {
         ?.filter((i: PurchaseDebitNoteProductItem) => i.productId)
         .map((i: PurchaseDebitNoteProductItem) => ({
           productId: typeof i.productId === "object" ? i.productId?._id : i.productId,
+          variantId: i.variantId || null,
           qty: Number(i.qty || 0),
           unit: i.unit,
           uomId: i.uomId,

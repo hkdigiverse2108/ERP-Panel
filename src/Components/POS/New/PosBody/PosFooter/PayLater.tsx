@@ -9,7 +9,6 @@ import { GenerateOptions, RemoveEmptyFields, SanitizePayload } from "../../../..
 import { CommonModal } from "../../../../Common";
 import type { PosProductOrderDataResponse } from "../../../../../Types";
 
-
 const calculateDueDate = (day: number): Date => {
   const date = new Date();
   date.setDate(date.getDate() + day);
@@ -22,7 +21,7 @@ const PayLater = () => {
   const { mutate: addPayLater, isPending: isAddPayLaterPending } = Mutations.useAddPosOrder();
   const { mutate: editPosOrder, isPending: editPosOrderLoading } = Mutations.useEditPosOrder();
   const { data: paymentTermsData } = Queries.useGetPaymentTermsDropdown();
-  
+
   const { isPayLaterModal } = useAppSelector((state) => state.modal);
   const { PosProduct } = useAppSelector((state) => state.pos);
   const multiplePayments = isPayLaterModal?.data;
@@ -71,6 +70,7 @@ const PayLater = () => {
         additionalDiscountAmount: item?.additionalDiscount,
         unitCost: item?.unitCost,
         netAmount: item?.netAmount,
+        ...(item.variantId && { variantId: item.variantId }),
       })),
       paymentMethod: multiplePayments?.length ? POS_PAYMENT_METHOD.MULTI_PAY : POS_PAYMENT_METHOD.PAY_LATER,
       ...(multiplePayments?.length && { multiplePayments: multiplePayments?.length ? multiplePayments : [] }),

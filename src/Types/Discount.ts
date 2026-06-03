@@ -4,7 +4,6 @@ import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 import type { PosProductOrderItem } from "./POS";
 import type { ProductBase } from "./Product";
 
-
 /* ---------------- SUB TYPES ---------------- */
 
 export interface RangeWiseRule {
@@ -14,17 +13,24 @@ export interface RangeWiseRule {
   discountValue?: number;
 }
 
+export type ProductVariantType = {
+  productId?: string;
+  variantId?: string | null;
+};
+
 export interface BuyXGetY {
   buyQty?: number;
   getQty?: number;
-  getProductIds?: string[];
+  getProductIds?: ProductVariantType[] | [];
+  getVariantIds?: string[] | [];
   getDiscountType?: string;
   getDiscountValue?: number;
 }
 
 export interface ProductAtFixAmount {
   minimumAmount?: number;
-  freeProductIds?: string[];
+  freeProductIds?: ProductVariantType[] | [];
+  freeVariantIds?: string[] | [];
   freeQty?: number;
 }
 
@@ -46,8 +52,10 @@ export interface DiscountFormValues {
   categoryIds?: string[] | [];
   subcategoryIds?: string[] | [];
   brandIds?: string[] | [];
-  productIds?: string[] | [];
-  excludedProductIds?: string[];
+  productIds?: ProductVariantType[];
+  variantIds?: string[];
+  excludedProductIds?: ProductVariantType[];
+  excludedVariantIds?: string[];
   minimumRequirement?: string | null;
   minimumPurchaseAmount?: number | null;
   minimumQuantity?: number | null;
@@ -96,7 +104,6 @@ export interface DiscountApiResponse extends MessageStatus {
 export interface DiscountDropdownApiResponse extends MessageStatus {
   data: DiscountBase[];
 }
-
 
 export interface VerifyDiscountPayload {
   discountId?: string;

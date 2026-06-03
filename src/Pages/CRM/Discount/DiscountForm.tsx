@@ -27,12 +27,16 @@ const DiscountForm = () => {
 
   const categoryIds = data?.categoryIds?.map((category: CategoryBase) => category?._id) || [];
   const brandIds = data?.brandIds?.map((brand: BrandBase) => brand?._id) || [];
-  const productIds = data?.productIds?.map((product: ProductBase) => product?._id) || [];
-  const excludedProductIds = data?.excludedProductIds?.map((product: ProductBase) => product?._id) || [];
-  const getProductIds = data?.buyXGetY?.getProductIds?.map((product: ProductBase) => product?._id) || [];
-  const freeProductIds = data?.productAtFixAmount?.freeProductIds?.map((product: ProductBase) => product?._id) || [];
+  const productIds = data?.productIds?.map((product: { productId: ProductBase }) => product?.productId?._id) || [];
+  const variantIds = data?.productIds?.map((product: { variantId: string }) => product?.variantId) || [];
+  const excludedProductIds = data?.excludedProductIds?.map((product: { productId: ProductBase }) => product?.productId?._id) || [];
+  const excludedVariantIds = data?.excludedProductIds?.map((product: { variantId: string }) => product?.variantId) || [];
+  const getProductIds = data?.buyXGetY?.getProductIds?.map((product: { productId: ProductBase }) => product?.productId?._id) || [];
+  const getVariantIds = data?.buyXGetY?.getVariantIds?.map((product: { variantId: string }) => product?.variantId) || [];
+  const freeProductIds = data?.productAtFixAmount?.freeProductIds?.map((product: { productId: ProductBase }) => product?.productId?._id) || [];
+  const freeVariantIds = data?.productAtFixAmount?.freeVariantIds?.map((product: { variantId: string }) => product?.variantId) || [];
 
-  const appliesTo = data?.discountApplicable === DISCOUNT_APPLICABLE_ENUM.PRODUCT_WISE ? DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY : null;
+  // const appliesTo = data?.discountApplicable === DISCOUNT_APPLICABLE_ENUM.PRODUCT_WISE ? DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY : null;
 
   // ✅ INITIAL VALUES
   const initialValues: DiscountFormValues = {
@@ -46,23 +50,27 @@ const DiscountForm = () => {
     discountType: data?.discountType || "",
     discountValue: data?.discountValue || "",
 
-    appliesTo: data?.appliesTo || appliesTo,
+    appliesTo: data?.appliesTo || null,
     categoryIds: data?.categoryIds?.length ? categoryIds : [],
     brandIds: data?.brandIds?.length ? brandIds : [],
     productIds: data?.productIds?.length ? productIds : [],
+    variantIds: data?.variantIds?.length ? variantIds : [],
     excludedProductIds: data?.excludedProductIds?.length ? excludedProductIds : [],
+    excludedVariantIds: data?.excludedProductIds?.length ? excludedVariantIds : [],
 
     rangeWiseRules: data?.rangeWiseRules?.length ? data.rangeWiseRules : [{ minQty: "", maxQty: "", discountValue: "", discountType: "" }],
 
     buyXGetY: {
       buyQty: data?.buyXGetY?.buyQty || "",
       getProductIds: data?.buyXGetY?.getProductIds?.length ? getProductIds : [],
+      getVariantIds: data?.buyXGetY?.getProductIds?.length ? getVariantIds : [],
       getQty: data?.buyXGetY?.getQty || "",
     },
 
     productAtFixAmount: {
       minimumAmount: data?.productAtFixAmount?.minimumAmount || "",
       freeProductIds: data?.productAtFixAmount?.freeProductIds?.length ? freeProductIds : [],
+      freeVariantIds: data?.productAtFixAmount?.freeProductIds?.length ? freeVariantIds : [],
       freeQty: data?.productAtFixAmount?.freeQty || "",
     },
 
@@ -119,8 +127,8 @@ const DiscountForm = () => {
                   appliesTo: rest?.appliesTo,
                   categoryIds: rest?.appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY ? rest?.categoryIds : [],
                   brandIds: rest?.appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_BRAND ? rest?.brandIds : [],
-                  productIds: rest?.appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_PRODUCTS ? rest?.productIds : [],
-                  excludedProductIds: rest?.excludedProductIds,
+                  productIds: rest?.appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_PRODUCTS ? (rest?.productIds || []).map((productId, index) => ({ productId, variantId: rest?.variantIds?.[index] || null })) : [],
+                  excludedProductIds: (rest?.excludedProductIds || []).map((productId, index) => ({ productId, variantId: rest?.excludedVariantIds?.[index] || null })),
                 }
               : {
                   appliesTo: null,
@@ -134,7 +142,7 @@ const DiscountForm = () => {
               ? {
                   buyXGetY: {
                     buyQty: rest?.buyXGetY?.buyQty,
-                    getProductIds: rest?.buyXGetY?.getProductIds,
+                    getProductIds: (rest?.buyXGetY?.getProductIds || []).map((productId, index) => ({ productId, variantId: rest?.buyXGetY?.getVariantIds?.[index] || null })),
                     getQty: rest?.buyXGetY?.getQty,
                   },
                 }
@@ -143,7 +151,7 @@ const DiscountForm = () => {
               ? {
                   productAtFixAmount: {
                     minimumAmount: rest?.productAtFixAmount?.minimumAmount,
-                    freeProductIds: rest?.productAtFixAmount?.freeProductIds,
+                    freeProductIds: (rest?.productAtFixAmount?.freeProductIds || []).map((productId, index) => ({ productId: productId, variantId: rest?.productAtFixAmount?.freeVariantIds?.[index] || null })),
                     freeQty: rest?.productAtFixAmount?.freeQty,
                   },
                 }
@@ -169,13 +177,12 @@ const DiscountForm = () => {
       endDateTime: rest?.endDateTime,
       isActive: rest?.isActive,
     };
-    console.log("payload", payload);
 
     if (isEditing) {
       const changedFields = GetChangedFields(payload, data);
       editDiscount({ ...changedFields, discountId: data._id }, { onSuccess: handleSuccess });
     } else {
-      addDiscount(RemoveEmptyFields(payload), { onSuccess: handleSuccess });
+      addDiscount(RemoveEmptyFields(payload as DiscountFormValues), { onSuccess: handleSuccess });
     }
   };
 
@@ -191,8 +198,6 @@ const DiscountForm = () => {
               value: opt.value,
               disabled: values.discountApplicable === DISCOUNT_APPLICABLE_ENUM.ENTIRE_BILL && [DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT, DISCOUNT_MODE_ENUM.BUY_X_GET_Y, DISCOUNT_MODE_ENUM.RANGE_WISE].includes(opt.value),
             }));
-
-            console.log("values", values);
 
             const resetDiscountModeFields = () => {
               setFieldValue("appliesTo", "");
@@ -225,7 +230,7 @@ const DiscountForm = () => {
                       {[DISCOUNT_MODE_ENUM.NORMAL].includes(values.discountMode || "") && (
                         <>
                           <CommonValidationSelect name="discountType" label="Discount Type" required options={DISCOUNT_VALUE_TYPE} grid={{ xs: 12, md: 3 }} />
-                          <CommonValidationTextField name="discountValue" label="Discount Value" type="number" grid={{ xs: 12, md: 3 }} maxDigits={5} />
+                          <CommonValidationTextField name="discountValue" label="Discount Value" type="number" grid={{ xs: 12, md: 3 }} maxDigits={5} required />
                         </>
                       )}
                       {[DISCOUNT_MODE_ENUM.RANGE_WISE].includes(values.discountMode || "") && (
@@ -260,9 +265,9 @@ const DiscountForm = () => {
                           <CommonValidationRadio name="appliesTo" label="Applies To" required options={DISCOUNT_APPLY_TO} row grid={{ xs: 12 }} />
                           {values.appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_CATEGORY && <CommonValidationSelect name="categoryIds" label="Select Category and Subcategory" multiple options={GenerateOptions(CategoryData?.data)} isLoading={CategoryLoading} grid={{ xs: 12, md: 4 }} required />}
                           {values.appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_BRAND && <CommonValidationSelect name="brandIds" label="Select Brand and Subbrand" multiple options={GenerateOptions(BrandData?.data)} isLoading={BrandLoading} grid={{ xs: 12, md: 4 }} required />}
-                          {values.appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_PRODUCTS && <CommonValidationSelect name="productIds" label="Select Products" multiple options={GenerateOptions(ProductData?.data)} isLoading={ProductLoading} grid={{ xs: 12, md: 4 }} required />}
+                          {values.appliesTo === DISCOUNT_APPLY_TO_ENUM.SPECIFIC_PRODUCTS && <CommonValidationSelect name="productIds" syncName="variantIds" label="Select Products" multiple options={GenerateOptions(ProductData?.data)} isLoading={ProductLoading} grid={{ xs: 12, md: 4 }} required />}
                           {values.discountMode === DISCOUNT_MODE_ENUM.BUY_X_GET_Y && <CommonValidationTextField name="buyXGetY.buyQty" label="Select Qty" type="number" grid={{ xs: 12, md: 4 }} maxDigits={5} required />}
-                          <CommonValidationSelect name="excludedProductIds" label="Excluding Products" multiple options={GenerateOptions(ProductData?.data)} isLoading={ProductLoading} grid={{ xs: 12, md: 4 }} required />{" "}
+                          <CommonValidationSelect name="excludedProductIds" syncName="excludedVariantIds" label="Excluding Products" multiple options={GenerateOptions(ProductData?.data)} isLoading={ProductLoading} grid={{ xs: 12, md: 4 }} required />{" "}
                         </>
                       )}
                       {DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT === values.discountMode && (
@@ -280,12 +285,14 @@ const DiscountForm = () => {
                           </Grid>
                           {DISCOUNT_MODE_ENUM.BUY_X_GET_Y === values.discountMode && (
                             <>
-                              <CommonValidationSelect name="buyXGetY.getProductIds" label="Select Products" multiple options={GenerateOptions(ProductData?.data)} isLoading={ProductLoading} grid={{ xs: 12, md: 4 }} required /> <CommonValidationTextField name="buyXGetY.getQty" label="Select Qty" type="number" grid={{ xs: 12, md: 4 }} maxDigits={5} required />
+                              <CommonValidationSelect name="buyXGetY.getProductIds" syncName="buyXGetY.getVariantIds" label="Select Products" multiple options={GenerateOptions(ProductData?.data)} isLoading={ProductLoading} grid={{ xs: 12, md: 4 }} required />
+                              <CommonValidationTextField name="buyXGetY.getQty" label="Select Qty" type="number" grid={{ xs: 12, md: 4 }} maxDigits={5} required />
                             </>
                           )}
                           {DISCOUNT_MODE_ENUM.PRODUCT_AT_FIX_AMOUNT === values.discountMode && (
                             <>
-                              <CommonValidationSelect name="productAtFixAmount.freeProductIds" label="Select Products" multiple options={GenerateOptions(ProductData?.data)} isLoading={ProductLoading} grid={{ xs: 12, md: 4 }} required /> <CommonValidationTextField name="productAtFixAmount.freeQty" label="Select Qty" type="number" grid={{ xs: 12, md: 4 }} maxDigits={5} required />
+                              <CommonValidationSelect name="productAtFixAmount.freeProductIds" syncName="productAtFixAmount.freeVariantIds" label="Select Products" multiple options={GenerateOptions(ProductData?.data)} isLoading={ProductLoading} grid={{ xs: 12, md: 4 }} required />
+                              <CommonValidationTextField name="productAtFixAmount.freeQty" label="Select Qty" type="number" grid={{ xs: 12, md: 4 }} maxDigits={5} required />
                             </>
                           )}
                         </>

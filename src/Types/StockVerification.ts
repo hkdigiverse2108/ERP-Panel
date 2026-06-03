@@ -3,6 +3,7 @@ import type { ProductBase } from "./Product";
 
 export interface StockVerificationItem {
   productId: string;
+  variantId: string | null;
   landingCost: number;
   price: number;
   mrp: number;

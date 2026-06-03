@@ -16,11 +16,11 @@ const PosTable = () => {
   const productData = PosProduct.items;
 
   const dispatch = useAppDispatch();
-  const updateRow = (_id: string, data: Partial<PosProductDataModal>) => dispatch(updateProduct({ _id, data }));
+  const updateRow = (_id: string, variantId?: string, data?: Partial<PosProductDataModal>) => dispatch(updateProduct({ _id, variantId, data }));
 
-  const removeRow = (_id: string) => {
+  const removeRow = (_id: string, variantId?: string) => {
     if (productData.length === 1) dispatch(clearPosProduct());
-    else dispatch(removeProduct(_id));
+    else dispatch(removeProduct({ _id, variantId }));
   };
 
   const calcNetAmount = (row: PosProductDataModal) => ((row.mrp - row.discount - row.additionalDiscount) * row.posQty)?.toFixed(2);
@@ -95,7 +95,7 @@ const PosTable = () => {
       bodyClass: "min-w-30 w-30",
       render: (row) => (
         <div className="flex gap-1 justify-center items-center cursor-pointer">
-          <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, { posQty: roundQty(Math.max(qtyCount(row), row.posQty - qtyCount(row))) })}>
+          <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, row.variantId, { posQty: roundQty(Math.max(qtyCount(row), row.posQty - qtyCount(row))) })}>
             <RemoveIcon />
           </CommonButton>
 
@@ -104,7 +104,7 @@ const PosTable = () => {
             {/* <CommonTextField type="number" value={row.posQty} onChange={(e) => updateRow(row._id, { posQty: Math.min(Number(e) || 0, row.posQty) })} /> */}
           </span>
 
-          <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, { posQty: roundQty(row.posQty + qtyCount(row)) })} disabled={isDisabled(row)}>
+          <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, row.variantId, { posQty: roundQty(row.posQty + qtyCount(row)) })} disabled={isDisabled(row)}>
             <AddIcon />
           </CommonButton>
         </div>
@@ -115,13 +115,13 @@ const PosTable = () => {
       key: "discount",
       header: "Discount",
       bodyClass: "min-w-32 w-35",
-      render: (row) => <CommonTextField type="number" value={row.discount} onChange={(e) => updateRow(row._id, { discount: Math.min(Number(e) || 0, row.mrp) })} isCurrency currencyDisabled />,
+      render: (row) => <CommonTextField type="number" value={row.discount} onChange={(e) => updateRow(row._id, row.variantId, { discount: Math.min(Number(e) || 0, row.mrp) })} isCurrency currencyDisabled />,
     },
     {
       key: "additionalDisc",
       header: "Additional Disc",
       bodyClass: "min-w-32 w-35",
-      render: (row) => <CommonTextField type="number" value={row.additionalDiscount || 0} onChange={(e) => updateRow(row._id, { additionalDiscount: Number(e) })} isCurrency disabled />,
+      render: (row) => <CommonTextField type="number" value={row.additionalDiscount || 0} onChange={(e) => updateRow(row._id, row.variantId, { additionalDiscount: Number(e) })} isCurrency disabled />,
     },
     { key: "unitCost", header: "Unit Cost", bodyClass: "min-w-32 w-35" },
     { key: "netAmount", header: "Net Amount", bodyClass: "min-w-32 w-35" },
@@ -131,7 +131,7 @@ const PosTable = () => {
       key: "action",
       header: "",
       render: (row: PosProductDataModal) => (
-        <CommonButton variant="outlined" size="small" color="error" sx={{ minWidth: 40 }} onClick={() => removeRow(row._id)}>
+        <CommonButton variant="outlined" size="small" color="error" sx={{ minWidth: 40 }} onClick={() => removeRow(row._id, row.variantId)}>
           <CloseIcon />
         </CommonButton>
       ),
