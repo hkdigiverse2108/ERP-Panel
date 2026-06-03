@@ -51,10 +51,7 @@ const TotalSummary = () => {
   // console.log("branchData", branchData?.data);
   let branchOptions = GenerateOptions(branchData?.data);
   // console.log("options", branchOptions);
-  branchOptions = [
-    { label: "ALL", value: "all" },
-    ...branchOptions,
-  ];
+  branchOptions = [{ label: "ALL", value: "all", variantId: "" }, ...branchOptions];
 
   const formatValue = (key: string, value: number) => {
     const currencyFields = ["totalSales", "toReceive", "totalSalesReturn", "totalPurchase", "toPay", "totalPurchaseReturn", "totalPaid", "totalExpense", "cashInHand", "bankAccountsBalance", "stockValue", "grossProfit", "avgProfitMarginAmount", "avgCartValue"];

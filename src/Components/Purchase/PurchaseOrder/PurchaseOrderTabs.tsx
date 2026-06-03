@@ -226,7 +226,7 @@ const PurchaseOrderTabs = ({ emptyRow }: { emptyRow: PurchaseOrderItem }) => {
                       key: "productId",
                       header: "Product",
                       bodyClass: "min-w-[250px]",
-                      render: (_, index) => <CommonValidationSelect name={`items.${index}.productId`} variantName={`items.${index}.variantId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isSupplierSelected} />,
+                      render: (_, index) => <CommonValidationSelect name={`items.${index}.productId`} syncName={`items.${index}.variantId`} label="Select Product" options={GenerateOptions(productsData?.data)} isLoading={isProductLoading} required disabled={!isSupplierSelected} />,
                     },
                     {
                       key: "qty",
