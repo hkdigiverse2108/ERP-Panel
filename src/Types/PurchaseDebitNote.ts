@@ -9,7 +9,7 @@ import type { TermsConditionBase } from "./TermsAndCondition";
 
 export interface PurchaseDebitNoteProductItem {
   productId?: ProductBase | string;
-  variantId: string | null;
+  variantId?: string | null;
   _prevProductId?: string;
   qty?: number;
   freeQty?: number;
