@@ -92,7 +92,7 @@ const CustomerForm = () => {
               <Grid container spacing={2} py={1}>
                 <CommonValidationTextField name="firstName" label="First Name" grid={{ xs: 12, md: 4 }} required />
                 <CommonValidationTextField name="lastName" label="Last Name" grid={{ xs: 12, md: 4 }} required />
-                <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} required />
+                <CommonPhoneNumber label="Phone No." countryCodeName="phoneNo.countryCode" numberName="phoneNo.phoneNo" grid={{ xs: 12, md: 4 }} />
                 <CommonPhoneNumber label="WhatsApp No." countryCodeName="whatsappNo.countryCode" numberName="whatsappNo.phoneNo" grid={{ xs: 12, md: 4 }} />
                 <CommonValidationDatePicker name="dob" label="Date Of Birth" grid={{ xs: 12, md: 4 }} />
                 <CommonValidationTextField name="email" label="Email" grid={{ xs: 12, md: 4 }} />

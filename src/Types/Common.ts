@@ -64,7 +64,7 @@ export type SelectOptionType = {
   label: string;
   value: string;
   [key: string]: any;
-  variantId?: string;
+  productId?: string;
 };
 
 export interface CommonSelectProps {

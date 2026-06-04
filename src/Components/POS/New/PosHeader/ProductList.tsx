@@ -20,14 +20,14 @@ const ProductList = () => {
 
   const { data: category, isLoading: categoryLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true }, open);
   const id = value[0] || "";
-  const { data: productDropdown, isLoading: productDropdownLoading } = Queries.useGetProductDropdown(id ? { categoryFilter: id } : {}, open);
+  const { data: productDropdown, isLoading: productDropdownLoading } = Queries.useGetProductDropdown(id ? { quickPickFilter: true, categoryFilter: id } : { quickPickFilter: true }, open);
   const { data: productById } = Queries.useGetProductById(productValue, { variantId: isProductVariantId });
 
   const handleAddProduct = (product: ProductBase) => {
     if (!isReturnPosOrder) {
       if (Number(product.qty) <= 0) return;
-      setProductValue(product._id);
-      setIsProductVariantId(product.variantId || "");
+      setProductValue(product.productId ? product.productId : product._id);
+      setIsProductVariantId(product.productId ? product._id : "");
     }
   };
 

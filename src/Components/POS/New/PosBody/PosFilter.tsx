@@ -69,8 +69,8 @@ const PosFilter = () => {
           disabled={productByIdLoading || productByIdFetching || isReturnPosOrder}
           value={[isSelectProduct]}
           onChange={(e, item) => {
-            dispatch(setIsSelectProduct(e[0]));
-            setIsProductVariantId(item?.variantId || "");
+            dispatch(setIsSelectProduct(item?.productId ? item.productId : e[0]));
+            setIsProductVariantId(item?.productId ? e[0] : "");
           }}
           limitTags={1}
           grid={{ xs: 12, xsm: 6, sm: 4 }}

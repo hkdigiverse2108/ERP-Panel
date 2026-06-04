@@ -2,7 +2,7 @@ import type { CommonDataType, MessageStatus, PageStatus } from "./Common";
 
 export interface StockFormValues {
   productId?: string;
-  variantId?: string;
+  variantId?: string | null;
   uomId?: string;
   purchaseTaxId?: string;
   isPurchaseTaxIncluding?: boolean;
@@ -16,6 +16,7 @@ export interface StockFormValues {
   sellingMargin?: number | null;
   qty?: number | null;
   isActive?: boolean;
+  quickPick?: boolean;
   _submitAction?: string;
 }
 

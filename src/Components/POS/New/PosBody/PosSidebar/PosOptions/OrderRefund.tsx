@@ -49,6 +49,7 @@ const OrderRefund = () => {
           additionalDiscountAmount: item?.additionalDiscount,
           unitCost: item?.unitCost,
           netAmount: item?.netAmount,
+          ...(item?.variantId ? { variantId: item.variantId } : {}),
         })),
         total: PosProduct.totalAmount,
         type: RETURN_POS_ORDER_TYPE.REFUND,

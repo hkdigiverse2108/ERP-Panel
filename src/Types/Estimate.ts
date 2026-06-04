@@ -16,7 +16,7 @@ export interface AdditionalCharge {
 
 export interface EstimateItem {
   productId: string | ProductBase;
-  variantId?:string | null;
+  variantId?: string | null;
   qty: number;
   freeQty: number;
   uomId: string | UomBase;

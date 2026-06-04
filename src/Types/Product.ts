@@ -88,6 +88,7 @@ export interface ProductBase extends Omit<ProductFormValues, "categoryId" | "sub
   uomId?: UomBase;
   detect_qty?: number;
   consumptionTypeId?: ConsumptionTypeBase;
+  productId?: string;
   variantId?: string;
 }
 

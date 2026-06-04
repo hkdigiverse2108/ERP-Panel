@@ -214,7 +214,10 @@ export const CustomerFormSchema = Yup.object({
   firstName: Validation("string", "First Name"),
   lastName: Validation("string", "Last Name"),
   email: Validation("string", "Email", { required: false }),
-  phoneNo: PhoneValidation(),
+  phoneNo: PhoneValidation("Phone No", {
+    requiredNumber: false,
+    requiredCountryCode: false,
+  }),
   whatsappNo: PhoneValidation("Whatsapp No", {
     requiredNumber: false,
     requiredCountryCode: false,
