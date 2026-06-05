@@ -13,11 +13,12 @@ const QtyCount = () => {
   const dispatch = useAppDispatch();
   const [prevData, setPrevData] = useState(isQtyCountModal.data);
 
-  const qtyCount = prevData?.uomId?.name === "PIECES" ? "0" : "0.00";
+  const isPieces = prevData?.uomId?.name === "PIECES";
+  const qtyCount = isPieces ? "0" : "0.00";
 
   const [tendered, setTendered] = useState<string>(qtyCount);
 
-  const MIN_QTY = prevData?.uomId?.name === "PIECES" ? 0 : 0.1;
+  const MIN_QTY = isPieces ? 0 : 0.1;
 
   const maxQty = isReturnPosOrder ? (prevData?.originalQty ?? Infinity) : (isQtyCountModal.data?.qty ?? Infinity);
   if (isQtyCountModal.data !== prevData) {
@@ -29,7 +30,7 @@ const QtyCount = () => {
   const clampQty = (val: number) => {
     if (val > maxQty) return maxQty;
     if (val < MIN_QTY) return MIN_QTY;
-    return Number(val.toFixed(2));
+    return isPieces ? Math.floor(val) : Number(val.toFixed(2));
   };
 
   const handleQtyChange = (e: string) => {
@@ -37,6 +38,13 @@ const QtyCount = () => {
     if (!/^[\d.]*$/.test(value)) return;
     // const num = Number(value || 0);
     // setTendered(clampQty(num).toString());
+    if (isPieces) {
+      // Only integers for PIECES
+      if (!/^\d*$/.test(value)) return;
+    } else {
+      // Allow decimals for other UOMs
+      if (!/^[\d.]*$/.test(value)) return;
+    }
     setTendered(value);
   };
 
@@ -96,7 +104,7 @@ const QtyCount = () => {
           <CommonTextField label="Qty" value={tendered} type="text" onChange={handleQtyChange} color="primary" />
           <div className="grid grid-cols-4 gap-2">
             {keypad.map((key) => (
-              <button key={key} onClick={() => handleKeyPress(key)} className="border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded py-3 text-xs sm:text-base font-semibold hover:bg-gray-100 active:scale-95">
+              <button key={key} onClick={() => handleKeyPress(key)} disabled={isPieces && key === "."} className={`border border-gray-200 dark:border-gray-700 rounded py-3 text-xs sm:text-base font-semibold ${isPieces && key === "." ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100 active:scale-95"}`}>
                 {key}
               </button>
             ))}
