@@ -5,7 +5,8 @@ import { setQtyCountModal } from "../../../../../Store/Slices/ModalSlice";
 import { updateProduct } from "../../../../../Store/Slices/PosSlice";
 import { CommonModal } from "../../../../Common";
 
-const keypad = ["1", "2", "3", "+10", "4", "5", "6", "+20", "7", "8", "9", "+50", "C", "0", ".", "⌫"];
+const keypadPieces = ["1", "2", "3", "+10", "4", "5", "6", "+20", "7", "8", "9", "+50", "C", "0", ".", "⌫"];
+const keypadGrams = ["1", "2", "3", "+0.05", "+0.10", "4", "5", "6", "+0.25", "+0.5", "7", "8", "9", "+1", "+2", "C", "0", ".", "⌫", "+5"];
 
 const QtyCount = () => {
   const { isQtyCountModal } = useAppSelector((state) => state.modal);
@@ -18,7 +19,7 @@ const QtyCount = () => {
 
   const [tendered, setTendered] = useState<string>(qtyCount);
 
-  const MIN_QTY = isPieces ? 0 : 0.1;
+  const MIN_QTY = isPieces ? 0 : 0.01;
 
   const maxQty = isReturnPosOrder ? (prevData?.originalQty ?? Infinity) : (isQtyCountModal.data?.qty ?? Infinity);
   if (isQtyCountModal.data !== prevData) {
@@ -36,8 +37,6 @@ const QtyCount = () => {
   const handleQtyChange = (e: string) => {
     const value = e;
     if (!/^[\d.]*$/.test(value)) return;
-    // const num = Number(value || 0);
-    // setTendered(clampQty(num).toString());
     if (isPieces) {
       // Only integers for PIECES
       if (!/^\d*$/.test(value)) return;
@@ -47,6 +46,8 @@ const QtyCount = () => {
     }
     setTendered(value);
   };
+
+  const keypad = isPieces ? keypadPieces : keypadGrams;
 
   // ⌨ Keypad handler
   const handleKeyPress = (key: string) => {
@@ -65,7 +66,7 @@ const QtyCount = () => {
       return;
     }
 
-    // ADD (+10, +20, +50)
+    // ADD (+10, +20, +50...)
     if (key.startsWith("+")) {
       const add = Number(key.replace("+", ""));
       const current = Number(tendered || 0);
@@ -82,7 +83,7 @@ const QtyCount = () => {
     // NUMBERS
     setTendered((prev) => {
       const next = prev === qtyCount || prev === "0" ? key : prev + key;
-      return clampQty(Number(next)).toString();
+      return next;
     });
   };
 
@@ -102,7 +103,7 @@ const QtyCount = () => {
       <div className="space-y-4 p-1">
         <div className="flex flex-col gap-4">
           <CommonTextField label="Qty" value={tendered} type="text" onChange={handleQtyChange} color="primary" />
-          <div className="grid grid-cols-4 gap-2">
+          <div className={`grid ${isPieces ? "grid-cols-4" : "grid-cols-5"} gap-2`}>
             {keypad.map((key) => (
               <button key={key} onClick={() => handleKeyPress(key)} disabled={isPieces && key === "."} className={`border border-gray-200 dark:border-gray-700 rounded py-3 text-xs sm:text-base font-semibold ${isPieces && key === "." ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100 active:scale-95"}`}>
                 {key}

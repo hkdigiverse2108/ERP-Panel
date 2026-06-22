@@ -95,7 +95,7 @@ const PosTable = () => {
       bodyClass: "min-w-30 w-30",
       render: (row) => (
         <div className="flex gap-1 justify-center items-center cursor-pointer">
-          <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, row.variantId, { posQty: roundQty(Math.max(qtyCount(row), row.posQty - qtyCount(row))) })}>
+          <CommonButton variant="outlined" size="small" sx={{ minWidth: 40 }} onClick={() => updateRow(row._id, row.variantId, { posQty: roundQty(Math.max(row.uomId?.name === "PIECES" ? 1 : 0.01, row.posQty - qtyCount(row))) })}>
             <RemoveIcon />
           </CommonButton>
 
@@ -110,7 +110,12 @@ const PosTable = () => {
         </div>
       ),
     },
-    { key: "mrp", header: "MRP", render: (row) => row.mrp?.toFixed(2) },
+    {
+      key: "mrp",
+      header: "MRP",
+      bodyClass: "min-w-32 w-35",
+      render: (row) => <CommonTextField type="number" value={row.mrp} onChange={(e) => updateRow(row._id, row.variantId, { mrp: Number(e) || 0 })} isCurrency currencyDisabled />,
+    },
     {
       key: "discount",
       header: "Discount",

@@ -9,7 +9,7 @@ import type { PosProductOrderDataResponse } from "../../../../../Types";
 import { RemoveEmptyFields, SanitizePayload } from "../../../../../Utils";
 import { CommonModal } from "../../../../Common";
 
-const keypad = ["1", "2", "3", "+5", "+100", "4", "5", "6", "+10", "+500", "7", "8", "9", "+20", "+2000", "C", "0", ".", "+50", "⌫"];
+const keypad = ["1", "2", "3", "+0.05", "+5", "+100", "4", "5", "6", "+0.10", "+10", "+500", "7", "8", "9", "+0.25", "+20", "+2000", "C", "0", ".", "+0.5", "+50", "⌫"];
 
 const Cash = () => {
   const { isCashModal } = useAppSelector((state) => state.modal);
@@ -111,7 +111,7 @@ const Cash = () => {
     <CommonModal isOpen={isCashModal} onClose={() => dispatch(setCashModal())} className="max-w-[700px]" showCloseButton={false}>
       <div className="space-y-4 p-1">
         <div className="grid grid-cols-1 md:grid-cols-[1fr_220px] gap-4">
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-6 gap-2">
             {keypad.map((key) => (
               <button key={key} onClick={() => handleKeyPress(key)} className="border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded py-3 text-xs sm:text-base font-semibold hover:bg-gray-100 active:scale-95">
                 {key}
