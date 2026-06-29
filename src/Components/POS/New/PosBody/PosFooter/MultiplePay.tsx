@@ -4,7 +4,7 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import { Box, Grid } from "@mui/material";
 import { FieldArray, Form, Formik } from "formik";
 import { Mutations, Queries } from "../../../../../Api";
-import { CommonButton, CommonValidationSelect, CommonValidationTextField } from "../../../../../Attribute";
+import { CommonButton, CommonValidationSelect, CommonValidationTextField, ShowNotification } from "../../../../../Attribute";
 import { PAYMENT_MODE, POS_PAYMENT_METHOD } from "../../../../../Data";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setPayLaterModal } from "../../../../../Store/Slices/ModalSlice";
@@ -74,6 +74,10 @@ const MultiplePay = () => {
       if (posOrderId) editPosOrder({ ...changedFields, posOrderId }, { onSuccess });
       else addPosOrder(RemoveEmptyFields(payload), { onSuccess });
     } else {
+      if (!PosProduct.customerId) {
+        ShowNotification("Customer is required for partial/due payments", "error");
+        return;
+      }
       dispatch(setPayLaterModal({ open: true, data: multiplePayments }));
     }
   };

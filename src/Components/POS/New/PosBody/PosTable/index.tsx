@@ -129,7 +129,29 @@ const PosTable = () => {
       render: (row) => <CommonTextField type="number" value={row.additionalDiscount || 0} onChange={(e) => updateRow(row._id, row.variantId, { additionalDiscount: Number(e) })} isCurrency disabled />,
     },
     { key: "unitCost", header: "Unit Cost", bodyClass: "min-w-32 w-35" },
-    { key: "netAmount", header: "Net Amount", bodyClass: "min-w-32 w-35" },
+    {
+      key: "netAmount",
+      header: "Net Amount",
+      bodyClass: "min-w-32 w-35",
+      render: (row) => (
+        <CommonTextField
+          type="number"
+          value={row.netAmount}
+          onChange={(e) => {
+            const desiredAmt = Number(e) || 0;
+            const unitPrice = row.mrp - row.discount - row.additionalDiscount;
+            const taxRate = row.salesTaxId?.percentage || 0;
+            const unitPriceIncludingTax = row.isSalesTaxIncluding ? unitPrice : unitPrice + (unitPrice * taxRate) / 100;
+            if (unitPriceIncludingTax > 0) {
+              const newQty = Number((desiredAmt / unitPriceIncludingTax).toFixed(3));
+              updateRow(row._id, row.variantId, { posQty: newQty });
+            }
+          }}
+          isCurrency
+          currencyDisabled
+        />
+      ),
+    },
     // ...(!PosProduct.posOrderId || isReturnPosOrder
     //   ? [
     {

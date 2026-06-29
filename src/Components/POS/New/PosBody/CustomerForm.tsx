@@ -5,6 +5,7 @@ import { CommonButton, CommonPhoneNumber, CommonValidationDatePicker, CommonVali
 import { PAGE_TITLE } from "../../../../Constants";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
 import { setCustomerModal } from "../../../../Store/Slices/ModalSlice";
+import { setCustomerId } from "../../../../Store/Slices/PosSlice";
 import type { ContactFormFormikValues } from "../../../../Types";
 import { GetChangedFields, RemoveEmptyFields } from "../../../../Utils";
 import { useDependentReset } from "../../../../Utils/Hooks";
@@ -56,9 +57,12 @@ const CustomerForm = () => {
       ...values,
       address: values.address ? [RemoveEmptyFields(values.address)] : [],
     };
-    const handleSuccess = () => {
+    const handleSuccess = (resData?: any) => {
       resetForm();
       dispatch(setCustomerModal({ open: false, data: null }));
+      if (!isEditing && resData?.data?._id) {
+        dispatch(setCustomerId(resData.data._id));
+      }
     };
     if (isEditing) {
       const normalizedCustomerData = {

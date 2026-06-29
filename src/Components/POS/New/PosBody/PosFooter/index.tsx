@@ -95,7 +95,7 @@ const PosFooter = () => {
   };
 
   const handleUpi = (type: string) => {
-    if (!validate(true)) return;
+    if (!validate(false)) return;
     const { posOrderId, ...rest } = PosProduct;
 
     const payload = {
@@ -131,19 +131,19 @@ const PosFooter = () => {
   };
 
   const handleCard = (type: string) => {
-    if (!validate(true)) return;
+    if (!validate(false)) return;
     dispatch(setCardModal());
     dispatch(setPrintType(type));
   };
 
   const handleCash = (type: string) => {
-    if (!validate(true)) return;
+    if (!validate(false)) return;
     dispatch(setCashModal());
     dispatch(setPrintType(type));
   };
 
   const handleMultiplePay = (type: string) => {
-    if (!validate(true)) return;
+    if (!validate(false)) return;
     dispatch(setMultiplePay());
     dispatch(setPrintType(type));
   };

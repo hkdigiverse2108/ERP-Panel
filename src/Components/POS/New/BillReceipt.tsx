@@ -167,6 +167,18 @@ const BillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }
         <div className="flex justify-end font-bold text-xl">
           <span className="text-right mr-2 capitalize">Total</span>:<span className="w-20 text-right">{Number(bill.totalAmount?.toFixed(0) || 0)}</span>
         </div>
+
+        {bill.paidAmount > 0 && (
+          <div className="flex justify-end text-sm font-semibold mt-1">
+            <span className="text-right mr-2 capitalize">Paid Amount</span>:<span className="w-20 text-right">{Number(bill.paidAmount?.toFixed(2) || 0)}</span>
+          </div>
+        )}
+
+        {bill.dueAmount > 0 && (
+          <div className="flex justify-end text-sm text-red-600 font-semibold mt-1">
+            <span className="text-right mr-2 capitalize">Due Amount</span>:<span className="w-20 text-right">{Number(bill.dueAmount?.toFixed(2) || 0)}</span>
+          </div>
+        )}
       </div>
 
       {/* Summary */}
