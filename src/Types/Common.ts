@@ -84,6 +84,8 @@ export interface CommonSelectProps {
   syncFieldName?: string;
   isLoading?: boolean;
   searchKeys?: string[];
+  onFavoriteToggle?: (option: SelectOptionType) => void;
+  togglingId?: string | null;
 }
 
 export interface CommonValidationSelectProps extends Omit<CommonSelectProps, "onChange" | "value"> {

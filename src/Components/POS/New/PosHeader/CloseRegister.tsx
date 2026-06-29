@@ -50,35 +50,35 @@ const CloseBillRegister = forwardRef<HTMLDivElement, { data?: PosCashRegisterVal
       <div className="my-3 border-t border-dashed border-black"></div>
 
       <div className="flex flex-col gap-[5px]">
-        <MetricRow label="No of Bills" value={data?.numberOfBills?.toFixed(2) ?? 0} />
-        <MetricRow label="No of Items" value={data?.numberOfItems?.toFixed(2) ?? 0} />
-        <MetricRow label="Total Amount" value={data?.totalSales?.toFixed(2) ?? 0} />
-        <MetricRow label="Disc" value={data?.discount?.toFixed(2) ?? 0} />
-        <MetricRow label="Tax Amount" value={data?.taxAmount?.toFixed(2) ?? 0} />
-        <MetricRow label="Sales Return" value={data?.salesReturn?.toFixed(2) ?? 0} />
-        <MetricRow label="Refund" value={data?.refund?.toFixed(2) ?? 0} />
-        <MetricRow label="Bank Transfer" value={data?.bankTransferAmount?.toFixed(2) ?? 0} />
-        <MetricRow label="Pay Later" value={data?.payLater?.toFixed(2) ?? 0} />
-        <MetricRow label="Credit/Advance Redeemed" value={data?.creditAdvanceRedeemed?.toFixed(2) ?? 0} />
-        <MetricRow label="Total Purchase Payment" value={data?.purchasePayment?.toFixed(2) ?? 0} />
-        <MetricRow label="Total Expense" value={data?.expense?.toFixed(2) ?? 0} />
+        <MetricRow label="No of Bills" value={Number(data?.numberOfBills || 0).toFixed(2)} />
+        <MetricRow label="No of Items" value={Number(data?.numberOfItems || 0).toFixed(2)} />
+        <MetricRow label="Total Amount" value={Number(data?.totalSales || 0).toFixed(2)} />
+        <MetricRow label="Disc" value={Number(data?.discount || 0).toFixed(2)} />
+        <MetricRow label="Tax Amount" value={Number(data?.taxAmount || 0).toFixed(2)} />
+        <MetricRow label="Sales Return" value={Number(data?.salesReturn || 0).toFixed(2)} />
+        <MetricRow label="Refund" value={Number(data?.refund || 0).toFixed(2)} />
+        <MetricRow label="Bank Transfer" value={Number(data?.bankTransferAmount || 0).toFixed(2)} />
+        <MetricRow label="Pay Later" value={Number(data?.payLater || 0).toFixed(2)} />
+        <MetricRow label="Credit/Advance Redeemed" value={Number(data?.creditAdvanceRedeemed || 0).toFixed(2)} />
+        <MetricRow label="Total Purchase Payment" value={Number(data?.purchasePayment || 0).toFixed(2)} />
+        <MetricRow label="Total Expense" value={Number(data?.expense || 0).toFixed(2)} />
       </div>
 
       <div className="my-2 border-t border-dashed border-black"></div>
 
       <div className="flex flex-col gap-[5px]">
-        <MetricRow label="Cash" value={data?.cashPayment?.toFixed(2) ?? 0} />
-        <MetricRow label="Card" value={data?.cardPayment?.toFixed(2) ?? 0} />
-        <MetricRow label="Wallet" value={data?.walletPayment?.toFixed(2) ?? 0} />
-        <MetricRow label="Upi" value={data?.upiPayment?.toFixed(2) ?? 0} />
-        <MetricRow label="Bank Refund (-)" value={data?.bankRefund?.toFixed(2) ?? 0} />
-        <MetricRow label="Payments Received" value={data?.paymentsReceived?.toFixed(2) ?? 0} />
+        <MetricRow label="Cash" value={Number(data?.cashPayment || 0).toFixed(2)} />
+        <MetricRow label="Card" value={Number(data?.cardPayment || 0).toFixed(2)} />
+        <MetricRow label="Wallet" value={Number(data?.walletPayment || 0).toFixed(2)} />
+        <MetricRow label="Upi" value={Number(data?.upiPayment || 0).toFixed(2)} />
+        <MetricRow label="Bank Refund (-)" value={Number(data?.bankRefund || 0).toFixed(2)} />
+        <MetricRow label="Payments Received" value={Number(data?.paymentsReceived || 0).toFixed(2)} />
       </div>
 
       <div className="my-3 border-t border-dashed border-black"></div>
 
       <div className="my-3 flex flex-col gap-1">
-        <MetricRow label="Total Sales" value={data?.totalSales?.toFixed(2) ?? 0} />
+        <MetricRow label="Total Sales" value={Number(data?.totalSales || 0).toFixed(2)} />
       </div>
 
       <div className="break-inside-avoid">
@@ -109,7 +109,7 @@ const CloseBillRegister = forwardRef<HTMLDivElement, { data?: PosCashRegisterVal
                   <td className="py-[8px]">Rs. {denom.currency}</td>
                   <td className="py-[8px]">*</td>
                   <td className="py-[8px]">{denom.count}</td>
-                  <td className="py-[8px]">{denom.amount?.toFixed(2)}</td>
+                  <td className="py-[8px]">{Number(denom.amount || 0).toFixed(2)}</td>
                 </tr>
               ))
             ) : (
@@ -131,20 +131,20 @@ const CloseBillRegister = forwardRef<HTMLDivElement, { data?: PosCashRegisterVal
       <div className="mb-[10px] flex flex-col gap-[5px] break-before-page pt-[20px]">
         <div className="mb-[5px] border-t border-dashed border-black"></div>
 
-        <MetricRow label="Total Denom" value={data?.totalDenominationAmount?.toFixed(2) ?? 0} />
+        <MetricRow label="Total Denom" value={Number(data?.totalDenominationAmount || 0).toFixed(2)} />
 
         <div className="my-[5px] border-t border-dashed border-black"></div>
 
-        <MetricRow label="Cash Sales" value={data?.cashPayment?.toFixed(2) ?? 0} />
-        <MetricRow label="Cash Refund (-)" value={data?.cashRefund?.toFixed(2) ?? 0} />
-        <MetricRow label="Expense Amount (-)" value={data?.expense?.toFixed(2) ?? 0} />
-        <MetricRow label="Cash in Hand" value={data?.cashFlow?.toFixed(2) ?? 0} />
-        <MetricRow label="Profit*" value={data?.profit?.toFixed(2) ?? 0} />
+        <MetricRow label="Cash Sales" value={Number(data?.cashPayment || 0).toFixed(2)} />
+        <MetricRow label="Cash Refund (-)" value={Number(data?.cashRefund || 0).toFixed(2)} />
+        <MetricRow label="Expense Amount (-)" value={Number(data?.expense || 0).toFixed(2)} />
+        <MetricRow label="Cash in Hand" value={Number(data?.cashFlow || 0).toFixed(2)} />
+        <MetricRow label="Profit*" value={Number(data?.profit || 0).toFixed(2)} />
 
         <div className="my-[5px] border-t border-dashed border-black"></div>
 
-        <MetricRow label="System Calculated Cash in Drawer" value={data?.totalCashInDrawer?.toFixed(2) ?? 0} />
-        <MetricRow label="Actual Cash in Drawer" value={data?.physicalDrawerCash?.toFixed(2) ?? 0} />
+        <MetricRow label="System Calculated Cash in Drawer" value={Number(data?.totalCashInDrawer || 0).toFixed(2)} />
+        <MetricRow label="Actual Cash in Drawer" value={Number(data?.physicalDrawerCash || 0).toFixed(2)} />
 
         <div className="my-[5px] border-t border-dashed border-black"></div>
       </div>

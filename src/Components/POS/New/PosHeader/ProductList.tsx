@@ -1,7 +1,8 @@
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import { Box, CardMedia, Paper, Skeleton, Tooltip, Typography } from "@mui/material";
+import { Box, CardMedia, Paper, Skeleton, Tooltip, Typography, IconButton, CircularProgress } from "@mui/material";
+import { Star, StarBorder } from "@mui/icons-material";
 import { useEffect, useState } from "react";
-import { Queries } from "../../../../Api";
+import { Queries, Mutations } from "../../../../Api";
 import { CommonSelect } from "../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
 import { addOrUpdateProduct } from "../../../../Store/Slices/PosSlice";
@@ -17,6 +18,10 @@ const ProductList = () => {
   const dispatch = useAppDispatch();
 
   const { isReturnPosOrder } = useAppSelector((state) => state.pos);
+
+  const { mutate: editProduct } = Mutations.useEditProduct();
+
+  const [togglingId, setTogglingId] = useState<string | null>(null);
 
   const { data: category, isLoading: categoryLoading } = Queries.useGetCategoryDropdown({ onlyCategoryFilter: true }, open);
   const id = value[0] || "";
@@ -68,9 +73,51 @@ const ProductList = () => {
               {productDropdown?.data?.map((item, index) => {
                 const imageSrc = getProductImage(item);
 
+                const isThisProductLoading = togglingId === (item.productId || item._id);
+
                 return (
-                  <Paper key={index} elevation={0} onClick={() => handleAddProduct(item)} className="p-4 rounded-lg! cursor-pointer border border-gray-200! dark:border-gray-600! bg-gray-50! dark:bg-gray-800! hover:bg-gray-100! dark:hover:bg-gray-dark! hover:border-gray-300! dark:hover:border-gray-600!">
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <Paper key={index} elevation={0} sx={{ position: "relative" }} className="p-4 rounded-lg! border border-gray-200! dark:border-gray-600! bg-gray-50! dark:bg-gray-800! hover:bg-gray-100! dark:hover:bg-gray-dark! hover:border-gray-300! dark:hover:border-gray-600!">
+                    <IconButton
+                      size="small"
+                      disabled={isThisProductLoading}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const prodId = item.productId || item._id;
+                        setTogglingId(prodId);
+                        editProduct(
+                          {
+                            productId: prodId,
+                            isFavorite: !item.isFavorite,
+                          },
+                          {
+                            onSuccess: () => setTogglingId(null),
+                            onError: () => setTogglingId(null),
+                          }
+                        );
+                      }}
+                      sx={{
+                        position: "absolute",
+                        top: 8,
+                        right: 8,
+                        zIndex: 2,
+                        p: 0.5,
+                        bgcolor: "rgba(255, 255, 255, 0.85)",
+                        "&:hover": { bgcolor: "rgba(255, 255, 255, 0.95)" },
+                        boxShadow: "0px 2px 4px rgba(0,0,0,0.15)",
+                        "&.Mui-disabled": {
+                          bgcolor: "rgba(255, 255, 255, 0.5)",
+                        }
+                      }}
+                    >
+                      {isThisProductLoading ? (
+                        <CircularProgress size={16} sx={{ color: "#ffb400" }} />
+                      ) : item.isFavorite ? (
+                        <Star sx={{ color: "#ffb400" }} fontSize="small" />
+                      ) : (
+                        <StarBorder fontSize="small" />
+                      )}
+                    </IconButton>
+                    <Box onClick={() => handleAddProduct(item)} sx={{ display: "flex", alignItems: "center", gap: 2, cursor: "pointer" }}>
                       {/* Product Details */}
                       <Box sx={{ minWidth: 0, flex: 1 }}>
                         <Typography fontWeight={600} noWrap title={item.name}>

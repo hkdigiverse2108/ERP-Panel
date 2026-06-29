@@ -72,6 +72,7 @@ export interface ProductFormValues {
   images?: string[];
   _submitAction?: string;
   variants?: VariantInfo[];
+  isFavorite?: boolean;
 }
 
 export type AddProductPayload = ProductFormValues;

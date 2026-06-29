@@ -143,7 +143,9 @@ const PosTable = () => {
             const taxRate = row.salesTaxId?.percentage || 0;
             const unitPriceIncludingTax = row.isSalesTaxIncluding ? unitPrice : unitPrice + (unitPrice * taxRate) / 100;
             if (unitPriceIncludingTax > 0) {
-              const newQty = Number((desiredAmt / unitPriceIncludingTax).toFixed(3));
+              const isPieces = row.uomId?.name === "PIECES";
+              const rawQty = desiredAmt / unitPriceIncludingTax;
+              const newQty = isPieces ? Math.round(rawQty) : Number(rawQty.toFixed(3));
               updateRow(row._id, row.variantId, { posQty: newQty });
             }
           }}

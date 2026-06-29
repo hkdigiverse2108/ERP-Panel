@@ -2,7 +2,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import EditSquareIcon from "@mui/icons-material/EditSquare";
 import { Grid } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Queries } from "../../../../Api";
+import { Queries, Mutations } from "../../../../Api";
 import { CommonButton, CommonSelect } from "../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../Store/hooks";
 import { setCustomerModal, setDiscardModal } from "../../../../Store/Slices/ModalSlice";
@@ -15,6 +15,8 @@ const PosFilter = () => {
   const [isProductVariantId, setIsProductVariantId] = useState<string>("");
 
   const dispatch = useAppDispatch();
+
+  const { mutate: editProduct } = Mutations.useEditProduct();
 
   const { data: productDropdown, isLoading: productDropdownLoading } = Queries.useGetProductDropdown({ stockFilter: true });
   const id = isSelectProduct || "";
@@ -71,6 +73,12 @@ const PosFilter = () => {
           onChange={(e, item) => {
             dispatch(setIsSelectProduct(item?.productId ? item.productId : e[0]));
             setIsProductVariantId(item?.productId ? e[0] : "");
+          }}
+          onFavoriteToggle={(option) => {
+            editProduct({
+              productId: option.productId || option.value,
+              isFavorite: !option.isFavorite,
+            });
           }}
           limitTags={1}
           grid={{ xs: 12, xsm: 6, sm: 4 }}

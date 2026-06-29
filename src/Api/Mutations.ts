@@ -92,8 +92,8 @@ export const Mutations = {
 
   //*************** POS **************** */
   useAddPosOrder: () => useMutations<AddPosProductOrderPayload, PosProductOrderDataResponse>([KEYS.POS.ADD, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER, KEYS.POS_ORDER.BASE, KEYS.POS_CASH_REGISTER.DETAILS, KEYS.POS_ORDER.DROPDOWN, KEYS.POS_CREDIT_NOTE.DROPDOWN], (input) => Post(URL_KEYS.POS.ADD, input)),
-  useEditPosOrder: () => useMutations<EditPosProductOrderPayload, PosProductOrderDataResponse>([KEYS.POS.EDIT, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER, KEYS.POS_ORDER.BASE, KEYS.POS_ORDER.DROPDOWN], (input) => Put(URL_KEYS.POS.EDIT, input)),
-  useDeletePosOrder: () => useMutations<string, void>([KEYS.POS.DELETE, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER, KEYS.POS_ORDER.DROPDOWN], (id) => Delete(`${URL_KEYS.POS.BASE}/${id}`)),
+  useEditPosOrder: () => useMutations<EditPosProductOrderPayload, PosProductOrderDataResponse>([KEYS.POS.EDIT, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER, KEYS.POS_ORDER.BASE, KEYS.POS_CASH_REGISTER.DETAILS, KEYS.POS_ORDER.DROPDOWN], (input) => Put(URL_KEYS.POS.EDIT, input)),
+  useDeletePosOrder: () => useMutations<string, void>([KEYS.POS.DELETE, KEYS.POS.BASE, KEYS.POS.HOLD_ORDER, KEYS.POS_CASH_REGISTER.DETAILS, KEYS.POS_ORDER.DROPDOWN], (id) => Delete(`${URL_KEYS.POS.BASE}/${id}`)),
 
   // ************ POS Payment ************
   useAddPosPayment: () => useMutations<AddPosPaymentPayload, void>([KEYS.POS_PAYMENT.ADD, KEYS.POS_PAYMENT.BASE, KEYS.POS_ORDER.DROPDOWN, KEYS.POS_CREDIT_NOTE.DROPDOWN, KEYS.SUPPLIER_BILL.DROPDOWN], (input) => Post(URL_KEYS.POS_PAYMENT.ADD, input)),

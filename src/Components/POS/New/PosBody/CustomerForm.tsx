@@ -12,7 +12,7 @@ import { useDependentReset } from "../../../../Utils/Hooks";
 import { CustomerFormSchema } from "../../../../Utils/ValidationSchemas";
 import { CommonModal, DependentSelect } from "../../../Common";
 
-const CustomerForm = () => {
+const CustomerForm = ({ onSuccess }: { onSuccess?: (customerId: string) => void }) => {
   const { isCustomerModal } = useAppSelector((state) => state.modal);
   const dispatch = useAppDispatch();
 
@@ -61,7 +61,11 @@ const CustomerForm = () => {
       resetForm();
       dispatch(setCustomerModal({ open: false, data: null }));
       if (!isEditing && resData?.data?._id) {
-        dispatch(setCustomerId(resData.data._id));
+        if (onSuccess) {
+          onSuccess(resData.data._id);
+        } else {
+          dispatch(setCustomerId(resData.data._id));
+        }
       }
     };
     if (isEditing) {

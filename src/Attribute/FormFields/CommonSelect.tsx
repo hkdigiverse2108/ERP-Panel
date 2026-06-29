@@ -1,4 +1,5 @@
-import { Autocomplete, Grid, TextField } from "@mui/material";
+import { Autocomplete, Grid, TextField, Box, IconButton, CircularProgress } from "@mui/material";
+import { Star, StarBorder } from "@mui/icons-material";
 import { useField, useFormikContext } from "formik";
 import { type FC } from "react";
 import type { CommonSelectProps, CommonValidationSelectProps, SelectOptionType } from "../../Types";
@@ -64,7 +65,7 @@ export const CommonValidationSelect: FC<CommonValidationSelectProps> = ({ name, 
   return grid ? <Grid size={grid}>{Input}</Grid> : Input;
 };
 
-export const CommonSelect: FC<CommonSelectProps> = ({ searchKeys, label, options = [], value, onChange, multiple = false, limitTags, size, grid, disabled, readOnly, isLoading, placeholder, ...props }) => {
+export const CommonSelect: FC<CommonSelectProps> = ({ onFavoriteToggle, togglingId, searchKeys, label, options = [], value, onChange, multiple = false, limitTags, size, grid, disabled, readOnly, isLoading, placeholder, ...props }) => {
   const selectedValue = multiple ? (value || []).map((v) => options.find((o) => o.value === v)).filter((v): v is SelectOptionType => Boolean(v)) : (options.find((o) => o.value === value?.[0]) ?? null);
   const Input = (
     <Autocomplete
@@ -100,11 +101,35 @@ export const CommonSelect: FC<CommonSelectProps> = ({ searchKeys, label, options
       }}
       clearOnEscape
       disableCloseOnSelect={multiple}
-      renderOption={(props, option) => (
-        <li {...props} key={option.value}>
-          {option.label}
-        </li>
-      )}
+      renderOption={(props, option) => {
+        const { key, ...liProps } = props as any;
+        return (
+          <li key={key || option.value} {...liProps}>
+            <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
+              <span>{option.label}</span>
+              {onFavoriteToggle && (
+                <IconButton
+                  size="small"
+                  disabled={togglingId === (option.productId || option.value)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onFavoriteToggle(option);
+                  }}
+                  sx={{ p: 0.5 }}
+                >
+                  {togglingId === (option.productId || option.value) ? (
+                    <CircularProgress size={16} sx={{ color: "#ffb400" }} />
+                  ) : option.isFavorite ? (
+                    <Star sx={{ color: "#ffb400" }} fontSize="small" />
+                  ) : (
+                    <StarBorder fontSize="small" />
+                  )}
+                </IconButton>
+              )}
+            </Box>
+          </li>
+        );
+      }}
       loading={isLoading}
       renderInput={(params) => <TextField {...params} placeholder={placeholder} label={label} size="small" className="capitalize" disabled={disabled} />}
     />

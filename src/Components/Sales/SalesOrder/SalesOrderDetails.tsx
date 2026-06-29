@@ -1,6 +1,7 @@
 import { Box, Grid, Typography, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { CommonValidationDatePicker, CommonValidationSelect } from "../../../Attribute";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import { CommonValidationDatePicker, CommonValidationSelect, CommonButton } from "../../../Attribute";
 import { REVERSE_CHARGE, TAX_TYPE } from "../../../Data";
 import { useFormikContext } from "formik";
 import type { ContactAddressApi, PaymentTermsBase, SalesOrderFormValues } from "../../../Types";
@@ -8,9 +9,13 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { AddressSelectionModal } from "../../Common";
 import { Queries } from "../../../Api";
 import { GenerateOptions, DateConfig } from "../../../Utils";
+import { useAppDispatch } from "../../../Store/hooks";
+import { setCustomerModal } from "../../../Store/Slices/ModalSlice";
+import CustomerForm from "../../POS/New/PosBody/CustomerForm";
 
 const SalesOrderDetails = ({ isEditing }: { isEditing: boolean }) => {
   const { values, setFieldValue } = useFormikContext<SalesOrderFormValues>();
+  const dispatch = useAppDispatch();
   const [modalType, setModalType] = useState<"billing" | "shipping" | null>(null);
 
   const { data: customerData, isLoading: isCustomerLoading, isFetching: isCustomerFetching } = Queries.useGetContactDropdown({ typeFilter: "customer" });
@@ -102,7 +107,12 @@ const SalesOrderDetails = ({ isEditing }: { isEditing: boolean }) => {
   return (
     <Grid container spacing={2} sx={{ p: 2 }}>
       <Grid size={{ xs: 12, md: 3 }} container spacing={2}>
-        <CommonValidationSelect name="customerId" label="Select Customer" required options={GenerateOptions(customers)} isLoading={isCustomerLoading || isCustomerFetching} grid={{ xs: 12 }} />
+        <CommonValidationSelect name="customerId" label="Select Customer" required options={GenerateOptions(customers)} isLoading={isCustomerLoading || isCustomerFetching} grid={{ xs: 10 }} />
+        <Grid size={{ xs: 2 }} display="flex" alignItems="center" justifyContent="center">
+          <CommonButton size="small" onClick={() => dispatch(setCustomerModal({ open: true, data: null }))} sx={{ minWidth: 40, p: 0, mt: 3 }} variant="contained">
+            <AddBoxIcon />
+          </CommonButton>
+        </Grid>
         <Grid
           size={{ xs: 12, md: 12 }}
           container
@@ -253,6 +263,7 @@ const SalesOrderDetails = ({ isEditing }: { isEditing: boolean }) => {
       </Grid>
 
       <AddressSelectionModal isOpen={Boolean(modalType)} onClose={() => setModalType(null)} addresses={selectedCustomer?.address || []} onSelect={handleAddressSelect} selectedAddressId={modalType === "billing" ? values.billingAddress : values.shippingAddress} title={modalType === "billing" ? "Select Billing Address" : "Select Shipping Address"} />
+      <CustomerForm onSuccess={(id) => setFieldValue("customerId", id)} />
     </Grid>
   );
 };
