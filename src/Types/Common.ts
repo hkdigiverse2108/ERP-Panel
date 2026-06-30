@@ -314,6 +314,7 @@ export interface CommonValidationTextFieldProps {
   rows?: number;
   onCurrencyLog?: (value: string) => void;
   maxDigits?: number;
+  onKeyDown?: (e: any) => void;
 }
 export interface CommonTextFieldProps extends Omit<CommonValidationTextFieldProps, "name"> {
   value: string | number;

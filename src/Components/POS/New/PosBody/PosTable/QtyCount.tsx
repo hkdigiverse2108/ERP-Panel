@@ -5,116 +5,276 @@ import { setQtyCountModal } from "../../../../../Store/Slices/ModalSlice";
 import { updateProduct } from "../../../../../Store/Slices/PosSlice";
 import { CommonModal } from "../../../../Common";
 
-const keypadPieces = ["1", "2", "3", "+10", "4", "5", "6", "+20", "7", "8", "9", "+50", "C", "0", ".", "⌫"];
-const keypadGrams = ["1", "2", "3", "+0.05", "+0.10", "4", "5", "6", "+0.25", "+0.5", "7", "8", "9", "+1", "+2", "C", "0", ".", "⌫", "+5"];
+// ─────────────────────────────────────────────
+// Keypad definitions
+// ─────────────────────────────────────────────
+const QTY_KEYPAD = ["1", "2", "3", "+10", "4", "5", "6", "+20", "7", "8", "9", "+50", "C", "0", ".", "⌫"];
+const AMT_KEYPAD = ["1", "2", "3", "+10", "4", "5", "6", "+50", "7", "8", "9", "+100", "C", "0", ".", "⌫"];
+
+// ─────────────────────────────────────────────
+// Mode toggle type
+// ─────────────────────────────────────────────
+type InputMode = "qty" | "amount";
 
 const QtyCount = () => {
   const { isQtyCountModal } = useAppSelector((state) => state.modal);
   const { isReturnPosOrder } = useAppSelector((state) => state.pos);
   const dispatch = useAppDispatch();
+
   const [prevData, setPrevData] = useState(isQtyCountModal.data);
+  const [mode, setMode] = useState<InputMode>("qty");
 
+  // ─── Derived helpers ────────────────────────
   const isPieces = prevData?.uomId?.name === "PIECES";
-  const qtyCount = isPieces ? "0" : "0.00";
+  const qtyDefault = isPieces ? "0" : "0.00";
 
-  const [tendered, setTendered] = useState<string>(qtyCount);
+  const [tendered, setTendered] = useState<string>(qtyDefault);
+  const [amountInput, setAmountInput] = useState<string>("0.00");
 
-  const MIN_QTY = isPieces ? 0 : 0.01;
+  const MIN_QTY = isPieces ? 0 : 0.1;
+  const maxQty = isReturnPosOrder
+    ? (prevData?.originalQty ?? Infinity)
+    : (isQtyCountModal.data?.qty ?? Infinity);
 
-  const maxQty = isReturnPosOrder ? (prevData?.originalQty ?? Infinity) : (isQtyCountModal.data?.qty ?? Infinity);
+  // Sync modal data when it changes (different row clicked)
   if (isQtyCountModal.data !== prevData) {
     setPrevData(isQtyCountModal.data);
-    if (isQtyCountModal.data) setTendered(isQtyCountModal.data.posQty?.toString() ?? qtyCount);
+    setMode("qty");
+    setAmountInput("0.00");
+    if (isQtyCountModal.data) {
+      setTendered(isQtyCountModal.data.posQty?.toString() ?? qtyDefault);
+    }
   }
 
-  // 🔒 Clamp qty between 0 and stock qty
+  // ─── Amount ↔ Qty conversion ─────────────────
+  /**
+   * MRP is price per 1 unit (kg, piece, etc.)
+   * qty from amount  = enteredAmount / mrp
+   * amount from qty  = qty * mrp
+   */
+  const mrp: number = isQtyCountModal.data?.mrp ?? 0;
+  const discount = isQtyCountModal.data?.discount ?? 0;
+  const additionalDiscount = isQtyCountModal.data?.additionalDiscount ?? 0;
+  const unitPrice = mrp - discount - additionalDiscount;
+  const taxRate = Number(isQtyCountModal.data?.salesTaxId?.percentage || 0);
+  const unitPriceIncludingTax = isQtyCountModal.data?.isSalesTaxIncluding ? unitPrice : unitPrice + (unitPrice * taxRate) / 100;
+
+  const derivedQtyFromAmount = (): number => {
+    if (!unitPriceIncludingTax || unitPriceIncludingTax === 0) return 0;
+    const amt = parseFloat(amountInput || "0");
+    return Number((amt / unitPriceIncludingTax).toFixed(3));
+  };
+
+  const derivedAmountFromQty = (): string => {
+    const qty = parseFloat(tendered || "0");
+    return (qty * unitPriceIncludingTax).toFixed(2);
+  };
+
+  // ─── Clamp helper ────────────────────────────
   const clampQty = (val: number) => {
     if (val > maxQty) return maxQty;
     if (val < MIN_QTY) return MIN_QTY;
-    return isPieces ? Math.floor(val) : Number(val.toFixed(2));
+    return isPieces ? Math.floor(val) : Number(val.toFixed(3));
   };
 
+  // ─── QTY mode handlers ───────────────────────
   const handleQtyChange = (e: string) => {
-    const value = e;
-    if (!/^[\d.]*$/.test(value)) return;
     if (isPieces) {
-      // Only integers for PIECES
-      if (!/^\d*$/.test(value)) return;
+      if (!/^\d*$/.test(e)) return;
     } else {
-      // Allow decimals for other UOMs
-      if (!/^[\d.]*$/.test(value)) return;
+      if (!/^[\d.]*$/.test(e)) return;
     }
-    setTendered(value);
+    setTendered(e);
   };
 
-  const keypad = isPieces ? keypadPieces : keypadGrams;
-
-  // ⌨ Keypad handler
-  const handleKeyPress = (key: string) => {
-    // CLEAR
-    if (key === "C") {
-      setTendered(qtyCount);
-      return;
-    }
-
-    // BACKSPACE
+  const handleQtyKeyPress = (key: string) => {
+    if (key === "C") { setTendered(qtyDefault); return; }
     if (key === "⌫") {
-      setTendered((prev) => {
-        const next = prev.slice(0, -1);
-        return next.length ? next : qtyCount;
-      });
+      setTendered((prev) => { const next = prev.slice(0, -1); return next.length ? next : qtyDefault; });
       return;
     }
-
-    // ADD (+10, +20, +50...)
     if (key.startsWith("+")) {
       const add = Number(key.replace("+", ""));
-      const current = Number(tendered || 0);
-      setTendered(clampQty(current + add).toString());
+      setTendered(clampQty(Number(tendered || 0) + add).toString());
       return;
     }
-
-    // DECIMAL
     if (key === ".") {
-      setTendered((prev) => (prev.includes(".") ? prev : prev === qtyCount ? "0." : prev + "."));
+      setTendered((prev) => (prev.includes(".") ? prev : prev === qtyDefault ? "0." : prev + "."));
       return;
     }
-
-    // NUMBERS
     setTendered((prev) => {
-      const next = prev === qtyCount || prev === "0" ? key : prev + key;
-      return next;
+      const next = prev === qtyDefault || prev === "0" ? key : prev + key;
+      return clampQty(Number(next)).toString();
     });
   };
 
+  // ─── AMOUNT mode handlers ────────────────────
+  const handleAmountChange = (e: string) => {
+    if (!/^[\d.]*$/.test(e)) return;
+    setAmountInput(e);
+  };
+
+  const handleAmountKeyPress = (key: string) => {
+    if (key === "C") { setAmountInput("0.00"); return; }
+    if (key === "⌫") {
+      setAmountInput((prev) => { const next = prev.slice(0, -1); return next.length ? next : "0.00"; });
+      return;
+    }
+    if (key.startsWith("+")) {
+      const add = Number(key.replace("+", ""));
+      setAmountInput((parseFloat(amountInput || "0") + add).toFixed(2));
+      return;
+    }
+    if (key === ".") {
+      setAmountInput((prev) => (prev.includes(".") ? prev : prev === "0.00" ? "0." : prev + "."));
+      return;
+    }
+    setAmountInput((prev) => (prev === "0.00" ? key : prev + key));
+  };
+
+  // ─── Close / Confirm ─────────────────────────
   const handleClose = () => {
     dispatch(setQtyCountModal({ open: false, data: null }));
-    setTendered(qtyCount);
+    setTendered(qtyDefault);
+    setAmountInput("0.00");
+    setMode("qty");
   };
 
   const handleConfirm = () => {
     if (!isQtyCountModal.data) return;
-    dispatch(updateProduct({ _id: isQtyCountModal.data._id, data: { posQty: clampQty(Number(tendered)) } }));
+
+    let finalQty: number;
+
+    if (mode === "amount") {
+      // Reverse-calculate qty from entered amount
+      finalQty = clampQty(derivedQtyFromAmount());
+    } else {
+      finalQty = clampQty(Number(tendered));
+    }
+
+    if (finalQty <= 0) return;
+
+    dispatch(updateProduct({ _id: isQtyCountModal.data._id, data: { posQty: finalQty } }));
     handleClose();
   };
 
+  // ─── Disable logic ───────────────────────────
+  const isConfirmDisabled = (() => {
+    if (mode === "qty") return Number(tendered) <= MIN_QTY;
+    // Amount mode: derived qty must be > 0 and mrp must be set
+    return !mrp || derivedQtyFromAmount() <= 0;
+  })();
+
+  // ─── UI ──────────────────────────────────────
+  const activeKeypad = mode === "qty" ? QTY_KEYPAD : AMT_KEYPAD;
+  const activeHandler = mode === "qty" ? handleQtyKeyPress : handleAmountKeyPress;
+
   return (
-    <CommonModal isOpen={isQtyCountModal.open} onClose={handleClose} className="max-w-[400px]" showCloseButton={false}>
+    <CommonModal
+      isOpen={isQtyCountModal.open}
+      onClose={handleClose}
+      className="max-w-[420px]"
+      showCloseButton={false}
+    >
       <div className="space-y-4 p-1">
+
+        {/* ── Mode Toggle ── */}
+        {!isPieces && unitPriceIncludingTax > 0 && (
+          <div className="flex gap-2 justify-center">
+            <CommonButton
+              title="By Qty"
+              variant={mode === "qty" ? "contained" : "outlined"}
+              size="small"
+              onClick={() => {
+                setMode("qty");
+                setAmountInput("0.00");
+              }}
+            />
+            <CommonButton
+              title="By Amount (₹)"
+              variant={mode === "amount" ? "contained" : "outlined"}
+              size="small"
+              onClick={() => {
+                setMode("amount");
+                setTendered(qtyDefault);
+              }}
+            />
+          </div>
+        )}
+
         <div className="flex flex-col gap-4">
-          <CommonTextField label="Qty" value={tendered} type="text" onChange={handleQtyChange} color="primary" />
-          <div className={`grid ${isPieces ? "grid-cols-4" : "grid-cols-5"} gap-2`}>
-            {keypad.map((key) => (
-              <button key={key} onClick={() => handleKeyPress(key)} disabled={isPieces && key === "."} className={`border border-gray-200 dark:border-gray-700 rounded py-3 text-xs sm:text-base font-semibold ${isPieces && key === "." ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100 active:scale-95"}`}>
+
+          {/* ── Input field ── */}
+          {mode === "qty" ? (
+            <CommonTextField
+              label="Qty"
+              value={tendered}
+              type="text"
+              onChange={handleQtyChange}
+              color="primary"
+            />
+          ) : (
+            <>
+              <CommonTextField
+                label="Enter Amount (₹)"
+                value={amountInput}
+                type="text"
+                onChange={handleAmountChange}
+                color="primary"
+                focused
+              />
+              {unitPriceIncludingTax > 0 && (
+                <div className="text-sm text-gray-500 dark:text-gray-400 px-1">
+                  Net Price: ₹{unitPriceIncludingTax.toFixed(2)} / unit &nbsp;→&nbsp;
+                  <span className="font-semibold text-gray-800 dark:text-gray-100">
+                    Qty: {derivedQtyFromAmount()} {prevData?.uomId?.name ?? ""}
+                  </span>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Show reverse info in qty mode too */}
+          {mode === "qty" && unitPriceIncludingTax > 0 && Number(tendered) > 0 && (
+            <div className="text-sm text-gray-500 dark:text-gray-400 px-1">
+              Amount: ₹{derivedAmountFromQty()}
+            </div>
+          )}
+
+          {/* ── Keypad ── */}
+          <div className="grid grid-cols-4 gap-2">
+            {activeKeypad.map((key) => (
+              <button
+                key={key}
+                onClick={() => activeHandler(key)}
+                disabled={isPieces && key === "."}
+                className={`border border-gray-200 dark:border-gray-700 rounded py-3 text-xs sm:text-base font-semibold
+                  ${isPieces && key === "." ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100 dark:hover:bg-gray-700 active:scale-95"}
+                `}
+              >
                 {key}
               </button>
             ))}
           </div>
 
+          {/* ── Action buttons ── */}
           <div className="flex justify-end gap-2">
-            <CommonButton title="Cancel" variant="outlined" color="error" className="py-4" onClick={handleClose} />
-            <CommonButton title="Submit" variant="contained" className="py-4" disabled={Number(tendered) <= MIN_QTY} onClick={handleConfirm} />
+            <CommonButton
+              title="Cancel"
+              variant="outlined"
+              color="error"
+              className="py-4"
+              onClick={handleClose}
+            />
+            <CommonButton
+              title="Submit"
+              variant="contained"
+              className="py-4"
+              disabled={isConfirmDisabled}
+              onClick={handleConfirm}
+            />
           </div>
+
         </div>
       </div>
     </CommonModal>

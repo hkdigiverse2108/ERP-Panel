@@ -25,6 +25,7 @@ export interface PosProductDataModal extends Omit<ProductBase, "sellingPrice" | 
   variant?: string;
   originalQty: number;
   detect_qty: number;
+  originalMrp?: number;
 }
 
 export interface AdditionalChargeType {

@@ -128,6 +128,7 @@ const PosSlice = createSlice({
           additionalDiscount: 0,
           unitCost: 0,
           netAmount: 0,
+          originalMrp: action.payload.mrp || 0,
         };
 
         calculateAmounts(newRow);
@@ -155,6 +156,7 @@ const PosSlice = createSlice({
             additionalDiscount: 0,
             unitCost: 0,
             netAmount: 0,
+            originalMrp: item.mrp || 0,
           };
 
           calculateAmounts(newRow);

@@ -219,8 +219,14 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({ maxDigits, label, va
       required={required}
       autoComplete={autoComplete}
       size="small"
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
+      onFocus={(e) => {
+        setFocused(true);
+        props.onFocus?.(e);
+      }}
+      onBlur={(e) => {
+        setFocused(false);
+        props.onBlur?.(e);
+      }}
       onChange={(e: ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
         if (maxDigits && value.length > maxDigits) return;
@@ -237,6 +243,7 @@ export const CommonTextField: FC<CommonTextFieldProps> = ({ maxDigits, label, va
         if (inputType === "number") {
           if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
         }
+        props.onKeyDown?.(e);
       }}
       sx={{
         "& .MuiOutlinedInput-root": { borderRadius: isCurrency ? "0 4px 4px 0" : "4px" },

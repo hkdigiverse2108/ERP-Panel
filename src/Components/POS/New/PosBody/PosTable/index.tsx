@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CommonButton, CommonTextField } from "../../../../../Attribute";
 import { useAppDispatch, useAppSelector } from "../../../../../Store/hooks";
 import { setProductDetailsModal, setQtyCountModal } from "../../../../../Store/Slices/ModalSlice";
@@ -10,6 +10,50 @@ import type { CommonTableColumn, PosProductDataModal } from "../../../../../Type
 import ProductDetails from "./ProductDetails";
 import QtyCount from "./QtyCount";
 import { CommonTable } from "../../../../Common";
+
+
+const NetAmountCell = ({ row, updateRow }: { row: PosProductDataModal; updateRow: any }) => {
+  const [localVal, setLocalVal] = useState<string>(row.netAmount.toString());
+  const [isFocused, setIsFocused] = useState(false);
+
+  useEffect(() => {
+    if (!isFocused) {
+      setLocalVal(row.netAmount.toString());
+    }
+  }, [row.netAmount, isFocused]);
+
+  const handleUpdate = (val: string) => {
+    const desiredAmt = Number(val) || 0;
+    const unitPrice = row.mrp - row.discount - row.additionalDiscount;
+    const taxRate = Number(row.salesTaxId?.percentage || 0);
+    const unitPriceIncludingTax = row.isSalesTaxIncluding ? unitPrice : unitPrice + (unitPrice * taxRate) / 100;
+    if (unitPriceIncludingTax > 0) {
+      const isPieces = row.uomId?.name === "PIECES";
+      const rawQty = desiredAmt / unitPriceIncludingTax;
+      const newQty = isPieces ? Math.round(rawQty) : Number(rawQty.toFixed(3));
+      updateRow(row._id, row.variantId, { posQty: newQty });
+    }
+  };
+
+  return (
+    <CommonTextField
+      type="number"
+      value={localVal}
+      onFocus={() => setIsFocused(true)}
+      onChange={(e) => {
+        setLocalVal(e);
+        handleUpdate(e);
+      }}
+      onBlur={() => {
+        setIsFocused(false);
+        handleUpdate(localVal);
+      }}
+      disabled={row.uomId?.name === "PIECES"}
+      isCurrency
+      currencyDisabled
+    />
+  );
+};
 
 const PosTable = () => {
   const { PosProduct, isPosLoading, isReturnPosOrder } = useAppSelector((state) => state.pos);
@@ -114,7 +158,7 @@ const PosTable = () => {
       key: "mrp",
       header: "MRP",
       bodyClass: "min-w-32 w-35",
-      render: (row) => <CommonTextField type="number" value={row.mrp} onChange={(e) => updateRow(row._id, row.variantId, { mrp: Number(e) || 0 })} isCurrency currencyDisabled />,
+      render: (row) => row.mrp?.toFixed(2),
     },
     {
       key: "discount",
@@ -133,26 +177,7 @@ const PosTable = () => {
       key: "netAmount",
       header: "Net Amount",
       bodyClass: "min-w-32 w-35",
-      render: (row) => (
-        <CommonTextField
-          type="number"
-          value={row.netAmount}
-          onChange={(e) => {
-            const desiredAmt = Number(e) || 0;
-            const unitPrice = row.mrp - row.discount - row.additionalDiscount;
-            const taxRate = row.salesTaxId?.percentage || 0;
-            const unitPriceIncludingTax = row.isSalesTaxIncluding ? unitPrice : unitPrice + (unitPrice * taxRate) / 100;
-            if (unitPriceIncludingTax > 0) {
-              const isPieces = row.uomId?.name === "PIECES";
-              const rawQty = desiredAmt / unitPriceIncludingTax;
-              const newQty = isPieces ? Math.round(rawQty) : Number(rawQty.toFixed(3));
-              updateRow(row._id, row.variantId, { posQty: newQty });
-            }
-          }}
-          isCurrency
-          currencyDisabled
-        />
-      ),
+      render: (row) => <NetAmountCell row={row} updateRow={updateRow} />,
     },
     // ...(!PosProduct.posOrderId || isReturnPosOrder
     //   ? [
@@ -174,7 +199,16 @@ const PosTable = () => {
     data: productData,
     rowKey: (row: PosProductDataModal) => row._id,
     columns: columns,
-    getRowClass: (row: PosProductDataModal) => (Number(calcNetAmount(row)) >= (row.landingCost ?? 0) ? "bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark" : "bg-red-50 dark:bg-red-900"),
+    getRowClass: (row: PosProductDataModal) => {
+      const isPieces = row.uomId?.name === "PIECES";
+      const isSufficientQty = isPieces
+        ? Number(calcNetAmount(row)) >= (row.landingCost ?? 0)
+        : row.posQty > 0;
+
+      return isSufficientQty
+        ? "bg-white dark:bg-gray-800 even:bg-gray-50 dark:even:bg-gray-dark"
+        : "bg-red-50 dark:bg-red-900";
+    },
   };
 
   return (
