@@ -176,6 +176,12 @@ export const BREADCRUMBS = {
   NOTIFICATION: {
     BASE: [{ label: PAGE_TITLE.NOTIFICATION }],
   },
+  MESSENGER: {
+    BASE: [{ label: PAGE_TITLE.MESSENGER.BASE }],
+  },
+  WHATSAPP: {
+    BASE: [{ label: PAGE_TITLE.WHATSAPP.BASE }],
+  },
 };
 
 export const BankBreadCrumbs = [{ label: ROUTES.BANK.BASE }];

@@ -73,7 +73,11 @@ export const NavItems: NavItem[] = [
   {
     name: PAGE_TITLE.SETTINGS.BASE,
     icon: <Settings />,
-    children: [{ name: PAGE_TITLE.SETTINGS.GENERAL, path: ROUTES.SETTINGS.GENERAL, pro: false }],
+    children: [
+      { name: PAGE_TITLE.SETTINGS.GENERAL, path: ROUTES.SETTINGS.GENERAL, pro: false },
+      { name: PAGE_TITLE.MESSENGER.BASE, path: ROUTES.MESSENGER.BASE },
+      { name: PAGE_TITLE.WHATSAPP.BASE, path: ROUTES.WHATSAPP.BASE },
+    ],
   },
   {
     name: PAGE_TITLE.ACCOUNTING.BASE,

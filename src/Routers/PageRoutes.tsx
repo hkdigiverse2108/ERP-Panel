@@ -47,6 +47,8 @@ import SupplierBillForm from "../Pages/Purchase/SupplierBill/SupplierBillForm";
 import PurchaseDebitNote from "../Pages/Purchase/PurchaseDebitNote";
 import PurchaseDebitNoteForm from "../Pages/Purchase/PurchaseDebitNote/PurchaseDebitNoteForm";
 import GeneralSetting from "../Pages/Settings/GeneralSetting";
+import MessengerSetting from "../Pages/Settings/MessengerSetting";
+import WhatsAppSetting from "../Pages/Settings/WhatsAppSetting";
 import Discount from "../Pages/CRM/Discount";
 import DiscountForm from "../Pages/CRM/Discount/DiscountForm";
 import Estimate from "../Pages/Sales/Estimate";
@@ -77,6 +79,8 @@ export const PageRoutes = [
   { path: ROUTES.DASHBOARD, name: PAGE_TITLE.DASHBOARD, element: <Dashboard /> },
 
   { path: ROUTES.SETTINGS.GENERAL, name: PAGE_TITLE.SETTINGS.GENERAL, element: <GeneralSetting /> },
+  { path: ROUTES.MESSENGER.BASE, name: PAGE_TITLE.MESSENGER.BASE, element: <MessengerSetting /> },
+  { path: ROUTES.WHATSAPP.BASE, name: PAGE_TITLE.WHATSAPP.BASE, element: <WhatsAppSetting /> },
   { path: ROUTES.SETTINGS.CHANGE_PASSWORD, name: PAGE_TITLE.SETTINGS.CHANGE_PASSWORD, element: <ChangePassword /> },
   { path: ROUTES.COMPANY.EDIT, name: PAGE_TITLE.CONTACT.BASE, element: <CompanyForm /> },
   { path: ROUTES.USER.EDIT, name: PAGE_TITLE.USER.BASE, element: <UserForm /> },

@@ -454,6 +454,16 @@ export const ProductFormSchema = Yup.object({
   masterQty: Validation("number", "Master Quantity", { required: false }),
   // images: Yup.array().of(Yup.mixed().required("Image is required")).min(2, "At least two image is required"),
   isActive: Yup.boolean(),
+  variants: Yup.array().of(
+    Yup.object({
+      name: Yup.string().required("Name is required"),
+      sku: Yup.string().required("SKU is required"),
+      mrp: Yup.number().min(0, "MRP must be at least 0"),
+      sellingPrice: Yup.number().min(0, "Selling Price must be at least 0"),
+      purchasePrice: Yup.number().min(0, "Purchase Price must be at least 0"),
+      packQty: Yup.number().min(1, "Pack Qty must be at least 1").required("Pack Qty is required"),
+    })
+  ),
 });
 
 export const ProductItemFormSchema = Yup.object({

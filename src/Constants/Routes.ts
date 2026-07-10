@@ -168,4 +168,6 @@ export const ROUTES = {
   NOTIFICATION: {
     BASE: "/notification",
   },
+  MESSENGER: { BASE: "/settings/messenger" },
+  WHATSAPP: { BASE: "/settings/whatsapp" },
 } as const;

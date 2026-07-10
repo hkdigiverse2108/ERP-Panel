@@ -233,4 +233,10 @@ export const PAGE_TITLE = {
     },
   },
   NOTIFICATION: "Notification",
+  MESSENGER: {
+    BASE: "Messenger Settings",
+  },
+  WHATSAPP: {
+    BASE: "WhatsApp",
+  },
 } as const;

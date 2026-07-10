@@ -392,4 +392,18 @@ export const KEYS = {
     EDIT: "report-format-edit",
     DELETE: "report-format-delete",
   },
+  MESSENGER: {
+    CONFIG: "messenger-config",
+    TEMPLATE: "messenger-template",
+    LOG: "messenger-log",
+  },
+  META_WHATSAPP: {
+    BASE: "meta-whatsapp",
+    ACCOUNT: "meta-whatsapp-account",
+    TEMPLATE: "meta-whatsapp-template",
+    LOGS: "meta-whatsapp-logs",
+    TEMPLATE_DELETE: "meta-whatsapp-template-delete",
+    SEND_POS_BILL: "meta-whatsapp-send-pos-bill",
+    SEND_CONTACTS: "meta-whatsapp-send-contacts",
+  },
 };
