@@ -32,12 +32,30 @@ const BillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }
   };
 
   return (
-    <div ref={ref} id="last-bill-print" className="mx-auto w-[150mm] bg-white text-black p-6 font-mono text-[15px] leading-tight">
+    <div ref={ref} id="last-bill-print" className="mx-auto w-[80mm] max-w-[80mm] bg-white text-black p-2 font-mono text-[11px] leading-tight">
+      <style>{`
+        @page {
+          size: 80mm auto;
+          margin: 0;
+        }
+        @media print {
+          body {
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          #last-bill-print {
+            width: 80mm !important;
+            max-width: 80mm !important;
+            padding: 6px !important;
+            margin: 0 auto !important;
+          }
+        }
+      `}</style>
       {/* Header */}
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold capitalize">{company?.name}</h2>
+      <div className="text-center mb-3">
+        <h2 className="text-lg font-bold capitalize">{company?.name}</h2>
 
-        <div className="text-sm mt-2">
+        <div className="text-[10px] mt-1">
           {getCompanyAddress() && <div>{getCompanyAddress()}</div>}
 
           {company?.phoneNo && (
@@ -47,11 +65,11 @@ const BillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }
           )}
         </div>
 
-        <h3 className="mt-4 font-bold text-base">{[RETURN_POS_ORDER_TYPE.REFUND, RETURN_POS_ORDER_TYPE.SALES_RETURN, POS_ORDER_STATUS.RETURNED, POS_ORDER_STATUS.PARTIALLY_RETURNED].includes(bill?.status) ? "Return Invoice" : [POS_ORDER_STATUS.HOLD].includes(bill?.status) ? "Hold BIll" : "Tax Invoice"}</h3>
+        <h3 className="mt-2 font-bold text-xs">{[RETURN_POS_ORDER_TYPE.REFUND, RETURN_POS_ORDER_TYPE.SALES_RETURN, POS_ORDER_STATUS.RETURNED, POS_ORDER_STATUS.PARTIALLY_RETURNED].includes(bill?.status) ? "Return Invoice" : [POS_ORDER_STATUS.HOLD].includes(bill?.status) ? "Hold BIll" : "Tax Invoice"}</h3>
       </div>
 
       {/* Customer Meta */}
-      <div className="flex flex-col gap-1 mb-4">
+      <div className="flex flex-col gap-0.5 mb-2 text-[10px]">
         <div className="flex gap-2">
           <span className="font-bold">Name:</span>
           <span>{bill?.customerId?.firstName ? `${bill.customerId.firstName} ${bill.customerId.lastName || ""}` : "Walk in Customer"}</span>
@@ -76,15 +94,15 @@ const BillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }
       </div>
 
       {/* Product Table */}
-      <table className="w-full text-sm border-t border-dashed border-black mb-4">
+      <table className="w-full text-[10px] border-t border-dashed border-black mb-2">
         <thead>
           <tr className="border-b border-dashed border-black">
-            <th className="text-left py-1 w-[5%]">#</th>
-            <th className="text-left py-1 w-[40%]">Item</th>
-            <th className="text-center py-1 w-[10%]">Qty</th>
-            <th className="text-center py-1 w-[15%]">MRP</th>
-            <th className="text-center py-1 w-[10%]">GST</th>
-            <th className="text-right py-1 w-[20%]">Net Amt.</th>
+            <th className="text-left py-0.5 w-[5%]">#</th>
+            <th className="text-left py-0.5 w-[35%]">Item</th>
+            <th className="text-center py-0.5 w-[12%]">Qty</th>
+            <th className="text-center py-0.5 w-[15%]">MRP</th>
+            <th className="text-center py-0.5 w-[13%]">GST</th>
+            <th className="text-right py-0.5 w-[20%]">Net Amt.</th>
           </tr>
         </thead>
 
@@ -99,24 +117,24 @@ const BillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }
             return (
               <React.Fragment key={index}>
                 <tr className="align-top">
-                  <td className="py-1">{index + 1}</td>
+                  <td className="py-0.5">{index + 1}</td>
 
-                  <td className="py-1">
+                  <td className="py-0.5">
                     <div className="font-bold">{item.productId?.name}</div>
 
-                    {item.productId?.variant && <div className="text-xs">{item.productId.variant}</div>}
+                    {item.productId?.variant && <div className="text-[9px]">{item.productId.variant}</div>}
                   </td>
 
-                  <td className="text-center py-1">{Number(item.qty || 0)}</td>
+                  <td className="text-center py-0.5">{Number(item.qty || 0)}</td>
 
-                  <td className="text-center py-1">{Number(item.mrp || 0)}</td>
-                  <td className="text-center py-1">{Number(taxAmount.toFixed(2))}</td>
+                  <td className="text-center py-0.5">{Number(item.mrp || 0)}</td>
+                  <td className="text-center py-0.5">{Number(taxAmount.toFixed(2))}</td>
 
-                  <td className="text-right py-1">{Number(item.netAmount || 0)}</td>
+                  <td className="text-right py-0.5">{Number(item.netAmount || 0)}</td>
                 </tr>
 
                 <tr>
-                  <td colSpan={5} className="pl-6 text-[10px] italic font-semibold pb-1">
+                  <td colSpan={6} className="pl-2 text-[9px] italic font-semibold pb-0.5">
                     GST {taxPercent}%{/* {taxAmount > 0 ? Number(taxAmount.toFixed(2)) : ""}  */}
                     {discAmt > 0 && `||  Discount: ${Number(discAmt.toFixed(2))}`}
                   </td>
@@ -128,55 +146,55 @@ const BillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }
       </table>
 
       {/* Totals */}
-      <div className="border-t border-dashed border-black pt-2 mb-4">
+      <div className="border-t border-dashed border-black pt-1 mb-2 text-[10px]">
         {bill.additionalCharges?.length > 0 && (
-          <div className="flex justify-end text-sm">
-            <span className="text-right mr-2 capitalize">Additional Charge</span>:<span className="w-20 text-right">{Number(bill.additionalCharges?.reduce((acc, charge) => acc + (charge.totalAmount || 0), 0)?.toFixed(2) || 0)}</span>
+          <div className="flex justify-end">
+            <span className="text-right mr-2 capitalize">Additional Charge</span>:<span className="w-16 text-right">{Number(bill.additionalCharges?.reduce((acc, charge) => acc + (charge.totalAmount || 0), 0)?.toFixed(2) || 0)}</span>
           </div>
         )}
 
         {bill.totalDiscount > 0 && (
-          <div className="flex justify-end text-sm">
-            <span className="text-right mr-2 capitalize">Discount</span>:<span className="w-20 text-right">{Number(bill.totalDiscount?.toFixed(2) || 0)}</span>
+          <div className="flex justify-end">
+            <span className="text-right mr-2 capitalize">Discount</span>:<span className="w-16 text-right">{Number(bill.totalDiscount?.toFixed(2) || 0)}</span>
           </div>
         )}
 
         {bill.redeemCreditAmount > 0 && (
-          <div className="flex justify-end text-sm">
-            <span className="text-right mr-2 capitalize">{bill.redeemCreditType === REDEEM_CREDIT_TYPE_ENUM?.CREDIT_NOTE ? "Credit Discount" : "Advance Payment"}</span>:<span className="w-20 text-right">{Number(bill.redeemCreditAmount?.toFixed(2) || 0)}</span>
+          <div className="flex justify-end">
+            <span className="text-right mr-2 capitalize">{bill.redeemCreditType === REDEEM_CREDIT_TYPE_ENUM?.CREDIT_NOTE ? "Credit Discount" : "Advance Payment"}</span>:<span className="w-16 text-right">{Number(bill.redeemCreditAmount?.toFixed(2) || 0)}</span>
           </div>
         )}
 
         {bill.flatDiscountAmount > 0 && (
-          <div className="flex justify-end text-sm">
-            <span className="text-right mr-2 capitalize">Flat Discount</span>:<span className="w-20 text-right">{Number(bill.flatDiscountAmount?.toFixed(2) || 0)}</span>
+          <div className="flex justify-end">
+            <span className="text-right mr-2 capitalize">Flat Discount</span>:<span className="w-16 text-right">{Number(bill.flatDiscountAmount?.toFixed(2) || 0)}</span>
           </div>
         )}
         {bill.roundOff > 0 && (
-          <div className="flex justify-end text-sm">
-            <span className="text-right mr-2 capitalize">Round Off</span>:<span className="w-20 text-right">{Number(bill.roundOff?.toFixed(2) || 0)}</span>
+          <div className="flex justify-end">
+            <span className="text-right mr-2 capitalize">Round Off</span>:<span className="w-16 text-right">{Number(bill.roundOff?.toFixed(2) || 0)}</span>
           </div>
         )}
 
         {bill.multiplePayments?.map((payment, index) => (
-          <div className="flex justify-end text-sm" key={index}>
-            <span className="text-right mr-2 capitalize">{FormatPayment(payment.method)}</span>:<span className="w-20 text-right">{Number(payment.amount?.toFixed(2) || 0)}</span>
+          <div className="flex justify-end" key={index}>
+            <span className="text-right mr-2 capitalize">{FormatPayment(payment.method)}</span>:<span className="w-16 text-right">{Number(payment.amount?.toFixed(2) || 0)}</span>
           </div>
         ))}
 
-        <div className="flex justify-end font-bold text-xl">
-          <span className="text-right mr-2 capitalize">Total</span>:<span className="w-20 text-right">{Number(bill.totalAmount?.toFixed(0) || 0)}</span>
+        <div className="flex justify-end font-bold text-sm mt-0.5">
+          <span className="text-right mr-2 capitalize">Total</span>:<span className="w-16 text-right">{Number(bill.totalAmount?.toFixed(0) || 0)}</span>
         </div>
 
         {bill.paidAmount > 0 && (
-          <div className="flex justify-end text-sm font-semibold mt-1">
-            <span className="text-right mr-2 capitalize">Paid Amount</span>:<span className="w-20 text-right">{Number(bill.paidAmount?.toFixed(2) || 0)}</span>
+          <div className="flex justify-end font-semibold mt-0.5">
+            <span className="text-right mr-2 capitalize">Paid Amount</span>:<span className="w-16 text-right">{Number(bill.paidAmount?.toFixed(2) || 0)}</span>
           </div>
         )}
 
         {bill.dueAmount > 0 && (
-          <div className="flex justify-end text-sm text-red-600 font-semibold mt-1">
-            <span className="text-right mr-2 capitalize">Due Amount</span>:<span className="w-20 text-right">{Number(bill.dueAmount?.toFixed(2) || 0)}</span>
+          <div className="flex justify-end text-red-600 font-semibold mt-0.5">
+            <span className="text-right mr-2 capitalize">Due Amount</span>:<span className="w-16 text-right">{Number(bill.dueAmount?.toFixed(2) || 0)}</span>
           </div>
         )}
       </div>
@@ -186,11 +204,11 @@ const BillReceipt = forwardRef<HTMLDivElement, { bill: PosOrderBase }>(({ bill }
         <div>PIECES PURCHASED: {Number(totalQty.toFixed(2))}</div>
         <div>DISCOUNT ITEMS: {Number(totalDiscount.toFixed(2))}</div>
       </div> */}
-      <Divider className="my-2! border-dashed! border-black!" />
+      <Divider className="my-1! border-dashed! border-black!" />
       {/* Footer */}
-      <div className="text-center font-bold mb-3">Thank You For Shopping At {bill?.companyId?.name}</div>
+      <div className="text-center font-bold mb-2 text-[10px]">Thank You For Shopping At {bill?.companyId?.name}</div>
 
-      <div className="flex justify-between text-sm font-bold">
+      <div className="flex justify-between text-[9px] font-bold">
         <span>Printed On: {FormatDateTime(new Date())}</span>
       </div>
     </div>

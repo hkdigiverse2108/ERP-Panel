@@ -16,14 +16,32 @@ const CloseBillRegister = forwardRef<HTMLDivElement, { data?: PosCashRegisterVal
   const { company } = useAppSelector((state) => state.company);
 
   return (
-    <div ref={ref} id="sales-register-print" className="mx-auto w-[150mm] bg-white p-[10px] font-mono text-[18px] leading-[1.2] text-black">
-      <div className="mb-[5px] flex justify-between text-[14px]">
+    <div ref={ref} id="sales-register-print" className="mx-auto w-[80mm] max-w-[80mm] bg-white p-[10px] font-mono text-[12px] leading-[1.2] text-black">
+      <style>{`
+        @page {
+          size: 80mm auto;
+          margin: 0;
+        }
+        @media print {
+          body {
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          #sales-register-print {
+            width: 80mm !important;
+            max-width: 80mm !important;
+            padding: 6px !important;
+            margin: 0 auto !important;
+          }
+        }
+      `}</style>
+      <div className="mb-[5px] flex justify-between text-[11px]">
         <span>{data?.endDate}</span>
         <span>Sales Register</span>
       </div>
 
       <center>
-        <h2 className="mb-[5px] text-[22px] font-bold">{company?.name}</h2>
+        <h2 className="mb-[5px] text-[16px] font-bold">{company?.name}</h2>
       </center>
 
       <div className="flex flex-col font-semibold gap-[5px]">
